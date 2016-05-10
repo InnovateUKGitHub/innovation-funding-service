@@ -5,6 +5,7 @@ import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 

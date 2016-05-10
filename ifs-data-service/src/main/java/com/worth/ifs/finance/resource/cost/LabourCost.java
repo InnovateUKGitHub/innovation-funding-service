@@ -2,6 +2,7 @@ package com.worth.ifs.finance.resource.cost;
 
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.*;
@@ -19,6 +20,7 @@ public class LabourCost implements CostItem {
 
     private String name;
 
+    @Length(max = MAX_STRING_LENGTH)
     @NotBlank(groups = Default.class)
     private String role;
 

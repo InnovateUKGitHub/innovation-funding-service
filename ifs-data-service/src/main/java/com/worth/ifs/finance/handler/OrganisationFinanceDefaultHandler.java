@@ -15,6 +15,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -39,6 +40,9 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Autowired
     CostFieldRepository costFieldRepository;
+
+    @Autowired
+    AutowireCapableBeanFactory beanFactory;
 
     @Override
     public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType){
@@ -165,25 +169,40 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public CostHandler getCostHandler(CostType costType) {
+        CostHandler handler = null;
         switch(costType) {
             case LABOUR:
-                return new LabourCostHandler();
+                handler = new LabourCostHandler();
+                break;
             case CAPITAL_USAGE:
-                return new CapitalUsageHandler();
+                handler = new CapitalUsageHandler();
+                break;
             case MATERIALS:
-                return new MaterialsHandler();
+                handler = new MaterialsHandler();
+                break;
             case OTHER_COSTS:
-                return new OtherCostHandler();
+                handler = new OtherCostHandler();
+                break;
             case OVERHEADS:
-                return new OverheadsHandler();
+                handler = new OverheadsHandler();
+                break;
             case SUBCONTRACTING_COSTS:
-                return new SubContractingCostHandler();
+                handler = new SubContractingCostHandler();
+                break;
             case TRAVEL:
-                return new TravelCostHandler();
+                handler = new TravelCostHandler();
+                break;
             case FINANCE:
-                return new GrantClaimHandler();
+                handler = new GrantClaimHandler();
+                break;
             case OTHER_FUNDING:
-                return new OtherFundingHandler();
+                handler = new OtherFundingHandler();
+                break;
+        }
+        if(handler != null){
+            // some times the handler needs autowired classes
+            beanFactory.autowireBean(handler);
+            return handler;
         }
         LOG.error("Not a valid FinanceType: " + costType);
         throw new IllegalArgumentException("Not a valid FinanceType: " + costType);

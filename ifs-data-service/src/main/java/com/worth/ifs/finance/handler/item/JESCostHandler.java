@@ -3,8 +3,21 @@ package com.worth.ifs.finance.handler.item;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.validator.AcademicValidator;
+import org.springframework.validation.BindingResult;
+
+import javax.validation.constraints.NotNull;
 
 public class JESCostHandler extends CostHandler {
+
+    @Override
+    public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
+        AcademicCost academicCost = (AcademicCost) costItem;
+        super.validate(academicCost, bindingResult);
+        AcademicValidator academicValidator = new AcademicValidator();
+        academicValidator.validate(academicCost, bindingResult);
+    }
+
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;

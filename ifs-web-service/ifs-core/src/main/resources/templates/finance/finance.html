@@ -14,7 +14,7 @@
 
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
             <input type="number"
-                   min="0"
+                   min="1"
                    th:max="${organisationFinanceSize?.getMaxGrantClaimPercentage()}"
                    th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                    th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
@@ -100,7 +100,7 @@
                            th:name="${type + '-labourDaysYearly-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
                            th:value="${costCategory.workingDaysPerYear}"
                            th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                           min="0"
+                           min="1"
                            max="365"
                            />
                 </div>
@@ -174,7 +174,7 @@
                        th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
                        th:readonly="${complete == 'complete'}"
                        th:value="${#numbers.formatDecimal(cost.grossAnnualSalary,0,0)}"
-                       min="0"
+                       min="1"
                         />
             </td>
             <td class="numeric">
@@ -204,7 +204,7 @@
                        th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"
                        th:value="${cost.labourDays}"
                        required="required"
-                       min="0"
+                       min="1"
                         />
             </td>
             <td rowspan="2" class="rowspan" th:unless="${complete == 'complete'}">
@@ -353,7 +353,7 @@
                                th:name="${'overheads-agreedRate-' + question.id + '-' + overheadCosts?.id}"
                                th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}"
                                data-calculation-input="overhead-agreedRate"
-                               min="0"
+                               min="1"
                                max="100"
                                class="form-control form-control-1-4 alignright"
                                th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? ${overheadCosts?.getRate()} : 0"
@@ -464,7 +464,7 @@
                        th:value="${#numbers.formatDecimal(cost.getCost(),0,0)}"
                        th:readonly="${complete == 'complete'}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
-                       min="0" />
+                       min="1" />
             </td>
             <td>
               <label th:for="${'cost-materials-'+cost.id+'-materialTotal'}">
@@ -519,17 +519,17 @@
 
     <div th:fragment="capital_usage_row" th:remove="tag">
         <div th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}" class="form-row">
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-item]}')} ? 'error' : ''">
-                <label th:for="${'cost-capital_usage-'+cost.id+'-item'}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-description]}')} ? 'error' : ''">
+                <label th:for="${'cost-capital_usage-'+cost.id+'-description'}">
                     <span>Item description</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-item'})" th:remove="tag" />
+                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-description'})" th:remove="tag" />
                   </label>
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='item', value=${cost.getDescription()},readonly=${complete == 'complete'},required=false)" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=false)" th:remove="tag" />
             </div>
-            <div class="form-group">
-
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-existing]}')} ? 'error' : ''">
                 <fieldset class="inline">
                     <legend>New or existing item</legend>
+                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-existing'})" th:remove="tag" />
                     <label class="block-label">
                         <input th:id="${'cost-capital_usage-'+cost.id+'-existing_0'}"
                                type="radio"
@@ -564,7 +564,7 @@
                         th:name="${type +'-deprecation_period-' + question.id + '-' +  cost.id}"
                         th:value="${cost.deprecation}"
                         th:readonly="${complete == 'complete'}"
-                        min="0"
+                        min="1"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-deprecation]}')} ? 'field-error' : ''"
                          />
             </div>
@@ -581,7 +581,7 @@
                         th:name="${type +'-npv-' + question.id + '-' + cost.id}"
                         th:value="${#numbers.formatDecimal(cost.npv,0,0)}"
                         th:readonly="${complete == 'complete'}"
-                        min="0"
+                        min="1"
                          th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-npv]}')} ? 'field-error' : ''" />
 
             </div>
@@ -598,7 +598,7 @@
                         th:name="${type +'-residual_value-' + question.id + '-' + cost.id}"
                         th:value="${#numbers.formatDecimal(cost.residualValue,0,0)}"
                         th:readonly="${complete == 'complete'}"
-                        min="0"
+                        min="1"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-residualValue]}')} ? 'field-error' : ''"/>
             </div>
 
@@ -613,7 +613,7 @@
                        th:name="${type +'-utilisation-' + question.id + '-' + cost.id}"
                        th:value="${cost.utilisation}"
                        th:readonly="${complete == 'complete'}"
-                       min="0"
+                       min="1"
                        max="100"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-utilisation]}')} ? 'field-error' : ''"/>
             </div>
@@ -674,21 +674,23 @@
 
     <div th:fragment="subcontracting_row" th:remove="tag">
         <div class="form-row" th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-companyName]}')} ? 'error' : ''">
-                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-companyName'}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-name]}')} ? 'error' : ''">
+                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-name'}">
                     <span>Subcontractor name</span>
+                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-name'})" th:remove="tag" />
                 </label>
                 <input type="text"
                        th:name="${type +'-name-' + question.id + '-' +cost.id}"
                        class="form-control form-finances-subcontracting-company"
-                       th:id="${'cost-subcontracting-'+cost.id+'-companyName'}"
+                       th:id="${'cost-subcontracting-'+cost.id+'-name'}"
                        th:value="${cost.name}"
                        th:readonly="${complete == 'complete'}"
-                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-companyName]}')} ? 'field-error' : ''"  />
+                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-name]}')} ? 'field-error' : ''"  />
             </div>
             <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-country]}')} ? 'error' : ''">
                 <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-country'}">
                     <span>Country where the subcontractor will work</span>
+                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-country'})" th:remove="tag" />
                 </label>
                 <input type="text"
                        th:name="${type +'-country-' + question.id + '-' + cost.id}"
@@ -702,6 +704,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-role]}')} ? 'error' : ''">
                 <label class="form-label" th:for="${'cost-'+ type + '-'+cost.id+'-role'}">
                   <span>Role of the subcontractor in the project and description of the work they’ll do</span>
+                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-role'})" th:remove="tag" />
                 </label>
 
                 <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=false)" th:remove="tag" />
@@ -719,7 +722,7 @@
                        th:id="${'cost-subcontracting-'+cost.id+'-subcontractingCost'}"
                        th:value="${#numbers.formatDecimal(cost.cost,0,0)}"
                        th:readonly="${complete == 'complete'}"
-                       min="0"
+                       min="1"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
                        />
             </div>
@@ -803,7 +806,7 @@
                        th:id="${'cost-'+type+'-'+cost.id+'-quantity'}"
                        th:value="${cost.getQuantity()}"
                        th:readonly="${complete == 'complete'}"
-                       min="0"
+                       min="1"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'field-error' : ''"  />
             </td>
             <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''">
@@ -817,7 +820,7 @@
                        th:id="${'cost-'+type+'-'+cost.id+'-cost'}"
                        th:value="${#numbers.formatDecimal(cost.cost,0,0)}"
                        th:readonly="${complete == 'complete'}"
-                       min="0"
+                       min="1"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''" />
             </td>
             <td class="numeric">
@@ -902,7 +905,7 @@
                        th:id="${'cost-'+type+'-'+cost.id+'-otherCost'}"
                        th:value="${#numbers.formatDecimal(cost.getCost(),0,0)}"
                        th:readonly="${complete == 'complete'}"
-                       min="0"
+                       min="1"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"  />
             </td>
             <td th:unless="${complete == 'complete'}">
@@ -1045,7 +1048,7 @@
                        th:id="${'cost-'+type+'-'+cost.id+'-fundingAmount'}"
                        th:value="${#numbers.formatDecimal(cost.fundingAmount,0,0)}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingAmount]}')} ? 'field-error' : ''"
-                       min="0" />
+                       min="1" />
             </td>
             <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
                 <button type="submit"

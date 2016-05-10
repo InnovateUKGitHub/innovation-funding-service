@@ -10,12 +10,12 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.validator.*;
+import com.worth.ifs.validator.MinRowCountValidator;
+import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -29,29 +29,17 @@ public class ValidationUtil {
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     private MessageSource messageSource;
     private ValidatorService validatorService;
-    private Validator validator;
-    private GrantClaimValidator grantClaimValidator;
-    private OtherFundingValidator otherFundingValidator;
-    private AcademicValidator academicValidator;
     private MinRowCountValidator minRowCountValidator;
 
 
     @Autowired
     @Lazy
     private ValidationUtil(ValidatorService validatorService,
-                           @Qualifier("basicValidator") Validator validator,
-                           GrantClaimValidator grantClaimValidator,
-                           OtherFundingValidator otherFundingValidator,
-                           AcademicValidator academicValidator,
                            MinRowCountValidator minRowCountValidator,
                            MessageSource messageSource
     ) {
         this.validatorService = validatorService;
-        this.validator = validator;
         this.minRowCountValidator = minRowCountValidator;
-        this.grantClaimValidator = grantClaimValidator;
-        this.otherFundingValidator = otherFundingValidator;
-        this.academicValidator = academicValidator;
         this.messageSource = messageSource;
     }
 
@@ -195,26 +183,25 @@ public class ValidationUtil {
     }
 
     private void invokeValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
-        Validator extraValidator = null;
         CostHandler costHandler = validatorService.getCostHandler(costItem);
         costHandler.validate(costItem, bindingResult);
-
-        switch(costItem.getCostType()){
-            case FINANCE:
-                extraValidator = grantClaimValidator;
-                break;
-            case OTHER_FUNDING:
-                extraValidator = otherFundingValidator;
-                break;
-            case ACADEMIC:
-                extraValidator = academicValidator;
-                break;
-        }
-
-        if(extraValidator != null){
-            LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
-            ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);
-        }
+//        Validator extraValidator = null;
+//        switch(costItem.getCostType()){
+////            case FINANCE:
+////                extraValidator = grantClaimValidator;
+////                break;
+////            case OTHER_FUNDING:
+////                extraValidator = otherFundingValidator;
+////                break;
+////            case ACADEMIC:
+////                extraValidator = academicValidator;
+////                break;
+//        }
+//
+//        if(extraValidator != null){
+//            LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
+//            ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);
+//        }
     }
 
     private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){

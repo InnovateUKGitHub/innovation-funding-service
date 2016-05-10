@@ -24,7 +24,7 @@ public class CapitalUsageHandler extends CostHandler {
         for(FinanceFormField financeFormField : financeFormFields) {
             final String costFormValue = financeFormField.getValue();
             switch (financeFormField.getCostName()) {
-                case "item":
+                case "description":
                     description = costFormValue;
                     break;
                 case "existing":

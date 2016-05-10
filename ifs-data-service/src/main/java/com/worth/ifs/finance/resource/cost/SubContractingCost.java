@@ -1,7 +1,11 @@
 package com.worth.ifs.finance.resource.cost;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -9,11 +13,22 @@ import java.math.BigDecimal;
  */
 public class SubContractingCost implements CostItem {
     private Long id;
-    @DecimalMin(value = "0")
+
+    @NotNull
+    @DecimalMin(value = "1")
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
+
+    @NotBlank
+    @Length(max = MAX_STRING_LENGTH)
     private String country;
+
+    @NotBlank
+    @Length(max = MAX_STRING_LENGTH)
     private String name;
+
+    @NotBlank
+    @Length(max = MAX_STRING_LENGTH)
     private String role;
 
     public SubContractingCost(){

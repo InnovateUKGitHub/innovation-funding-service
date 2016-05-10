@@ -1,18 +1,22 @@
 package com.worth.ifs.finance.resource.cost;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class OtherCost implements CostItem {
     private Long id;
 
     @NotBlank
+    @Length(max = MAX_STRING_LENGTH)
     private String description;
 
-    @DecimalMin(value = "0")
+    @NotNull
+    @DecimalMin(value = "1")
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
 

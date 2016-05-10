@@ -10,7 +10,9 @@ public class GrantClaim implements CostItem {
     @Max(100)
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer grantClaimPercentage;
+
     private String name;
+
     public GrantClaim() {
         this.name = getCostType().getType();
     }

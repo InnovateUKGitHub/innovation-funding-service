@@ -2,6 +2,7 @@ package com.worth.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,14 +14,21 @@ import java.util.List;
  */
 @Entity
 public class Cost {
+    public static final int DB_MAX_STRING_LENGTH = 255;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+    @Length(max = DB_MAX_STRING_LENGTH)
     String item;
+    @Length(max = DB_MAX_STRING_LENGTH)
     String description;
+
     Integer quantity;
     BigDecimal cost;
+
+    @Length(max = DB_MAX_STRING_LENGTH)
     String name;
 
     @OneToMany(mappedBy="cost")
@@ -61,15 +69,18 @@ public class Cost {
     }
 
     public String getName() {
-        return name;
+        // Fix for sql breaking when saving string longer than the field length
+        return (name.length() > DB_MAX_STRING_LENGTH) ? name.substring(0, DB_MAX_STRING_LENGTH) : name;
     }
 
     public String getItem() {
-        return item;
+        // Fix for sql breaking when saving string longer than the field length
+        return (item.length() > DB_MAX_STRING_LENGTH) ? item.substring(0, DB_MAX_STRING_LENGTH) : item;
     }
 
     public String getDescription() {
-        return description;
+        // Fix for sql breaking when saving string longer than the field length
+        return (description.length() > DB_MAX_STRING_LENGTH) ? description.substring(0, DB_MAX_STRING_LENGTH) : description;
     }
 
     public Integer getQuantity() {

@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 })
 public interface CostItem {
     int MAX_DIGITS = 20;
+    int MAX_STRING_LENGTH = 240;
     public Long getId();
     public BigDecimal getTotal();
     public CostType getCostType();
