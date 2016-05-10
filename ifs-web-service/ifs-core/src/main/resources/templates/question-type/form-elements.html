@@ -305,11 +305,11 @@
                   <div th:remove="tag" th:each="assignableUser : ${assignableUsers}">
                       <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
                               th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
-                              th:text="${assignableUser.getName()}"
+                              th:text="${assignableUser.userName}"
                               th:class="${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'current-user' : ''}"
                               />
                       <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
-                              th:text="${assignableUser?.getName()}"
+                              th:text="${assignableUser?.userName}"
                               selected="selected"
                               th:class="${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'current-user' : ''}"
                               disabled="disabled"/>

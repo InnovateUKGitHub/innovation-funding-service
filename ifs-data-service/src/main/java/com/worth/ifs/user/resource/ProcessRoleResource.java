@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 public class ProcessRoleResource {
     private Long id;
     private Long user;
+    private String userName;
     private Long application;
     private Long role;
     private String roleName;
@@ -21,6 +22,7 @@ public class ProcessRoleResource {
     public ProcessRoleResource(Long id, UserResource user, ApplicationResource application, RoleResource role, OrganisationResource organisation) {
         this.id = id;
         this.user = user.getId();
+        this.userName = user.getName();
         this.application = application.getId();
         this.role = role.getId();
         this.roleName = role.getName();
@@ -31,6 +33,10 @@ public class ProcessRoleResource {
 
     public Long getUser() {
         return user;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public Long getRole() {
@@ -51,6 +57,10 @@ public class ProcessRoleResource {
 
     public void setUser(Long user) {
         this.user = user;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setApplication(Long application) {

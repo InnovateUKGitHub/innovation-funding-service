@@ -34,7 +34,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISI
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
 import static java.util.Arrays.asList;

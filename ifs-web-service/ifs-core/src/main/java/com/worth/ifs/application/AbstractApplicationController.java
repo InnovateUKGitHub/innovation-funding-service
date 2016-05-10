@@ -334,8 +334,8 @@ public abstract class AbstractApplicationController extends BaseController {
         questionService.removeNotifications(notifications);
 
         List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
-        
-        model.addAttribute("assignableUsers", userService.getAssignable(application.getId()));
+
+        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
@@ -344,7 +344,7 @@ public abstract class AbstractApplicationController extends BaseController {
     private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
         if(!application.isOpen() || userOrganisation == null){
             //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<UserResource>());
+            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
             model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
             model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
