@@ -6,7 +6,9 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.mapper.AssessmentMapper;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.resource.Feedback;
 import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
@@ -28,6 +30,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -62,6 +65,10 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
     @Mock
     private UsersRolesService usersRolesServiceMock;
+
+
+    @Mock
+    protected AssessmentMapper assessmentMapperMock;
 
     @Test
     public void test_responseNotFound() {
@@ -170,7 +177,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         when(assessmentRepositoryMock.findOneByProcessRoleId(123L)).thenReturn(assessment);
 
-        ServiceResult<Assessment> result = service.getOneByProcessRole(123L);
+        ServiceResult<AssessmentResource> result = service.getOneByProcessRole(123L);
         assertTrue(result.isSuccess());
         assertEquals(assessment, result.getSuccessObject());
     }
@@ -184,7 +191,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         when(assessmentRepositoryMock.findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(456L, 123L, states)).thenReturn(singletonList(assessment));
 
-        ServiceResult<List<Assessment>> result = service.getAllByCompetitionAndAssessor(123L, 456L);
+        ServiceResult<List<AssessmentResource>> result = service.getAllByCompetitionAndAssessor(123L, 456L);
         assertTrue(result.isSuccess());
         assertEquals(singletonList(assessment), result.getSuccessObject());
     }
@@ -231,12 +238,16 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
-        ProcessRole processRole = newProcessRole().withApplication(application).build();
+        ProcessRole processRole = newProcessRole().withId(123L).withApplication(application).build();
         Assessment assessment = newAssessment().withProcessRole(processRole).build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withApplicationId(123L).build();
+        AssessmentResource assessmentResource = newAssessmentResource().withProcessRole(processRoleResource).build();
 
         when(assessmentRepositoryMock.findOneByProcessRoleId(123L)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToDomain(assessmentResource)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToResource(assessment)).thenReturn(assessmentResource);
 
-        ServiceResult<Void> result = service.acceptAssessmentInvitation(123L, assessment);
+        ServiceResult<Void> result = service.acceptAssessmentInvitation(123L, assessmentResource);
         assertTrue(result.isSuccess());
 
         verify(assessmentWorkflowEventHandlerMock).acceptInvitation(123L, assessment);

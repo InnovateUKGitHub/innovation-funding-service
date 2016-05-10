@@ -6,7 +6,6 @@ import org.hibernate.annotations.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class AssessmentResource {
     private Calendar lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
-    protected List<Long> processOutcomes = new ArrayList<>();
+    protected List<Long> processOutcomes;
     Long processRole;
 
     public Long getId() {

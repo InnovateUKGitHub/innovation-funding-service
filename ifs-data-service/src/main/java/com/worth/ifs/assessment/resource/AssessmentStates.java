@@ -1,6 +1,6 @@
-package com.worth.ifs.assessment.domain;
+package com.worth.ifs.assessment.resource;
 
-import com.worth.ifs.workflow.domain.ProcessStates;
+import com.worth.ifs.workflow.resource.ProcessStates;
 
 import java.util.HashMap;
 import java.util.HashSet;

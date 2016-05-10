@@ -8,6 +8,7 @@ public class ProcessOutcomeResource {
     private String description;
     private String comment;
     private Process process;
+    private String outcomeType;
 
     public Long getId() {
         return this.id;
@@ -47,5 +48,13 @@ public class ProcessOutcomeResource {
 
     public void setProcess(Process process) {
         this.process = process;
+    }
+
+    public String getOutcomeType() {
+        return outcomeType;
+    }
+
+    public void setOutcomeType(String outcomeType) {
+        this.outcomeType = outcomeType;
     }
 }

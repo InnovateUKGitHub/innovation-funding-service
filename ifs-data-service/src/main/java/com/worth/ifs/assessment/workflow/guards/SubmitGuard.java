@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.workflow.guards;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 

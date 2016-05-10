@@ -2,15 +2,20 @@ package com.worth.ifs.documentation;
 
 import java.time.LocalDate;
 
-import com.worth.ifs.assessment.builder.AssessmentBuilder;
-import com.worth.ifs.assessment.domain.AssessmentStates;
-import com.worth.ifs.workflow.domain.ProcessEvent;
+import com.worth.ifs.assessment.builder.AssessmentResourceBuilder;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.workflow.resource.ProcessEvent;
 
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessmentDocs {
@@ -19,18 +24,18 @@ public class AssessmentDocs {
             fieldWithPath("startDate").description("start date of the assessment"),
             fieldWithPath("endDate").description("end date of the assessment"),
             fieldWithPath("processOutcomes").description("outcomes of the assessment process"),
-            fieldWithPath("lastOutcome").description("last outcome for the assessment process"),
-            fieldWithPath("processStatus").description("current status of the assessment process"),
-            fieldWithPath("processEvent").description("currently not used"),
+            fieldWithPath("lastModified").description("last modified"),
+            fieldWithPath("status").description("current status of the assessment process"),
+            fieldWithPath("event").description("currently not used"),
             fieldWithPath("processRole").description("process role of the assigned assessor")
     };
 
-    public static final AssessmentBuilder assessmentBuilder = newAssessment()
+    public static final AssessmentResourceBuilder assessmentResourceBuilder = newAssessmentResource()
             .withId(1L)
             .withStartDate(LocalDate.now())
             .withEndDate(LocalDate.now().plusDays(14))
-            .withProcessOutcome(newProcessOutcome().build(2))
+            .withProcessOutcome(asList(1L, 2L))
             .withProcessStatus(AssessmentStates.OPEN)
             .withProcessEvent(ProcessEvent.ASSESSMENT)
-            .withProcessRole(newProcessRole().build());
+            .withProcessRole(newProcessRoleResource().build());
 }

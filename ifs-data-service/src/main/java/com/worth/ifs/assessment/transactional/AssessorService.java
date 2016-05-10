@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.Feedback;
 import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -32,19 +33,19 @@ public interface AssessorService {
     ServiceResult<Feedback> getFeedback(@P("id") Feedback.Id id);
 
     @PreAuthorize("hasPermission(#a, 'UPDATE')")
-    ServiceResult<Void> save(Assessment a);
+    ServiceResult<Void> save(AssessmentResource a);
 
     @PreAuthorize("hasPermission(#a, 'UPDATE')")
-    ServiceResult<Assessment> saveAndGet(Assessment a);
+    ServiceResult<AssessmentResource> saveAndGet(AssessmentResource a);
 
     @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.domain.Assessment', 'READ')")
     ServiceResult<Assessment> getOne(Long id);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<Assessment>> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId);
+    ServiceResult<List<AssessmentResource>> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<Assessment> getOneByProcessRole(Long processRoleId);
+    ServiceResult<AssessmentResource> getOneByProcessRole(Long processRoleId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Integer> getTotalSubmittedAssessmentsByCompetition(Long competitionId, Long assessorId);
@@ -59,7 +60,7 @@ public interface AssessorService {
     ServiceResult<Void> submitAssessment(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Void> acceptAssessmentInvitation(Long processRoleId, Assessment assessment);
+    ServiceResult<Void> acceptAssessmentInvitation(Long processRoleId, AssessmentResource assessment);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Void> rejectAssessmentInvitation(Long processRoleId, ProcessOutcome processOutcome);

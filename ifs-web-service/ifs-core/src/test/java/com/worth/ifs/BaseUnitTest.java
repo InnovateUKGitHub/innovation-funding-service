@@ -13,8 +13,7 @@ import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.builder.AssessmentBuilder;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
@@ -181,11 +180,11 @@ public class BaseUnitTest {
     public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
-    public List<Assessment> assessments;
+    public List<AssessmentResource> assessments;
     // TODO BO - remove assessorProcessRolesTemporary when Assessment is converted to DTO
     public List<ProcessRoleResource> assessorProcessRoleResources;
     public List<ProcessRoleResource> applicantRoles;
-    public List<Assessment> submittedAssessments;
+    public List<AssessmentResource> submittedAssessments;
     public ApplicationFinanceResource applicationFinanceResource;
     public ApplicationStatusResource submittedApplicationStatus;
     public ApplicationStatusResource createdApplicationStatus;

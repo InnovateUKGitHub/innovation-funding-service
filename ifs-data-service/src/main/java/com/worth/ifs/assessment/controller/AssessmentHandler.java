@@ -7,7 +7,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;

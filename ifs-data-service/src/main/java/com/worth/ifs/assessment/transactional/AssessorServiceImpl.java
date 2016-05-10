@@ -7,10 +7,8 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentStates;
-import com.worth.ifs.assessment.domain.RecommendedValue;
-import com.worth.ifs.assessment.resource.Feedback;
-import com.worth.ifs.assessment.resource.Score;
+import com.worth.ifs.assessment.mapper.AssessmentMapper;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.security.FeedbackLookupStrategy;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
@@ -39,6 +37,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
 import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.PairFunctions.*;
 import static java.util.Optional.empty;
@@ -70,6 +69,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Autowired
     private AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
 
+    @Autowired
+    private AssessmentMapper assessmentMapper;
+
     @Override
     public ServiceResult<Feedback> updateAssessorFeedback(Feedback.Id feedbackId, Optional<String> feedbackValue, Optional<String> feedbackText) {
 
@@ -99,14 +101,16 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     @Override
-    public ServiceResult<Void> save(Assessment a) {
-        assessmentRepository.save(a);
+    public ServiceResult<Void> save(AssessmentResource a) {
+        Assessment assessment = assessmentMapper.mapToDomain(a);
+        assessmentRepository.save(assessment);
         return serviceSuccess();
     }
 
     @Override
-    public ServiceResult<Assessment> saveAndGet(Assessment a) {
-        return serviceSuccess(assessmentRepository.save(a));
+    public ServiceResult<AssessmentResource> saveAndGet(AssessmentResource a) {
+        Assessment assessment = assessmentMapper.mapToDomain(a);
+        return serviceSuccess(assessmentRepository.save(assessment)).andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 
     @Override
@@ -120,15 +124,15 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * Also, groups the assessments by first having the pending ones and only after the open/active/submitted.
      */
     @Override
-    public ServiceResult<List<Assessment>> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
+    public ServiceResult<List<AssessmentResource>> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
         Set<String> states = AssessmentStates.getStates();
         states.remove(AssessmentStates.REJECTED.getState());
-        return serviceSuccess(assessmentRepository.findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(assessorId, competitionId, states));
+        return serviceSuccess(assessmentsToResource(assessmentRepository.findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(assessorId, competitionId, states)));
     }
 
     @Override
-    public ServiceResult<Assessment> getOneByProcessRole(Long processRoleId) {
-        return find(assessmentRepository.findOneByProcessRoleId(processRoleId), notFoundError(Assessment.class, processRoleId));
+    public ServiceResult<AssessmentResource> getOneByProcessRole(Long processRoleId) {
+        return find(assessmentRepository.findOneByProcessRoleId(processRoleId), notFoundError(AssessmentResource.class, processRoleId)).andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 
     @Override
@@ -197,7 +201,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 processOutcome.setOutcome(getRecommendedValueFromString(suitableValue).name());
                 processOutcome.setDescription(suitableFeedback);
                 processOutcome.setComment(comments);
-                newAssessment.setProcessStatus(assessment.getProcessStatus());
+                newAssessment.setProcessStatus(assessment.getStatus());
 
                 assessmentWorkflowEventHandler.recommend(processRole.getId(), newAssessment, processOutcome);
             })
@@ -205,9 +209,10 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     @Override
-    public ServiceResult<Void> acceptAssessmentInvitation(Long processRoleId, Assessment updatedAssessment) {
+    public ServiceResult<Void> acceptAssessmentInvitation(Long processRoleId, AssessmentResource updatedAssessmentResource) {
         return getOneByProcessRole(processRoleId).andOnSuccessReturnVoid(existingAssessment -> {
-            updatedAssessment.setProcessStatus(existingAssessment.getProcessStatus());
+            Assessment updatedAssessment = assessmentMapper.mapToDomain(updatedAssessmentResource);
+            updatedAssessment.setProcessStatus(existingAssessment.getStatus());
             assessmentWorkflowEventHandler.acceptInvitation(processRoleId, updatedAssessment);
         });
     }
@@ -215,7 +220,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Override
     public ServiceResult<Void> rejectAssessmentInvitation(Long processRoleId, ProcessOutcome processOutcome) {
         return getOneByProcessRole(processRoleId).andOnSuccessReturnVoid(existingAssessment -> {
-            String currentProcessStatus = existingAssessment.getProcessStatus();
+            String currentProcessStatus = existingAssessment.getStatus();
             assessmentWorkflowEventHandler.rejectInvitation(processRoleId, currentProcessStatus, processOutcome);
         });
     }
@@ -249,5 +254,10 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
             default:
                 return RecommendedValue.EMPTY;
         }
+    }
+
+
+    private List<AssessmentResource> assessmentsToResource(List<Assessment> filtered) {
+        return simpleMap(filtered, assessment -> assessmentMapper.mapToResource(assessment));
     }
 }
