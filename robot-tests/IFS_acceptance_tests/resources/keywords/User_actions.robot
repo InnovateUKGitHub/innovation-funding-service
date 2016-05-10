@@ -223,6 +223,12 @@ the user can remove the uploaded file
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
 
+
+The element should be disabled
+    [Arguments]    ${ELEMENT}
+    Element Should Be Disabled    ${ELEMENT}
+
+
 the user clicks the link from the appropriate email sender
     Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
     Run keyword if    '${RUNNING_ON_DEV}' != ''    the user opens the mailbox and verifies the official innovate email

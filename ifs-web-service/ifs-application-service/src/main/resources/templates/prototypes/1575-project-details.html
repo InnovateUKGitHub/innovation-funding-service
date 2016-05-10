@@ -32,7 +32,7 @@
 			<tr>
 				<th scope="col" style="width: 45%">Question</th>
 				<th scope="col" style="width: 45%">Answer</th>
-				<th scope="col" style="width: 20%">Complete</th>
+				<th scope="col" style="width: 10%">Complete</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -83,10 +83,10 @@
 	<table>
 		<thead>
 			<tr>
-				<th scope="col" style="width: 30%">Partner</th>
-				<th scope="col" style="width: 30%">Finance contact</th>
-				<th scope="col" style="width: 15%">Turnover</th>
-				<th scope="col" style="width: 15%">Staff headcount</th>
+				<th scope="col" style="width: 45%">Partner</th>
+				<th scope="col" style="width: 45%">Finance contact</th>
+				<!-- <th scope="col" style="width: 15%">Turnover</th>
+				<th scope="col" style="width: 15%">Staff headcount</th> -->
 				<th scope="col" style="width: 10%">Complete</th>
 			</tr>
 		</thead>
@@ -99,12 +99,12 @@
 				<td>
 					<span id="finance-contact">John Smith</span>
 				</td>
-				<td>
+				<!-- <td>
 					<span id="finance-turnover">-</span>
 				</td>
 				<td>
 					<span id="finance-headcount">-</span>
-				</td>
+				</td> -->
 				<td>
 					<span id="finance-contact-status" class="yes">Yes</span>
 				</td>
@@ -117,12 +117,12 @@
 				<td>
 					<span id="finance-partner-contact">-</span>
 				</td>
-				<td>
+				<!-- <td>
 					<span id="finance-partner-turnover">-</span>
 				</td>
 				<td>
 					<span id="finance-partner-headcount">-</span>
-				</td>
+				</td> -->
 				<td>
 					<span id="finance-partner-contact-status" class="no">No</span>
 				</td>
@@ -134,12 +134,12 @@
 				<td>
 					Paula Moore
 				</td>
-				<td>
+				<!-- <td>
 					<span id="finance-turnover">&pound;2,023,092</span>
 				</td>
 				<td>
 					<span id="finance-headcount">76</span>
-				</td>
+				</td> -->
 				<td>
 					<span id="finance-partner2-contact-status">Pending</span>
 				</td>
@@ -242,7 +242,7 @@
 		var financesNamePending = localStorage.getItem('financesNamePending');
 		var financesPartnerNamePending = localStorage.getItem('financesPartnerNamePending');
 
-		if (userType == null && financesTurnover != null){ // LEAD VIEW
+		/*if (userType == null && financesTurnover != null){ // LEAD VIEW
 			localStorage.setItem('financesTurnoverLead', '£'+financesTurnover);
 		}else if(userType == null && financesTurnover == null){
 			localStorage.setItem('financesTurnoverLead', '£1,000,012');
@@ -278,6 +278,8 @@
 			localStorage.setItem('financesHeadcountPartner', '-');
 		}
 		var financesHeadcountPartner = decodeURIComponent(localStorage.getItem('financesHeadcountPartner'));
+
+		*/
 		
 
 		if(startDate == null){
@@ -333,20 +335,22 @@
 			//jQuery('#finance-contact-status').addClass('no');
 			//jQuery('#finance-contact-status').removeClass('yes');
 
-			jQuery('#finance-turnover').text(financesTurnoverLead);
-			jQuery('#finance-headcount').text(financesHeadcountLead);
-			jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-turnover').text(financesTurnoverLead);
+			//jQuery('#finance-headcount').text(financesHeadcountLead);
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
-			jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
 
 		}else if(financesName != null & userType == null){
 
+			//jQuery('#finance-turnover').text(financesTurnoverLead);
+			//jQuery('#finance-headcount').text(financesHeadcountLead);
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+
 			jQuery('#finance-contact').text(financesName.replace(/\+/g,' '));
-			jQuery('#finance-turnover').text(financesTurnoverLead);
-			jQuery('#finance-headcount').text(financesHeadcountLead);
-			jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
-			jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
 
 			if(financesNamePending == null){
 				jQuery('#finance-contact-status').text('Yes');
@@ -360,24 +364,25 @@
 			}
 		}
 
-		if(financesName == null & userType == 'nonLead'){
+		if(financesPartnerName == null & userType == 'nonLead'){
 			jQuery('#finance-partner-contact').text('-');
 			jQuery('#finance-partner-contact-status').text('No');
 			jQuery('#finance-partner-contact-status').addClass('no');
 			jQuery('#finance-partner-contact-status').removeClass('yes');
 
-			jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
 
-		}else if(financesName != null & userType == 'nonLead'){
+		}else if(financesPartnerName != null & userType == 'nonLead'){
 
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
-			jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
-			jQuery('#finance-turnover').text(financesTurnoverLead);
-			jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
-			jQuery('#finance-headcount').text(financesHeadcountLead);
+			
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-turnover').text(financesTurnoverLead);
+			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+			//jQuery('#finance-headcount').text(financesHeadcountLead);
 
 
-			if(financesNamePending == null){
+			if(financesPartnerNamePending == null){
 				jQuery('#finance-partner-contact-status').text('Yes');
 				jQuery('#finance-partner-contact-status').addClass('yes');
 				jQuery('#finance-partner-contact-status').removeClass('no');
