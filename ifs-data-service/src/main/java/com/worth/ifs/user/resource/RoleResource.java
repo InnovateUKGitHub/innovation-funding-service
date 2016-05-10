@@ -1,7 +1,5 @@
 package com.worth.ifs.user.resource;
 
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

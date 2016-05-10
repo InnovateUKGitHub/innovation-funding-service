@@ -20,13 +20,20 @@ public class Assessment extends Process {
         super(processRole);
     }
 
-    public Boolean hasAssessmentStarted() {
-        return getProcessStatus().equals(AssessmentStates.ASSESSED.getState());
+    public Boolean isStarted() {
+        if(getProcessStatus()!=null) {
+            return getProcessStatus().equals(AssessmentStates.ASSESSED.getState());
+        } else {
+            return Boolean.FALSE;
+        }
     }
 
-    @JsonIgnore
     public Boolean isSubmitted() {
-        return getProcessStatus().equals(AssessmentStates.SUBMITTED.getState());
+        if(getProcessStatus()!=null) {
+            return getProcessStatus().equals(AssessmentStates.SUBMITTED.getState());
+        } else {
+            return Boolean.FALSE;
+        }
     }
 
     public ProcessOutcome getLastOutcome() {

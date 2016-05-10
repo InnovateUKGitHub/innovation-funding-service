@@ -266,13 +266,16 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         Invite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+        InviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
+
 
         when(inviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
 
         ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
         assertTrue(organisationInvite.isSuccess());
 
-        List<InviteResource> expectedInvites = singletonList(new InviteResource(invite));
+
+        List<InviteResource> expectedInvites = singletonList(inviteResource);
 
         InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
                 withId(inviteOrganisation.getId()).

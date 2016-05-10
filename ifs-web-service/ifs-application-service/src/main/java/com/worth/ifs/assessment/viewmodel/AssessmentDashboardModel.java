@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.competition.resource.CompetitionResource;
 
@@ -37,10 +37,10 @@ public class AssessmentDashboardModel {
 
     public static class AssessmentWithApplicationAndScore {
         private final ApplicationResource application;
-        private final Assessment assessment;
+        private final AssessmentResource assessment;
         private final Score score;
 
-        public AssessmentWithApplicationAndScore(Assessment assessment, ApplicationResource application, Score score) {
+        public AssessmentWithApplicationAndScore(AssessmentResource assessment, ApplicationResource application, Score score) {
             this.application = application;
             this.assessment = assessment;
             this.score = score;
@@ -50,7 +50,7 @@ public class AssessmentDashboardModel {
             return score;
         }
 
-        public Assessment getAssessment() {
+        public AssessmentResource getAssessment() {
             return assessment;
         }
 

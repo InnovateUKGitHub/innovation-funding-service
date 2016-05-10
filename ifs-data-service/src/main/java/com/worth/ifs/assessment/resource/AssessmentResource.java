@@ -1,7 +1,5 @@
 package com.worth.ifs.assessment.resource;
 
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -18,6 +16,8 @@ public class AssessmentResource {
     private LocalDate endDate;
     protected List<Long> processOutcomes;
     Long processRole;
+    private Boolean submitted;
+    private Boolean started;
 
     public Long getId() {
         return id;
@@ -81,5 +81,21 @@ public class AssessmentResource {
 
     public void setProcessRole(Long processRole) {
         this.processRole = processRole;
+    }
+
+    public Boolean getSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(Boolean submitted) {
+        this.submitted = submitted;
+    }
+
+    public Boolean getStarted() {
+        return started;
+    }
+
+    public void setStarted(Boolean started) {
+        this.started = started;
     }
 }

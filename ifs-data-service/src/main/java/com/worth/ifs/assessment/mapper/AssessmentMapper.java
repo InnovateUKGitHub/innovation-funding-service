@@ -31,13 +31,10 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
 
         @Mappings({
                 @Mapping(target = "processStatus", source = "status"),
-                @Mapping(target = "processEvent", source = "event"),
-                @Mapping(target = "outcomeType", ignore = true)
+                @Mapping(target = "processEvent", source = "event")
         })
         @Override
-        public Assessment mapToDomain(AssessmentResource resource) {
-                return null;
-        }
+        public abstract Assessment mapToDomain(AssessmentResource resource);
 
         public Long mapAssessmentToId(Assessment object) {
                 if (object == null) {

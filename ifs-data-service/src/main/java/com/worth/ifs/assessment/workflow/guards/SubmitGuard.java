@@ -17,6 +17,6 @@ public class SubmitGuard implements Guard<String, String> {
         if(assessment ==null)
             return false;
 
-        return assessment.hasAssessmentStarted() && !assessment.getProcessStatus().equals(AssessmentStates.SUBMITTED);
+        return assessment.isStarted() && !assessment.getProcessStatus().equals(AssessmentStates.SUBMITTED);
     }
 }

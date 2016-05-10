@@ -1,6 +1,7 @@
 package com.worth.ifs.user.mapper;
 
 import com.worth.ifs.application.mapper.ApplicationMapper;
+import com.worth.ifs.application.mapper.ResponseMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -16,7 +17,8 @@ import org.mapstruct.Mappings;
         ApplicationMapper.class,
         RoleMapper.class,
         OrganisationMapper.class,
-        UserMapper.class
+        UserMapper.class,
+        ResponseMapper.class
     }
 )
 public abstract class ProcessRoleMapper extends BaseMapper<ProcessRole, ProcessRoleResource, Long> {

@@ -174,26 +174,30 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
     public void testFindByProcessRole() {
 
         Assessment assessment = newAssessment().build();
-
+        AssessmentResource assessmentResource = newAssessmentResource().build();
         when(assessmentRepositoryMock.findOneByProcessRoleId(123L)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToResource(assessment)).thenReturn(assessmentResource);
 
         ServiceResult<AssessmentResource> result = service.getOneByProcessRole(123L);
+
         assertTrue(result.isSuccess());
-        assertEquals(assessment, result.getSuccessObject());
+        assertEquals(assessmentResource, result.getSuccessObject());
     }
 
     @Test
     public void testFindByCompetitionAndAssessor() {
 
         Assessment assessment = newAssessment().build();
+        AssessmentResource assessmentResource = newAssessmentResource().build();
         Set<String> states = AssessmentStates.getStates();
         states.remove(AssessmentStates.REJECTED.getState());
 
         when(assessmentRepositoryMock.findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(456L, 123L, states)).thenReturn(singletonList(assessment));
+        when(assessmentMapperMock.mapToResource(assessment)).thenReturn(assessmentResource);
 
         ServiceResult<List<AssessmentResource>> result = service.getAllByCompetitionAndAssessor(123L, 456L);
         assertTrue(result.isSuccess());
-        assertEquals(singletonList(assessment), result.getSuccessObject());
+        assertEquals(singletonList(assessmentResource), result.getSuccessObject());
     }
 
     @Test
@@ -260,8 +264,12 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         Application application = newApplication().withCompetition(competition).build();
         ProcessRole processRole = newProcessRole().withApplication(application).build();
         Assessment assessment = newAssessment().withProcessRole(processRole).build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withApplicationId(123L).build();
+        AssessmentResource assessmentResource = newAssessmentResource().withProcessRole(processRoleResource).build();
 
         when(assessmentRepositoryMock.findOneByProcessRoleId(123L)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToDomain(assessmentResource)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToResource(assessment)).thenReturn(assessmentResource);
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
         ServiceResult<Void> result = service.rejectAssessmentInvitation(123L, processOutcome);
@@ -294,12 +302,15 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
         ProcessRole processRole = newProcessRole().withApplication(application).build();
+
         ProcessRoleResource processRoleResource = newProcessRoleResource().with(id(processRole.getId())).withApplicationId(application.getId()).build();
         Assessment assessment = newAssessment().withProcessRole(processRole).build();
-
+        AssessmentResource assessmentResource = newAssessmentResource().withProcessRole(processRoleResource).build();
         when(usersRolesServiceMock.getProcessRoleByUserIdAndApplicationId(123L, 456L)).thenReturn(serviceSuccess(processRoleResource));
 
         when(assessmentRepositoryMock.findOneByProcessRoleId(processRole.getId())).thenReturn(assessment);
+        when(assessmentMapperMock.mapToResource(assessment)).thenReturn(assessmentResource);
+
         ServiceResult<Void> result = service.submitAssessment(123L, 456L, "a suitable value", "suitable feedback", "some comments");
         assertTrue(result.isSuccess());
 

@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.viewmodel;
 import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.builder.*;
 import com.worth.ifs.application.resource.*;
-import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.junit.Ignore;

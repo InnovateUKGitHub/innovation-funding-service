@@ -7,7 +7,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;

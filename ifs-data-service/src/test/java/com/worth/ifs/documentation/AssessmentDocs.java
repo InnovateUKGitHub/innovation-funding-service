@@ -27,6 +27,8 @@ public class AssessmentDocs {
             fieldWithPath("lastModified").description("last modified"),
             fieldWithPath("status").description("current status of the assessment process"),
             fieldWithPath("event").description("currently not used"),
+            fieldWithPath("submitted").description("the assessment is submitted"),
+            fieldWithPath("started").description("the assessment is started"),
             fieldWithPath("processRole").description("process role of the assigned assessor")
     };
 

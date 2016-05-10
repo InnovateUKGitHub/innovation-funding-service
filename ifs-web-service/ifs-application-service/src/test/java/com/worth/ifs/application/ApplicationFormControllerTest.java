@@ -118,7 +118,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("userIsLeadApplicant", true))
-                .andExpect(model().attribute("leadApplicant", processRoles.get(0)))
+                .andExpect(model().attribute("leadApplicant", users.get(0)))
                 .andExpect(model().attribute("currentSectionId", currentSectionId));
 
     }

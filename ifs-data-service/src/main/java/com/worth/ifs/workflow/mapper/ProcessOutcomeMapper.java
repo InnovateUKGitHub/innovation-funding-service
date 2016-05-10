@@ -6,6 +6,8 @@ import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.mapstruct.Mapper;
 import com.worth.ifs.assessment.domain.Assessment;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 
 @Mapper(
@@ -21,4 +23,10 @@ public abstract class ProcessOutcomeMapper  extends BaseMapper<ProcessOutcome, P
         }
         return object.getId();
     }
+
+    @Mappings({
+            @Mapping(target = "process", ignore = true)
+    })
+    @Override
+    public abstract ProcessOutcome mapToDomain(ProcessOutcomeResource resource);
 }

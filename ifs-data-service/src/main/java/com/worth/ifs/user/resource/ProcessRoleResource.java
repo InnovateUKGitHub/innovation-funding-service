@@ -3,8 +3,6 @@ package com.worth.ifs.user.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
 
 public class ProcessRoleResource {
@@ -14,7 +12,7 @@ public class ProcessRoleResource {
     private Long role;
     private String roleName;
     private Long organisation;
-    private List<Response> responses = new ArrayList<>();
+    private List<Long> responses = new ArrayList<>();
 
     public ProcessRoleResource(){
     	// no-arg constructor
@@ -71,11 +69,11 @@ public class ProcessRoleResource {
         this.organisation = organisation;
     }
 
-    public List<Response> getResponses() {
-        return this.responses;
+    public List<Long> getResponses() {
+        return responses;
     }
 
-    public void setResponses(List<Response> responses) {
+    public void setResponses(List<Long> responses) {
         this.responses = responses;
     }
 

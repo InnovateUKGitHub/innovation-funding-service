@@ -1,8 +1,7 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.*;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.RecommendedValue;
+import com.worth.ifs.assessment.resource.RecommendedValue;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
+import static com.worth.ifs.assessment.resource.AssessmentOutcomes.RECOMMEND;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.PairFunctions.leftPair;
 import static com.worth.ifs.util.PairFunctions.presentRightPair;

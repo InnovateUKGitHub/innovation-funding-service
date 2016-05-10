@@ -2,11 +2,9 @@ package com.worth.ifs.assessment;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -81,10 +79,10 @@ public class AssessmentControllerTest extends BaseUnitTest {
     @Ignore
     @Test
     public void testCompetitionAssessmentDashboard() throws Exception {
-        List<AssessmentResource> nonSubmittedAssessments = assessments.stream().filter(a -> !a.isSubmitted()).collect(toList());
+        List<AssessmentResource> nonSubmittedAssessments = assessments.stream().filter(a -> !a.getSubmitted()).collect(toList());
         nonSubmittedAssessments.sort(new AssessmentStatusComparator());
 
-        long noOfAssessmentsStartedAwaitingSubmission = nonSubmittedAssessments.stream().filter(AssessmentResource::hasAssessmentStarted).count();
+        long noOfAssessmentsStartedAwaitingSubmission = nonSubmittedAssessments.stream().filter(AssessmentResource::getStarted).count();
         boolean hasAssesmentsStartedAwaitingSubmission = noOfAssessmentsStartedAwaitingSubmission > 0;
 
         MvcResult mvcResult = mockMvc.perform(get("/assessor/competitions/{competitionId}/applications", competitionResource.getId())).andReturn();
