@@ -29,7 +29,13 @@
 
 			<p class="form-hint">Who will be responsible for project finances in your organisation?</p>
 
-			<p>We will ask this person to provide bank details for your organisation. They will also need to confirm project costs and financial forecasts before the project can begin.</p>
+			<p>We will ask this person to</p>
+
+			<ul class="list-bullet">
+				<li>provide the bank details for your organisation</li>
+				<li>confirm any queries we may have with your project costs</li>
+				<li>review the spend profile of your project costs</li>
+			</ul>
 
 		
 			<div class="form-group extra-margin">			
@@ -51,6 +57,7 @@
 				<label for="add-finance-contact" class="block-label">
 					<input id="add-finance-contact" type="radio" name="finances-name-group" value="Add new team member" />
 					Add new team member
+					<span class="form-hint">A new team member will be invited to join the project</span>
 				</label>
 
 				<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />

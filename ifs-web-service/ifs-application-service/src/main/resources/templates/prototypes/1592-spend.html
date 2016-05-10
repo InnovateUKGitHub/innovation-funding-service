@@ -45,17 +45,17 @@
 		<a href="#">View finances</a>
 	</div>
 
-	<h2 class="heading-medium" th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" >Spend profile</h2>
+	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span> <span th:if="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'edit'}" th:text="${'- ' + param.status[0]}" th:remove="tag">- submitted</span></h2>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<h2 class="heading-medium">Project - Spend profile</h2>
+		<h2 class="heading-medium">Project - Spend profile <span th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">- Submitted</span></h2>
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
 		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs can not be moved across cost categories.
 	</p>
 	
-	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend your project.</p>
+	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 		
