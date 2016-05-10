@@ -25,7 +25,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
-import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMapCollector;
 import static com.worth.ifs.util.PairFunctions.*;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.summingInt;
@@ -107,7 +107,7 @@ public class AssessmentHandler {
                 collect(Collectors.toList());
 
         Map<Question, Optional<Response>> questionsAndResponses =
-                questionsAndResponsePairs.stream().collect(pairsToMap());
+                questionsAndResponsePairs.stream().collect(pairsToMapCollector());
 
         Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
                 map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).

@@ -1,4 +1,4 @@
-package com.worth.ifs.notifications.service;
+package com.worth.ifs.notifications.service.senders;
 
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
