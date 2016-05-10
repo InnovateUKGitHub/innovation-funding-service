@@ -29,7 +29,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     @Test
     public void applicationFundingDecisionControllerShouldReturnAppropriateStatusCode() throws Exception {
         Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.APPLICATION_FUNDED, 2L, FundingDecision.APPLICATION_NOT_FUNDED);
+        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceSuccess());
@@ -44,7 +44,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     @Test
     public void makeFundingDecisionButErrorOccursSendingNotifications() throws Exception {
         Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.APPLICATION_FUNDED, 2L, FundingDecision.APPLICATION_NOT_FUNDED);
+        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceFailure(internalServerErrorError("Unable to send notifications")));

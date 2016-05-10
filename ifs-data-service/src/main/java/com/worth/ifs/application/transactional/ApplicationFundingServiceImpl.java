@@ -24,10 +24,10 @@ import java.util.Map;
 
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.REJECTED;
-import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_FUNDED;
-import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_NOT_FUNDED;
-import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION;
-import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION;
+import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
+import static com.worth.ifs.application.resource.FundingDecision.UNFUNDED;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
@@ -50,8 +50,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	private SystemNotificationSource systemNotificationSource;
 
 	enum Notifications {
-        FUNDED_APPLICATION,
-        UNFUNDED_APPLICATION,
+		APPLICATION_FUNDED,
+		APPLICATION_NOT_FUNDED,
     }
 
 	@Override
@@ -79,8 +79,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 
 		List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
-		List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> APPLICATION_FUNDED.equals(decision.getValue()));
-		List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> APPLICATION_NOT_FUNDED.equals(decision.getValue()));
+		List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
+		List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> UNFUNDED.equals(decision.getValue()));
         List<Long> fundedApplicationIds = simpleMap(fundedApplicationDecisions, Pair::getKey);
         List<Long> unfundedApplicationIds = simpleMap(unfundedApplicationDecisions, Pair::getKey);
 
@@ -92,11 +92,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
         if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
 
-            ServiceResult<Notification> fundedNotification = createFundingDecisionNotification(competitionId, aggregatedFundedTargets.getSuccessObject(), FUNDED_APPLICATION);
+            ServiceResult<Notification> fundedNotification = createFundingDecisionNotification(competitionId, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED);
             ServiceResult<Void> fundedEmailSendResult = fundedNotification.andOnSuccessReturnVoid(
                     notification -> notificationService.sendNotification(notification, EMAIL));
 
-            ServiceResult<Notification> unfundedNotification = createFundingDecisionNotification(competitionId, aggregatedUnfundedTargets.getSuccessObject(), UNFUNDED_APPLICATION);
+            ServiceResult<Notification> unfundedNotification = createFundingDecisionNotification(competitionId, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED);
             ServiceResult<Void> unfundedEmailSendResult = unfundedNotification.andOnSuccessReturnVoid(
                     notification -> notificationService.sendNotification(notification, EMAIL));
 
@@ -140,7 +140,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	}
 
 	private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
-		if(APPLICATION_FUNDED.equals(applicationFundingDecision)) {
+		if(FUNDED.equals(applicationFundingDecision)) {
 			return statusFromConstant(APPROVED);
 		} else {
 			return statusFromConstant(REJECTED);

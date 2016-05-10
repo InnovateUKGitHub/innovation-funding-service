@@ -37,7 +37,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     @Test
     public void makeFundingDecision() throws Exception {
     	Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.APPLICATION_FUNDED, 2L, FundingDecision.APPLICATION_NOT_FUNDED);
+        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceSuccess());

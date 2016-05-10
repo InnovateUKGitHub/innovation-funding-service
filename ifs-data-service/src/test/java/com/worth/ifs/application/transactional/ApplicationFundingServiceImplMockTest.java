@@ -23,10 +23,10 @@ import java.util.Map;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_FUNDED;
-import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_NOT_FUNDED;
-import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION;
-import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION;
+import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
+import static com.worth.ifs.application.resource.FundingDecision.UNFUNDED;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -69,7 +69,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application2 = newApplication().withId(2L).build();
     	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(asList(application1, application2));
     	
-    	Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED);
+    	Map<Long, FundingDecision> decision = asMap(1L, FUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
@@ -85,7 +85,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application2 = newApplication().withId(2L).build();
     	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(asList(application1, application2));
     	
-    	Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED, 2L, APPLICATION_NOT_FUNDED);
+    	Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNFUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
@@ -118,7 +118,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 				withRole(leadApplicantRole, leadApplicantRole, leadApplicantRole).
 				build(3);
 
-		Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED, 2L, APPLICATION_NOT_FUNDED, 3L, APPLICATION_FUNDED);
+		Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNFUNDED, 3L, FUNDED);
 
         UserNotificationTarget fundedApplication1LeadApplicantTarget = new UserNotificationTarget(fundedApplication1LeadApplicant);
         UserNotificationTarget fundedApplication3LeadApplicantTarget = new UserNotificationTarget(fundedApplication3LeadApplicant);
@@ -134,7 +134,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 fundedApplication1LeadApplicantTarget, asMap("applicationName", fundedApplication1.getName()),
                 fundedApplication3LeadApplicantTarget, asMap("applicationName", fundedApplication3.getName()));
 
-		Notification expectedFundedNotification = new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, FUNDED_APPLICATION,
+		Notification expectedFundedNotification = new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, APPLICATION_FUNDED,
                 expectedGlobalNotificationArguments, expectedFundedNotificationTargetSpecificArguments);
 
         UserNotificationTarget unfundedApplication2LeadApplicantTarget = new UserNotificationTarget(unfundedApplication2LeadApplicant);
@@ -143,7 +143,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Map<NotificationTarget, Map<String, Object>> expectedUnfundedNotificationTargetSpecificArguments = asMap(
                 unfundedApplication2LeadApplicantTarget, asMap("applicationName", unfundedApplication2.getName()));
 
-        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, UNFUNDED_APPLICATION,
+        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, APPLICATION_NOT_FUNDED,
                 expectedGlobalNotificationArguments, expectedUnfundedNotificationTargetSpecificArguments);
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
@@ -192,14 +192,14 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 withRole(leadApplicantRole, collaboratorRole, leadApplicantRole, collaboratorRole).
                 build(3);
 
-        Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED, 2L, APPLICATION_NOT_FUNDED);
+        Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNFUNDED);
 
         List<NotificationTarget> expectedFundedLeadApplicants = asList(new UserNotificationTarget(fundedApplication1LeadApplicant));
         Notification expectedFundedNotification =
-                new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, FUNDED_APPLICATION, emptyMap());
+                new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, APPLICATION_FUNDED, emptyMap());
 
         List<NotificationTarget> expectedUnfundedLeadApplicants = singletonList(new UserNotificationTarget(unfundedApplication2LeadApplicant));
-        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, UNFUNDED_APPLICATION, emptyMap());
+        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, APPLICATION_NOT_FUNDED, emptyMap());
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
