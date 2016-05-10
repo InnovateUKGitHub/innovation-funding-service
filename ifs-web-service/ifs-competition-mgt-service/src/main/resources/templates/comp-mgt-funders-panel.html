@@ -52,12 +52,13 @@
         </div>
     </div>
 
-
-    <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-
- 	<div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
+ </form>
  
-     </form>
+    <form method="post" action="#" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
+      <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
+      <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
+    </form>
+    
   </div>
 </div>
 

@@ -29,6 +29,8 @@ import com.worth.ifs.service.ApplicationSummarySortFieldService;
 @RequestMapping("/competition")
 public class CompetitionManagementController {
     
+	private static final int PAGE_SIZE = 20;
+	
     @Autowired
     private CompetitionService competitionService;
 
@@ -71,7 +73,7 @@ public class CompetitionManagementController {
 
 		String sort = applicationSummarySortFieldService.sortFieldForOpenCompetition(queryForm.getSort());
 
-		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, sort, queryForm.getPage() - 1, PAGE_SIZE);
 		model.addAttribute("results", applicationSummary);
 		model.addAttribute("activeSortField", sort);
 		model.addAttribute("activeTab", "allApplications");
@@ -80,12 +82,21 @@ public class CompetitionManagementController {
 	}
 
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
-		populateModelBasedOnSubmittedOrNotSubmittedTab(model, competitionId, queryForm, bindingResult);
+		if("notSubmitted".equals(queryForm.getTab())) {
+			populateNotSubmittedModel(model, competitionId, queryForm);
+		} else {
+			populateSubmittedModel(model, competitionId, queryForm, PAGE_SIZE);
+		}
         return "comp-mgt-in-assessment";
 	}
 	
 	private String fundersPanelCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
-		populateModelBasedOnSubmittedOrNotSubmittedTab(model, competitionId, queryForm, bindingResult);
+		if("notSubmitted".equals(queryForm.getTab())) {
+			populateNotSubmittedModel(model, competitionId, queryForm);
+		} else {
+			queryForm.setPage(1);
+			populateSubmittedModel(model, competitionId, queryForm, Integer.MAX_VALUE);
+		}
 		return "comp-mgt-funders-panel";
 	}
 	
@@ -96,45 +107,37 @@ public class CompetitionManagementController {
 
 	private void populateModelBasedOnAssessorTabState(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
 		if("overview".equals(queryForm.getTab())) {
-			populateOverviewModel(model, competitionId, queryForm, bindingResult);
+			populateOverviewModel(model);
 		} else if("notSubmitted".equals(queryForm.getTab())) {
-			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
+			populateNotSubmittedModel(model, competitionId, queryForm);
 		} else if("submitted".equals(queryForm.getTab())) {
-			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
+			populateSubmittedModel(model, competitionId, queryForm, PAGE_SIZE);
 		} else {
-			populateInProjectSetupModel(model, competitionId, queryForm, bindingResult);
+			populateInProjectSetupModel(model);
 		}
 	}
 
-	private void populateModelBasedOnSubmittedOrNotSubmittedTab(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
-		if("notSubmitted".equals(queryForm.getTab())) {
-			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
-		} else {
-			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
-		}
-	}
-	
-	private void populateNotSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+	private void populateNotSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm) {
 		String sort = applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(queryForm.getSort());
-		ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sort, queryForm.getPage() - 1, PAGE_SIZE);
 		model.addAttribute("results", results);
 		model.addAttribute("activeTab", "notSubmitted");
 		model.addAttribute("activeSortField", sort);
 	}
 
-	private void populateSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+	private void populateSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, Integer pageSize) {
 		String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
-		ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sort, queryForm.getPage() - 1, pageSize);
 		model.addAttribute("results", results);
 		model.addAttribute("activeTab", "submitted");
 		model.addAttribute("activeSortField", sort);
 	}
 	
-	private void populateInProjectSetupModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+	private void populateInProjectSetupModel(Model model) {
 		model.addAttribute("activeTab", "projectsInSetup");
 	}
 
-	private void populateOverviewModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+	private void populateOverviewModel(Model model) {
 		model.addAttribute("activeTab", "overview");
 	}
 
