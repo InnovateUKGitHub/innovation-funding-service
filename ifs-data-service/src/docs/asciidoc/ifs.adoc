@@ -109,6 +109,10 @@ include::application.adoc[]
 == Application Status
 include::application-status.adoc[]
 
+[[applicationfundingdecision]]
+== Application Funding Decision
+include::application-funding-decision.adoc[]
+
 [[assessorfeedback]]
 == AssessorFeedback
 include::assessor-feedback.adoc[]

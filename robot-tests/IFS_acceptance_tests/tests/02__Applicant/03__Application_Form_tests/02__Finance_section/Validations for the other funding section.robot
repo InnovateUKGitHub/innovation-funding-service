@@ -5,7 +5,7 @@ Suite Setup       Run keywords    Guest user log-in    &{lead_applicant_credenti
 ...               AND    Focus    jQuery=button:contains('Add another source of funding')
 ...               AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances
+Force Tags        Finances    Pending
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -23,15 +23,20 @@ When the other funding row is empty mark as complete is impossible
 
 Other funding validations
     [Documentation]    INFUND-2214
-    [Tags]    Pending
+    [Tags]
     [Setup]    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    # Pending due to INFUND-2688
-    When the user enters invalid inputs in the other funding fields
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
     And the user clicks marks as complete the finance section
-    #Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    Funding source cannot be blank
+    And the user should see an error    Please use MM-YYYY format
     And the user should see an error    This field should be 0 or higher
     And the user should see the element    css=.error-summary-list
-    #add an extra validation for the date field
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    ${EMPTY}    ${EMPTY}
+    Then the user should see an error    Funding source cannot be blank
+    And the user should see an error    This field cannot be left blank
+    And the user should see an error    This field should be a number
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    12-2017    012345678910111213141516171819202122
+    Then the user should see an error    You must enter a value less than 20 digits
 
 When the selection is NO the user should be able to mark as complete
     [Documentation]    INFUND-2214
@@ -52,6 +57,9 @@ the user clicks marks as complete the finance section
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
 
 the user enters invalid inputs in the other funding fields
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -6565
+    [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
+    Mouse out    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
+    Focus    jQuery=button:contains("Mark all as complete")

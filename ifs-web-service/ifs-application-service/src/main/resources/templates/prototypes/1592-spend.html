@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
-	<p>The Profile Spend enables the entry of planned project costs for section of the proposed project. The profile spend should not be developed in isolation, but developed collaboratively with the project partners. Your profile spend has been developed from the information provided in the initial application and finalised with Innovate UK during your finance check.</p>
+	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have now been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
 
 	<dl class="standard-definition-list">
 		<dt>Project start date</dt>
@@ -42,7 +42,7 @@
 
 
 	<div class="extra-margin" th:unless="${param.task != null and param.task[0] == 'reviewProject'}">
-		<a href="#">Review finances</a>
+		<a href="#">View finances</a>
 	</div>
 
 	<h2 class="heading-medium" th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" >Spend profile</h2>
@@ -51,9 +51,11 @@
 		<h2 class="heading-medium">Project - Spend profile</h2>
 	</div>
 
-	<p th:unless="${param.task != null and param.task[0] == 'reviewProject'}">This is the project cost taken form funding grant that has been approved by Innovate UK. Initially set as a flat profile spend, for review. This profile spend can edited to suit the project requirements and timeline</p>
+	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
+		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs can not be moved across cost categories.
+	</p>
 	
-	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for the Technology Inspired Project.</p>
+	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 		
@@ -286,17 +288,14 @@
 	<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
 		<div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit#table-forecast')}" class="button button-secondary">Edit spend profile</a>
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit')}" class="button button-secondary">Edit spend profile</a>
 		</div>
 
 		<div class="extra-margin" th:unless="${param.user == null}">
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 		</div>
 
-		<p class="extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with their project plan before they are submitted to Innovate UK.</p>
-
-		<p>Depending on review by the lead or by Innovate UK the profile spend submitted may need to be modified. If you are requested to modify costs dased on review by Innovate UK you will also be supplied with feedback.</p>
-
+		<p class="extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with the project plan before they are submitted to Innovate UK.</p>
 
 		<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
@@ -326,7 +325,7 @@
 	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:remove="tag">
 			
 			<div class="extra-margin">
-				<a href="#" class="button button-large" data-js-modal="modal-complete">Complete</a>
+				<a href="#" class="button button-large" data-js-modal="modal-complete">Submit</a>
 			</div>
 
 			<div class="modal-complete" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -362,7 +361,7 @@
 	</div>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-		<p>If required you can allow edits to be made to this profile spend. this will return access enabling them to make the changes required.  It will not be possible to submit the profile spend until it is resubmitted.</p>
+		<p>If required you can allow your partner to edit this profile. It will not be possible to submit the project profile spend until the partner resubmits their profile.</p>
 
 		<div class="extra-margin">
 			<a href="#" class="button button-large" data-js-modal="modal-allow-edits">Allow edits</a>
@@ -389,7 +388,6 @@
 
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<p>The Project profile spend is submitted to both InnovateUK and to the Monitoring officer assigned to this Project, it will be kept for review and reference..</p>
 
 		<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'Submitted'}">
 			<a href="#" class="button button-large" data-js-modal="modal-submit-spend">Submit project spend profile</a>

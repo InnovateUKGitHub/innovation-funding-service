@@ -27,16 +27,18 @@
         </div>
 
         <div th:remove="tag" th:case="'IN_ASSESSMENT'">
-          <div th:include="fragments/competition-management :: competition-mgt-menu-assesment(id=${competitionId})" th:remove="tag" />
+          <div th:include="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" th:remove="tag" />
+        </div>
+        <div th:remove="tag" th:case="'FUNDERS_PANEL'">
+        	<div th:include="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" th:remove="tag" />
         </div>
         <!--/* future
-        <div th:remove="tag" th:case="'FUNDERS_PANEL'"></div>
         <div th:remove="tag" th:case="'PROJECT_SETUP'"></div>
         */-->
     </div>
 </div>
 
-<div th:fragment="competition-mgt-menu-assesment(id)" th:remove="tag">
+<div th:fragment="competition-mgt-menu-assessment(id)" th:remove="tag">
   <ul class="inline-nav extra-margin">
     <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=submitted'}">Applications submitted</a></li>
     <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=notSubmitted'}">Applications not submitted</a></li>
@@ -91,8 +93,11 @@
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
-          <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.xls)</a>
-          <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+          <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
+          <a href="#" id="publish-funding-decision" class="button disabled" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+
+          <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+          <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
       </div>
 
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
@@ -111,5 +116,95 @@
         &nbsp; <!--/* don't remove is for mainting layout when the info box is sticky/fixed */-->
     </div>
 
+</div>
+
+<!-- Applications table -->
+<div th:fragment="applications-table(competition,results)" th:remove="tag">
+   <table th:if="${competition.competitionStatus.name() == 'OPEN'}">
+     <thead>
+       <tr>
+         <th scope="col">Application no</th>
+         <th scope="col">Project title</th>
+         <th scope="col">Lead</th>
+         <th scope="col">Status</th>
+         <th scope="col">Percentage complete</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr th:each="result : ${results.content}">
+         <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}" th:text="${result.getFormattedId()}" /></td>
+         <td th:text="${result.name}"></td>
+         <td th:text="${result.lead}"></td>
+         <td th:text="${result.status}"></td>
+         <td th:text="${result.completedPercentage}"></td>
+       </tr>
+     </tbody>
+   </table>
+
+   <div th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL'}" th:remove="tag">
+	    <table th:if="${activeTab == 'submitted'}">
+	       <thead>
+	         <tr>
+	           <th scope="col">Application no</th>
+	           <th scope="col">Project title</th>
+	           <th scope="col">Lead</th>
+	           <th scope="col">No. of partners</th>
+	           <th scope="col">Grant requested (£)</th>
+	           <th scope="col">Total project cost (£)</th>
+	           <th scope="col">Duration (months)</th>
+	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Fund project?</th>
+	         </tr>
+	       </thead>
+	       <tbody>
+	         <tr th:each="result : ${results.content}">
+	           <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+	           <td th:text="${result.name}"></td>
+	           <td th:text="${result.lead}"></td>
+	           <td th:text="${result.numberOfPartners}"></td>
+	           <td th:text="${result.grantRequested}"></td>
+	           <td th:text="${result.totalProjectCost}"></td>
+	           <td th:text="${result.duration}"></td>
+	           <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
+	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" name="fund">
+           			<option value="-">-</option>
+           			<option value="Y">Yes</option>
+           			<option value="N">No</option>
+           		  </select>
+	           </td>
+	         </tr>
+	       </tbody>
+	     </table>
+
+	     <table th:if="${activeTab == 'notSubmitted'}">
+	       <thead>
+	         <tr>
+	           <th scope="col">Application no</th>
+	           <th scope="col">Project title</th>
+	           <th scope="col">Lead</th>
+	           <th scope="col">Percentage complete</th>
+	         </tr>
+	       </thead>
+	       <tbody>
+	         <tr th:each="result : ${results.content}">
+	           <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+	           <td th:text="${result.name}"></td>
+	           <td th:text="${result.lead}"></td>
+	           <td th:text="${result.completedPercentage}"></td>
+	         </tr>
+	       </tbody>
+	     </table>
+     </div>
+
+</div>
+
+<!-- Applications pagination -->
+<div th:fragment="applications-pagination(results)" th:remove="tag">
+	<div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
+      <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
+      <div class="status">
+        Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
+      </div>
+      <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
+    </div>
 </div>
 </html>
