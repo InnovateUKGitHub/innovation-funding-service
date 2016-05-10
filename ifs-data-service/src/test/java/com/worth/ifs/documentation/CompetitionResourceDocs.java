@@ -3,7 +3,6 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.google.common.primitives.Longs.asList;
@@ -20,6 +19,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
             fieldWithPath("assessmentStartDate").description("date on which the assessments start"),
             fieldWithPath("assessmentEndDate").description("date on which all the assessments should be finished"),
+            fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
             fieldWithPath("maxResearchRatio").description("maximum ratio of research participation"),
             fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics")
@@ -34,6 +34,7 @@ public class CompetitionResourceDocs {
             .withEndDate(LocalDateTime.now().plusDays(30))
             .withAssessmentStartDate(LocalDateTime.now().plusDays(32))
             .withAssessmentEndDate(LocalDateTime.now().plusDays(44))
+            .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100);
 }

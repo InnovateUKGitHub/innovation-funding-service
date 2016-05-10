@@ -7,8 +7,8 @@ import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.service.NotificationSender;
 import com.worth.ifs.notifications.service.NotificationTemplateRenderer;
+import com.worth.ifs.notifications.service.senders.NotificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,15 +62,18 @@ public class EmailNotificationSender implements NotificationSender {
     }
 
     private ServiceResult<String> getSubject(Notification notification, NotificationTarget recipient) {
-        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "subject") + ".txt", notification.getArguments());
+        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "subject") + ".txt",
+                notification.getTemplateArgumentsForRecipient(recipient));
     }
 
     private ServiceResult<String> getPlainTextBody(Notification notification, NotificationTarget recipient) {
-        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_plain") + ".txt", notification.getArguments());
+        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_plain") + ".txt",
+                notification.getTemplateArgumentsForRecipient(recipient));
     }
 
     private ServiceResult<String> getHtmlBody(Notification notification, NotificationTarget recipient) {
-        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_html") + ".html", notification.getArguments());
+        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_html") + ".html",
+                notification.getTemplateArgumentsForRecipient(recipient));
     }
 
     private String getTemplatePath(Notification notification, String suffix) {
