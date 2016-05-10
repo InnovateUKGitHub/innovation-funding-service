@@ -66,7 +66,7 @@
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h3 class="heading-medium">
-                            	<a th:href="@{/application/{id}(id=${application.getId()})}" th:text="${application.name}" />
+                            	<a th:href="@{/application/{id}(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})" />
                             </h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
                         </div>
