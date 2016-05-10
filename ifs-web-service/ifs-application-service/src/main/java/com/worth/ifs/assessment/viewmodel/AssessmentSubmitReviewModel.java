@@ -66,7 +66,7 @@ public class AssessmentSubmitReviewModel {
                 collect(toList());
 
         Map<QuestionResource, Optional<ResponseResource>> questionsAndResponses =
-                questionsAndResponsePairs.stream().collect(pairsToMap());
+                questionsAndResponsePairs.stream().collect(pairsToMapCollector());
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));

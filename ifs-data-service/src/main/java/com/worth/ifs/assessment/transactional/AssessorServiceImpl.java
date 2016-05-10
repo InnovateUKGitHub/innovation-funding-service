@@ -36,7 +36,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
-import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMapCollector;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.PairFunctions.*;
@@ -165,7 +165,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 collect(Collectors.toList());
 
         Map<Question, Optional<Response>> questionsAndResponses =
-                questionsAndResponsePairs.stream().collect(pairsToMap());
+                questionsAndResponsePairs.stream().collect(pairsToMapCollector());
 
         Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
                 map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessorProcessRole))).

@@ -6,6 +6,6 @@ import com.worth.ifs.security.NotSecured;
 
 public interface AddressService {
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<AddressResource> findOne(Long id);
 }

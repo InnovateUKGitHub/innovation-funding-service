@@ -19,9 +19,11 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" th:remove="tag" />
 
-	<p th:unless="${param.status != null and param.status[0] == 'review'}">Bank account details that have been submitted and accepted by Innovate UK for use during the project <strong>Machine learning in robots</strong></p>
+	<p th:unless="${param.status != null and param.status[0] == 'review'}">
+		Your organisation's details have been verified and will be used for grant claims for this project.
+	</p>
 
-	<p th:unless="${param.status == null or param.status[0] != 'review'}">Bank account details below are under review by Innovate UK, if any clarification is required then contact will be made via your designated finance contact.</p>
+	<p th:unless="${param.status == null or param.status[0] != 'review'}">Bank account details below are now being reviewed. We will contact you if we need any further information.</p>
 
 	<p>This bank account belongs to</p>
 

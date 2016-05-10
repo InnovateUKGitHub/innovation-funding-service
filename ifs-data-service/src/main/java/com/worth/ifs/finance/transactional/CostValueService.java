@@ -7,6 +7,6 @@ import com.worth.ifs.security.NotSecured;
 
 public interface CostValueService {
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CostValueResource> findOne(CostValueId id);
 }

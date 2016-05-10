@@ -4,7 +4,7 @@ IFS.formValidation = (function(){
     return {
         settings : {
             number : {
-                fields : '[type="number"]',
+                fields : '[type="number"]:not([data-date])',
                 messageInvalid : 'This field should be a number'
             },
             min : {
@@ -37,27 +37,30 @@ IFS.formValidation = (function(){
             },
             email : {
                 fields : '[type="email"]',
-                messageInvalid : 'Please enter a valid email address'
+                messageInvalid : "Please enter a valid email address"
             },
             required : {
                 fields: '[required]',
-                messageInvalid : 'This field cannot be left blank'
+                messageInvalid : "This field cannot be left blank"
             },
             minlength : {
                 fields : '[minlength]',
-                messageInvalid : 'This field should contain at least %minlength% characters'
+                messageInvalid : "This field should contain at least %minlength% characters"
             },
             maxlength : {
                 fields : '[maxlength]',
-                messageInvalid : 'This field cannot contain more than %maxlength% characters'
+                messageInvalid : "This field cannot contain more than %maxlength% characters"
             },
             date : {
                 fields : '.date-group input',
-                messageInvalid : 'Please enter a valid date'
+                messageInvalid : {
+                    invalid : "Please enter a valid date",
+                    future : "Please enter a future date"
+                }
             },
             tel : {
                 fields : '[type="tel"]',
-                messageInvalid : 'Please enter a valid phone number'
+                messageInvalid : "Please enter a valid phone number"
             },
             typeTimeout : 1500
         },
@@ -107,6 +110,7 @@ IFS.formValidation = (function(){
                     return false;
                 }
             }
+            return false;
         },
         checkPasswordPolicy : function(field,showMessage){
             var password = field.val();
@@ -173,45 +177,95 @@ IFS.formValidation = (function(){
             }
         },
         checkNumber : function(field,showMessage){
-            //https://api.jquery.com/jQuery.isNumeric/
-             if(!jQuery.isNumeric(field.val())){
-              if(showMessage) { IFS.formValidation.setInvalid(field,s.number.messageInvalid);}
-              return false;
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'number');
+            //In modern browsers the number field doesn't allow text input
+            //When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
+            //An empty string is returned as true therefore
+            //http://stackoverflow.com/questions/18852244/how-to-get-the-raw-value-an-input-type-number-field
+            var html5validationMode =  IFS.formValidation.checkHTML5validationMode(field);
+            if(html5validationMode){
+                var domField = field[0];
+                if(domField.validity.valid === false && domField.validity.badInput === true){
+                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage); }
+                  return false;
+                }
+                else {
+                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage); }
+                  return true;
+                }
             }
-            else{
-              if(showMessage) { IFS.formValidation.setValid(field,s.number.messageInvalid);}
-              return true;
+            else {
+              //old browser mode
+              //https://api.jquery.com/jQuery.isNumeric for what this checks
+              if((field.val() > 0) && !jQuery.isNumeric(field.val())){
+                if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage); }
+                return false;
+              }
+              else{
+                if(showMessage) { IFS.formValidation.setValid(field,errorMessage); }
+                return true;
+              }
             }
         },
         checkMax : function(field,showMessage){
-            var max = parseInt(field.attr('max'),10);
             var errorMessage = IFS.formValidation.getErrorMessage(field,'max');
+            var html5validationMode =  IFS.formValidation.checkHTML5validationMode(field);
 
-            if(IFS.formValidation.checkNumber(field,true)){
-              var fieldVal = parseInt(field.val(),10);
-              if(fieldVal > max){
-                if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
-                return false;
-              }
-              else {
-                if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
-                return true;
+            if(html5validationMode){
+               //html5 validation api
+               var domField = field[0];
+               if(domField.validity.rangeOverflow === true){
+                 if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                 return false;
+               }
+               else {
+                 if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                 return true;
+               }
+            }
+            else {
+              //classic mode
+              var max = parseInt(field.attr('max'),10);
+              if(IFS.formValidation.checkNumber(field,true)){
+                var fieldVal = parseInt(field.val(),10);
+                if(fieldVal > max){
+                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                  return false;
+                }
+                else {
+                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                  return true;
+                }
               }
             }
         },
         checkMin : function(field,showMessage){
-            var min = parseInt(field.attr('min'),10);
             var errorMessage = IFS.formValidation.getErrorMessage(field,'min');
+            var html5validationMode =  IFS.formValidation.checkHTML5validationMode(field);
 
-            if(IFS.formValidation.checkNumber(field)){
-              var fieldVal = parseInt(field.val(),10);
-              if(fieldVal < min){
+            if(html5validationMode){
+              var domField = field[0];
+              if(domField.validity.rangeUnderflow === true){
                 if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
                 return false;
               }
               else {
                 if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
                 return true;
+              }
+            }
+            else {
+              var min = parseInt(field.attr('min'),10);
+              if(IFS.formValidation.checkNumber(field)){
+                var fieldVal = parseInt(field.val(),10);
+                if(fieldVal < min){
+                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                  return false;
+                }
+                else {
+                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                  return true;
+                }
               }
             }
         },
@@ -251,16 +305,16 @@ IFS.formValidation = (function(){
             }
         },
         checkMaxLength : function(field,showMessage){
-          var errorMessage = IFS.formValidation.getErrorMessage(field,'maxlength');
-          var maxlength = parseInt(field.attr('maxlength'),10);
-          if(field.val().length > maxlength){
-            if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
-            return false;
-          }
-          else {
-            if(showMessage) {IFS.formValidation.setValid(field,errorMessage);}
-            return true;
-          }
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'maxlength');
+            var maxlength = parseInt(field.attr('maxlength'),10);
+            if(field.val().length > maxlength){
+              if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+              return false;
+            }
+            else {
+              if(showMessage) {IFS.formValidation.setValid(field,errorMessage);}
+              return true;
+            }
         },
         checkTel : function(field,showMessage){
             var tel = field.val();
@@ -278,30 +332,53 @@ IFS.formValidation = (function(){
             }
         },
         checkDate : function(field,showMessage){
-          var errorMessage = IFS.formValidation.getErrorMessage(field,'date');
           var dateGroup = field.closest('.date-group');
+          field.addClass('js-visited');
+
           var d = dateGroup.find('.day input');
           var m = dateGroup.find('.month input');
           var y = dateGroup.find('.year input');
 
-          if(IFS.formValidation.checkNumber(d,false) && IFS.formValidation.checkNumber(m,false) && IFS.formValidation.checkNumber(y,false)){
+          var allFields = d.add(m).add(y);
+          var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'));
+          var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0));
+          var validNumbers = IFS.formValidation.checkNumber(d,false) && IFS.formValidation.checkNumber(m,false) && IFS.formValidation.checkNumber(y,false);
+
+          if(validNumbers && filledOut){
             var month = parseInt(m.val(),10);
             var day = parseInt(d.val(),10);
             var year = parseInt(y.val(),10);
-
             var date = new Date(year,month-1,day); //parse as date to check if it is a valid date
+
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
-                if(showMessage){ IFS.formValidation.setValid(d.add(m).add(y),errorMessage); }
-                d.add(m).add(y).removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
+                if(showMessage){ IFS.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
+                allFields.removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
+
+                if(dateGroup.hasClass("js-future-date")){
+                  var now = new Date();
+                  if(now < date){
+                    if(showMessage){ IFS.formValidation.setValid(allFields,s.date.messageInvalid.future); }
+                    return true;
+                  }
+                  else {
+                    if(showMessage){ IFS.formValidation.setInvalid(allFields,s.date.messageInvalid.future); }
+                    return false;
+                  }
+                }
                 return true;
             } else {
-                if(showMessage){ IFS.formValidation.setInvalid(d.add(m).add(y),errorMessage); }
-                d.add(m).add(y).addClass('js-autosave-disabled').attr('data-date','');
+                if(showMessage){ IFS.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                allFields.addClass('js-autosave-disabled').attr('data-date','');
                 return false;
             }
           }
+          else if (filledOut || fieldsVisited){
+                if(showMessage){ IFS.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                allFields.addClass('js-autosave-disabled').attr('data-date','');
+                return false;
+          }
           else {
-              return false;
+            return false;
           }
         },
         getErrorMessage : function(field,type){
@@ -354,6 +431,14 @@ IFS.formValidation = (function(){
               jQuery('.error-summary').attr('aria-hidden',true);
             }
             jQuery(window).trigger('updateWysiwygPosition');
+        },
+        checkHTML5validationMode : function(field){
+            if(field[0].validity){
+              return true;
+            }
+            else {
+              return false;
+            }
         }
     };
 })();

@@ -58,6 +58,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((assessmentEndDate, object) -> setField("assessmentEndDate", assessmentEndDate, object), assessmentEndDates);
     }
 
+    public CompetitionResourceBuilder withAssessorFeedbackDate(LocalDateTime... assessorFeedbackDate) {
+        return withArray((date, object) -> object.setAssessorFeedbackDate(date), assessorFeedbackDate);
+    }
+
     public CompetitionResourceBuilder withMaxResearchRatio(Integer... maxResearchRatios) {
         return withArray((maxResearchRatio, object) -> setField("maxResearchRatio", maxResearchRatio, object), maxResearchRatios);
     }

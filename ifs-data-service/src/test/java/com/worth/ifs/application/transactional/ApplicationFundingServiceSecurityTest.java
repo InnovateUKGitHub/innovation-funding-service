@@ -85,5 +85,9 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			return null;
 		}
 
+		@Override
+		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+			return null;
+		}
 	}
 }

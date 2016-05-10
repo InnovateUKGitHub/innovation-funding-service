@@ -21,6 +21,7 @@ import com.worth.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -73,6 +74,10 @@ public abstract class BaseTransactionalService  {
 
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
         return find(processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+    }
+
+    protected ServiceResult<List<ProcessRole>> getProcessRoles(Long applicationId, UserRoleType roleType) {
+        return getRole(roleType).andOnSuccess(role -> find(processRoleRepository.findByApplicationIdAndRoleId(applicationId, role.getId()), notFoundError(ProcessRole.class, applicationId, role.getId())));
     }
 
     protected Supplier<ServiceResult<Section>> section(final Long id) {
