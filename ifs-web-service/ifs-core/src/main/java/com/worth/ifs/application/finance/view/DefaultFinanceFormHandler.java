@@ -236,12 +236,11 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         List<Error> errors = new ArrayList<>();
         ArrayList<Object> args = new ArrayList<Object>();
         args.add(e.getMessage());
-        if(e.getClass().equals(IntegerNumberFormatException.class)){
+        if(IntegerNumberFormatException.class.equals(e.getClass()) || BigDecimalNumberFormatException.class.equals(e.getClass())){
             errors.add(new Error("", messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
-        }else if(e.getClass().equals(BigDecimalNumberFormatException.class)){
-            errors.add(new Error("", messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
+        }else{
+            errors.add(new Error("", messageSource.getMessage("field.value.not.valid", args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
         }
-        errors.add(new Error("", messageSource.getMessage("field.value.not.valid", args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
         validationMessages.setErrors(errors);
         return validationMessages;
     }
