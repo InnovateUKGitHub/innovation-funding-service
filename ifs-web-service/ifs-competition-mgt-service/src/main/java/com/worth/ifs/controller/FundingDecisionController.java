@@ -115,7 +115,7 @@ public class FundingDecisionController {
 		if ("Y".equals(val[0])) {
 			decision = FundingDecision.FUNDED;
 		} else {
-			decision = FundingDecision.NOT_FUNDED;
+			decision = FundingDecision.UNFUNDED;
 		}
 		return decision;
 	}

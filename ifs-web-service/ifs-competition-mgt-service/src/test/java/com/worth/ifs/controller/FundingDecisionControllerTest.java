@@ -117,7 +117,7 @@ public class FundingDecisionControllerTest {
     	verifyNoMoreInteractions(cookieFlashMessageFilter);
     	
     	Map<Long, FundingDecision> expectedDecisions = MapFunctions.asMap(8L, FundingDecision.FUNDED,
-														    			9L, FundingDecision.NOT_FUNDED,
+														    			9L, FundingDecision.UNFUNDED,
 														    			10L, FundingDecision.FUNDED);
     	verify(applicationFundingDecisionService).makeApplicationFundingDecision(eq(123L), eq(expectedDecisions));
     }
@@ -139,7 +139,7 @@ public class FundingDecisionControllerTest {
     	verifyNoMoreInteractions(cookieFlashMessageFilter);
     	
     	Map<Long, FundingDecision> expectedDecisions = MapFunctions.asMap(8L, FundingDecision.FUNDED,
-														    			9L, FundingDecision.NOT_FUNDED,
+														    			9L, FundingDecision.UNFUNDED,
 														    			10L, FundingDecision.FUNDED);
     	verify(applicationFundingDecisionService).makeApplicationFundingDecision(eq(123L), eq(expectedDecisions));
     }
@@ -179,7 +179,7 @@ public class FundingDecisionControllerTest {
     public void fundingDecision() throws Exception {
     	
     	Map<Long, FundingDecision> expectedDecisions = MapFunctions.asMap(8L, FundingDecision.FUNDED,
-														    			9L, FundingDecision.NOT_FUNDED,
+														    			9L, FundingDecision.UNFUNDED,
 														    			10L, FundingDecision.FUNDED);
     	
     	mockMvc.perform(
