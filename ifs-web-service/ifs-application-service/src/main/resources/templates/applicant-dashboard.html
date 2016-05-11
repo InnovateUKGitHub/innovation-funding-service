@@ -20,6 +20,27 @@
     <div class="my-applications">
         <h1 class="heading-large">Your dashboard</h1>
 
+		<section th:if="${!projectsInSetup.isEmpty()}" class="projects-in-setup">
+            <h2 class="heading-medium">Projects in setup</h2>
+              <ul class="boxed-list">
+                <li th:each="application : ${projectsInSetup}">
+                    <div class="grid-row">
+                        <div class="column-assessment-details">
+							<h3 class="heading-medium">
+                                <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
+                            </h3>
+                            <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
+                        </div>
+                        <div class="column-assessment-status navigation-right">
+                             <div class="project-in-setup">
+                                Project in setup
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+           
         <section class="in-progress">
             <h2 class="heading-medium">Application in progress</h2>
             <ul class="boxed-list">
