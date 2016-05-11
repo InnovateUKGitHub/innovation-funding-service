@@ -35,9 +35,9 @@ public class ApplicationSummaryServiceImplTest {
 	@Test
 	public void testFindByCompetitionId() {
 		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-		when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), 0, "sort")).thenReturn(restSuccess(resource));
+		when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), "sort", 0, 20)).thenReturn(restSuccess(resource));
 		
-		ApplicationSummaryPageResource result = service.findByCompetitionId(Long.valueOf(123L), 0, "sort");
+		ApplicationSummaryPageResource result = service.findByCompetitionId(Long.valueOf(123L), "sort", 0, 20);
 		
 		assertEquals(resource, result);
 	}
@@ -45,9 +45,9 @@ public class ApplicationSummaryServiceImplTest {
 	@Test
 	public void testFindSubmittedByCompetitionId() {
 		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-		when(applicationSummaryRestService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort")).thenReturn(restSuccess(resource));
+		when(applicationSummaryRestService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20)).thenReturn(restSuccess(resource));
 		
-		ApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort");
+		ApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20);
 		
 		assertEquals(resource, result);
 	}
@@ -55,9 +55,9 @@ public class ApplicationSummaryServiceImplTest {
 	@Test
 	public void testFindNotSubmittedByCompetitionId() {
 		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-		when(applicationSummaryRestService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort")).thenReturn(restSuccess(resource));
+		when(applicationSummaryRestService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20)).thenReturn(restSuccess(resource));
 		
-		ApplicationSummaryPageResource result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort");
+		ApplicationSummaryPageResource result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20);
 		
 		assertEquals(resource, result);
 	}

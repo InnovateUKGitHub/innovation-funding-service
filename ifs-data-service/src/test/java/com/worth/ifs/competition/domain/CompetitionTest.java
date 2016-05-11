@@ -86,10 +86,28 @@ public class CompetitionTest {
     }
     
     @Test
-    public void competitionStatusFundersPanel(){
-        competition.setEndDate(LocalDateTime.now().minusDays(3));
-        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(2));
-        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(1));
+    public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent(){
+        competition.setEndDate(LocalDateTime.now().minusDays(4));
+        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
+        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
         assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+    }
+    
+    @Test
+    public void competitionStatusFundersPanelAsFundersPanelEndDatePresentButInFuture(){
+        competition.setEndDate(LocalDateTime.now().minusDays(4));
+        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
+        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
+        competition.setFundersPanelEndDate(LocalDateTime.now().plusDays(1));
+        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+    }
+    
+    @Test
+    public void competitionStatusAssessorFeedback(){
+        competition.setEndDate(LocalDateTime.now().minusDays(4));
+        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
+        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
+        competition.setFundersPanelEndDate(LocalDateTime.now().minusDays(1));
+        assertEquals(CompetitionResource.Status.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
 }

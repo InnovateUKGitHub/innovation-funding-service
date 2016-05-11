@@ -12,7 +12,9 @@ IFS.competition_management = (function(){
           container : '.competition-data form',
           breakpoint : 1200, //px
           fundingDecisionSelects: '.funding-decision',
-          submitFundingDecisionButton: '#publish-funding-decision'
+          submitFundingDecisionButton: '#publish-funding-decision',
+          noJsSubmitFundingDecisionButton: '#no-js-notify-applicants',
+          fundingDecisionForm: '#submit-funding-decision-form'
         },
         init: function(){
             s = this.settings;
@@ -21,6 +23,9 @@ IFS.competition_management = (function(){
             IFS.competition_management.getContainerHeight();
 
             IFS.competition_management.handleFundingDecisionSelectChange();
+            IFS.competition_management.handleFundingDecisionButtons();
+            IFS.competition_management.alterSubmitDecisionFormAction();
+
             jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
 
             if(IFS.competition_management.stickyEnabled()){
@@ -91,6 +96,12 @@ IFS.competition_management = (function(){
             s.menu.removeClass('sticky bottom').removeAttr('style');
           }
         },
+        handleFundingDecisionButtons: function(){
+        	var button = jQuery(s.submitFundingDecisionButton);
+        	var noJsButton = jQuery(s.noJsSubmitFundingDecisionButton);
+        	noJsButton.hide();
+        	button.show();
+        },
         disableFundingDecisonButton : function(){
             var button = jQuery(s.submitFundingDecisionButton);
             var modal = button.attr('data-js-modal');
@@ -102,6 +113,11 @@ IFS.competition_management = (function(){
              var button = jQuery(s.submitFundingDecisionButton);
              var modal = button.attr('data-js-modal-disabled');
              button.off('click').removeAttr('data-js-modal-disabled aria-disabled').attr('data-js-modal',modal).removeClass('disabled');
+         },
+         alterSubmitDecisionFormAction: function(){
+        	 var form = jQuery(s.fundingDecisionForm);
+        	 var action = form.attr('action');
+        	 form.attr('action', action + 'submit');
          },
          allSelectsDecided: function() {
         	 var selects = jQuery(s.fundingDecisionSelects);
