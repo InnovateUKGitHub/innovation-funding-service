@@ -20,6 +20,9 @@ import com.worth.ifs.application.service.ApplicationFundingDecisionService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 
+/**
+ * This controller gets the decision to fund or not fund the applications for a given competition.
+ */
 @Controller
 public class FundingDecisionController {
 	

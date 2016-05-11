@@ -6,9 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Arrays;
@@ -18,13 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
@@ -34,13 +28,14 @@ import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.util.MapFunctions;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FundingDecisionControllerTest {
+public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<FundingDecisionController> {
 
 	public static final Long COMPETITION_ID = Long.valueOf(123L);
     
-    @InjectMocks
-	private FundingDecisionController controller;
+	@Override
+	protected FundingDecisionController supplyControllerUnderTest() {
+		return new FundingDecisionController();
+	}
 	
     @Mock
     private ApplicationFundingDecisionService applicationFundingDecisionService;
@@ -51,11 +46,8 @@ public class FundingDecisionControllerTest {
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     
-    private MockMvc mockMvc;
-    
     @Before
     public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         
         ApplicationSummaryPageResource applicationSummaries = new ApplicationSummaryPageResource();
         ApplicationSummaryResource app8 = app(8L);
@@ -197,4 +189,6 @@ public class FundingDecisionControllerTest {
     	verifyNoMoreInteractions(cookieFlashMessageFilter);
     	verifyNoMoreInteractions(applicationFundingDecisionService);
     }
+
+
 }

@@ -99,11 +99,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 				FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
 				ApplicationStatus status = statusFromDecision(applicationFundingDecision);
 				app.setApplicationStatus(status);
-				applicationRepository.save(app);
 			});
 
 			competition.setFundersPanelEndDate(LocalDateTime.now());
-			competitionRepository.save(competition);
 			
 			return serviceSuccess();
 		});

@@ -10,6 +10,7 @@ import static com.worth.ifs.application.transactional.ApplicationFundingServiceI
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_WRONG_STATUS;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -93,7 +94,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
     	assertTrue(result.isFailure());
-    	assertEquals("competition not in correct status", result.getFailure().getErrors().get(0).getErrorMessage());
+    	assertTrue(result.getFailure().is(FUNDING_PANEL_DECISION_WRONG_STATUS));
     	verifyNoMoreInteractions(applicationRepositoryMock);
     }
     
@@ -151,8 +152,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	
     	assertTrue(result.isSuccess());
     	verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId());
-    	verify(applicationRepositoryMock).save(application1);
-    	verify(applicationRepositoryMock).save(application2);
     	assertEquals(approvedStatus, application1.getApplicationStatus());
     	assertEquals(rejectedStatus, application2.getApplicationStatus());
     	assertNotNull(competition.getFundersPanelEndDate());
