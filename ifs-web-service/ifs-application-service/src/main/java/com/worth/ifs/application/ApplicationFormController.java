@@ -236,6 +236,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 model.addAttribute("currentUser", user);
                 addUserDetails(model, application, user.getId());
+                addNavigation(question, applicationId, model);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -567,6 +568,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             SectionResource section = sectionService.getById(sectionId);
             addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
             addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
+            addNavigation(section, applicationId, model);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);

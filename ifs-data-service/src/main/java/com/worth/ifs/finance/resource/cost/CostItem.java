@@ -24,8 +24,8 @@ import java.math.BigDecimal;
 })
 public interface CostItem {
     int MAX_DIGITS = 20;
-    int MAX_STRING_LENGTH = 240;
-    int MAX_DB_STRING_LENGTH = 255;
+    int MAX_STRING_LENGTH = 255; // when to show the validation message and when to disable mark as complete
+    int MAX_DB_STRING_LENGTH = 255; // max string length to send to the db.
     String MAXLENGTH_MESSAGE = "{org.hibernate.validator.constraints.MaxLength.message}";
 
     public Long getId();
