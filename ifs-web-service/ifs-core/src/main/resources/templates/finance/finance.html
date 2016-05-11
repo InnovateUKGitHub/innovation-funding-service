@@ -175,6 +175,8 @@
                        th:readonly="${complete == 'complete'}"
                        th:value="${#numbers.formatDecimal(cost.grossAnnualSalary,0,0)}"
                        min="1"
+                       max="9999999999999999999"
+                       data-max-errormessage="You must enter a value less than 20 digits"
                         />
             </td>
             <td class="numeric">
@@ -205,6 +207,8 @@
                        th:value="${cost.labourDays}"
                        required="required"
                        min="1"
+                       max="999999999"
+                       data-max-errormessage="You must enter a value less than 10 digits"
                         />
             </td>
             <td rowspan="2" class="rowspan" th:unless="${complete == 'complete'}">
@@ -450,7 +454,10 @@
                        th:value="${cost.getQuantity()}"
                        th:readonly="${complete == 'complete'}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'field-error' : ''"
-                       min="1"/>
+                       min="1"
+                       max="999999999"
+                       data-max-errormessage="You must enter a value less than 10 digits"
+                       />
             </td>
             <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''">
                 <label th:for="${'cost-materials-'+cost.id+'-cost'}">
@@ -464,7 +471,9 @@
                        th:value="${#numbers.formatDecimal(cost.getCost(),0,0)}"
                        th:readonly="${complete == 'complete'}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
-                       min="1" />
+                       min="1"
+                       max="9999999999999999999"
+                       data-max-errormessage="You must enter a value less than 20 digits" />
             </td>
             <td>
               <label th:for="${'cost-materials-'+cost.id+'-materialTotal'}">
@@ -565,6 +574,8 @@
                         th:value="${cost.deprecation}"
                         th:readonly="${complete == 'complete'}"
                         min="1"
+                        max="999999999"
+                        data-max-errormessage="You must enter a value less than 10 digits"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-deprecation]}')} ? 'field-error' : ''"
                          />
             </div>
@@ -582,7 +593,9 @@
                         th:value="${#numbers.formatDecimal(cost.npv,0,0)}"
                         th:readonly="${complete == 'complete'}"
                         min="1"
-                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-npv]}')} ? 'field-error' : ''" />
+                        max="9999999999999999999"
+                        data-max-errormessage="You must enter a value less than 20 digits"
+                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-npv]}')} ? 'field-error' : ''" />
 
             </div>
 
