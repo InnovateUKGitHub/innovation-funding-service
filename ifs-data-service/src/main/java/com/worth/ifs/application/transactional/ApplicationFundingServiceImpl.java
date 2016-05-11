@@ -1,28 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
-import com.worth.ifs.notifications.resource.UserNotificationTarget;
-import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.util.EntityLookupCallbacks;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.REJECTED;
 import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
@@ -32,12 +9,46 @@ import static com.worth.ifs.application.transactional.ApplicationFundingServiceI
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_WRONG_STATUS;
+import static com.worth.ifs.commons.service.ServiceResult.aggregate;
+import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
 import static java.util.Arrays.asList;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.resource.UserNotificationTarget;
+import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.util.EntityLookupCallbacks;
 
 @Service
 class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
@@ -59,16 +70,24 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 		APPLICATION_NOT_FUNDED,
     }
 
+    private static final Log LOG = LogFactory.getLog(ApplicationFundingServiceImpl.class);
+
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 
 		return getCompetition(competitionId).andOnSuccess(competition -> {
 
 			if (competition.getAssessorFeedbackDate() == null) {
+				LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competitionId);
 				return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
 			}
+			
+			if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
+				LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competitionId);
+				return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
+			}
 
-			List<Application> applicationsForCompetition = competition.getApplications();
+			List<Application> applicationsForCompetition = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
 
 			boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()));
 
@@ -80,11 +99,13 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 				FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
 				ApplicationStatus status = statusFromDecision(applicationFundingDecision);
 				app.setApplicationStatus(status);
-				applicationRepository.save(app);
 			});
 
+			competition.setFundersPanelEndDate(LocalDateTime.now());
+			
 			return serviceSuccess();
 		});
+		
 	}
 
 	@Override
