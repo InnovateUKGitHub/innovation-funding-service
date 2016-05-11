@@ -18,14 +18,10 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" th:remove="tag" />
-	
-	<p>Please supply the following details about your project and the team. We need these to carry out financial checks before the project begins.</p>
 
 	<h2 class="heading-medium">Project details</h2>
 
-	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">You are providing these details as the lead applicant on behalf of the overall project.</p>
-
-	<p th:unless="${param.user == null}">The lead partner will provide these details on behalf of the project..</p>
+	<p>These project details were supplied by the lead partner on behalf of the project.</p>
 
 	<table>
 		<thead>
@@ -63,9 +59,7 @@
 		</tbody>
 	</table>
 
-	<h2 class="heading-medium">Finance contacts</h2>
-
-	<p>Each partner must provide a finance contact who will be sent any queries from us around project finances.</p>
+	<h2 class="heading-medium">Partner finance contacts</h2>
 
 	<table>
 		<thead>
@@ -79,7 +73,7 @@
 		<tbody>
 			<tr>
 				<td>
-					Aptrans Ltd
+					Aptrans Ltd (Lead)
 				</td>
 				<td>
 					<span id="finance-contact">John Smith</span>
@@ -122,7 +116,6 @@
 		</tbody>
 	</table>
 
-	<p class="extra-margin">Any new team members invited at this stage must join the project before this section can be marked as complete.</p>
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

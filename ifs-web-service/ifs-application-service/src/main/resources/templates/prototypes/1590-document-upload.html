@@ -22,18 +22,22 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Other documents'})" th:remove="tag" />
 
-	<p>As the lead partner in this collaboration you must supply the additional documents to support your grant.</p>
-	
-	<p>These documents are:</p>
+	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
-	<ul class="list-bullet">
-		<li>Collaboration agreement</li>
-		<li>Exploitation plan</li>
-	</ul>
-	
-	<p>These documents must be discussed and agreed with the other members of your collaboration, and when uploaded will become available for them to view.</p>
+		<p>As the lead partner in this project you must supply the additional documents to support your grant application.</p>
+		
+		<p>These documents are:</p>
 
-	<p>Further details on what is required from these documents is available below.</p>
+		<ul class="list-bullet">
+			<li>the collaboration agreement</li>
+			<li>the exploitation plan</li>
+		</ul>
+		
+		<p>These documents must be discussed and agreed with the other partners in your project.</p>
+
+		<p>Further details on what is required from these documents is available below.</p>
+
+	</div>
 
 	<form action="#">
 
@@ -44,8 +48,6 @@
 			<div class="upload-section">
 				
 				<h2 class="heading-medium no-margin">Collaboration agreement</h2>
-
-				<p class="form-hint">Further details on what is required from these documents is available below.</p>
 
 				<details>
 				    <summary><span class="summary">What should I include in the collaboration agreement?</span></summary>
@@ -148,7 +150,7 @@
 
 		<div th:if="${param.user == null and param.status == null}">
 
-			<p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will be in contact.</p>
+			<p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
 
 			<button class="button button-large">Submit documents</button>
 
