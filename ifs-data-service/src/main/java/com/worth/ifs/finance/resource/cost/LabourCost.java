@@ -21,7 +21,7 @@ public class LabourCost implements CostItem {
 
     private String name;
 
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     @NotBlank(groups = Default.class)
     private String role;
 

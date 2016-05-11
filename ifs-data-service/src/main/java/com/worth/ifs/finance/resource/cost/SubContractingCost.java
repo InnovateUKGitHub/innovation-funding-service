@@ -19,15 +19,15 @@ public class SubContractingCost implements CostItem {
     private BigDecimal cost;
 
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String country;
 
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
     public SubContractingCost(){

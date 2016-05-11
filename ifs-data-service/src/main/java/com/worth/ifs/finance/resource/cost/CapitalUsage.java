@@ -19,12 +19,12 @@ public class CapitalUsage implements CostItem {
     Integer deprecation;
     @NotBlank
     @NotNull
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String description;
 
     @NotBlank
     @NotNull
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String existing;
 
     @NotNull

@@ -12,7 +12,7 @@ public class OtherCost implements CostItem {
     private Long id;
 
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String description;
 
     @NotNull

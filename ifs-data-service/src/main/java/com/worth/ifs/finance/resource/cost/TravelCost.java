@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class TravelCost implements CostItem {
     private Long id;
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
     @NotNull
     @DecimalMin(value = "1")
