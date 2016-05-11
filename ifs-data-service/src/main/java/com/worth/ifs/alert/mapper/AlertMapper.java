@@ -6,6 +6,9 @@ import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import org.mapstruct.Mapper;
 
+/**
+ * Maps between domain and resource DTO for {@link Alert}.
+ */
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {}

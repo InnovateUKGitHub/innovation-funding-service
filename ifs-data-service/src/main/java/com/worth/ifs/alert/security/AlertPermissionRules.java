@@ -15,11 +15,6 @@ import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 @PermissionRules
 public class AlertPermissionRules {
 
-    @PermissionRule(value = "READ", description = "Anyone can view Alerts")
-    public boolean anyoneCanViewAlerts(final AlertResource alertResource, final UserResource user) {
-        return true;
-    }
-
     @PermissionRule(value = "CREATE", description = "Competitions Admin can create Alerts")
     public boolean competitionsAdminCanCreateAlerts(final AlertResource alertResource, final UserResource user) {
         return isCompAdmin(user);

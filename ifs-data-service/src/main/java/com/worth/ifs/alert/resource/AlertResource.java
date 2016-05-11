@@ -1,6 +1,8 @@
 package com.worth.ifs.alert.resource;
 
 import com.worth.ifs.alert.domain.AlertType;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -72,26 +74,28 @@ public class AlertResource {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         AlertResource that = (AlertResource) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        if (type != that.type) return false;
-        if (validFromDate != null ? !validFromDate.equals(that.validFromDate) : that.validFromDate != null)
-            return false;
-        return validToDate != null ? validToDate.equals(that.validToDate) : that.validToDate == null;
-
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(message, that.message)
+                .append(type, that.type)
+                .append(validFromDate, that.validFromDate)
+                .append(validToDate, that.validToDate)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (validFromDate != null ? validFromDate.hashCode() : 0);
-        result = 31 * result + (validToDate != null ? validToDate.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(message)
+                .append(type)
+                .append(validFromDate)
+                .append(validToDate)
+                .toHashCode();
     }
 }

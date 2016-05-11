@@ -8,7 +8,6 @@ import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +38,6 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    @Rollback
     public void test_findAllVisible() throws Exception {
         // save new alerts with date ranges that should make them visible now
         final LocalDateTime now = LocalDateTime.now().minusMinutes(1);
@@ -68,7 +66,6 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    @Rollback
     public void test_findAllVisibleByType() throws Exception {
         // save new alerts with date ranges that should make them visible now
         final LocalDateTime now = LocalDateTime.now().minusMinutes(1);
@@ -109,7 +106,6 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    @Rollback
     public void test_create() throws Exception {
         setLoggedInUser(compAdminUser);
 
@@ -128,7 +124,6 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    @Rollback
     public void test_delete() throws Exception {
         setLoggedInUser(compAdminUser);
 
@@ -149,7 +144,6 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    @Rollback
     public void test_deleteAllByType() throws Exception {
         setLoggedInUser(compAdminUser);
 

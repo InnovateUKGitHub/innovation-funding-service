@@ -3,6 +3,7 @@ package com.worth.ifs.alert.transactional;
 import com.worth.ifs.alert.domain.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,14 +15,14 @@ import java.util.List;
  */
 public interface AlertService {
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @NotSecured(value="Anyone can view alerts", mustBeSecuredByOtherServices = false)
     ServiceResult<List<AlertResource>> findAllVisible();
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<AlertResource>> findAllVisibleByType(@P("type") final AlertType type);
+    @NotSecured(value="Anyone can view alerts", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<AlertResource>> findAllVisibleByType(final AlertType type);
 
-    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.alert.resource.AlertResource', 'READ')")
-    ServiceResult<AlertResource> findById(@P("id") final Long id);
+    @NotSecured(value="Anyone can view an alert", mustBeSecuredByOtherServices = false)
+    ServiceResult<AlertResource> findById(final Long id);
 
     @PreAuthorize("hasPermission(#alertResource, 'CREATE')")
     ServiceResult<AlertResource> create(@P("alertResource") final AlertResource alertResource);

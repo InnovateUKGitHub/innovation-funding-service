@@ -22,8 +22,6 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
     private AlertPermissionRules alertPermissionRules;
     private AlertLookupStrategy alertLookupStrategy;
 
-    private static final int ARRAY_SIZE_FOR_TESTS = 2;
-
     @Override
     protected Class<? extends AlertService> getServiceClass() {
         return TestAlertService.class;
@@ -33,31 +31,6 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
     public void setUp() throws Exception {
         alertPermissionRules = getMockPermissionRulesBean(AlertPermissionRules.class);
         alertLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AlertLookupStrategy.class);
-    }
-
-    @Test
-    public void test_findAllVisible() throws Exception {
-        service.findAllVisible();
-        verify(alertPermissionRules, times(ARRAY_SIZE_FOR_TESTS)).anyoneCanViewAlerts(isA(AlertResource.class), isA(UserResource.class));
-    }
-
-    @Test
-    public void test_findAllVisibleByType() throws Exception {
-        service.findAllVisibleByType(MAINTENANCE);
-        verify(alertPermissionRules, times(ARRAY_SIZE_FOR_TESTS)).anyoneCanViewAlerts(isA(AlertResource.class), isA(UserResource.class));
-    }
-
-    @Test
-    public void test_findById() throws Exception {
-        when(alertLookupStrategy.getAlertResource(9999L)).thenReturn(newAlertResource()
-                .withId(9999L)
-                .build());
-
-        assertAccessDenied(
-                () -> service.findById(9999L),
-                () -> {
-                    verify(alertPermissionRules).anyoneCanViewAlerts(isA(AlertResource.class), isA(UserResource.class));
-                });
     }
 
     @Test
@@ -87,12 +60,12 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
     public static class TestAlertService implements AlertService {
         @Override
         public ServiceResult<List<AlertResource>> findAllVisible() {
-            return serviceSuccess(newAlertResource().build(ARRAY_SIZE_FOR_TESTS));
+            return null;
         }
 
         @Override
         public ServiceResult<List<AlertResource>> findAllVisibleByType(final AlertType type) {
-            return serviceSuccess(newAlertResource().build(ARRAY_SIZE_FOR_TESTS));
+            return null;
         }
 
         @Override

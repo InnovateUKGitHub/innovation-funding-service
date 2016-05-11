@@ -1,5 +1,7 @@
 package com.worth.ifs.alert.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -85,26 +87,28 @@ public class Alert {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         Alert alert = (Alert) o;
 
-        if (id != null ? !id.equals(alert.id) : alert.id != null) return false;
-        if (message != null ? !message.equals(alert.message) : alert.message != null) return false;
-        if (type != alert.type) return false;
-        if (validFromDate != null ? !validFromDate.equals(alert.validFromDate) : alert.validFromDate != null)
-            return false;
-        return validToDate != null ? validToDate.equals(alert.validToDate) : alert.validToDate == null;
-
+        return new EqualsBuilder()
+                .append(id, alert.id)
+                .append(message, alert.message)
+                .append(type, alert.type)
+                .append(validFromDate, alert.validFromDate)
+                .append(validToDate, alert.validToDate)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (validFromDate != null ? validFromDate.hashCode() : 0);
-        result = 31 * result + (validToDate != null ? validToDate.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(message)
+                .append(type)
+                .append(validFromDate)
+                .append(validToDate)
+                .toHashCode();
     }
 }

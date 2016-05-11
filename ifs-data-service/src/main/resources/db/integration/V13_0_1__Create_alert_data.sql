@@ -16,21 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `alert`
+-- Dumping data for table `alert`
 --
 
-DROP TABLE IF EXISTS `alert`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `alert` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `message` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `valid_from_date` datetime NOT NULL,
-  `valid_to_date` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `alert` WRITE;
+/*!40000 ALTER TABLE `alert` DISABLE KEYS */;
+INSERT  IGNORE INTO `alert` (`id`, `message`, `type`, `valid_from_date`, `valid_to_date`) VALUES (1,'Sample message','MAINTENANCE','2016-05-06 21:00:00','2016-05-06 21:05:00'),(2,'Sample message 2','MAINTENANCE','2016-05-09 15:00:00','2016-05-09 15:05:00');
+/*!40000 ALTER TABLE `alert` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -41,4 +34,4 @@ CREATE TABLE `alert` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-09  0:23:27
+-- Dump completed on 2016-05-11 11:21:09

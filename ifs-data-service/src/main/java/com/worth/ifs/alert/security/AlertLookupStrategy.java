@@ -8,6 +8,9 @@ import com.worth.ifs.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Lookup strategy for {@link AlertResource}, used for permissioning.
+ */
 @Component
 @PermissionEntityLookupStrategies
 public class AlertLookupStrategy {
