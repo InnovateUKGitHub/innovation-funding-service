@@ -1,8 +1,8 @@
 package com.worth.ifs.dashboard;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,9 +76,7 @@ public class ApplicantController {
     }
 
     private List<ApplicationResource> projectsInSetup(List<ApplicationResource> finished) {
-		return finished.stream()
-				.filter(a -> ApplicationStatusConstants.APPROVED.getId().equals(a.getApplicationStatus()))
-				.collect(Collectors.toList());
+		return simpleFilter(finished, a -> ApplicationStatusConstants.APPROVED.getId().equals(a.getApplicationStatus()));
 	}
 
 	/**
