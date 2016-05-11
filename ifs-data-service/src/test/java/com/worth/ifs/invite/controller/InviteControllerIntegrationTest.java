@@ -112,8 +112,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
         String testEmail = "jessica.doe@ludlow.co.uk";
         String testName = "Jessica Istesting";
 
-        assertEquals(1, inviteRepository.findByApplicationId(APPLICATION_ID).size());
-        assertEquals(1, controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size());
+        int inviteSize = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size();
 
         RestResult<Set<InviteOrganisationResource>> invitesResult = this.controller.getInvitesByApplication(APPLICATION_ID);
         Assert.isTrue(invitesResult.isSuccess());
@@ -126,33 +125,29 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
         RestResult<InviteResultsResource> inviteResults = controller.saveInvites(newInvites);
         Assert.isTrue(inviteResults.isSuccess());
 
-        // Check if the invite is created.
-        assertEquals(2, inviteRepository.findByApplicationId(APPLICATION_ID).size());
-        assertEquals(2, controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size());
+        // Needed because test is run in one transaction
+        flushAndClearSession();
 
+        // Check if the invite is created and we have a hash
+        assertEquals(inviteSize + 1, controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size());
 
-//        Invite inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
-//        assertNotNull(inviteCreated.getHash());
-//
-//        loginSystemRegistrationUser();
-//
-//        RestResult<Void> resultSet = controller.acceptInvite(inviteCreated.getHash(), user.getId());
-//        Assert.isTrue(resultSet.isSuccess());
-//        assertEquals(2, inviteRepository.findByApplicationId(APPLICATION_ID).size());
-//        assertEquals(2, controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size());
-//
-//        swapOutForUser(userResource);
-//
-//        invitesResult = controller.getInvitesByApplication(APPLICATION_ID);
-//        Assert.isTrue(invitesResult.isSuccess());
-//        Set<InviteOrganisationResource> invitesOrganisations = invitesResult.getSuccessObject();
-//        invitesOrganisations.iterator();
-//
-//        inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
-//        assertEquals(InviteStatusConstants.ACCEPTED, inviteCreated.getStatus());
+        Invite inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
+        assertNotNull(inviteCreated.getHash());
 
+        // Accept the invite with for the user
+        loginSystemRegistrationUser();
+        RestResult<Void> resultSet = controller.acceptInvite(inviteCreated.getHash(), user.getId());
+        Assert.isTrue(resultSet.isSuccess());
+        swapOutForUser(userResource);
 
-        //check nameconfirmed
+        // Check if invite is accepted
+        inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
+        assertEquals(InviteStatusConstants.ACCEPTED, inviteCreated.getStatus());
+
+        // Check nameConfirmed is name of the userAccount
+        invitesResult = controller.getInvitesByApplication(APPLICATION_ID);
+        Assert.isTrue(invitesResult.isSuccess());
+        assertEquals(user.getName(), getMatchingInviteResource(invitesResult, testEmail).getNameConfirmed());
     }
 
     private List<InviteResource> createInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userName, String userMail, long applicationId) {
@@ -169,18 +164,33 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
     }
 
     private Invite getCreatedInvite(String userEmail, long applicationId) {
-        Invite inviteFound = null;
+        Invite inviteMatching = null;
 
         List<Invite> invites = inviteRepository.findByApplicationId(applicationId);
         invites.get(0).getHash();
-        for (Invite invite:invites) {
-            if(invite.getEmail() == userEmail) {
-                inviteFound = invite;
+        for (Invite invite : invites) {
+            if(invite.getEmail().equals(userEmail)) {
+                inviteMatching = invite;
                 break;
             }
         }
 
-        return inviteFound;
+        return inviteMatching;
+    }
+
+
+    private InviteResource getMatchingInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userEmail) {
+        Set<InviteOrganisationResource> invitesOrganisations = invitesResult.getSuccessObject();
+        List<InviteResource> inviteResources = invitesOrganisations.iterator().next().getInviteResources();
+        InviteResource inviteResourceMatiching = null;
+
+        for (InviteResource inviteResource : inviteResources) {
+            if(inviteResource.getEmail().equals(userEmail)) {
+                inviteResourceMatiching = inviteResource;
+            }
+        }
+
+        return inviteResourceMatiching;
     }
 
     @After
