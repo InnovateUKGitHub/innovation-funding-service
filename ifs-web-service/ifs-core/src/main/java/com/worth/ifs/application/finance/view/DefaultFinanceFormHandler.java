@@ -208,6 +208,11 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
      */
     private List<Either<CostItem, ValidationMessages>> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType) {
         List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
+
+        if(costFieldMap.size() == 0) {
+            return costItems;
+        }
+
         CostHandler costHandler = getCostItemHandler(costType);
 
         // create new cost items
