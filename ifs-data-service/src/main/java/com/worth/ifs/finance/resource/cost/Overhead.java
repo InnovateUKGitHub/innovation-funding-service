@@ -5,6 +5,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 
 /**
@@ -12,10 +13,15 @@ import java.math.BigDecimal;
  *
  */
 public class Overhead implements CostItem {
+    public interface RateNotZero{}
     private Long id;
     @Enumerated(EnumType.STRING)
     private OverheadRateType rateType;
-    @Min(0)
+
+    @Min.List({
+        @Min(value = 0, groups = Default.class),
+        @Min(value = 1, groups = RateNotZero.class)
+    })
     @Max(100)
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer rate;

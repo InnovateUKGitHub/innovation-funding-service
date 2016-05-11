@@ -36,7 +36,7 @@ public class CapitalUsageHandler extends CostHandler {
                 case "npv":
                     npv = getBigDecimalValue(costFormValue, 0d);
                     break;
-                case "residual_value":
+                case "residualValue":
                     residualValue = getBigDecimalValue(costFormValue, 0d);
                     break;
                 case "utilisation":

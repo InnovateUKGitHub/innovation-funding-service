@@ -21,14 +21,17 @@ public class CapitalUsage implements CostItem {
     @NotNull
     @Length(max = MAX_STRING_LENGTH)
     String description;
+
     @NotBlank
     @NotNull
     @Length(max = MAX_STRING_LENGTH)
     String existing;
+
     @NotNull
     @DecimalMin(value = "1")
     @Digits(integer = MAX_DIGITS, fraction = 0)
     BigDecimal npv;
+
     @NotNull
     @DecimalMin(value = "1")
     @Digits(integer = MAX_DIGITS, fraction = 0)
