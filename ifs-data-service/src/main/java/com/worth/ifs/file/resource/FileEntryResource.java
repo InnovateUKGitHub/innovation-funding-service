@@ -1,6 +1,5 @@
 package com.worth.ifs.file.resource;
 
-import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.MediaType;
@@ -29,10 +28,6 @@ public class FileEntryResource {
 
     public FileEntryResource(Long id, String name, MediaType mediaType, long filesizeBytes) {
         this(id, name, mediaType.toString(), filesizeBytes);
-    }
-
-    public FileEntryResource(Long id, FileHeaderAttributes fileAttributes) {
-        this(id, fileAttributes.getFilename(), fileAttributes.getMediaType(), fileAttributes.getContentLength());
     }
 
     public Long getId() {

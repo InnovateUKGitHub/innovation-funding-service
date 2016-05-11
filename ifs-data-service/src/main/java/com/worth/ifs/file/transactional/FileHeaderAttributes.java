@@ -1,5 +1,6 @@
 package com.worth.ifs.file.transactional;
 
+import com.worth.ifs.file.resource.FileEntryResource;
 import org.springframework.http.MediaType;
 
 /**
@@ -27,5 +28,9 @@ public class FileHeaderAttributes {
 
     public String getFilename() {
         return filename;
+    }
+
+    public FileEntryResource toFileEntryResource() {
+        return new FileEntryResource(null, filename, mediaType, contentLength);
     }
 }

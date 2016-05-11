@@ -133,8 +133,8 @@ public class ApplicationFinanceController {
             HttpServletRequest request) {
 
         ServiceResult<FileEntryResource> fileAddedResult =
-                fileValidator.validateFileHeaders(contentLength, contentType, originalFilename).andOnSuccess(fileAttributes ->
-                fileService.createFile(new FileEntryResource(null, fileAttributes), inputStreamSupplier(request)).
+                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
+                fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier(request)).
                 andOnSuccessReturn(result -> mapper.mapToResource(result.getValue())));
 
         fileAddedResult.andOnSuccess(file -> {

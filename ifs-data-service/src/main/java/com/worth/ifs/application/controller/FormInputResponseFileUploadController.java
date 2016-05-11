@@ -175,7 +175,7 @@ public class FormInputResponseFileUploadController {
     }
 
     private FormInputResponseFileEntryResource createFormInputResponseFileEntry(FileHeaderAttributes fileAttributes, long formInputId, long applicationId, long processRoleId) {
-        FileEntryResource fileEntry = new FileEntryResource(null, fileAttributes);
+        FileEntryResource fileEntry = fileAttributes.toFileEntryResource();
         return new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
     }
 
