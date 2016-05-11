@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -444,18 +445,20 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
-        if(bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0){
-            bindingResult.getFieldErrors(k)
-                    .stream()
-                    .filter(fieldError -> !fieldError.getDefaultMessage().equals(e))
-                        .forEach(fieldError -> {
-                            String defaultMessage = messageSource.getMessage(e, null, Locale.getDefault());
-                            if(defaultMessage == null){
-                                defaultMessage = e;
-                            }
-                            bindingResult.rejectValue(k, e, defaultMessage);
-                        });
-        }else{
+        if (bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0) {
+            bindingResult.getFieldErrors(k).iterator().forEachRemaining(fieldError -> {
+                String defaultMessage = null;
+                try {
+                    defaultMessage = messageSource.getMessage(e, null, Locale.UK);
+                } catch (NoSuchMessageException e1) {
+                    defaultMessage = e;
+                }
+                // if the current field error equals the one we want to add... then don't.
+                if (!fieldError.getDefaultMessage().equals(defaultMessage)) {
+                    bindingResult.rejectValue(k, e, defaultMessage);
+                }
+            });
+        } else {
             bindingResult.rejectValue(k, e, e);
         }
     }
@@ -788,9 +791,12 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
             }else{
+                String[] fieldNameParts = fieldName.split("-");
+                // fieldname = other_costs-description-34-219
                 errors = validationMessages.getErrors()
                         .stream()
-                        .filter(e -> fieldName.toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
+                        //.peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getErrorKey().toLowerCase())))
+                        .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
                         .map(e -> e.getErrorMessage())
                         .collect(Collectors.toList());
             }
