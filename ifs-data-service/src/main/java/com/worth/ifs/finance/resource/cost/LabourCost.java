@@ -20,7 +20,7 @@ public class LabourCost implements CostItem {
 
     private String name;
 
-    @Length(max = MAX_STRING_LENGTH)
+    @Length(max = MAX_STRING_LENGTH, message = "{org.hibernate.validator.constraints.MaxLength.message}")
     @NotBlank(groups = Default.class)
     private String role;
 
