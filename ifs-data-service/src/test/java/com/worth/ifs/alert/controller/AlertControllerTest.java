@@ -22,6 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -130,8 +131,8 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)))
                 .andDo(document("alert/create",
-                        pathParameters(
-                        ),responseFields(alertResourceFields))
+                        requestFields(alertResourceFields),
+                        responseFields(alertResourceFields))
                 );
     }
 

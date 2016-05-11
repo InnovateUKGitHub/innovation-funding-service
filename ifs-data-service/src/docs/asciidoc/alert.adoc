@@ -37,7 +37,7 @@ include::{snippets}/alert/find-by-id/curl-request.adoc[]
 === Create an alert
 ==== Request
 include::{snippets}/alert/create/http-request.adoc[]
-include::{snippets}/alert/create/path-parameters.adoc[]
+include::{snippets}/alert/create/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/alert/create/http-response.adoc[]
