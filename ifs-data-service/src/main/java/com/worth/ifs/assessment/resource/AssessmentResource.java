@@ -9,12 +9,12 @@ import java.util.List;
 
 public class AssessmentResource {
     private Long id;
-    protected String event;
-    protected String status;
+    private String event;
+    private String status;
     private Calendar lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
-    protected List<Long> processOutcomes;
+    private List<Long> processOutcomes;
     Long processRole;
     private Boolean submitted;
     private Boolean started;
