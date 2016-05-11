@@ -31,7 +31,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -418,20 +417,20 @@ public class ApplicationFormController extends AbstractApplicationController {
             SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
             List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request, response, errors);
 
-            if(financeErrorsMark != null && !financeErrorsMark.isEmpty()){
+            if (financeErrorsMark != null && !financeErrorsMark.isEmpty()) {
                 bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
-                financeErrorsMark.forEach((validationMessage) ->
+                financeErrorsMark.forEach((validationMessage) -> {
                     validationMessage.getErrors().parallelStream()
-                    .filter(e -> StringUtils.hasText(e.getErrorMessage()))
-                    .forEach(e -> {
-                        LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
-                        if(StringUtils.hasText(e.getErrorKey())){
-                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage());
-                        }else {
-                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage());
-                        }
-                        })
-                );
+                        .filter(Objects::nonNull)
+                        .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                        .forEach(e -> {
+                            if (StringUtils.hasText(e.getErrorKey())) {
+                                addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
+                            } else {
+                                addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage());
+                            }
+                        });
+                });
             }
         }
 
@@ -447,19 +446,12 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
         if (bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0) {
-            bindingResult.getFieldErrors(k).iterator().forEachRemaining(fieldError -> {
-                String defaultMessage = null;
-                try {
-                    defaultMessage = messageSource.getMessage(e, null, Locale.UK);
-                } catch (NoSuchMessageException e1) {
-                    defaultMessage = e;
-                }
-                // if the current field error equals the one we want to add... then don't.
-                if (!fieldError.getDefaultMessage().equals(defaultMessage)) {
-                    bindingResult.rejectValue(k, e, defaultMessage);
-                }
-            });
+            boolean foundMessage = bindingResult.getFieldErrors(k).stream().anyMatch(fieldError -> fieldError.getDefaultMessage().equals(e));
+            if(!foundMessage){
+                bindingResult.rejectValue(k, e, e);
+            }
         } else {
+            LOG.debug(String.format("add reject value 2 %s => %s ", k, e));
             bindingResult.rejectValue(k, e, e);
         }
     }

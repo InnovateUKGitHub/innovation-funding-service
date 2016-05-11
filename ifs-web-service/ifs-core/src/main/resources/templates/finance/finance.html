@@ -324,7 +324,7 @@
                                th:name="${'overheads-customRate-' + question.id + '-'+overheadCosts?.id}"
                                th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}"
                                data-calculation-input="overhead-rate"
-                               min="0"
+                               min="1"
                                max="100"
                                class="form-control form-control-1-4 alignright"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'field-error' : ''"

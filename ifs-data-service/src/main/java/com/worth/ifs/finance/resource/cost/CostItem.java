@@ -33,5 +33,8 @@ public interface CostItem {
     public CostType getCostType();
     public String getName();
     public boolean isEmpty();
+    public default boolean excludeInRowCount(){
+        return isEmpty();
+    }
     public int getMinRows();
 }
