@@ -95,7 +95,9 @@
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
           <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
           <a href="#" id="publish-funding-decision" class="button disabled" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
-    	  <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
+
+          <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+          <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
       </div>
 
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
@@ -138,7 +140,7 @@
        </tr>
      </tbody>
    </table>
-   
+
    <div th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL'}" th:remove="tag">
 	    <table th:if="${activeTab == 'submitted'}">
 	       <thead>
@@ -150,7 +152,7 @@
 	           <th scope="col">Grant requested (£)</th>
 	           <th scope="col">Total project cost (£)</th>
 	           <th scope="col">Duration (months)</th>
-	           <th scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Fund project?</th>
+	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Fund project?</th>
 	         </tr>
 	       </thead>
 	       <tbody>
@@ -163,7 +165,7 @@
 	           <td th:text="${result.totalProjectCost}"></td>
 	           <td th:text="${result.duration}"></td>
 	           <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
-	          	 <select class="funding-decision" th:id="${'fund' + result.id}" name="fund">
+	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" name="fund">
            			<option value="-">-</option>
            			<option value="Y">Yes</option>
            			<option value="N">No</option>
@@ -172,7 +174,7 @@
 	         </tr>
 	       </tbody>
 	     </table>
-	     
+
 	     <table th:if="${activeTab == 'notSubmitted'}">
 	       <thead>
 	         <tr>
@@ -192,7 +194,7 @@
 	       </tbody>
 	     </table>
      </div>
-     
+
 </div>
 
 <!-- Applications pagination -->

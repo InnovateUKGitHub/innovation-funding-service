@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.emptyList;
@@ -207,6 +207,13 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     /**
+     * A factory method to generate a failing ServiceResult based upon an ErrorTemplate.
+     */
+    public static <T> ServiceResult<T> serviceFailure(ErrorTemplate errorTemplate) {
+        return serviceFailure(singletonList(new Error(errorTemplate)));
+    }
+
+    /**
      * A factory method to generate a failing ServiceResult based upon an Error.
      */
     public static <T> ServiceResult<T> serviceFailure(List<Error> errors) {
@@ -227,7 +234,25 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     /**
      * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
-     * all ServiceResults are successful.
+     * all ServiceResults are successful.  In the event of a failure, all encountered failing ServiceResults' Errors will
+     * be combined into a single failing ServiceResult
+     */
+    public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, ServiceResult<T> successResponse) {
+        List<ServiceResult<R>> failures = simpleFilter(results, ServiceResult::isFailure);
+
+        if (failures.isEmpty()) {
+            return successResponse;
+        }
+
+        List<List<Error>> errorLists = simpleMap(failures, failure -> failure.getFailure().getErrors());
+        List<Error> combinedErrors = flattenLists(errorLists);
+        return serviceFailure(combinedErrors);
+    }
+
+
+    /**
+     * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
+     * all ServiceResults are successful, and return a specific failure in the event that there were any errors detected.
      */
     public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, ServiceResult<T> failureResponse, ServiceResult<T> successResponse) {
         return results.stream().anyMatch(ServiceResult::isFailure) ? failureResponse : successResponse;

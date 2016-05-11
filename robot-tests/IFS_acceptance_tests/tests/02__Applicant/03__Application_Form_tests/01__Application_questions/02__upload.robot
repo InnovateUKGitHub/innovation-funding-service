@@ -92,6 +92,7 @@ Collaborators can view a file when the question is assigned to them
     [Tags]  Collaboration   Upload
     [Setup]     Guest user log-in       &{collaborator1_credentials}
     Given the user navigates to the page    ${technical_approach_url}
+    And the user reloads the page
     And the user should see the text in the page      ${valid_pdf}
     When the user clicks the button/link        link=${valid_pdf}
     Then the user should see the text in the page       ${valid_pdf_excerpt}

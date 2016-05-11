@@ -19,7 +19,9 @@ public class FormInputResourceDocs {
         fieldWithPath("inputValidators").description("list of inputValidator ids"),
         fieldWithPath("description").description("description"),
         fieldWithPath("includedInApplicationSummary").description("whether the input should be included in the application summary"),
-        fieldWithPath("formValidators").description("list of formValidator ids")
+        fieldWithPath("formValidators").description("list of formValidator ids"),
+        fieldWithPath("guidanceQuestion").description("question on which the guidance for this input is based"),
+        fieldWithPath("guidanceAnswer").description("answer to the guidanceQuestion")
     };
 
     public static final FormInputResourceBuilder formInputResourceBuilder = newFormInputResource()

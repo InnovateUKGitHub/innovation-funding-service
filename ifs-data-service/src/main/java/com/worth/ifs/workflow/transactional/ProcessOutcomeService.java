@@ -4,6 +4,6 @@ import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
 public interface ProcessOutcomeService {
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ProcessOutcome findOne(Long id);
 }

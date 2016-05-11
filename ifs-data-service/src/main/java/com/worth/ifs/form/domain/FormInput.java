@@ -1,13 +1,25 @@
 package com.worth.ifs.form.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.competition.domain.Competition;
-
-import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.competition.domain.Competition;
 
 /**
  * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Recommendation Feedback etc).
@@ -17,7 +29,7 @@ import java.util.Set;
  * for example, collaborative Application Forms
  */
 @Entity
-public class FormInput {
+public class FormInput{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,6 +62,11 @@ public class FormInput {
             inverseJoinColumns = {@JoinColumn(name = "form_validator_id")})
     private Set<FormValidator> inputValidators;
 
+    @Column(length=5000)
+    private String guidanceQuestion;
+
+    @Column(length=5000)
+    private String guidanceAnswer;
 
     private String description;
 
@@ -148,5 +165,21 @@ public class FormInput {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public String getGuidanceQuestion() {
+        return guidanceQuestion;
+    }
+
+    public void setGuidanceQuestion(final String guidanceQuestion) {
+        this.guidanceQuestion = guidanceQuestion;
+    }
+
+    public String getGuidanceAnswer() {
+        return guidanceAnswer;
+    }
+
+    public void setGuidanceAnswer(final String guidanceAnswer) {
+        this.guidanceAnswer = guidanceAnswer;
     }
 }

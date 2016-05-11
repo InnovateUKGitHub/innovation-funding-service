@@ -1,5 +1,17 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.RoleResource;
+import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
@@ -7,19 +19,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.fail;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
-
-import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.resource.RoleResource;
 
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 
@@ -85,5 +84,9 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			return null;
 		}
 
+		@Override
+		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+			return null;
+		}
 	}
 }

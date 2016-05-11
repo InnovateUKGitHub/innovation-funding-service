@@ -25,6 +25,7 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -171,9 +172,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FormInputService formInputServiceMock;
-    
+
     @Mock
     protected ApplicationFundingService applicationFundingServiceMock;
+
+    @Mock
+    protected SystemNotificationSource systemNotificationSourceMock;
 
     @Before
     public void setupMockInjection() {

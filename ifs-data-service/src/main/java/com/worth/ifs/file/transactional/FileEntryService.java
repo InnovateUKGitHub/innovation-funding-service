@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface FileEntryService {
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> findOne(Long id);
 
     @PreAuthorize("hasPermission(#applicationFinanceResourceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")

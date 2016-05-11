@@ -53,7 +53,13 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Users
      */
-    USERS_DUPLICATE_EMAIL_ADDRESS("This email address is already taken", CONFLICT)
+    USERS_DUPLICATE_EMAIL_ADDRESS("This email address is already taken", CONFLICT),
+
+    /**
+     * Funding Panel
+     */
+    FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED("Not all submitted applications are represented in the funding decision", BAD_REQUEST),
+    FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET("An Assessor Feedback Date has not yet been set for this competition", BAD_REQUEST),
     ;
 
     private ErrorTemplate errorTemplate;
