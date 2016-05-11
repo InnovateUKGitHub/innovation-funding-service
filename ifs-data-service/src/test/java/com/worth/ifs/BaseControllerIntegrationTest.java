@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Rollback
 @Transactional
-public abstract class BaseControllerIntegrationTest<ControllerType> extends BaseWebIntegrationTest {
+public abstract class BaseControllerIntegrationTest<ControllerType> extends BaseIntegrationTest {
 
     public Log LOG = LogFactory.getLog(getClass());
 
