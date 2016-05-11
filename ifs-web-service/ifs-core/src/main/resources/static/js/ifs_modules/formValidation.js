@@ -62,10 +62,12 @@ IFS.formValidation = (function(){
                 fields : '[type="tel"]',
                 messageInvalid : "Please enter a valid phone number"
             },
-            typeTimeout : 1500
+            typeTimeout : 1500,
+            html5validationMode : false
         },
         init : function(){
             s = this.settings;
+            s.html5validationMode =  IFS.formValidation.checkHTML5validationMode();
             //bind the checks if password and retyped password are equal
             jQuery('body').on('change keyup', s.passwordEqual.field1+','+s.passwordEqual.field2, function(e){
                 switch(e.type){
@@ -182,8 +184,7 @@ IFS.formValidation = (function(){
             //When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
             //An empty string is returned as true therefore
             //http://stackoverflow.com/questions/18852244/how-to-get-the-raw-value-an-input-type-number-field
-            var html5validationMode =  IFS.formValidation.checkHTML5validationMode(field);
-            if(html5validationMode){
+            if(s.html5validationMode){
                 var domField = field[0];
                 if(domField.validity.valid === false && domField.validity.badInput === true){
                   if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage); }
@@ -209,9 +210,7 @@ IFS.formValidation = (function(){
         },
         checkMax : function(field,showMessage){
             var errorMessage = IFS.formValidation.getErrorMessage(field,'max');
-            var html5validationMode =  IFS.formValidation.checkHTML5validationMode(field);
-
-            if(html5validationMode){
+            if(s.html5validationMode){
                //html5 validation api
                var domField = field[0];
                if(domField.validity.rangeOverflow === true){
@@ -241,9 +240,7 @@ IFS.formValidation = (function(){
         },
         checkMin : function(field,showMessage){
             var errorMessage = IFS.formValidation.getErrorMessage(field,'min');
-            var html5validationMode =  IFS.formValidation.checkHTML5validationMode(field);
-
-            if(html5validationMode){
+            if(s.html5validationMode){
               var domField = field[0];
               if(domField.validity.rangeUnderflow === true){
                 if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
@@ -432,12 +429,15 @@ IFS.formValidation = (function(){
             }
             jQuery(window).trigger('updateWysiwygPosition');
         },
-        checkHTML5validationMode : function(field){
-            if(field[0].validity){
-              return true;
-            }
-            else {
-              return false;
+        checkHTML5validationMode : function(){
+            var testField =jQuery('input');
+            if(testField.length){
+              if(testField[0].validity){
+                return true;
+              }
+              else {
+                return false;
+              }
             }
         }
     };

@@ -79,7 +79,7 @@ public class AlertServiceImplTest extends BaseServiceUnitTest<AlertService> {
 
         when(alertRestService.findAllVisibleByType(MAINTENANCE)).thenReturn(restSuccess(expected));
 
-        final List<AlertResource> found = service.findAllVisible();
+        final List<AlertResource> found = service.findAllVisibleByType(MAINTENANCE);
         assertEquals(2, found.size());
         assertEquals(Long.valueOf(8888L), found.get(0).getId());
         assertEquals(Long.valueOf(9999L), found.get(1).getId());
