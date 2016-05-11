@@ -11,9 +11,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
-    <div class="page-title">
-        <h1 class="heading-xlarge">Project page</h1>
+    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${project.getApplicationDisplayName()} "/>
+        <h1 class="heading-xlarge no-margin">Project setup status</h1>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
