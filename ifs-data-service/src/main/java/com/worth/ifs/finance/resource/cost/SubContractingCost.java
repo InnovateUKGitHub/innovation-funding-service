@@ -1,11 +1,10 @@
 package com.worth.ifs.finance.resource.cost;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
@@ -20,15 +19,15 @@ public class SubContractingCost implements CostItem {
     private BigDecimal cost;
 
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH)
+    @Length(max = MAX_STRING_LENGTH, message = "{org.hibernate.validator.constraints.MaxLength.message}")
     private String country;
 
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH)
+    @Length(max = MAX_STRING_LENGTH, message = "{org.hibernate.validator.constraints.MaxLength.message}")
     private String name;
 
     @NotBlank
-    @Length(max = MAX_STRING_LENGTH)
+    @Length(max = MAX_STRING_LENGTH, message = "{org.hibernate.validator.constraints.MaxLength.message}")
     private String role;
 
     public SubContractingCost(){
@@ -53,12 +52,13 @@ public class SubContractingCost implements CostItem {
     }
 
     public String getCountry() {
-        return country;
+
+        return (StringUtils.length(country) >  MAX_DB_STRING_LENGTH ? country.substring(0, MAX_DB_STRING_LENGTH) : country);
     }
 
     @Override
     public String getName() {
-        return name;
+        return (StringUtils.length(name) >  MAX_DB_STRING_LENGTH ? name.substring(0, MAX_DB_STRING_LENGTH) : name);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SubContractingCost implements CostItem {
     }
 
     public String getRole() {
-        return role;
+        return (StringUtils.length(role) >  MAX_DB_STRING_LENGTH ? role.substring(0, MAX_DB_STRING_LENGTH) : role);
     }
 
     @Override
