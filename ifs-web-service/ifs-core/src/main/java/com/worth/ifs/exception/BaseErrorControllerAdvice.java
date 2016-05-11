@@ -1,6 +1,5 @@
 package com.worth.ifs.exception;
 
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
 import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -30,14 +29,29 @@ public abstract class BaseErrorControllerAdvice {
     @Value("${logout.url}")
     private String logoutUrl;
 
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    protected ModelAndView createExceptionModelAndView(Exception e, String pageName, HttpServletRequest req, List<Object> arguments, HttpStatus status){
+        return createExceptionModelAndView(e, "error.title.status." + status.value(), pageName, req, arguments, status);
+    }
 
-    protected ModelAndView createExceptionModelAndView(Exception e, String message, HttpServletRequest req, List<Object> arguments, HttpStatus status){
+    protected ModelAndView createExceptionModelAndView(Exception e, String title, String pageName, HttpServletRequest req, List<Object> arguments, HttpStatus status){
+        return createExceptionModelAndView(e, title, null, pageName, req, arguments, status);
+    }
+
+    protected ModelAndView createExceptionModelAndViewWithTitleAndMessage(Exception e, String titleKey, String messageForUserKey, HttpServletRequest req, List<Object> arguments, HttpStatus status) {
+        return createExceptionModelAndView(e, titleKey, messageForUserKey, "title-and-message-error", req, arguments, status);
+    }
+
+    protected ModelAndView createExceptionModelAndView(Exception e, String titleKey, String messageForUserKey, String pageName, HttpServletRequest req, List<Object> arguments, HttpStatus status){
+
+        String errorTitle = MessageUtil.getFromMessageBundle(messageSource, titleKey, "Unknown Error...", req.getLocale());
+        String messageForUser = MessageUtil.getFromMessageBundle(messageSource, messageForUserKey, "Unknown Error...", req.getLocale());
+
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
-        final String errorPageTitle = MessageUtil.getFromMessageBundle(messageSource, "error.title.status." + status.value(), "Unknown Error...", arguments.toArray(), req.getLocale());
-        mav.addObject("title", errorPageTitle);
+        mav.addObject("title", errorTitle);
+        mav.addObject("messageForUser", messageForUser);
+        mav.addObject("errorMessageClass", status.name().toLowerCase());
+
         if(env.acceptsProfiles("uat", "dev", "test")) {
             mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
             String msg = MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale());
@@ -45,7 +59,7 @@ public abstract class BaseErrorControllerAdvice {
         }
 
         mav.addObject("url", req.getRequestURL().toString());
-        mav.setViewName(message);
+        mav.setViewName(pageName);
 
         // Needed here because postHandle of MenuLinkHandlerInterceptior may not be hit when there is an error.
         if(!(mav.getView() instanceof RedirectView || mav.getViewName().startsWith("redirect:") )) {

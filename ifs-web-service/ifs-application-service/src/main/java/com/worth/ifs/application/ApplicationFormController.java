@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -77,6 +78,9 @@ public class ApplicationFormController extends AbstractApplicationController {
     private FormInputService formInputService;
 
     @Autowired
+    private FinanceService financeService;
+
+    @Autowired
     MessageSource messageSource;
 
     @InitBinder
@@ -125,12 +129,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
-            @PathVariable("applicationFinanceId") final Long applicationFinanceId,
-            HttpServletRequest request) {
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-
-        final ByteArrayResource resource = financeHandler.getFinanceFormHandler(organisationType).getFile(applicationFinanceId).getSuccessObjectOrThrowException();
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
+        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
         return getPdfFile(resource);
     }
 
@@ -403,7 +403,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
         new ApplicationStartDateValidator().validate(request, bindingResult);
-        
+
         setApplicationDetails(application, form.getApplication());
 
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
@@ -668,7 +668,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                         .forEach(formInput -> processFormInput(formInput, params, applicationId, processRoleId, request, errorMap)));
         return errorMap;
     }
-    
+
     private void processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errorMap){
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
             formInputResponseService.removeFile(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
@@ -699,19 +699,19 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     /**
      * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
-     * @param application 
-     * @param updatedApplication 
+     * @param application
+     * @param updatedApplication
      */
     private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
             return;
         }
-        
+
         if (updatedApplication.getName() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
-        
+
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
             if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
@@ -816,7 +816,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if ("application.name".equals(fieldName)) {
             String trimmedValue = value.trim();
             if (StringUtils.isEmpty(trimmedValue)) {
-                errors.add("Please enter the full title of the project.");
+                errors.add("Please enter the full title of the project");
             } else {
 
                 application.setName(trimmedValue);
@@ -825,7 +825,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
             if (durationInMonth == null || durationInMonth < 1L) {
-                errors.add("Please enter a valid duration.");
+                errors.add("Please enter a valid duration");
             } else {
                 application.setDurationInMonths(durationInMonth);
                 applicationService.save(application);
@@ -850,7 +850,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                 startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
             }
             if (startDate.isBefore(LocalDate.now())) {
-                errors.add("Please enter a future date.");
+                errors.add("Please enter a future date");
                 startDate = null;
             }else{
                 LOG.debug("Save startdate: "+ startDate.toString());

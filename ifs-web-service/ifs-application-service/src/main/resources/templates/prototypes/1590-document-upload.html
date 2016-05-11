@@ -13,54 +13,57 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${(param.user != null and param.user[0] == 'nonLead' ?  '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})" th:remove="tag" />
+	
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${(param.user != null and param.user[0] == 'nonLead' ?  '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})" th:remove="tag" th:unless="${param.status != null and param.status[0] == 'submitted'}"/>
+
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status?stage=level2'})" th:remove="tag" th:if="${param.status != null and param.status[0] == 'submitted'}"/>
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Lead documents'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Other documents'})" th:remove="tag" />
 
-	<div class="grid-row">
-		<div class="column-two-thirds">
-			<h2 class="heading-medium no-margin-top">Collaboration agreement</h2>
-			<p>Before your project can start, all consortium members must sign a collaboration agreement.</p>
+	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
-			<p>This agreement is between project participants and should cover how the project will operate. It should also include how you will exploit the results of the project. Please allow enough time to complete this process before your project start date.</p>
-			
-			<p>The following partners need to sign this collaboration agreement:</p>
+		<p>As the lead partner in this project you must supply the additional documents to support your grant application.</p>
+		
+		<p>These documents are:</p>
 
-			<ul class="list-bullet">
-				<li>Aptrans Ltd</li>
-				<li>Biotech Corp</li>
-				<li>University of Cardiff</li>
-			</ul>
-		</div>
-		<div class="column-third">
-			
-			<div class="boxed">
-				<p>An example of collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert Agreement website</a>.</p>
-			</div>
+		<ul class="list-bullet">
+			<li>the collaboration agreement</li>
+			<li>the exploitation plan</li>
+		</ul>
+		
+		<p>These documents must be discussed and agreed with the other partners in your project.</p>
 
-		</div>
+		<p>Further details on what is required from these documents is available below.</p>
+
 	</div>
 
-	<h2 class="heading-medium" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Documents uploaded or to be uploaded by the lead partner</h2>
-
-	<h2 class="heading-medium" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Document uploads</h2>
-	
 	<form action="#">
 
 		<fieldset>
 
-			<legend class="visuallyhidden">Upload your collaboration agreement</legend>
+			<legend class="visuallyhidden">Collaboration agreement</legend>
 			
-			<div class="upload-section" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+			<div class="upload-section">
 				
-				<h2 class="heading-medium no-margin-top">Upload your collaboration agreement</h2>
+				<h2 class="heading-medium no-margin">Collaboration agreement</h2>
 
 				<details>
 				    <summary><span class="summary">What should I include in the collaboration agreement?</span></summary>
 				    <div class="panel-indent">
-						<p>CONTENT REQUIRED</p>  
+						<p>This is an agreement between project partners and will cover how the project will operate. It will also include details of how you will exploit the results of the project. Please allow enough time to complete this process before your project start date.</p>
+				
+						<p>The following partners need to sign this collaboration agreement:</p>
+
+						<ul class="list-bullet">
+							<li>Aptrans Ltd</li>
+							<li>Biotech Corp</li>
+							<li>University of Cardiff</li>
+						</ul>
+
+						<p>An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert Agreement website</a>.</p>
+
 						<p>The uploaded collaboration agreement must:</p>
 						<ul class="list-bullet">  
 							<li>be in a Portable Document Format (.pdf)</li>
@@ -70,14 +73,18 @@
 				    </div>
 				</details>
 
-				<input type="file" name="file-collaboration-agreement" id="file-collaboration-agreement" class="inputfile" />
-				<label for="file-collaboration-agreement" class="button-secondary extra-margin">+ Upload</label>
-			</div>
-			
-			<div class="upload-section" th:unless="${param.user == null or param.user[0] != 'nonLead'}">
+				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted'}">
+
+					<input type="file" name="file-collaboration-agreement" id="file-collaboration-agreement" class="inputfile" />
+					<label for="file-collaboration-agreement" class="button-secondary extra-margin">+ Upload</label>
+
+				</div>
+
+				<div th:if="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'submitted'}">
 				
-				<h2 class="heading-medium no-margin-top">Collaboration agreement</h2>
-				<a href="#" class="uploaded-file">Collab-agreement-file.pdf</a>
+					<a href="#" class="uploaded-file">Collab-agreement-file.pdf</a>
+
+				</div>
 
 			</div>
 
@@ -85,17 +92,31 @@
 
 		<fieldset>
 
-			<legend class="visuallyhidden">Upload your exploitation plan</legend>
+			<legend class="visuallyhidden">Exploitation plan</legend>
+
+			<div class="upload-section">
 			
-			<div class="upload-section" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-				
-				<h2 class="heading-medium no-margin-top">Upload your exploitation plan</h2>
+				<h2 class="heading-medium no-margin">Exploitation plan</h2>
+				<p class="form-hint">The aim of the plan is to confirm the business case for the project and describe the partner activities towards exploitation of the results of the project.</p>
 				
 				<details>
 				    <summary><span class="summary">What should I include in the exploitation plan?</span></summary>
 				    <div class="panel-indent">
-						<p>CONTENT REQUIRED</p>  
-						<p>The uploaded explotation plan must:</p>
+						<p>The exploitation plan must include:</p> 
+
+						<ul class="list-bullet">
+							<li>business Case including partners capability to develop and exploit the technology developed</li>
+							<li>market and commercial opportunities of the expected deliverables</li>
+							<li>commercial returns expected from the project, together with timescales</li>
+							<li>potential impact of the project for those outside the consortium</li>
+							<li>overall Business Plan</li>
+							<li>dissemination Activities during the project</li>
+						</ul>
+
+						<p>A framework of the exploitation plan is available for <a href="">download</a></p>
+				
+
+						<p>The uploaded exploitation plan must:</p>
 						<ul class="list-bullet">  
 							<li>be in a Portable Document Format (.pdf)</li>
 							<li>be legible at 100% magnification</li>
@@ -104,60 +125,37 @@
 				    </div>
 				</details>
 
-				<input type="file" name="file-exploitation-plan" id="file-exploitation-plan" class="inputfile" />
-				<label for="file-exploitation-plan" class="button-secondary extra-margin">+ Upload</label>
+				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted'}">
 
+					<input type="file" name="file-exploitation-plan" id="file-exploitation-plan" class="inputfile" />
+					<label for="file-exploitation-plan" class="button-secondary extra-margin">+ Upload</label>
 
-			</div>
+				</div>
 
-
-			<div class="upload-section" th:unless="${param.user == null or param.user[0] != 'nonLead'}">
+				<div th:if="${param.user != null and param.user[0] == 'nonLead'}">
 				
-				<h2 class="heading-medium no-margin-top">Exploitation plan</h2>
-				<p class="uploaded-file">No file currently uploaded by the lead partner</p>
+					<p class="uploaded-file">Awaiting upload by lead partner</p>
 
-			</div>
+				</div>
 
-			
-
-
-
-
-		</fieldset>
-
-		<fieldset>
-
-			<legend class="visuallyhidden">Upload your project plan</legend>
-			
-			<div class="upload-section" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+				<div th:if="${param.status != null and param.status[0] == 'submitted'}">
 				
-				<h2 class="heading-medium no-margin-top">Upload your project plan</h2>
+					<a href="#" class="uploaded-file">Expolitation-file.pdf</a>
 
-				<details>
-				    <summary><span class="summary">What should I include in the project plan?</span></summary>
-				    <div class="panel-indent">
-						<p>CONTENT REQUIRED</p>  
-						<p>The uploaded project plan must:</p>
-						<ul class="list-bullet">  
-							<li>be in a Portable Document Format (.pdf)</li>
-							<li>be legible at 100% magnification</li>
-							<li>be less than 1mb in file size</li>
-						</ul>
-				    </div>
-				</details>
-				
-				<input type="file" name="file-project-plan" id="file-project-plan" class="inputfile" />
-				<label for="file-project-plan" class="button-secondary extra-margin">+ Upload</label>
-			</div>
-
-			<div class="upload-section" th:unless="${param.user == null or param.user[0] != 'nonLead'}">
-				
-				<h2 class="heading-medium no-margin-top">Project plan</h2>
-				<a href="#" class="uploaded-file">project-plan-file.pdf</a>
+				</div>
 
 			</div>
 
 		</fieldset>
+
+		<div th:if="${param.user == null and param.status == null}">
+
+			<p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
+
+			<button class="button button-large">Submit documents</button>
+
+
+		</div>
 
 	</form>
 

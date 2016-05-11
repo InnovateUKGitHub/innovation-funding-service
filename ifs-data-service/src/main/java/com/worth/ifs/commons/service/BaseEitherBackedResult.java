@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.CollectionFunctions.nullSafe;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
@@ -43,8 +45,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public BaseEitherBackedResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler) {
 
-        if (result.isLeft()) {
-            return createFailure((FailingOrSucceedingResult<Void, FailureType>) this);
+        if (isLeft()) {
+            return (BaseEitherBackedResult<Void, FailureType>) this;
         }
 
         try {
@@ -59,8 +61,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public BaseEitherBackedResult<T, FailureType> andOnSuccess(Runnable successHandler) {
 
-        if (result.isLeft()) {
-            return createFailure(this);
+        if (isLeft()) {
+            return this;
         }
 
         try {
@@ -74,12 +76,12 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
 
     @Override
     public <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<FailingOrSucceedingResult<R, FailureType>> successHandler) {
-        if (result.isLeft()) {
-            return (BaseEitherBackedResult<R, FailureType>) createFailure(this);
+        if (isLeft()) {
+            return (BaseEitherBackedResult<R, FailureType>) this;
         }
 
         try {
-            return (FailingOrSucceedingResult<R, FailureType>) successHandler.get();
+            return successHandler.get();
         } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
@@ -89,8 +91,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler) {
 
-        if (result.isLeft()) {
-            return (BaseEitherBackedResult<R, FailureType>) createFailure(this);
+        if (isLeft()) {
+            return (BaseEitherBackedResult<R, FailureType>) this;
         }
 
         try {
@@ -106,6 +108,20 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
         return flatMap(successHandler);
+    }
+
+    @Override
+    public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Supplier<FailingOrSucceedingResult<R, FailureType>>  failureHandler) {
+        if (isRight()) {
+            return (BaseEitherBackedResult<R, FailureType>) this;
+        }
+
+        try {
+            return failureHandler.get();
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing failure function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -246,5 +262,10 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
             final BaseEitherBackedResult<Item, FailureType> failure = firstResult.createFailure(failures.stream().reduce(null, nullSafe(failureCollector)));
             return (Result) failure;
         }
+    }
+
+
+    public static <T, FailureType, R extends BaseEitherBackedResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
+        return results.stream().filter(result -> result.isSuccess() ? true : errorsFilter.test(result.getFailure())).collect(toList());
     }
 }

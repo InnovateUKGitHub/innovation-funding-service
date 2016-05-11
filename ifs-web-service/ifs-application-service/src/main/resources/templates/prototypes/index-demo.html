@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='demo'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Demo</h1>
+
+			<section>
+				<h2 class="heading-medium">Application</h2>
+				<ul class="list-bullet">
+					<li>
+						<a href="/prototypes/635-application-overview">Application overview</a> 
+					</li>
+					<li><a href="/prototypes/545-application-feedback">Application feedback</a></li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Assessor</h2>
+				<ul class="list-bullet">
+					<li><a href="/prototypes/1360-assessor-email-invite">Assessor create account</a></li>
+					<li><a href="/prototypes/871-assessor-comp-dashboard">Assessor competition dashboard</a></li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Competition management</h2>
+
+				<h3 class="heading-small">Competition management (MVP)</h3>
+
+				<ul class="list-bullet">
+					<li><a href="/prototypes/1348-open-applications">Open</a></li>
+					<li><a href="/prototypes/1348-submitted-applications?closed&#38;status=assessment">Closed</a></li>
+				</ul>
+
+				<h3 class="heading-small">Competition management (non MVP - was in progress)</h3>
+
+				<ul class="list-bullet">
+					<li><a href="/prototypes/863-invite-assessors">Invite assessors</a></li>
+					<li><a href="/prototypes/1381-application-allocation">Allocating applications</a></li>
+					<li><a href="/prototypes/1373-manage-applications">Manage assessments</a></li>
+				</ul>
+			</section>
+
+			<section>
+				
+				<h2 class="heading-medium">Project setup</h2>
+
+				<ul class="list-bullet">
+					<li><a href="/prototypes/1588-project-status">Project setup overview lead</a></li>
+					<li><a href="/prototypes/1588-project-status?user=nonLead">Project setup overview non lead</a></li>
+					<li><a href="/prototypes/1972-project-invite">Invited to join PSU</a></li>
+					<li><a href="/prototypes/1627-admin-view-project-status-grid?status=setup">Internal project setup overview</a></li>
+				</ul>
+
+			</section>
+
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

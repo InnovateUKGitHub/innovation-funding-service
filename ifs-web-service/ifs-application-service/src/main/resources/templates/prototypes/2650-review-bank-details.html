@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="full-width">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Bank account'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<div class="grid-row constrain-width">		
+		
+		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<p th:unless="${param.status != null and param.status[0] == 'accepted'}">The following bank account details have been submitted to Innovate UK by Aptrans Ltd for use during the project Technology Inspired, awaiting internal review from Innovate UK</p>
+
+		<p th:unless="${param.status == null or param.status[0] != 'accepted'}" >The following bank account details that have been accepted by Innovate UK for use by Aptrans Ltd during the project Technology Inspired.
+		</p>
+
+		<h2 class="heading-medium">Finance contact</h2>
+
+		<p>
+			Dave Normen<br />
+			<a href="mailto:d.norman@aptrans.co.uk">d.norman@aptrans.co.uk</a>
+		</p>
+
+		<h2 class="heading-medium">Aptrans Ltd - Account details</h2>
+
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">
+						Section
+					</th>
+					<th scope="col">
+						Answer
+					</th>
+					<th scope="col" class="alignright">
+						Experian score
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						Company
+					</td>
+					<td>
+						Aptrans Ltd
+					</td>
+					<td class="alignright">
+						5 / 9
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Company number
+					</td>
+					<td>
+						46587342
+					</td>
+					<td class="alignright">
+						<span class="yes">Match</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Bank account number / Sort code
+					</td>
+					<td>
+						04214477 / 201181
+					</td>
+					<td class="alignright">
+						<span class="yes">Match</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Address
+					</td>
+					<td>
+						Aptrans Ltd, <br />
+						13 Queens Square, <br />
+						Bristol, <br />
+						BS3 1RF
+					</td>
+					<td class="alignright">
+						9 / 9
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="grid-row constrain-width extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
+		<div class="column-half">
+			<a href="/prototypes/2652-change-bank-details" class="button-link">Change bank account details</a>
+		</div>
+		<div class="column-half alignright">
+			<a href="/prototypes/2650-review-bank-details?status=accepted" class="button">Approve bank account details</a>
+		</div>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+
+		if (localStorage.getItem('moDetails') != null){
+
+			jQuery('#first-name').val(localStorage.getItem('moFirstName'));
+			jQuery('#last-name').val(localStorage.getItem('moLastName'));
+			jQuery('#email').val(localStorage.getItem('moEmail'));
+			jQuery('#phone-number').val(localStorage.getItem('moPhoneNumber'));
+
+		}else if ($_GET('status') == 'edit' && localStorage.getItem('moDetails') == null ){
+
+			jQuery('#first-name').val('David');
+			jQuery('#last-name').val('Jones');
+			jQuery('#email').val('djones@companya.co.uk');
+			jQuery('#phone-number').val('01234 456879');
+		}
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

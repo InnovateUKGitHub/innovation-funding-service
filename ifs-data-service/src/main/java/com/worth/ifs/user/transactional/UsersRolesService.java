@@ -11,18 +11,18 @@ import java.util.List;
  */
 public interface UsersRolesService {
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<ProcessRoleResource> getProcessRoleById(final Long id);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(final Long applicationId);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<ProcessRoleResource> getProcessRoleByUserIdAndApplicationId(final Long userId, final Long applicationId);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByUserId(final Long userId);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProcessRoleResource>> getAssignableProcessRolesByApplicationId(final Long applicationId);
 }

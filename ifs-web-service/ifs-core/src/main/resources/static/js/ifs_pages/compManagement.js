@@ -10,13 +10,23 @@ IFS.competition_management = (function(){
         settings: {
           menu : jQuery('.info-area'),
           container : '.competition-data form',
-          breakpoint : 1200 //px
+          breakpoint : 1200, //px
+          fundingDecisionSelects: '.funding-decision',
+          submitFundingDecisionButton: '#publish-funding-decision',
+          noJsSubmitFundingDecisionButton: '#no-js-notify-applicants',
+          fundingDecisionForm: '#submit-funding-decision-form'
         },
         init: function(){
             s = this.settings;
             IFS.competition_management.getWindowWidth();
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
+
+            IFS.competition_management.handleFundingDecisionSelectChange();
+            IFS.competition_management.handleFundingDecisionButtons();
+            IFS.competition_management.alterSubmitDecisionFormAction();
+
+            jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
 
             if(IFS.competition_management.stickyEnabled()){
                 IFS.competition_management.getMenuWidth();
@@ -85,6 +95,53 @@ IFS.competition_management = (function(){
           else {
             s.menu.removeClass('sticky bottom').removeAttr('style');
           }
+        },
+        handleFundingDecisionButtons: function(){
+        	var button = jQuery(s.submitFundingDecisionButton);
+        	var noJsButton = jQuery(s.noJsSubmitFundingDecisionButton);
+        	noJsButton.hide();
+        	button.show();
+        },
+        disableFundingDecisonButton : function(){
+            var button = jQuery(s.submitFundingDecisionButton);
+            var modal = button.attr('data-js-modal');
+            //remove the modal action and add aria-disabled and disabled styling
+            button.on('click',function(event){ event.preventDefault(); });
+            button.removeAttr('data-js-modal').attr({'data-js-modal-disabled':modal, 'aria-disabled': 'true'}).addClass('disabled');
+         },
+         enableFundingDecisionButton : function(){
+             var button = jQuery(s.submitFundingDecisionButton);
+             var modal = button.attr('data-js-modal-disabled');
+             button.off('click').removeAttr('data-js-modal-disabled aria-disabled').attr('data-js-modal',modal).removeClass('disabled');
+         },
+         alterSubmitDecisionFormAction: function(){
+        	 var form = jQuery(s.fundingDecisionForm);
+        	 var action = form.attr('action');
+        	 form.attr('action', action + 'submit');
+         },
+         allSelectsDecided: function() {
+        	 var selects = jQuery(s.fundingDecisionSelects);
+        	 if(selects === null || selects === undefined || selects.length === 0) {
+        		 return false;
+        	 }
+
+        	 var allDecided = true;
+        	 selects.each(function() {
+        		 var value = jQuery(this).val();
+        		 var decided = value === 'Y' || value === 'N';
+        		 if(!decided) {
+        			 allDecided = false;
+        		 }
+        	 });
+
+        	 return allDecided;
+         },
+        handleFundingDecisionSelectChange: function(){
+        	if(IFS.competition_management.allSelectsDecided()){
+                IFS.competition_management.enableFundingDecisionButton();
+        	} else {
+                IFS.competition_management.disableFundingDecisonButton();
+        	}
         }
     };
 })();

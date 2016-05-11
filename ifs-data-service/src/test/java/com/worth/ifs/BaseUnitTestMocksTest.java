@@ -3,9 +3,13 @@ package com.worth.ifs;
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
 import com.worth.ifs.address.transactional.AddressService;
+import com.worth.ifs.alert.mapper.AlertMapper;
+import com.worth.ifs.alert.repository.AlertRepository;
+import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.*;
+import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.ResponseService;
@@ -21,6 +25,7 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -43,7 +48,16 @@ import org.mockito.MockitoAnnotations;
 public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
-    protected ResponseService responseService;
+    protected AlertService alertServiceMock;
+
+    @Mock
+    protected AlertRepository alertRepositoryMock;
+
+    @Mock
+    protected AlertMapper alertMapperMock;
+
+    @Mock
+    protected ResponseService responseServiceMock;
 
     @Mock
     protected AddressRepository addressRepositoryMock;
@@ -55,7 +69,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationMapper applicationMapperMock;
 
     @Mock
-    protected ApplicationFinanceRepository applicationFinanceRepository;
+    protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
 
     @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
@@ -91,16 +105,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
-    protected ApplicationService applicationService;
+    protected ApplicationService applicationServiceMock;
 
     @Mock
     protected QuestionService questionServiceMock;
 
     @Mock
-    protected QuestionRepository questionRepository;
+    protected QuestionRepository questionRepositoryMock;
 
     @Mock
-    protected QuestionStatusRepository questionStatusRepository;
+    protected QuestionStatusRepository questionStatusRepositoryMock;
 
     @Mock
     protected QuestionMapper questionMapperMock;
@@ -157,7 +171,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected PasswordPolicyValidator passwordPolicyValidatorMock;
 
     @Mock
-    protected FormInputService formInputService;
+    protected FormInputService formInputServiceMock;
+
+    @Mock
+    protected ApplicationFundingService applicationFundingServiceMock;
+
+    @Mock
+    protected SystemNotificationSource systemNotificationSourceMock;
 
     @Before
     public void setupMockInjection() {

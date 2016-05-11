@@ -22,7 +22,6 @@ ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/1/form/question/11
 ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/1/form/question/12
 ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
-${JSFUNCTION}     window.document.getElementById("18").onChange();
 
 *** Test Cases ***
 Verify the Autosave for the form text areas
@@ -30,22 +29,22 @@ Verify the Autosave for the form text areas
     [Tags]    Applicant    Form    HappyPath
     [Setup]
     Given the user navigates to the page    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
-    When the Applicant enters some text
-    And the Applicant refreshes the page
+    When the user edits the 'project summary' question
+    And the user reloads the page
     Then the text should be visible
 
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
     [Tags]    Applicant    Form
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
-    When the applicant clicks the "What should I include in project summary?" question
-    Then the guidance should be visible
+    When the user clicks the button/link    css=#form-input-11 .summary
+    Then the user should see the element    css=#details-content-0 p
 
 Verify the navigation in the form sections
     [Documentation]    INFUND-189
     [Tags]    Applicant    Form    HappyPath
-    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    When the Applicant clicks a section then the Applicant navigates to the correct section
+    When the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    Then the user clicks the section links and is redirected to the correct sections
 
 Verify that the word count works
     [Documentation]    INFUND-198
@@ -59,8 +58,8 @@ Verify that the word count works
 Verify the "review and submit" button
     [Tags]    Applicant    Form
     Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    When the Applicant clicks the "Review and submit" button
-    Then the Applicant will navigate to the summary page
+    When the user clicks the button/link        jQuery=.button:contains("Review & submit")
+    Then the user should be redirected to the correct page      ${summary_url}
 
 Verify that when the Applicant marks as complete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
@@ -83,46 +82,32 @@ Verify that when the Applicant marks as incomplete the text box is no longer gre
     And the question should not be marked as complete on the application overview page
 
 *** Keywords ***
-the Applicant enters some text
-    Applicant edits the 'Project Summary' question
-    Focus    css=.app-submit-btn
-    Sleep    2s
-
-the Applicant refreshes the page
-    Reload Page
-    sleep    1s
 
 the text should be visible
     Element Should Contain    css=#form-input-11 .editor    I am a robot
 
-the applicant clicks the "What should I include in project summary?" question
-    Wait Until Element Is Visible    css=#form-input-11 .summary
-    Click Element    css=#form-input-11 .summary
 
-the guidance should be visible
-    Element Should Be Visible    css=#details-content-0 p
+the user clicks the section links and is redirected to the correct sections
 
-the Applicant clicks a section then the Applicant navigates to the correct section
-
-    The user clicks the section link and is on the correct section      Application details     ${APPLICATION_DETAILS_URL}
-    The user clicks the section link and is on the correct section      Project summary         ${PROJECT_SUMMARY_URL}
-    The user clicks the section link and is on the correct section      Public description      ${PUBLIC_DESCRIPTION_URL}
-    The user clicks the section link and is on the correct section      Scope                   ${SCOPE_URL}
-    The user clicks the section link and is on the correct section      1. Business opportunity    ${BUSINESS_OPPORTUNITY_URL}
-    The user clicks the section link and is on the correct section      2. Potential market        ${POTENTIAL_MARKET_URL}
-    The user clicks the section link and is on the correct section      3. Project exploitation    ${PROJECT_EXPLOITATION_URL}
-    The user clicks the section link and is on the correct section      4. Economic benefit        ${ECONOMIC_BENEFIT_URL}
-    The user clicks the section link and is on the correct section      5. Technical approach      ${TECHNICAL_APPROACH_URL}
-    The user clicks the section link and is on the correct section      6. Innovation              ${INNOVATION_URL}
-    The user clicks the section link and is on the correct section      7. Risks                   ${RISKS_URL}
-    The user clicks the section link and is on the correct section      8. Project team            ${PROJECT_TEAM_URL}
-    The user clicks the section link and is on the correct section      9. Funding                 ${FUNDING_URL}
-    The user clicks the section link and is on the correct section      10. Adding value            ${ADDING_VALUE_URL}
-    The user clicks the section link and is on the correct section      Your finances           ${YOUR_FINANCES_URL}
-    The user clicks the section link and is on the correct section      Finances overview        ${FINANCES_OVERVIEW_URL}
+    The user clicks the section link and is redirected to the correct section      Application details     ${APPLICATION_DETAILS_URL}
+    The user clicks the section link and is redirected to the correct section      Project summary         ${PROJECT_SUMMARY_URL}
+    The user clicks the section link and is redirected to the correct section      Public description      ${PUBLIC_DESCRIPTION_URL}
+    The user clicks the section link and is redirected to the correct section      Scope                   ${SCOPE_URL}
+    The user clicks the section link and is redirected to the correct section      1. Business opportunity    ${BUSINESS_OPPORTUNITY_URL}
+    The user clicks the section link and is redirected to the correct section      2. Potential market        ${POTENTIAL_MARKET_URL}
+    The user clicks the section link and is redirected to the correct section      3. Project exploitation    ${PROJECT_EXPLOITATION_URL}
+    The user clicks the section link and is redirected to the correct section      4. Economic benefit        ${ECONOMIC_BENEFIT_URL}
+    The user clicks the section link and is redirected to the correct section      5. Technical approach      ${TECHNICAL_APPROACH_URL}
+    The user clicks the section link and is redirected to the correct section      6. Innovation              ${INNOVATION_URL}
+    The user clicks the section link and is redirected to the correct section      7. Risks                   ${RISKS_URL}
+    The user clicks the section link and is redirected to the correct section      8. Project team            ${PROJECT_TEAM_URL}
+    The user clicks the section link and is redirected to the correct section      9. Funding                 ${FUNDING_URL}
+    The user clicks the section link and is redirected to the correct section      10. Adding value            ${ADDING_VALUE_URL}
+    The user clicks the section link and is redirected to the correct section      Your finances           ${YOUR_FINANCES_URL}
+    The user clicks the section link and is redirected to the correct section      Finances overview        ${FINANCES_OVERVIEW_URL}
 
 
-The user clicks the section link and is on the correct section
+The user clicks the section link and is redirected to the correct section
     [Arguments]     ${link}     ${url}
     The user clicks the button/link     link=${link}
     The user should be redirected to the correct page   ${url}
@@ -134,7 +119,6 @@ the Applicant edits the Public description
     Clear Element Text    css=#form-input-12 .editor
     Press Key    css=#form-input-12 .editor    \\8
     Focus    css=.app-submit-btn
-    Sleep    1s
     Wait Until Element Contains    css=#form-input-12 .count-down    400
     Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
@@ -150,14 +134,8 @@ the Applicant edits the Project description question (300 words)
     Press Key    css=#form-input-12 .editor    \\8
     Input Text    css=#form-input-12 .editor    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
     Focus    css=.app-submit-btn
-    Sleep    10s
+    Sleep    1s
 
-the Applicant clicks the "Review and submit" button
-    Page Should Contain element    link=Review & submit
-    Click Element    link=Review & submit
-
-the Applicant will navigate to the summary page
-    Location Should Be    ${SUMMARY_URL}
 
 the text box should turn to green
     Page Should Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete

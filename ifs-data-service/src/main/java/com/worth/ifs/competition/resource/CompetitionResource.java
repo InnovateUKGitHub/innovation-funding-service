@@ -24,6 +24,8 @@ public class CompetitionResource {
     private LocalDateTime endDate;
     private LocalDateTime assessmentStartDate;
     private LocalDateTime assessmentEndDate;
+    private LocalDateTime fundersPanelEndDate;
+    private LocalDateTime assessorFeedbackDate;
     private Status competitionStatus;
     @Min(0)
     @Max(100)
@@ -138,6 +140,14 @@ public class CompetitionResource {
         this.assessmentStartDate = assessmentStartDate;
     }
 
+    public LocalDateTime getAssessorFeedbackDate() {
+        return assessorFeedbackDate;
+    }
+
+    public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
+        this.assessorFeedbackDate = assessorFeedbackDate;
+    }
+
     @JsonIgnore
     public long getDaysLeft() {
         return getDaysBetween(LocalDateTime.now(), this.endDate);
@@ -192,7 +202,6 @@ public class CompetitionResource {
 
     private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
-
     }
 
     private long getDaysLeftPercentage(long daysLeft, long totalDays) {
@@ -219,8 +228,16 @@ public class CompetitionResource {
     public void setAcademicGrantPercentage(Integer academicGrantPercentage) {
         this.academicGrantPercentage = academicGrantPercentage;
     }
+    
+    public LocalDateTime getFundersPanelEndDate() {
+		return fundersPanelEndDate;
+	}
+    
+    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
+		this.fundersPanelEndDate = fundersPanelEndDate;
+	}
 
     public enum Status {
-        NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, PROJECT_SETUP
+        NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP
     }
 }

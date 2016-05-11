@@ -29,9 +29,11 @@ public class Competition {
             return CompetitionResource.Status.OPEN;
         }else if(getAssessmentEndDate().isAfter(today)){
             return CompetitionResource.Status.IN_ASSESSMENT;
+        }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
+        	return CompetitionResource.Status.FUNDERS_PANEL;
         }
 
-        return CompetitionResource.Status.FUNDERS_PANEL;
+        return CompetitionResource.Status.ASSESSOR_FEEDBACK;
     }
 
     @Id
@@ -54,9 +56,16 @@ public class Competition {
     private String description;
     @DateTimeFormat
     private LocalDateTime startDate;
+    @DateTimeFormat
     private LocalDateTime endDate;
+    @DateTimeFormat
     private LocalDateTime assessmentStartDate;
+    @DateTimeFormat
     private LocalDateTime assessmentEndDate;
+    @DateTimeFormat
+    private LocalDateTime fundersPanelEndDate;
+	@DateTimeFormat
+    private LocalDateTime assessorFeedbackDate;
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 
@@ -183,6 +192,14 @@ public class Competition {
         this.endDate = endDate;
     }
 
+    public LocalDateTime getAssessorFeedbackDate() {
+        return assessorFeedbackDate;
+    }
+
+    public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
+        this.assessorFeedbackDate = assessorFeedbackDate;
+    }
+
     private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
     }
@@ -224,6 +241,13 @@ public class Competition {
         this.id = id;
     }
 
+    public LocalDateTime getFundersPanelEndDate() {
+		return fundersPanelEndDate;
+	}
+    
+    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
+		this.fundersPanelEndDate = fundersPanelEndDate;
+	}
 
 }
 
