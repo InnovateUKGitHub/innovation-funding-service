@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.controller.form;
 
 import javax.validation.constraints.Min;
 

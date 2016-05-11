@@ -1,6 +1,5 @@
 package com.worth.ifs.commons.pojo;
 
-
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.PojoClassFilter;
 import com.openpojo.reflection.impl.PojoClassFactory;
@@ -10,6 +9,8 @@ import com.openpojo.validation.rule.impl.*;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.alert.domain.Alert;
+import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.AssessorFeedback;
@@ -49,6 +50,8 @@ public class POJOTest {
     private List<PojoClass> classes;
     private Validator validator;
     private List<Class<?>> classesToTest = Arrays.asList(
+            Alert.class,
+            AlertResource.class,
             Invite.class,
             Address.class,
             OrganisationType.class,

@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.controller;
 
 import com.worth.ifs.exception.CommonErrorControllerAdvice;
 import org.springframework.context.MessageSource;
