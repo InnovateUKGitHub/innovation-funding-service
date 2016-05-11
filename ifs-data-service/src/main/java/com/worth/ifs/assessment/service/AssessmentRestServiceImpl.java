@@ -8,7 +8,6 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 
 /**
