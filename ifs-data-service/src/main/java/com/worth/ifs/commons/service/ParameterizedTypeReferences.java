@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
@@ -50,6 +51,10 @@ public final class ParameterizedTypeReferences {
     /**
      * IFS types
      */
+
+    public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
+        return new ParameterizedTypeReference<List<AlertResource>>() {};
+    }
 
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};

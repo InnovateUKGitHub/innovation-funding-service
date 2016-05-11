@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.service;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.worth.ifs.service.ApplicationSummarySortFieldService;
 
 public class ApplicationSummarySortFieldServiceTest {
 	private ApplicationSummarySortFieldService service;
