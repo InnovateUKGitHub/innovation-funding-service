@@ -15,12 +15,13 @@ import java.math.RoundingMode;
  * {@code LabourCost} implements {@link CostItem}
  */
 public class LabourCost implements CostItem {
+
     public interface YearlyWorkingDays {}
     private Long id;
 
     private String name;
 
-    @Length(max = MAX_STRING_LENGTH, message = "{org.hibernate.validator.constraints.MaxLength.message}")
+    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
     @NotBlank(groups = Default.class)
     private String role;
 

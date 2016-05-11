@@ -19,12 +19,12 @@ public class CapitalUsage implements CostItem {
     Integer deprecation;
     @NotBlank
     @NotNull
-    @Length(max = MAX_STRING_LENGTH, message = "{org.hibernate.validator.constraints.MaxLength.message}")
+    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
     String description;
 
     @NotBlank
     @NotNull
-    @Length(max = MAX_STRING_LENGTH, message = "{org.hibernate.validator.constraints.MaxLength.message}")
+    @Length(max = MAX_STRING_LENGTH, message = MAXLENGTH_MESSAGE)
     String existing;
 
     @NotNull

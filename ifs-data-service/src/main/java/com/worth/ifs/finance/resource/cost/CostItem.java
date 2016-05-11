@@ -26,6 +26,8 @@ public interface CostItem {
     int MAX_DIGITS = 20;
     int MAX_STRING_LENGTH = 240;
     int MAX_DB_STRING_LENGTH = 255;
+    String MAXLENGTH_MESSAGE = "{org.hibernate.validator.constraints.MaxLength.message}";
+
     public Long getId();
     public BigDecimal getTotal();
     public CostType getCostType();
