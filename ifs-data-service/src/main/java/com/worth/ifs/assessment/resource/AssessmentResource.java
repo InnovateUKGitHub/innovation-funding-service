@@ -1,8 +1,5 @@
 package com.worth.ifs.assessment.resource;
 
-import org.hibernate.annotations.*;
-
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
