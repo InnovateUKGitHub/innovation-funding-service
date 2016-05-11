@@ -596,7 +596,7 @@
                         type="number"
                         th:id="${'cost-capital_usage-'+cost.id+'-residual_value'}"
                         class="form-control form-finances-capital-usage-residual-value"
-                        th:name="${type +'-residual_value-' + question.id + '-' + cost.id}"
+                        th:name="${type +'-residualValue-' + question.id + '-' + cost.id}"
                         th:value="${#numbers.formatDecimal(cost.residualValue,0,0)}"
                         th:readonly="${complete == 'complete'}"
                         min="1"
