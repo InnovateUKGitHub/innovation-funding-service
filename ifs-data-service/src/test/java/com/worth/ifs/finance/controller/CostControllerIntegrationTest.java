@@ -9,12 +9,7 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.cost.GrantClaim;
-import com.worth.ifs.finance.resource.cost.LabourCost;
-import com.worth.ifs.finance.resource.cost.Materials;
-import com.worth.ifs.finance.resource.cost.OtherFunding;
-
-import com.worth.ifs.finance.resource.cost.OtherCost;
+import com.worth.ifs.finance.resource.cost.*;
 
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -44,6 +39,8 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private LabourCost labourCost;
     private LabourCost labourCostDaysPerYear;
     private OtherFunding otherFunding;
+    private TravelCost travelCost;
+    private OtherCost otherCost;
 
     private String notAllowedTextSize;
 
@@ -57,9 +54,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private long leadApplicantId;
     private long leadApplicantProcessRole;
     public static final long APPLICATION_ID = 1L;
-
-    private OtherCost otherCost;
-
+    private long travelAndSubsistenceQuestionId = 33L;
     private long otherCostQuestionId = 34L;
 
     @Autowired
@@ -84,7 +79,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         labourCost = (LabourCost) controller.get(4L).getSuccessObject();
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccessObject();
         otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
-
+        travelCost = (TravelCost) controller.add(applicationFinance.getId(), travelAndSubsistenceQuestionId, new TravelCost()).getSuccessObject();
         otherCost = (OtherCost) controller.add(applicationFinance.getId(), otherCostQuestionId, new OtherCost()).getSuccessObject();
 
         leadApplicantId = 1L;
@@ -223,6 +218,78 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                 .filter(e -> "This field should be 70% or lower".equals(e.getErrorMessage()))
                 .findAny().isPresent());
     }
+
+    /* TravelCost Section Tests */
+
+    @Rollback
+    @Test
+    public void testValidationTravelCostUpdateSuccess() {
+        travelCost.setItem("Travel To Australia for research consultancy");
+        travelCost.setCost(new BigDecimal(100000));
+        travelCost.setQuantity(1000);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+    }
+
+    @Rollback
+    @Test
+    public void testValidationTravelCostUpdateIncorrectValues(){
+        travelCost.setItem("");
+        travelCost.setCost(new BigDecimal(-1000));
+        travelCost.setQuantity(-500);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+        assertEquals(3, messages.getErrors().size());
+        assertEquals(travelCost.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("item")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
+    }
+
+    @Rollback
+    @Test
+    public void testValidationTravelCostUpdateIncorrectNumbers(){
+        travelCost.setItem(notAllowedTextSize);
+        travelCost.setCost(new BigDecimal(0));
+        travelCost.setQuantity(null);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+        assertEquals(256, notAllowedTextSize.length());
+        assertEquals(2, messages.getErrors().size());
+        assertEquals(travelCost.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("may not be null"))
+                )
+        ));
+    }
+
 
     /* Other Cost Section Tests */
 

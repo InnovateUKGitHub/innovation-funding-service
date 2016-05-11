@@ -83,4 +83,16 @@ public class TravelCost implements CostItem {
     public int getMinRows() {
         return 0;
     }
+
+    public void setItem(String item) {
+        this.item = item;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 }
