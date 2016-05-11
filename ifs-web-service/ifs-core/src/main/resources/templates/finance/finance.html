@@ -11,7 +11,7 @@
                 <span class="form-hint" th:text="${question.description}" />
                 <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
             </label>
-            
+
             <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
             <input type="number"
                    min="1"
@@ -705,6 +705,7 @@
                        th:value="${cost.name}"
                        th:readonly="${complete == 'complete'}"
                        maxlength="240"
+                       required="required"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-name]}')} ? 'field-error' : ''"  />
             </div>
             <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-country]}')} ? 'error' : ''">
@@ -719,6 +720,7 @@
                        th:value="${cost.country}"
                        th:readonly="${complete == 'complete'}"
                        maxlength="240"
+                       required="required"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-country]}')} ? 'field-error' : ''"   />
             </div>
 
@@ -728,7 +730,7 @@
                     <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-role'})" th:remove="tag" />
                 </label>
 
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=false)" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
             </div>
 
             <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''">
@@ -745,6 +747,7 @@
                        th:readonly="${complete == 'complete'}"
                        min="1"
                        max="9999999999999999999"
+                       required="required"
                        data-max-errormessage="You must enter a value less than 20 digits"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
                        />
@@ -1065,7 +1068,7 @@
                        maxlength="7"
                        th:value="${cost.securedDate}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'field-error' : ''"
-                       required="required"/>
+                       required="required" />
             </td>
 
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingAmount]}')} ? 'error' : ''">
