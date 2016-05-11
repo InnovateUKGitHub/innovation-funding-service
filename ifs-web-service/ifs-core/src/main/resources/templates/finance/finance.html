@@ -323,7 +323,6 @@
                                th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                                th:name="${'overheads-customRate-' + question.id + '-'+overheadCosts?.id}"
                                th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}"
-                               data-calculation-input="overhead-rate"
                                min="1"
                                max="100"
                                class="form-control form-control-1-4 alignright"
@@ -357,7 +356,6 @@
                                th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                                th:name="${'overheads-agreedRate-' + question.id + '-' + overheadCosts?.id}"
                                th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}"
-                               data-calculation-input="overhead-agreedRate"
                                min="1"
                                max="100"
                                class="form-control form-control-1-4 alignright"
@@ -740,7 +738,6 @@
                   </label>
                 <input type="number"
                        class="form-control"
-                       data-calculation-input="subcontracting-cost-row"
                        th:name="${type +'-subcontractingCost-' + question.id + '-' + cost.id}"
                        th:id="${'cost-subcontracting-'+cost.id+'-subcontractingCost'}"
                        th:value="${#numbers.formatDecimal(cost.cost,0,0)}"

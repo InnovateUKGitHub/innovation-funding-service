@@ -70,4 +70,12 @@ public class OtherCost implements CostItem {
     public int getMinRows() {
         return 0;
     }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
