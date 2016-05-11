@@ -13,10 +13,14 @@ import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.finance.resource.cost.LabourCost;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
+
+import com.worth.ifs.finance.resource.cost.OtherCost;
+
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.UserMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -41,6 +45,8 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private LabourCost labourCostDaysPerYear;
     private OtherFunding otherFunding;
 
+    private String notAllowedTextSize;
+
     @Mock
     BindingResult bindingResult;
 
@@ -52,7 +58,12 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private long leadApplicantProcessRole;
     public static final long APPLICATION_ID = 1L;
 
+    private OtherCost otherCost;
+
+    private long otherCostQuestionId = 34L;
+
     @Autowired
+
     UserMapper userMapper;
 
 
@@ -74,8 +85,13 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccessObject();
         otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
 
+        otherCost = (OtherCost) controller.add(applicationFinance.getId(), otherCostQuestionId, new OtherCost()).getSuccessObject();
+
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
+
+        notAllowedTextSize = StringUtils.repeat("a", 256);
+
         List<ProcessRole> proccessRoles = new ArrayList<>();
         proccessRoles.add(
                 new ProcessRole(
@@ -207,4 +223,69 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                 .filter(e -> "This field should be 70% or lower".equals(e.getErrorMessage()))
                 .findAny().isPresent());
     }
+
+    /* Other Cost Section Tests */
+
+    @Rollback
+    @Test
+    public void testValidationOtherCostUpdateSuccess() {
+        otherCost.setCost(new BigDecimal(1000));
+        otherCost.setDescription("Additional Test Cost");
+
+        RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+    }
+
+    @Rollback
+    @Test
+    public void testValidationOtherCostUpdateIncorrectCostValue() {
+
+        otherCost.setCost(new BigDecimal(0));
+        otherCost.setDescription(notAllowedTextSize);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(1, messages.getErrors().size());
+        assertEquals(otherCost.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), contains(
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
+    }
+
+    @Rollback
+    @Test
+    public void testValidationOtherCostUpdateMinIncorrectValues() {
+
+        otherCost.setCost(new BigDecimal(-1000));
+        otherCost.setDescription("");
+
+        RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(2, messages.getErrors().size());
+        assertEquals(otherCost.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("description")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
+    }
+
 }
