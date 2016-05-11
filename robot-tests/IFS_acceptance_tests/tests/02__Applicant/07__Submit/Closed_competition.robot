@@ -20,7 +20,7 @@ The application shows as not submitted on the dashboard when the competition is 
     [Tags]
     When the user navigates to the page     ${dashboard_url}
     Then the user should see that the application is not submitted
-    And the user clicks the button/link     link=00000015. Spherical interactions in hyperdimensional space
+    And the user clicks the button/link     link=00000015: Spherical interactions in hyperdimensional space
 
 
 
