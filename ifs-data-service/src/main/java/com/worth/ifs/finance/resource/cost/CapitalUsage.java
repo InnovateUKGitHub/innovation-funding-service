@@ -36,6 +36,7 @@ public class CapitalUsage implements CostItem {
     @DecimalMin(value = "1")
     @Digits(integer = MAX_DIGITS, fraction = 0)
     BigDecimal residualValue;
+
     @NotNull
     @Min(0)
     @Max(100)

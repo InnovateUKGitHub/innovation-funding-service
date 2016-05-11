@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -98,6 +99,13 @@ public class Cost {
 
     public List<CostValue> getCostValues() {
         return costValues;
+    }
+
+    public void setCostValues(List<CostValue> costValues) {
+        this.costValues = costValues;
+    }
+    public void addCostValues(CostValue... c) {
+        Collections.addAll(this.costValues, c);
     }
 
     public Question getQuestion() {

@@ -631,7 +631,7 @@
                        th:name="${type +'-utilisation-' + question.id + '-' + cost.id}"
                        th:value="${cost.utilisation}"
                        th:readonly="${complete == 'complete'}"
-                       min="1"
+                       min="0"
                        max="100"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-utilisation]}')} ? 'field-error' : ''"/>
             </div>

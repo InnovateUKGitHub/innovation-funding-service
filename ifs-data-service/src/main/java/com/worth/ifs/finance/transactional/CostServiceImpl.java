@@ -151,7 +151,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
                     .peek(c -> LOG.debug("CostValue: " + c.getValue()))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
-            return updatedCost;
+            // refresh the object, since we need to reload the costvalues, on the cost object.
+            return savedCost;
         });
     }
 
@@ -295,7 +296,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
         costValue.setCost(savedCost);
         costValue.setCostField(costField);
-        costValueRepository.save(costValue);
+        costValue = costValueRepository.save(costValue);
+        savedCost.addCostValues(costValue);
     }
 
 
