@@ -638,27 +638,6 @@ public class BaseUnitTest {
         when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
     }
 
-    public void setupAssessment(){
-//        final Assessment assessment1 = newAssessment().withId(1L).withProcessRole(assessorProcessRolesTemporary.get(2)).build();
-//        final Assessment assessment2 = newAssessment().withId(2L).withProcessRole(assessorProcessRolesTemporary.get(0)).build();
-//        final Assessment assessment3 = newAssessment().withId(3L).withProcessRole(assessorProcessRolesTemporary.get(1)).build();
-//        final Assessment assessment4 = newAssessment().withId(4L).withProcessRole(assessorProcessRolesTemporary.get(3)).build();
-//
-//        when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competitionResource.getId())).thenReturn(restSuccess(3));
-//        when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competitionResource.getId())).thenReturn(restSuccess(1));
-//
-//        assessment1.setProcessStatus(AssessmentStates.REJECTED.getState());
-//        assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
-//        assessment3.setProcessStatus(AssessmentStates.SUBMITTED.getState());
-//        assessment4.setProcessStatus(AssessmentStates.ASSESSED.getState());
-//
-//        submittedAssessments = singletonList(assessment3);
-//        assessments = asList(assessment1, assessment2, assessment3, assessment4);
-//        when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competitionResource.getId())).thenReturn(restSuccess(assessments));
-//
-//        assessments.forEach(assessment -> when(assessmentRestService.getScore(assessment.getId())).thenReturn(restSuccess(new Score())));
-    }
-
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);

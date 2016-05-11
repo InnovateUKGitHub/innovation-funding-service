@@ -1,7 +1,7 @@
 package com.worth.ifs.alert.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
-import static com.worth.ifs.alert.domain.AlertType.MAINTENANCE;
+import static com.worth.ifs.alert.resource.AlertType.MAINTENANCE;
 import static com.worth.ifs.security.SecuritySetter.basicSecurityUser;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 

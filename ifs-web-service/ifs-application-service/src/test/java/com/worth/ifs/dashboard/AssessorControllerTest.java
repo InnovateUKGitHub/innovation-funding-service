@@ -38,7 +38,6 @@ public class AssessorControllerTest  extends BaseUnitTest {
         this.setupCompetition();
         this.setupUserRoles();
         this.setupApplicationWithRoles();
-        this.setupAssessment();
     }
 
     @Ignore
