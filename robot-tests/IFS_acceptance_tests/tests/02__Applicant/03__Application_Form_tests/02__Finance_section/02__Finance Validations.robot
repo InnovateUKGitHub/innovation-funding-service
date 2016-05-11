@@ -13,7 +13,7 @@ Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-Labour validations
+Labour server side validations
     [Documentation]    INFUND-844
     [Tags]    Pending
     #Pending due to infund 2687
@@ -21,17 +21,26 @@ Labour validations
     When the user clicks the button/link    jQuery=button:contains('Add another role')
     And the user enters text to a text field    css=#cost-labour-1-labourDaysYearly    366
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    -98
-    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112131415161718192021
+    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    123456789101112131415161718192021
+    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
     And the user marks the finances as complete
     Then the user should see an error    This field should be 365 or lower
     And the user should see an error    This field cannot be left blank
-    And the user should see an error    This field should be 0 or higher
-    #And the user should see an error    You must enter a value less than 20 digits
+    And the user should see an error    This field should be 1 or higher
+    And the user should see an error    You must enter a value less than 20 digits
     And the user should see the element    css=.error-summary-list
-    And the user enters text to a text field    css=#cost-labour-1-labourDaysYearly    150
-    [Teardown]    Run keywords    the user clicks the button/link    jQuery=button:contains("Remove")
-    ...    AND    the user clicks the button/link    jQuery=button:contains("Labour")
+    [Teardown]
+
+Labour client side validations
+    [Documentation]    INFUND-844
+    [Tags]    Pending
+    When the user enters text to a text field    css=#cost-labour-1-labourDaysYearly    -1
+    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
+    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    -1
+    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112
+    Then the user gets the expected validation errors    You must enter a value less than 10 digits    This field should be 1 or higher
+    #And the user gets the expected validation errors    This field cannot be left blank    #we
+    [Teardown]    Remove row    jQuery=button:contains("Labour")
 
 Administration costs validations (custom cost)
     [Documentation]    INFUND-844
@@ -39,16 +48,16 @@ Administration costs validations (custom cost)
     #Pending due to infund-2693
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And user selects the admin costs    overheads-rateType-29-51    CUSTOM_RATE
-    #And the user enters text to a text field    id=cost-overheads-51-customRate    ${EMPTY}
-    #And the user marks the finances as complete
-    #Then the user should see an error    Please enter a valid value
+    And the user enters text to a text field    id=cost-overheads-51-customRate    ${EMPTY}
+    And the user marks the finances as complete
+    Then the user should see an error    This field should be 1 or higher
     And the user enters text to a text field    id=cost-overheads-51-customRate    101
     And the user marks the finances as complete
     Then the user should see an error    This field should be 100 or lower
     And the user should see the element    css=.error-summary-list
     And the user enters text to a text field    id=cost-overheads-51-customRate    -1
     And the user marks the finances as complete
-    Then the user should see an error    This field should be 0 or higher
+    Then the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
     [Teardown]    When the user clicks the button/link    jQuery=button:contains("Administration support costs")
 
@@ -58,16 +67,16 @@ Administration costs validations (special rate)
     #Pending due to infund-2693
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And user selects the admin costs    overheads-rateType-29-51    SPECIAL_AGREED_RATE
-    #And the user enters text to a text field    id=cost-overheads-51-customRate    ${EMPTY}
-    #And the user marks the finances as complete
-    #Then the user should see an error    Please enter a valid value
+    And the user enters text to a text field    id=cost-overheads-51-agreedRate    ${EMPTY}
+    And the user marks the finances as complete
+    Then the user should see an error    This field should be 1 or higher
     And the user enters text to a text field    id=cost-overheads-51-agreedRate    101
     And the user marks the finances as complete
     Then the user should see an error    This field should be 100 or lower
     And the user should see the element    css=.error-summary-list
     And the user enters text to a text field    id=cost-overheads-51-agreedRate    -1
     And the user marks the finances as complete
-    Then the user should see an error    This field should be 0 or higher
+    Then the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
     [Teardown]    When the user clicks the button/link    jQuery=button:contains("Administration support costs")
 
@@ -85,9 +94,7 @@ Materials calculations
     #And the user should see an error    You must enter a value less than 20 digits
     And the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    Focus    jQuery=button:contains("Remove")
-    ...    AND    the user clicks the button/link    jQuery=button:contains("Remove")
-    ...    AND    the user clicks the button/link    jQuery=button:contains("Materials")
+    [Teardown]    Remove row    jQuery=button:contains("Materials")
 
 Capital usage validations
     [Documentation]    INFUND-844
@@ -105,8 +112,7 @@ Capital usage validations
     And the user should see an error    This field should be 0 or higher
     And the user should see an error    This field should be 100 or lower
     And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    the user clicks the button/link    jQuery=button:contains("Remove")
-    ...    AND    the user clicks the button/link    jQuery=button:contains("Capital usage")
+    [Teardown]    Remove row    jQuery=button:contains("Capital usage")
 
 Subcontracting costs validations
     [Documentation]    INFUND-844
@@ -121,8 +127,7 @@ Subcontracting costs validations
     And the user marks the finances as complete
     Then the user should see an error    You must enter a value less than 20 digits
     And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    the user clicks the button/link    jQuery=button:contains("Remove")
-    ...    AND    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
+    [Teardown]    Remove row    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence validations
     [Documentation]    INFUND-844
@@ -240,3 +245,14 @@ the user enters invalid inputs in the other funding fields
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
     Mouse out    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
     Focus    jQuery=button:contains("Mark all as complete")
+
+Remove row
+    [Arguments]    ${section}
+    the user clicks the button/link    jQuery=button:contains("Remove")
+    the user clicks the button/link    ${section}
+
+The user gets the expected validation errors
+    [Arguments]    ${ERROR1}    ${ERROR2}
+    Focus    jQuery=button:contains("Mark all as complete")
+    Then the user should see an error    ${ERROR1}
+    And the user should see an error    ${ERROR2}
