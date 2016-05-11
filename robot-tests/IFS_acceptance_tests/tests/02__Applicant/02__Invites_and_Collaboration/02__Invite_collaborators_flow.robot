@@ -154,10 +154,10 @@ The Lead applicant invites a non registered user in the same organisation
 the status of the invitees is correct on the overview page
     [Documentation]     INFUND-2738
     [Tags]  Collaboration   Pending
-    # Pending completion of INFUND-2738
+    # Pending completion of INFUND-2050
     [Setup]     Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page        ${application_details_url}
-    Then the user should see the text in the page        Worth Internet Systems <small> (pending) </small>
+    Then the user should see the text in the page        foobar
 
 
 The user should not create new org but should follow the create account flow
