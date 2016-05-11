@@ -14,82 +14,82 @@ import static org.mockito.Mockito.*;
 public class ApplicationStartDateValidatorTest {
 
 	private ApplicationStartDateValidator validator;
-	
+
 	@Before
 	public void setUp() {
 		validator = new ApplicationStartDateValidator();
 	}
-	
+
 	@Test
 	public void testDoAllowInFuture() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = req("11","3","2020");
-		
+
 		validator.validate(request, errors);
-		
+
 		verifyNoMoreInteractions(errors);
 	}
-	
+
 	@Test
 	public void testDoNotAllowInPast() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = req("11","3","1985");
-		
+
 		validator.validate(request, errors);
-		
-		verify(errors).reject("application.startDate", "Please enter a future date.");
+
+		verify(errors).reject("application.startDate", "Please enter a future date");
 	}
-	
+
 	@Test
 	public void testDoNotAllowNonNumeric() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = req("abc","3","2020");
-		
+
 		validator.validate(request, errors);
-		
-		verify(errors).reject("application.startDate", "Please enter a valid date.");
+
+		verify(errors).reject("application.startDate", "Please enter a valid date");
 	}
-	
+
 	@Test
 	public void testDoNotAllowInvalidDate() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = req("30","2","2020");
-		
+
 		validator.validate(request, errors);
-		
-		verify(errors).reject("application.startDate", "Please enter a valid date.");
+
+		verify(errors).reject("application.startDate", "Please enter a valid date");
 	}
-	
+
 	@Test
 	public void testDoNotComplainAboutEmptyFields() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = req("","","");
-		
+
 		validator.validate(request, errors);
-		
+
 		verifyNoMoreInteractions(errors);
 	}
-	
+
 	@Test
 	public void testDoNotComplainAboutAbsentFields() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = mock(HttpServletRequest.class);
-		
+
 		validator.validate(request, errors);
-		
+
 		verifyNoMoreInteractions(errors);
 	}
-	
+
 	@Test
 	public void testDoNotAllowPartlyEmptyFields() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = req("","3","2020");
-		
+
 		validator.validate(request, errors);
-		
-		verify(errors).reject("application.startDate", "Please enter a valid date.");
+
+		verify(errors).reject("application.startDate", "Please enter a valid date");
 	}
-	
+
 	@Test
 	public void testSupportsHttpServletRequestAndSubclasses() {
 		assertTrue(validator.supports(HttpServletRequest.class));

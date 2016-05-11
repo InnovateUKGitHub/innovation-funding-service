@@ -6,8 +6,8 @@ import com.worth.ifs.security.NotSecured;
 
 public interface AssessorFeedbackService {
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<AssessorFeedbackResource> findOne(Long id);
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<AssessorFeedbackResource> findByAssessorId(Long assessorId);
 }

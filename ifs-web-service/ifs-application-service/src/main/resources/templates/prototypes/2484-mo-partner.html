@@ -19,48 +19,27 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Monitoring officer'})" th:remove="tag" />
 
-	<div class="grid-row">
+	<div  th:unless="${param.status != null and param.status[0] == 'noMo'}">
 		
-		<div class="column-half" th:unless="${param.status != null and param.status[0] == 'noMo'}">
-			
-			<p><strong>Machine learning in robots</strong> has been assigned a Monitoring officer. No action needs to be taken by your team, the Monitoring officer will make contact for an introduction to your project. If there are any further questions about this appointment please contact InnovateUK for further information.</p>
+		<p><strong>Machine learning in robots</strong> has been assigned a Monitoring Officer. No action needs to be taken by your team. The Monitoring Officer will make contact in due course. If you have any questions about this appointment please contact Innovate UK.</p>
 
-			<ul class="boxed">
-				<li>Tom Evans</li>
-				<li><a href="mailto:tom.evans@evans.com">tom.evans@evans.com</a></li>
-				<li>07843 454856</li>
-			</ul>
-
-		</div>
-
-		<div class="column-half" th:unless="${param.status == null or param.status[0] != 'noMo'}">
-
-			<p><strong>Machine learning in robots</strong> has not yet been assigned a monitoring officer.</p>
-
-		</div>
-
-		<div class="column-half">
-
-			<h3 class="heading-medium no-margin-top">Role of Monitoring Officer</h3>
-			
-			<p>The Monitoring officer will be the primary point of contact for the Project over it's lifetime, and will monitor the Project throughout and report progress to Innovate UK. Monitoring will occur on a quarterly basis, consisting of a Quarterly Review Meetings (“QRM”) between the Project and the MO to review the Project’s progress.</p>
-
-			<p>If during the Project the <strong>Aptrans Ltd</strong> is or becomes aware of any impediment relevant to the progress, outcomes or exploitation of the Project, the Organisation shall promptly inform InnovateUK, via the MO.</p>
-
-			<p>When the project is completed, <strong>Aptrans Ltd</strong>  will be required to supply the Monitoring Officer the following</p>
-
-			<ul class="list-bullet">
-				<li>Final Report; and</li>
-				<li>confirmation that the Independent Accountant’s Report has been submitted;</li>
-				<li>Confirmation that the final claim has been submitted.</li>
-			</ul>
-
-
-		</div>
+		<ul class="boxed">
+			<li>Tom Evans</li>
+			<li><a href="mailto:tom.evans@evans.com">tom.evans@evans.com</a></li>
+			<li>07843 454856</li>
+		</ul>
 
 	</div>
 
+	<div  th:unless="${param.status == null or param.status[0] != 'noMo'}">
 
+		<p><strong>Machine learning in robots</strong> has not yet been assigned a monitoring officer.</p>
+
+	</div>
+
+	<h3 class="heading-medium">Role of Monitoring Officer</h3>
+	
+	<p>The Monitoring Officer will be the primary point of contact for the project, and will monitor and report progress to Innovate UK.</p>
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

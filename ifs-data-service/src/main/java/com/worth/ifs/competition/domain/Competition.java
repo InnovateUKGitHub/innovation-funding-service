@@ -57,6 +57,7 @@ public class Competition {
     private LocalDateTime endDate;
     private LocalDateTime assessmentStartDate;
     private LocalDateTime assessmentEndDate;
+    private LocalDateTime assessorFeedbackDate;
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 
@@ -181,6 +182,14 @@ public class Competition {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public LocalDateTime getAssessorFeedbackDate() {
+        return assessorFeedbackDate;
+    }
+
+    public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
+        this.assessorFeedbackDate = assessorFeedbackDate;
     }
 
     private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {

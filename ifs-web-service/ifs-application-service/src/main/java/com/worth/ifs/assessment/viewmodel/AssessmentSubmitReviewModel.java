@@ -1,8 +1,5 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
@@ -19,11 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
-import static com.worth.ifs.util.CollectionFunctions.*;
-import static com.worth.ifs.util.PairFunctions.leftPair;
-import static com.worth.ifs.util.PairFunctions.presentRightPair;
-import static com.worth.ifs.util.PairFunctions.rightPairIsPresent;
-import static java.util.Optional.empty;
+import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMapCollector;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -67,7 +61,7 @@ public class AssessmentSubmitReviewModel {
                 collect(toList());
 
         Map<QuestionResource, Optional<ResponseResource>> questionsAndResponses =
-                questionsAndResponsePairs.stream().collect(pairsToMap());
+                questionsAndResponsePairs.stream().collect(pairsToMapCollector());
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));

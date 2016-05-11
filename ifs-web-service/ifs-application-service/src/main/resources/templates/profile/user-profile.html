@@ -18,6 +18,18 @@
 
     <h2 class="heading-medium no-margin-bottom">Your details <small><a href="/profile/edit"> Edit your details</a></small></h2>
     <!--/*/ <th:block th:object="${userDetailsForm}">/*/-->
+    <h3 class="heading-small">Your organisation</h3>
+    <p th:text="*{organisationName}" />
+    <h3 class="heading-small">Registration number</h3>
+    <p th:text="*{companyHouseNumber}" />
+    <h3 class="heading-small">Address</h3>
+    <div th:text="*{addressLine1}" />
+    <div th:text="*{addressLine2}" />
+    <div th:text="*{addressLine3}" />
+    <div th:text="*{town}" />
+    <div th:text="*{county}" />
+    <div th:text="*{postcode}" />
+    
     <h3 class="heading-small">Your name</h3>
     <p>
         <span th:text="*{title}" th:remove="tag" />

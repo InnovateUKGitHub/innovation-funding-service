@@ -1,14 +1,14 @@
 package com.worth.ifs.form.transactional;
 
-import java.util.List;
-
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.security.NotSecured;
 
+import java.util.List;
+
 public interface FormInputTypeService {
-    @NotSecured("anyone can find a form input type")
+    @NotSecured(value = "Anyone can find a form input type", mustBeSecuredByOtherServices = false)
     FormInputType findOne(Long id);
 
-    @NotSecured("anyone can find a form input type")
+    @NotSecured(value = "Anyone can find a form input type", mustBeSecuredByOtherServices = false)
     List<FormInputType> findByTitle(String title);
 }

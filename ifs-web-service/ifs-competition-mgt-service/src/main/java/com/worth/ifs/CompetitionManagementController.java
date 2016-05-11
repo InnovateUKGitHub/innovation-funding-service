@@ -56,7 +56,7 @@ public class CompetitionManagementController {
 	    	case IN_ASSESSMENT:
 	    		return inAssessmentCompetition(model, competitionId, queryForm, bindingResult);
 	    	case FUNDERS_PANEL:
-	    		return "comp-mgt-funders-panel";
+	    		return fundersPanelCompetition(model, competitionId, queryForm, bindingResult);
 			default:
 				return "redirect:/login";
     	}
@@ -72,7 +72,6 @@ public class CompetitionManagementController {
 		model.addAttribute("activeSortField", sort);
 		model.addAttribute("activeTab", "allApplications");
 
-        LOG.warn("Show open competition info");
         return "comp-mgt-open";
 	}
 
@@ -81,13 +80,23 @@ public class CompetitionManagementController {
 		
 		if("notSubmitted".equals(queryForm.getTab())) {
 			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
-
 		} else {
 			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
 		}
 		
-        LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";
+	}
+	
+	private String fundersPanelCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
+			BindingResult bindingResult) {
+		
+		if("notSubmitted".equals(queryForm.getTab())) {
+			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
+		} else {
+			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
+		}
+		
+		return "comp-mgt-funders-panel";
 	}
 
 	private void populateNotSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
@@ -107,7 +116,6 @@ public class CompetitionManagementController {
 		model.addAttribute("activeTab", "submitted");
 		model.addAttribute("activeSortField", sort);
 	}
-
 
 	@RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {

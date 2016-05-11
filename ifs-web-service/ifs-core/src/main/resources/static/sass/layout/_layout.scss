@@ -67,7 +67,19 @@
 		color: $red;
 		margin: 7px 0;
 		@include media-down(mobile){
-			float:none;
+			font-size:14px;
+			.pie.small {
+				width:30px;
+				height:30px;
+			}
+			.pie.small + .pie-overlay {
+				width:26px;
+				height: 26px;
+			}
+			.pie.small + .pie-overlay > div {
+				font-size: 12px;
+	     	line-height: 29px;
+			}
 		}
 	}
 

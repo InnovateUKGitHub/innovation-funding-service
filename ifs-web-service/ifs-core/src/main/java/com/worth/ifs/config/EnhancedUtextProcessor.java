@@ -34,10 +34,12 @@ class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProce
             expression.execute(configuration, arguments, StandardExpressionExecutionContext.UNESCAPED_EXPRESSION);
 
         Whitelist whitelist = Whitelist.relaxed()
-            .addAttributes("ul", "class", "id", "style")
-            .addAttributes("li", "class", "id", "style")
-            .addAttributes("ol", "class", "id", "style")
-            .addAttributes("div", "class", "id", "style", "aria-hidden");
+            .addAttributes("ul", "class", "id")
+            .addAttributes("li", "class", "id")
+            .addAttributes("ol", "class", "id")
+            .addAttributes("h2", "class", "id")
+            .addAttributes("h3", "class", "id")
+            .addAttributes("div", "class", "id", "aria-hidden");
 
         return Jsoup.clean((result == null? "" : result.toString()), whitelist);
     }

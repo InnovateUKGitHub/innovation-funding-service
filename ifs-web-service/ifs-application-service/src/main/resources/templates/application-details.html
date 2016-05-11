@@ -18,6 +18,8 @@
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
+	<div th:include="fragments/elements :: competition-status-warning (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+
     <div class="grid-row">
         <div class="column-half">
           <dl class="dl-left">
@@ -37,7 +39,7 @@
         <div class="column-half">
             <ul class="list-bullet">
                 <li><a th:href="'/application/'+${currentApplication.getId()}+'/contributors'">View team members and add collaborators</a></li>
-                <li><a th:href="'/competition/'+${currentCompetition.id}+'/info/terms-and-conditions'">Grant Terms and Conditions</a></li>
+                <li><a th:href="'/competition/'+${currentCompetition.id}+'/info/terms-and-conditions'">View conditions of grant offer</a></li>
             </ul>
         </div>
     </div>

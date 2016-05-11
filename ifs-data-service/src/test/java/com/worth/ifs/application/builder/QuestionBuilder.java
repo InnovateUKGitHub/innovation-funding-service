@@ -36,9 +36,7 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
                 .with(idBasedNames("Section "))
                 .withNeedingAssessorScore(true)
                 .withPriority(0)
-                .withQuestionNumber("1")
-                .withGuidanceQuestion("Some Guidance Question Text")
-                .withGuidanceAnswer("Some Guidance Answer Text");
+                .withQuestionNumber("1");
     }
 
     public QuestionBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
@@ -47,14 +45,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withQuestionNumber(String value) {
         return with(question -> setField("questionNumber", value, question));
-    }
-
-    public QuestionBuilder withGuidanceQuestion(String value) {
-        return with(question -> setField("guidanceQuestion", value, question));
-    }
-
-    public QuestionBuilder withGuidanceAnswer(String value) {
-        return with(question -> setField("guidanceAnswer", value, question));
     }
 
     public QuestionBuilder withPriority(int priority) {
