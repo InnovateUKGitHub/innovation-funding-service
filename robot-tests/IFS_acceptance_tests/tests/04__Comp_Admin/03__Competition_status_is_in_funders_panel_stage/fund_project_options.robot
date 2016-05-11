@@ -32,7 +32,7 @@ If a Fund Project option is chosen for each application then the option to notif
 Comp admin can unselect a Fund Project and the option to notify applicants become disabled
     [Documentation]     INFUND-2601
     When the user selects the option from the drop-down menu    -         id=fund16
-    the option to notify applicants is disabled
+    Then the option to notify applicants is disabled
 
 
 *** Keywords ***
