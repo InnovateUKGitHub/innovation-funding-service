@@ -70,7 +70,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> updateApplicationStatus(@P("applicationId") final Long id,
                                                                final Long statusId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'APPLICATION_SUBMITTED_NOTIFICATION')")
     ServiceResult<Notification> sendNotificationApplicationSubmitted(@P("applicationId") Long application);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
