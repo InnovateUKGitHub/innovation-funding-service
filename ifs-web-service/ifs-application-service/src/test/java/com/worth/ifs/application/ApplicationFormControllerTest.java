@@ -465,7 +465,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
