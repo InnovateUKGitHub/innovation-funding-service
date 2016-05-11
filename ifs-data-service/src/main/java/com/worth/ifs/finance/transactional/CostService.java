@@ -69,6 +69,6 @@ public interface CostService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId") Long applicationId);
 
-    @NotSecured("This is not getting date from the database, just getting a CostHandler")
+    @NotSecured(value = "This is not getting date from the database, just getting a CostHandler", mustBeSecuredByOtherServices = false)
     CostHandler getCostHandler(CostItem costItem);
 }

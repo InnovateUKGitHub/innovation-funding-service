@@ -185,23 +185,6 @@ public class ValidationUtil {
     private void invokeValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
         CostHandler costHandler = validatorService.getCostHandler(costItem);
         costHandler.validate(costItem, bindingResult);
-//        Validator extraValidator = null;
-//        switch(costItem.getCostType()){
-////            case FINANCE:
-////                extraValidator = grantClaimValidator;
-////                break;
-////            case OTHER_FUNDING:
-////                extraValidator = otherFundingValidator;
-////                break;
-////            case ACADEMIC:
-////                extraValidator = academicValidator;
-////                break;
-//        }
-//
-//        if(extraValidator != null){
-//            LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
-//            ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);
-//        }
     }
 
     private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){
