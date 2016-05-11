@@ -51,7 +51,7 @@
                 <div th:include="question-type/form-elements :: form-mark-all-as-complete-buttons" th:remove="tag"/>
             </div>
 
-            <ul class="pagination">
+            <ul class="pagination" th:if="${previousUrl != '' and nextUrl !=''}">
                 <li class="prev" th:if="${previousUrl}">
                     <a th:href="@{${previousUrl}}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>

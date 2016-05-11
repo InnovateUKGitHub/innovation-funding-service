@@ -1,12 +1,12 @@
-package com.worth.ifs;
+package com.worth.ifs.controller;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -17,17 +17,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.controller.form.ApplicationSummaryQueryForm;
+import com.worth.ifs.service.ApplicationSummarySortFieldService;
 
 @Controller
 @RequestMapping("/competition")
 public class CompetitionManagementController {
-    private static final Log LOG = LogFactory.getLog(CompetitionManagementController.class);
     
+	private static final int PAGE_SIZE = 20;
+	
     @Autowired
     private CompetitionService competitionService;
 
@@ -57,17 +60,20 @@ public class CompetitionManagementController {
 	    		return inAssessmentCompetition(model, competitionId, queryForm, bindingResult);
 	    	case FUNDERS_PANEL:
 	    		return fundersPanelCompetition(model, competitionId, queryForm, bindingResult);
+	    	case ASSESSOR_FEEDBACK:
+	    		return assessorFeedbackCompetition(model, competitionId, queryForm, bindingResult);
+	    	case PROJECT_SETUP:
+	    		return "comp-mgt-project-setup";
 			default:
 				return "redirect:/login";
     	}
     }
 
-	private String openCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
-			BindingResult bindingResult) {
+	private String openCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
 
 		String sort = applicationSummarySortFieldService.sortFieldForOpenCompetition(queryForm.getSort());
 
-		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, sort, queryForm.getPage() - 1, PAGE_SIZE);
 		model.addAttribute("results", applicationSummary);
 		model.addAttribute("activeSortField", sort);
 		model.addAttribute("activeTab", "allApplications");
@@ -75,46 +81,64 @@ public class CompetitionManagementController {
         return "comp-mgt-open";
 	}
 
-	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
-			BindingResult bindingResult) {
-		
+	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
 		if("notSubmitted".equals(queryForm.getTab())) {
-			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
+			populateNotSubmittedModel(model, competitionId, queryForm);
 		} else {
-			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
+			populateSubmittedModel(model, competitionId, queryForm, PAGE_SIZE);
 		}
-		
         return "comp-mgt-in-assessment";
 	}
 	
-	private String fundersPanelCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
-			BindingResult bindingResult) {
-		
+	private String fundersPanelCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
 		if("notSubmitted".equals(queryForm.getTab())) {
-			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
+			populateNotSubmittedModel(model, competitionId, queryForm);
 		} else {
-			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
+			queryForm.setPage(1);
+			populateSubmittedModel(model, competitionId, queryForm, Integer.MAX_VALUE);
 		}
-		
 		return "comp-mgt-funders-panel";
 	}
+	
+	private String assessorFeedbackCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+		populateModelBasedOnAssessorTabState(model, competitionId, queryForm, bindingResult);
+		return "comp-mgt-assessor-feedback";
+	}
 
-	private void populateNotSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
-			BindingResult bindingResult) {
+	private void populateModelBasedOnAssessorTabState(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+		if("overview".equals(queryForm.getTab())) {
+			populateOverviewModel(model);
+		} else if("notSubmitted".equals(queryForm.getTab())) {
+			populateNotSubmittedModel(model, competitionId, queryForm);
+		} else if("submitted".equals(queryForm.getTab())) {
+			populateSubmittedModel(model, competitionId, queryForm, PAGE_SIZE);
+		} else {
+			populateInProjectSetupModel(model);
+		}
+	}
+
+	private void populateNotSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm) {
 		String sort = applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(queryForm.getSort());
-		ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sort, queryForm.getPage() - 1, PAGE_SIZE);
 		model.addAttribute("results", results);
 		model.addAttribute("activeTab", "notSubmitted");
 		model.addAttribute("activeSortField", sort);
 	}
 
-	private void populateSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
-			BindingResult bindingResult) {
+	private void populateSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, Integer pageSize) {
 		String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
-		ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sort, queryForm.getPage() - 1, pageSize);
 		model.addAttribute("results", results);
 		model.addAttribute("activeTab", "submitted");
 		model.addAttribute("activeSortField", sort);
+	}
+	
+	private void populateInProjectSetupModel(Model model) {
+		model.addAttribute("activeTab", "projectsInSetup");
+	}
+
+	private void populateOverviewModel(Model model) {
+		model.addAttribute("activeTab", "overview");
 	}
 
 	@RequestMapping("/{competitionId}/download")

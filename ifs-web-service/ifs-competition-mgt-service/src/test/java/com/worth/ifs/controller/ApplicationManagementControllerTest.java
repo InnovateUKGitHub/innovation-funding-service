@@ -1,5 +1,6 @@
-package com.worth.ifs;
+package com.worth.ifs.controller;
 
+import com.worth.ifs.controller.ApplicationManagementController;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +21,6 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void testDisplayApplicationForCompetitionAdministrator() throws Exception {
-        List<FormInputResponseResource> responses = new ArrayList<>();
         Map<Long, FormInputResponseResource> mappedFormInputResponsesToFormInput = new HashMap<>();
 
         this.setupCompetition();

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+</head>
+<body class="competition-management funding-decision-confirmation">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content" class="full-width">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<h2 class="heading-medium">Notify applicants</h2>
+	<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+	<p>This step cannot be undone.</p>
+ 
+    <form method="post" action="#" id="submit-funding-decision-form" th:action="@{/competition/{competitionId}/fundingdecisionsubmit(competitionId=${competitionId})}">
+      <span th:each="entry : ${applicationFundingDecisions.entrySet()}" th:remove="tag" >
+      	<input th:if="${entry.getValue().name() == 'FUNDED'}" type="hidden" th:name="${entry.key}" value="Y" />
+      	<input th:if="${entry.getValue().name() == 'UNFUNDED'}" type="hidden" th:name="${entry.key}" value="N" />
+      </span>
+      <button id="no-js-notify-applicants" type="submit" class="button no-margin">Notify Applicants</button>
+    </form>
+    
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

@@ -14,8 +14,8 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 	private ApplicationSummaryRestService applicationSummaryRestService;
 	
 	@Override
-	public ApplicationSummaryPageResource findByCompetitionId(Long competitionId, int i, String sort) {
-		return applicationSummaryRestService.findByCompetitionId(competitionId, i, sort).getSuccessObjectOrThrowException();
+	public ApplicationSummaryPageResource findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+		return applicationSummaryRestService.findByCompetitionId(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
 	}
 
 	@Override
@@ -25,14 +25,14 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 
 	@Override
 	public ApplicationSummaryPageResource getSubmittedApplicationSummariesByCompetitionId(
-			Long competitionId, int pageNumber, String sortField) {
-		return applicationSummaryRestService.getSubmittedApplicationSummariesByCompetitionId(competitionId, pageNumber, sortField).getSuccessObjectOrThrowException();
+			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+		return applicationSummaryRestService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
 	}
 
 	@Override
 	public ApplicationSummaryPageResource getNotSubmittedApplicationSummariesByCompetitionId(
-			Long competitionId, int pageNumber, String sortField) {
-		return applicationSummaryRestService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, pageNumber, sortField).getSuccessObjectOrThrowException();
+			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+		return applicationSummaryRestService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
 	}
 
 	@Override
