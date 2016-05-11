@@ -19,27 +19,34 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" th:remove="tag" />
 
+	<div class="success-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'review'}">
+		<p><strong>Your bank details have been approved</strong></p>
+	</div>
+
 	<p th:unless="${param.status != null and param.status[0] == 'review'}">
 		Your organisation's details have been verified and will be used for grant claims for this project.
 	</p>
 
 	<p th:unless="${param.status == null or param.status[0] != 'review'}">Bank account details below are now being reviewed. We will contact you if we need any further information.</p>
 
-	<p>This bank account belongs to</p>
-
-	<h2 class="heading-medium no-margin">Aptrans Ltd</h2>
-	<p>Company number 04214477</p>
+	<h3 class="heading-medium">Organisation information</h3>
+	<p class="form-hint">This information provided during the application process cannot be changed.</p>
+	
+	<p class="extra-margin">
+		Aptrans Ltd <br />
+		Company no. 04214477
+	</p>
 
 	<h2 class="heading-medium">Account details</h2>
 
 	<dl class="standard-definition-list">
-		<dt>Sort code</dt>
-		<dd>****21</dd>
 		<dt>Account number</dt>
 		<dd>*****152</dd>
+		<dt>Sort code</dt>
+		<dd>****21</dd>
 	</dl>
 
-	<h2 class="heading-medium">Address</h2>
+	<h2 class="heading-medium">Billing address</h2>
 	<p>
 		Aptana Ltd<br />
 		13 Queen Square<br />
