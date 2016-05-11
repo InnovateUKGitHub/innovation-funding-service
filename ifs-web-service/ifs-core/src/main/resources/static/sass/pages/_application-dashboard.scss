@@ -132,18 +132,17 @@ The view is similar to the applications for assessment, but have a grey backgrou
 
 */
 
-@mixin with-hourglass{
+@mixin with-hourglass {
 	background: url(../images/icons/icon-awaiting-assessment.png) no-repeat;
 	width: 105px;
 	text-align: center;
 	line-height: 1.2em;
 	font-size: 14px;
-	padding-top: 110px;
 	float: right;
 	color: $secondary-text-colour;
 	margin: 0;
 }
-	
+
 .column-assessment-details{
 	@include grid-column( 13/16 );
 	@include media-down(tablet) {
@@ -297,10 +296,14 @@ The view is similar to the applications for assessment, but have a grey backgrou
 
 	.awaiting-assessment{
 		@include with-hourglass;
+		padding-top: 110px;
 	}
 	
 	.project-in-setup{
-    	@include with-hourglass;
+		@include with-hourglass;
+		padding-top: 46px;
+		background-size: 36px 36px;
+    	background-position: 32px 0px;
 	}
 
 	.assessment-submit-checkbox{
