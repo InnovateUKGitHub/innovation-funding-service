@@ -6,7 +6,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.OrganisationTypeForm;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.util.CookieUtil;

@@ -80,8 +80,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
-                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)));
     }
 
     @Test
@@ -130,10 +129,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(3)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv4)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(2)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamA")))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamB")));
+               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv4)));
    }
     
     @Test
@@ -165,9 +161,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(1)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamA")));
+               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
    }
     
     @Test
@@ -201,9 +195,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(1)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamA")));
+               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
    }
 
     private InviteOrganisationResource inviteOrganisationResource(InviteResource... invs) {

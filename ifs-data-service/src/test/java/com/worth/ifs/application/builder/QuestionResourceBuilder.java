@@ -1,18 +1,16 @@
 package com.worth.ifs.application.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.domain.Competition;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, QuestionResourceBuilder> {

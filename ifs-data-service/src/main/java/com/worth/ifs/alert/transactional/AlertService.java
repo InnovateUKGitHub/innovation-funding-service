@@ -1,11 +1,10 @@
 package com.worth.ifs.alert.transactional;
 
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;

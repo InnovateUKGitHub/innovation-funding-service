@@ -16,6 +16,7 @@ import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -59,6 +60,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Autowired
     private CostFieldMapper costFieldMapper;
 
+    @Autowired
+    private ApplicationFinanceMapper applicationFinanceMapper;
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -182,7 +185,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, final Long organisationId) {
         return find(applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId), notFoundError(ApplicationFinance.class, applicationId, organisationId)).
-                andOnSuccessReturn(finance -> new ApplicationFinanceResource(finance));
+                andOnSuccessReturn(finance -> applicationFinanceMapper.mapToResource(finance));
     }
 
     @Override
@@ -190,7 +193,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return find(applicationFinanceRepository.findByApplicationId(applicationId), notFoundError(ApplicationFinance.class, applicationId)).andOnSuccessReturn(applicationFinances -> {
             List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
             if (applicationFinances != null) {
-                applicationFinances.stream().forEach(af -> applicationFinanceResources.add(new ApplicationFinanceResource(af)));
+                applicationFinances.stream().forEach(af -> applicationFinanceResources.add(applicationFinanceMapper.mapToResource(af)));
             }
             return applicationFinanceResources;
         });
@@ -211,7 +214,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         final Long organisationId = applicationFinanceResourceId.getOrganisationId();
         ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         if (existingFinances != null) {
-            return serviceSuccess(new ApplicationFinanceResource(existingFinances));
+            return serviceSuccess(applicationFinanceMapper.mapToResource(existingFinances));
         }
 
         return find(application(applicationId), organisation(organisationId)).andOnSuccess((application, organisation) -> {
@@ -220,13 +223,13 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
             applicationFinance = applicationFinanceRepository.save(applicationFinance);
             initialize(applicationFinance);
-            return serviceSuccess(new ApplicationFinanceResource(applicationFinance));
+            return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
         });
     }
 
     @Override
     public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
-        return find(applicationFinance(applicationFinanceId)).andOnSuccess(finance -> serviceSuccess(new ApplicationFinanceResource(finance)));
+        return find(applicationFinance(applicationFinanceId)).andOnSuccess(finance -> serviceSuccess(applicationFinanceMapper.mapToResource(finance)));
     }
 
     @Override
@@ -237,7 +240,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
             dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
             dbFinance = applicationFinanceRepository.save(dbFinance);
-            return serviceSuccess(new ApplicationFinanceResource(dbFinance));
+            return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
         });
     }
 

@@ -1,10 +1,11 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.*;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.RecommendedValue;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.RecommendedValue;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -15,9 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
-import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
-import static com.worth.ifs.util.CollectionFunctions.pairsToMapCollector;
+import static com.worth.ifs.assessment.resource.AssessmentOutcomes.RECOMMEND;
+import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.PairFunctions.leftPair;
+import static com.worth.ifs.util.PairFunctions.presentRightPair;
+import static com.worth.ifs.util.PairFunctions.rightPairIsPresent;
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -31,7 +35,7 @@ public class AssessmentSubmitReviewModel {
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(AssessmentSubmitReviewModel.class);
 
-    private final Assessment assessment;
+    private final AssessmentResource assessment;
     private final ApplicationResource application;
     private final CompetitionResource competition;
     private final List<QuestionResource> questions;
@@ -40,17 +44,18 @@ public class AssessmentSubmitReviewModel {
     private final Map<Long, AssessorFeedbackResource> responseIdsAndFeedback;
     private final Map<Long, Optional<ResponseResource>> questionIdsAndResponses;
     private final List<AssessmentSummarySection> assessmentSummarySections;
-
+    private final ProcessOutcomeResource recommendedOutcome;
 
     // TODO this logic should live in the data layer and we should return a dto instead.
     // TODO Note there is code commonality with AssessmentHandler.getScore.
     // TODO make these changes when converting to dtos.
-    public AssessmentSubmitReviewModel(Assessment assessment, List<ResponseResource> responses, ApplicationResource application, CompetitionResource competition, Score score, List<QuestionResource> questions, List<SectionResource> sections) {
+    public AssessmentSubmitReviewModel(AssessmentResource assessment, ProcessOutcomeResource recommendedOutcome,  List<ResponseResource> responses, ApplicationResource application, CompetitionResource competition, Score score, List<QuestionResource> questions, List<SectionResource> sections) {
         this.assessment = assessment;
         this.application = application;
         this.competition = competition;
         this.score = score;
         this.questions = questions;
+        this.recommendedOutcome = recommendedOutcome;
 
         scorableQuestions = questions.stream().filter(QuestionResource::getNeedingAssessorScore).collect(toList());
 
@@ -72,17 +77,17 @@ public class AssessmentSubmitReviewModel {
 //                map(response -> Pair.of(response, response.getResponseAssessmentFeedbacks())).
 //                filter(rightPairIsPresent()).
 //                collect(toMap(leftPair(), presentRightPair()));
-
+//
 //        responses.forEach(response -> {
 //            response.getResponseAssessmentFeedbacks()
 //            responseIdsAndFeedback.put(response.getId(), )
 //        });
-
+//
 //        responseIdsAndFeedback = ;
 //                responsesAndFeedback.entrySet().stream().
 //                collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
-
-
+//
+//
 //        Map<QuestionResource, Optional<AssessorFeedbackResource>> questionsAndFeedback =
 //                questionsAndResponses.entrySet().stream().
 //                map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(empty()))).
@@ -104,7 +109,7 @@ public class AssessmentSubmitReviewModel {
 //                collect(toList());
     }
 
-    public Assessment getAssessment() {
+    public AssessmentResource getAssessment() {
         return assessment;
     }
 
@@ -146,14 +151,14 @@ public class AssessmentSubmitReviewModel {
     }
 
     public String getRecommendedValue(){
-        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getOutcome() : RecommendedValue.EMPTY.toString();
+        return recommendedOutcome != null ? recommendedOutcome.getOutcome() : RecommendedValue.EMPTY.toString();
     }
 
     public String getSuitableFeedback(){
-        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getDescription() : "";
+        return recommendedOutcome != null ? recommendedOutcome.getDescription() : "";
     }
 
     public String getComments(){
-        return assessment.getLastOutcome(RECOMMEND) != null ? assessment.getLastOutcome(RECOMMEND).getComment() : "";
+        return recommendedOutcome != null ? recommendedOutcome.getComment() : "";
     }
 }

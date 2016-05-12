@@ -1,4 +1,4 @@
-package com.worth.ifs.address.domain;
+package com.worth.ifs.address.resource;
 
 public enum AddressType {
     REGISTERED("registered", 2), OPERATING("operating", 1);

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 

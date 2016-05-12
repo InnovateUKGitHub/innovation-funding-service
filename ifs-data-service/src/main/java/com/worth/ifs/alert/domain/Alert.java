@@ -1,5 +1,6 @@
 package com.worth.ifs.alert.domain;
 
+import com.worth.ifs.alert.resource.AlertType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.format.annotation.DateTimeFormat;

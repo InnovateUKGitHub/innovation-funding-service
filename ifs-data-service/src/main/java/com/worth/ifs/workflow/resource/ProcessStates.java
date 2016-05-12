@@ -1,4 +1,4 @@
-package com.worth.ifs.workflow.domain;
+package com.worth.ifs.workflow.resource;
 
 /**
  * The process states should be represented by a named state.

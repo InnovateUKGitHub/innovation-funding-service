@@ -1,8 +1,6 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 
 import java.time.LocalDateTime;
 
@@ -29,14 +27,14 @@ public class QuestionStatusResource {
     	// no-arg constructor
     }
 
-    public QuestionStatusResource(Question question, Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
+    public QuestionStatusResource(QuestionResource question, ApplicationResource application, ProcessRoleResource markedAsCompleteBy, Boolean markedAsComplete) {
         this.application = application.getId();
         this.markedAsComplete = markedAsComplete;
         this.markedAsCompleteBy = markedAsCompleteBy.getId();
         this.question = question.getId();
     }
 
-    public QuestionStatusResource(Question question, Application application, ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
+    public QuestionStatusResource(QuestionResource question, ApplicationResource application, ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
         this.question = question.getId();
         this.application = application.getId();
         this.assignee = assignee.getId();
@@ -81,7 +79,7 @@ public class QuestionStatusResource {
         this.assignedBy = assignedBy;
     }
 
-    public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
+    public void setAssignee(ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee.getId();
         this.assignedBy = assignedBy.getId();

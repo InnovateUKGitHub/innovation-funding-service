@@ -47,7 +47,12 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        application = addApplicationDetails(application, competition, user.getId(),  Optional.empty(),  Optional.empty(), model, form, userApplicationRoles);
+
+        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        addSectionDetails(model,  Optional.empty());
         return "application-details";
     }
 
@@ -303,8 +308,9 @@ public class ApplicationController extends AbstractApplicationController {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
-        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
+        addOrganisationDetails(model, application, userApplicationRoles);
         addQuestionsDetails(model, application, null);
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);

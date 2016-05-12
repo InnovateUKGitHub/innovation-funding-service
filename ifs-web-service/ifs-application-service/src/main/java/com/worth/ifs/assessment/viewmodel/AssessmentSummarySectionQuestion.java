@@ -1,7 +1,5 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.resource.QuestionResource;
 
