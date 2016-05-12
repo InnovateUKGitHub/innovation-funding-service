@@ -10,6 +10,7 @@ public enum UserRoleType {
     ASSESSOR("assessor"),
     LEADAPPLICANT("leadapplicant"),
     COMP_ADMIN("comp_admin"),
+    SYSTEM_MAINTAINER("system_maintainer"),
     SYSTEM_REGISTRATION_USER("system_registrar");
 
     private final String name;
