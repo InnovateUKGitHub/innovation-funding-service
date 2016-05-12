@@ -10,12 +10,17 @@ import com.worth.ifs.user.resource.UserResource;
 import java.util.List;
 
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 
 public class SecurityRuleUtil {
 
     public static boolean isCompAdmin(UserResource user) {
         return hasRole(user, COMP_ADMIN);
+    }
+
+    public static boolean isSystemMaintenanceUser(UserResource user) {
+        return hasRole(user, SYSTEM_MAINTAINER);
     }
 
     public static boolean isSystemRegistrationUser(UserResource user) {

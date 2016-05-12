@@ -1,8 +1,8 @@
 package com.worth.ifs.alert.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -17,18 +17,18 @@ import static com.worth.ifs.alert.resource.AlertType.MAINTENANCE;
 import static com.worth.ifs.security.SecuritySetter.basicSecurityUser;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
-    UserResource compAdminUser;
+    UserResource systemMaintenanceUser;
 
     @Before
     public void setUp() throws Exception {
-        final RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-        compAdminUser = newUserResource().withRolesGlobal(singletonList(compAdminRole)).build();
+        final RoleResource systemMaintainerRole = newRoleResource().withType(SYSTEM_MAINTAINER).build();
+        systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(systemMaintainerRole)).build();
     }
 
     @Autowired
@@ -46,7 +46,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         final LocalDateTime oneHourAhead = now.plusHours(1);
         final LocalDateTime oneDayAhead = now.plusDays(1);
 
-        setLoggedInUser(compAdminUser);
+        setLoggedInUser(systemMaintenanceUser);
         final AlertResource created1 = controller.create(newAlertResource()
                 .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
@@ -74,7 +74,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         final LocalDateTime oneHourAhead = now.plusHours(1);
         final LocalDateTime oneDayAhead = now.plusDays(1);
 
-        setLoggedInUser(compAdminUser);
+        setLoggedInUser(systemMaintenanceUser);
         final AlertResource created1 = controller.create(newAlertResource()
                 .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
@@ -107,7 +107,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
     @Test
     public void test_create() throws Exception {
-        setLoggedInUser(compAdminUser);
+        setLoggedInUser(systemMaintenanceUser);
 
         final AlertResource alertResource = newAlertResource()
                 .build();
@@ -125,7 +125,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
     @Test
     public void test_delete() throws Exception {
-        setLoggedInUser(compAdminUser);
+        setLoggedInUser(systemMaintenanceUser);
 
         // save a new alert
         final AlertResource alertResource = newAlertResource()
@@ -145,7 +145,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
     @Test
     public void test_deleteAllByType() throws Exception {
-        setLoggedInUser(compAdminUser);
+        setLoggedInUser(systemMaintenanceUser);
 
         controller.deleteAllByType(AlertType.MAINTENANCE);
 
