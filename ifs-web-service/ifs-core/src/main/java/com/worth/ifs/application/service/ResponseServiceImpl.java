@@ -1,6 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * This class contains methods to retrieve and store {@link Response} related data,
+ * This class contains methods to retrieve and store {@link ResponseResource} related data,
  * through the RestService {@link ResponseRestService}.
  */
 // TODO DW - INFUND-1555 - handle rest results

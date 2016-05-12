@@ -26,6 +26,7 @@ public interface UserRestService {
     RestResult<List<UserResource>> findRelatedUsers(Long applicationId);
 
     Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId);
+    RestResult<List<ProcessRoleResource>> findProcessRolesByIds(List<Long> processRoleIds);
     RestResult<Void> verifyEmail(String hash);
 
     RestResult<Void> sendPasswordResetNotification(String email);

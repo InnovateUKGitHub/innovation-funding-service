@@ -15,10 +15,11 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Arrays.asList;
 
 /**
  * Service that encompasses functions that relate to users and their roles
@@ -32,6 +33,12 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
     @Override
     public ServiceResult<ProcessRoleResource> getProcessRoleById(Long id) {
         return super.getProcessRole(id).andOnSuccessReturn(processRoleMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<List<ProcessRoleResource>> getProcessRolesByIds(Long[] ids) {
+        List<Long> processRoleIds = asList(ids);
+        return serviceSuccess(processRolesToResources(processRoleRepository.findAll(processRoleIds)));
     }
 
     @Override
@@ -64,5 +71,11 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     private List<ProcessRoleResource> processRolesToResources(final List<ProcessRole> processRoles) {
         return simpleMap(processRoles, processRoleMapper::mapToResource);
+    }
+
+    private List<ProcessRoleResource> processRolesToResources(final Iterable<ProcessRole> processRoles) {
+        List<ProcessRoleResource> processRoleResources = new ArrayList<>();
+        processRoles.forEach(pr -> processRoleResources.add(processRoleMapper.mapToResource(pr)));
+        return processRoleResources;
     }
 }

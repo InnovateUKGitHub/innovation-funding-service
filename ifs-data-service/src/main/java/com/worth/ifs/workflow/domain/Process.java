@@ -36,7 +36,7 @@ public abstract class Process {
     @OneToMany(mappedBy="process")
     @OrderColumn(name = "process_index")
     @Cascade(CascadeType.ALL)
-    protected List<ProcessOutcome> processOutcomes = new ArrayList<>();
+    protected List<ProcessOutcome> processOutcomes;
 
     @ManyToOne
     @JoinColumn(name="processRole", referencedColumnName = "id")

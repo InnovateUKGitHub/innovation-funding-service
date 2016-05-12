@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 /**

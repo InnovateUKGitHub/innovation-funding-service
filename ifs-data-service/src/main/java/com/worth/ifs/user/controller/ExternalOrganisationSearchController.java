@@ -5,7 +5,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.transactional.CompanyHouseApiService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.transactional.OrganisationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -13,7 +13,7 @@ import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.finance.resource.cost.LabourCost;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.UserMapper;

@@ -1,8 +1,8 @@
 package com.worth.ifs.finance;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.CostResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import org.junit.Assert;
@@ -23,26 +23,13 @@ public class LabourCostCategoryTest {
     LabourCostCategory labourCostCategory;
     List<CostItem> costs;
     BigDecimal total;
-    Cost cost1;
-    Cost cost2;
-    Cost negativeCost;
     CostItem cost3;
 
     @Before
     public void setUp() throws Exception {
-        ApplicationFinance f = new ApplicationFinance();
-        Question q = new Question();
-
-        cost1 = new Cost("k", "a","b", 1, new BigDecimal(20), f, q);
-        cost2 = new Cost("k", "a","b", 1, new BigDecimal(20), f, q);
-        negativeCost = new Cost("k", "a","b", 1, new BigDecimal(-20), f, q);
-        //cost3 = costItemFactory.createCostItem(CostType.LABOUR, new Cost("a",LabourCostCategory.WORKING_DAYS_PER_YEAR, 1, new BigDecimal(20), f, q));
-
+        ApplicationFinanceResource f = new ApplicationFinanceResource();
+        QuestionResource q = new QuestionResource();
         costs = new ArrayList<>();
-
-        //costs.add(costItemFactory.createCostItem(CostType.LABOUR, cost1));
-        //costs.add(costItemFactory.createCostItem(CostType.LABOUR, cost2));
-
         total = BigDecimal.ZERO;
 
         labourCostCategory = new LabourCostCategory();

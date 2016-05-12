@@ -5,7 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.junit.Assert.assertEquals;
 
@@ -67,13 +68,12 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
     public void mapApplicationFinanceToResourceTest() throws Exception {
         Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();
-        ApplicationFinance applicationFinance = newApplicationFinance()
-                .withApplication(application)
-                .withOrganisation(organisation).build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(application.getId())
+                .withOrganisation(organisation.getId()).build();
 
-        ApplicationFinanceResource applicationFinanceResource1 = new ApplicationFinanceResource(applicationFinance);
-        assertEquals(applicationFinanceResource1.getApplication(), new Long(1L));
-        assertEquals(applicationFinanceResource1.getOrganisation(), new Long(1L));
+        assertEquals(applicationFinanceResource.getApplication(), new Long(1L));
+        assertEquals(applicationFinanceResource.getOrganisation(), new Long(1L));
     }
 
     @Test

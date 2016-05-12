@@ -134,7 +134,7 @@
             <h3 class="heading-small" th:text="${organisationForm.organisationType.name}+' name'" />
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <span th:if="${T(com.worth.ifs.user.domain.OrganisationTypeEnum).BUSINESS.organisationTypeId == organisationForm.organisationType.id}">
+            <span th:if="${T(com.worth.ifs.user.resource.OrganisationTypeEnum).BUSINESS.organisationTypeId == organisationForm.organisationType.id}">
                 <h3 th:if="${selectedOrganisation?.organisationSearchId}" class="heading-small">Registration number</h3>
                 <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
             </span>

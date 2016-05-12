@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.dto;
+package com.worth.ifs.assessment.resource;
 
 
 import java.io.Serializable;

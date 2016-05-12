@@ -60,12 +60,16 @@ Applicant can't access the competitions details page
 
 Applicant can't access the assessor's review application page
     [Documentation]    INFUND-1683
+    [Tags]      Pending
+    # Pending due to upcoming refactoring work for the assessor story
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message    ${ASSESSOR_REVIEW_APPLICATION}    ${404_error_message}
 
 
 Applicant can't access the assessor's details page
     [Documentation]    INFUND-1683
+    [Tags]      Pending
+    # Pending due to upcoming refactoring work for the assessor story
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message   ${ASSESSOR_DETAILS_PAGE}       ${404_error_message}
 

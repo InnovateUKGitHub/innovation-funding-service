@@ -1,9 +1,8 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.application.transactional.ResponseService;
-import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.assessment.resource.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.security.CustomPermissionEvaluator;
