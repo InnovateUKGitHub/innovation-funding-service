@@ -22,7 +22,7 @@ public interface ApplicationFundingService {
 
 	@PreAuthorize("hasAuthority('comp_admin')")
 	@SecuredBySpring(value = "SAVE_FUNDING_DECISION_DATA", securedType = FundingDecision.class, description = "Comp Admins should be able to save the decision of what applications to fund for a given competition")
-	ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> decision);
+	ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions);
 
 	@PreAuthorize("hasAuthority('comp_admin')")
 	@SecuredBySpring(value = "GET_FUNDING_DECISION_DATA", securedType = FundingDecision.class, description = "Comp Admins should be able to get the saved decision of what applications to fund for a given competition")
