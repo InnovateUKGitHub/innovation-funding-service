@@ -115,6 +115,16 @@ the user selects the option from the drop-down menu
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
+the user submits the form
+    Submit Form
+    Page Should Not Contain     Error
+    Page Should Not Contain     something went wrong
+    Page Should Not Contain     Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
 
 
 the user edits the 'Project Summary' question
