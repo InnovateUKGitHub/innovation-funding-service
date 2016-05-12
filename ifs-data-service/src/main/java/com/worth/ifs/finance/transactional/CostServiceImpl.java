@@ -5,7 +5,10 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.repository.FileEntryRepository;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -24,11 +27,14 @@ import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,24 +49,39 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 public class CostServiceImpl extends BaseTransactionalService implements CostService {
 
     private static final Log LOG = LogFactory.getLog(CostServiceImpl.class);
+
     @Autowired
     OrganisationFinanceDelegate organisationFinanceDelegate;
+
     @Autowired
     FileEntryRepository fileEntryRepository;
+
     @Autowired
     private CostFieldMapper costFieldMapper;
+
     @Autowired
     private QuestionRepository questionRepository;
+
     @Autowired
     private CostRepository costRepository;
+
     @Autowired
     private CostFieldRepository costFieldRepository;
+
     @Autowired
     private CostValueRepository costValueRepository;
+
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private FileEntryMapper fileEntryMapper;
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
@@ -241,6 +262,44 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
         return getFinanceTotals(applicationId);
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return fileService.createFile(fileEntryResource, inputStreamSupplier).
+                andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults));
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults));
+    }
+
+    @Override
+    public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
+        return getApplicationFinanceById(applicationFinanceId).
+                andOnSuccess(finance -> fileService.deleteFile(finance.getFinanceFileEntry()).
+                andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
+                andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<ApplicationFinanceResource> removeFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
+        applicationFinanceResource.setFinanceFileEntry(null);
+        return updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+    }
+
+    private FileEntryResource linkFileEntryToApplicationFinance(long applicationFinanceId, Pair<File, FileEntry> fileResults) {
+        FileEntry fileEntry = fileResults.getValue();
+
+        ApplicationFinanceResource applicationFinanceResource = getApplicationFinanceById(applicationFinanceId).getSuccessObject();
+
+        if(applicationFinanceResource!=null) {
+            applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
+            updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+        }
+
+        return fileEntryMapper.mapToResource(fileEntry);
     }
 
     private ServiceResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {

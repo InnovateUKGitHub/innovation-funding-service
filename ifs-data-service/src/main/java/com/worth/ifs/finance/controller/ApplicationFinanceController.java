@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.file.transactional.FileService;
@@ -15,7 +13,6 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +25,12 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -59,9 +54,6 @@ public class ApplicationFinanceController {
 
     @Autowired
     private FileService fileService;
-
-    @Autowired
-    private FileEntryMapper mapper;
 
     @Autowired
     @Qualifier("applicationFinanceFileValidator")
@@ -134,17 +126,7 @@ public class ApplicationFinanceController {
 
         ServiceResult<FileEntryResource> fileAddedResult =
                 fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier(request)).
-                andOnSuccessReturn(result -> mapper.mapToResource(result.getValue())));
-
-        fileAddedResult.andOnSuccess(file -> {
-            ApplicationFinanceResource applicationFinanceResource = costService.getApplicationFinanceById(applicationFinanceId).getSuccessObject();
-            if(applicationFinanceResource!=null) {
-                applicationFinanceResource.setFinanceFileEntry(file.getId());
-                costService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
-            }
-            return serviceSuccess();
-        });
+                costService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
 
         return fileAddedResult.toPostCreateResponse();
     }
@@ -157,20 +139,8 @@ public class ApplicationFinanceController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<Void> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes -> {
-
-            ApplicationFinanceResource applicationFinanceResource = costService.getApplicationFinanceById(applicationFinanceId).getSuccessObject();
-
-            if (applicationFinanceResource != null) {
-
-                FileEntryResource fileEntryResource = fileEntryService.findOne(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
-                if(fileEntryResource!=null) {
-                    ServiceResult<Pair<File, FileEntry>> fileEntryResult = fileService.updateFile(fileEntryResource, inputStreamSupplier(request));
-                    return fileEntryResult.andOnSuccessReturnVoid();
-                }
-            }
-            return serviceSuccess();
-        });
+        ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
+                costService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
 
         return updateResult.toPutResponse();
     }
@@ -179,15 +149,8 @@ public class ApplicationFinanceController {
     public RestResult<Void> deleteFinanceDocument(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
-        ServiceResult<ApplicationFinanceResource> applicationFinanceServiceResult = costService.getApplicationFinanceById(applicationFinanceId);
-        ServiceResult<ApplicationFinanceResource> applicationFinanceResourceServiceResult = applicationFinanceServiceResult.andOnSuccess(applicationFinanceResource -> {
-            Long fileEntryId = applicationFinanceResource.getFinanceFileEntry();
-            return fileService.deleteFile(fileEntryId).andOnSuccess(() -> {
-                applicationFinanceResource.setFinanceFileEntry(null);
-                return costService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
-            });
-        });
-        return applicationFinanceResourceServiceResult.toDeleteResponse();
+        ServiceResult<Void> deleteResult = costService.deleteFinanceFileEntry(applicationFinanceId);
+        return deleteResult.toDeleteResponse();
     }
 
     @RequestMapping(value = "/financeDocument", method = GET)
