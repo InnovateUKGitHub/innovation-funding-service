@@ -4,12 +4,13 @@
     <!-- ===========================Form: finance =========================== -->
     <div th:fragment="finance">
         <div th:class="form-group"
-             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationgrantClaimPercentageId +'-grantClaimPercentage]}')}? 'error'">
+             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationgrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationgrantClaimPercentageId +']}')}? 'error'">
 
             <label class="form-label form-label-bold" for="cost-financegrantclaim">
                 <div th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
                 <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId})" th:remove="tag" />
             </label>
 
             <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
