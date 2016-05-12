@@ -162,7 +162,7 @@
                        th:value="${cost.getRole()}"
                        th:readonly="${complete == 'complete'}"
                        required="required"
-                       maxlength="240"  />
+                       maxlength="255"  />
             </td>
             <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-grossAnnualSalary]}')} ? 'error' : ''">
                 <label th:for="${'cost-labour-'+cost.id+'-labourGrossSalary'}">
@@ -193,7 +193,7 @@
                        th:id="${'cost-labour-'+cost.id+'-labourRate'}"
                        th:name="${type + '-labourRate-' + question.id + '-' + cost.id}"
                        th:value="${costCategory?.workingDaysPerYear != null ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
-                       maxlength="240" />
+                       maxlength="255" />
             </td>
             <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-labourDays]}')} ? 'error' : ''">
                 <label th:for="${'cost-labour-'+cost.id+'-labourDays'}">
@@ -442,7 +442,7 @@
                        th:readonly="${complete == 'complete'}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-item]}')} ? 'field-error' : ''"
                        required="required"
-                       maxlength="240" />
+                       maxlength="255" />
             </td>
             <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'error' : ''">
               <label th:for="${'cost-materials-'+cost.id+'-quantity'}">
@@ -613,7 +613,7 @@
                         th:name="${type +'-residualValue-' + question.id + '-' + cost.id}"
                         th:value="${#numbers.formatDecimal(cost.residualValue,0,0)}"
                         th:readonly="${complete == 'complete'}"
-                        min="1"
+                        min="0"
                         max="9999999999999999999"
                         data-max-errormessage="You must enter a value less than 20 digits"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-residualValue]}')} ? 'field-error' : ''"/>
@@ -703,7 +703,7 @@
                        th:id="${'cost-subcontracting-'+cost.id+'-name'}"
                        th:value="${cost.name}"
                        th:readonly="${complete == 'complete'}"
-                       maxlength="240"
+                       maxlength="255"
                        required="required"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-name]}')} ? 'field-error' : ''"  />
             </div>
@@ -718,7 +718,7 @@
                        th:id="${'cost-subcontracting-'+cost.id+'-country'}"
                        th:value="${cost.country}"
                        th:readonly="${complete == 'complete'}"
-                       maxlength="240"
+                       maxlength="255"
                        required="required"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-country]}')} ? 'field-error' : ''"   />
             </div>
@@ -817,7 +817,8 @@
                        th:id="${'cost-'+type+'-'+cost.id+'-item'}"
                        th:value="${cost.getItem()}"
                        th:readonly="${complete == 'complete'}"
-                       maxlength="240"
+                       required="required"
+                       maxlength="255"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-item]}')} ? 'field-error' : ''"/>
             </td>
             <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'error' : ''">
@@ -957,13 +958,14 @@
                    costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},
                    type=${formInput.formInputTypeTitle}">
         <div class="form-group"
-                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}')}? 'error'">
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
 
 
-        <h2 th:text="${question.getName()}" class="heading-medium" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
+            <h2 th:text="${question.getName()}" class="heading-medium" />
+            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${question.id})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
             <fieldset class="inline" id="otherFundingShowHideToggle">
                 <legend class="visuallyhidden" th:text="${question.getName()}" />
@@ -1049,7 +1051,7 @@
                        th:value="${cost.fundingSource}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingSource]}')} ? 'field-error' : ''"
                        required="required"
-                       maxlength="240"
+                       maxlength="255"
                        data-required-errormessage="Funding source cannot be blank" />
             </td>
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'error' : ''">

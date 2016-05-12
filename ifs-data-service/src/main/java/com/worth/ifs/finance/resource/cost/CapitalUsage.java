@@ -33,8 +33,7 @@ public class CapitalUsage implements CostItem {
     @Digits(integer = MAX_DIGITS, fraction = 0)
     BigDecimal npv;
 
-    @NotNull
-    @DecimalMin(value = "1")
+    @DecimalMin(value = "0")
     @Digits(integer = MAX_DIGITS, fraction = 0)
     BigDecimal residualValue;
 

@@ -432,14 +432,19 @@ public class ApplicationFormController extends AbstractApplicationController {
                 if (financeErrorsMark != null && !financeErrorsMark.isEmpty()) {
                     bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
                     financeErrorsMark.forEach((validationMessage) -> {
+
                         validationMessage.getErrors().parallelStream()
                                 .filter(Objects::nonNull)
                                 .filter(e -> StringUtils.hasText(e.getErrorMessage()))
                                 .forEach(e -> {
-                                    if (StringUtils.hasText(e.getErrorKey())) {
-                                        addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
-                                    } else {
-                                        addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage());
+                                    if(validationMessage.getObjectName().equals("costItem")){
+                                        if (StringUtils.hasText(e.getErrorKey())) {
+                                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
+                                        } else {
+                                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage());
+                                        }
+                                    }else{
+                                        addNonDuplicateFieldError(bindingResult, "formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage());
                                     }
                                 });
                     });
