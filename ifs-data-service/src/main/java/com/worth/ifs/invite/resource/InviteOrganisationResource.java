@@ -1,7 +1,5 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -29,15 +27,6 @@ public class InviteOrganisationResource {
         this.organisationName = organisationName;
         this.organisation = organisation;
         this.inviteResources = inviteResources;
-    }
-
-    public InviteOrganisationResource(InviteOrganisation invite) {
-        this.id = invite.getId();
-        this.organisationName = invite.getOrganisationName();
-        if(invite.getOrganisation() != null && invite.getOrganisation().getId() != null){
-            this.organisation = invite.getOrganisation().getId();
-        }
-        this.setInviteResources(invite.getInvites().stream().map(i -> new InviteResource(i)).collect(Collectors.toList()));
     }
 
     public Long getId() {

@@ -3,19 +3,18 @@ package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.assessment.resource.Feedback;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 import static com.worth.ifs.util.CollectionFunctions.onlyElementOrNull;
 

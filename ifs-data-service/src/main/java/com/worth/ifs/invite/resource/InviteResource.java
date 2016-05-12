@@ -1,7 +1,6 @@
 package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.domain.Invite;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -45,22 +44,6 @@ public class InviteResource {
         this.name = name;
         this.email = email;
         this.application = application;
-    }
-
-    public InviteResource(Invite i) {
-        this.id = i.getId();
-        this.name = i.getName();
-        this.email = i.getEmail();
-        this.application = i.getApplication().getId();
-        this.applicationName = i.getApplication().getName();
-        this.competitionId = i.getApplication().getCompetition().getId();
-        this.competitionName = i.getApplication().getCompetition().getName();
-        this.leadOrganisation = i.getApplication().getLeadOrganisation().getName();
-        this.leadApplicant = i.getApplication().getLeadApplicant().getName();
-        this.inviteOrganisation = i.getInviteOrganisation().getId();
-        this.inviteOrganisationName = i.getInviteOrganisation().getOrganisationName();
-        this.hash = i.getHash();
-        this.status = i.getStatus();
     }
 
     public Long getId() {

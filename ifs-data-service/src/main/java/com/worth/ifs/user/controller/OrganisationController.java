@@ -3,7 +3,7 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.organisation.transactional.OrganisationService;
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;

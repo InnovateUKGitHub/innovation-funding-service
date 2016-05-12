@@ -9,7 +9,7 @@ import org.springframework.test.annotation.Rollback;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.alert.domain.AlertType.MAINTENANCE;
+import static com.worth.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.junit.Assert.*;
 
 public class AlertRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AlertRepository> {

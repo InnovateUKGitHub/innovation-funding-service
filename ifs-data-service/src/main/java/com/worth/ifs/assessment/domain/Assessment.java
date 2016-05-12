@@ -1,8 +1,9 @@
 package com.worth.ifs.assessment.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.workflow.domain.OutcomeType;
+import com.worth.ifs.workflow.resource.OutcomeType;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
@@ -19,13 +20,20 @@ public class Assessment extends Process {
         super(processRole);
     }
 
-    public Boolean hasAssessmentStarted() {
-        return getProcessStatus().equals(AssessmentStates.ASSESSED.getState());
+    public Boolean isStarted() {
+        if(getProcessStatus()!=null) {
+            return getProcessStatus().equals(AssessmentStates.ASSESSED.getState());
+        } else {
+            return Boolean.FALSE;
+        }
     }
 
-    @JsonIgnore
     public Boolean isSubmitted() {
-        return getProcessStatus().equals(AssessmentStates.SUBMITTED.getState());
+        if(getProcessStatus()!=null) {
+            return getProcessStatus().equals(AssessmentStates.SUBMITTED.getState());
+        } else {
+            return Boolean.FALSE;
+        }
     }
 
     public ProcessOutcome getLastOutcome() {

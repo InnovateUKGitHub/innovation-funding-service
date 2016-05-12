@@ -1,8 +1,8 @@
 package com.worth.ifs.application.finance.model;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 
 import java.time.LocalDateTime;
 
@@ -11,30 +11,30 @@ public class QuestionStatusModel {
 
     private Boolean markedAsComplete;
 
-    private ProcessRole markedAsCompleteBy;
+    private ProcessRoleResource markedAsCompleteBy;
 
-    private Question question;
+    private QuestionResource question;
 
-    private ProcessRole assignee;
+    private ProcessRoleResource assignee;
     private LocalDateTime assignedDate;
 
-    private Application application;
+    private ApplicationResource application;
 
-    private ProcessRole assignedBy;
+    private ProcessRoleResource assignedBy;
     private Boolean notified;
 
     public QuestionStatusModel() {
     	// no-arg constructor
     }
 
-    public QuestionStatusModel(Question question,  Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
+    public QuestionStatusModel(QuestionResource question,  ApplicationResource application, ProcessRoleResource markedAsCompleteBy, Boolean markedAsComplete) {
         this.application = application;
         this.markedAsComplete = markedAsComplete;
         this.markedAsCompleteBy = markedAsCompleteBy;
         this.question = question;
     }
 
-    public QuestionStatusModel(Question question, Application application, ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
+    public QuestionStatusModel(QuestionResource question, ApplicationResource application, ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
         this.question = question;
         this.application = application;
         this.assignee = assignee;
@@ -51,15 +51,15 @@ public class QuestionStatusModel {
         return markedAsComplete;
     }
 
-    public ProcessRole getMarkedAsCompleteBy() {
+    public ProcessRoleResource getMarkedAsCompleteBy() {
         return markedAsCompleteBy;
     }
 
-    public ProcessRole getAssignee() {
+    public ProcessRoleResource getAssignee() {
         return assignee;
     }
 
-    public ProcessRole getAssignedBy() {
+    public ProcessRoleResource getAssignedBy() {
         return assignedBy;
     }
 
@@ -67,14 +67,14 @@ public class QuestionStatusModel {
         return assignedDate;
     }
 
-    public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
+    public void setAssignee(ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee;
         this.assignedBy = assignedBy;
         this.notified = false;
     }
 
-    public void setApplication(Application application) {
+    public void setApplication(ApplicationResource application) {
         this.application = application;
     }
 
@@ -86,11 +86,11 @@ public class QuestionStatusModel {
         this.notified = notified;
     }
 
-    public Question getQuestion() {
+    public QuestionResource getQuestion() {
         return this.question;
     }
 
-    public Application getApplication() {
+    public ApplicationResource getApplication() {
         return this.application;
     }
 
@@ -102,7 +102,7 @@ public class QuestionStatusModel {
         this.markedAsComplete = markedAsComplete;
     }
 
-    public void setMarkedAsCompleteBy(ProcessRole markedAsCompleteBy) {
+    public void setMarkedAsCompleteBy(ProcessRoleResource markedAsCompleteBy) {
         this.markedAsCompleteBy = markedAsCompleteBy;
     }
 }
