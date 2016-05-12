@@ -84,4 +84,20 @@ public class SubContractingCost implements CostItem {
     public CostType getCostType() {
         return CostType.SUBCONTRACTING_COSTS;
     }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

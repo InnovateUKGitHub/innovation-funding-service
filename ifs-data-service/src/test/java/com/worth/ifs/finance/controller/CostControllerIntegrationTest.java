@@ -39,6 +39,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private LabourCost labourCost;
     private LabourCost labourCostDaysPerYear;
     private OtherFunding otherFunding;
+    private SubContractingCost subContractingCost;
     private TravelCost travelCost;
     private OtherCost otherCost;
 
@@ -54,7 +55,9 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private long leadApplicantId;
     private long leadApplicantProcessRole;
     public static final long APPLICATION_ID = 1L;
-    private long travelAndSubsistenceQuestionId = 33L;
+
+    private long subContractingCostQuestionId = 32L;
+    private long travelCostQuestionId = 33L;
     private long otherCostQuestionId = 34L;
 
     @Autowired
@@ -79,13 +82,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         labourCost = (LabourCost) controller.get(4L).getSuccessObject();
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccessObject();
         otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
-        travelCost = (TravelCost) controller.add(applicationFinance.getId(), travelAndSubsistenceQuestionId, new TravelCost()).getSuccessObject();
+       // subContractingCost = (SubContractingCost)controller.get(32L).getSuccessObject();
+        subContractingCost = (SubContractingCost) controller.add(applicationFinance.getId(), subContractingCostQuestionId, new SubContractingCost()).getSuccessObject();
+        travelCost = (TravelCost) controller.add(applicationFinance.getId(), travelCostQuestionId, new TravelCost()).getSuccessObject();
         otherCost = (OtherCost) controller.add(applicationFinance.getId(), otherCostQuestionId, new OtherCost()).getSuccessObject();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
 
-        notAllowedTextSize = StringUtils.repeat("a", 256);
+        notAllowedTextSize = StringUtils.repeat("<ifs_test>", 30);
 
         List<ProcessRole> proccessRoles = new ArrayList<>();
         proccessRoles.add(
@@ -219,6 +224,106 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                 .findAny().isPresent());
     }
 
+    /* SubContracting Section Tests */
+
+    @Rollback
+    @Test
+    public void testValidationSubContractingCostUpdateSuccess() {
+        assertNotNull(subContractingCost.getName());
+        assertNotNull(subContractingCost.getCountry());
+        assertNotNull(subContractingCost.getRole());
+        assertNotNull(subContractingCost.getCost());
+
+        subContractingCost.setName("Tom Bloggs");
+        subContractingCost.setCountry("UK");
+        subContractingCost.setRole("Business Analyst");
+        subContractingCost.setCost(new BigDecimal(10000));
+
+        RestResult<ValidationMessages> validationMessages = controller.update(subContractingCost.getId(), subContractingCost);
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+    }
+
+    @Rollback
+    @Test
+    //TODO
+    // 1. Country is allowed to be null
+    // 2. Update validation messages for textfields
+    public void testValidationSubContractingCostUpdateIncorrectValues(){
+        subContractingCost.setName("");
+        subContractingCost.setCountry("");
+        subContractingCost.setRole("");
+        subContractingCost.setCost(new BigDecimal(-5000));
+
+        RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(3, messages.getErrors().size());
+        assertEquals(travelCost.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("item")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("may not be null"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("may not be null"))
+                )
+              /*  ,
+                allOf(
+                        hasProperty("errorKey", is("country")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                )*/
+        ));
+    }
+
+    @Rollback
+    @Test
+    //TODO
+    //Max value limitaton message
+    //Country max value constraint
+    public void testValidationSubContractingCostUpdateOverMaxAllowedValues(){
+        subContractingCost.setName(notAllowedTextSize);
+        subContractingCost.setCountry(notAllowedTextSize);
+        subContractingCost.setRole(notAllowedTextSize);
+        subContractingCost.setCost(new BigDecimal(1000000));
+
+        RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(300, notAllowedTextSize.length());
+        assertEquals(3, messages.getErrors().size());
+        assertEquals(travelCost.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                           hasProperty("errorKey", is("item")),
+                         hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("may not be null"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("may not be null"))
+                )/*,
+                allOf(
+                        hasProperty("errorKey", is("country")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                )*/
+        ));
+    }
+
     /* TravelCost Section Tests */
 
     @Rollback
@@ -235,7 +340,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationTravelCostUpdateIncorrectValues(){
+    public void testValidationTravelCostUpdateIncorrectMinValues(){
         travelCost.setItem("");
         travelCost.setCost(new BigDecimal(-1000));
         travelCost.setQuantity(-500);
@@ -265,20 +370,26 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationTravelCostUpdateIncorrectNumbers(){
+    //TODO
+    // The constrant to limit item size to 255 is invalid
+    public void testValidationTravelCostUpdateIncorrectMaxValues(){
         travelCost.setItem(notAllowedTextSize);
         travelCost.setCost(new BigDecimal(0));
         travelCost.setQuantity(null);
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(256, notAllowedTextSize.length());
+        assertEquals(300, notAllowedTextSize.length());
         assertEquals(2, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
         messages.getErrors().get(0);
 
         assertThat(messages.getErrors(), containsInAnyOrder(
+                //     allOf(
+             //           hasProperty("errorKey", is("item")),
+               //         hasProperty("errorMessage", is("This field cannot be left blank"))
+               // ),
                 allOf(
                         hasProperty("errorKey", is("cost")),
                         hasProperty("errorMessage", is("This field should be 1 or higher"))
@@ -289,7 +400,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                 )
         ));
     }
-
 
     /* Other Cost Section Tests */
 
