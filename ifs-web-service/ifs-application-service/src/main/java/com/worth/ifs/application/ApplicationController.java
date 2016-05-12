@@ -51,7 +51,7 @@ public class ApplicationController extends AbstractApplicationController {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         application = addApplicationDetails(application, competition, user.getId(),  Optional.empty(),  Optional.empty(), model, form, userApplicationRoles);
 
-        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        model.addAttribute("completedsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addSectionDetails(model,  Optional.empty());
         return "application-details";
     }
