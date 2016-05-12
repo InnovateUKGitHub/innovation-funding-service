@@ -119,4 +119,28 @@ public class CapitalUsage implements CostItem {
     public CostType getCostType() {
         return CostType.CAPITAL_USAGE;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setNpv(BigDecimal npv) {
+        this.npv = npv;
+    }
+
+    public void setResidualValue(BigDecimal residualValue) {
+        this.residualValue = residualValue;
+    }
+
+    public void setUtilisation(Integer utilisation) {
+        this.utilisation = utilisation;
+    }
+
+    public void setDeprecation(Integer deprecation) {
+        this.deprecation = deprecation;
+    }
+
+    public void setExisting(String existing) {
+        this.existing = existing;
+    }
 }
