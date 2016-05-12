@@ -5,6 +5,7 @@ import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
 import static com.worth.ifs.application.resource.FundingDecision.UNFUNDED;
+import static com.worth.ifs.application.resource.FundingDecision.UNDECIDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -130,6 +131,23 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(asList(application1, application2));
     	
     	Map<Long, FundingDecision> decision = asMap(1L, FUNDED);
+    	
+    	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
+    	
+    	assertTrue(result.isFailure());
+    	verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId());
+    	verifyNoMoreInteractions(applicationRepositoryMock);
+        assertTrue(result.getFailure().is(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED));
+    }
+    
+    @Test
+    public void testFailIfNotAllApplicationsNotUndecidedInDecision() {
+
+        Application application1 = newApplication().withId(1L).withCompetition(competition).build();
+    	Application application2 = newApplication().withId(2L).withCompetition(competition).build();
+    	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(asList(application1, application2));
+    	
+    	Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNDECIDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	

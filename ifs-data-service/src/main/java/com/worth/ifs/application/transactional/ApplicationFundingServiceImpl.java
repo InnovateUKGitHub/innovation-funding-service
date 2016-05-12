@@ -1,32 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
-import com.worth.ifs.notifications.resource.UserNotificationTarget;
-import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.util.EntityLookupCallbacks;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.REJECTED;
 import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
@@ -37,13 +10,51 @@ import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_WRONG_STATUS;
-
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.service.ServiceResult.aggregate;
+import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
 import static java.util.Arrays.asList;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.mapper.FundingDecisionMapper;
+import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.fundingdecisiondata.domain.FundingDecisionData;
+import com.worth.ifs.fundingdecisiondata.domain.FundingDecisionStatus;
+import com.worth.ifs.fundingdecisiondata.repository.FundingDecisionDataRepository;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.resource.UserNotificationTarget;
+import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.util.EntityLookupCallbacks;
 
 @Service
 class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
@@ -52,10 +63,13 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	private NotificationService notificationService;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
+    private FundingDecisionDataRepository fundingDecisionDataRepository;
+    
 	@Autowired
 	private SystemNotificationSource systemNotificationSource;
+	
+	@Autowired
+	private FundingDecisionMapper fundingDecisionMapper;
 
 	@Value("${ifs.web.baseURL}")
 	private String webBaseUrl;
@@ -67,6 +81,25 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
     private static final Log LOG = LogFactory.getLog(ApplicationFundingServiceImpl.class);
 
+	@Override
+	public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> decision) {
+		 return getCompetition(competitionId).andOnSuccess(competition -> saveFundingDecisionData(competition, decision));
+	}
+
+	@Override
+	public ServiceResult<Map<Long, FundingDecision>> getFundingDecisionData(Long competitionId) {
+		Map<Long, FundingDecision> result = new HashMap<>();
+		FundingDecisionData data = fundingDecisionDataRepository.findOne(competitionId);
+		if(data != null) {
+			data.getFundingDecisions().entrySet().forEach(entry -> {
+				Long applicationId = entry.getKey();
+				FundingDecision decision = fundingDecisionMapper.mapToResource(entry.getValue());
+				result.put(applicationId, decision);
+			});
+		}
+		return serviceSuccess(result);
+	}
+	
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 
@@ -84,7 +117,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
 			List<Application> applicationsForCompetition = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
 
-			boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()));
+			boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()) || FundingDecision.UNDECIDED.equals(applicationFundingDecisions.get(app.getId())));
 
 			if(!allPresent) {
 				return serviceFailure(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED);
@@ -100,7 +133,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 			
 			return serviceSuccess();
 		});
-		
 	}
 
 	@Override
@@ -135,6 +167,38 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         }
 	}
 
+	private ServiceResult<Void> saveFundingDecisionData(Competition competition, Map<Long, FundingDecision> decision) {
+		List<Application> applicationsForCompetition = applicationRepository.findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId());
+
+		Map<Long, FundingDecision> relevantDecision = decision.entrySet().stream()
+				.filter(decisionEntry -> isRelevantApplicationId(decisionEntry.getKey(), applicationsForCompetition))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		 
+		FundingDecisionData data = fundingDecisionDataRepository.findOne(competition.getId());
+		
+		if(data == null) {
+			data = new FundingDecisionData();
+			data.setId(competition.getId());
+			fundingDecisionDataRepository.save(data);
+		}
+		
+		populateFundingDecisionData(relevantDecision, data);
+		
+		return serviceSuccess();
+	}
+
+	private void populateFundingDecisionData(Map<Long, FundingDecision> relevantDecision, FundingDecisionData data) {
+		relevantDecision.entrySet().forEach(entry -> {
+			Long applicationId = entry.getKey();
+			FundingDecisionStatus status = fundingDecisionMapper.mapToDomain(entry.getValue());
+			data.getFundingDecisions().put(applicationId, status);
+		});
+	}
+	
+	private boolean isRelevantApplicationId(Long applicationId, List<Application> applicationsForCompetition) {
+		return applicationsForCompetition.stream().anyMatch(e -> applicationId.equals(e.getId()));
+	}
+	
 	private ServiceResult<Notification> createFundingDecisionNotification(Long competitionId, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
 
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {

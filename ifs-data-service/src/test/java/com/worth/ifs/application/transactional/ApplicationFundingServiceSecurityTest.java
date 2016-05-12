@@ -72,6 +72,106 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			}
 		});
 	}
+	
+	@Test
+	public void testSaveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
+
+		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+	}
+
+	@Test
+	public void testSaveFundingDecisionDataDeniedIfNotLoggedIn() {
+
+		setLoggedInUser(null);
+		try {
+			service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+			fail("Should not have been able to save funding decision data without first logging in");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testSaveFundingDecisionDataDeniedIfNoGlobalRolesAtAll() {
+
+		try {
+			service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+			fail("Should not have been able to save funding decision data without the global comp admin role");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testSaveFundingDecisionDataDeniedIfNotCorrectGlobalRoles() {
+
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+				.collect(toList());
+
+		nonCompAdminRoles.forEach(role -> {
+
+			setLoggedInUser(
+					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+			try {
+				service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+				fail("Should not have been able to save funding decision data without the global Comp Admin role");
+			} catch (AccessDeniedException e) {
+				// expected behaviour
+			}
+		});
+	}
+	
+	@Test
+	public void testGetFundingDecisionDataAllowedIfGlobalCompAdminRole() {
+
+		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		service.getFundingDecisionData(123L);
+	}
+
+	@Test
+	public void testGetFundingDecisionDataDeniedIfNotLoggedIn() {
+
+		setLoggedInUser(null);
+		try {
+			service.getFundingDecisionData(123L);
+			fail("Should not have been able to get funding decision data without first logging in");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testGetFundingDecisionDataDeniedIfNoGlobalRolesAtAll() {
+
+		try {
+			service.getFundingDecisionData(123L);
+			fail("Should not have been able to get funding decision data without the global comp admin role");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testGetFundingDecisionDataDeniedIfNotCorrectGlobalRoles() {
+
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+				.collect(toList());
+
+		nonCompAdminRoles.forEach(role -> {
+
+			setLoggedInUser(
+					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+			try {
+				service.getFundingDecisionData(123L);
+				fail("Should not have been able to get funding decision data without the global Comp Admin role");
+			} catch (AccessDeniedException e) {
+				// expected behaviour
+			}
+		});
+	}
 
 	@Override
 	protected Class<? extends ApplicationFundingService> getServiceClass() {
@@ -87,6 +187,18 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 		@Override
 		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+			return null;
+		}
+
+		@Override
+		public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> decision) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public ServiceResult<Map<Long, FundingDecision>> getFundingDecisionData(Long competitionId) {
+			// TODO Auto-generated method stub
 			return null;
 		}
 	}
