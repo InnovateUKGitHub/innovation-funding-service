@@ -23,7 +23,6 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -37,36 +36,16 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 public class ApplicationOverviewModel implements ViewModel{
     private static final Log LOG = LogFactory.getLog(ApplicationOverviewModel.class);
-    private final Long applicationId;
     private final Model model;
-    private final Long userId;
     private final Services s;
-
-    private ApplicationResource application ;
-    private CompetitionResource competition;
-    private List<ProcessRoleResource> userApplicationRoles;
-    private Optional<OrganisationResource> userOrganisation;
-    private ApplicationForm form;
 
     public ApplicationOverviewModel(Long applicationId, Long userId, ApplicationForm form, Model model, Services s){
         this.model = model;
-        this.userId = userId;
-        this.applicationId = applicationId;
-        this.form = form;
         this.s = s;
-    }
-
-    @Override
-    public Model getModel(){
-        populateModel();
-        return model;
-    }
-    
-    private void populateModel(){
-        this.application = s.applicationService.getById(applicationId);
-        this.competition = s.competitionService.getById(application.getCompetition());
-        this.userApplicationRoles = s.processRoleService.findProcessRolesByApplicationId(applicationId);
-        this.userOrganisation = s.organisationService.getUserForOrganisation(userId, userApplicationRoles);
+        ApplicationResource application = s.applicationService.getById(applicationId);
+        CompetitionResource competition = s.competitionService.getById(application.getCompetition());
+        List<ProcessRoleResource> userApplicationRoles = s.processRoleService.findProcessRolesByApplicationId(applicationId);
+        Optional<OrganisationResource> userOrganisation = s.organisationService.getUserForOrganisation(userId, userApplicationRoles);
 
         if(form == null){
             form = new ApplicationForm();
@@ -77,7 +56,7 @@ public class ApplicationOverviewModel implements ViewModel{
 
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
         addCompletedDetails(model, application, userOrganisation);
-        addSections();
+        addSections(competition);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
@@ -85,8 +64,13 @@ public class ApplicationOverviewModel implements ViewModel{
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", s.applicationService.getCompleteQuestionsPercentage(application.getId()));
     }
-    @ProfileExecution
-    private void addSections() {
+
+    @Override
+    public Model getModel(){
+        return model;
+    }
+    
+    private void addSections(CompetitionResource competition) {
         final List<SectionResource> allSections = s.sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = s.sectionService.filterParentSections(allSections);
         final List<QuestionResource> questions = s.questionService.findByCompetition(competition.getId());
@@ -139,7 +123,7 @@ public class ApplicationOverviewModel implements ViewModel{
         s.questionService.removeNotifications(notifications);
         List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
 
-        model.addAttribute("assignableUsers", s.processRoleService.findAssignableProcessRoles(applicationId));
+        model.addAttribute("assignableUsers", s.processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
