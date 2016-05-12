@@ -6,7 +6,7 @@ import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isSystemMaintenanceUser;
 
 /**
  * Provides the permissions around CRUD operations for {@link com.worth.ifs.alert.domain.Alert} resources.
@@ -15,13 +15,13 @@ import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 @PermissionRules
 public class AlertPermissionRules {
 
-    @PermissionRule(value = "CREATE", description = "Competitions Admin can create Alerts")
-    public boolean competitionsAdminCanCreateAlerts(final AlertResource alertResource, final UserResource user) {
-        return isCompAdmin(user);
+    @PermissionRule(value = "CREATE", description = "System maintentenance users can create Alerts")
+    public boolean systemMaintenanceUserCanCreateAlerts(final AlertResource alertResource, final UserResource user) {
+        return isSystemMaintenanceUser(user);
     }
 
-    @PermissionRule(value = "DELETE", description = "Competitions Admin can delete Alerts")
-    public boolean competitionsAdminCanDeleteAlerts(final AlertResource alertResource, final UserResource user) {
-        return isCompAdmin(user);
+    @PermissionRule(value = "DELETE", description = "System maintentenance users can delete Alerts")
+    public boolean systemMaintenanceUserCanDeleteAlerts(final AlertResource alertResource, final UserResource user) {
+        return isSystemMaintenanceUser(user);
     }
 }
