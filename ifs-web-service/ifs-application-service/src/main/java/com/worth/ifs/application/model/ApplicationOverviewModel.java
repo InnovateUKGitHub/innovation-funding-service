@@ -42,16 +42,15 @@ public class ApplicationOverviewModel implements ViewModel{
     public ApplicationOverviewModel(Long applicationId, Long userId, ApplicationForm form, Model model, Services s){
         this.model = model;
         this.s = s;
-        ApplicationResource application = s.applicationService.getById(applicationId);
-        CompetitionResource competition = s.competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = s.processRoleService.findProcessRolesByApplicationId(applicationId);
-        Optional<OrganisationResource> userOrganisation = s.organisationService.getUserForOrganisation(userId, userApplicationRoles);
+        ApplicationResource application = s.getApplicationService().getById(applicationId);
+        CompetitionResource competition = s.getCompetitionService().getById(application.getCompetition());
+        List<ProcessRoleResource> userApplicationRoles = s.getProcessRoleService().findProcessRolesByApplicationId(applicationId);
+        Optional<OrganisationResource> userOrganisation = s.getOrganisationService().getUserForOrganisation(userId, userApplicationRoles);
 
         if(form == null){
             form = new ApplicationForm();
         }
         form.setApplication(application);
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", s.sectionService.getCompleted(application.getId(), org.getId())));
         addUserDetails(model, application, userId);
 
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
@@ -62,7 +61,7 @@ public class ApplicationOverviewModel implements ViewModel{
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        model.addAttribute("completedQuestionsPercentage", s.applicationService.getCompleteQuestionsPercentage(application.getId()));
+        model.addAttribute("completedQuestionsPercentage", s.getApplicationService().getCompleteQuestionsPercentage(application.getId()));
     }
 
     @Override
@@ -71,9 +70,9 @@ public class ApplicationOverviewModel implements ViewModel{
     }
     
     private void addSections(CompetitionResource competition) {
-        final List<SectionResource> allSections = s.sectionService.getAllByCompetitionId(competition.getId());
-        final List<SectionResource> parentSections = s.sectionService.filterParentSections(allSections);
-        final List<QuestionResource> questions = s.questionService.findByCompetition(competition.getId());
+        final List<SectionResource> allSections = s.getSectionService().getAllByCompetitionId(competition.getId());
+        final List<SectionResource> parentSections = s.getSectionService().filterParentSections(allSections);
+        final List<QuestionResource> questions = s.getQuestionService().findByCompetition(competition.getId());
 
         final Map<Long, SectionResource> sections =
             parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
@@ -103,9 +102,9 @@ public class ApplicationOverviewModel implements ViewModel{
     }
 
     private void addUserDetails(Model model, ApplicationResource application, Long userId) {
-        Boolean userIsLeadApplicant = s.userService.isLeadApplicant(userId, application);
-        ProcessRoleResource leadApplicantProcessRole = s.userService.getLeadApplicantProcessRoleOrNull(application);
-        UserResource leadApplicant = s.userService.findById(leadApplicantProcessRole.getUser());
+        Boolean userIsLeadApplicant = s.getUserService().isLeadApplicant(userId, application);
+        ProcessRoleResource leadApplicantProcessRole = s.getUserService().getLeadApplicantProcessRoleOrNull(application);
+        UserResource leadApplicant = s.getUserService().findById(leadApplicantProcessRole.getUser());
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);
@@ -117,13 +116,13 @@ public class ApplicationOverviewModel implements ViewModel{
         if (isApplicationInViewMode(model, application, userOrganisation))
             return;
 
-        Map<Long, QuestionStatusResource> questionAssignees = s.questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
+        Map<Long, QuestionStatusResource> questionAssignees = s.getQuestionService().getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
 
-        List<QuestionStatusResource> notifications = s.questionService.getNotificationsForUser(questionAssignees.values(), userId);
-        s.questionService.removeNotifications(notifications);
+        List<QuestionStatusResource> notifications = s.getQuestionService().getNotificationsForUser(questionAssignees.values(), userId);
+        s.getQuestionService().removeNotifications(notifications);
         List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
 
-        model.addAttribute("assignableUsers", s.processRoleService.findAssignableProcessRoles(application.getId()));
+        model.addAttribute("assignableUsers", s.getProcessRoleService().findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
@@ -142,7 +141,7 @@ public class ApplicationOverviewModel implements ViewModel{
     }
 
     private List<InviteResource> pendingInvitations(ApplicationResource application) {
-        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = s.inviteRestService.getInvitesByApplication(application.getId());
+        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = s.getInviteRestService().getInvitesByApplication(application.getId());
 
         return pendingAssignableUsersResult.handleSuccessOrFailure(
             failure -> new ArrayList<>(0),
@@ -153,9 +152,9 @@ public class ApplicationOverviewModel implements ViewModel{
 
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         final Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        final Map<Long, Set<Long>> completedSectionsByOrganisation = s.sectionService.getCompletedSectionsByOrganisation(application.getId());
+        final Map<Long, Set<Long>> completedSectionsByOrganisation = s.getSectionService().getCompletedSectionsByOrganisation(application.getId());
         final Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
-        final List<SectionResource> financeSections = s.sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
+        final List<SectionResource> financeSections = s.getSectionService().getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
 
         boolean hasFinanceSection;
         Long financeSectionId;
@@ -167,8 +166,9 @@ public class ApplicationOverviewModel implements ViewModel{
             financeSectionId = financeSections.get(0).getId();
         }
 
+        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", s.getSectionService().getCompleted(application.getId(), org.getId())));
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
-        model.addAttribute("allQuestionsCompleted", s.sectionService.allSectionsMarkedAsComplete(application.getId()));
+        model.addAttribute("allQuestionsCompleted", s.getSectionService().allSectionsMarkedAsComplete(application.getId()));
         model.addAttribute("markedAsComplete", markedAsComplete);
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
@@ -180,6 +180,6 @@ public class ApplicationOverviewModel implements ViewModel{
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
         }
-        return s.questionService.getMarkedAsComplete(application.getId(), organisationId);
+        return s.getQuestionService().getMarkedAsComplete(application.getId(), organisationId);
     }
 }

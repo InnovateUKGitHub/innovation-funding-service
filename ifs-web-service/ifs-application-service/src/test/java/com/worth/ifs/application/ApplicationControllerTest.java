@@ -1,5 +1,17 @@
 package com.worth.ifs.application;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -13,6 +25,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,22 +37,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -62,6 +77,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
+        when(organisationService.getUserForOrganisation(anyLong(), anyList())).thenReturn(Optional.ofNullable(organisations.get(0)));
     }
 
     @Test
@@ -72,6 +88,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
+
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
@@ -79,7 +96,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)));
     }
 
@@ -125,7 +141,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(model().attribute("currentApplication", app))
                .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(3)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
@@ -158,7 +173,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(model().attribute("currentApplication", app))
                .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
@@ -167,7 +181,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
        ApplicationResource app = applications.get(0);
-
        when(applicationService.getById(app.getId())).thenReturn(app);
        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -192,7 +205,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(model().attribute("currentApplication", app))
                .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
