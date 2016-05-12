@@ -7,9 +7,9 @@ import java.util.function.BiConsumer;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.workflow.domain.ProcessEvent;
+import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
-import com.worth.ifs.workflow.domain.ProcessStates;
+import com.worth.ifs.workflow.resource.ProcessStates;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;

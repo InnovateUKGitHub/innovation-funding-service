@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
-import static com.worth.ifs.alert.domain.AlertType.MAINTENANCE;
+import static com.worth.ifs.alert.resource.AlertType.MAINTENANCE;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;

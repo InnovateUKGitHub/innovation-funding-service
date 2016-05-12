@@ -1,11 +1,10 @@
 package com.worth.ifs.finance.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
@@ -28,14 +27,14 @@ public class ApplicationFinanceResource {
     private OrganisationSize organisationSize;
     private Map<CostType, CostCategory> financeOrganisationDetails;
 
-    public ApplicationFinanceResource(ApplicationFinance applicationFinance) {
+    public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
         if (applicationFinance != null) {
             this.id = applicationFinance.getId();
-            this.organisation = applicationFinance.getOrganisation().getId();
-            this.application = applicationFinance.getApplication().getId();
+            this.organisation = applicationFinance.getOrganisation();
+            this.application = applicationFinance.getApplication();
             this.organisationSize = applicationFinance.getOrganisationSize();
             if(applicationFinance.getFinanceFileEntry()!=null) {
-                this.financeFileEntry = applicationFinance.getFinanceFileEntry().getId();
+                this.financeFileEntry = applicationFinance.getFinanceFileEntry();
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.exception.InvalidURLException;

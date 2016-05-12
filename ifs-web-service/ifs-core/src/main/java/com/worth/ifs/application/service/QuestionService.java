@@ -1,6 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -9,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.Future;
 
 /**
- * Interface for CRUD operations on {@link Question} related data.
+ * Interface for CRUD operations on {@link QuestionResource} related data.
  */
 public interface QuestionService {
     void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById);

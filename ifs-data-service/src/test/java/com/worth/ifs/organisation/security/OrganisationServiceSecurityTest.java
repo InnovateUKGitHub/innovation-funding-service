@@ -1,7 +1,7 @@
 package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static com.worth.ifs.address.domain.AddressType.REGISTERED;
+import static com.worth.ifs.address.resource.AddressType.REGISTERED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.util.Arrays.asList;

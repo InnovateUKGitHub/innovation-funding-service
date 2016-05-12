@@ -1,4 +1,4 @@
-package com.worth.ifs.token.domain;
+package com.worth.ifs.token.resource;
 
 public enum TokenType {
 
