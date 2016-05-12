@@ -83,11 +83,14 @@ print "Tests marked as Pending:", pending_tests
 
 print "Grand test total:", total_tests
 
+print ""
+
 if tidy_failing_test_list:
-  print ""
   print "We spotted some failing tests, here are the locations:"
   for test_location in tidy_failing_test_list:
     print test_location
+else:
+  print "We didn't search for any locations, as no failing tests were found. Let's keep it that way!"
 
 
 
