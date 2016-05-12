@@ -16,6 +16,19 @@
     </div>
 </div>
 
+<!-- ===========================Element: alert message=========================== -->
+
+<div th:fragment="global-alert-message">
+    <div th:if="${alertMessages}" id="global-alert-message">
+        <div th:remove="tag" th:each="alertMessage : ${alertMessages}">
+            <div class="event-alert">
+                <p><span th:text="${alertMessage.message}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- ===========================Element: Header logo =========================== -->
 
 <div th:fragment="header-logo">
