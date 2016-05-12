@@ -1,8 +1,8 @@
 package com.worth.ifs.organisation.resource;
 
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.OrganisationResource;
 
 public class OrganisationAddressResource {
     private Long id;
@@ -10,7 +10,7 @@ public class OrganisationAddressResource {
     private AddressResource address;
     private AddressType addressType;
 
-    public OrganisationAddressResource(Organisation organisation, AddressResource address, AddressType addressType) {
+    public OrganisationAddressResource(OrganisationResource organisation, AddressResource address, AddressType addressType) {
         this.organisation = organisation.getId();
         this.address = address;
         this.addressType = addressType;

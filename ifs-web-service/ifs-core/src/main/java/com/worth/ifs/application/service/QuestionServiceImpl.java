@@ -1,7 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -13,7 +11,7 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
- * This class contains methods to retrieve and store {@link Question} related data,
+ * This class contains methods to retrieve and store {@link QuestionResource} related data,
  * through the RestService {@link QuestionRestService}.
  */
 // TODO DW - INFUND-1555 - handle rest results
@@ -54,7 +52,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
 
-        final Map questionAssignees = new HashMap<Long, QuestionStatus>();
+        final Map questionAssignees = new HashMap<Long, QuestionStatusResource>();
 
         for(QuestionStatusResource questionStatusResource : questionStatusResources){
             questionAssignees.put(questionStatusResource.getQuestion(), questionStatusResource);

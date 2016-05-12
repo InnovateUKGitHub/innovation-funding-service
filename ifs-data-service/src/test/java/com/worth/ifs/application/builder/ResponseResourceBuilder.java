@@ -2,11 +2,11 @@ package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.ResponseResource;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +40,15 @@ public class ResponseResourceBuilder extends BaseBuilder<ResponseResource, Respo
         return withArray((id, response) -> setField("id", id, response), ids);
     }
 
-    public ResponseResourceBuilder withApplication(Builder<Application, ?> application) {
+    public ResponseResourceBuilder withApplication(Builder<ApplicationResource, ?> application) {
         return withApplication(application.build());
     }
 
-    public ResponseResourceBuilder withApplication(Application... applications) {
-        return withArray((application, response) -> response.setApplication(application), applications);
+    public ResponseResourceBuilder withApplication(ApplicationResource... applications) {
+        return withArray((application, response) -> response.setApplication(application.getId()), applications);
     }
 
-    public ResponseResourceBuilder withUpdatedBy(Builder<ProcessRole, ?> value) {
+    public ResponseResourceBuilder withUpdatedBy(Builder<ProcessRoleResource, ?> value) {
         return withUpdatedBy(value.build().getId());
     }
 

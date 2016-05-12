@@ -37,8 +37,6 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
-	private static final int PAGE_SIZE = 20;
-
 	public static final Collection<Long> SUBMITTED_STATUS_IDS = Arrays.asList(
 			ApplicationStatusConstants.APPROVED.getId(),
 			ApplicationStatusConstants.REJECTED.getId(),
@@ -71,34 +69,34 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
 	
 	@Override
-	public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, int pageIndex, String sortBy) {
+	public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize) {
 		
-		return applicationSummaries(sortBy, pageIndex,
+		return applicationSummaries(sortBy, pageIndex, pageSize,
 				pageable -> applicationRepository.findByCompetitionId(competitionId, pageable),
 				() -> applicationRepository.findByCompetitionId(competitionId));
 	}
 	
 	@Override
 	public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-			Long competitionId, int pageIndex, String sortBy) {
+			Long competitionId, String sortBy, int pageIndex, int pageSize) {
 		
-		return applicationSummaries(sortBy, pageIndex,
+		return applicationSummaries(sortBy, pageIndex, pageSize, 
 				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, pageable),
 				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
 	}
 	
 	@Override
 	public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
-			Long competitionId, int pageIndex, String sortBy) {
+			Long competitionId, String sortBy, int pageIndex, int pageSize) {
 		
-		return applicationSummaries(sortBy, pageIndex,
+		return applicationSummaries(sortBy, pageIndex, pageSize,
 				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS, pageable),
 				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS));
 	}
 	
-	private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
+	private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, int pageSize, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
 		String[] sortField = getApplicationSummarySortField(sortBy);
-		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Sort.Direction.ASC, sortField));
+		Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(Sort.Direction.ASC, sortField));
 		
 		if(canUseSpringDataPaginationForSummaryResults(sortBy)){
 			Page<Application> applicationResults = paginatedApplicationsSupplier.apply(pageable);

@@ -10,7 +10,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
@@ -130,7 +130,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, 0, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20);
         
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -145,7 +145,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     }
     @Test
     public void testApplicationSummariesByCompetitionIdSortedId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, 0, "id");
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "id", 0, 20);
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -160,7 +160,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     }
     @Test
     public void testApplicationSummariesByCompetitionIdSortedName() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, 0, "name");
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "name", 0, 20);
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -174,7 +174,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     
     @Test
     public void testApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, 0, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20);
         
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -185,7 +185,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     
     @Test
     public void testNotSubmittedApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, 0, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20);
         
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());

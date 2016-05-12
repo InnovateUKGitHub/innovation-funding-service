@@ -1,12 +1,11 @@
 package com.worth.ifs.form.service;
 
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.form.resource.FormInputResource;
 
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link Response} related data.
+ * Interface for CRUD operations on {@link FormInputResource} related data.
  */
 public interface FormInputService {
     FormInputResource getOne(Long formInputId);

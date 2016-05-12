@@ -102,7 +102,7 @@
 					<option value="">SN1 2BD, 5, Station Road, Swindon </option>
 				</select>
 			</div>
-			
+
 
 			<fieldset id="address-details" class="extra-margin" th:style="${param.edit == null ? 'display: none' : 'display: block'}">
 				<legend class="visuallyhidden">Address details</legend>
@@ -177,13 +177,13 @@
 			<div th:if="${param.edit != null}" th:remove="tag">
 				<div class="form-group">
 					<h3 class="heading-small">Email</h3>
-					<p class="form-hint">Your email address can not be changed in the system<br /><strong>jsmith@assessor.co.uk</strong></p>
+					<p class="form-hint">Your email address cannot be changed in the system<br /><strong>jsmith@assessor.co.uk</strong></p>
 				</div>
 				<p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
 			</div>
 
 		</fieldset>
-		
+
 		<div th:if="${param.edit == null}" th:remove="tag">
 			<button class="button button-large extra-margin" name="create-account" formaction="/prototypes/1177-assessor-skills" type="submit">Continue</button>
 		</div>
@@ -203,13 +203,13 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
 
-	jQuery('#postcode-lookup').on('click',function(e){ 
+	jQuery('#postcode-lookup').on('click',function(e){
 		e.preventDefault();
 		jQuery("#select-address-block").show();
 
 	});
 
-	jQuery('#select-address').on('change',function(e){ 
+	jQuery('#select-address').on('change',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#street").val("4 Station Road");
@@ -219,7 +219,7 @@
 
 	});
 
-	jQuery('#enter-address-manually').on('click',function(e){ 
+	jQuery('#enter-address-manually').on('click',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#select-address-block").hide();

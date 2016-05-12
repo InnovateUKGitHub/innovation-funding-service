@@ -2,7 +2,6 @@ package com.worth.ifs.competition;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

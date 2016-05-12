@@ -2,9 +2,10 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Feedback;
-import com.worth.ifs.assessment.dto.Feedback.Id;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.Feedback;
+import com.worth.ifs.assessment.resource.Feedback.Id;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.security.FeedbackLookupStrategy;
 import com.worth.ifs.assessment.security.FeedbackRules;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -157,12 +158,12 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         }
 
         @Override
-        public ServiceResult<Void> save(Assessment a) {
+        public ServiceResult<Void> save(AssessmentResource a) {
             return null;
         }
 
         @Override
-        public ServiceResult<Assessment> saveAndGet(Assessment a) {
+        public ServiceResult<AssessmentResource> saveAndGet(AssessmentResource a) {
             return null;
         }
 
@@ -172,12 +173,12 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         }
 
         @Override
-        public ServiceResult<List<Assessment>> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
+        public ServiceResult<List<AssessmentResource>> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Assessment> getOneByProcessRole(Long processRoleId) {
+        public ServiceResult<AssessmentResource> getOneByProcessRole(Long processRoleId) {
             return null;
         }
 
@@ -202,7 +203,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         }
 
         @Override
-        public ServiceResult<Void> acceptAssessmentInvitation(Long processRoleId, Assessment assessment) {
+        public ServiceResult<Void> acceptAssessmentInvitation(Long processRoleId, AssessmentResource assessment) {
             return null;
         }
 

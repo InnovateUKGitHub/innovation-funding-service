@@ -1,10 +1,9 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -13,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * This class contains methods to retrieve and store {@link Organisation} related data,
+ * This class contains methods to retrieve and store {@link OrganisationResource} related data,
  * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
  */
 @Service
