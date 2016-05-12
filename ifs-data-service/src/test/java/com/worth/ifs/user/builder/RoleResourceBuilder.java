@@ -1,12 +1,13 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.RoleResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -27,6 +28,10 @@ public class RoleResourceBuilder extends BaseBuilder<RoleResource, RoleResourceB
     @Override
     protected RoleResource createInitial() {
         return new RoleResource();
+    }
+
+    public RoleResourceBuilder withId(Long... ids) {
+        return withArray((id, role) -> role.setId(id), ids);
     }
 
     public RoleResourceBuilder withType(UserRoleType... types) {

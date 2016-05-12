@@ -22,7 +22,7 @@ import com.worth.ifs.application.transactional.ApplicationSummarisationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 
 @RunWith(MockitoJUnitRunner.class)

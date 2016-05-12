@@ -3,7 +3,7 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;

@@ -6,11 +6,11 @@ import java.util.List;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.QuestionResourceBuilder;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.builder.CompetitionBuilder;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 
@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static java.util.Arrays.asList;
@@ -49,10 +50,10 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     public void setUp() {
         super.setUp();
 
-        ArrayList<Section> sections = new ArrayList<>();
-        Competition competition = CompetitionBuilder.newCompetition().build();
-        parentSection = new SectionResource(10L, competition, new ArrayList<>(), "ParentSection", null);
-        childSection1 = new SectionResource(20L, competition, new ArrayList<>(), "childSection1", parentSection.getId());
+        ArrayList<SectionResource> sections = new ArrayList<>();
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+        parentSection = newSectionResource().withId(10L).withCompetition(competition.getId()).build();
+        childSection1 = newSectionResource().withId(20L).withCompetition(competition.getId()).withParentSection(parentSection.getId()).build();
         formInputResource1 = newFormInputResource().withFormInputTypeTitle("empty").build();
         formInputResource2 = newFormInputResource().withFormInputTypeTitle("textarea").build();
 

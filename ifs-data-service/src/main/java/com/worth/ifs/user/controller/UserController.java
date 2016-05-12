@@ -3,7 +3,7 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.Set;
 
 import static java.util.Optional.of;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This RestController exposes CRUD operations to both the

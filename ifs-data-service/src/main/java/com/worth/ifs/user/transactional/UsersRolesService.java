@@ -15,6 +15,9 @@ public interface UsersRolesService {
     ServiceResult<ProcessRoleResource> getProcessRoleById(final Long id);
 
     @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<ProcessRoleResource>> getProcessRolesByIds(final Long[] ids);
+
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(final Long applicationId);
 
     @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)

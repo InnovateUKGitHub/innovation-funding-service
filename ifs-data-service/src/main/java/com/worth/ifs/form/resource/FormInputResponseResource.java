@@ -1,10 +1,9 @@
 package com.worth.ifs.form.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 
 import java.time.LocalDateTime;
 
@@ -24,7 +23,7 @@ public class FormInputResponseResource {
     public FormInputResponseResource() {
     	// no-arg constructor
     }
-    public FormInputResponseResource(LocalDateTime updateDate, String value, ProcessRole updatedBy, Long formInput, Application application) {
+    public FormInputResponseResource(LocalDateTime updateDate, String value, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
         this.value = value;
         this.updatedBy = updatedBy.getId();
@@ -33,7 +32,7 @@ public class FormInputResponseResource {
     }
 
 
-    public FormInputResponseResource(LocalDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, Long formInput, Application application) {
+    public FormInputResponseResource(LocalDateTime updateDate, FileEntryResource fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
         this.fileEntry = fileEntry.getId();
         this.updatedBy = updatedBy.getId();

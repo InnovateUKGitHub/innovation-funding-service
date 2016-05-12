@@ -1,6 +1,6 @@
-package com.worth.ifs.assessment.domain;
+package com.worth.ifs.assessment.resource;
 
-import com.worth.ifs.workflow.domain.OutcomeType;
+import com.worth.ifs.workflow.resource.OutcomeType;
 
 public enum AssessmentOutcomes implements OutcomeType {
     ACCEPT("accept"),

@@ -1,9 +1,7 @@
 package com.worth.ifs.form.service;
 
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -11,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Interface for CRUD operations on {@link Response} related data.
+ * Interface for CRUD operations on {@link FormInputResponseResource} related data.
  */
 public interface FormInputResponseService {
     List<FormInputResponseResource> getByApplication(Long applicationId);

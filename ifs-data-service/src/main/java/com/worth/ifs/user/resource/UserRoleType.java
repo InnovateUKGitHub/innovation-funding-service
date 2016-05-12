@@ -1,4 +1,4 @@
-package com.worth.ifs.user.domain;
+package com.worth.ifs.user.resource;
 
 /**
  * The UserRoleType enumeration defines the available user roles.

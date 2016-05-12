@@ -20,6 +20,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -121,6 +122,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId) {
         return getWithRestResultAsync(processRoleRestURL + "/" + processRoleId, ProcessRoleResource.class);
+    }
+
+    @Override
+    public RestResult<List<ProcessRoleResource>> findProcessRolesByIds(List<Long> processRoleIds) {
+        return getWithRestResult(processRoleRestURL + "/findByIds/" + simpleJoiner(processRoleIds, ","), processRoleResourceListType());
     }
 
     @Override

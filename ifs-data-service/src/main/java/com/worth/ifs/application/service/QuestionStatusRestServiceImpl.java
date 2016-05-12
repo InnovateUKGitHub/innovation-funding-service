@@ -52,6 +52,6 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
 
     @Override
     public RestResult<List<QuestionStatusResource>> getByIds(List<Long> ids){
-        return getWithRestResult(questionStatusRestURL + "getByIds", questionStatusResourceListType());
+        return getWithRestResult(questionStatusRestURL + "/getByIds", questionStatusResourceListType());
     }
 }

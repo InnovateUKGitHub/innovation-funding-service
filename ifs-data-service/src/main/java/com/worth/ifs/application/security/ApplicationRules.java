@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 
 @PermissionRules
 @Component

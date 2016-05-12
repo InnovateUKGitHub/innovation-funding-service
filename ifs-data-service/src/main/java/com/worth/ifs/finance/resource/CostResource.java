@@ -1,7 +1,5 @@
 package com.worth.ifs.finance.resource;
 
-import com.worth.ifs.finance.domain.CostValue;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

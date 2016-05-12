@@ -32,7 +32,6 @@ import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.user.domain.User;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")

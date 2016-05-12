@@ -2,7 +2,7 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.UserStatus;
+import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Ignore;
 import org.junit.Test;

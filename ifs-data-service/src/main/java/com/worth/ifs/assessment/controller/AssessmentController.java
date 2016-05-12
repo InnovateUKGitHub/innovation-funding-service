@@ -2,8 +2,8 @@ package com.worth.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
@@ -28,12 +28,12 @@ public class AssessmentController {
     private AssessorService assessorService;
 
     @RequestMapping("/findAssessmentsByCompetition/{assessorId}/{competitionId}")
-    public RestResult<List<Assessment>> findAssessmentsByProcessRole(@PathVariable("assessorId") final Long assessorId, @PathVariable("competitionId") final Long competitionId) {
+    public RestResult<List<AssessmentResource>> findAssessmentsByProcessRole(@PathVariable("assessorId") final Long assessorId, @PathVariable("competitionId") final Long competitionId) {
         return assessorService.getAllByCompetitionAndAssessor(competitionId, assessorId).toGetResponse();
     }
 
     @RequestMapping("/findAssessmentByProcessRole/{processRoleId}")
-    public RestResult<Assessment> getAssessmentByProcessRole( @PathVariable("processRoleId") final Long processRoleId) {
+    public RestResult<AssessmentResource> getAssessmentByProcessRole( @PathVariable("processRoleId") final Long processRoleId) {
         return assessorService.getOneByProcessRole(processRoleId).toGetResponse();
     }
 
@@ -49,7 +49,7 @@ public class AssessmentController {
 
     @RequestMapping(value = "/acceptAssessmentInvitation/{processRoleId}")
     public RestResult<Void> acceptAssessmentInvitation(@PathVariable("processRoleId") final Long processRoleId,
-                                           @RequestBody Assessment assessment) {
+                                           @RequestBody AssessmentResource assessment) {
         return assessorService.acceptAssessmentInvitation(processRoleId, assessment).toPutResponse();
     }
 
