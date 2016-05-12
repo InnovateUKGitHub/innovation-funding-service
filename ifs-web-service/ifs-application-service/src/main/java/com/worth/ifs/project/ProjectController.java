@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
@@ -21,7 +22,7 @@ public class ProjectController {
 	@Autowired
 	private ApplicationService applicationService;
 	
-    @RequestMapping("/{projectId}")
+    @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String projectDetails(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
     	
     	ApplicationResource application = applicationService.getById(projectId);
