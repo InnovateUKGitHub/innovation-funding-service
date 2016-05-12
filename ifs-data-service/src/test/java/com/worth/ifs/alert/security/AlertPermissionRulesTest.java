@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -31,22 +32,26 @@ public class AlertPermissionRulesTest extends BasePermissionRulesTest<AlertPermi
     }
 
     @Test
-    public void test_competitionsAdminCanCreateAlerts() throws Exception {
-        assertTrue(rules.competitionsAdminCanCreateAlerts(alertResource, compAdminUser()));
+    public void test_systemMaintenanceUserCanCreateAlerts() throws Exception {
+        assertTrue(rules.systemMaintenanceUserCanCreateAlerts(alertResource, systemMaintenanceUser()));
     }
 
     @Test
-    public void test_competitionsAdminCanCreateAlerts_anonymous() throws Exception {
-        assertFalse(rules.competitionsAdminCanCreateAlerts(alertResource, anonymousUser));
+    public void test_systemMaintenanceUserCanCreateAlerts_anonymous() throws Exception {
+        assertFalse(rules.systemMaintenanceUserCanCreateAlerts(alertResource, anonymousUser));
     }
 
     @Test
-    public void test_competitionsAdminCanDeleteAlerts() throws Exception {
-        assertTrue(rules.competitionsAdminCanDeleteAlerts(alertResource, compAdminUser()));
+    public void test_systemMaintenanceUserCanDeleteAlerts() throws Exception {
+        assertTrue(rules.systemMaintenanceUserCanDeleteAlerts(alertResource, systemMaintenanceUser()));
     }
 
     @Test
-    public void test_competitionsAdminCanDeleteAlerts_anonymous() throws Exception {
-        assertFalse(rules.competitionsAdminCanDeleteAlerts(alertResource, anonymousUser));
+    public void test_systemMaintenanceUserCanDeleteAlerts_anonymous() throws Exception {
+        assertFalse(rules.systemMaintenanceUserCanDeleteAlerts(alertResource, anonymousUser));
+    }
+
+    private UserResource systemMaintenanceUser() {
+        return getUserWithRole(SYSTEM_MAINTAINER);
     }
 }
