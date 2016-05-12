@@ -17,9 +17,6 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.JsonUtil;
@@ -72,7 +69,7 @@ public class ApplicationContributorController{
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
-        User leadApplicant = leadApplicantProcessRole.getUser();
+        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         if(savedInvites.stream().noneMatch(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId()))){
@@ -106,7 +103,7 @@ public class ApplicationContributorController{
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
-        User leadApplicant = leadApplicantProcessRole.getUser();
+        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));
@@ -160,7 +157,7 @@ public class ApplicationContributorController{
                 });
     }
 
-    private void mergeAndValidateCookieData(HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ContributorsForm contributorsForm, Long applicationId, ApplicationResource application, User leadApplicant) {
+    private void mergeAndValidateCookieData(HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ContributorsForm contributorsForm, Long applicationId, ApplicationResource application, UserResource leadApplicant) {
 
         String json = CookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
@@ -217,7 +214,7 @@ public class ApplicationContributorController{
         } else if (saveContributors != null) {
             contributorsForm.setTriedToSave(true);
             validator.validate(contributorsForm, bindingResult);
-            User leadApplicant = leadApplicantProcessRole.getUser();
+            UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
             validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
             validatePermissionToInvite(contributorsForm, bindingResult, application, leadApplicant, request);
             
@@ -246,7 +243,7 @@ public class ApplicationContributorController{
     }
 
     private void validatePermissionToInvite(ContributorsForm contributorsForm, BindingResult bindingResult,
-			ApplicationResource application, User leadApplicant, HttpServletRequest request) {
+			ApplicationResource application, UserResource leadApplicant, HttpServletRequest request) {
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
 
@@ -305,7 +302,7 @@ public class ApplicationContributorController{
     /**
      * Check if e-mail addresses entered, are unique within this application's invites.
      */
-    private void validateUniqueEmails(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, User leadApplicant) {
+    private void validateUniqueEmails(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
         Set<String> savedEmails = getSavedEmailAddresses(application);
         savedEmails.add(leadApplicant.getEmail());
         contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {

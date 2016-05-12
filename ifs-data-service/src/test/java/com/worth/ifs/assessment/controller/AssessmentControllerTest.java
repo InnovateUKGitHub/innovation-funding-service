@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
@@ -43,9 +44,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testFindAssessmentsByProcessRole() throws Exception {
-        Assessment assessment = new Assessment();
+        AssessmentResource assessment = new AssessmentResource();
 
-        List<Assessment> assessments = new ArrayList<>();
+        List<AssessmentResource> assessments = new ArrayList<>();
         assessments.add(assessment);
 
         assessment.setId(123L);
@@ -60,7 +61,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testGetAssessmentByProcessRole() throws Exception {
-        Assessment assessment = new Assessment();
+        AssessmentResource assessment = new AssessmentResource();
 
         assessment.setId(456L);
 
@@ -113,7 +114,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         Assessment assessment = newAssessment().withId(assessmentId).build();
         String json = new ObjectMapper().writeValueAsString(assessment);
 
-        when(assessorService.acceptAssessmentInvitation(eq(processRoleId), isA(Assessment.class))).thenReturn(serviceSuccess());
+        when(assessorService.acceptAssessmentInvitation(eq(processRoleId), isA(AssessmentResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(applicationControllerPath + "/acceptAssessmentInvitation/" + processRoleId)
                 .contentType(MediaType.APPLICATION_JSON)

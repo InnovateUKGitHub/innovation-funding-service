@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.workflow;
 
-import com.worth.ifs.assessment.domain.AssessmentOutcomes;
-import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.workflow.actions.AcceptAction;
 import com.worth.ifs.assessment.workflow.actions.RecommendAction;
 import com.worth.ifs.assessment.workflow.actions.RejectAction;

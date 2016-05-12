@@ -8,7 +8,7 @@ import static com.worth.ifs.application.transactional.ApplicationServiceImpl.RES
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
 import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceFields;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -38,7 +38,7 @@ import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 public class ApplicationControllerDocumentation extends BaseControllerMockMVCTest<ApplicationController> {
 

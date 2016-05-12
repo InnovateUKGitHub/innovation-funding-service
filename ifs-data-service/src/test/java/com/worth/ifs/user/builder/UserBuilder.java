@@ -7,7 +7,15 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserStatus;
+
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 

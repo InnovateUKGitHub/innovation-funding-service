@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.domain;
 
+import com.worth.ifs.finance.resource.CostValueId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

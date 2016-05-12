@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
 

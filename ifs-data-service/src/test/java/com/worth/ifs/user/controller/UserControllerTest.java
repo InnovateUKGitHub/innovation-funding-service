@@ -14,7 +14,7 @@ import org.junit.Test;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.token.domain.TokenType.VERIFY_EMAIL_ADDRESS;
+import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;

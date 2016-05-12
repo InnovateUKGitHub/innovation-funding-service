@@ -5,7 +5,7 @@ import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;

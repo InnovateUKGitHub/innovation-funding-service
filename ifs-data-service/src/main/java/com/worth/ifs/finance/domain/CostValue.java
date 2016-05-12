@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.finance.resource.CostValueId;
 
 import javax.persistence.*;
 

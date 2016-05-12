@@ -3,7 +3,7 @@ package com.worth.ifs.user.repository;
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

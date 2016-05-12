@@ -7,8 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -26,7 +25,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.stream.Collectors.toList;
 
 /**
- * This class contains methods to retrieve and store {@link Section} related data,
+ * This class contains methods to retrieve and store {@link SectionResource} related data,
  * through the RestService {@link SectionRestService}.
  */
 // TODO DW - INFUND-1555 - return RestResults

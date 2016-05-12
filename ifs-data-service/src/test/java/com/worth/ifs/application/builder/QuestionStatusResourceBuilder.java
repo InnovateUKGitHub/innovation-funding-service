@@ -1,7 +1,7 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
         return new QuestionStatusResourceBuilder(emptyList()).with(uniqueIds());
     }
 
-    public QuestionStatusResourceBuilder withApplication(Application application) {
+    public QuestionStatusResourceBuilder withApplication(ApplicationResource application) {
         return with(questionStatus -> {
             questionStatus.setApplication(application.getId());
         });

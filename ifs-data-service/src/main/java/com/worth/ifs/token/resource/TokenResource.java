@@ -1,7 +1,6 @@
 package com.worth.ifs.token.resource;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worth.ifs.token.domain.TokenType;
 
 public class TokenResource {
     Long id;

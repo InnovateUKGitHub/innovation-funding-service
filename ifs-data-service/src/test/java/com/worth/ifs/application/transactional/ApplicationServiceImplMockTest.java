@@ -28,7 +28,6 @@ import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +53,7 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;

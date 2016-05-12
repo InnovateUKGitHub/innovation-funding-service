@@ -96,8 +96,8 @@
                                     <h3 class="score"><span th:text="${score.percentage}"/> %</h3>
                                     <small>Overall score</small>
                                     <div class="recommend-container">
-                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES.toString()}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
-                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO.toString()}" th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.resource.RecommendedValue).YES.toString()}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                        <p th:if="${assessment?.lastOutcome?.outcome == T(com.worth.ifs.assessment.resource.RecommendedValue).NO.toString()}" th:class="${'recommend no'}"> <span>Not recommended</span> </p>
                                     </div>
                                 </p>
                             </div>
@@ -140,8 +140,8 @@
                                 <h3 class="score"><span th:text="${score.percentage}"/>%</h3>
                                 <small>Overall score</small>
                                 <div class="recommend-container">
-                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).YES.toString()}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
-                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.domain.RecommendedValue).NO.toString()}" th:class="${'recommend no'}"> <span>Not recommended</span> </p>
+                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.resource.RecommendedValue).YES.toString()}" th:class="${'recommend yes'}"> <span>Recommended</span> </p>
+                                    <p th:if="${assessment.lastOutcome?.outcome == T(com.worth.ifs.assessment.resource.RecommendedValue).NO.toString()}" th:class="${'recommend no'}"> <span>Not recommended</span> </p>
                                 </div>
                             </div>
                         </div>
