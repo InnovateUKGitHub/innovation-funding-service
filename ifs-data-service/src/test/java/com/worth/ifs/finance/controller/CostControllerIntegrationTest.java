@@ -59,10 +59,10 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     public static final long APPLICATION_ID = 1L;
 
 
-    private long capitalUsageQuestionId = 31L;
-    private long subContractingCostQuestionId = 32L;
-    private long travelCostQuestionId = 33L;
-    private long otherCostQuestionId = 34L;
+    //private long capitalUsageQuestionId = 31L;
+    //private long subContractingCostQuestionId = 32L;
+    //private long travelCostQuestionId = 33L;
+    //private long otherCostQuestionId = 34L;
 
     @Autowired
 
@@ -87,10 +87,10 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccessObject();
         otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
 
-        capitalUsage = (CapitalUsage) controller.add(applicationFinance.getId(), capitalUsageQuestionId, null).getSuccessObject();
-        subContractingCost = (SubContractingCost) controller.add(applicationFinance.getId(), subContractingCostQuestionId, new SubContractingCost()).getSuccessObject();
-        travelCost = (TravelCost) controller.add(applicationFinance.getId(), travelCostQuestionId, new TravelCost()).getSuccessObject();
-        otherCost = (OtherCost) controller.add(applicationFinance.getId(), otherCostQuestionId, null).getSuccessObject();
+        capitalUsage = (CapitalUsage) controller.add(applicationFinance.getId(), 31L, null).getSuccessObject();
+        subContractingCost = (SubContractingCost) controller.add(applicationFinance.getId(), 32L, new SubContractingCost()).getSuccessObject();
+        travelCost = (TravelCost) controller.add(applicationFinance.getId(), 33L, new TravelCost()).getSuccessObject();
+        otherCost = (OtherCost) controller.add(applicationFinance.getId(), 34L, null).getSuccessObject();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
@@ -162,13 +162,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         );
     }
 
-    @Rollback
-    @Test
-    public void testValidationMaterial(){
-        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
-        assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
-    }
+
 
     @Rollback
     @Test
@@ -176,38 +170,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding);
         ValidationMessages messages = validationMessages.getSuccessObject();
         assertEquals(null, messages);
-    }
-
-    @Rollback
-    @Test
-    public void testValidationMaterialUpdate(){
-        materials.setCost(new BigDecimal(-5));
-        materials.setItem("");
-        materials.setQuantity(-5);
-
-
-        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
-        ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(3, messages.getErrors().size());
-        assertEquals(materials.getId(), messages.getObjectId());
-        assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
-
-
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "item".equals(e.getErrorKey()))
-                .filter(e -> "This field cannot be left blank".equals(e.getErrorMessage()))
-                .findAny().isPresent());
-
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "quantity".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
-                .findAny().isPresent());
-
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "cost".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
-                .findAny().isPresent());
     }
 
     @Rollback
@@ -227,6 +189,78 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                 .filter(e -> "grantClaimPercentage".equals(e.getErrorKey()))
                 .filter(e -> "This field should be 70% or lower".equals(e.getErrorMessage()))
                 .findAny().isPresent());
+    }
+
+    /* Material Section Tests */
+
+    @Rollback
+    @Test
+    public void testValidationMaterial(){
+        assertEquals(new BigDecimal(2000), materials.getTotal());
+
+        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+    }
+
+    @Rollback
+    @Test
+    public void testValidationMaterialUpdateInvalidValues(){
+        materials.setCost(new BigDecimal(-5));
+        materials.setItem("");
+        materials.setQuantity(-5);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(3, messages.getErrors().size());
+        assertEquals(materials.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("item")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
+    }
+
+    public void testValidationMaterialUpdateMaxValues(){
+        materials.setCost(new BigDecimal(1000));
+        materials.setItem(overMaxTextSize);
+        materials.setQuantity(1000);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(3, messages.getErrors().size());
+        assertEquals(materials.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("item")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
     }
 
     /* Capital Usage Section Tests */
@@ -249,7 +283,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //@TODO Check the field existing and confirm whether it is required or not -> see the spreadheet
+    //@TODO Check the field existing and confirm the constrant -> see the spreadheet; Residual value should be higher than 0
     public void testValidationCapitalUsageUpdateIncorrectValues(){
         capitalUsage.setDescription("");
         capitalUsage.setExisting("");
@@ -281,7 +315,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                 ),
                 allOf(
                         hasProperty("errorKey", is("residualValue")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                        hasProperty("errorMessage", is("This field should be 0 or higher"))
                 ),
                 allOf(
                         hasProperty("errorKey", is("npv")),
