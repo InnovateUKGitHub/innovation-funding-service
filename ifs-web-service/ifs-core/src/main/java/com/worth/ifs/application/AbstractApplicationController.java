@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -45,8 +45,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -191,13 +190,14 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("currentCompetition", competition);
 
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
         if(form == null){
             form = new ApplicationForm();
         }
         form.setApplication(application);
 
-        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
+        //addOrganisationDetails(model, application, userApplicationRoles);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
@@ -241,10 +241,7 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation,
-                                          List<ProcessRoleResource> userApplicationRoles) {
-
-        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
+    protected void addOrganisationDetails(Model model, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
         SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
         model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
         model.addAttribute("applicationOrganisations", organisations);
@@ -293,8 +290,11 @@ public abstract class AbstractApplicationController extends BaseController {
 
     protected void addUserDetails(Model model, ApplicationResource application, Long userId) {
         Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
-        model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
+        model.addAttribute("leadApplicant", leadApplicant);
     }
 
     protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
@@ -334,7 +334,7 @@ public abstract class AbstractApplicationController extends BaseController {
         questionService.removeNotifications(notifications);
 
         List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
-        
+
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
         model.addAttribute("questionAssignees", questionAssignees);
@@ -344,7 +344,7 @@ public abstract class AbstractApplicationController extends BaseController {
     private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
         if(!application.isOpen() || userOrganisation == null){
             //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<ProcessRole>());
+            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
             model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
             model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
@@ -520,7 +520,7 @@ public abstract class AbstractApplicationController extends BaseController {
                                                                              ApplicationForm form) {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
+        addOrganisationDetails(model, application, userApplicationRoles);
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
         
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
@@ -579,7 +579,7 @@ public abstract class AbstractApplicationController extends BaseController {
     public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getUser().getId().equals(userId))
+                .filter(uar -> uar.getUser().equals(userId))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
     }

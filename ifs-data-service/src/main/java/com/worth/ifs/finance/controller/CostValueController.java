@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.finance.domain.CostValueId;
+import com.worth.ifs.finance.resource.CostValueId;
 import com.worth.ifs.finance.resource.CostValueResource;
 import com.worth.ifs.finance.transactional.CostValueService;
 import org.springframework.beans.factory.annotation.Autowired;

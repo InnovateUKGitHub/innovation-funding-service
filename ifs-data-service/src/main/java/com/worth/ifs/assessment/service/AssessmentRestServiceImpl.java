@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -15,7 +16,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 
 /**
  * AssessmentRestServiceImpl is a utility for CRUD operations on {@link Assessment}.
@@ -29,13 +30,13 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     String assessmentRestURL;
 
     @Override
-    public RestResult<List<Assessment>> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return getWithRestResult(assessmentRestURL +"/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , assessmentListType());
+    public RestResult<List<AssessmentResource>> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return getWithRestResult(assessmentRestURL +"/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , assessmentResourceListType());
     }
 
     @Override
-    public RestResult<Assessment> getOneByProcessRole(Long processRoleId) {
-        return getWithRestResult(assessmentRestURL +"/findAssessmentByProcessRole/" + processRoleId, Assessment.class);
+    public RestResult<AssessmentResource> getOneByProcessRole(Long processRoleId) {
+        return getWithRestResult(assessmentRestURL +"/findAssessmentByProcessRole/" + processRoleId, AssessmentResource.class);
     }
 
     @Override
@@ -85,12 +86,12 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<Void> acceptAssessmentInvitation(Long processId, Assessment assessment) {
+    public RestResult<Void> acceptAssessmentInvitation(Long processId, AssessmentResource assessment) {
         return postWithRestResult(assessmentRestURL + "/acceptAssessmentInvitation/" + processId, assessment, Void.class);
     }
 
     @Override
-    public RestResult<Void> rejectAssessmentInvitation(Long processId, ProcessOutcome processOutcome) {
+    public RestResult<Void> rejectAssessmentInvitation(Long processId, ProcessOutcomeResource processOutcome) {
         return postWithRestResult(assessmentRestURL + "/rejectAssessmentInvitation/" + processId, processOutcome, Void.class);
     }
 

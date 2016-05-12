@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
-import static com.worth.ifs.alert.domain.AlertType.MAINTENANCE;
+import static com.worth.ifs.alert.resource.AlertType.MAINTENANCE;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.alertResourceListType;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;

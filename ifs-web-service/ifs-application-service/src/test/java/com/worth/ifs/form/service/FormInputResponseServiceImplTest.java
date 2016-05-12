@@ -1,8 +1,6 @@
 package com.worth.ifs.form.service;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;

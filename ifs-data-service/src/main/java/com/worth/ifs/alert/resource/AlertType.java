@@ -1,4 +1,4 @@
-package com.worth.ifs.alert.domain;
+package com.worth.ifs.alert.resource;
 
 /**
  * Enumeration of the possible different types of Alert.

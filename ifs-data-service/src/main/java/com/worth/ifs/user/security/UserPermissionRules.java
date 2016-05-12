@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 

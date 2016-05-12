@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.repository;
 
 import com.worth.ifs.finance.domain.CostValue;
-import com.worth.ifs.finance.domain.CostValueId;
+import com.worth.ifs.finance.resource.CostValueId;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 

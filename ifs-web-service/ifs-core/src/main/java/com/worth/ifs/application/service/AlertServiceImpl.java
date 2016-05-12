@@ -1,6 +1,6 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.alert.service.AlertRestService;
 import org.springframework.beans.factory.annotation.Autowired;

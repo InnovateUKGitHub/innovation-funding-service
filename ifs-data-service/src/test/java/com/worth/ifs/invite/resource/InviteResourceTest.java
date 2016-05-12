@@ -11,6 +11,7 @@ public class InviteResourceTest {
 
     Long inviteId;
     String name;
+    String nameConfirmed;
     String email;
     Long applicationId;
     String hash;
@@ -21,6 +22,7 @@ public class InviteResourceTest {
     public void setUp() throws Exception {
         inviteId = 1L;
         name = "testname";
+        nameConfirmed = "testnameConfirmed"; 
         email = "test@email.test";
         applicationId = 2L;
         hash = "123abc";
@@ -30,6 +32,7 @@ public class InviteResourceTest {
         setInviteResource = new InviteResource();
         setInviteResource.setId(inviteId);
         setInviteResource.setName(name);
+        setInviteResource.setNameConfirmed(nameConfirmed);
         setInviteResource.setEmail(email);
         setInviteResource.setApplication(applicationId);
         setInviteResource.setHash(hash);
@@ -43,6 +46,7 @@ public class InviteResourceTest {
     public void gettingAnyAttributeAfterSettingShouldReturnCorrectValue() throws Exception {
         Assert.assertEquals(inviteId, setInviteResource.getId());
         Assert.assertEquals(name, setInviteResource.getName());
+        Assert.assertEquals(nameConfirmed, setInviteResource.getNameConfirmed());
         Assert.assertEquals(email, setInviteResource.getEmail());
         Assert.assertEquals(applicationId, setInviteResource.getApplication());
         Assert.assertEquals(hash, setInviteResource.getHash());
@@ -60,6 +64,5 @@ public class InviteResourceTest {
         Assert.assertEquals((Long)inviteOrganisationId, constructedInviteResource.getInviteOrganisation());
         Assert.assertEquals(status, constructedInviteResource.getStatus());
     }
-
 
 }
