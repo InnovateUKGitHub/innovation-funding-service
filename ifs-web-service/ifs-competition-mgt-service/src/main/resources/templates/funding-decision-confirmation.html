@@ -20,6 +20,7 @@
       	<input th:if="${entry.getValue().name() == 'FUNDED'}" type="hidden" th:name="${entry.key}" value="Y" />
       	<input th:if="${entry.getValue().name() == 'UNFUNDED'}" type="hidden" th:name="${entry.key}" value="N" />
       </span>
+      <a th:href="@{/competition/{competitionId}(competitionId=${competitionId})}">Cancel</a>
       <button id="no-js-notify-applicants" type="submit" class="button no-margin">Notify Applicants</button>
     </form>
     

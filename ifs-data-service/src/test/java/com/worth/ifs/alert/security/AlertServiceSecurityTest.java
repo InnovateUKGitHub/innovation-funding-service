@@ -39,7 +39,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
         assertAccessDenied(
                 () -> service.create(alertResource),
                 () -> {
-                    verify(alertPermissionRules).competitionsAdminCanCreateAlerts(isA(AlertResource.class), isA(UserResource.class));
+                    verify(alertPermissionRules).systemMaintenanceUserCanCreateAlerts(isA(AlertResource.class), isA(UserResource.class));
                 });
     }
 
@@ -52,7 +52,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
         assertAccessDenied(
                 () -> service.delete(9999L),
                 () -> {
-                    verify(alertPermissionRules).competitionsAdminCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class));
+                    verify(alertPermissionRules).systemMaintenanceUserCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class));
                 });
     }
 
