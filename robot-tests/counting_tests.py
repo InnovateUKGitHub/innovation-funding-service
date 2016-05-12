@@ -23,6 +23,13 @@ def tidyUpPybotOutput(pybot_output):
     else:
       return "0 tests!"
 
+# Clean up grep's output to give a tidy directory for each failing test
+def tidyUpFailingTestSearch(grep_output):
+  list_of_failing_test_locations = []
+  for match in re.findall("(\S*)\:", grep_output):
+    list_of_failing_test_locations.append(match)
+  return list_of_failing_test_locations
+
 
 
 print "Counting the local running tests..."
@@ -45,6 +52,11 @@ failing_tests_pybot_output = shell("pybot --outputdir test_counting --pythonpath
 
 failing_tests = tidyUpPybotOutput(failing_tests_pybot_output)
 
+if failing_tests != "0 tests":
+  failing_test_list = shell("grep -R Failing IFS_acceptance_tests/")
+
+tidy_failing_test_list = tidyUpFailingTestSearch(failing_test_list)
+
 pending_tests_pybot_output = shell("pybot --outputdir test_counting --pythonpath IFS_acceptance_tests/libs --dryrun --include Pending IFS_acceptance_tests/tests")
 
 pending_tests = tidyUpPybotOutput(pending_tests_pybot_output)
@@ -55,7 +67,6 @@ print "Counting total tests..."
 total_tests_pybot_output = shell("pybot --outputdir test_counting --pythonpath IFS_acceptance_tests/libs --dryrun IFS_acceptance_tests/tests")
 
 total_tests = tidyUpPybotOutput(total_tests_pybot_output)
-
 
 
 print "-------------------------------------------------------------------------"
@@ -72,6 +83,11 @@ print "Tests marked as Pending:", pending_tests
 
 print "Grand test total:", total_tests
 
+if tidy_failing_test_list:
+  print ""
+  print "We spotted some failing tests, here are the locations:"
+  for test_location in tidy_failing_test_list:
+    print test_location
 
 
 
