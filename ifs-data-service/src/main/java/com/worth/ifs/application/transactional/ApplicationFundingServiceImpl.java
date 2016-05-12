@@ -200,10 +200,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 		if(data == null) {
 			data = new FundingDecisionData();
 			data.setId(competition.getId());
-			fundingDecisionDataRepository.save(data);
 		}
 		
 		populateFundingDecisionData(data).accept(relevantDecision);
+		
+		fundingDecisionDataRepository.save(data);
 		
 		return serviceSuccess();
 	}

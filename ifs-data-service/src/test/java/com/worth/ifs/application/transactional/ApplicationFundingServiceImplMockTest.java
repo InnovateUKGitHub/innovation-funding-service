@@ -336,9 +336,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(Arrays.asList(application1, application2));
 
     	FundingDecisionData fundingDecisionData = new FundingDecisionData();
+    	fundingDecisionData.getFundingDecisions().put(2L, FundingDecisionStatus.FUNDED);
     	when(fundingDecisionDataRepositoryMock.findOne(competition.getId())).thenReturn(fundingDecisionData);
     	
-    	Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNDECIDED, 3L, UNFUNDED);
+    	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
     	ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
     	
@@ -348,8 +349,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	assertEquals(openStatus, application2.getApplicationStatus());
     	assertNull(competition.getFundersPanelEndDate());
     	assertEquals("Only contains entries for the submitted applications that exist for the competition", 2, fundingDecisionData.getFundingDecisions().size());
-    	assertEquals(FundingDecisionStatus.FUNDED, fundingDecisionData.getFundingDecisions().get(1L));
-    	assertEquals(FundingDecisionStatus.UNDECIDED, fundingDecisionData.getFundingDecisions().get(2L));
+    	assertEquals(FundingDecisionStatus.UNDECIDED, fundingDecisionData.getFundingDecisions().get(1L));
+    	assertEquals(FundingDecisionStatus.FUNDED, fundingDecisionData.getFundingDecisions().get(2L));
     }
     
     @Test
