@@ -32,7 +32,7 @@
 
 			<dt>Finance contact</dt>
 			<dd>
-				Dave Normen, 
+				Dave Normen,
 				<a href="mailto:dave@normen.com">dave@normen.com</a>
 			</dd>
 
@@ -52,15 +52,15 @@
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
-		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs can not be moved across cost categories.
+		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.
 	</p>
-	
+
 	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-		
+
 		<div class="extra-margin alignright" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-			
+
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}" class="button-secondary">View wide screen  table</a>
 
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}" class="button-secondary">View standard size table</a>
@@ -68,7 +68,7 @@
 		</div>
 
 		<div class="extra-margin alignright" th:unless="${param.user == null}">
-			
+
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full&#38;user=nonLead#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}" class="button-secondary">View wide screen table</a>
 
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}" class="button-secondary">View standard table</a>
@@ -136,7 +136,7 @@
 					<td class="separate-cell year">12,500</td>
 
 					<td class="separate-cell">8,333</td>
-	
+
 					<td class="total">87,500</td>
 					<td class="total eligible">87,500</td>
 				</tr>
@@ -152,7 +152,7 @@
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-2 y1-q3 labour" id="labour-y2-q3" value="12,500" /><label for="labour-y2-q3" class="visuallyhidden">Labour</label></td>
 
 					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y1-q4 labour" id="labour-y2-q4" value="8,333" /><label for="labour-y2-q4" class="visuallyhidden">Labour</label></td>
-		
+
 					<td class="total">87,500</td>
 					<td class="total eligible">87,500</td>
 				</tr>
@@ -193,7 +193,7 @@
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 materials" id="materials-y1-q1" value="1,000" /><label for="materials-y1-q1" class="visuallyhidden">Materials</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 materials" id="materials-y1-q2" value="3,000" /><label for="materials-y1-q2" class="visuallyhidden">Materials</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 materials" id="materials-y1-q3" value="3,000" /><label for="materials-y1-q3" class="visuallyhidden">Materials</label></td>
-					
+
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 materials" id="materials-y1-q4" value="3,000" /><label for="materials-y1-q4" class="visuallyhidden">Materials</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 materials" id="materials-y2-q1" value="3,000" /><label for="materials-y2-q1" class="visuallyhidden">Materials</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 materials" id="materials-y2-q2" value="3,000" /><label for="materials-y2-q2" class="visuallyhidden">Materials</label></td>
@@ -225,7 +225,7 @@
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 capital" id="capital-y1-q1" value="1,000" /><label for="capital-y1-q1" class="visuallyhidden">Capital</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 capital" id="capital-y1-q2" value="3,000" /><label for="capital-y1-q2" class="visuallyhidden">Capital</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 capital" id="capital-y1-q3" value="3,000" /><label for="capital-y1-q3" class="visuallyhidden">Capital</label></td>
-					
+
 					<td ><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 capital" id="capital-y1-q4" value="3,000" /><label for="capital-y1-q4" class="visuallyhidden">Capital</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 capital" id="capital-y2-q1" value="3,000" /><label for="capital-y2-q1" class="visuallyhidden">Capital</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 capital" id="capital-y2-q2" value="3,000" /><label for="capital-y2-q2" class="visuallyhidden">Capital</label></td>
@@ -245,7 +245,7 @@
 					<td>3,000</td>
 					<td>3,000</td>
 					<td>3,000</td>
-					<td class="separate-cell year">3,000</td> 
+					<td class="separate-cell year">3,000</td>
 
 					<td class="separate-cell">2,000</td>
 
@@ -257,12 +257,12 @@
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 sub-contract" id="sub-contract-y1-q1" value="1,000" /><label for="sub-contract-y1-q1" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 sub-contract" id="sub-contract-y1-q2" value="3,000" /><label for="sub-contract-y1-q2" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 sub-contract" id="sub-contract-y1-q3" value="3,000" /><label for="sub-contract-y1-q3" class="visuallyhidden">Sub-contracting costs</label></td>
-					
+
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 sub-contract" id="sub-contract-y1-q4" value="3,000" /><label for="sub-contract-y1-q4" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 sub-contract" id="sub-contract-y2-q1" value="3,000" /><label for="sub-contract-y2-q1" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 sub-contract" id="sub-contract-y2-q2" value="3,000" /><label for="sub-contract-y2-q2" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 sub-contract" id="sub-contract-y2-q3" value="3,000" /><label for="sub-contract-y2-q3" class="visuallyhidden">Sub-contracting costs</label></td>
-					
+
 					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 sub-contract" id="sub-contract-y2-q4" th:value="${(param.spend != null and param.spend[0] == 'high' ? '4,000' : '2,000')}" /><label for="sub-contract-y2-q4" class="visuallyhidden">Sub-contracting costs</label></td>
 
 					<td class="total" th:text="${(param.spend != null and param.spend[0] == 'high' ? '23,000' : '21,000')}">21,000</td>
@@ -280,7 +280,7 @@
 					<td class="separate-cell year">1,000</td>
 
 					<td class="separate-cell">667</td>
-	
+
 					<td class="total">7,000</td>
 					<td class="total eligible">7,000</td>
 				</tr>
@@ -325,13 +325,13 @@
 			<div class="modal-send-to-lead" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
-					
+
 					<h2 class="heading-medium no-margin">Send to lead</h2>
 
 					<p>Your profile spend has now been made available to <strong>Aptrans Ltd</strong>. They may contact you if it requires change.</p>
 
 					<hr />
-		            
+
 	            	<div class="alignright-button">
 	            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">OK</a>
 	            	</div>
@@ -342,7 +342,7 @@
 	 	</div>
 
 	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:remove="tag">
-			
+
 			<div class="extra-margin">
 				<a href="#" class="button button-large" data-js-modal="modal-complete">Submit</a>
 			</div>
@@ -350,13 +350,13 @@
 			<div class="modal-complete" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
-					
+
 					<h2 class="heading-medium no-margin">Spend profile complete</h2>
 
 					<p><strong>Aptrans Ltd's</strong> spend profile has now been marked as complete. You can return edit the spend profile, but it must be marked as complete before the project spend profile can be submitted.</p>
 
 					<hr />
-		            
+
 	            	<div class="alignright-button">
 	            		<a href="/prototypes/1592-spend?status=Submitted" class="button">OK</a>
 	            	</div>
@@ -370,7 +370,7 @@
 	</div>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-		
+
 		<div class="extra-margin">
 
 			<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary">Save and return to spend profile overview</a>
@@ -389,13 +389,13 @@
 		<div class="modal-allow-edits" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
-				
+
 				<h2 class="heading-medium no-margin">Allow edits</h2>
 
 				<p><strong>Biotech Corp's</strong> profile spend has been handed back to them, they have been informaed of by email, if there are any specific changes required please contact them.</p>
 
 				<hr />
-	            
+
             	<div class="alignright-button">
             		<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>
             	</div>
@@ -415,13 +415,13 @@
 		<div class="modal-submit-spend" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
-				
+
 				<h2 class="heading-medium no-margin">Submit project profile spend</h2>
 
 				<p>The Project profile spend will be submitted to both InnovateUK and the Monitiring officer assigned to this project. This will be used for reference and the base for progress.</p>
 
 				<hr />
-	            
+
             	<div class="alignright-button">
             		<a href="/prototypes/1592-spend?status=Submitted&#38;task=edit " class="button">Submit</a>
             	</div>
@@ -430,7 +430,7 @@
 	    </div>
 	</div>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -442,7 +442,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

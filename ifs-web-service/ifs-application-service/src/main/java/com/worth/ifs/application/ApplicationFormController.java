@@ -28,7 +28,6 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.QuestionModel;
-import com.worth.ifs.application.model.Services;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -46,6 +45,7 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
+import com.worth.ifs.util.Services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

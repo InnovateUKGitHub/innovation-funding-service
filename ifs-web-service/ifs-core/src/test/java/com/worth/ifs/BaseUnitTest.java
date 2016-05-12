@@ -30,7 +30,6 @@ import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
-import com.worth.ifs.application.model.Services;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.resource.QuestionResource;
@@ -74,10 +73,10 @@ import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.util.Services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -275,7 +274,6 @@ public class BaseUnitTest {
         applications = new ArrayList<>();
         questionResources = new HashMap<>();
         organisations = new ArrayList<>();
-        randomGenerator = new Random();
 
         setupUsers();
         setupOrganisationTypes();
@@ -659,8 +657,6 @@ public class BaseUnitTest {
         questionResources.get(21L).setResponses(Arrays.asList(responseResource2.getId()));
 
         when(responseService.getByApplication(application.getId())).thenReturn(responseResources);
-
-        ArgumentCaptor<Long> argument = ArgumentCaptor.forClass(Long.class);
 
         when(formInputService.getOne(anyLong())).thenAnswer(invocation -> {
             Object[] args = invocation.getArguments();

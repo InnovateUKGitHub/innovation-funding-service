@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.model.ApplicationOverviewModel;
-import com.worth.ifs.application.model.Services;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -24,6 +23,7 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.Services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,4 +1,4 @@
-package com.worth.ifs.application.model;
+package com.worth.ifs.util;
 
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;

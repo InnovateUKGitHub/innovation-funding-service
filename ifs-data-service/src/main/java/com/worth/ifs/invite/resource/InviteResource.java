@@ -13,7 +13,9 @@ public class InviteResource {
     private String leadApplicant;
     private String leadApplicantEmail;
     private Long id;
+    private Long user;
     private String name;
+    private String nameConfirmed;
     private String email;
     private Long application;
     private Long competitionId;
@@ -140,6 +142,22 @@ public class InviteResource {
 
     public void setLeadApplicant(String leadApplicant) {
         this.leadApplicant = leadApplicant;
+    }
+
+    public String getNameConfirmed() {
+        return this.nameConfirmed;
+    }
+
+    public void setNameConfirmed(String nameConfirmed) {
+        this.nameConfirmed = nameConfirmed;
+    }
+
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
     }
 
     @Override

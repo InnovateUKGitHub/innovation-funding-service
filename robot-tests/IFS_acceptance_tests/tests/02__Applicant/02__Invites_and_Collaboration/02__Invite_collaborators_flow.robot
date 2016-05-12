@@ -151,6 +151,15 @@ The Lead applicant invites a non registered user in the same organisation
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
     [Teardown]    User closes the browser
 
+the status of the invitees is correct on the overview page
+    [Documentation]     INFUND-2738
+    [Tags]  Collaboration   Pending
+    # Pending completion of INFUND-2050
+    [Setup]     Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page        ${application_details_url}
+    Then the user should see the text in the page        foobar
+
+
 The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     ...
@@ -167,6 +176,7 @@ The user should not create new org but should follow the create account flow
     And the user fills the create account form    Roger    Axe
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+
 
 *** Keywords ***
 the applicant enters valid inputs
@@ -213,6 +223,7 @@ the applicant cannot assign to pending invitees
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
+
 
 the lead applicant logs out
     Logout as user

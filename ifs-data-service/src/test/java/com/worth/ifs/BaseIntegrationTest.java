@@ -24,7 +24,7 @@ import java.util.List;
 @TestPropertySource(locations="classpath:application-web-integration-test.properties")
 public abstract class BaseIntegrationTest extends BaseTest {
 
-    public static final int USER_COUNT  = 13;
+    public static final int USER_COUNT  = 14;
     public static final List<String> ALL_USERS_EMAIL = Arrays.asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ewan+2@hiveit.co.uk", "ewan+12@hiveit.co.uk", "ifs_web_user@innovateuk.org", "compadmin@innovateuk.test");
 
     @Autowired
