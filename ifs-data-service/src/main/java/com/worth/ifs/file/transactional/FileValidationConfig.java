@@ -10,7 +10,9 @@ import java.util.List;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * TODO DW - document this class
+ * Spring Configuration that is able to supply a number of FileValidators for the use of various Controllers in order
+ * to ensure that files being uploaded for particular contexts (e.g. a file upload for an Application Form question)
+ * are valid for those contexts
  */
 @Configuration
 public class FileValidationConfig {
@@ -30,12 +32,12 @@ public class FileValidationConfig {
     @Bean(name = "formInputResponseFileValidator")
     public FileValidator getFormInputResponseFileValidator() {
         List<MediaType> mediaTypes = simpleMap(validMediaTypesForFormInputResponses, MediaType::valueOf);
-        return new FileValidatorImpl(maxFilesizeBytesForFormInputResponses, mediaTypes);
+        return new FilesizeAndTypeFileValidator(maxFilesizeBytesForFormInputResponses, mediaTypes);
     }
 
     @Bean(name = "applicationFinanceFileValidator")
     public FileValidator getApplicationFinanceFileValidator() {
         List<MediaType> mediaTypes = simpleMap(validMediaTypesForApplicationFinance, MediaType::valueOf);
-        return new FileValidatorImpl(maxFilesizeBytesForApplicationFinance, mediaTypes);
+        return new FilesizeAndTypeFileValidator(maxFilesizeBytesForApplicationFinance, mediaTypes);
     }
 }

@@ -4,7 +4,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import org.springframework.http.MediaType;
 
 /**
- * TODO DW - document this class
+ * A holder for some basic attributes about a file that is being validated and uploaded
  */
 public class FileHeaderAttributes {
 
