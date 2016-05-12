@@ -1,18 +1,22 @@
 package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.function.Supplier;
 
 public interface CostService {
 
@@ -66,4 +70,13 @@ public interface CostService {
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId") Long applicationId);
+
+    @NotSecured(value = "RP will secure this", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value = "RP will secure this", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value = "RP will secure this", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId);
 }
