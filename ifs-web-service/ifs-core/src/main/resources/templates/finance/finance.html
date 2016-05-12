@@ -535,7 +535,7 @@
                     <span>Item description</span>
                     <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-description'})" th:remove="tag" />
                   </label>
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=false)" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-existing]}')} ? 'error' : ''">
                 <fieldset class="inline">

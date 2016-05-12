@@ -17,6 +17,7 @@ public class CapitalUsage implements CostItem {
     @Min(1)
     @Digits(integer = MAX_DIGITS, fraction = 0)
     Integer deprecation;
+
     @NotBlank
     @NotNull
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)

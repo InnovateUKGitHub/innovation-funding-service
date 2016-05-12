@@ -3,7 +3,6 @@ package com.worth.ifs.finance.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,26 +10,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.worth.ifs.finance.resource.cost.CostItem.MAX_DB_STRING_LENGTH;
+import static com.worth.ifs.finance.resource.cost.CostItem.MAX_LENGTH_MESSAGE;
+
 /**
  * Cost defines database relations and a model to use client side and server side.
  */
 @Entity
 public class Cost {
-    public static final int DB_MAX_STRING_LENGTH = 255;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @Length(max = DB_MAX_STRING_LENGTH)
+    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String item;
-    @Length(max = DB_MAX_STRING_LENGTH)
+
+    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String description;
 
     Integer quantity;
     BigDecimal cost;
 
-    @Length(max = DB_MAX_STRING_LENGTH)
+    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String name;
 
     @OneToMany(mappedBy="cost")
