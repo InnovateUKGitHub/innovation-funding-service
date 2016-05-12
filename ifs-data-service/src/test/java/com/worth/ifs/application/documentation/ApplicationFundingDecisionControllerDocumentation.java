@@ -52,7 +52,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     }
     
     @Test
-    public void testSaveApplicationFundingDecisionData() throws Exception {
+    public void saveFundingDecisionData() throws Exception {
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
@@ -65,7 +65,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     }
     
     @Test
-    public void testGetApplicationFundingDecisionData() throws Exception {
+    public void getFundingDecisionData() throws Exception {
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
