@@ -59,7 +59,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return newUserResource().withRolesGlobal(roles).build();
     }
 
-    private UserResource getUserWithRole(UserRoleType type) {
+    protected UserResource getUserWithRole(UserRoleType type) {
         return simpleFilter(allRoleUsers, user -> simpleMap(user.getRoles(), RoleResource::getName).contains(type.getName())).get(0);
     }
 
