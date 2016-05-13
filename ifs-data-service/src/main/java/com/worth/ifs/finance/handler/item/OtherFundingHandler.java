@@ -26,7 +26,6 @@ public class OtherFundingHandler extends CostHandler {
     @Override
     public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
         super.validate(costItem, bindingResult);
-
         validator.validate(costItem, bindingResult);
     }
 

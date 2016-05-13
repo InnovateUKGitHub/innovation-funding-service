@@ -53,6 +53,9 @@ public class OtherFundingValidatorTest extends AbstractValidatorTest {
         otherFunding = new OtherFunding(3L, "Yes", "Source1", "2014", new BigDecimal(100));
         expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
 
+        otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0));
+        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "javax.validation.constraints.DecimalMin.message", null, new Integer[]{1}, null)), otherFunding);
+
         otherFunding = new OtherFunding(4L, "Yes", "Source1", "12-2014hvhvh", new BigDecimal(100));
         expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
     }
@@ -67,14 +70,14 @@ public class OtherFundingValidatorTest extends AbstractValidatorTest {
         otherFunding = new OtherFunding(2L, "Yes", OTHER_FUNDING, null, null);
         expectNoErrors(otherFunding);
 
-        otherFunding = new OtherFunding(3L, null, "Source1", "", new BigDecimal(0));
+        otherFunding = new OtherFunding(3L, null, "Source1", "", new BigDecimal(5));
         expectNoErrors(otherFunding);
 
-        otherFunding = new OtherFunding(4L, "Yes", "Source1", "", null);
+        otherFunding = new OtherFunding(4L, "Yes", "Source1", "",  new BigDecimal(5));
         expectNoErrors(otherFunding);
 
         mockWithRadio("No");
-        otherFunding = new OtherFunding(5L, "No", "", "ertt", new BigDecimal(0));
+        otherFunding = new OtherFunding(5L, "No", "", "ertt", new BigDecimal(5));
         expectNoErrors(otherFunding);
 
         otherFunding = new OtherFunding(6L, "Yes", "Source1", "2014", new BigDecimal(100));
