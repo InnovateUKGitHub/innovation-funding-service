@@ -118,6 +118,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
     				.param("8", "Y")
     				.param("9", "N")
+    				.param("action", "notify")
     			)
                 .andExpect(redirectedUrl("/competition/123"));
     	
@@ -140,6 +141,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     				.param("8", "Y")
     				.param("9", "N")
     				.param("10", "Y")
+    				.param("action", "notify")
     			)
                 .andExpect(view().name("funding-decision-confirmation"))
                 .andExpect(model().attribute("competitionId", 123L))
@@ -157,10 +159,11 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
 		when(applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(isA(Map.class), isA(List.class))).thenReturn(fundingDecisons);
     
     	mockMvc.perform(
-    				post("/competition/123/savedata")
+    				post("/competition/123/fundingdecision")
     				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
     				.param("8", "Y")
     				.param("9", "N")
+    				.param("action", "save")
     			)
                 .andExpect(redirectedUrl("/competition/123"));
     	

@@ -14,6 +14,7 @@ IFS.competition_management = (function(){
           fundingDecisionSelects: '.funding-decision',
           submitFundingDecisionButton: '#publish-funding-decision',
           noJsSubmitFundingDecisionButton: '#no-js-notify-applicants',
+          noJsSaveFundingDecisionButton: '#no-js-save-funding-decision',
           fundingDecisionForm: '#submit-funding-decision-form'
         },
         init: function(){
@@ -99,7 +100,9 @@ IFS.competition_management = (function(){
         handleFundingDecisionButtons: function(){
         	var button = jQuery(s.submitFundingDecisionButton);
         	var noJsButton = jQuery(s.noJsSubmitFundingDecisionButton);
+        	var noJsSaveButton = jQuery(s.noJsSaveFundingDecisionButton);
         	noJsButton.hide();
+        	noJsSaveButton.hide();
         	button.show();
         },
         disableFundingDecisonButton : function(){

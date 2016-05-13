@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.application.service.ApplicationFundingDecisionService;
@@ -35,17 +36,23 @@ public class FundingDecisionController {
 	private CookieFlashMessageFilter cookieFlashMessageFilter;
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/fundingdecision")
-    public String fundingDecisionCheck(Model model, HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
+    public String fundingDecisionCheck(Model model, HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId, @RequestParam("action") String action){
 		
 		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
 
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
+
+		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+		
+		if(!"notify".equals(action)) {
+			return "redirect:/competition/" + competitionId;
+		}
+		
 		if(!applicationFundingDecisionService.verifyAllApplicationsRepresented(request.getParameterMap(), applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
 			return "redirect:/competition/" + competitionId;
 		}
 		
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
-
 		model.addAttribute("competitionId", competitionId);
 		model.addAttribute("applicationFundingDecisions", applicationIdToFundingDecision);
 		
@@ -57,34 +64,23 @@ public class FundingDecisionController {
 		
 		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
 
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
+
+		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+		
 		if(!applicationFundingDecisionService.verifyAllApplicationsRepresented(request.getParameterMap(), applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
 			return "redirect:/competition/" + competitionId;
 		}
 		
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
-
 		applicationFundingDecisionService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
 
 		return "redirect:/competition/" + competitionId;
     }
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/savedata")
-    public String saveFundingDecisionDate(HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
-		
-		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
-
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
-
-		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
-
-		return "redirect:/competition/" + competitionId;
-    }
-
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
 		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE).getContent()
 				.stream().map(e -> e.getId()).collect(Collectors.toList());
 	}
-
 	
 }
