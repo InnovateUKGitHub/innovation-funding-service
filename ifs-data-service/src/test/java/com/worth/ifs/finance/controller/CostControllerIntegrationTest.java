@@ -45,7 +45,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private OtherCost otherCost;
     private Overhead overhead;
 
-    private String overMaxTextSize;
+    private String overMaxAllowedTextSize;
 
     @Mock
     BindingResult bindingResult;
@@ -89,7 +89,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
 
-        overMaxTextSize = StringUtils.repeat("<ifs_test>", 30);
+        overMaxAllowedTextSize = StringUtils.repeat("<ifs_test>", 30);
 
         List<ProcessRole> proccessRoles = new ArrayList<>();
         proccessRoles.add(
@@ -113,13 +113,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         swapOutForUser(userMapper.mapToResource(user));
     }
 
-    /* Labour Section Test */
+    /* Labour Section Tests */
 
     @Rollback
     @Test
     public void testValidationLabour(){
-     //   assertEquals(, labourCost.getRate(labourCost.getLabourDays()));
-        //assertEquals(250, labourCost.getRate());
+
+        assertEquals(new BigDecimal("129.31034"), labourCost.getRate(labourCostDaysPerYear.getLabourDays()).setScale(5, BigDecimal.ROUND_HALF_EVEN));
+        assertEquals(new BigDecimal("90000"), (labourCost.getTotal(labourCostDaysPerYear.getLabourDays())).setScale(0, BigDecimal.ROUND_HALF_EVEN) );
+
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
         assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
@@ -130,7 +132,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     public void testValidationLabourUpdateIncorrectValues(){
         labourCost.setRole("");
         labourCost.setLabourDays(-50);
-        labourCost.setGrossAnnualSalary(new BigDecimal(-500000));
+        labourCost.setGrossAnnualSalary(new BigDecimal("-500000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
@@ -163,13 +165,11 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //@Todo no validation for WorkingDaysPer Year (0-365), role limitation (255 characters), salary (0-8), but form validation works
+    //@Todo no validation for WorkingDaysPerYear (0-365), role limitation (255 characters), salary (0-8), but form validation works
     public void testValidationLabourUpdateIncorrectMaxValues(){
-        labourCost.setRole(overMaxTextSize);
+        labourCost.setRole(overMaxAllowedTextSize);
         labourCost.setLabourDays(400);
-        labourCost.setGrossAnnualSalary(new BigDecimal(100000));
-
-
+        labourCost.setGrossAnnualSalary(new BigDecimal("100000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -200,11 +200,17 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         );*/
     }
 
-    /* Overhead */
+    /* Overhead Section Tests */
 
     @Rollback
     @Test
     public void testValidationOverhead() {
+
+        BigDecimal overheadTotal =  overhead.getTotal();
+        assertEquals(0, overheadTotal.intValue());
+        overheadTotal = new BigDecimal("50000");
+        assertEquals(11500, overhead.getRate() * overheadTotal.intValue() / 100);
+
         RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
         assertTrue(validationMessages.isSuccess());
         assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
@@ -212,17 +218,48 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationOverheadUpdate(){
-        overhead.setRate(100);
-        assertEquals(1000, overhead.getRate() * 1000/100);
+    public void testValidationOverheadUpdateMinRate(){
 
+        overhead.setRate(-10);
+        assertEquals(-100, overhead.getRate() * 1000/100);
 
-        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
-        assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
+        ValidationMessages messages = validationMessages.getSuccessObject();
 
+        assertEquals(1, messages.getErrors().size());
+        assertEquals(overhead.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("rate")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
     }
 
+    @Rollback
+    @Test
+    public void testValidationOverheadUpdateMaxRate(){
+        overhead.setRate(150);
+        assertEquals(1500, overhead.getRate() * 1000/100);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(1, messages.getErrors().size());
+        assertEquals(overhead.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), contains(
+                allOf(
+                        hasProperty("errorKey", is("rate")),
+                        hasProperty("errorMessage", is("This field should be 100 or lower"))
+                )
+        ));
+    }
 
 
     /* Material Section Tests */
@@ -230,7 +267,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationMaterial(){
-        assertEquals(new BigDecimal(2000), materials.getTotal());
+        assertEquals(new BigDecimal("2000"), materials.getTotal());
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         assertTrue(validationMessages.isSuccess());
@@ -240,7 +277,8 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationMaterialUpdateInvalidValues(){
-        materials.setCost(new BigDecimal(-5));
+        materials.setCost(new BigDecimal("-5"));
+
         materials.setItem("");
         materials.setQuantity(-5);
 
@@ -269,8 +307,8 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     public void testValidationMaterialUpdateMaxValues(){
-        materials.setCost(new BigDecimal(1000));
-        materials.setItem(overMaxTextSize);
+        materials.setCost(new BigDecimal("1000"));
+        materials.setItem(overMaxAllowedTextSize);
         materials.setQuantity(1000);
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
@@ -301,14 +339,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     public void testValidationCapitalUsageUpdateSuccess() {
 
-        capitalUsage.setDescription(overMaxTextSize);
+        capitalUsage.setDescription(overMaxAllowedTextSize);
         capitalUsage.setExisting("New");
         capitalUsage.setDeprecation(5);
-        capitalUsage.setResidualValue(new BigDecimal(1000));
-        capitalUsage.setNpv(new BigDecimal(10000));
+        capitalUsage.setResidualValue(new BigDecimal("1000"));
+        capitalUsage.setNpv(new BigDecimal("10000"));
         capitalUsage.setUtilisation(99);
 
-        assertEquals(new BigDecimal(8910), capitalUsage.getTotal());
+        assertEquals(new BigDecimal("8910"), capitalUsage.getTotal());
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
         assertTrue(validationMessages.isSuccess());
@@ -322,8 +360,8 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         capitalUsage.setDescription("");
         capitalUsage.setExisting("");
         capitalUsage.setDeprecation(-5);
-        capitalUsage.setResidualValue(new BigDecimal(-100000));
-        capitalUsage.setNpv(new BigDecimal(-10000));
+        capitalUsage.setResidualValue(new BigDecimal("-100000"));
+        capitalUsage.setNpv(new BigDecimal("-10000"));
         capitalUsage.setUtilisation(-5);
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
@@ -366,11 +404,11 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     //@TODO it is not clear in the spreadsheet, the field exisiting has string lenght constraint.
     public void testValidationCapitalUsageUpdateUpdateOverMaxAllowedValues(){
-        capitalUsage.setDescription(overMaxTextSize);
-        capitalUsage.setExisting(overMaxTextSize);
+        capitalUsage.setDescription(overMaxAllowedTextSize);
+        capitalUsage.setExisting(overMaxAllowedTextSize);
         capitalUsage.setDeprecation(1000);
-        capitalUsage.setResidualValue(new BigDecimal(1000000));
-        capitalUsage.setNpv(new BigDecimal(100000));
+        capitalUsage.setResidualValue(new BigDecimal("1000000"));
+        capitalUsage.setNpv(new BigDecimal("100000"));
         capitalUsage.setUtilisation(200);
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
@@ -406,7 +444,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         subContractingCost.setName("Tom Bloggs");
         subContractingCost.setCountry("UK");
         subContractingCost.setRole("Business Analyst");
-        subContractingCost.setCost(new BigDecimal(10000));
+        subContractingCost.setCost(new BigDecimal("10000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(subContractingCost.getId(), subContractingCost);
         assertTrue(validationMessages.isSuccess());
@@ -420,7 +458,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         subContractingCost.setName("");
         subContractingCost.setCountry("");
         subContractingCost.setRole("");
-        subContractingCost.setCost(new BigDecimal(-5000));
+        subContractingCost.setCost(new BigDecimal("-5000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -455,15 +493,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     //@TODO Max value limitaton message; Country max value constraint
     public void testValidationSubContractingCostUpdateOverMaxAllowedValues(){
-        subContractingCost.setName(overMaxTextSize);
-        subContractingCost.setCountry(overMaxTextSize);
-        subContractingCost.setRole(overMaxTextSize);
-        subContractingCost.setCost(new BigDecimal(1000000));
+        subContractingCost.setName(overMaxAllowedTextSize);
+        subContractingCost.setCountry(overMaxAllowedTextSize);
+        subContractingCost.setRole(overMaxAllowedTextSize);
+        subContractingCost.setCost(new BigDecimal("1000000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(300, overMaxTextSize.length());
+        assertEquals(300, overMaxAllowedTextSize.length());
         assertEquals(3, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -495,10 +533,10 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void testValidationTravelCostUpdateSuccess() {
         travelCost.setItem("Travel To Australia for research consultancy");
-        travelCost.setCost(new BigDecimal(1000));
+        travelCost.setCost(new BigDecimal("1000"));
         travelCost.setQuantity(100);
 
-        assertEquals(new BigDecimal(100000), travelCost.getTotal());
+        assertEquals(new BigDecimal("100000"), travelCost.getTotal());
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         assertTrue(validationMessages.isSuccess());
@@ -509,7 +547,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void testValidationTravelCostUpdateIncorrectMinValues(){
         travelCost.setItem("");
-        travelCost.setCost(new BigDecimal(-1000));
+        travelCost.setCost(new BigDecimal("-1000"));
         travelCost.setQuantity(-500);
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
@@ -539,13 +577,13 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     //@TODO The constrant to limit item size to 255 is invalid
     public void testValidationTravelCostUpdateIncorrectMaxValues(){
-        travelCost.setItem(overMaxTextSize);
-        travelCost.setCost(new BigDecimal(0));
+        travelCost.setItem(overMaxAllowedTextSize);
+        travelCost.setCost(new BigDecimal("0"));
         travelCost.setQuantity(null);
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(300, overMaxTextSize.length());
+        assertEquals(300, overMaxAllowedTextSize.length());
         assertEquals(2, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -572,7 +610,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationOtherCostUpdateSuccess() {
-        otherCost.setCost(new BigDecimal(1000));
+        otherCost.setCost(new BigDecimal("1000"));
         otherCost.setDescription("Additional Test Cost");
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
@@ -584,8 +622,8 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void testValidationOtherCostUpdateIncorrectCostValue() {
 
-        otherCost.setCost(new BigDecimal(0));
-        otherCost.setDescription(overMaxTextSize);
+        otherCost.setCost(new BigDecimal("0"));
+        otherCost.setDescription(overMaxAllowedTextSize);
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -607,7 +645,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void testValidationOtherCostUpdateMinIncorrectValues() {
 
-        otherCost.setCost(new BigDecimal(-1000));
+        otherCost.setCost(new BigDecimal("-1000"));
         otherCost.setDescription("");
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
@@ -631,7 +669,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         ));
     }
 
-    //todo
+    //todo joe
 
     @Rollback
     @Test
