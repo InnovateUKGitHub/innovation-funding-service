@@ -1,4 +1,4 @@
-package com.worth.ifs.workflow.domain;
+package com.worth.ifs.workflow.resource;
 
 /**
  * ProcessEvent is a bag of Process Event/Types.

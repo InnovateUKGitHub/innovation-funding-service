@@ -4,6 +4,7 @@ import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -12,7 +13,8 @@ import org.mapstruct.Mappings;
     componentModel = "spring",
     uses = {
         ApplicationMapper.class,
-        InviteOrganisationMapper.class
+        InviteOrganisationMapper.class,
+        UserMapper.class
     }
 )
 public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Long> {
@@ -28,6 +30,8 @@ public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Lo
             @Mapping(source = "inviteOrganisation.id", target = "inviteOrganisation"),
             @Mapping(source = "inviteOrganisation.organisationName", target = "inviteOrganisationName"),
             @Mapping(source = "inviteOrganisation.organisation.name", target = "inviteOrganisationNameConfirmed"),
+            @Mapping(source = "user.name", target = "nameConfirmed"),
+            @Mapping(source = "user.id", target = "user"),
     })
     @Override
     public abstract InviteResource mapToResource(Invite domain);

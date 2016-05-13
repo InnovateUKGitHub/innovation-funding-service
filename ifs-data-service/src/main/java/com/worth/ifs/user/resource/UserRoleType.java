@@ -1,4 +1,4 @@
-package com.worth.ifs.user.domain;
+package com.worth.ifs.user.resource;
 
 /**
  * The UserRoleType enumeration defines the available user roles.
@@ -10,6 +10,7 @@ public enum UserRoleType {
     ASSESSOR("assessor"),
     LEADAPPLICANT("leadapplicant"),
     COMP_ADMIN("comp_admin"),
+    SYSTEM_MAINTAINER("system_maintainer"),
     SYSTEM_REGISTRATION_USER("system_registrar");
 
     private final String name;

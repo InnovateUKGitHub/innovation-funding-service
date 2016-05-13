@@ -1,4 +1,4 @@
-package com.worth.ifs.user.domain;
+package com.worth.ifs.user.resource;
 
 /**
  * organisation size as defined by the EU

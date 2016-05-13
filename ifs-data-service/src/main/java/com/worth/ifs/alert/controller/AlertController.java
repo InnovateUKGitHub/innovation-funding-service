@@ -1,6 +1,6 @@
 package com.worth.ifs.alert.controller;
 
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.commons.rest.RestResult;

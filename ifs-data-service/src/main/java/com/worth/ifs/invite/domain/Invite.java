@@ -2,6 +2,7 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.user.domain.User;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -35,6 +36,10 @@ public class Invite {
     @ManyToOne
     @JoinColumn(name = "inviteOrganisationId", referencedColumnName = "id")
     private InviteOrganisation inviteOrganisation;
+
+    @ManyToOne
+    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
+    private User user;
 
     private String hash;
 
@@ -108,6 +113,14 @@ public class Invite {
 
     public void setStatus(InviteStatusConstants status) {
         this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String generateHash() {

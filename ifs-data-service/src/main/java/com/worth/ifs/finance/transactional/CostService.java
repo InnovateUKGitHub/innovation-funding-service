@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.handler.item.CostHandler;
@@ -14,7 +15,9 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.function.Supplier;
 
 public interface CostService {
 
@@ -71,4 +74,12 @@ public interface CostService {
 
     @NotSecured(value = "This is not getting date from the database, just getting a CostHandler", mustBeSecuredByOtherServices = false)
     CostHandler getCostHandler(CostItem costItem);
+    @NotSecured(value = "RP will secure this", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value = "RP will secure this", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value = "RP will secure this", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId);
 }

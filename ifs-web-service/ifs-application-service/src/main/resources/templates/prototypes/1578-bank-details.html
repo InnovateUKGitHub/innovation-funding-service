@@ -21,15 +21,18 @@
 
 	<p>To enable Innovate UK to pay your grant claims we require your organisation's bank account details.</p>
 
-	<p>The bank account details entered must belong to:</p>
+	<h3 class="heading-medium">Organisation information</h3>
+	<p class="form-hint">This information provided during the application process cannot be changed.</p>
 	
 	<div th:if="${param.status == null}">
-		<h2 class="heading-medium no-margin-bottom">Aptrans Ltd</h2>
-		<p>Company no. 04214477</p>
+		<p class="extra-margin">
+			Aptrans Ltd <br />
+			Company no. 04214477
+		</p>
 	</div>
 	
 	<div th:if="${param.status != null and param.status[0] == 'nonBusiness'}">
-		<h2 class="heading-medium no-margin-bottom">University of Cardiff</h2>
+		<p class="extra-margin">University of Cardiff</p>
 	</div>
 	
 	<form action="#">

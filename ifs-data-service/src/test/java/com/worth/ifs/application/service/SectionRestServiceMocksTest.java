@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 
 /**

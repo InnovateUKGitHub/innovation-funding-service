@@ -1,10 +1,5 @@
 package com.worth.ifs.finance.resource;
 
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.domain.CostValueId;
-
-
 public class CostValueResource {
     String value;
     private Long cost;
@@ -14,12 +9,12 @@ public class CostValueResource {
     	// no-arg constructor
     }
 
-    public CostValueResource(CostField costField, String value) {
+    public CostValueResource(CostFieldResource costField, String value) {
         this.costField = costField.getId();
         this.value = value;
     }
 
-    public CostValueResource(Cost cost, CostField costField, String value) {
+    public CostValueResource(CostResource cost, CostFieldResource costField, String value) {
         this.cost = cost.getId();
         this.costField = costField.getId();
         this.value = value;
@@ -38,11 +33,11 @@ public class CostValueResource {
     }
 
 
-    public void setCost(Cost cost) {
+    public void setCost(CostResource cost) {
         this.cost = cost.getId();
     }
 
-    public void setCostField(CostField costField) {
+    public void setCostField(CostFieldResource costField) {
         this.costField = costField.getId();
     }
 

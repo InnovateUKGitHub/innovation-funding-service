@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.domain;
+package com.worth.ifs.assessment.resource;
 
 
 public enum RecommendedValue {

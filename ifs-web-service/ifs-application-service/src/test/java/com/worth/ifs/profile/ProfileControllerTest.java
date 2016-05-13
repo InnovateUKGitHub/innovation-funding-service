@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.resource.OrganisationResource;

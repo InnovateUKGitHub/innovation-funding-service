@@ -13,7 +13,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
@@ -210,6 +210,11 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
      */
     private List<Either<CostItem, ValidationMessages>> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType) {
         List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
+
+        if(costFieldMap.size() == 0) {
+            return costItems;
+        }
+
         CostHandler costHandler = getCostItemHandler(costType);
 
         // create new cost items
