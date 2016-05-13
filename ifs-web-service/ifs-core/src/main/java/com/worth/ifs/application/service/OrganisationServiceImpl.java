@@ -70,7 +70,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public Optional<OrganisationResource> getUserForOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
+    public Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
             .filter(uar -> uar.getUser().equals(userId))
             .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())

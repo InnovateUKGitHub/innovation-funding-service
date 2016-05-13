@@ -73,7 +73,6 @@ import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-import com.worth.ifs.util.Services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -201,9 +200,6 @@ public class BaseUnitTest {
     @Mock
     public MessageSource messageSource;
 
-    @Mock
-    public Services services;
-
     public List<ApplicationResource> applications;
     public List<SectionResource> sectionResources;
     public Map<Long, QuestionResource> questionResources;
@@ -278,20 +274,6 @@ public class BaseUnitTest {
         setupUsers();
         setupOrganisationTypes();
         setupUserRoles();
-        setupServices();
-    }
-
-    private void setupServices() {
-        when(services.getApplicationService()).thenReturn(applicationService);
-        when(services.getCompetitionService()).thenReturn(competitionService);
-        when(services.getProcessRoleService()).thenReturn(processRoleService);
-        when(services.getOrganisationService()).thenReturn(organisationService);
-        when(services.getUserService()).thenReturn(userService);
-        when(services.getQuestionService()).thenReturn(questionService);
-        when(services.getInviteRestService()).thenReturn(inviteRestService);
-        when(services.getSectionService()).thenReturn(sectionService);
-        when(services.getFormInputService()).thenReturn(formInputService);
-        when(services.getFormInputResponseService()).thenReturn(formInputResponseService);
     }
 
     private void setupUsers() {

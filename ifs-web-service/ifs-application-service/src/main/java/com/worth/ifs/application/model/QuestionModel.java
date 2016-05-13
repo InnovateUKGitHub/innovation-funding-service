@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.worth.ifs.ViewModel;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
@@ -16,20 +15,32 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.QuestionStatusRestService;
+import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.Services;
+import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.user.service.UserService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -42,37 +53,49 @@ import static java.util.Collections.singletonList;
 /**
  * View model for the single question pages
  */
-public class QuestionModel implements ViewModel {
+@Component
+public class QuestionModel{
     private static final Log LOG = LogFactory.getLog(QuestionModel.class);
+    @Autowired
+    private ApplicationService applicationService;
+    @Autowired
+    private CompetitionService competitionService;
+    @Autowired
+    private ProcessRoleService processRoleService;
+    @Autowired
+    private OrganisationService organisationService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private InviteRestService inviteRestService;
+    @Autowired
+    private SectionService sectionService;
+    @Autowired
+    private FormInputService formInputService;
+    @Autowired
+    private FormInputResponseService formInputResponseService;
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
 
-    private final Services s;
-    private final Model model;
-    private final ApplicationForm form;
+    public QuestionModel(){}
 
-    public QuestionModel(final Long questionId, final Long applicationId, final UserResource user, final Services s, final Model model, final ApplicationForm form, final BindingResult bindingResult){
-        this.s = s;
-        this.model = model;
-        this.form = form;
-        QuestionResource question = s.getQuestionService().getById(questionId);
-        List<FormInputResource> formInputs = s.getFormInputService().findByQuestion(questionId);
-        SectionResource section = s.getSectionService().getSectionByQuestionId(questionId);
-        ApplicationResource application = s.getApplicationService().getById(applicationId);
-        CompetitionResource competition = s.getCompetitionService().getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = s.getProcessRoleService().findProcessRolesByApplicationId(application.getId());
+    public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form, final BindingResult bindingResult) {
+        QuestionResource question = questionService.getById(questionId);
+        List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        addFormAttributes(application, competition, section, user, model, form,
+        addFormAttributes(application, competition, user, model, form,
             question, formInputs, userApplicationRoles);
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
     }
-    
-    @Override public Model getModel() {
-        return model;
-    }
 
     private void addFormAttributes(ApplicationResource application,
         CompetitionResource competition,
-        SectionResource section,
         UserResource user, Model model,
         ApplicationForm form, QuestionResource question,
         List<FormInputResource> formInputs,
@@ -123,7 +146,7 @@ public class QuestionModel implements ViewModel {
 
     private void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
         List<FormInputResponseResource> responses = getFormInputResponses(application);
-        Map<Long, FormInputResponseResource> mappedResponses = s.getFormInputResponseService().mapFormInputResponsesToFormInput(responses);
+        Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
         Map<String, String> values = form.getFormInput();
         mappedResponses.forEach((k, v) ->
@@ -134,9 +157,9 @@ public class QuestionModel implements ViewModel {
     }
 
     private void addUserDetails(Model model, ApplicationResource application, Long userId) {
-        Boolean userIsLeadApplicant = s.getUserService().isLeadApplicant(userId, application);
-        ProcessRoleResource leadApplicantProcessRole = s.getUserService().getLeadApplicantProcessRoleOrNull(application);
-        UserResource leadApplicant = s.getUserService().findById(leadApplicantProcessRole.getUser());
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);
@@ -149,20 +172,20 @@ public class QuestionModel implements ViewModel {
             return;
 
         Map<Long, QuestionStatusResource> questionAssignees;
-        QuestionStatusResource questionStatusResource = s.getQuestionService().getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId, application.getId(), userOrganisation.getId());
+        QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId, application.getId(), userOrganisation.getId());
         questionAssignees = new HashMap<>();
         if(questionStatusResource != null) {
             questionAssignees.put(currentQuestionId, questionStatusResource);
         }
         QuestionStatusResource questionAssignee = questionAssignees.get(currentQuestionId);
 
-        List<QuestionStatusResource> notifications = s.getQuestionService().getNotificationsForUser(questionAssignees.values(), userId);
-        s.getQuestionService().removeNotifications(notifications);
+        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
+        questionService.removeNotifications(notifications);
 
         List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
 
         model.addAttribute("questionAssignee", questionAssignee);
-        model.addAttribute("assignableUsers", s.getProcessRoleService().findAssignableProcessRoles(application.getId()));
+        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
@@ -184,7 +207,7 @@ public class QuestionModel implements ViewModel {
 
         return userApplicationRoles.stream()
             .filter(uar -> uar.getUser().equals(userId))
-            .map(uar -> s.getOrganisationService().getOrganisationById(uar.getOrganisation()))
+            .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
             .findFirst().get();
     }
 
@@ -209,9 +232,9 @@ public class QuestionModel implements ViewModel {
             return;
         }
 
-        Optional<QuestionResource> previousQuestion = s.getQuestionService().getPreviousQuestion(question.getId());
+        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<QuestionResource> nextQuestion = s.getQuestionService().getNextQuestion(question.getId());
+        Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
 
@@ -221,7 +244,7 @@ public class QuestionModel implements ViewModel {
 
         if (previousQuestionOptional.isPresent()) {
             QuestionResource previousQuestion = previousQuestionOptional.get();
-            SectionResource previousSection = s.getSectionService().getSectionByQuestionId(previousQuestion.getId());
+            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
                 previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
                 previousText = previousSection.getName();
@@ -240,7 +263,7 @@ public class QuestionModel implements ViewModel {
 
         if (nextQuestionOptional.isPresent()) {
             QuestionResource nextQuestion = nextQuestionOptional.get();
-            SectionResource nextSection = s.getSectionService().getSectionByQuestionId(nextQuestion.getId());
+            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
             if (nextSection.isQuestionGroup()) {
                 nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
@@ -256,7 +279,7 @@ public class QuestionModel implements ViewModel {
     }
 
     private List<InviteResource> pendingInvitations(ApplicationResource application) {
-        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = s.getInviteRestService().getInvitesByApplication(application.getId());
+        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
 
         return pendingAssignableUsersResult.handleSuccessOrFailure(
             failure -> new ArrayList<>(0),
@@ -266,7 +289,7 @@ public class QuestionModel implements ViewModel {
     }
 
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return s.getFormInputResponseService().getByApplication(application.getId());
+        return formInputResponseService.getByApplication(application.getId());
     }
 
     private void addCompletedDetails(Model model, QuestionResource question, Long applicationId) {
@@ -274,7 +297,7 @@ public class QuestionModel implements ViewModel {
 
         Set<Long> markedAsComplete = questions
             .stream()
-            .filter(q -> q.isMarkAsCompletedEnabled() && s.getQuestionStatusRestService().findQuestionStatusesByQuestionAndApplicationId(q.getId(), applicationId).getSuccessObjectOrThrowException()
+            .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(q.getId(), applicationId).getSuccessObjectOrThrowException()
                 .stream()
                 .anyMatch(qs ->
                     (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
@@ -295,7 +318,7 @@ public class QuestionModel implements ViewModel {
 
         return userApplicationRoles.stream()
             .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-            .map(uar -> s.getOrganisationService().getOrganisationById(uar.getOrganisation()))
+            .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
             .findFirst();
     }
 }

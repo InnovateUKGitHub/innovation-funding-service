@@ -45,7 +45,6 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
-import com.worth.ifs.util.Services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -88,9 +87,6 @@ public class ApplicationFormController extends AbstractApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
 
     @Autowired
-    private Services services;
-
-    @Autowired
     private CostService costService;
 
     @Autowired
@@ -101,6 +97,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     MessageSource messageSource;
+
+    @Autowired
+    private QuestionModel questionModel;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -116,8 +115,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        QuestionModel questionModel = new QuestionModel(questionId, applicationId, user, services, model, form, bindingResult);
-        model = questionModel.getModel();
+        questionModel.populateModel(questionId, applicationId, user, model, form, bindingResult);
         return APPLICATION_FORM;
     }
 

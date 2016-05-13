@@ -23,7 +23,6 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.Services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +48,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class ApplicationController extends AbstractApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
     @Autowired
-    private Services services;
+    private ApplicationOverviewModel applicationOverviewModel;
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -61,8 +60,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request) {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        ApplicationOverviewModel applicationOverviewModel = new ApplicationOverviewModel(applicationId, userId, form, model, services);
-        model = applicationOverviewModel.getModel();
+        model = applicationOverviewModel.populateModel(applicationId, userId, form, model);
         return "application-details";
     }
 

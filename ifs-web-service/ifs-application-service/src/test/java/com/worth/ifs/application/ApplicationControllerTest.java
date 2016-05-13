@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.model.ApplicationOverviewModel;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -30,7 +31,9 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
@@ -62,6 +65,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewModel applicationOverviewModel;
+
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -77,7 +84,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
-        when(organisationService.getUserForOrganisation(anyLong(), anyList())).thenReturn(Optional.ofNullable(organisations.get(0)));
+        when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.ofNullable(organisations.get(0)));
     }
 
     @Test
@@ -195,7 +202,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
        
        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
-       
+
        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
        
        LOG.debug("Show dashboard for application: " + app.getId());
