@@ -60,7 +60,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request) {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        model = applicationOverviewModel.populateModel(applicationId, userId, form, model);
+        applicationOverviewModel.populateModel(applicationId, userId, form, model);
         return "application-details";
     }
 

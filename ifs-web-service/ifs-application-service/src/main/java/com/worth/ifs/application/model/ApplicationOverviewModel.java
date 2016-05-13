@@ -66,11 +66,8 @@ public class ApplicationOverviewModel{
     private InviteRestService inviteRestService;
     @Autowired
     private SectionService sectionService;
-
-
-    public ApplicationOverviewModel(){}
     
-    public Model populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
+    public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
@@ -91,7 +88,6 @@ public class ApplicationOverviewModel{
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        return model;
     }
     
     private void addSections(Model model, CompetitionResource competition) {

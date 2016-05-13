@@ -79,8 +79,6 @@ public class QuestionModel{
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
-    public QuestionModel(){}
-
     public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form, final BindingResult bindingResult) {
         QuestionResource question = questionService.getById(questionId);
         List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
