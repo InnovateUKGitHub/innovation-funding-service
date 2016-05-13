@@ -49,8 +49,7 @@ Pushing the notify applicants button brings up a warning dialogue
 
 Choosing cancel on the dialogue goes back to the Funder's Panel page
     [Documentation]     INFUND-2646
-    [Tags]  Pending
-    # Pending completion of INFUND-2751
+    [Tags]
     When the user clicks the button/link        jQuery=.button:contains("Cancel")
     Then the user should be redirected to the correct page  ${funders_panel_competition_url}
     And the user should see the text in the page    Funders Panel
