@@ -15,7 +15,7 @@ IFS.financeSpecifics = (function(){
             }
           },
           administrationCostTotal : {
-              adminSupportCosts : '[name*="overheads-rateType"]',
+              adminSupportCosts : '[name*="overheads-type"]',
               supportCostInTotal : {
                 'NONE' : '#section-total-10-labour-cost-none',
                 'DEFAULT_PERCENTAGE' : '#section-total-10-default',
