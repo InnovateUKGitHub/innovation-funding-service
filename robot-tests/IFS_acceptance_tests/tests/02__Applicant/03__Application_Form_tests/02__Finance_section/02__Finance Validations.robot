@@ -124,7 +124,7 @@ Capital usage client side
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    -1
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
     And the user enters text to a text field    css=.form-finances-capital-usage-utilisation    101
-    Then the user gets the expected validation errors    You must enter a value less than 20 digits    This field should be 1 or higher
+    Then the user gets the expected validation errors    You must enter a value less than 10 digits    This field should be 1 or higher
     #And the user gets the expected validation errors    This field should be 0 or higher    This field should be 100 or lower
 
 Capital usage server side
@@ -281,10 +281,12 @@ user selects the admin costs
     focus    css=.app-submit-btn
 
 the field with the wrong input should be saved
-    Textfield Should Contain    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
+    ${input_value} =    Get Value    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    Should Be Equal As Strings    ${input_value}    -1
 
 the user reloads the page with validation errors
     Reload Page
+    Run Keyword And Ignore Error    Confirm Action
 
 the users selects no in the other fundings section
     Select Radio button    other_funding-otherPublicFunding-35-54    No
