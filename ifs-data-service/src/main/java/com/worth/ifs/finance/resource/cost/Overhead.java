@@ -22,7 +22,7 @@ public class Overhead implements CostItem {
         @Min(value = 0, groups = Default.class),
         @Min(value = 1, groups = RateNotZero.class)
     })
-    @Max(100)
+    @Max(value = 100, groups = RateNotZero.class)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0)
     private Integer rate;
     private String name;
