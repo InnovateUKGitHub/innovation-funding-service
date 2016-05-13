@@ -39,11 +39,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private LabourCost labourCost;
     private LabourCost labourCostDaysPerYear;
     private OtherFunding otherFunding;
+
+    private CapitalUsage capitalUsage;
     private SubContractingCost subContractingCost;
     private TravelCost travelCost;
     private OtherCost otherCost;
+    private Overhead overhead;
 
-    private String notAllowedTextSize;
+    private String overMaxTextSize;
 
     @Mock
     BindingResult bindingResult;
@@ -56,14 +59,9 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private long leadApplicantProcessRole;
     public static final long APPLICATION_ID = 1L;
 
-    private long subContractingCostQuestionId = 32L;
-    private long travelCostQuestionId = 33L;
-    private long otherCostQuestionId = 34L;
-
     @Autowired
 
     UserMapper userMapper;
-
 
     @Override
     @Autowired
@@ -82,15 +80,17 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         labourCost = (LabourCost) controller.get(4L).getSuccessObject();
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccessObject();
         otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
-       // subContractingCost = (SubContractingCost)controller.get(32L).getSuccessObject();
-        subContractingCost = (SubContractingCost) controller.add(applicationFinance.getId(), subContractingCostQuestionId, new SubContractingCost()).getSuccessObject();
-        travelCost = (TravelCost) controller.add(applicationFinance.getId(), travelCostQuestionId, new TravelCost()).getSuccessObject();
-        otherCost = (OtherCost) controller.add(applicationFinance.getId(), otherCostQuestionId, new OtherCost()).getSuccessObject();
+
+        overhead =  (Overhead) controller.get(51L).getSuccessObject();
+        capitalUsage = (CapitalUsage) controller.add(applicationFinance.getId(), 31L, null).getSuccessObject();
+        subContractingCost = (SubContractingCost) controller.add(applicationFinance.getId(), 32L, new SubContractingCost()).getSuccessObject();
+        travelCost = (TravelCost) controller.add(applicationFinance.getId(), 33L, new TravelCost()).getSuccessObject();
+        otherCost = (OtherCost) controller.add(applicationFinance.getId(), 34L, null).getSuccessObject();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
 
-        notAllowedTextSize = StringUtils.repeat("<ifs_test>", 30);
+        overMaxTextSize = StringUtils.repeat("<ifs_test>", 30);
 
         List<ProcessRole> proccessRoles = new ArrayList<>();
         proccessRoles.add(
@@ -114,9 +114,13 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         swapOutForUser(userMapper.mapToResource(user));
     }
 
+    /* Labour Section Test */
+
     @Rollback
     @Test
     public void testValidationLabour(){
+     //   assertEquals(, labourCost.getRate(labourCost.getLabourDays()));
+        //assertEquals(250, labourCost.getRate());
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
         assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
@@ -124,10 +128,11 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationLabourUpdate(){
+    public void testValidationLabourUpdateIncorrectValues(){
         labourCost.setRole("");
         labourCost.setLabourDays(-50);
         labourCost.setGrossAnnualSalary(new BigDecimal(-500000));
+
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
         assertNotNull(validationMessages.getOptionalSuccessObject().get());
@@ -159,7 +164,75 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
+    //@Todo no validation for WorkingDaysPer Year (0-365), role limitation (255 characters), salary (0-8), but form validation works
+    public void testValidationLabourUpdateIncorrectMaxValues(){
+        labourCost.setRole(overMaxTextSize);
+        labourCost.setLabourDays(400);
+        labourCost.setGrossAnnualSalary(new BigDecimal(100000));
+
+
+
+        RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+
+       // assertEquals(0, messages.getErrors().size());
+     /*   assertEquals(labourCost.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(),
+                containsInAnyOrder(
+                        allOf(
+                                hasProperty("errorKey", is("labourDays")),
+                                hasProperty("errorMessage", is("This field should be 1 or higher"))
+                        ),
+                        allOf(
+                                hasProperty("errorKey", is("grossAnnualSalary")),
+                                hasProperty("errorMessage", is("This field should be 1 or higher"))
+                        ),
+                        allOf(
+                                hasProperty("errorKey", is("role")),
+                                hasProperty("errorMessage", is("This field cannot be left blank"))
+                        )
+                )
+        );*/
+    }
+
+    /* Overhead */
+
+    @Rollback
+    @Test
+    public void testValidationOverhead() {
+        RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+    }
+
+    @Rollback
+    @Test
+    public void testValidationOverheadUpdate(){
+        overhead.setRate(100);
+        assertEquals(1000, overhead.getRate() * 1000/100);
+
+
+        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+
+    }
+
+
+
+    /* Material Section Tests */
+
+    @Rollback
+    @Test
     public void testValidationMaterial(){
+        assertEquals(new BigDecimal(2000), materials.getTotal());
+
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         assertTrue(validationMessages.isSuccess());
         assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
@@ -167,61 +240,158 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationOtherFundingUpdate(){
-        RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding);
-        ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(null, messages);
-    }
-
-    @Rollback
-    @Test
-    public void testValidationMaterialUpdate(){
+    public void testValidationMaterialUpdateInvalidValues(){
         materials.setCost(new BigDecimal(-5));
         materials.setItem("");
         materials.setQuantity(-5);
 
-
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         ValidationMessages messages = validationMessages.getSuccessObject();
+
         assertEquals(3, messages.getErrors().size());
         assertEquals(materials.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
         messages.getErrors().get(0);
 
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("item")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
+    }
 
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "item".equals(e.getErrorKey()))
-                .filter(e -> "This field cannot be left blank".equals(e.getErrorMessage()))
-                .findAny().isPresent());
+    public void testValidationMaterialUpdateMaxValues(){
+        materials.setCost(new BigDecimal(1000));
+        materials.setItem(overMaxTextSize);
+        materials.setQuantity(1000);
 
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "quantity".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
-                .findAny().isPresent());
+        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
+        ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "cost".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
-                .findAny().isPresent());
+        assertEquals(3, messages.getErrors().size());
+        assertEquals(materials.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("item")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("cost")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                )
+        ));
+    }
+
+    /* Capital Usage Section Tests */
+
+    public void testValidationCapitalUsageUpdateSuccess() {
+
+        capitalUsage.setDescription(overMaxTextSize);
+        capitalUsage.setExisting("New");
+        capitalUsage.setDeprecation(5);
+        capitalUsage.setResidualValue(new BigDecimal(1000));
+        capitalUsage.setNpv(new BigDecimal(10000));
+        capitalUsage.setUtilisation(99);
+
+        assertEquals(new BigDecimal(8910), capitalUsage.getTotal());
+
+        RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
+        assertTrue(validationMessages.isSuccess());
+        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
     }
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdate(){
-        assertEquals(OrganisationSize.SMALL, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(80);
+    //@TODO Check the field existing and confirm the constrant -> see the spreadheet; Residual value should be higher than 0
+    public void testValidationCapitalUsageUpdateIncorrectValues(){
+        capitalUsage.setDescription("");
+        capitalUsage.setExisting("");
+        capitalUsage.setDeprecation(-5);
+        capitalUsage.setResidualValue(new BigDecimal(-100000));
+        capitalUsage.setNpv(new BigDecimal(-10000));
+        capitalUsage.setUtilisation(-5);
 
-        RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
+        RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
         ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(1, messages.getErrors().size());
-        assertEquals(grantClaim.getId(), messages.getObjectId());
+
+        assertEquals(6, messages.getErrors().size());
+        assertEquals(capitalUsage.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
         messages.getErrors().get(0);
 
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "grantClaimPercentage".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 70% or lower".equals(e.getErrorMessage()))
-                .findAny().isPresent());
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("description")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("existing")),
+                        hasProperty("errorMessage", is("This field cannot be left blank"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("deprecation")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("residualValue")),
+                        hasProperty("errorMessage", is("This field should be 0 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("npv")),
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("utilisation")),
+                        hasProperty("errorMessage", is("This field should be 0 or higher"))
+                )
+        ));
+    }
+
+    @Rollback
+    @Test
+    //@TODO it is not clear in the spreadsheet, the field exisiting has string lenght constraint.
+    public void testValidationCapitalUsageUpdateUpdateOverMaxAllowedValues(){
+        capitalUsage.setDescription(overMaxTextSize);
+        capitalUsage.setExisting(overMaxTextSize);
+        capitalUsage.setDeprecation(1000);
+        capitalUsage.setResidualValue(new BigDecimal(1000000));
+        capitalUsage.setNpv(new BigDecimal(100000));
+        capitalUsage.setUtilisation(200);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(2, messages.getErrors().size());
+        assertEquals(capitalUsage.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertThat(messages.getErrors(), containsInAnyOrder(
+                allOf(
+                        hasProperty("errorKey", is("existing")),
+                        hasProperty("errorMessage", is("This field cannot contain more than 255 characters"))
+                ),
+                allOf(
+                        hasProperty("errorKey", is("utilisation")),
+                        hasProperty("errorMessage", is("This field should be 100 or lower"))
+                )
+        ));
     }
 
     /* SubContracting Section Tests */
@@ -246,9 +416,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //TODO
-    // 1. Country is allowed to be null
-    // 2. Update validation messages for textfields
+    //@TODO Country is allowed to be null; Update validation messages for textfields
     public void testValidationSubContractingCostUpdateIncorrectValues(){
         subContractingCost.setName("");
         subContractingCost.setCountry("");
@@ -286,19 +454,17 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //TODO
-    //Max value limitaton message
-    //Country max value constraint
+    //@TODO Max value limitaton message; Country max value constraint
     public void testValidationSubContractingCostUpdateOverMaxAllowedValues(){
-        subContractingCost.setName(notAllowedTextSize);
-        subContractingCost.setCountry(notAllowedTextSize);
-        subContractingCost.setRole(notAllowedTextSize);
+        subContractingCost.setName(overMaxTextSize);
+        subContractingCost.setCountry(overMaxTextSize);
+        subContractingCost.setRole(overMaxTextSize);
         subContractingCost.setCost(new BigDecimal(1000000));
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(300, notAllowedTextSize.length());
+        assertEquals(300, overMaxTextSize.length());
         assertEquals(3, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -330,8 +496,10 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void testValidationTravelCostUpdateSuccess() {
         travelCost.setItem("Travel To Australia for research consultancy");
-        travelCost.setCost(new BigDecimal(100000));
-        travelCost.setQuantity(1000);
+        travelCost.setCost(new BigDecimal(1000));
+        travelCost.setQuantity(100);
+
+        assertEquals(new BigDecimal(100000), travelCost.getTotal());
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         assertTrue(validationMessages.isSuccess());
@@ -370,16 +538,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //TODO
-    // The constrant to limit item size to 255 is invalid
+    //@TODO The constrant to limit item size to 255 is invalid
     public void testValidationTravelCostUpdateIncorrectMaxValues(){
-        travelCost.setItem(notAllowedTextSize);
+        travelCost.setItem(overMaxTextSize);
         travelCost.setCost(new BigDecimal(0));
         travelCost.setQuantity(null);
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(300, notAllowedTextSize.length());
+        assertEquals(300, overMaxTextSize.length());
         assertEquals(2, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -419,7 +586,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     public void testValidationOtherCostUpdateIncorrectCostValue() {
 
         otherCost.setCost(new BigDecimal(0));
-        otherCost.setDescription(notAllowedTextSize);
+        otherCost.setDescription(overMaxTextSize);
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -463,6 +630,35 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                         hasProperty("errorMessage", is("This field should be 1 or higher"))
                 )
         ));
+    }
+
+    //todo
+
+    @Rollback
+    @Test
+    public void testValidationOtherFundingUpdate(){
+        RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+        assertEquals(null, messages);
+    }
+
+    @Rollback
+    @Test
+    public void testValidationGrantClaimUpdate(){
+        assertEquals(OrganisationSize.SMALL, applicationFinance.getOrganisationSize());
+        grantClaim.setGrantClaimPercentage(80);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+        assertEquals(1, messages.getErrors().size());
+        assertEquals(grantClaim.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        messages.getErrors().get(0);
+
+        assertTrue(messages.getErrors().stream()
+                .filter(e -> "grantClaimPercentage".equals(e.getErrorKey()))
+                .filter(e -> "This field should be 70% or lower".equals(e.getErrorMessage()))
+                .findAny().isPresent());
     }
 
 }
