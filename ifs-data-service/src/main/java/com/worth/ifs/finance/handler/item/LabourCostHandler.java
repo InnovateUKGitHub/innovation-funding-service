@@ -9,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindingResult;
 
-import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class LabourCostHandler extends CostHandler {
         if(StringUtils.isNotEmpty(labourCost.getName()) && labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_KEY)){
             super.validate(costItem, bindingResult, LabourCost.YearlyWorkingDays.class);
         }else{
-            super.validate(costItem, bindingResult, Default.class);
+            super.validate(costItem, bindingResult);
         }
     }
 

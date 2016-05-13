@@ -20,7 +20,7 @@ public class OverheadsHandler extends CostHandler {
 
         for(FinanceFormField financeFormField : financeFormFields) {
             switch (financeFormField.getCostName()) {
-                case "rateType":
+                case "type":
                     rateType = financeFormField.getValue();
                     break;
                 case "customRate":

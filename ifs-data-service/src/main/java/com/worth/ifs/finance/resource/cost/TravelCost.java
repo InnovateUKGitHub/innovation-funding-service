@@ -19,11 +19,11 @@ public class TravelCost implements CostItem {
     private String item;
     @NotNull
     @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal cost;
     @NotNull
     @Min(1)
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0)
     private Integer quantity;
     private String name;
 

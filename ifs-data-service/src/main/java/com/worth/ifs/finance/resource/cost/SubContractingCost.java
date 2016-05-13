@@ -15,7 +15,7 @@ public class SubContractingCost implements CostItem {
 
     @NotNull
     @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal cost;
 
     @NotBlank

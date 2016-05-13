@@ -16,6 +16,7 @@
             <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
             <input type="number"
                    min="1"
+                   required="required"
                    th:max="${organisationFinanceSize?.getMaxGrantClaimPercentage()}"
                    th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                    th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
@@ -44,7 +45,8 @@
                            th:id="'financePosition-organisationSize-'+${size}"
                            th:name="'financePosition-organisationSize'"
                            th:value="${size}"
-                           th:checked="${size == organisationFinanceSize}"/>
+                           th:checked="${size == organisationFinanceSize}"
+                           required="required" />
                     <span th:text="${size.name}" />
                 </label>
             </fieldset>
@@ -104,6 +106,7 @@
                            th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            min="1"
                            max="365"
+                           required="required"
                            />
                 </div>
 
@@ -176,6 +179,7 @@
                        th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
                        th:readonly="${complete == 'complete'}"
                        th:value="${#numbers.formatDecimal(cost.grossAnnualSalary,0,0)}"
+                       required="required"
                        min="1"
                        max="9999999999999999999"
                        data-max-errormessage="You must enter a value less than 20 digits"
@@ -249,7 +253,8 @@
                         <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}"
                                    type="radio"
-                                   th:name="${'overheads-rateType-' + question.id + '-'+ overheadCosts?.id}"
+                                   required="required"
+                                   th:name="${'overheads-type-' + question.id + '-'+ overheadCosts?.id}"
                                    th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE}"
                                    th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE)}"
                                    th:disabled="${!(overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
@@ -258,7 +263,8 @@
                         <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"  data-target="overhead-default-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"
                                    type="radio"
-                                   th:name="${'overheads-rateType-' + question.id + '-'+ overheadCosts?.id}"
+                                   required="required"
+                                   th:name="${'overheads-type-' + question.id + '-'+ overheadCosts?.id}"
                                    th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"
                                    th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"
                                    th:disabled="${!(overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
@@ -267,7 +273,8 @@
                         <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
                                    type="radio"
-                                   th:name="${'overheads-rateType-' + question.id + '-'+ overheadCosts?.id}"
+                                   required="required"
+                                   th:name="${'overheads-type-' + question.id + '-'+ overheadCosts?.id}"
                                    th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE}"
                                    th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)}"
                                    th:disabled="${!(overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
@@ -276,7 +283,8 @@
                         <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}" data-target="overhead-special-rate">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"
                                    type="radio"
-                                   th:name="${'overheads-rateType-' + question.id + '-'+overheadCosts?.id}"
+                                   required="required"
+                                   th:name="${'overheads-type-' + question.id + '-'+overheadCosts?.id}"
                                    th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE}"
                                    th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)}"
                                    th:disabled="${!(overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
@@ -326,6 +334,7 @@
                                th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}"
                                min="1"
                                max="100"
+                               required="required"
                                class="form-control form-control-1-4 alignright"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'field-error' : ''"
                                th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? ${overheadCosts?.getRate()} : 0" />
@@ -359,6 +368,7 @@
                                th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}"
                                min="1"
                                max="100"
+                               required="required"
                                class="form-control form-control-1-4 alignright"
                                th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? ${overheadCosts?.getRate()} : 0"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'field-error' : ''" />
@@ -458,6 +468,7 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'field-error' : ''"
                        min="1"
                        max="999999999"
+                       required="required"
                        data-max-errormessage="You must enter a value less than 10 digits"
                        />
             </td>
@@ -475,6 +486,7 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
                        min="1"
                        max="9999999999999999999"
+                       required="required"
                        data-max-errormessage="You must enter a value less than 20 digits" />
             </td>
             <td>
@@ -546,6 +558,7 @@
                                type="radio"
                                th:name="${type +'-existing-' + question.id + '-' + cost.id}"
                                value="New"
+                               required="required"
                                th:checked="${cost.existing == 'New'}"
                                th:disabled="${complete == 'complete'}">
                         New
@@ -556,6 +569,7 @@
                                type="radio"
                                th:name="${type +'-existing-' + question.id + '-' + cost.id}"
                                value="Existing"
+                               required="required"
                                th:checked="${cost.existing == 'Existing'}"
                                th:disabled="${complete == 'complete'}">
                         Existing
@@ -577,6 +591,7 @@
                         th:readonly="${complete == 'complete'}"
                         min="1"
                         max="999999999"
+                        required="required"
                         data-max-errormessage="You must enter a value less than 10 digits"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-deprecation]}')} ? 'field-error' : ''"
                          />
@@ -596,6 +611,7 @@
                         th:readonly="${complete == 'complete'}"
                         min="1"
                         max="9999999999999999999"
+                        required="required"
                         data-max-errormessage="You must enter a value less than 20 digits"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-npv]}')} ? 'field-error' : ''" />
 
@@ -615,6 +631,7 @@
                         th:readonly="${complete == 'complete'}"
                         min="0"
                         max="9999999999999999999"
+                        required="required"
                         data-max-errormessage="You must enter a value less than 20 digits"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-residualValue]}')} ? 'field-error' : ''"/>
             </div>
@@ -632,6 +649,7 @@
                        th:readonly="${complete == 'complete'}"
                        min="0"
                        max="100"
+                       required="required"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-utilisation]}')} ? 'field-error' : ''"/>
             </div>
 
@@ -834,6 +852,7 @@
                        th:readonly="${complete == 'complete'}"
                        min="1"
                        max="999999999"
+                       required="required"
                        data-max-errormessage="You must enter a value less than 10 digits"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'field-error' : ''"  />
             </td>
@@ -850,6 +869,7 @@
                        th:readonly="${complete == 'complete'}"
                        min="1"
                        max="9999999999999999999"
+                       required="required"
                        data-max-errormessage="You must enter a value less than 20 digits"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''" />
             </td>
@@ -937,6 +957,7 @@
                        th:readonly="${complete == 'complete'}"
                        min="1"
                        max="9999999999999999999"
+                       required="required"
                        data-max-errormessage="You must enter a value less than 20 digits"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"  />
             </td>
@@ -978,6 +999,7 @@
                                th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                                th:name="${type + '-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
                                value="Yes"
+                               required="required"
                                th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
                                th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                                 />
@@ -989,6 +1011,7 @@
                                th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
                                th:name="${type + '-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
                                value="No"
+                               required="required"
                                th:checked="${costCategory.otherPublicFunding?.equals('No')}"
                                th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"/>
                         No
@@ -1083,6 +1106,7 @@
                        th:id="${'cost-'+type+'-'+cost.id+'-fundingAmount'}"
                        th:value="${#numbers.formatDecimal(cost.fundingAmount,0,0)}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingAmount]}')} ? 'field-error' : ''"
+                       required="required"
                        min="1"
                        max="9999999999999999999"
                        data-max-errormessage="You must enter a value less than 20 digits"

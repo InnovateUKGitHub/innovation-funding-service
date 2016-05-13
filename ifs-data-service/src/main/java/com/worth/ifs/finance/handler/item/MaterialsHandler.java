@@ -5,6 +5,9 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.Materials;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.validation.BindingResult;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Handles the material costs, i.e. converts the costs to be stored into the database
@@ -13,6 +16,11 @@ import org.apache.commons.logging.LogFactory;
 public class MaterialsHandler extends CostHandler {
     private static final Log LOG = LogFactory.getLog(MaterialsHandler.class);
     public static final String COST_KEY = "materials";
+
+    @Override
+    public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
+        super.validate(costItem, bindingResult);
+    }
 
     @Override
     public Cost toCost(CostItem costItem) {

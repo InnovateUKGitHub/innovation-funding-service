@@ -20,10 +20,12 @@ public class OverheadsHandler extends CostHandler {
 
     @Override
     public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
-        super.validate(costItem, bindingResult);
+
         Overhead overhead = (Overhead) costItem;
         if(overhead.getRateType() != null && !OverheadRateType.NONE.equals(overhead.getRateType())){
             super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
+        }else{
+            super.validate(costItem, bindingResult);
         }
     }
 

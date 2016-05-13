@@ -27,13 +27,17 @@ public class LabourCost implements CostItem {
 
     @NotNull(groups = Default.class)
     @DecimalMin(value = "1", groups = Default.class)
-    @Digits(integer = MAX_DIGITS, fraction = 0, groups = Default.class)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class)
     private BigDecimal grossAnnualSalary;
 
     @NotNull
-    @Min(1)
+
+    @Min.List({
+            @Min(value=1, groups = Default.class),
+            @Min(value=1, groups = LabourCost.YearlyWorkingDays.class)
+    })
     @Max(value=365, groups = LabourCost.YearlyWorkingDays.class)
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
     private Integer labourDays;
     private BigDecimal rate; // calculated field, no validation
     private String description;

@@ -15,7 +15,7 @@ public class CapitalUsage implements CostItem {
     String name;
     @NotNull
     @Min(1)
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
     Integer deprecation;
 
     @NotBlank
@@ -30,17 +30,17 @@ public class CapitalUsage implements CostItem {
 
     @NotNull
     @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     BigDecimal npv;
 
     @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     BigDecimal residualValue;
 
     @NotNull
     @Min(0)
     @Max(100)
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
     Integer utilisation;
 
     public CapitalUsage() {

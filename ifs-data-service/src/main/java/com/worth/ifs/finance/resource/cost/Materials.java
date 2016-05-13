@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class Materials implements CostItem {
     private Long id;
 
+    @NotNull
     @NotBlank
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
@@ -23,12 +24,12 @@ public class Materials implements CostItem {
 
     @NotNull
     @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal cost;
 
     @NotNull
     @Min(1)
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0)
     private Integer quantity;
 
     private BigDecimal total = BigDecimal.ZERO; // calculated, no validation

@@ -16,8 +16,8 @@ public class OtherFunding implements CostItem {
     private String securedDate;
 
     @NotNull
-    @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @DecimalMin(value = "1")
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal fundingAmount;
 
     private String name;
