@@ -49,7 +49,7 @@ Admin costs (custom cost)
     [Documentation]    INFUND-844
     [Tags]
     Given the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    When user selects the admin costs    overheads-rateType-29-51    CUSTOM_RATE
+    When user selects the admin costs    overheads-type-29-51    CUSTOM_RATE
     And the user enters text to a text field    id=cost-overheads-51-customRate    ${EMPTY}
     And the user marks the finances as complete
     Then the user should see an error    This field should be 1 or higher
@@ -67,7 +67,7 @@ Admin costs (special rate)
     [Documentation]    INFUND-844
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    And user selects the admin costs    overheads-rateType-29-51    SPECIAL_AGREED_RATE
+    And user selects the admin costs    overheads-type-29-51    SPECIAL_AGREED_RATE
     And the user enters text to a text field    id=cost-overheads-51-agreedRate    ${EMPTY}
     And the user marks the finances as complete
     Then the user should see an error    This field should be 1 or higher

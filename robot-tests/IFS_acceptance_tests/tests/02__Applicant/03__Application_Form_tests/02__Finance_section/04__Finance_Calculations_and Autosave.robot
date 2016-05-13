@@ -46,12 +46,12 @@ Administration support costs
     ...    INFUND-736
     [Tags]    Finances
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    And user selects the admin costs    overheads-rateType-29-51    DEFAULT_PERCENTAGE
+    And user selects the admin costs    overheads-type-29-51    DEFAULT_PERCENTAGE
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    And user selects the admin costs    overheads-rateType-29-51    CUSTOM_RATE
+    And user selects the admin costs    overheads-type-29-51    CUSTOM_RATE
     And the user enters text to a text field    id=cost-overheads-51-customRate    30
     Then admin costs total should be correct    id=section-total-10-custom    £ 14,400
-    And user selects the admin costs    overheads-rateType-29-51    SPECIAL_AGREED_RATE
+    And user selects the admin costs    overheads-type-29-51    SPECIAL_AGREED_RATE
     And the user enters text to a text field    id=cost-overheads-51-agreedRate    40
     Then admin costs total should be correct    id=section-total-10-special    £ 19,200
     And the user reloads the page
