@@ -10,6 +10,7 @@ import java.util.List;
 
 public class AcademicFinanceHandler extends CostHandler {
 
+
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         if(financeFormFields!=null && !financeFormFields.isEmpty()) {

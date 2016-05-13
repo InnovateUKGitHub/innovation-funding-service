@@ -1,6 +1,8 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
+import com.worth.ifs.exception.BigDecimalNumberFormatException;
+import com.worth.ifs.exception.IntegerNumberFormatException;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
@@ -11,7 +13,10 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * CostHandlers are used to convert form fields to costItems
@@ -36,9 +41,9 @@ public abstract class CostHandler {
         try {
             return new BigDecimal(nf.parse(value).toString());
         } catch (NumberFormatException nfe) {
-            throw nfe;
+            throw new BigDecimalNumberFormatException(value);
         } catch (ParseException e) {
-            throw new NumberFormatException();
+            throw new BigDecimalNumberFormatException(value);
         }
     }
 
@@ -55,9 +60,9 @@ public abstract class CostHandler {
             String stringValue = nf.parse(value).toString();
             return Integer.valueOf(stringValue);
         } catch (NumberFormatException nfe) {
-            throw new NumberFormatException(inputValue);
+            throw new IntegerNumberFormatException(inputValue);
         } catch (ParseException e) {
-            throw new NumberFormatException(inputValue);
+            throw new IntegerNumberFormatException(inputValue);
         }
     }
 

@@ -124,6 +124,11 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
+    public CostHandler getCostHandler(CostType costType) {
+        return new JESCostHandler();
+    }
+
+    @Override
     public List<CostItem> costToCostItem(List<Cost> costs) {
         return costs.stream().map(c -> costToCostItem(c)).collect(Collectors.toList());
     }
