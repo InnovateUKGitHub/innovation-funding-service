@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.worth.ifs.ViewModel;
+import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -109,6 +110,10 @@ public class QuestionModel implements ViewModel {
         addApplicationFormDetailInputs(application, form);
         addAssignableDetails(model, application, userOrganisation, userId, questionResource.getId());
         addCompletedDetails(model, questionResource, application.getId());
+        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        leadOrganisation.ifPresent(org ->
+            model.addAttribute("leadOrganisation", org)
+        );
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
@@ -284,5 +289,13 @@ public class QuestionModel implements ViewModel {
             markedAsComplete = questionStatus.getMarkedAsComplete();
         }
         return Optional.ofNullable(markedAsComplete);
+    }
+
+    private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
+
+        return userApplicationRoles.stream()
+            .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
+            .map(uar -> s.getOrganisationService().getOrganisationById(uar.getOrganisation()))
+            .findFirst();
     }
 }
