@@ -1,5 +1,8 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
@@ -64,5 +67,13 @@ public class OrganisationServiceImpl implements OrganisationService {
             return organisationResource.getOrganisationTypeName();
         }
         return "";
+    }
+
+    @Override
+    public Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles) {
+        return userApplicationRoles.stream()
+            .filter(uar -> uar.getUser().equals(userId))
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+            .findFirst();
     }
 }
