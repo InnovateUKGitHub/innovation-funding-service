@@ -1,7 +1,7 @@
 package com.worth.ifs.alert.transactional;
 
 import com.worth.ifs.alert.domain.Alert;
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.mapper.AlertMapper;
 import com.worth.ifs.alert.repository.AlertRepository;
 import com.worth.ifs.alert.resource.AlertResource;

@@ -1,7 +1,7 @@
 package com.worth.ifs.alert.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
-import static com.worth.ifs.alert.domain.AlertType.MAINTENANCE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -40,7 +39,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
         assertAccessDenied(
                 () -> service.create(alertResource),
                 () -> {
-                    verify(alertPermissionRules).competitionsAdminCanCreateAlerts(isA(AlertResource.class), isA(UserResource.class));
+                    verify(alertPermissionRules).systemMaintenanceUserCanCreateAlerts(isA(AlertResource.class), isA(UserResource.class));
                 });
     }
 
@@ -53,7 +52,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
         assertAccessDenied(
                 () -> service.delete(9999L),
                 () -> {
-                    verify(alertPermissionRules).competitionsAdminCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class));
+                    verify(alertPermissionRules).systemMaintenanceUserCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class));
                 });
     }
 

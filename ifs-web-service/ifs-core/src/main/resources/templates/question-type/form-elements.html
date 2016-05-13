@@ -203,7 +203,7 @@
     <div th:class="'textarea-wrapped ' +
                    (${readonly} ? '' : (
                             (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
-                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
+                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
                             )
                        )
                        + ' ' +
@@ -224,7 +224,7 @@
                   <div class="assignee">This question is <strong>marked as complete</strong></div>
             </div>
 
-            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"
+            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}"
                  src="/images/field/field-assigned.png"
                  th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned.png')}"
                  alt=""
@@ -306,11 +306,11 @@
                   <div th:remove="tag" th:each="assignableUser : ${assignableUsers}">
                       <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
                               th:unless="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
-                              th:text="${assignableUser.getUser()?.getName()}"
+                              th:text="${assignableUser.userName}"
                               th:class="${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'current-user' : ''}"
                               />
                       <option th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
-                              th:text="${assignableUser.getUser()?.getName()}"
+                              th:text="${assignableUser?.userName}"
                               selected="selected"
                               th:class="${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'current-user' : ''}"
                               disabled="disabled"/>
@@ -326,13 +326,13 @@
 <!-- ========================= Assigned to =========================== -->
 <div th:fragment="assigned-to">
         <div th:remove="tag" th:if="${questionAssignee?.assignee != null} ">
-            <span th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getUser().getId()}">Assigned to:</span>
-            <span th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getUser().getId()}">Reassigned to:</span>
+            <span th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Assigned to:</span>
+            <span th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Reassigned to:</span>
              <strong th:text="${name}" th:with="name=${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'You' : questionAssignee?.getAssigneeName()}" />
         </div>
         <!-- Default to lead applicant when unassigned.  TODO: Maybe we need to indicate visually in someway that this has not been actually assigned by defaulting to it? -->
         <div th:remove="tag" th:if="${questionAssignee?.assignee == null} ">
-            Assigned to: <strong th:text="${name}" th:with="name=${(leadApplicant?.getUser()?.getId() == currentUser.getId()) ? 'You' : leadApplicant?.getUser()?.getName()}" />
+            Assigned to: <strong th:text="${name}" th:with="name=${(leadApplicant?.getId() == currentUser.getId()) ? 'You' : leadApplicant?.getName()}" />
         </div>
 </div>
 

@@ -9,7 +9,7 @@ import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;

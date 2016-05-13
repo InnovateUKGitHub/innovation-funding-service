@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
 import com.worth.ifs.application.security.ApplicationRules;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.handler.item.CostHandler;
@@ -19,8 +20,10 @@ import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -356,6 +359,21 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
 
         @Override
         public CostHandler getCostHandler(CostItem costItem) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
             return null;
         }
     }

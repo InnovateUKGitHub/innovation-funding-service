@@ -3,7 +3,7 @@ package com.worth.ifs.finance.view;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

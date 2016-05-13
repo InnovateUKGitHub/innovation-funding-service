@@ -1,7 +1,6 @@
 package com.worth.ifs.user.resource;
 
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

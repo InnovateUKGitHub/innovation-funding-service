@@ -41,6 +41,10 @@ public class InviteResourceBuilder extends BaseBuilder<InviteResource, InviteRes
         return withArray((applicationId, inviteResource) -> setField("application", applicationId, inviteResource), applicationIds);
     }
 
+    public InviteResourceBuilder withOrganisation(final Long... organisationIds) {
+        return withArray((organisationId, inviteResource) -> setField("organisation", organisationId, inviteResource), organisationIds);
+    }
+
     @Override
     protected InviteResource createInitial() {
         return new InviteResource();

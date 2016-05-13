@@ -3,7 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.exception.BigDecimalNumberFormatException;
 import com.worth.ifs.exception.IntegerNumberFormatException;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +24,7 @@ import java.util.Map;
 public abstract class CostHandler {
     public static final Locale LOCALE_UK = Locale.UK;
     protected Log LOG = LogFactory.getLog(this.getClass());
-    Map<String, CostField> costFields = new HashMap<>();
+    Map<String, CostFieldResource> costFields = new HashMap<>();
 
     public abstract CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields);
 

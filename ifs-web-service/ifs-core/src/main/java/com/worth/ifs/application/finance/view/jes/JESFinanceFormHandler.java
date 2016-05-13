@@ -1,6 +1,5 @@
 package com.worth.ifs.application.finance.view.jes;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;

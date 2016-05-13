@@ -1,7 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.mockito.InjectMocks;
@@ -11,9 +11,9 @@ import java.util.List;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
-import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
@@ -59,7 +59,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return newUserResource().withRolesGlobal(roles).build();
     }
 
-    private UserResource getUserWithRole(UserRoleType type) {
+    protected UserResource getUserWithRole(UserRoleType type) {
         return simpleFilter(allRoleUsers, user -> simpleMap(user.getRoles(), RoleResource::getName).contains(type.getName())).get(0);
     }
 

@@ -196,6 +196,24 @@ table{
 	
 	.separate-cell{
 		border-right: 12px solid $white;
+		
+		&.year{
+			border-right: 1px solid $grey-2;
+			
+			& + th{
+				padding-left: 1.25em;
+			}
+
+			& + td{
+				padding-left: 1.25em;
+			}
+
+		}
+
+		&.aligncentre{
+			padding-left: 1.25em; 
+		}
+
 	}
 
 	.total{
@@ -347,5 +365,3 @@ table{
 		}
 	}
 } */
-
-

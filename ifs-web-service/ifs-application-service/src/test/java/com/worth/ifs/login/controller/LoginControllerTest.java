@@ -6,7 +6,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.login.LoginController;
-import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.resource.TokenResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -95,7 +95,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     public void testResetPasswordInvalidHash() throws Exception {
 
         String hash = UUID.randomUUID().toString();
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restFailure(CommonErrors.notFoundError(Token.class, hash)));
+        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restFailure(CommonErrors.notFoundError(TokenResource.class, hash)));
 
         mockMvc.perform(get("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash))
                 .andExpect(status().isAlreadyReported())
@@ -165,7 +165,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd";
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restFailure(CommonErrors.notFoundError(Token.class, hash)));
+        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restFailure(CommonErrors.notFoundError(TokenResource.class, hash)));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
