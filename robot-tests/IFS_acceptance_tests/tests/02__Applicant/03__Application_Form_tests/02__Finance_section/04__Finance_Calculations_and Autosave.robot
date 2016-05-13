@@ -51,11 +51,6 @@ Administration support costs
     And user selects the admin costs    overheads-type-29-51    CUSTOM_RATE
     And the user enters text to a text field    id=cost-overheads-51-customRate    30
     Then admin costs total should be correct    id=section-total-10-custom    £ 14,400
-    And user selects the admin costs    overheads-type-29-51    SPECIAL_AGREED_RATE
-    And the user enters text to a text field    id=cost-overheads-51-agreedRate    40
-    Then admin costs total should be correct    id=section-total-10-special    £ 19,200
-    And the user reloads the page
-    Then admin costs total should be correct    id=section-total-10-special    £ 19,200
     [Teardown]    Click Element    jQuery=button:contains("Administration support costs")
 
 Materials
