@@ -7,8 +7,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileEntryService;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.file.transactional.FileValidator;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
@@ -28,9 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -57,7 +57,7 @@ public class ApplicationFinanceController {
 
     @Autowired
     @Qualifier("applicationFinanceFileValidator")
-    private FileValidator fileValidator;
+    private FileHttpHeadersValidator fileValidator;
 
     @RequestMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
@@ -184,16 +184,5 @@ public class ApplicationFinanceController {
 
     private ServiceResult<FileEntryResource> doGetFile(long applicationFinanceId) {
         return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId);
-    }
-
-    private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
-        return () -> {
-            try {
-                return request.getInputStream();
-            } catch (IOException e) {
-                LOG.error("Unable to open an input stream from request", e);
-                throw new RuntimeException("Unable to open an input stream from request", e);
-            }
-        };
     }
 }

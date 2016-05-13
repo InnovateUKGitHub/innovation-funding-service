@@ -80,4 +80,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((inviteList, address) -> setField("invites", inviteList, address), inviteLists);
     }
 
+    public ApplicationResourceBuilder withAssessorFeedbackFileEntry(Long... assessorFeedbackFileEntryId) {
+        return withArray((fileEntryId, application) -> application.setAssessorFeedbackFileEntry(fileEntryId), assessorFeedbackFileEntryId);
+    }
 }
