@@ -2,25 +2,38 @@ package com.worth.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static com.worth.ifs.finance.resource.cost.CostItem.MAX_DB_STRING_LENGTH;
+import static com.worth.ifs.finance.resource.cost.CostItem.MAX_LENGTH_MESSAGE;
 
 /**
  * Cost defines database relations and a model to use client side and server side.
  */
 @Entity
 public class Cost {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String item;
+
+    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String description;
+
     Integer quantity;
     BigDecimal cost;
+
+    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String name;
 
     @OneToMany(mappedBy="cost")
@@ -61,15 +74,18 @@ public class Cost {
     }
 
     public String getName() {
-        return name;
+        // Fix for sql breaking when saving string longer than the field length
+        return (StringUtils.hasText(name) && name.length() > MAX_DB_STRING_LENGTH) ? name.substring(0, MAX_DB_STRING_LENGTH) : name;
     }
 
     public String getItem() {
-        return item;
+        // Fix for sql breaking when saving string longer than the field length
+        return (StringUtils.hasText(item) && item.length() > MAX_DB_STRING_LENGTH) ? item.substring(0, MAX_DB_STRING_LENGTH) : item;
     }
 
     public String getDescription() {
-        return description;
+        // Fix for sql breaking when saving string longer than the field length
+        return (StringUtils.hasText(description) && description.length() > MAX_DB_STRING_LENGTH) ? description.substring(0, MAX_DB_STRING_LENGTH) : description;
     }
 
     public Integer getQuantity() {
@@ -86,6 +102,13 @@ public class Cost {
 
     public List<CostValue> getCostValues() {
         return costValues;
+    }
+
+    public void setCostValues(List<CostValue> costValues) {
+        this.costValues = costValues;
+    }
+    public void addCostValues(CostValue... c) {
+        Collections.addAll(this.costValues, c);
     }
 
     public Question getQuestion() {

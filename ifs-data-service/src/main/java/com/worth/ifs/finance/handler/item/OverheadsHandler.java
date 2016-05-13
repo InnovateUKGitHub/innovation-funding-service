@@ -5,7 +5,9 @@ import com.worth.ifs.finance.resource.category.OverheadCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
 import com.worth.ifs.finance.resource.cost.OverheadRateType;
+import org.springframework.validation.BindingResult;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,17 @@ import java.util.List;
  */
 public class OverheadsHandler extends CostHandler {
     public static final String COST_KEY = "overhead";
+
+    @Override
+    public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
+
+        Overhead overhead = (Overhead) costItem;
+        if(overhead.getRateType() != null && !OverheadRateType.NONE.equals(overhead.getRateType())){
+            super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
+        }else{
+            super.validate(costItem, bindingResult);
+        }
+    }
 
     @Override
     public Cost toCost(CostItem costItem) {

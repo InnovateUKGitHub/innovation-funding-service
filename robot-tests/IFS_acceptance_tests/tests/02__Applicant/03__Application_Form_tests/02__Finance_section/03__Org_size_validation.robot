@@ -36,10 +36,13 @@ Small organisation can choose up to 70% funding
     [Tags]    Organisation    Funding    Finance    HappyPath
     When the applicant enters organisation size details    ${small_org_option}    68
     Then the 'your finances' section can be successfully saved    ${small_org_option}    68
+    [Teardown]   user closes the browser
 
 Medium organisation can't choose over 60% funding
     [Documentation]    INFUND-1100
     [Tags]    Organisation    Funding    Finance
+    [Setup]     Guest user log-in    &{lead_applicant_credentials}
+    Given the user navigates to the page    ${newly_created_application_your_finances_url}
     When the applicant enters organisation size details    ${medium_org_option}    68
     Then the 'your finances' section cannot be successfully saved with the message    ${incorrect_funding_level_message}
 
@@ -48,10 +51,13 @@ Medium organisation can choose up to 60% funding
     [Tags]    Organisation    Funding    Finance
     When the applicant enters organisation size details    ${medium_org_option}    53
     Then the 'your finances' section can be successfully saved    ${medium_org_option}    53
+    [Teardown]   user closes the browser
 
 Large organisation can't choose over 50% funding
     [Documentation]    INFUND-1100
     [Tags]    Organisation    Funding    Finance
+    [Setup]     Guest user log-in    &{lead_applicant_credentials}
+    Given the user navigates to the page    ${newly_created_application_your_finances_url}
     When the applicant enters organisation size details    ${large_org_option}    54
     Then the 'your finances' section cannot be successfully saved with the message    ${incorrect_funding_level_message}
 
