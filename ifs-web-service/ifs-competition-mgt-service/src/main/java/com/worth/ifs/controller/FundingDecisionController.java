@@ -2,7 +2,6 @@ package com.worth.ifs.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,12 +39,12 @@ public class FundingDecisionController {
 		
 		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
 
-		if(!validate(request, applicationIds)) {
+		if(!applicationFundingDecisionService.verifyAllApplicationsRepresented(request.getParameterMap(), applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
 			return "redirect:/competition/" + competitionId;
 		}
 		
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequest(request, applicationIds);
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
 
 		model.addAttribute("competitionId", competitionId);
 		model.addAttribute("applicationFundingDecisions", applicationIdToFundingDecision);
@@ -58,68 +57,34 @@ public class FundingDecisionController {
 		
 		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
 
-		if(!validate(request, applicationIds)) {
+		if(!applicationFundingDecisionService.verifyAllApplicationsRepresented(request.getParameterMap(), applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
 			return "redirect:/competition/" + competitionId;
 		}
 		
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequest(request, applicationIds);
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
 
 		applicationFundingDecisionService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
 
 		return "redirect:/competition/" + competitionId;
     }
-
-	private boolean validate(HttpServletRequest request, List<Long> applicationIds) {
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequest(request, applicationIds);
-		Set<Long> submittedIds = applicationIdToFundingDecision.keySet();
-		
-		List<Long> notSubmittedIds = applicationIds.stream()
-				.filter(e -> submittedIds.stream().noneMatch(s -> s.equals(e)))
-				.collect(Collectors.toList());
-
-		return notSubmittedIds.isEmpty();
-	}
 	
+	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/savedata")
+    public String saveFundingDecisionDate(HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
+		
+		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
+
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
+
+		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+
+		return "redirect:/competition/" + competitionId;
+    }
+
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
 		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE).getContent()
 				.stream().map(e -> e.getId()).collect(Collectors.toList());
 	}
 
-	private Map<Long, FundingDecision> applicationIdToFundingDecisionFromRequest(HttpServletRequest request, List<Long> applicationIds) {
-		return request.getParameterMap().entrySet().stream()
-				.filter(e -> keyIsApplicationId(e.getKey(), applicationIds) && valueIsDecided(e.getValue()))
-				.collect(Collectors.toMap(
-		            e -> Long.parseLong(e.getKey()),
-		            e -> fundingDecisionForString(e.getValue())
-		        ));
-	}
 	
-	private boolean valueIsDecided(String[] value) {
-		if(value.length == 0) {
-			return false;
-		}
-		return ("Y".equals(value[0]) || "N".equals(value[0]));
-	}
-
-	private boolean keyIsApplicationId(String key, List<Long> applicationIds) {
-		Long id;
-		try {
-			id = Long.parseLong(key);
-		} catch(NumberFormatException e) {
-			return false;
-		}
-		
-		return applicationIds.stream().anyMatch(e -> e.equals(id));
-	}
-	
-	private FundingDecision fundingDecisionForString(String[] val) {
-		FundingDecision decision;
-		if ("Y".equals(val[0])) {
-			decision = FundingDecision.FUNDED;
-		} else {
-			decision = FundingDecision.UNFUNDED;
-		}
-		return decision;
-	}
 }

@@ -1,7 +1,11 @@
 package com.worth.ifs.controller;
 
+import static java.util.Arrays.asList;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -10,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +30,6 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.application.service.ApplicationFundingDecisionService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.util.MapFunctions;
 
 public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<FundingDecisionController> {
 
@@ -53,7 +56,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
         ApplicationSummaryResource app8 = app(8L);
         ApplicationSummaryResource app9 = app(9L);
         ApplicationSummaryResource app10 = app(10L);
-        applicationSummaries.setContent(Arrays.asList(app8, app9, app10));
+        applicationSummaries.setContent(asList(app8, app9, app10));
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(123L, null, 0, Integer.MAX_VALUE)).thenReturn(applicationSummaries);
     }
     
@@ -63,9 +66,12 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
 		return app;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
-    public void submitFundingDecisionWithoutAllApplications() throws Exception {
+    public void submitFundingDecisionFailVerification() throws Exception {
     	
+		when(applicationFundingDecisionService.verifyAllApplicationsRepresented(isA(Map.class), isA(List.class))).thenReturn(false);
+		
     	mockMvc.perform(
     				post("/competition/123/fundingdecisionsubmit")
     				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -74,30 +80,20 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     			)
                 .andExpect(redirectedUrl("/competition/123"));
     	
-    	verifyNoMoreInteractions(applicationFundingDecisionService);
+    	verify(applicationFundingDecisionService, never()).makeApplicationFundingDecision(any(Long.class), any(Map.class));
     	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("fundingNotDecidedForAllApplications"));
     }
     
-    @Test
-    public void submitFundingDecisionWithoutAllApplicationsYesOrNo() throws Exception {
-    	
-    	mockMvc.perform(
-    				post("/competition/123/fundingdecisionsubmit")
-    				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-    				.param("8", "Y")
-    				.param("9", "N")
-    				.param("10", "-")
-    			)
-                .andExpect(redirectedUrl("/competition/123"));
-    	
-    	verifyNoMoreInteractions(applicationFundingDecisionService);
-    	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("fundingNotDecidedForAllApplications"));
-    }
-    
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void submitFundingDecision() throws Exception {
     	
-    	mockMvc.perform(
+		when(applicationFundingDecisionService.verifyAllApplicationsRepresented(isA(Map.class), isA(List.class))).thenReturn(true);
+
+		Map<Long, FundingDecision> fundingDecisons = mock(Map.class);
+		when(applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(isA(Map.class), isA(List.class))).thenReturn(fundingDecisons);
+    	
+		mockMvc.perform(
     				post("/competition/123/fundingdecisionsubmit")
     				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
     				.param("8", "Y")
@@ -108,37 +104,15 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     	
     	verifyNoMoreInteractions(cookieFlashMessageFilter);
     	
-    	Map<Long, FundingDecision> expectedDecisions = MapFunctions.asMap(8L, FundingDecision.FUNDED,
-														    			9L, FundingDecision.UNFUNDED,
-														    			10L, FundingDecision.FUNDED);
-    	verify(applicationFundingDecisionService).makeApplicationFundingDecision(eq(123L), eq(expectedDecisions));
+    	verify(applicationFundingDecisionService).makeApplicationFundingDecision(123L, fundingDecisons);
     }
     
-    @Test
-    public void submitFundingDecisionIrrelaventParamsIgnored() throws Exception {
+    @SuppressWarnings("unchecked")
+	@Test
+    public void fundingDecisionFailVerification() throws Exception {
     	
-    	mockMvc.perform(
-    				post("/competition/123/fundingdecisionsubmit")
-    				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-    				.param("8", "Y")
-    				.param("9", "N")
-    				.param("10", "Y")
-    				.param("something", "irrelevant")
-    				.param("11", "N")
-    			)
-                .andExpect(redirectedUrl("/competition/123"));
-    	
-    	verifyNoMoreInteractions(cookieFlashMessageFilter);
-    	
-    	Map<Long, FundingDecision> expectedDecisions = MapFunctions.asMap(8L, FundingDecision.FUNDED,
-														    			9L, FundingDecision.UNFUNDED,
-														    			10L, FundingDecision.FUNDED);
-    	verify(applicationFundingDecisionService).makeApplicationFundingDecision(eq(123L), eq(expectedDecisions));
-    }
-    
-    @Test
-    public void fundingDecisionWithoutAllApplications() throws Exception {
-    	
+		when(applicationFundingDecisionService.verifyAllApplicationsRepresented(isA(Map.class), isA(List.class))).thenReturn(false);
+		
     	mockMvc.perform(
     				post("/competition/123/fundingdecision")
     				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -147,32 +121,18 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     			)
                 .andExpect(redirectedUrl("/competition/123"));
     	
-    	verifyNoMoreInteractions(applicationFundingDecisionService);
+    	verify(applicationFundingDecisionService, never()).makeApplicationFundingDecision(any(Long.class), any(Map.class));
     	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("fundingNotDecidedForAllApplications"));
     }
     
-    @Test
-    public void fundingDecisionWithoutAllApplicationsYesOrNo() throws Exception {
-    	
-    	mockMvc.perform(
-    				post("/competition/123/fundingdecision")
-    				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-    				.param("8", "Y")
-    				.param("9", "N")
-    				.param("10", "-")
-    			)
-                .andExpect(redirectedUrl("/competition/123"));
-    	
-    	verifyNoMoreInteractions(applicationFundingDecisionService);
-    	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("fundingNotDecidedForAllApplications"));
-    }
-    
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void fundingDecision() throws Exception {
     	
-    	Map<Long, FundingDecision> expectedDecisions = MapFunctions.asMap(8L, FundingDecision.FUNDED,
-														    			9L, FundingDecision.UNFUNDED,
-														    			10L, FundingDecision.FUNDED);
+		when(applicationFundingDecisionService.verifyAllApplicationsRepresented(isA(Map.class), isA(List.class))).thenReturn(true);
+
+		Map<Long, FundingDecision> fundingDecisons = mock(Map.class);
+		when(applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(isA(Map.class), isA(List.class))).thenReturn(fundingDecisons);
     	
     	mockMvc.perform(
     				post("/competition/123/fundingdecision")
@@ -183,12 +143,28 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     			)
                 .andExpect(view().name("funding-decision-confirmation"))
                 .andExpect(model().attribute("competitionId", 123L))
-                .andExpect(model().attribute("applicationFundingDecisions", expectedDecisions));
+                .andExpect(model().attribute("applicationFundingDecisions", fundingDecisons));
 
-    	
     	verifyNoMoreInteractions(cookieFlashMessageFilter);
-    	verifyNoMoreInteractions(applicationFundingDecisionService);
+    	verify(applicationFundingDecisionService, never()).makeApplicationFundingDecision(any(Long.class), any(Map.class));
     }
-
+    
+    @SuppressWarnings("unchecked")
+	@Test
+    public void saveFundingDecisionData() throws Exception {
+    	
+		Map<Long, FundingDecision> fundingDecisons = mock(Map.class);
+		when(applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(isA(Map.class), isA(List.class))).thenReturn(fundingDecisons);
+    
+    	mockMvc.perform(
+    				post("/competition/123/savedata")
+    				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+    				.param("8", "Y")
+    				.param("9", "N")
+    			)
+                .andExpect(redirectedUrl("/competition/123"));
+    	
+    	verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(123L, fundingDecisons);
+    }
 
 }
