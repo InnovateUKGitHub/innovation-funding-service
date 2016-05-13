@@ -178,11 +178,11 @@ the applicant edits the Subcontracting costs section
     Click Element    jQuery=button:contains('Add another subcontractor')
     Wait Until Page Contains    Subcontractor name
     Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
-    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=companyName]    test
+    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
     Click Element    jQuery=button:contains('Add another subcontractor')
     Wait Until Page Contains Element    css=#collapsible-4 .form-row:nth-child(2)
     Input Text    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
-    input text    css=#collapsible-4 .form-row:nth-child(2) input[id$=companyName]    test
+    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
     focus    css=.app-submit-btn
 
 the applicant fills the 'capital usage' field
