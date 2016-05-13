@@ -70,10 +70,10 @@ public class OtherFundingValidatorTest extends AbstractValidatorTest {
         otherFunding = new OtherFunding(2L, "Yes", OTHER_FUNDING, null, null);
         expectNoErrors(otherFunding);
 
-        otherFunding = new OtherFunding(3L, null, "Source1", "", new BigDecimal(5));
+        otherFunding = new OtherFunding(3L, null, "Source1", "11-1999", new BigDecimal(5));
         expectNoErrors(otherFunding);
 
-        otherFunding = new OtherFunding(4L, "Yes", "Source1", "",  new BigDecimal(5));
+        otherFunding = new OtherFunding(4L, "Yes", "Source1", "09-1999",  new BigDecimal(5));
         expectNoErrors(otherFunding);
 
         mockWithRadio("No");

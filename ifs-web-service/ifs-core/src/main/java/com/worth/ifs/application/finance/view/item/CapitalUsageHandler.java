@@ -30,7 +30,7 @@ public class CapitalUsageHandler extends CostHandler {
                 case "existing":
                     existing = costFormValue;
                     break;
-                case "deprecation_period":
+                case "deprecation":
                     deprecation = getIntegerValue(costFormValue, 0);
                     break;
                 case "npv":

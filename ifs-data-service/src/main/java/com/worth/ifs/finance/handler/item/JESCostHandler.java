@@ -8,6 +8,9 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 
+/***
+ *  Handle conversion and validation of the AcademicCost and CostItem objects.
+ */
 public class JESCostHandler extends CostHandler {
 
     @Override

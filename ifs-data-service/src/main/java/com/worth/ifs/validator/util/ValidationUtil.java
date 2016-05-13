@@ -21,6 +21,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Path;
+import javax.validation.Validation;
+import javax.validation.groups.Default;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +45,40 @@ public class ValidationUtil {
         this.validatorService = validatorService;
         this.minRowCountValidator = minRowCountValidator;
         this.messageSource = messageSource;
+    }
+
+    /**
+     * This method is needed because we want to add validator Group to validation.
+     * Because we can't use the spring validators for this, we need to convert the validation messages.
+     * {@link http://docs.oracle.com/javaee/6/tutorial/doc/gkagv.html}
+     */
+    public static boolean isValid(Errors result, Object o, Class<?>... classes) {
+        if (classes == null || classes.length == 0 || classes[0] == null) {
+            classes = new Class<?>[]{Default.class};
+        }
+        javax.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Object>> violations = validator.validate(o, classes);
+        addValidationMessages(result, violations);
+        return violations.size() == 0;
+    }
+
+    public static void addValidationMessages(Errors result, Set<ConstraintViolation<Object>> violations) {
+        for (ConstraintViolation<Object> v : violations) {
+            Path path = v.getPropertyPath();
+            String propertyName = "";
+            if (path != null) {
+                for (Path.Node n : path) {
+                    propertyName += n.getName() + ".";
+                }
+                propertyName = propertyName.substring(0, propertyName.length() - 1);
+            }
+            String constraintName = v.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName();
+            if (propertyName == null || "".equals(propertyName)) {
+                result.reject(constraintName, v.getMessage());
+            } else {
+                result.rejectValue(propertyName, constraintName, v.getMessage());
+            }
+        }
     }
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
@@ -74,7 +112,7 @@ public class ValidationUtil {
     }
 
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
-        LOG.debug("VALIDATE SECTION "+ section.getName());
+        LOG.debug("VALIDATE SECTION " + section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         boolean allQuestionsValid = true;
         for (Question question : section.fetchAllChildQuestions()) {
@@ -86,7 +124,7 @@ public class ValidationUtil {
     }
 
     private List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
-        LOG.debug("==validate question "+ question.getName());
+        LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : question.getFormInputs()) {
@@ -112,7 +150,7 @@ public class ValidationUtil {
     }
 
     private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
-        LOG.debug("====validate form input "+ formInput.getDescription());
+        LOG.debug("====validate form input " + formInput.getDescription());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty()) {
             // no validator? question is valid!
@@ -157,7 +195,7 @@ public class ValidationUtil {
                 .collect(Collectors.toList());
 
         ValidationMessages emptyRowMessages = invokeEmptyRowValidatorAndReturnMessages(costItems, question);
-        if(emptyRowMessages != null) {
+        if (emptyRowMessages != null) {
             results.add(emptyRowMessages);
         }
 
@@ -169,17 +207,16 @@ public class ValidationUtil {
         invokeValidator(costItem, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("validated, with messages: ");
-                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: "+ e.getRejectedValue() + e.getDefaultMessage()));
-                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: "+ e.getObjectName() + e.getDefaultMessage()));
+                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
+                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
             }
             return new ValidationMessages(messageSource, costItem.getId(), bindingResult);
         } else {
             LOG.debug("validated, no messages");
             return null;
         }
-
     }
 
     private void invokeValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
@@ -187,7 +224,7 @@ public class ValidationUtil {
         costHandler.validate(costItem, bindingResult);
     }
 
-    private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){
+    private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult) {
         ValidationUtils.invokeValidator(minRowCountValidator, costItems, bindingResult);
     }
 }

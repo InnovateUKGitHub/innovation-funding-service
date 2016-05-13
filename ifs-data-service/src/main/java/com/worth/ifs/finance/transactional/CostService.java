@@ -73,7 +73,7 @@ public interface CostService {
     ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId") Long applicationId);
 
     @NotSecured(value = "This is not getting date from the database, just getting a CostHandler", mustBeSecuredByOtherServices = false)
-    CostHandler getCostHandler(CostItem costItem);
+    CostHandler getCostHandler(Long costItemId);
     @NotSecured(value = "RP will secure this", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 

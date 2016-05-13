@@ -540,7 +540,7 @@
                 <input  type="number"
                         th:id="${'cost-capital_usage-'+cost.id+'-deprecation_period'}"
                         class="form-control form-finances-capital-usage-depreciation"
-                        th:name="${type +'-deprecation_period-' + question.id + '-' +  cost.id}"
+                        th:name="${type +'-deprecation-' + question.id + '-' +  cost.id}"
                         th:value="${cost.deprecation}"
                         th:readonly="${complete == 'complete'}"
                         min="1"

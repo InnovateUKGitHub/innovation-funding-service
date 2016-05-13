@@ -391,12 +391,15 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         }
     }
 
+    /**
+     * Get the cost handler by costItemId. This CostHandler can be used for validation or conversion of the CostItem.
+     */
     @Override
-    public CostHandler getCostHandler(CostItem costItem){
-        Cost cost = costMapper.mapIdToDomain(costItem.getId());
+    public CostHandler getCostHandler(Long costItemId){
+        Cost cost = costMapper.mapIdToDomain(costItemId);
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(cost.getApplicationFinance().getOrganisation().getOrganisationType().getName());
-        CostItem costItem2 = organisationFinanceHandler.costToCostItem(cost);
-        CostHandler costHandler = organisationFinanceHandler.getCostHandler(costItem2.getCostType());
+        CostItem costItem = organisationFinanceHandler.costToCostItem(cost);
+        CostHandler costHandler = organisationFinanceHandler.getCostHandler(costItem.getCostType());
         return costHandler;
     }
 }
