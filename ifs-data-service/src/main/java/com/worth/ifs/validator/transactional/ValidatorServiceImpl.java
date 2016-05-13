@@ -67,7 +67,6 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         return getProcessRole(markedAsCompleteById).andOnSuccess(role -> {
             return costService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails -> {
                 return costService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems -> {
-                    LOG.debug("=======Got Cost Items : count 2: "+costItems.size());
                     return validationUtil.validateCostItem(costItems, question);
                 });
             });
@@ -76,6 +75,6 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
     @Override
     public CostHandler getCostHandler(CostItem costItem){
-        return costService.getCostHandler(costItem);
+        return costService.getCostHandler(costItem.getId());
     }
 }

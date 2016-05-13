@@ -5,7 +5,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 Suite Setup       Run keywords    Guest user log-in    &{lead_applicant_credentials}
 ...               AND    Given the user navigates to the page    ${YOUR_FINANCES_URL}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Pending
+Force Tags        Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -27,6 +27,7 @@ Labour client side
     Then the user gets the expected validation errors    You must enter a value less than 10 digits    This field should be 1 or higher
     And the user gets the expected validation errors    This field should be 365 or lower    This field cannot be left blank
     When the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    123456789101112131415161718192021
+    When the user enters text to a text field    css=#cost-labour-1-labourDaysYearly    120
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
     Then the user gets the expected validation errors    You must enter a value less than 20 digits    This field should be 1 or higher
     [Teardown]
@@ -58,24 +59,6 @@ Admin costs (custom cost)
     Then the user should see an error    This field should be 100 or lower
     And the user should see the element    css=.error-summary-list
     And the user enters text to a text field    id=cost-overheads-51-customRate    -1
-    And the user marks the finances as complete
-    Then the user should see an error    This field should be 1 or higher
-    And the user should see the element    css=.error-summary-list
-    [Teardown]    When the user clicks the button/link    jQuery=button:contains("Administration support costs")
-
-Admin costs (special rate)
-    [Documentation]    INFUND-844
-    [Tags]
-    When the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    And user selects the admin costs    overheads-type-29-51    SPECIAL_AGREED_RATE
-    And the user enters text to a text field    id=cost-overheads-51-agreedRate    ${EMPTY}
-    And the user marks the finances as complete
-    Then the user should see an error    This field should be 1 or higher
-    When the user enters text to a text field    id=cost-overheads-51-agreedRate    101
-    And the user marks the finances as complete
-    Then the user should see an error    This field should be 100 or lower
-    when the user should see the element    css=.error-summary-list
-    And the user enters text to a text field    id=cost-overheads-51-agreedRate    -1
     And the user marks the finances as complete
     Then the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
@@ -231,41 +214,46 @@ Funding level server side
     When the user enters text to a text field    id=cost-financegrantclaim    61
     And the user marks the finances as complete
     Then the user should see an error    This field should be 60% or lower
-    [Teardown]    When the user enters text to a text field    id=cost-financegrantclaim    61
+    [Teardown]    When the user enters text to a text field    id=cost-financegrantclaim    59
 
-When the other funding row is empty mark as complete is impossible
+Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
     [Tags]
-    Given the user clicks the button/link    jQuery=button:contains('Add another source of funding')
-    And the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    And the user marks the finances as complete
+    [Setup]    Run keywords    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
+    ...    AND    Focus    jQuery=button:contains('Add another source of funding')
+    ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
+    When the user marks the finances as complete
     Then the user should see the element    css=.error-summary-list
 
-Other funding validations
+Other funding client side
+    [Setup]    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
+    Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
+    and the user should see an error    This field should be 1 or higher
+
+Other funding server side
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    [Setup]
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
     And the user marks the finances as complete
     Then the user should see an error    Funding source cannot be blank
     And the user should see an error    Please use MM-YYYY format
-    And the user should see an error    This field should be 0 or higher
+    And the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    ${EMPTY}    ${EMPTY}
     Then the user should see an error    Funding source cannot be blank
     And the user should see an error    This field cannot be left blank
-    And the user should see an error    This field should be a number
-    When the user enters invalid inputs in the other funding fields    ${EMPTY}    12-2017    012345678910111213141516171819202122
-    Then the user should see an error    You must enter a value less than 20 digits
+    And the user should see an error    This field should be 1 or higher
 
-When the selection is NO the user should be able to mark as complete
+Select NO and mark as complete should be possible
     [Documentation]    INFUND-2214
     [Tags]
-    # Pending INFUND-2690
     Given the users selects no in the other fundings section
     And the user marks the finances as complete
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     [Teardown]    Run keywords    When the user navigates to the page    ${YOUR_FINANCES_URL}
+    ...    AND    Focus    jQuery=button:contains("Edit")
     ...    AND    the user clicks the button/link    jQuery=button:contains("Edit")
 
 *** Keywords ***

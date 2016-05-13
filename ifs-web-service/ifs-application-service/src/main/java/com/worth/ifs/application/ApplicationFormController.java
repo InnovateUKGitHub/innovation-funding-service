@@ -412,49 +412,51 @@ public class ApplicationFormController extends AbstractApplicationController {
             applicationService.save(application);
         }
 
-
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
         financeErrors.forEach((k, errorsList) ->
-        errorsList.forEach(e -> {
-            addNonDuplicateFieldError(bindingResult, k, e);
-        }));
-
+        errorsList.forEach(e -> addNonDuplicateFieldError(bindingResult, k, e)));
 
         if(isMarkQuestionRequest(params)) {
             markApplicationQuestions(application, processRole.getId(), request, response, errors);
         } else if(isMarkSectionRequest(params)){
-            if(bindingResult.hasErrors()){
-                bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
-            }else{
-                SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
-                List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request, response, errors);
-
-                if (financeErrorsMark != null && !financeErrorsMark.isEmpty()) {
-                    bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
-                    financeErrorsMark.forEach((validationMessage) -> {
-
-                        validationMessage.getErrors().parallelStream()
-                                .filter(Objects::nonNull)
-                                .filter(e -> StringUtils.hasText(e.getErrorMessage()))
-                                .forEach(e -> {
-                                    if(validationMessage.getObjectName().equals("costItem")){
-                                        if (StringUtils.hasText(e.getErrorKey())) {
-                                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
-                                        } else {
-                                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage());
-                                        }
-                                    }else{
-                                        addNonDuplicateFieldError(bindingResult, "formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage());
-                                    }
-                                });
-                    });
-                }
-            }
+            handleMarkSectionRequest(application, competition, sectionId, request, response, bindingResult, processRole, errors);
         }
 
-
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+    }
+
+    private void handleMarkSectionRequest(ApplicationResource application, CompetitionResource competition, Long sectionId, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+        } else {
+            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request, response, errors);
+
+            if (financeErrorsMark != null && !financeErrorsMark.isEmpty()) {
+                bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+                handleMarkSectionValidationMessages(bindingResult, financeErrorsMark);
+            }
+        }
+    }
+
+    private void handleMarkSectionValidationMessages(BindingResult bindingResult, List<ValidationMessages> financeErrorsMark) {
+        financeErrorsMark.forEach((validationMessage) -> {
+            validationMessage.getErrors().stream()
+                .filter(Objects::nonNull)
+                .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                .forEach(e -> {
+                    if (validationMessage.getObjectName().equals("costItem")) {
+                        if (StringUtils.hasText(e.getErrorKey())) {
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
+                        } else {
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage());
+                        }
+                    } else {
+                        addNonDuplicateFieldError(bindingResult, "formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage());
+                    }
+                });
+        });
     }
 
     private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
@@ -647,23 +649,23 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                HttpServletRequest request,
                                                                Long userId,
                                                                Long applicationId,
-                                                               boolean ignoreEmpty){
+                                                               boolean ignoreEmpty) {
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
-                                .stream()
-                                .filter(formInput1 -> !"fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()))
-                                .forEach(formInput -> {
-                                            if (params.containsKey("formInput[" + formInput + "]")) {
-                                                String value = request.getParameter("formInput[" + formInput + "]");
-                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
-                                                if (!errors.isEmpty()) {
-                                                    LOG.info("save failed. " + question.getId());
-                                                    errorMap.put(question.getId(), new ArrayList<>(errors));
-                                                }
-                                            }
+                        .stream()
+                        .filter(formInput1 -> !"fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()))
+                        .forEach(formInput -> {
+                                    if (params.containsKey("formInput[" + formInput + "]")) {
+                                        String value = request.getParameter("formInput[" + formInput + "]");
+                                        List<String> errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
+                                        if (!errors.isEmpty()) {
+                                            LOG.info("save failed. " + question.getId());
+                                            errorMap.put(question.getId(), new ArrayList<>(errors));
                                         }
-                                )
+                                    }
+                                }
+                        )
                 );
         return errorMap;
     }
@@ -767,18 +769,20 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } catch (Exception e) {
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-            List<Object> args = new ArrayList<>();
-            args.add(ex.getErrorMessage());
-            if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
-                errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
-            }else{
-                LOG.error("Got a exception on autosave : "+ e.getMessage());
-                if(LOG.isDebugEnabled()){
-                    e.printStackTrace();
-                }
-                errors.add(ex.getErrorMessage());
-            }
+            handleAutosaveException(errors, e, ex);
             return this.createJsonObjectNode(false, errors);
+        }
+    }
+
+    private void handleAutosaveException(List<String> errors, Exception e, AutosaveElementException ex) {
+        List<Object> args = new ArrayList<>();
+        args.add(ex.getErrorMessage());
+        if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
+            errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
+        }else{
+            LOG.error("Got a exception on autosave : "+ e.getMessage());
+            LOG.debug("Autosave exception: ", e);
+            errors.add(ex.getErrorMessage());
         }
     }
 

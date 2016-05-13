@@ -69,7 +69,9 @@ public class OtherFundingValidator implements Validator {
 
     private void validateDate(OtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
-        if(StringUtils.isNotBlank(securedDate) && !isValidDate(securedDate)) {
+        if(StringUtils.isBlank(securedDate)){
+            errors.rejectValue("securedDate", "org.hibernate.validator.constraints.NotBlank.message");
+        }else if(!isValidDate(securedDate)) {
             errors.rejectValue("securedDate", "validation.finance.secured.date.invalid");
         }
     }

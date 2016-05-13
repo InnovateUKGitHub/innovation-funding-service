@@ -358,7 +358,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
-        public CostHandler getCostHandler(CostItem costItem) {
+        public CostHandler getCostHandler(Long costItemId) {
             return null;
         }
 

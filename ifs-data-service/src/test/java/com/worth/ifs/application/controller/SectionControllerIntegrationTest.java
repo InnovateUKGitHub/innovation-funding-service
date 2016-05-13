@@ -24,7 +24,10 @@ import java.util.Optional;
 
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -145,11 +148,5 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
                         )
                 )
         );
-
-//        assertTrue(messages.getErrors().stream()
-//                .filter(e -> "".equals(e.getErrorKey()))
-//                .filter(e -> "".equals(e.getErrorMessage()))
-//                .filter(e -> HttpStatus.NOT_ACCEPTABLE.equals(e.getStatusCode()))
-//                .findAny().isPresent());
     }
 }
