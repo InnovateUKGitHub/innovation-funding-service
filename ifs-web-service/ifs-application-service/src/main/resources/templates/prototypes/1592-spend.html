@@ -19,6 +19,31 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
+	<div th:if="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
+		<div class="marked-complete-alert extra-margin-bottom">
+			<p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
+have submitted their profile spends submit them to Innovate UK</p>
+		</div>
+	</div>
+
+	<div th:if="${param.spend != null and param.spend[0] == 'high'}" th:remove="tag">
+
+		<div class="warning-alert extra-margin-bottom">
+			<h2 class="heading-small">You cannot submit your spend profile with total costs higher than eligible project costs</h2>
+			<p class="no-margin-bottom">Please review:</p>
+			<ul class="list-bullet">
+				<li>Subcontracting costs</li>
+			</ul>
+		</div>
+
+	</div>
+	
+	<div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<div class="success-alert extra-margin-bottom">
+			<p>All Project Spend profiles have been submitted to Innovate UK</p>
+		</div>
+	</div>
+
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have now been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
 
 	<dl class="standard-definition-list">
@@ -39,6 +64,55 @@
 		</div>
 
 	</dl>
+
+	<div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<h2 class="heading-medium">Partner project costs</h2>
+		<p class="form-hint">These are the project costs for your partners on the project</p>
+
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Partner</th>
+					<th scope="col">Project costs</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th scope="row">Total</th>
+					<td>&pound;525,000</td>
+				</tr>
+			</tfoot>
+			<tbody>
+				<tr>
+					<td>
+						<p class="no-margin">Aptrans Ltd</p>
+						<p class="form-hint">Lead organisation</p>
+					</td>
+					<td>
+						&pound;175,000
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p class="no-margin">Biotech Corp</p>
+						<p class="form-hint">Partner</p>
+					</td>
+					<td>
+						&pound;175,000
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p class="no-margin">University of Cardiff</p>
+						<p class="form-hint">Partner</p>
+					</td>
+					<td>
+						&pound;175,000
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 
 	<div class="extra-margin" th:unless="${param.task != null and param.task[0] == 'reviewProject'}">
@@ -83,8 +157,8 @@
 			<thead>
 				<tr>
 					<th class="alignleft">Year</th>
-					<th colspan="3" class="aligncentre">2016</th>
-					<th colspan="4" class="aligncentre">2017</th>
+					<th colspan="3" class="aligncentre separate-cell year">2016</th>
+					<th colspan="4" class="aligncentre separate-cell year">2017</th>
 					<th class="aligncentre separate-cell">2018</th>
 					<th scope="col" rowspan="2" class="total" id="grand-total">Total</th>
 					<th scope="col" rowspan="2" class="total eligible" id="eligible-project-cost">Eligible project cost
@@ -306,6 +380,11 @@
 
 	<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
+		<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
+			<p>If required, you can allow edits to be made to this profile. It will not be possible to submit the project spend profile to Innovate UK until the section is marked as complete again.</p>
+		</div>
+
+
 		<div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit')}" class="button button-secondary">Edit spend profile</a>
 		</div>
@@ -314,19 +393,26 @@
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 		</div>
 
-		<p class="extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with the project plan before they are submitted to Innovate UK.</p>
+		<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">When you are satisfied with the profile spend and it matches the Eligible project costs you will be able to submit your spend profile to the lead partner, before they are submitted to Innovate UK.</p>
 
+		<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the profile spend mark the section as complete, this will allow you to submit the Project profile spend to innovate UK. If you wish you return to allow edits to this page.</p>
+
+	
 		<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
-			<div class="extra-margin">
-				<a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Send to lead</a>
+			<div class="extra-margin" th:unless="${param.spend != null and param.spend[0] == 'high'}">
+				<a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Send to lead partner</a>
+			</div>
+
+			<div class="extra-margin" th:unless="${param.spend == null or param.spend[0] != 'high'}">
+				<a href="#" class="button button-large" disabled="disabled">Send to lead partner</a>
 			</div>
 
 			<div class="modal-send-to-lead" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Send to lead</h2>
+					<h2 class="heading-medium no-margin">Submit to lead partner</h2>
 
 					<p>Your profile spend has now been made available to <strong>Aptrans Ltd</strong>. They may contact you if it requires change.</p>
 
@@ -341,10 +427,10 @@
 
 	 	</div>
 
-	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:remove="tag">
+	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
 
 			<div class="extra-margin">
-				<a href="#" class="button button-large" data-js-modal="modal-complete">Submit</a>
+				<a href="#" class="button button-large" data-js-modal="modal-complete">Mark as complete</a>
 			</div>
 
 			<div class="modal-complete" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -353,12 +439,12 @@
 
 					<h2 class="heading-medium no-margin">Spend profile complete</h2>
 
-					<p><strong>Aptrans Ltd's</strong> spend profile has now been marked as complete. You can return edit the spend profile, but it must be marked as complete before the project spend profile can be submitted.</p>
+					<p><strong>Aptrans Ltd's</strong> profile has now been marked as complete. You can return to edit the spend profile, but it must be marked as complete before the project spend profile can be submitted.</p>
 
 					<hr />
 
 	            	<div class="alignright-button">
-	            		<a href="/prototypes/1592-spend?status=Submitted" class="button">OK</a>
+	            		<a href="/prototypes/1592-spend?status=MarkedComplete" class="button">OK</a>
 	            	</div>
 
 		        </div>
@@ -418,12 +504,12 @@
 
 				<h2 class="heading-medium no-margin">Submit project profile spend</h2>
 
-				<p>The Project profile spend will be submitted to both InnovateUK and the Monitiring officer assigned to this project. This will be used for reference and the base for progress.</p>
+				<p>The Project profile spend will be submitted to both Innovate UK and the Monitoring officer assigned to this project. This will be used for reference and the base for progress.</p>
 
 				<hr />
 
             	<div class="alignright-button">
-            		<a href="/prototypes/1592-spend?status=Submitted&#38;task=edit " class="button">Submit</a>
+            		<a href="/prototypes/1588-project-status?stage=level3" class="button">Submit</a>
             	</div>
 
 	        </div>
