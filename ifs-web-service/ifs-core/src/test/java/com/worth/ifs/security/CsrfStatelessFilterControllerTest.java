@@ -10,12 +10,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,9 +50,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(classes = CsrfStatelessFilterControllerTest.ContextConfiguration.class)
 @TestPropertySource(properties = {"ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9", "ifs.web.security.csrf.encryption.salt: 9ea751556a3feee7", "ifs.web.security.csrf.token.validity.mins: 30"})
 @WebAppConfiguration
+@ActiveProfiles("CsrfStatelessFilterControllerTest")
 public class CsrfStatelessFilterControllerTest {
 
     @Autowired
@@ -193,9 +196,19 @@ public class CsrfStatelessFilterControllerTest {
         }
     }
 
+    /**
+     * <p>
+     * Spring Configuration class.<br>
+     * Using a unique @Profile to make sure that all of the @Bean methods are bypassed unless the profile is active,
+     * which will only be the case for this integration test.
+     * Without this restriction, these beans clash with the real ones during the running of
+     * other {@link com.worth.ifs.BaseWebIntegrationTest} integration tests which load the main Spring application configuration as well as this one.
+     * </p>
+     */
     @Configuration
     @EnableWebSecurity
     @EnableWebMvc
+    @Profile("CsrfStatelessFilterControllerTest")
     static class ContextConfiguration {
 
         @Bean
@@ -214,7 +227,7 @@ public class CsrfStatelessFilterControllerTest {
         }
 
         @Bean
-        public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+        public PropertySourcesPlaceholderConfigurer propertiesResolver() {
             return new PropertySourcesPlaceholderConfigurer();
         }
 
