@@ -74,7 +74,7 @@ public class FormInputResponsePermissionRules {
     }
 
     @PermissionRule(value = "SAVE",
-            description = "An assigned user can update the response.",
+            description = "A consortium member can update the response.",
             additionalComments = "TODO these permissions are not correct - but are the best we can do with the code in its current state. To fix this we need to " +
                     "1) Split the service methods into create and update " +
                     "2) Have the web layer only call the update when it is meant to, i.e. not when it is in read only mode as it currently does")
