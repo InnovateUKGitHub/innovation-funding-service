@@ -3,6 +3,7 @@ package com.worth.ifs.finance.handler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
@@ -19,7 +20,7 @@ public interface OrganisationFinanceHandler {
     Map<CostType,CostCategory> getOrganisationFinanceTotals(Long id, Competition competition);
     Cost costItemToCost(CostItem costItem);
     CostItem costToCostItem(Cost cost);
-
+    CostHandler getCostHandler(CostType costType);
     List<CostItem> costToCostItem(List<Cost> costs);
 
     List<Cost> costItemsToCost(List<CostItem> costItems);

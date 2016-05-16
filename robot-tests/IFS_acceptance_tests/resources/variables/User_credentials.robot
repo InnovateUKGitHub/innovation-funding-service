@@ -5,3 +5,5 @@
 &{collaborator2_credentials}    email=pete.tom@egg.com    password=Passw0rd
 &{worth_test_credentials}    email=worth.email.test+submit@gmail.com    password=Passw0rd
 &{Comp_admin1_credentials}    email=john.doe@innovateuk.test    password=Passw0rd
+&{successful_applicant_credentials}     email=worth.email.test+fundsuccess@gmail.com    password=Passw0rd
+&{unsuccessful_applicant_credentials}   email=worth.emai.test.two+fundfailure@gmail.com     password=Passw0rd
