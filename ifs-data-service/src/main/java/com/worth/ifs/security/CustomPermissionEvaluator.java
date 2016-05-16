@@ -46,6 +46,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return user == ANONYMOUS_USER;
     }
 
+    public static UserResource getAnonymous() {
+        return ANONYMOUS_USER;
+    }
+
     @PostConstruct
     void generateRules() {
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();
