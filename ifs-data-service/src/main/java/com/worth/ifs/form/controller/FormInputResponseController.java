@@ -5,6 +5,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.validator.ValidatedResponse;
 import com.worth.ifs.validator.util.ValidationUtil;
@@ -56,7 +57,7 @@ public class FormInputResponseController {
         ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
-        ServiceResult<List<String>> result = formInputService.saveQuestionResponse(userId, applicationId, formInputId, value).andOnSuccessReturn(response -> {
+        ServiceResult<List<String>> result = formInputService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId,  userId, value)).andOnSuccessReturn(response -> {
 
             BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
             if (bindingResult.hasErrors()) {

@@ -53,4 +53,8 @@ public class SecurityRuleUtil {
         return CustomPermissionEvaluator.isAnonymous(user);
     }
 
+    public static UserResource getAnonymous(){
+        return CustomPermissionEvaluator.getAnonymous();
+    }
+
 }
