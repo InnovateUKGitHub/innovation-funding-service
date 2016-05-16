@@ -49,7 +49,7 @@ public class AssessorFeedbackController {
 
         ServiceResult<FileEntryResource> fileAddedResult =
                 fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                assessorFeedbackService.createAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+                        assessorFeedbackService.createAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
 
         return fileAddedResult.toPostCreateResponse();
     }

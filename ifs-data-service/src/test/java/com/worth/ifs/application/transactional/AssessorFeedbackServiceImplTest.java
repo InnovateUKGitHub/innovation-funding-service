@@ -1,19 +1,12 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.transactional.FileService;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import java.io.File;
 import java.io.InputStream;
@@ -47,7 +40,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         when(fileServiceMock.createFile(fileEntryToCreate, inputStreamSupplier)).thenReturn(successfulFileCreationResult);
 
         FileEntryResource createdFileEntryResource = newFileEntryResource().build();
-        when(fileEntryMapper.mapToResource(createdFileEntry)).thenReturn(createdFileEntryResource);
+        when(fileEntryMapperMock.mapToResource(createdFileEntry)).thenReturn(createdFileEntryResource);
 
         //
         // Call the method under test
@@ -102,7 +95,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         when(fileServiceMock.updateFile(fileEntryToUpdate, inputStreamSupplier)).thenReturn(successfulFileUpdateResult);
 
         FileEntryResource updatedFileEntryResource = newFileEntryResource().build();
-        when(fileEntryMapper.mapToResource(updatedFileEntry)).thenReturn(updatedFileEntryResource);
+        when(fileEntryMapperMock.mapToResource(updatedFileEntry)).thenReturn(updatedFileEntryResource);
 
         //
         // Call the method under test
