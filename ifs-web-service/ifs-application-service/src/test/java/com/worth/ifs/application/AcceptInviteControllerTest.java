@@ -31,8 +31,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
     @Mock
     private Validator validator;
     @Mock
-    CookieFlashMessageFilter cookieFlashMessageFilter;
-    private Long applicationId;
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Before
     public void setUp() throws Exception {
@@ -65,8 +64,6 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
-
-        applicationId = applications.get(0).getId();
     }
 
     @Test

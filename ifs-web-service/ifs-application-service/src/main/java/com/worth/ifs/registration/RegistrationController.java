@@ -111,7 +111,7 @@ public class RegistrationController {
         }
 
         try {
-        	addRegistrationFormToModel(model, request);
+        	addRegistrationFormToModel(model, request, response);
         }
         catch (InviteAlreadyAcceptedException e) {
         	cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
@@ -140,9 +140,9 @@ public class RegistrationController {
         return success;
     }
 
-    private void addRegistrationFormToModel(Model model, HttpServletRequest request) {
+    private void addRegistrationFormToModel(Model model, HttpServletRequest request, HttpServletResponse response) {
         RegistrationForm registrationForm = new RegistrationForm();
-        setFormActionURL(registrationForm, request);
+        setOrganisationIdCookie(registrationForm, request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
     }
@@ -283,7 +283,7 @@ public class RegistrationController {
     }
 
     private Long getOrganisationId(HttpServletRequest request) {
-        String organisationParameter = request.getParameter(ORGANISATION_ID_PARAMETER_NAME);
+        String organisationParameter = CookieUtil.getCookieValue(request, ORGANISATION_ID_PARAMETER_NAME);
         Long organisationId = null;
 
         try {
@@ -297,9 +297,11 @@ public class RegistrationController {
         return organisationId;
     }
 
-    private void setFormActionURL(RegistrationForm registrationForm, HttpServletRequest request) {
+    private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
-        registrationForm.setActionUrl(BASE_URL + "?" + ORGANISATION_ID_PARAMETER_NAME + "=" + organisationId);
+        if(organisationId != null) {
+        	CookieUtil.saveToCookie(response, ORGANISATION_ID_PARAMETER_NAME, Long.toString(organisationId));
+        }
     }
 
     private boolean hasVerifiedCookieSet(final HttpServletRequest request) {
