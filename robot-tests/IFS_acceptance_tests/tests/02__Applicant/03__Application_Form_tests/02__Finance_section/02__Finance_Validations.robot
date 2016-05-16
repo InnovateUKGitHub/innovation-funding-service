@@ -62,7 +62,7 @@ Admin costs (custom cost)
     And the user marks the finances as complete
     Then the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
-    [Teardown]    When the user clicks the button/link    jQuery=button:contains("Administration support costs")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Administration support costs")
 
 Materials client side
     [Documentation]    INFUND-844
@@ -214,7 +214,7 @@ Funding level server side
     When the user enters text to a text field    id=cost-financegrantclaim    61
     And the user marks the finances as complete
     Then the user should see an error    This field should be 60% or lower
-    [Teardown]    When the user enters text to a text field    id=cost-financegrantclaim    59
+    [Teardown]     the user enters text to a text field    id=cost-financegrantclaim    59
 
 Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
@@ -269,6 +269,7 @@ user selects the admin costs
     focus    css=.app-submit-btn
 
 the field with the wrong input should be saved
+    sleep   300ms
     ${input_value} =    Get Value    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Should Be Equal As Strings    ${input_value}    -1
 
