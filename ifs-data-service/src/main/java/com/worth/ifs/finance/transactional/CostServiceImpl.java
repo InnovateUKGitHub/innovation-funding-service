@@ -16,8 +16,10 @@ import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
+import com.worth.ifs.finance.mapper.CostMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
@@ -62,6 +64,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;
+    @Autowired
+    private CostMapper costMapper;
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -171,7 +175,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
                     .peek(c -> LOG.debug("CostValue: " + c.getValue()))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
-            return updatedCost;
+            // refresh the object, since we need to reload the costvalues, on the cost object.
+            return savedCost;
         });
     }
 
@@ -353,7 +358,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
         costValue.setCost(savedCost);
         costValue.setCostField(costField);
-        costValueRepository.save(costValue);
+        costValue = costValueRepository.save(costValue);
+        savedCost.addCostValues(costValue);
     }
 
 
@@ -383,5 +389,17 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         for (CostType costType : CostType.values()) {
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
         }
+    }
+
+    /**
+     * Get the cost handler by costItemId. This CostHandler can be used for validation or conversion of the CostItem.
+     */
+    @Override
+    public CostHandler getCostHandler(Long costItemId){
+        Cost cost = costMapper.mapIdToDomain(costItemId);
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(cost.getApplicationFinance().getOrganisation().getOrganisationType().getName());
+        CostItem costItem = organisationFinanceHandler.costToCostItem(cost);
+        CostHandler costHandler = organisationFinanceHandler.getCostHandler(costItem.getCostType());
+        return costHandler;
     }
 }

@@ -172,6 +172,7 @@
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${type +'-'+name+'-'+question.id+'-' + id}"
                 th:text="${value}"
+                maxlength="255"
                 rows="4"
                 th:readonly="${readonly}"
                 th:required="${required}"

@@ -3,8 +3,7 @@ package com.worth.ifs.finance.resource.cost;
 public enum OverheadRateType{
     NONE(null),
     DEFAULT_PERCENTAGE(20),
-    CUSTOM_RATE(null),
-    SPECIAL_AGREED_RATE(null);
+    CUSTOM_RATE(null);
 
     private final Integer rate;
 

@@ -4,22 +4,27 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.validator.*;
+import com.worth.ifs.validator.MinRowCountValidator;
+import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Path;
+import javax.validation.Validation;
+import javax.validation.groups.Default;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,28 +33,52 @@ public class ValidationUtil {
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     private MessageSource messageSource;
     private ValidatorService validatorService;
-    private Validator validator;
-    private GrantClaimValidator grantClaimValidator;
-    private OtherFundingValidator otherFundingValidator;
-    private AcademicValidator academicValidator;
     private MinRowCountValidator minRowCountValidator;
+
 
     @Autowired
     @Lazy
-    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator,
-                           GrantClaimValidator grantClaimValidator,
-                           OtherFundingValidator otherFundingValidator,
-                           AcademicValidator academicValidator,
+    private ValidationUtil(ValidatorService validatorService,
                            MinRowCountValidator minRowCountValidator,
                            MessageSource messageSource
     ) {
         this.validatorService = validatorService;
-        this.validator = validator;
         this.minRowCountValidator = minRowCountValidator;
-        this.grantClaimValidator = grantClaimValidator;
-        this.otherFundingValidator = otherFundingValidator;
-        this.academicValidator = academicValidator;
         this.messageSource = messageSource;
+    }
+
+    /**
+     * This method is needed because we want to add validator Group to validation.
+     * Because we can't use the spring validators for this, we need to convert the validation messages.
+     * {@link http://docs.oracle.com/javaee/6/tutorial/doc/gkagv.html}
+     */
+    public static boolean isValid(Errors result, Object o, Class<?>... classes) {
+        if (classes == null || classes.length == 0 || classes[0] == null) {
+            classes = new Class<?>[]{Default.class};
+        }
+        javax.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Object>> violations = validator.validate(o, classes);
+        addValidationMessages(result, violations);
+        return violations.size() == 0;
+    }
+
+    public static void addValidationMessages(Errors result, Set<ConstraintViolation<Object>> violations) {
+        for (ConstraintViolation<Object> v : violations) {
+            Path path = v.getPropertyPath();
+            String propertyName = "";
+            if (path != null) {
+                for (Path.Node n : path) {
+                    propertyName += n.getName() + ".";
+                }
+                propertyName = propertyName.substring(0, propertyName.length() - 1);
+            }
+            String constraintName = v.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName();
+            if (propertyName == null || "".equals(propertyName)) {
+                result.reject(constraintName, v.getMessage());
+            } else {
+                result.rejectValue(propertyName, constraintName, v.getMessage());
+            }
+        }
     }
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
@@ -83,7 +112,7 @@ public class ValidationUtil {
     }
 
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
-        LOG.debug("VALIDATE SECTION "+ section.getName());
+        LOG.debug("VALIDATE SECTION " + section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         boolean allQuestionsValid = true;
         for (Question question : section.fetchAllChildQuestions()) {
@@ -95,7 +124,7 @@ public class ValidationUtil {
     }
 
     private List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
-        LOG.debug("==validate question "+ question.getName());
+        LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : question.getFormInputs()) {
@@ -121,7 +150,7 @@ public class ValidationUtil {
     }
 
     private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
-        LOG.debug("====validate form input "+ formInput.getDescription());
+        LOG.debug("====validate form input " + formInput.getDescription());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty()) {
             // no validator? question is valid!
@@ -166,7 +195,7 @@ public class ValidationUtil {
                 .collect(Collectors.toList());
 
         ValidationMessages emptyRowMessages = invokeEmptyRowValidatorAndReturnMessages(costItems, question);
-        if(emptyRowMessages != null) {
+        if (emptyRowMessages != null) {
             results.add(emptyRowMessages);
         }
 
@@ -175,44 +204,27 @@ public class ValidationUtil {
 
     public ValidationMessages validateCostItem(CostItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
-        ValidationUtils.invokeValidator(validator, costItem, bindingResult);
-
-        invokeExtraValidator(costItem, bindingResult);
+        invokeValidator(costItem, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("validated, with messages: ");
-                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: "+ e.getRejectedValue() + e.getDefaultMessage()));
-                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: "+ e.getObjectName() + e.getDefaultMessage()));
+                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
+                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
             }
             return new ValidationMessages(messageSource, costItem.getId(), bindingResult);
         } else {
             LOG.debug("validated, no messages");
             return null;
         }
-
     }
 
-    private void invokeExtraValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
-        Validator extraValidator = null;
-        switch(costItem.getCostType()){
-            case FINANCE:
-                extraValidator = grantClaimValidator;
-                break;
-            case OTHER_FUNDING:
-                extraValidator = otherFundingValidator;
-                break;
-            case ACADEMIC:
-                extraValidator = academicValidator;
-                break;
-        }
-        if(extraValidator != null){
-            LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
-            ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);
-        }
+    private void invokeValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
+        CostHandler costHandler = validatorService.getCostHandler(costItem);
+        costHandler.validate(costItem, bindingResult);
     }
 
-    private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){
+    private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult) {
         ValidationUtils.invokeValidator(minRowCountValidator, costItems, bindingResult);
     }
 }

@@ -29,7 +29,8 @@ public class MinRowCountValidator implements Validator {
         int rowCount = 0;
         if(response.size() > 1) {
             for (final CostItem row : response) {
-                if (!row.isEmpty()) {
+                boolean exclude = row.excludeInRowCount();
+                if (!exclude) {
                     rowCount++;
                 }
             }
@@ -39,7 +40,12 @@ public class MinRowCountValidator implements Validator {
             switch(response.get(0).getCostType()) {
                 case OTHER_FUNDING:
                     if(((OtherFunding)response.get(0)).getOtherPublicFunding().equals("Yes")) {
-                        errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least " + response.get(0).getMinRows() + " source(s) of funding");
+                        if(response.get(0).getMinRows() == 1){
+                            errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least " + response.get(0).getMinRows() + " source of other funding");
+                        }else{
+                            errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least " + response.get(0).getMinRows() + " source(s) of funding");
+                        }
+
                     }
                     break;
                 default:
