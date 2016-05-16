@@ -4,6 +4,7 @@ import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.verify;
 public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormInputService> {
 
     private FormInputResponsePermissionRules formInputResponsePermissionRules;
+
 
     @Before
     public void lookupPermissionRules() {
@@ -50,6 +52,19 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).compAdminCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
+    }
+
+
+    @Test
+    public void testSaveQuestionResponse() {
+        final long applicationId = 1l;
+        final long formInputId = 2l;
+        final long userId = 3l;
+        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, "test text");
+        assertAccessDenied(
+                () -> service.saveQuestionResponse(formInputResponseCommand),
+                () -> verify(formInputResponsePermissionRules).aConsortiumMemberCanUpdateAFormInputResponse(isA(FormInputResponseCommand.class), isA(UserResource.class))
+        );
     }
 
     @Override
@@ -93,7 +108,7 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         }
 
         @Override
-        public ServiceResult<FormInputResponse> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String htmlUnescapedValue) {
+        public ServiceResult<FormInputResponse> saveQuestionResponse(FormInputResponseCommand command) {
             return null;
         }
     }
