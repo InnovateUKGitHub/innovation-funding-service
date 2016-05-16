@@ -2,6 +2,10 @@ package com.worth.ifs.validator.transactional;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
+import com.worth.ifs.finance.handler.item.CostHandler;
+import com.worth.ifs.finance.mapper.CostMapper;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -26,7 +30,13 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
+
+    @Autowired
     private CostService costService;
+
+    @Autowired
+    private CostMapper costMapper;
 
     @Autowired
     private ValidationUtil validationUtil;
@@ -57,10 +67,14 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         return getProcessRole(markedAsCompleteById).andOnSuccess(role -> {
             return costService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails -> {
                 return costService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems -> {
-                    LOG.debug("=======Got Cost Items : count 2: "+costItems.size());
                     return validationUtil.validateCostItem(costItems, question);
                 });
             });
         }).getSuccessObject();
+    }
+
+    @Override
+    public CostHandler getCostHandler(CostItem costItem){
+        return costService.getCostHandler(costItem.getId());
     }
 }

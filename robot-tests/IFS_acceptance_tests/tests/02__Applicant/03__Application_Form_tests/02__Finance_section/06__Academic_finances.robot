@@ -177,6 +177,8 @@ the academic partner fills the finances
     Input Text    id=exceptions-staff    999.999
     Input Text    id=exceptions-other-direct    999.999
     Input Text    id=tsb-ref    123123
+    Mouse Out    css=input
+    Sleep    300ms
 
 the calculations should be correct and the totals rounded to the second decimal
     Textfield Value Should Be    id=subtotal-directly-allocated    £ 3,000

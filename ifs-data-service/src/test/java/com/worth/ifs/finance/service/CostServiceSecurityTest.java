@@ -8,6 +8,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -354,6 +355,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         @Override
         public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
             return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public CostHandler getCostHandler(Long costItemId) {
+            return null;
         }
 
         @Override
