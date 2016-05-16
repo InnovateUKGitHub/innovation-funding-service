@@ -2,21 +2,32 @@ package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.hibernate.jpa.internal.QueryImpl.LOG;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/assessorfeedback")
@@ -53,6 +64,68 @@ public class AssessorFeedbackController {
 
         return fileAddedResult.toPostCreateResponse();
     }
+
+    @RequestMapping(value = "/assessorFeedbackDocument", method = GET)
+    public @ResponseBody
+    ResponseEntity<Object> getFileContents(
+            @RequestParam("applicationId") long applicationId) throws IOException {
+
+        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
+        try {
+
+            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = assessorFeedbackService.getAssessorFeedbackFileEntry(applicationId);
+
+            return getFileResult.handleSuccessOrFailure(
+                    failure -> {
+                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
+                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
+                    },
+                    fileResult -> {
+                        FileEntryResource fileEntry = fileResult.getKey();
+                        Supplier<InputStream> inputStreamSupplier = fileResult.getValue();
+                        InputStream inputStream = inputStreamSupplier.get();
+                        ByteArrayResource inputStreamResource = new ByteArrayResource(StreamUtils.copyToByteArray(inputStream));
+                        HttpHeaders httpHeaders = new HttpHeaders();
+                        httpHeaders.setContentLength(fileEntry.getFilesizeBytes());
+                        httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));
+                        return new ResponseEntity<>(inputStreamResource, httpHeaders, OK);
+                    }
+            );
+
+        } catch (Exception e) {
+
+            LOG.error("Error retrieving file", e);
+            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
+    public @ResponseBody ResponseEntity<Object> getFileEntryDetails(
+            @RequestParam("applicationId") long applicationId) throws IOException {
+
+        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
+        try {
+
+            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = assessorFeedbackService.getAssessorFeedbackFileEntry(applicationId);
+
+            return getFileResult.handleSuccessOrFailure(
+                    failure -> {
+                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
+                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
+                    },
+                    success -> {
+                        FileEntryResource fileEntry = success.getKey();
+                        return new ResponseEntity<>(fileEntry, OK);
+                    }
+            );
+
+        } catch (Exception e) {
+
+            LOG.error("Error retrieving file details", e);
+            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file details")), INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @RequestMapping(value = "/assessorFeedbackDocument", method = PUT, produces = "application/json")
     public RestResult<Void> updateAssessorFeedbackDocument(

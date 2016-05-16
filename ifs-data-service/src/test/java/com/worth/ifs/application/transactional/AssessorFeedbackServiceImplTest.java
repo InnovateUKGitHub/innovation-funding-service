@@ -82,6 +82,41 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     }
 
     @Test
+    public void testGetAssessorFeedbackFileEntry() {
+
+        FileEntryResource fileEntryToCreate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        Application application = newApplication().withId(123L).build();
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+
+        FileEntry createdFileEntry = newFileEntry().build();
+        ServiceResult<Pair<File, FileEntry>> successfulFileCreationResult = serviceSuccess(Pair.of(new File("createdfile"), createdFileEntry));
+        when(fileServiceMock.createFile(fileEntryToCreate, inputStreamSupplier)).thenReturn(successfulFileCreationResult);
+
+        FileEntryResource createdFileEntryResource = newFileEntryResource().build();
+        when(fileEntryMapperMock.mapToResource(createdFileEntry)).thenReturn(createdFileEntryResource);
+
+        //
+        // Call the method under test
+        //
+        ServiceResult<FileEntryResource> result = service.createAssessorFeedbackFileEntry(application.getId(), fileEntryToCreate, inputStreamSupplier);
+
+        //
+        // Assert that the result of our service call was successful and contains the resource returned from the mapper
+        //
+        assertTrue(result.isSuccess());
+        assertEquals(createdFileEntryResource, result.getSuccessObject());
+
+        // assert that the application entity got its Assessor Feedback file entry updated to match the FileEntry returned by
+        // the FileService
+        assertEquals(createdFileEntry, application.getAssessorFeedbackFileEntry());
+
+        verify(applicationRepositoryMock).findOne(application.getId());
+        verifyNoMoreInteractions(addressRepositoryMock);
+    }
+
+    @Test
     public void testUpdateAssessorFeedbackFileEntry() {
 
         FileEntryResource fileEntryToUpdate = newFileEntryResource().build();
