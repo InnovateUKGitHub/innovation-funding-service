@@ -1,9 +1,9 @@
 package com.worth.ifs.finance.resource.cost;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 
@@ -13,20 +13,34 @@ import java.math.BigDecimal;
 public class CapitalUsage implements CostItem {
     Long id;
     String name;
-    @Min(0)
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @NotNull
+    @Min(1)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
     Integer deprecation;
+
+    @NotBlank
+    @NotNull
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String description;
+
+    @NotBlank
+    @NotNull
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String existing;
-    @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+
+    @NotNull
+    @DecimalMin(value = "1")
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     BigDecimal npv;
+
     @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     BigDecimal residualValue;
+
+    @NotNull
     @Min(0)
     @Max(100)
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
     Integer utilisation;
 
     public CapitalUsage() {
@@ -104,5 +118,29 @@ public class CapitalUsage implements CostItem {
     @Override
     public CostType getCostType() {
         return CostType.CAPITAL_USAGE;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setNpv(BigDecimal npv) {
+        this.npv = npv;
+    }
+
+    public void setResidualValue(BigDecimal residualValue) {
+        this.residualValue = residualValue;
+    }
+
+    public void setUtilisation(Integer utilisation) {
+        this.utilisation = utilisation;
+    }
+
+    public void setDeprecation(Integer deprecation) {
+        this.deprecation = deprecation;
+    }
+
+    public void setExisting(String existing) {
+        this.existing = existing;
     }
 }

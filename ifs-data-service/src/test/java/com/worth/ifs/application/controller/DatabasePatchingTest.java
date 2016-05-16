@@ -1,6 +1,6 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.BaseWebIntegrationTest;
+import com.worth.ifs.BaseIntegrationTest;
 import org.flywaydb.core.Flyway;
 import org.junit.After;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 
-public class DatabasePatchingTest extends BaseWebIntegrationTest {
+public class DatabasePatchingTest extends BaseIntegrationTest {
 
     @Value("${flyway.url}")
     public String databaseUrl;

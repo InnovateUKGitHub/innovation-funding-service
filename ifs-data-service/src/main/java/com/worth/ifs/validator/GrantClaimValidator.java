@@ -18,16 +18,12 @@ import org.springframework.validation.Validator;
 public class GrantClaimValidator implements Validator {
     private static final Log LOG = LogFactory.getLog(GrantClaimValidator.class);
 
+    @Autowired
     private CostRepository costRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
         return GrantClaim.class.equals(clazz);
-    }
-
-    @Autowired
-    public GrantClaimValidator(CostRepository costRepository) {
-        this.costRepository = costRepository;
     }
 
     @Override
@@ -42,6 +38,8 @@ public class GrantClaimValidator implements Validator {
             errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
         } else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
             errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", size.getMaxGrantClaimPercentage()));
+        } else if(response.getGrantClaimPercentage().intValue() <= 0){
+            errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", 1));
         }
     }
 }

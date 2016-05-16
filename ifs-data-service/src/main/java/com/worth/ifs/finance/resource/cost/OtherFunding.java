@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.resource.cost;
 
+import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -15,8 +15,7 @@ public class OtherFunding implements CostItem {
     private String securedDate;
 
     @NotNull
-    @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal fundingAmount;
 
     private String name;
@@ -69,6 +68,11 @@ public class OtherFunding implements CostItem {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean excludeInRowCount() {
+        return (OtherFundingCostCategory.OTHER_FUNDING.equals(fundingSource) || isEmpty());
     }
 
     @Override

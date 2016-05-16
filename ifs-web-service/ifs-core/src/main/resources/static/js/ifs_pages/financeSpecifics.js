@@ -15,12 +15,11 @@ IFS.financeSpecifics = (function(){
             }
           },
           administrationCostTotal : {
-              adminSupportCosts : '[name*="overheads-rateType"]',
+              adminSupportCosts : '[name*="overheads-type"]',
               supportCostInTotal : {
                 'NONE' : '#section-total-10-labour-cost-none',
                 'DEFAULT_PERCENTAGE' : '#section-total-10-default',
-                'CUSTOM_RATE' : '#section-total-10-custom',
-                'SPECIAL_AGREED_RATE' : '#section-total-10-special'
+                'CUSTOM_RATE' : '#section-total-10-custom'
               },
               allTotals :  '[id*="section-total-10"]',
               totalCostInHeaders : '[data-mirror="#section-total-10"]'

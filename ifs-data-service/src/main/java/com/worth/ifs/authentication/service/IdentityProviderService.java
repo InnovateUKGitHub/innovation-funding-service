@@ -15,7 +15,7 @@ public interface IdentityProviderService {
      * @param password
      * @return
      */
-    @NotSecured(value = "TODO - implement when permissions matrix defined", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<String> createUserRecordWithUid(String emailAddress, String password);
 
     /**
@@ -25,7 +25,7 @@ public interface IdentityProviderService {
      * @param password
      * @return
      */
-    @NotSecured(value = "TODO - implement when permissions matrix defined", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<String> updateUserPassword(String uid, String password);
 
     /**
@@ -34,6 +34,6 @@ public interface IdentityProviderService {
      * @param uid
      * @return
      */
-    @NotSecured(value = "TODO - implement when permissions matrix defined", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<String> activateUser(String uid);
 }

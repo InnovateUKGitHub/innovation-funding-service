@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,15 +52,26 @@ public class OtherFundingValidator implements Validator {
         OtherFunding otherFunding = (OtherFunding) target;
         boolean userHasSelectedYesToOtherFunding = userHasSelectedYes(otherFunding);
         String fundingSource = otherFunding.getFundingSource();
+        BigDecimal fundingAmount = otherFunding.getFundingAmount();
         if(userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)){
             validateDate(otherFunding, errors);
             validateFundingSource(fundingSource, errors);
+            validateFundingAmount(fundingAmount, errors);
+        }
+    }
+
+    private void validateFundingAmount(BigDecimal fundingAmount, Errors errors) {
+        if(fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) != 1){
+            errors.rejectValue("fundingAmount", "javax.validation.constraints.DecimalMin.message", new Integer[]{1}, null);
+
         }
     }
 
     private void validateDate(OtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
-        if(StringUtils.isNotBlank(securedDate) && !isValidDate(securedDate)) {
+        if(StringUtils.isBlank(securedDate)){
+            errors.rejectValue("securedDate", "org.hibernate.validator.constraints.NotBlank.message");
+        }else if(!isValidDate(securedDate)) {
             errors.rejectValue("securedDate", "validation.finance.secured.date.invalid");
         }
     }
