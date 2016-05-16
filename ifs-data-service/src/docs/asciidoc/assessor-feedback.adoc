@@ -9,3 +9,32 @@ include::{snippets}/assessor-feedback/find-one/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessor-feedback/find-one/curl-request.adoc[]
+
+
+
+=== Upload Assessor Feedback document for an Application
+==== Request
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/http-request.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/request-parameters.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/request-fields.adoc[]
+
+==== Response
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/http-response.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/curl-request.adoc[]
+
+
+
+=== Update Assessor Feedback document for an Application
+==== Request
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/http-request.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/request-parameters.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/request-fields.adoc[]
+
+==== Response
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/curl-request.adoc[]
