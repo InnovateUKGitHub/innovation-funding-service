@@ -1,14 +1,15 @@
 package com.worth.ifs.form.transactional;
 
+import java.util.List;
+
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.security.NotSecured;
-import org.springframework.security.access.prepost.PostFilter;
 
-import java.util.List;
+import org.springframework.security.access.prepost.PostFilter;
 
 public interface FormInputService {
 
@@ -27,10 +28,10 @@ public interface FormInputService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId);
 
-    @PostFilter("hasPermission(returnObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId);
 
-    @NotSecured(value = "TODO RB - implement when permissions matrix available", mustBeSecuredByOtherServices = false)
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId);
 
     @NotSecured(value = "TODO DW - implement when permissions matrix available", mustBeSecuredByOtherServices = false)
