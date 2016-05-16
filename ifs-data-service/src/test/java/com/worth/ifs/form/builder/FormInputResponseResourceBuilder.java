@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.idBasedValues;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -63,8 +62,8 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return with(response -> response.setUpdateDate(dateTime));
     }
 
-    public FormInputResponseResourceBuilder withUpdatedBy(Long applicationId) {
-        return with(response -> response.setUpdatedBy(applicationId));
+    public FormInputResponseResourceBuilder withUpdatedBy(Long processRoleId) {
+        return with(response -> response.setUpdatedBy(processRoleId));
     }
 
     public FormInputResponseResourceBuilder withUpdatedByUserName(String userName) {
