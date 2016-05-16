@@ -22,8 +22,8 @@ import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 @ActiveProfiles("prototypes")
 public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
 
-    @Value("${ifs.web.baseURL}")
-    private String webUrl;
+    @Value("http://localhost:${local.server.port}")
+    private String baseWebUrl;
 
     private RestTemplate template = new TestRestTemplate();
 
@@ -35,7 +35,7 @@ public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
 
     @Test
     public void test_getPrototypeIndex() throws Exception {
-        ResponseEntity<String> entity = template.getForEntity(webUrl + "/prototypes", String.class);
+        ResponseEntity<String> entity = template.getForEntity(baseWebUrl + "/prototypes", String.class);
         String body = entity.getBody();
         assertEquals(OK, entity.getStatusCode());
         assertEquals(TEXT_HTML_VALUE + ";charset=UTF-8", entity.getHeaders().getContentType().toString());
@@ -44,7 +44,7 @@ public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
 
     @Test
     public void test_getPrototypePage() throws Exception {
-        ResponseEntity<String> entity = template.getForEntity(webUrl + KNOWN_PROTOTYPE, String.class);
+        ResponseEntity<String> entity = template.getForEntity(baseWebUrl + KNOWN_PROTOTYPE, String.class);
         String body = entity.getBody();
         assertEquals(OK, entity.getStatusCode());
         assertEquals(TEXT_HTML_VALUE + ";charset=UTF-8", entity.getHeaders().getContentType().toString());
@@ -54,7 +54,7 @@ public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
     @Test
     @Ignore("fault with the controller not testing if the requested Thymeleaf template exists")
     public void test_getPrototypePage_noTemplateResource() throws Exception {
-        ResponseEntity<String> entity = template.getForEntity(webUrl + "/prototypes/template-does-not-exist", String.class);
+        ResponseEntity<String> entity = template.getForEntity(baseWebUrl + "/prototypes/template-does-not-exist", String.class);
         assertEquals(NOT_FOUND, entity.getStatusCode());
     }
 
