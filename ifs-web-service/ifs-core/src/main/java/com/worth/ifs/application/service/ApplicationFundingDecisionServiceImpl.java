@@ -51,8 +51,23 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 				.filter(e -> keyIsApplicationId(e.getKey(), applicationIds) && valueIsValid(e.getValue()))
 				.collect(Collectors.toMap(
 		            e -> Long.parseLong(e.getKey()),
-		            e -> fundingDecisionForString(e.getValue())
+		            e -> fundingDecisionForStringArray(e.getValue())
 		        ));
+	}
+	
+	@Override
+	public FundingDecision fundingDecisionForString(String val) {
+		FundingDecision decision;
+		if ("Y".equals(val)) {
+			decision = FundingDecision.FUNDED;
+		} else if ("N".equals(val)) {
+			decision = FundingDecision.UNFUNDED;
+		} else if ("-".equals(val)) {
+			decision = FundingDecision.UNDECIDED;
+		} else {
+			decision = null;
+		}
+		return decision;
 	}
 	
 	private Map<Long, FundingDecision> applicationIdToDeterminedFundingDecisionFromRequestParams(Map<String, String[]> parameterMap, List<Long> applicationIds) {
@@ -81,19 +96,8 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 		return applicationIds.stream().anyMatch(e -> e.equals(id));
 	}
 	
-	private FundingDecision fundingDecisionForString(String[] val) {
-		FundingDecision decision;
-		if ("Y".equals(val[0])) {
-			decision = FundingDecision.FUNDED;
-		} else if ("N".equals(val[0])) {
-			decision = FundingDecision.UNFUNDED;
-		} else if ("-".equals(val[0])) {
-			decision = FundingDecision.UNDECIDED;
-		} else {
-			decision = null;
-		}
-		return decision;
+	private FundingDecision fundingDecisionForStringArray(String[] val) {
+		return fundingDecisionForString(val[0]);
 	}
-
 
 }

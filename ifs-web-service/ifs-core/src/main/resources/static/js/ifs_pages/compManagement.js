@@ -23,11 +23,11 @@ IFS.competition_management = (function(){
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
 
-            IFS.competition_management.handleFundingDecisionSelectChange();
+            jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
+
+            IFS.competition_management.handleFundingDecisionEnableOrDisable();
             IFS.competition_management.handleFundingDecisionButtons();
             IFS.competition_management.alterSubmitDecisionFormAction();
-
-            jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
 
             if(IFS.competition_management.stickyEnabled()){
                 IFS.competition_management.getMenuWidth();
@@ -140,11 +140,47 @@ IFS.competition_management = (function(){
         	 return allDecided;
          },
         handleFundingDecisionSelectChange: function(){
+        	
+        	IFS.competition_management.handleFundingDecisionEnableOrDisable();
+        	
+        	var element = jQuery(this);
+        	var applicationId = element.attr('name');
+        	var competitionId = element.attr('competition');
+        	var value = element.val();
+        	
+        	IFS.competition_management.saveFundingDecision(competitionId, applicationId, value);
+        },
+        handleFundingDecisionEnableOrDisable: function() {
         	if(IFS.competition_management.allSelectsDecided()){
                 IFS.competition_management.enableFundingDecisionButton();
         	} else {
                 IFS.competition_management.disableFundingDecisonButton();
         	}
+        },
+        saveFundingDecision: function(competitionId, applicationId, value) {
+        	
+        	var saveInfo = jQuery('#funding-decision-save-info-' + applicationId);
+        	
+        	jQuery.ajaxProtected({
+                 type: 'POST',
+                 url: '/management/funding/' + competitionId,
+                 data: {
+                	 applicationId: applicationId,
+                	 fundingDecision: value
+                 },
+                 dataType: "json",
+                 beforeSend: function() {
+                     saveInfo.html('Saving...');
+                 }
+             }).done(function(data){
+            	 if(data.success == 'true') {
+            		 saveInfo.html('Saved!');
+            	 } else {
+            		 saveInfo.html('Not saved.');
+            	 }
+             }).error(function(){
+            	 saveInfo.html('Not saved.');
+             });
         }
     };
 })();

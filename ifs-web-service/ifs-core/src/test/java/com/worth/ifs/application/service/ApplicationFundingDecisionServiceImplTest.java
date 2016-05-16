@@ -164,6 +164,24 @@ public class ApplicationFundingDecisionServiceImplTest {
 		assertEquals(FundingDecision.UNDECIDED, result.get(3L));
 	}
 	
+	@Test
+	public void testFundingDecisionForStringFunded() {
+		FundingDecision result = service.fundingDecisionForString("Y");
+		assertEquals(FundingDecision.FUNDED, result);
+	}
+	
+	@Test
+	public void testFundingDecisionForStringUnfunded() {
+		FundingDecision result = service.fundingDecisionForString("N");
+		assertEquals(FundingDecision.UNFUNDED, result);
+	}
+	
+	@Test
+	public void testFundingDecisionForStringUndecided() {
+		FundingDecision result = service.fundingDecisionForString("-");
+		assertEquals(FundingDecision.UNDECIDED, result);
+	}
+	
 	private String[] val(String val) {
 		return new String[]{val};
 	}
