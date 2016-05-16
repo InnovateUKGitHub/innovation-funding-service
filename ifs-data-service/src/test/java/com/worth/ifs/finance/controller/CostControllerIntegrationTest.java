@@ -44,7 +44,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private OtherCost otherCost;
     private OtherFunding otherFunding;
     private OtherFunding otherFundingCost;
-    private OtherFunding otherFundingCost2;
+    //private OtherFunding otherFundingCost2;
     private Overhead overhead;
 
 
@@ -91,7 +91,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         otherCost = (OtherCost) controller.add(applicationFinance.getId(), 34L, null).getSuccessObject();
 
         otherFundingCost = (OtherFunding) controller.add(applicationFinance.getId(), 35L, null).getSuccessObject();
-        otherFundingCost2 = (OtherFunding) controller.get(55L).getSuccessObject();
+        //otherFundingCost2 = (OtherFunding) controller.get(55L).getSuccessObject();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
@@ -379,7 +379,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         capitalUsage.setExisting(overMaxAllowedTextSize);
         capitalUsage.setDeprecation(1000);
         capitalUsage.setResidualValue(new BigDecimal("1000000"));
-        capitalUsage.setNpv(new BigDecimal("0"));
+        capitalUsage.setNpv(new BigDecimal("1000"));
         capitalUsage.setUtilisation(200);
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
