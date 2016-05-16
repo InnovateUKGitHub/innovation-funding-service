@@ -17,6 +17,7 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
+import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -186,6 +187,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FileHttpHeadersValidator fileValidatorMock;
+
+    @Mock
+    protected FileEntryMapper fileEntryMapper;
 
     @Before
     public void setupMockInjection() {
