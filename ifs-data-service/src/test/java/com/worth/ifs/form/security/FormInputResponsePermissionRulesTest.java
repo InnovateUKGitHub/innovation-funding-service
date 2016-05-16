@@ -57,34 +57,30 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         application = newApplication().build();
         organisation1 = newOrganisation().build();
         organisation2 = newOrganisation().build();
-        {
-            // Set up a lead applicant who has answered a question.
-            leadApplicantForApplicationOnOrganisation1 = UserResourceBuilder.newUserResource().build();
-            processRoleForLeadOnApplicationOnOrganisation1 = newProcessRole().withApplication(application).withOrganisation(organisation1).build();
-            formInputResponseUpdatedByLead = newFormInputResponseResource().withUpdatedBy(processRoleForLeadOnApplicationOnOrganisation1.getId()).withApplication(application.getId()).build();
-            when(processRoleRepositoryMock.findOne(processRoleForLeadOnApplicationOnOrganisation1.getId())).thenReturn(processRoleForLeadOnApplicationOnOrganisation1);
-            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicantForApplicationOnOrganisation1.getId(), getRole(LEADAPPLICANT).getId(), application.getId(), organisation1.getId())).thenReturn(newProcessRole().build());
-        }
-        {
-            // Set up a collaborator who has answered a question
-            collaboratorForApplicationOnOrganisation2 = UserResourceBuilder.newUserResource().build();
-            processRoleForCollaboratorOnApplicationOnOrganisation2 = newProcessRole().withApplication(application).withOrganisation(organisation2).build();
-            formInputResponseUpdatedByCollaborator = newFormInputResponseResource().withUpdatedBy(processRoleForCollaboratorOnApplicationOnOrganisation2.getId()).withApplication(application.getId()).build();
-            when(processRoleRepositoryMock.findOne(processRoleForCollaboratorOnApplicationOnOrganisation2.getId())).thenReturn(processRoleForCollaboratorOnApplicationOnOrganisation2);
-            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaboratorForApplicationOnOrganisation2.getId(), getRole(COLLABORATOR).getId(), application.getId(), organisation2.getId())).thenReturn(newProcessRole().build());
-        }
-        {
-            // Set up a question to which both lead applicant and collaborator should be able to see.
-            final Question question = QuestionBuilder.newQuestion().withMultipleStatuses(false).build();
-            final FormInput formInput = FormInputBuilder.newFormInput().withQuestion(question).build();
-            sharedInputResponse = newFormInputResponseResource().withApplication(application.getId()).build();
-            when(formInputRepositoryMock.findOne(sharedInputResponse.getFormInput())).thenReturn(formInput);
-            when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicantForApplicationOnOrganisation1.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
-            when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaboratorForApplicationOnOrganisation2.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
-        }
-        {
-            userNotOnApplication = UserResourceBuilder.newUserResource().build();
-        }
+
+        // Set up a lead applicant who has answered a question.
+        leadApplicantForApplicationOnOrganisation1 = UserResourceBuilder.newUserResource().build();
+        processRoleForLeadOnApplicationOnOrganisation1 = newProcessRole().withApplication(application).withOrganisation(organisation1).build();
+        formInputResponseUpdatedByLead = newFormInputResponseResource().withUpdatedBy(processRoleForLeadOnApplicationOnOrganisation1.getId()).withApplication(application.getId()).build();
+        when(processRoleRepositoryMock.findOne(processRoleForLeadOnApplicationOnOrganisation1.getId())).thenReturn(processRoleForLeadOnApplicationOnOrganisation1);
+        when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicantForApplicationOnOrganisation1.getId(), getRole(LEADAPPLICANT).getId(), application.getId(), organisation1.getId())).thenReturn(newProcessRole().build());
+
+        // Set up a collaborator who has answered a question
+        collaboratorForApplicationOnOrganisation2 = UserResourceBuilder.newUserResource().build();
+        processRoleForCollaboratorOnApplicationOnOrganisation2 = newProcessRole().withApplication(application).withOrganisation(organisation2).build();
+        formInputResponseUpdatedByCollaborator = newFormInputResponseResource().withUpdatedBy(processRoleForCollaboratorOnApplicationOnOrganisation2.getId()).withApplication(application.getId()).build();
+        when(processRoleRepositoryMock.findOne(processRoleForCollaboratorOnApplicationOnOrganisation2.getId())).thenReturn(processRoleForCollaboratorOnApplicationOnOrganisation2);
+        when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaboratorForApplicationOnOrganisation2.getId(), getRole(COLLABORATOR).getId(), application.getId(), organisation2.getId())).thenReturn(newProcessRole().build());
+
+        // Set up a question to which both lead applicant and collaborator should be able to see.
+        final Question question = QuestionBuilder.newQuestion().withMultipleStatuses(false).build();
+        final FormInput formInput = FormInputBuilder.newFormInput().withQuestion(question).build();
+        sharedInputResponse = newFormInputResponseResource().withApplication(application.getId()).build();
+        when(formInputRepositoryMock.findOne(sharedInputResponse.getFormInput())).thenReturn(formInput);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicantForApplicationOnOrganisation1.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaboratorForApplicationOnOrganisation2.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
+
+        userNotOnApplication = UserResourceBuilder.newUserResource().build();
     }
 
 
@@ -97,14 +93,14 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testConsortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(){
+    public void testConsortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations() {
         assertTrue(rules.consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
         assertTrue(rules.consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(sharedInputResponse, collaboratorForApplicationOnOrganisation2));
         assertFalse(rules.consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(sharedInputResponse, userNotOnApplication));
     }
 
     @Test
-    public void testCompAdminCanSeeFormInputResponsesForApplications(){
+    public void testCompAdminCanSeeFormInputResponsesForApplications() {
         assertTrue(rules.compAdminCanSeeFormInputResponsesForApplications(sharedInputResponse, compAdminUser()));
         assertFalse(rules.compAdminCanSeeFormInputResponsesForApplications(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
     }
