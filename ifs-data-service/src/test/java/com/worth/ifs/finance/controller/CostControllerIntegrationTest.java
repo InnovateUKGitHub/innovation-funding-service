@@ -44,9 +44,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private OtherCost otherCost;
     private OtherFunding otherFunding;
     private OtherFunding otherFundingCost;
-    //private OtherFunding otherFundingCost2;
     private Overhead overhead;
-
 
     private String overMaxAllowedTextSize;
 
@@ -91,7 +89,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         otherCost = (OtherCost) controller.add(applicationFinance.getId(), 34L, null).getSuccessObject();
 
         otherFundingCost = (OtherFunding) controller.add(applicationFinance.getId(), 35L, null).getSuccessObject();
-        //otherFundingCost2 = (OtherFunding) controller.get(55L).getSuccessObject();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
@@ -172,7 +169,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //@Todo no validation for WorkingDaysPerYear (0-365), role limitation (255 characters), salary (0-8), but form validation works
     public void testValidationLabourUpdateIncorrectMaxValues() {
 
         labourCost.setRole(overMaxAllowedTextSize);
@@ -308,6 +304,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     /* Capital Usage Section Tests */
+
     @Rollback
     @Test
     public void testValidationCapitalUsageUpdateSuccess() {
@@ -424,7 +421,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //@TODO Country can be saved as empty string
     public void testValidationSubContractingCostUpdateIncorrectValues(){
         subContractingCost.setName("");
         subContractingCost.setCountry("");
@@ -457,7 +453,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //@TODO Text values are allowed over 255 characters
     public void testValidationSubContractingCostUpdateOverMaxAllowedValues(){
         subContractingCost.setName(overMaxAllowedTextSize);
         subContractingCost.setCountry(overMaxAllowedTextSize);
@@ -517,7 +512,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //@TODO Text value (item) can be over 255 characters; quantity and cost can be 0 if updated through the form
     public void testValidationTravelCostUpdateIncorrectMaxAndZeroValues(){
 
         travelCost.setItem(overMaxAllowedTextSize);
@@ -625,9 +619,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(null, messages);
     }
 
-    //@Rollback
-    //@Test
-    //TODO Something wrong here??? otherPublicFunding and secureDate contain the same variable?
     public void testValidationOtherFundingUpdateIncorrectValues() {
 
         assertEquals("Yes", otherFunding.getOtherPublicFunding());
@@ -635,8 +626,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         otherFundingCost.setFundingSource("SomethingWrongHere");
         otherFundingCost.setSecuredDate("15-1000");
         otherFundingCost.setFundingAmount(new BigDecimal("0"));
-
-        //otherFunding.getTotal();
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherFundingCost.getId(), otherFundingCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -701,7 +690,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    //@TODO No error message "This field should be 1 or higher" OR "This field cannot be left blank"
     public void testValidationGrantClaimUpdateSmallOrganisationSizeZeroValue() {
 
         assertEquals(OrganisationSize.SMALL, applicationFinance.getOrganisationSize());
