@@ -16,7 +16,8 @@ Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
 First name left blank
     [Documentation]    -INFUND-885
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Given the user follows the flow to register their organisation
+    # Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -82,6 +83,8 @@ Phone number too short
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters
 
 *** Keywords ***
+
+
 the user submits their information
     Select Checkbox    termsAndConditions
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');

@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     INFUND-1458 As a existing user with an invitation to collaborate on an application and I am already registered with IFS I want to be able to use my existing credentials and confirm my details so that I don't have to follow the registration process again.
+...
+...
+...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'View team members and add collaborators'.
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Invite    Email
@@ -43,4 +46,24 @@ The continue button should redirect to the overview page
     When the user clicks the button/link    jQuery=.button:contains("Continue to application")
     Then the user should see the text in the page    Application overview
 
+When this user edits the name this should be changed in the View team page
+    [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'View team members and add collaborators'.
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    When the user clicks the button/link    link=View and edit your profile details
+    And the user clicks the button/link    link=Edit your details
+    And the user enters profile details
+    Then the user should see the change in the view team members page
+
 *** Keywords ***
+the user enters profile details
+    Wait Until Element Is Visible    id=title
+    Input Text    id=firstName    New
+    Input Text    id=lastName    Name
+    Click Element    css=[name="create-account"]
+
+the user should see the change in the view team members page
+    click element    link=My dashboard
+    click element    xpath=//*[@id="content"]/div[2]/section[1]/ul/li[2]/div/div[1]/h3/a
+    click element    link=View team members and add collaborators
+    Page Should Contain Element    link= New Name
+    Capture Page Screenshot

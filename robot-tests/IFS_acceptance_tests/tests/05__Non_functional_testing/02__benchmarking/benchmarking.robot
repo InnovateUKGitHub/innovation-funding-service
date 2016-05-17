@@ -39,7 +39,7 @@ the guest logs in as an assessor
 
 
 the assessor can visit the competition dashboard
-    click link      Technology Inspired
+    click link      Connected digital additive manufacturing
 
 
 the assessor can visit the application details

@@ -34,14 +34,20 @@ have submitted their profile spends submit them to Innovate UK</p>
 			<ul class="list-bullet">
 				<li>Subcontracting costs</li>
 			</ul>
-			<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="button-secondary" th:unless="${param.status == null}">Save with overspend</a>
+			<!-- <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="button-secondary" th:unless="${param.status == null}">Save with overspend</a> -->
 		</div>
 
 	</div>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<div class="success-alert extra-margin-bottom">
-			<p>All Project Spend profiles have been submitted to Innovate UK</p>
+			<p><strong>All Project Spend profiles have been submitted to Innovate UK</strong></p>
+		</div>
+	</div>
+
+	<div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<div class="success-alert extra-margin-bottom">
+			<p><strong>Your spend profile is currently with the lead applicant who will submit it to Innovate UK</strong></p>
 		</div>
 	</div>
 
@@ -66,7 +72,7 @@ have submitted their profile spends submit them to Innovate UK</p>
 
 	</dl>
 
-	<div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
 		<h2 class="heading-medium">Partner project costs</h2>
 		<p class="form-hint">These are the project costs for your partners on the project</p>
 
@@ -120,10 +126,10 @@ have submitted their profile spends submit them to Innovate UK</p>
 		<a href="#">View finances</a>
 	</div>
 
-	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span> <span th:if="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'edit'}" th:text="${'- ' + param.status[0]}" th:remove="tag">- submitted</span></h2>
+	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<h2 class="heading-medium">Project - Spend profile <span th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">- Submitted</span></h2>
+		<h2 class="heading-medium">Project - Spend profile</h2>
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
@@ -437,14 +443,17 @@ have submitted their profile spends submit them to Innovate UK</p>
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Submit to lead partner</h2>
+					<h2 class="heading-medium no-margin">Send to lead partner</h2>
 
-					<p>Your profile spend has now been made available to <strong>Aptrans Ltd</strong>. They may contact you if it requires change.</p>
+					<p>Are you sure you want to send your Spend Profile to the lead partner?</p>
 
 					<hr />
 
 	            	<div class="alignright-button">
-	            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">OK</a>
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">Send</a>
 	            	</div>
 
 		        </div>
@@ -455,25 +464,8 @@ have submitted their profile spends submit them to Innovate UK</p>
 	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
 
 			<div class="extra-margin">
-				<a href="#" class="button button-large" data-js-modal="modal-complete">Mark as complete</a>
+				<a href="/prototypes/1592-spend?status=MarkedComplete" class="button button-large">Mark as complete</a>
 			</div>
-
-			<div class="modal-complete" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-		        <button class="js-close close" aria-label="Close Popup">X</button>
-		        <div>
-
-					<h2 class="heading-medium no-margin">Spend profile complete</h2>
-
-					<p><strong>Aptrans Ltd's</strong> profile has now been marked as complete. You can return to edit the spend profile, but it must be marked as complete before the project spend profile can be submitted.</p>
-
-					<hr />
-
-	            	<div class="alignright-button">
-	            		<a href="/prototypes/1592-spend?status=MarkedComplete" class="button">OK</a>
-	            	</div>
-
-		        </div>
-		    </div>
 
 	 	</div>
 
@@ -484,7 +476,32 @@ have submitted their profile spends submit them to Innovate UK</p>
 
 		<div class="extra-margin">
 
-			<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary">Save and return to spend profile overview</a>
+			<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary" th:unless="${param.spend != null and param.spend[0] == 'high'}" >Save and return to spend profile overview</a>
+
+			<a href="#" class="button-secondary" data-js-modal="modal-save-error" th:unless="${param.spend == null or param.spend[0] != 'high'}">Save and return to spend profile overview</a>
+
+			<div class="modal-save-error" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+
+					<h2 class="heading-medium no-margin">Save</h2>
+
+					<p>Are you sure you wish to save your profile spend with higher costs than your eligible project costs?</p>
+
+					<p>You will not be able to submit your project spend until this is corrected.</p>
+
+					<hr />
+
+	            	<div class="alignright-button">
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	            		<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="button">Save</a>
+	            	</div>
+
+		        </div>
+		    </div>
+
 
 		</div>
 
@@ -529,12 +546,13 @@ have submitted their profile spends submit them to Innovate UK</p>
 
 				<h2 class="heading-medium no-margin">Submit project profile spend</h2>
 
-				<p>The Project profile spend will be submitted to both Innovate UK and the Monitoring officer assigned to this project. This will be used for reference and the base for progress.</p>
+				<p>The project profile spend will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
 
 				<hr />
 
             	<div class="alignright-button">
-            		<a href="/prototypes/1588-project-status?stage=level3" class="button">Submit</a>
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+            		<a href="/prototypes/1588-project-status?stage=level4" class="button">Submit</a>
             	</div>
 
 	        </div>
