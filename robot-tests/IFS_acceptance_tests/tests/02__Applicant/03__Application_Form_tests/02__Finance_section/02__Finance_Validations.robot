@@ -263,7 +263,7 @@ Select NO and mark as complete should be possible
     Given the users selects no in the other fundings section
     And the user marks the finances as complete
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
-    [Teardown]    the user navigates to the page    ${YOUR_FINANCES_URL}
+    [Teardown]    Run keywords    the user navigates to the page    ${YOUR_FINANCES_URL}
     ...    AND    Focus    jQuery=button:contains("Edit")
     ...    AND    the user clicks the button/link    jQuery=button:contains("Edit")
 
