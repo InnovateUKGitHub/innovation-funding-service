@@ -418,7 +418,7 @@ the lead applicant invites a registered user
     The user clicks the button/link    jQuery=.button:contains("Log in")
     The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
     The guest user clicks the log-in button
-    The user clicks the button/link    link=Technology Inspired
+    The user clicks the button/link    link=Connected digital additive manufacturing
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate
     Input Text    name=organisations[1].invites[0].personName    Partner name
