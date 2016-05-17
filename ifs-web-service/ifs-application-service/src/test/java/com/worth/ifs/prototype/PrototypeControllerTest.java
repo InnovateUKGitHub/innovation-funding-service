@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+/**
+ * Controller test class using Spring MVC test support to test expected routes and their responses.
+ */
 public class PrototypeControllerTest extends BaseControllerMockMVCTest<PrototypeController> {
 
     @Override

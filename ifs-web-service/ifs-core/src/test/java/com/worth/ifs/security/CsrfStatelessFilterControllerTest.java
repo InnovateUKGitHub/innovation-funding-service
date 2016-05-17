@@ -49,6 +49,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * <p>
+ * CSRF stateless filter test using a sample controller.
+ * Performs requests with a combination of different request methods and tokens, checking the expected responses.
+ * </p>
+ * <p>
+ * Also checks that a sample Thymeleaf view template with a form (csrf-test.html) returned by the controller has the appropriate CSRF hidden field injected into it.
+ * </p>
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CsrfStatelessFilterControllerTest.ContextConfiguration.class)
 @TestPropertySource(properties = {"ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9", "ifs.web.security.csrf.encryption.salt: 9ea751556a3feee7", "ifs.web.security.csrf.token.validity.mins: 30"})
