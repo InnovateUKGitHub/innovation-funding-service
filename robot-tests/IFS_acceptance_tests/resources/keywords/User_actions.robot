@@ -47,8 +47,7 @@ The user is on the page
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
-    Sleep    500ms
-    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    10       500ms    Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
@@ -126,6 +125,21 @@ the user submits the form
     Page Should Contain    BETA
 
 
+
+the user follows the flow to register their organisation
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=organisationSearchName    Innovate
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    link=INNOVATE LTD
+    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    id=postcode-lookup
+    Then the user should see the element    css=#select-address-block
+    And the user clicks the button/link    css=#select-address-block > button
+    And the user clicks the button/link     jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link     jQuery=.button:contains("Save")
 
 the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
