@@ -11,7 +11,7 @@ Suite Teardown    TestTeardown User closes the browser
 Test Setup
 Test Teardown
 Force Tags         Pending
-# These tests are pending since the assessor pages are due to be refactored
+# Pending due to upcoming refactoring work for the assessor story
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot

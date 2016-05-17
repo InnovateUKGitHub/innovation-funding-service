@@ -13,8 +13,8 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 ${funders_panel_competition_url}        ${server}/management/competition/3
 ${dialogue_warning_message}
-${email_success_message}
-${email_failure_message}
+${email_success_message}        We are pleased to inform you that your application
+${email_failure_message}        Unfortunately Innovate UK is unable to fund
 
 ${test_mailbox_one}     worth.email.test@gmail.com
 ${test_mailbox_two}     worth.email.test.two@gmail.com
@@ -71,54 +71,55 @@ Choosing Notify applicants on the dialogue redirects to the Assessor feedback pa
 
 Successful applicants are notified of the funding decision
     [Documentation]     INFUND-2603
-    [Tags]      Pending     Email
-    Then the user should get a confirmation email       ${test_mailbox_one}     ${success_message}
+    [Tags]     Email
+    Then the user should get a confirmation email       ${test_mailbox_one}     ${email_success_message}
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]     INFUND-2603
-    [Tags]    Pending       Email
-    Then the user should get a confirmation email       ${test_mailbox_two}     ${failure_message}
+    [Tags]           Email
+    Then the user should get a confirmation email       ${test_mailbox_two}     ${email_failure_message}
 
 Once applicants are notified, the whole state of the competition changes to Assessor feedback
     [Documentation]     INFUND-2646
     [Tags]
-    Then the user should see the text in the page      Projects in setup
-    And the user should see the text in the page    Assessor Feedback
+    When the user should see the text in the page      Projects in setup
+    Then the user should see the text in the page    Assessor Feedback
 
 
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]     INFUND-2604
-    [Tags]  Pending
+    [Tags]
     [Setup]     Guest user log-in   &{successful_applicant_credentials}
     When the user navigates to the page     ${server}
-    Then the user should see the text in the page       Project setup
+    Then the user should see the text in the page       Projects in setup
     And the successful application shows in the project setup section
     And the successful application shows in the previous applications section
 
 Successful applicants can see the assessment outcome on the overview page
     [Documentation]     INFUND-2605
-    [Tags]  Pending
-    When the user clicks the button/link
-    Then the user should see the text in the page   Application successful
+    [Tags]
+    When the user clicks the button/link      link=00000016: Cheese is good
+    Then the user should see the text in the page   Project setup status
+    [Teardown]  Logout as user
 
 
-Unsuccessful applicants can see the assessment outcome on the overview page
+Unsuccessful applicants can see the assessment outcome on the dashboard page
     [Documentation]     INFUND-2605
-    [Tags]  Pending
+    [Tags]
     [Setup]     Guest user log-in    &{unsuccessful_applicant_credentials}
-    When the user navigates to the page     overview page
-    Then the user should not see the text in the page   Project setup
+    When the user navigates to the page     ${server}
+    Then the user should not see the text in the page   Projects in setup
     And the unsuccessful application shows in the previous applications section
 
 
 
-Unsuccessful applicants can see the assessment outcome on the dashboard page
+Unsuccessful applicants can see the assessment outcome on the overview page
     [Documentation]     INFUND-2604
-    [Tags]  Pending
-    When the user clicks the button/link
-    Then the user should not see the text in the page       Project setup
-    And the user should see the text in the page        Your application was unsuccessful
+    [Tags]
+    When the user clicks the button/link            link=00000017: Cheese is great
+    Then the user should not see the text in the page       Project setup status
+    And the user should see the text in the page        Your application has not been successful in this competition
 
 
 
@@ -146,9 +147,10 @@ the user should get a confirmation email
 
 
 the successful application shows in the project setup section
-
+    Element Should Contain     css=section.projects-in-setup        Cheese is good
 
 the successful application shows in the previous applications section
-
+    Element Should Contain     css=section.previous-applications    Cheese is good
 
 the unsuccessful application shows in the previous applications section
+    Element Should Contain      css=section.previous-applications   Cheese is great
