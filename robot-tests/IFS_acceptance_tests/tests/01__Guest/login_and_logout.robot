@@ -59,6 +59,7 @@ Valid login as Assessor
 
 Valid login as Comp Admin
     [Documentation]    INFUND-2130
+    [Tags]
     Given the user is not logged-in
     When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -68,7 +69,8 @@ Valid login as Comp Admin
 
 Reset password (psw does not match)
     [Documentation]    INFUND-1889
-    [Tags]    Email
+    [Tags]    Email     Pending
+    # Pending until shib image drop 14
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=forgot your password?
@@ -86,7 +88,8 @@ Reset password (psw does not match)
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Pending
+    # Pending until shib image drop 14
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=forgot your password?
@@ -96,7 +99,8 @@ Reset password
 
 Reset password (email step)
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath    Pending
+    # Pending until shib image drop 14
     [Setup]    The guest user opens the browser
     And the user opens the mailbox and clicks the reset link
     And the user should see the text in the page    Password reset
