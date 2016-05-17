@@ -6,7 +6,7 @@ UPDATE `cost` SET `item`='Sprint retrospective' WHERE `id`='100';
 UPDATE `cost` SET `description`='Project setup', `item`='10-2016' WHERE `id`='101';
 UPDATE `cost` SET `description`='Other funding' WHERE `id`='102';
 
-INSERT INTO `ifs`.`cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('99', '1', 'Netherlands');
-INSERT INTO `ifs`.`cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('98', '2', 'New');
-INSERT INTO `ifs`.`cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('98', '3', '10');
-INSERT INTO `ifs`.`cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('98', '4', '12');
+INSERT INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('99', '1', 'Netherlands');
+INSERT INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('98', '2', 'New');
+INSERT INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('98', '3', '10');
+INSERT INTO `cost_value` (`cost_id`, `cost_field_id`, `value`) VALUES ('98', '4', '12');
