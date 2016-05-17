@@ -17,8 +17,10 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -217,6 +219,53 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     }
 
     @Test
+    public void testDeleteFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.deleteFinanceFileEntry(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testCreateFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.createFinanceFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testUpdateFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.updateFinanceFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testGetFileContents() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.getFileContents(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
     public void testGetCosts() {
         final Long costId = 1L;
         final String costTypeName = "academic";
@@ -374,6 +423,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
 
         @Override
         public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinance) {
             return null;
         }
     }
