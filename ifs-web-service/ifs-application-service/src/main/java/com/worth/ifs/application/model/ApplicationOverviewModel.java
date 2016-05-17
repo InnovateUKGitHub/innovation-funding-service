@@ -187,7 +187,7 @@ public class ApplicationOverviewModel{
             financeSectionId = financeSections.get(0).getId();
         }
 
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
+        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         model.addAttribute("markedAsComplete", markedAsComplete);

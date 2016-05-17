@@ -2,11 +2,13 @@ package com.worth.ifs.application;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyList;
@@ -90,7 +93,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
      public void testApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
-
+        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
@@ -101,7 +107,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+                .andExpect(model().attribute("completedSections", sections))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)));
     }
@@ -123,7 +129,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
        ApplicationResource app = applications.get(0);
-
+        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        when(applicationService.getById(app.getId())).thenReturn(app);
        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -146,7 +155,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+               .andExpect(model().attribute("completedSections", sections))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(3)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
@@ -157,7 +166,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
        ApplicationResource app = applications.get(0);
-
+        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        when(applicationService.getById(app.getId())).thenReturn(app);
        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -178,7 +190,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+               .andExpect(model().attribute("completedSections", sections))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
@@ -188,8 +200,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
        ApplicationResource app = applications.get(0);
+        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        when(applicationService.getById(app.getId())).thenReturn(app);
        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
 
        InviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
        
@@ -210,7 +227,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+               .andExpect(model().attribute("completedSections", sections))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
