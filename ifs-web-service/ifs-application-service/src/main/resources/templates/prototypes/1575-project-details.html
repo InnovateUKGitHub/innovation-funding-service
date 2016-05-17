@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -148,7 +148,7 @@
 	</table>
 
 	<div class="extra-margin">
-		<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead?stage=level2' :'/prototypes/1588-project-status?stage=level2'}" class="button">Save and return to project setup</a>
+		<a href="/prototypes/1588-project-status?stage=level2" class="button" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Save and return to project setup</a>
 	</div>
 
 	
