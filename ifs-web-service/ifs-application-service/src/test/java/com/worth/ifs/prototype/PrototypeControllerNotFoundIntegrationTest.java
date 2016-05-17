@@ -3,7 +3,6 @@ package com.worth.ifs.prototype;
 import com.worth.ifs.BaseWebIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.ResponseEntity;

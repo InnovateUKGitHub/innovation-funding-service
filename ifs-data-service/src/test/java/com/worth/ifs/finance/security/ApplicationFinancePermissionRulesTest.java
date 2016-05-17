@@ -153,4 +153,26 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
         assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
     }
+
+    @Test
+    public void testConsortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
+    @Test
+    public void testConsortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
+    @Test
+    public void testConsortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
 }
