@@ -1,6 +1,6 @@
 package com.worth.ifs.alert.builder;
 
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import org.junit.Before;
 import org.junit.Test;

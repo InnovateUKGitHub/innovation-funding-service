@@ -1,13 +1,16 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.address.domain.AddressType;
+import java.util.List;
+import java.util.Optional;
+
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 
 /**
- * Interface for CRUD operations on {@link Organisation} related data.
+ * Interface for CRUD operations on {@link OrganisationResource} related data.
  */
 public interface OrganisationService {
 
@@ -25,4 +28,5 @@ public interface OrganisationService {
 
     String getOrganisationType(Long userId, Long applicationId);
 
+    Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles);
 }

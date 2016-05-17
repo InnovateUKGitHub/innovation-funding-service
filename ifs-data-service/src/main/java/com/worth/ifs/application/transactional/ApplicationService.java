@@ -10,7 +10,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -70,7 +70,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> updateApplicationStatus(@P("applicationId") final Long id,
                                                                final Long statusId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'APPLICATION_SUBMITTED_NOTIFICATION')")
     ServiceResult<Notification> sendNotificationApplicationSubmitted(@P("applicationId") Long application);
 
     @PostFilter("hasPermission(filterObject, 'READ')")

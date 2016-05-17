@@ -17,13 +17,17 @@ import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -108,7 +112,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
         // Mark one question as incomplete.
         questionService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
-	Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccessObject();
+	    Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccessObject();
         assertFalse(questionService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccessObject());
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
@@ -129,16 +133,20 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         RestResult<List<ValidationMessages>> result = controller.markAsComplete(sectionIdYourFinances, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         List<ValidationMessages> validationMessages = result.getSuccessObject();
-        assertEquals(1, validationMessages.size());
-
-        ValidationMessages messages = validationMessages.get(0);
+        Optional<ValidationMessages> findMessage = validationMessages.stream().filter(m -> m.getObjectId().equals(35L)).findFirst();
+        assertTrue("Could not find ValidationMessage object", findMessage.isPresent());
+        ValidationMessages messages = findMessage.get();
         assertEquals(1, messages.getErrors().size());
         assertEquals(new Long(35), messages.getObjectId());
         assertEquals("question", messages.getObjectName());
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "".equals(e.getErrorKey()))
-                .filter(e -> "You should provide at least 1 source(s) of funding".equals(e.getErrorMessage()))
-                .filter(e -> HttpStatus.NOT_ACCEPTABLE.equals(e.getStatusCode()))
-                .findAny().isPresent());
+
+        assertThat(messages.getErrors(),
+                containsInAnyOrder(
+                        allOf(
+                                hasProperty("errorKey", is("")),
+                                hasProperty("errorMessage", is("You should provide at least 1 source of other funding"))
+                        )
+                )
+        );
     }
 }

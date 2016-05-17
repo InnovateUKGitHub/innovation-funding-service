@@ -1,10 +1,8 @@
 package com.worth.ifs.form.service;
 
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.service.ResponseRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -16,7 +14,7 @@ import java.util.Map;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
- * This class contains methods to retrieve and store {@link Response} related data,
+ * This class contains methods to retrieve and store {@link FormInputResponseResource} related data,
  * through the RestService {@link ResponseRestService}.
  */
 // TODO DW - INFUND-1555 - handle rest results

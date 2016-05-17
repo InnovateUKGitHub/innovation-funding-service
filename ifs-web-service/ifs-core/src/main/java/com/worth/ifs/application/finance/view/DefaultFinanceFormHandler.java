@@ -4,22 +4,19 @@ import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.item.*;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -34,11 +31,10 @@ import java.util.stream.Collectors;
  * to {@link CostItem}.
  */
 @Component
-public class DefaultFinanceFormHandler implements FinanceFormHandler {
+public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements FinanceFormHandler {
     private static final Log LOG = LogFactory.getLog(DefaultFinanceFormHandler.class);
 
-    @Autowired
-    private MessageSource messageSource;
+
 
     @Autowired
     private CostService costService;
@@ -208,6 +204,10 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
      */
     private List<Either<CostItem, ValidationMessages>> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType) {
         List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
+
+        if(costFieldMap.size() == 0) {
+            return costItems;
+        }
         CostHandler costHandler = getCostItemHandler(costType);
 
         // create new cost items
@@ -225,18 +225,6 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
             }
         }
         return costItems;
-    }
-
-    private ValidationMessages getValidationMessageFromException(Map.Entry<Long, List<FinanceFormField>> entry, NumberFormatException e) {
-        ValidationMessages validationMessages = new ValidationMessages();
-        validationMessages.setObjectId(entry.getKey());
-        validationMessages.setObjectName("cost");
-        List<Error> errors = new ArrayList<>();
-        ArrayList<Object> args = new ArrayList<Object>();
-        args.add(e.getMessage());
-        errors.add(new Error("", messageSource.getMessage("field.value.not.valid", args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
-        validationMessages.setErrors(errors);
-        return validationMessages;
     }
 
     private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {

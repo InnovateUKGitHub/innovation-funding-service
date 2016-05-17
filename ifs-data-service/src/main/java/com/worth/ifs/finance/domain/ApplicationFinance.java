@@ -5,11 +5,9 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ApplicationFinance defines database relations and a model to use client side and server side.

@@ -2,12 +2,10 @@ package com.worth.ifs.file.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.file.transactional.FileService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -27,7 +24,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.ParsingFunctions.validLong;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("/fileentry")
@@ -69,7 +65,7 @@ public class FileEntryController {
     }
 
     private ServiceResult<String> validContentTypeHeader(String contentTypeHeader) {
-        return !StringUtils.isBlank(contentTypeHeader) ? serviceSuccess(contentTypeHeader) : serviceFailure(unsupportedMediaTypeError(validMediaTypes));
+        return !StringUtils.isBlank(contentTypeHeader) ? serviceSuccess(contentTypeHeader) : serviceFailure(unsupportedMediaTypeByNameError(validMediaTypes));
     }
 
     private ServiceResult<Long> validContentLength(long length) {
@@ -85,7 +81,7 @@ public class FileEntryController {
 
     private ServiceResult<MediaType> validMediaType(String contentType) {
         if (!validMediaTypes.contains(contentType)) {
-            return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
+            return serviceFailure(unsupportedMediaTypeByNameError(validMediaTypes));
         }
         return serviceSuccess(MediaType.valueOf(contentType));
     }

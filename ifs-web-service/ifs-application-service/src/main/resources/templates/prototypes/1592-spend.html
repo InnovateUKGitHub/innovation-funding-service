@@ -19,6 +19,38 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
+	<div th:if="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
+		<div class="marked-complete-alert extra-margin-bottom">
+			<p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
+have submitted their profile spends submit them to Innovate UK</p>
+		</div>
+	</div>
+
+	<div th:if="${param.spend != null and param.spend[0] == 'high'}" th:remove="tag">
+
+		<div class="warning-alert extra-margin-bottom">
+			<h2 class="heading-small">Your spend profile has total costs higher than eligible project costs, this cannot be submitted with higher total costs.</h2>
+			<p class="no-margin-bottom">Please review:</p>
+			<ul class="list-bullet">
+				<li>Subcontracting costs</li>
+			</ul>
+			<!-- <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="button-secondary" th:unless="${param.status == null}">Save with overspend</a> -->
+		</div>
+
+	</div>
+
+	<div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<div class="success-alert extra-margin-bottom">
+			<p><strong>All Project Spend profiles have been submitted to Innovate UK</strong></p>
+		</div>
+	</div>
+
+	<div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<div class="success-alert extra-margin-bottom">
+			<p><strong>Your spend profile is currently with the lead applicant who will submit it to Innovate UK</strong></p>
+		</div>
+	</div>
+
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have now been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
 
 	<dl class="standard-definition-list">
@@ -32,7 +64,7 @@
 
 			<dt>Finance contact</dt>
 			<dd>
-				Dave Normen, 
+				Dave Normen,
 				<a href="mailto:dave@normen.com">dave@normen.com</a>
 			</dd>
 
@@ -40,27 +72,76 @@
 
 	</dl>
 
+	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
+		<h2 class="heading-medium">Partner project costs</h2>
+		<p class="form-hint">These are the project costs for your partners on the project</p>
+
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Partner</th>
+					<th scope="col">Project costs</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th scope="row">Total</th>
+					<td>&pound;525,000</td>
+				</tr>
+			</tfoot>
+			<tbody>
+				<tr>
+					<td>
+						<p class="no-margin">Aptrans Ltd</p>
+						<p class="form-hint">Lead organisation</p>
+					</td>
+					<td>
+						&pound;175,000
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p class="no-margin">Biotech Corp</p>
+						<p class="form-hint">Partner</p>
+					</td>
+					<td>
+						&pound;175,000
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p class="no-margin">University of Cardiff</p>
+						<p class="form-hint">Partner</p>
+					</td>
+					<td>
+						&pound;175,000
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 
 	<div class="extra-margin" th:unless="${param.task != null and param.task[0] == 'reviewProject'}">
 		<a href="#">View finances</a>
 	</div>
 
-	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span> <span th:if="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'edit'}" th:text="${'- ' + param.status[0]}" th:remove="tag">- submitted</span></h2>
+	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<h2 class="heading-medium">Project - Spend profile <span th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">- Submitted</span></h2>
+		<h2 class="heading-medium">Project - Spend profile</h2>
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
-		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs can not be moved across cost categories.
+		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.
 	</p>
-	
+
 	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-		
+
 		<div class="extra-margin alignright" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-			
+
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}" class="button-secondary">View wide screen  table</a>
 
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}" class="button-secondary">View standard size table</a>
@@ -68,7 +149,7 @@
 		</div>
 
 		<div class="extra-margin alignright" th:unless="${param.user == null}">
-			
+
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full&#38;user=nonLead#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}" class="button-secondary">View wide screen table</a>
 
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}" class="button-secondary">View standard table</a>
@@ -83,8 +164,8 @@
 			<thead>
 				<tr>
 					<th class="alignleft">Year</th>
-					<th colspan="3" class="aligncentre">2016</th>
-					<th colspan="4" class="aligncentre">2017</th>
+					<th colspan="3" class="aligncentre separate-cell year">2016</th>
+					<th colspan="4" class="aligncentre separate-cell year">2017</th>
 					<th class="aligncentre separate-cell">2018</th>
 					<th scope="col" rowspan="2" class="total" id="grand-total">Total</th>
 					<th scope="col" rowspan="2" class="total eligible" id="eligible-project-cost">Eligible project cost
@@ -108,37 +189,42 @@
 			<tfoot>
 				<tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
 					<th scope="row" id="total">Total</th>
-					<td>8,333</td>
-					<td>25,000</td>
-					<td class="separate-cell year">25,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '24999' : '8333')}">8333</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '75000' : '25000')}">25000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '75000' : '25000')}" class="separate-cell year">25000</td>
 
-					<td >25,000</td>
-					<td>25,000</td>
-					<td>25,000</td>
-					<td class="separate-cell year">25,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '75000' : '25000')}">25000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '75000' : '25000')}">25000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '75000' : '25000')}">25000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '75000' : '25000')}" class="separate-cell year">25000</td>
 
-					<td class="separate-cell" th:text="${(param.spend != null and param.spend[0] == 'high' ? '18,666' : '16,666')}">16,666</td>
+					<td class="separate-cell" th:text="${(param.spend != null and param.spend[0] == 'high' ? '18666' : '16666')}" th:unless="${param.task != null and param.task[0] == 'reviewProject'}">16,666</td>
 
-					<td class="total" th:text="${(param.spend != null and param.spend[0] == 'high' ? '177,000' : '175,000')}">175,000</td>
-					<td class="total eligible">175,000</td>
+					<td class="separate-cell" th:unless="${param.task == null or param.task[0] != 'reviewProject'}">49998</td>
+
+					<td class="total" th:text="${(param.spend != null and param.spend[0] == 'high' ? '177000' : '175000')}" th:unless="${param.task != null and param.task[0] == 'reviewProject'}">175000</td>
+
+					<td class="total" th:unless="${param.task == null or param.task[0] != 'reviewProject'}">525500</td>
+
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '525000' : '175000')}" class="total eligible">175000</td>
 				</tr>
 			</tfoot>
 			<tbody>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="labour">Labour</th>
-					<td>4,167</td>
-					<td>12,500</td>
-					<td class="separate-cell year">12,500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '12501' : '4167')}">4167</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '37500' : '12500')}">12500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '37500' : '12500')}" class="separate-cell year">12,500</td>
 
-					<td>12,500</td>
-					<td>12,500</td>
-					<td>12,500</td>
-					<td class="separate-cell year">12,500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '37500' : '12500')}">12500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '37500' : '12500')}">12500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '37500' : '12500')}">12500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '37500' : '12500')}" class="separate-cell year">12500</td>
 
-					<td class="separate-cell">8,333</td>
-	
-					<td class="total">87,500</td>
-					<td class="total eligible">87,500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '24999' : '8333')}" class="separate-cell">8333</td>
+
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '262500' : '87500')}" class="total">87500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '262500' : '87500')}" class="total eligible">87500</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="labour">Labour</th>
@@ -152,48 +238,67 @@
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-2 y1-q3 labour" id="labour-y2-q3" value="12,500" /><label for="labour-y2-q3" class="visuallyhidden">Labour</label></td>
 
 					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y1-q4 labour" id="labour-y2-q4" value="8,333" /><label for="labour-y2-q4" class="visuallyhidden">Labour</label></td>
-		
+
 					<td class="total">87,500</td>
 					<td class="total eligible">87,500</td>
 				</tr>
-				<tr>
+				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="admin">Admin support costs</th>
-					<td>833</td>
-					<td>2,500</td>
-					<td class="separate-cell year">2,500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '2499' : '833')}">833</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '7500' : '2500')}">2500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '7500' : '2500')}" class="separate-cell year">2500</td>
 
-					<td>2,500</td>
-					<td>2,500</td>
-					<td>2,500</td>
-					<td class="separate-cell year">2,500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '7500' : '2500')}">2500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '7500' : '2500')}">2500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '7500' : '2500')}">2500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '7500' : '2500')}" class="separate-cell year">2500</td>
 
-					<td class="separate-cell">1,667</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '5001' : '1667')}" class="separate-cell">1667</td>
+
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '52550' : '17500')}" class="total">17500</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '52550' : '17500')}" class="total eligible">17500</td>
+				</tr>
+				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
+					<th id="admin">Admin support costs</th>
+					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 admin" id="admin-y1-q1" value="4,167" /><label for="admin-y1-q1" class="visuallyhidden">Admin support costs</label></td>
+					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 admin" id="admin-y1-q2" value="12,500" /><label for="admin-y1-q2" class="visuallyhidden">Admin support costs</label></td>
+					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 admin" id="admin-y1-q3" value="12,500" /><label for="admin-y1-q3" class="visuallyhidden">Admin support costs</label></td>
+
+					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 admin" id="admin-y1-q4" value="12,500" /><label for="admin-y1-q4" class="visuallyhidden">Admin support costs</label></td>
+					<td><input type="text" class="form-control" aria-labelledby="year-2 y1-q1 admin" id="admin-y2-q1" value="12,500" /><label for="admin-y2-q1" class="visuallyhidden">Admin support costs</label></td>
+					<td><input type="text" class="form-control" aria-labelledby="year-2 y1-q2 admin" id="admin-y2-q2" value="12,500" /><label for="admin-y2-q2" class="visuallyhidden">Admin support costs</label></td>
+					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-2 y1-q3 admin" id="admin-y2-q3" value="12,500" /><label for="admin-y2-q3" class="visuallyhidden">Admin support costs</label></td>
+
+					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y1-q4 admin" id="admin-y2-q4" value="8,333" /><label for="admin-y2-q4" class="visuallyhidden">Admin support costs</label></td>
 
 					<td class="total">17,500</td>
 					<td class="total eligible">17,500</td>
 				</tr>
+
+
+
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="materials">Materials</th>
-					<td>1,000</td>
-					<td>3,000</td>
-					<td class="separate-cell year">3,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}">1000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" class="separate-cell year">3000</td>
 
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td class="separate-cell year">3,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" class="separate-cell year">3000</td>
 
-					<td class="separate-cell">2,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '6000' : '2000')}" class="separate-cell">2000</td>
 
-					<td class="total">21,000</td>
-					<td class="total eligible">21,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '43000' : '21000')}" class="total">21,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '43000' : '21000')}" class="total eligible">21,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="materials">Materials</th>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 materials" id="materials-y1-q1" value="1,000" /><label for="materials-y1-q1" class="visuallyhidden">Materials</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 materials" id="materials-y1-q2" value="3,000" /><label for="materials-y1-q2" class="visuallyhidden">Materials</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 materials" id="materials-y1-q3" value="3,000" /><label for="materials-y1-q3" class="visuallyhidden">Materials</label></td>
-					
+
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 materials" id="materials-y1-q4" value="3,000" /><label for="materials-y1-q4" class="visuallyhidden">Materials</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 materials" id="materials-y2-q1" value="3,000" /><label for="materials-y2-q1" class="visuallyhidden">Materials</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 materials" id="materials-y2-q2" value="3,000" /><label for="materials-y2-q2" class="visuallyhidden">Materials</label></td>
@@ -206,26 +311,26 @@
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="capital">Capital usage</th>
-					<td>1,000</td>
-					<td>3,000</td>
-					<td class="separate-cell year">3,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}">1000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" class="separate-cell year">3000</td>
 
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td class="separate-cell year">3,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" class="separate-cell year">3000</td>
 
-					<td class="separate-cell">2,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '6000' : '2000')}" class="separate-cell">2000</td>
 
-					<td class="total">21,000</td>
-					<td class="total eligible">21,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '43000' : '21000')}" class="total">21000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '43000' : '21000')}" class="total eligible">21000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="capital">Capital usage</th>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 capital" id="capital-y1-q1" value="1,000" /><label for="capital-y1-q1" class="visuallyhidden">Capital</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 capital" id="capital-y1-q2" value="3,000" /><label for="capital-y1-q2" class="visuallyhidden">Capital</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 capital" id="capital-y1-q3" value="3,000" /><label for="capital-y1-q3" class="visuallyhidden">Capital</label></td>
-					
+
 					<td ><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 capital" id="capital-y1-q4" value="3,000" /><label for="capital-y1-q4" class="visuallyhidden">Capital</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 capital" id="capital-y2-q1" value="3,000" /><label for="capital-y2-q1" class="visuallyhidden">Capital</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 capital" id="capital-y2-q2" value="3,000" /><label for="capital-y2-q2" class="visuallyhidden">Capital</label></td>
@@ -238,31 +343,31 @@
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}" th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row' : '')}">
 					<th id="sub-contract">Sub-contracting costs</th>
-					<td>1,000</td>
-					<td>3,000</td>
-					<td class="separate-cell year">3,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}">1000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" class="separate-cell year">3000</td>
 
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td class="separate-cell year">3,000</td> 
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" >3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" >3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" >3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}" class="separate-cell year">3000</td>
 
-					<td class="separate-cell">2,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '6000' : '2000')}"  class="separate-cell">2000</td>
 
-					<td class="total">21,000</td>
-					<td class="total eligible">21,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '43000' : '21000')}"  class="total">21,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '43000' : '21000')}"  class="total eligible">21,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}" th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row' : '')}">
 					<th id="sub-contract">Sub-contracting costs</th>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 sub-contract" id="sub-contract-y1-q1" value="1,000" /><label for="sub-contract-y1-q1" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 sub-contract" id="sub-contract-y1-q2" value="3,000" /><label for="sub-contract-y1-q2" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 sub-contract" id="sub-contract-y1-q3" value="3,000" /><label for="sub-contract-y1-q3" class="visuallyhidden">Sub-contracting costs</label></td>
-					
+
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 sub-contract" id="sub-contract-y1-q4" value="3,000" /><label for="sub-contract-y1-q4" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 sub-contract" id="sub-contract-y2-q1" value="3,000" /><label for="sub-contract-y2-q1" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 sub-contract" id="sub-contract-y2-q2" value="3,000" /><label for="sub-contract-y2-q2" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td class="separate-cell year"><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 sub-contract" id="sub-contract-y2-q3" value="3,000" /><label for="sub-contract-y2-q3" class="visuallyhidden">Sub-contracting costs</label></td>
-					
+
 					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 sub-contract" id="sub-contract-y2-q4" th:value="${(param.spend != null and param.spend[0] == 'high' ? '4,000' : '2,000')}" /><label for="sub-contract-y2-q4" class="visuallyhidden">Sub-contracting costs</label></td>
 
 					<td class="total" th:text="${(param.spend != null and param.spend[0] == 'high' ? '23,000' : '21,000')}">21,000</td>
@@ -270,19 +375,19 @@
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="other">Other costs</th>
-					<td>333</td>
-					<td>1,000</td>
-					<td class="separate-cell year">1,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '999' : '333')}" >333</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}" >1000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}"  class="separate-cell year">1000</td>
 
-					<td>3,000</td>
-					<td>1,000</td>
-					<td>1,000</td>
-					<td class="separate-cell year">1,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '9000' : '3000')}">3000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}">1000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}">1000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '3000' : '1000')}" class="separate-cell year">1,000</td>
 
-					<td class="separate-cell">667</td>
-	
-					<td class="total">7,000</td>
-					<td class="total eligible">7,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '2001' : '667')}" class="separate-cell">667</td>
+
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '21000' : '7000')}" class="total">7,000</td>
+					<td th:text="${(param.task != null and param.task[0] == 'reviewProject' ? '21000' : '7000')}" class="total eligible">7,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="other">Other costs</th>
@@ -306,6 +411,11 @@
 
 	<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
+		<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
+			<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
+		</div>
+
+
 		<div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit')}" class="button button-secondary">Edit spend profile</a>
 		</div>
@@ -314,26 +424,36 @@
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 		</div>
 
-		<p class="extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with the project plan before they are submitted to Innovate UK.</p>
+		<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">When you are satisfied with the profile spend and it matches the Eligible project costs you will be able to submit your spend profile to the lead partner, before they are submitted to Innovate UK.</p>
+
+		<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the profile spend mark the section as complete, this will allow you to submit the Project profile spend to innovate UK. If you wish you return to allow edits to this page.</p>
+
 
 		<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
-			<div class="extra-margin">
-				<a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Send to lead</a>
+			<div class="extra-margin" th:unless="${param.spend != null and param.spend[0] == 'high'}">
+				<a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Send to lead partner</a>
+			</div>
+
+			<div class="extra-margin" th:unless="${param.spend == null or param.spend[0] != 'high'}">
+				<a href="#" class="button button-large" disabled="disabled">Send to lead partner</a>
 			</div>
 
 			<div class="modal-send-to-lead" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
-					
-					<h2 class="heading-medium no-margin">Send to lead</h2>
 
-					<p>Your profile spend has now been made available to <strong>Aptrans Ltd</strong>. They may contact you if it requires change.</p>
+					<h2 class="heading-medium no-margin">Send to lead partner</h2>
+
+					<p>Are you sure you want to send your Spend Profile to the lead partner?</p>
 
 					<hr />
-		            
+
 	            	<div class="alignright-button">
-	            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">OK</a>
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">Send</a>
 	            	</div>
 
 		        </div>
@@ -341,28 +461,11 @@
 
 	 	</div>
 
-	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:remove="tag">
-			
+	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
+
 			<div class="extra-margin">
-				<a href="#" class="button button-large" data-js-modal="modal-complete">Submit</a>
+				<a href="/prototypes/1592-spend?status=MarkedComplete" class="button button-large">Mark as complete</a>
 			</div>
-
-			<div class="modal-complete" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-		        <button class="js-close close" aria-label="Close Popup">X</button>
-		        <div>
-					
-					<h2 class="heading-medium no-margin">Spend profile complete</h2>
-
-					<p><strong>Aptrans Ltd's</strong> spend profile has now been marked as complete. You can return edit the spend profile, but it must be marked as complete before the project spend profile can be submitted.</p>
-
-					<hr />
-		            
-	            	<div class="alignright-button">
-	            		<a href="/prototypes/1592-spend?status=Submitted" class="button">OK</a>
-	            	</div>
-
-		        </div>
-		    </div>
 
 	 	</div>
 
@@ -370,17 +473,42 @@
 	</div>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-		
+
 		<div class="extra-margin">
 
-			<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary">Save and return to spend profile overview</a>
+			<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary" th:unless="${param.spend != null and param.spend[0] == 'high'}" >Save and return to spend profile overview</a>
+
+			<a href="#" class="button-secondary" data-js-modal="modal-save-error" th:unless="${param.spend == null or param.spend[0] != 'high'}">Save and return to spend profile overview</a>
+
+			<div class="modal-save-error" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+
+					<h2 class="heading-medium no-margin">Save</h2>
+
+					<p>Are you sure you wish to save your profile spend with higher costs than your eligible project costs?</p>
+
+					<p>You will not be able to submit your project spend until this is corrected.</p>
+
+					<hr />
+
+	            	<div class="alignright-button">
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	            		<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="button">Save</a>
+	            	</div>
+
+		        </div>
+		    </div>
+
 
 		</div>
 
 	</div>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-		<p>If required you can allow your partner to edit this profile. It will not be possible to submit the project profile spend until the partner resubmits their profile.</p>
+		<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
 
 		<div class="extra-margin">
 			<a href="#" class="button button-large" data-js-modal="modal-allow-edits">Allow edits</a>
@@ -389,13 +517,13 @@
 		<div class="modal-allow-edits" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
-				
+
 				<h2 class="heading-medium no-margin">Allow edits</h2>
 
 				<p><strong>Biotech Corp's</strong> profile spend has been handed back to them, they have been informaed of by email, if there are any specific changes required please contact them.</p>
 
 				<hr />
-	            
+
             	<div class="alignright-button">
             		<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>
             	</div>
@@ -415,22 +543,23 @@
 		<div class="modal-submit-spend" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
-				
+
 				<h2 class="heading-medium no-margin">Submit project profile spend</h2>
 
-				<p>The Project profile spend will be submitted to both InnovateUK and the Monitiring officer assigned to this project. This will be used for reference and the base for progress.</p>
+				<p>The project profile spend will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
 
 				<hr />
-	            
+
             	<div class="alignright-button">
-            		<a href="/prototypes/1592-spend?status=Submitted&#38;task=edit " class="button">Submit</a>
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+            		<a href="/prototypes/1588-project-status?stage=level4" class="button">Submit</a>
             	</div>
 
 	        </div>
 	    </div>
 	</div>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -442,7 +571,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

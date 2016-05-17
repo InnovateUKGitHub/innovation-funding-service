@@ -1,8 +1,5 @@
 package com.worth.ifs.application.security;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.security.PermissionRule;
@@ -21,7 +18,7 @@ import java.util.List;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 
 @PermissionRules
 @Component
@@ -63,6 +60,13 @@ public class ApplicationRules {
         return isLeadApplicant || isCollaborator;
     }
 
+
+    @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
+    public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
+        final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT, processRoleRepository);
+        return isLeadApplicant;
+    }
+
     @PermissionRule(value = "READ_FINANCE_TOTALS",
             description = "A comp admin can see application finances for organisations",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
@@ -70,10 +74,15 @@ public class ApplicationRules {
         return SecurityRuleUtil.isCompAdmin(user);
     }
 
+    @PermissionRule(value = "READ", description = "A user can see an application resource which they are connected to")
+    public boolean usersConnectedToTheApplicationCanView(ApplicationResource application, UserResource user) {
+        boolean isConnectedToApplication = userIsConnectedToApplicationResource(application, user);
+        return  isConnectedToApplication;
+    }
 
-    @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to and if the application exists")
-    public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, UserResource user) {
-        return isCompAdmin(user) || !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
+    @PermissionRule(value = "READ", description = "Comp admins can see application resources")
+    public boolean compAdminsCanViewApplications(final ApplicationResource application, final UserResource user){
+        return isCompAdmin(user);
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
@@ -86,11 +95,6 @@ public class ApplicationRules {
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
         ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
         return processRole != null;
-    }
-
-    boolean applicationExists(ApplicationResource applicationResource) {
-        Long id = applicationResource.getId();
-        return id != null && applicationRepository.exists(id);
     }
 }
 

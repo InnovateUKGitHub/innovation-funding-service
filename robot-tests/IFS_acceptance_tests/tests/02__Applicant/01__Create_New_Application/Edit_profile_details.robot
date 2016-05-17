@@ -94,6 +94,7 @@ Display errors for invalid inputs of the Phone field
 
 *** Keywords ***
 the user enters profile details
+    Wait Until Element Is Visible       id=title
     Select From List By Index    id=title    4
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
@@ -129,6 +130,7 @@ the user can change their details back again
     the user enters their old profile details
 
 the user enters their old profile details
+    Wait Until Element Is Visible       id=title
     Select From List By Index    id=title    4
     Input Text    id=firstName    Steve
     Input Text    id=lastName    Smith

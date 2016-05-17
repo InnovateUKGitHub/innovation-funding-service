@@ -1,7 +1,7 @@
 package com.worth.ifs.alert.repository;
 
 import com.worth.ifs.alert.domain.Alert;
-import com.worth.ifs.alert.domain.AlertType;
+import com.worth.ifs.alert.resource.AlertType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

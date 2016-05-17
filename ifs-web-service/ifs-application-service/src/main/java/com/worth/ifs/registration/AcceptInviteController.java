@@ -1,7 +1,7 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
@@ -133,10 +133,12 @@ public class AcceptInviteController extends BaseController {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
+                CookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
+
                 model.addAttribute("invite", inviteResource);
                 model.addAttribute("organisation", organisation);
                 model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
-                model.addAttribute("registerUrl", RegistrationController.BASE_URL + "?" + RegistrationController.ORGANISATION_ID_PARAMETER_NAME + "=" + inviteOrganisation.getOrganisation());
+                model.addAttribute("registerUrl", RegistrationController.BASE_URL);
                 return "registration/confirm-invited-organisation";
             } else {
                 return handleAcceptedInvite(cookieFlashMessageFilter, response);

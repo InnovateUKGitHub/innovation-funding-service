@@ -3,6 +3,7 @@ package com.worth.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.competition.domain.Competition;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;

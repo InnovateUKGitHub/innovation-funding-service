@@ -10,7 +10,6 @@ import com.worth.ifs.security.NotSecured;
  */
 public interface NotificationService {
 
-    // @NotSecured("NotificationService to be used within the context of some other secured service")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Notification> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia);
 }

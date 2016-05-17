@@ -3,7 +3,7 @@ Documentation     INFUND-248: As an assessor I want to submit my assessments one
 Suite Setup       Guest user log-in    &{assessor_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags          Pending
-# These tests are pending since the assessor pages are due to be refactored
+# Pending due to upcoming refactoring work for the assessor story
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -12,7 +12,7 @@ Resource          ../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${application_name}    Mobile Phone Data for Logistics Analytics
-${competition_name}    Technology Inspired
+${competition_name}    Connected digital additive manufacturing
 
 *** Test Cases ***
 Submitting an application shows a confirmation popup
@@ -61,6 +61,3 @@ Application is not submitted
 Application is submitted
     Reload Page
     Page Should Contain Element    xpath=//*[@class="submitted"]//*[contains(text(),'${application_name}')]
-
-
-

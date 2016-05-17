@@ -8,7 +8,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -45,7 +45,7 @@ public class ApplicationRulesTest extends BasePermissionRulesTest<ApplicationRul
     private ProcessRole processRole1;
     private ProcessRole processRole2;
     private ProcessRole assessorProcessRole;
-    private UserResource user1;
+    private UserResource leadOnApplication1;
     private UserResource user2;
     private UserResource user3;
     private UserResource assessor;
@@ -59,7 +59,7 @@ public class ApplicationRulesTest extends BasePermissionRulesTest<ApplicationRul
 
     @Before
     public void setup() {
-        user1 = newUserResource().build();
+        leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();
         compAdmin = compAdminUser();
@@ -86,45 +86,47 @@ public class ApplicationRulesTest extends BasePermissionRulesTest<ApplicationRul
         when(roleRepositoryMock.findByNameIn(anyList())).thenReturn(applicantRoles);
         when(roleRepositoryMock.findByName(leadApplicantRole.getName())).thenReturn(singletonList(leadApplicantRole));
 
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user1.getId(), applicationResource1.getId())).thenReturn(processRole1);
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user1.getId(), applicationResource2.getId())).thenReturn(null);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource1.getId())).thenReturn(processRole1);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource2.getId())).thenReturn(null);
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(user2.getId(), applicationResource1.getId())).thenReturn(null);
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(user2.getId(), applicationResource2.getId())).thenReturn(processRole1);
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(user3.getId(), applicationResource2.getId())).thenReturn(processRole2);
 
-        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(user1.getId(), leadApplicantRole, applicationResource1.getId())).thenReturn(singletonList(processRole1));
-        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(user1.getId(), leadApplicantRole, applicationResource2.getId())).thenReturn(emptyList());
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(leadOnApplication1.getId(), leadApplicantRole, applicationResource1.getId())).thenReturn(singletonList(processRole1));
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(leadOnApplication1.getId(), leadApplicantRole, applicationResource2.getId())).thenReturn(emptyList());
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(user2.getId(), leadApplicantRole, applicationResource1.getId())).thenReturn(emptyList());
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(user2.getId(), leadApplicantRole, applicationResource2.getId())).thenReturn(emptyList());
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(user3.getId(), leadApplicantRole, applicationResource2.getId())).thenReturn(emptyList());
-        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user1.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
+        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user2.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user3.getId(), applicantRoles, applicationResource1.getId())).thenReturn(emptyList());
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(assessor.getId(), applicationResource1.getId())).thenReturn(assessorProcessRole);
     }
 
     @Test
-    public void applicantCanSeeConnectedApplicationResourceTest() {
-        assertTrue(rules.applicantCanSeeConnectedApplicationResource(applicationResource1, user1));
-        assertTrue(rules.applicantCanSeeConnectedApplicationResource(applicationResource2, user2));
+    public void testUsersConnectedToTheApplicationCanView() {
+        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
+        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource2, user2));
+        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource1, user2));
+        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource2, leadOnApplication1));
     }
 
-    @Test
-    public void applicantCannotSeeUnconnectedApplicationResourceTest() {
-        assertFalse(rules.applicantCanSeeConnectedApplicationResource(applicationResource1, user2));
-        assertFalse(rules.applicantCanSeeConnectedApplicationResource(applicationResource2, user1));
+    public void testCompAdminsCanViewApplications() {
+        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, compAdmin));
+        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
     }
+
 
     @Test
     public void onlyUsersPartOfTheApplicationCanChangeApplicationResourceTest() {
-        assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user1));
+        assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user2));
         assertFalse(rules.applicantCanUpdateApplicationResource(applicationResource1, user3));
     }
 
     @Test
     public void userIsConnectedToApplicationResourceTest() {
-        assertTrue(rules.userIsConnectedToApplicationResource(applicationResource1, user1));
+        assertTrue(rules.userIsConnectedToApplicationResource(applicationResource1, leadOnApplication1));
     }
 
 
@@ -136,25 +138,20 @@ public class ApplicationRulesTest extends BasePermissionRulesTest<ApplicationRul
 
     @Test
     public void consortiumCanSeeTheResearchParticipantPercentageTest() {
-        assertTrue(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, user1));
+        assertTrue(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, leadOnApplication1));
         assertFalse(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
     }
 
     @Test
     public void compAdminCanSeeTheResearchParticipantPercentageInApplications() {
         assertTrue(rules.compAdminCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
-        assertFalse(rules.compAdminCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, user1));
+        assertFalse(rules.compAdminCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
     }
 
-
     @Test
-    public void applicationExistsTest() {
-        ApplicationResource noId = newApplicationResource().build();
-
-        assertTrue("applicationExists should return true when called with existing application", rules.applicationExists(applicationResource1));
-        assertFalse("applicationExists should return false when called with non-existing application", rules.applicationExists(noId));
-        noId.setId(null);
-        assertFalse("applicationExists should return false when called with application without an id", rules.applicationExists(noId));
+    public void sendNotificationApplicationSubmitted() {
+        assertTrue(rules.aLeadApplicantCanSendApplicationSubmittedNotification(applicationResource1, leadOnApplication1));
+        assertFalse(rules.aLeadApplicantCanSendApplicationSubmittedNotification(applicationResource1, user2));
     }
 
 

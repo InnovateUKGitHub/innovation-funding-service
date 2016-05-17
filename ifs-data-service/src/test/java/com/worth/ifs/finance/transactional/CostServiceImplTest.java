@@ -56,15 +56,17 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
         ApplicationFinance existingFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
 
-        ServiceResult<ApplicationFinanceResource> result = service.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
-        assertTrue(result.isSuccess());
-
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(existingFinance.getId())).
                 withOrganisation(organisation.getId()).
                 withApplication(application.getId()).
                 build();
 
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
+        when(applicationFinanceMapperMock.mapToResource(existingFinance)).thenReturn(expectedFinance);
+
+        ServiceResult<ApplicationFinanceResource> result = service.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
+        assertTrue(result.isSuccess());
         assertEquals(expectedFinance, result.getSuccessObject());
     }
 
@@ -77,21 +79,23 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
         ApplicationFinance existingFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
         when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
 
-        ServiceResult<List<ApplicationFinanceResource>> result = service.findApplicationFinanceByApplication(123L);
-        assertTrue(result.isSuccess());
-
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(existingFinance.getId())).
                 withOrganisation(organisation.getId()).
                 withApplication(application.getId()).
                 build();
 
+        when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
+        when(applicationFinanceMapperMock.mapToResource(existingFinance)).thenReturn(expectedFinance);
+
+        ServiceResult<List<ApplicationFinanceResource>> result = service.findApplicationFinanceByApplication(123L);
+        assertTrue(result.isSuccess());
+
         assertEquals(singletonList(expectedFinance), result.getSuccessObject());
     }
 
     @Test
     public void testAddCost() {
-
         Organisation organisation = newOrganisation().withOrganisationType(new OrganisationType("Business", null)).build();
         Application application = newApplication().build();
 
@@ -99,7 +103,7 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
         when(organisationRepositoryMock.findOne(456L)).thenReturn(organisation);
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler("Business")).thenReturn(organisationFinanceDefaultHandlerMock);
 
-        ApplicationFinance newFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
+        ApplicationFinance newFinance = new ApplicationFinance(application, organisation);
 
         ApplicationFinance newFinanceExpectations = argThat(lambdaMatches(finance -> {
             assertEquals(application, finance.getApplication());
@@ -107,10 +111,6 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
             return true;
         }));
 
-        when(applicationFinanceRepositoryMock.save(newFinanceExpectations)).thenReturn(newFinance);
-
-        ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
-        assertTrue(result.isSuccess());
 
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(newFinance.getId())).
@@ -118,6 +118,11 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
                 withApplication(application.getId()).
                 build();
 
+        when(applicationFinanceRepositoryMock.save(newFinanceExpectations)).thenReturn(newFinance);
+        when(applicationFinanceMapperMock.mapToResource(newFinance)).thenReturn(expectedFinance);
+
+        ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
+        assertTrue(result.isSuccess());
         assertEquals(expectedFinance, result.getSuccessObject());
     }
 }

@@ -14,9 +14,9 @@ Click the back button while on the create account page
     [Documentation]    INFUND-1423
     [Tags]    Create account    Back button
     Given the user navigates to the page    ${LOGIN_URL}
-    When the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user follows the flow to register their organisation
     And the user goes back to the previous page
-    Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
+    Then the user should be redirected to the correct page    ${confirm_organisation_url}
 
 The user logs in and visits the create account page
     [Documentation]    INFUND-1423

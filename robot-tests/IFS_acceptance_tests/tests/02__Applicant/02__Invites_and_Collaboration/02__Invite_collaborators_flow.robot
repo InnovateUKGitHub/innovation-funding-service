@@ -89,7 +89,7 @@ User who accepted the invite should be able to log-in and see the new company na
 
 User who accepted the invite can invite others to their own organisation
     [Documentation]    INFUND-2335
-    [Tags]  Failing     Email
+    [Tags]      Email
     Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
     Then the user can invite another person to their own organisation
@@ -97,7 +97,7 @@ User who accepted the invite can invite others to their own organisation
 
 User who accepted the invite cannot invite others to other organisations
     [Documentation]    INFUND-2335
-    [Tags]      Failing     Email
+    [Tags]      Email
     Then the user cannot invite another person to a different organisation
 
 
@@ -151,6 +151,15 @@ The Lead applicant invites a non registered user in the same organisation
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
     [Teardown]    User closes the browser
 
+the status of the invitees is correct on the overview page
+    [Documentation]     INFUND-2738
+    [Tags]  Collaboration   Pending
+    # Pending completion of INFUND-2050
+    [Setup]     Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page        ${application_details_url}
+    Then the user should see the text in the page        foobar
+
+
 The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     ...
@@ -167,6 +176,7 @@ The user should not create new org but should follow the create account flow
     And the user fills the create account form    Roger    Axe
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+
 
 *** Keywords ***
 the applicant enters valid inputs
@@ -214,6 +224,7 @@ the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
 
+
 the lead applicant logs out
     Logout as user
 
@@ -227,9 +238,11 @@ the user can see the updated company name throughout the application
     the user should see the text in the page    NOMENSA LTD
 
 the user can invite another person to their own organisation
+    ${OWN_ORG}=     Get WebElement      jQuery=li:has(input[value='NOMENSA LTD'])
     the user clicks the button/link     jQuery=button:contains('Add person')
-    the user should see the element         jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2)
-    the user should not see the element     jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2) [readonly]
+    the user should see the element     jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
+    the user should not see the element     jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
-    the user should see the element         jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(2) [readonly]
+    ${OTHER_ORG}=     Get WebElement  jQuery=li:has(input[value='HIVE IT LIMITED'])
+    the user should see the element   jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]

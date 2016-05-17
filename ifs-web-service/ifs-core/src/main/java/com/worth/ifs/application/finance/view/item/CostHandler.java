@@ -1,7 +1,9 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.exception.BigDecimalNumberFormatException;
+import com.worth.ifs.exception.IntegerNumberFormatException;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +13,10 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * CostHandlers are used to convert form fields to costItems
@@ -19,7 +24,7 @@ import java.util.*;
 public abstract class CostHandler {
     public static final Locale LOCALE_UK = Locale.UK;
     protected Log LOG = LogFactory.getLog(this.getClass());
-    Map<String, CostField> costFields = new HashMap<>();
+    Map<String, CostFieldResource> costFields = new HashMap<>();
 
     public abstract CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields);
 
@@ -36,9 +41,9 @@ public abstract class CostHandler {
         try {
             return new BigDecimal(nf.parse(value).toString());
         } catch (NumberFormatException nfe) {
-            throw nfe;
+            throw new BigDecimalNumberFormatException(value);
         } catch (ParseException e) {
-            throw new NumberFormatException();
+            throw new BigDecimalNumberFormatException(value);
         }
     }
 
@@ -55,9 +60,9 @@ public abstract class CostHandler {
             String stringValue = nf.parse(value).toString();
             return Integer.valueOf(stringValue);
         } catch (NumberFormatException nfe) {
-            throw new NumberFormatException(inputValue);
+            throw new IntegerNumberFormatException(inputValue);
         } catch (ParseException e) {
-            throw new NumberFormatException(inputValue);
+            throw new IntegerNumberFormatException(inputValue);
         }
     }
 
