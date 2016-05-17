@@ -47,8 +47,7 @@ The user is on the page
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
-    Sleep    500ms
-    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    10       500ms    Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
