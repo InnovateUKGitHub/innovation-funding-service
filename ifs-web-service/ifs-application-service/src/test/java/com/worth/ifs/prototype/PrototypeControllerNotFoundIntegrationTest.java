@@ -2,6 +2,7 @@ package com.worth.ifs.prototype;
 
 import com.worth.ifs.BaseWebIntegrationTest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * Integration test of the Prototype Controller but without the "prototypes" profile to check that requests are not found.
  */
 @ActiveProfiles("example")
+@Ignore
 public class PrototypeControllerNotFoundIntegrationTest extends BaseWebIntegrationTest {
 
     @Value("http://localhost:${local.server.port}")

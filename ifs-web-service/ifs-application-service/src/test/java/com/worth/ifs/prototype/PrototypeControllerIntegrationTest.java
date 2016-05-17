@@ -20,6 +20,7 @@ import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
  * Integration test of the Prototype Controller with the "prototypes" profile to check that requests are found when they should be.
  */
 @ActiveProfiles("prototypes")
+@Ignore
 public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
 
     @Value("http://localhost:${local.server.port}")
