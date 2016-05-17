@@ -22,7 +22,7 @@
     <div th:if="${alertMessages}" id="global-alert-message">
         <div th:remove="tag" th:each="alertMessage : ${alertMessages}">
             <div class="event-alert event-warning no-animation">
-                <p><span th:text="${alertMessage.message}"></span></p>
+                <p><span ifs:utext="${alertMessage.message}"></span></p>
             </div>
         </div>
     </div>
