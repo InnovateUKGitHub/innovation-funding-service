@@ -25,15 +25,10 @@ public class ApplicationFundingDecisionController {
                 toPostResponse();
     }
     
-    @RequestMapping(value="/{competitionId}", method=RequestMethod.PUT)
+    @RequestMapping(value="/{competitionId}", method=RequestMethod.POST)
     public RestResult<Void> saveFundingDecisionData(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
         return applicationFundingService.saveFundingDecisionData(competitionId, applicationFundingDecisions).
                 toPutResponse();
     }
     
-    @RequestMapping(value="/{competitionId}", method=RequestMethod.GET)
-    public RestResult<Map<Long, FundingDecision>> getFundingDecisionData(@PathVariable("competitionId") final Long competitionId) {
-        return applicationFundingService.getFundingDecisionData(competitionId).
-                toGetResponse();
-    }
 }

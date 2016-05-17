@@ -70,7 +70,7 @@ IFS.competition_management = (function(){
           calculatedValues.containerOffsetTop = jQuery(s.container).offset().top;
         },
         stickyEnabled: function(){
-          //not responsively disabled or heigher menu than container
+          //not responsively disabled or higher menu than container
           if((s.breakpoint < calculatedValues.windowWidth) && (calculatedValues.menuHeight < calculatedValues.containerHeight)){
             return true;
           }

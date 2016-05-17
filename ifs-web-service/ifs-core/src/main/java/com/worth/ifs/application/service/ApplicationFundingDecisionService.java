@@ -41,12 +41,6 @@ public interface ApplicationFundingDecisionService {
 	void saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
 	
 	/**
-	 * get the saved funding decision data
-	 * @param competitionId the id of the competition
-	 */
-	Map<Long, FundingDecision> getApplicationFundingDecisionData(Long competitionId);
-	
-	/**
 	 * returns the appropriate FundingDecision enum value for a String used in the decision form.
 	 * @param val either "Y", "N" or "-"
 	 * @return the appropriate FundingDecision enum value

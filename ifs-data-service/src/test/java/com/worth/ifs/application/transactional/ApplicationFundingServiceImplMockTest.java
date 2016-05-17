@@ -30,7 +30,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -52,13 +51,12 @@ import com.worth.ifs.application.builder.ApplicationStatusBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.FundingDecisionStatus;
 import com.worth.ifs.application.mapper.FundingDecisionMapper;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.fundingdecisiondata.domain.FundingDecisionData;
-import com.worth.ifs.fundingdecisiondata.domain.FundingDecisionStatus;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.UserNotificationTarget;
@@ -329,16 +327,12 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     }
     
     @Test
-    public void testSaveExistingFundingDecisionData() {
+    public void testSaveFundingDecisionData() {
     	
-    	Application application1 = newApplication().withId(1L).withCompetition(competition).withApplicationStatus(openStatus).build();
-     	Application application2 = newApplication().withId(2L).withCompetition(competition).withApplicationStatus(openStatus).build();
+    	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
+     	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationStatus(openStatus).build();
     	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(Arrays.asList(application1, application2));
 
-    	FundingDecisionData fundingDecisionData = new FundingDecisionData();
-    	fundingDecisionData.getFundingDecisions().put(2L, FundingDecisionStatus.FUNDED);
-    	when(fundingDecisionDataRepositoryMock.findOne(competition.getId())).thenReturn(fundingDecisionData);
-    	
     	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
     	ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
@@ -347,51 +341,12 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId());
     	assertEquals(openStatus, application1.getApplicationStatus());
     	assertEquals(openStatus, application2.getApplicationStatus());
+    	assertEquals(FundingDecisionStatus.UNDECIDED, application1.getFundingDecision());
+    	assertEquals(FundingDecisionStatus.UNFUNDED, application2.getFundingDecision());
     	assertNull(competition.getFundersPanelEndDate());
-    	assertEquals("Only contains entries for the submitted applications that exist for the competition", 2, fundingDecisionData.getFundingDecisions().size());
-    	assertEquals(FundingDecisionStatus.UNDECIDED, fundingDecisionData.getFundingDecisions().get(1L));
-    	assertEquals(FundingDecisionStatus.FUNDED, fundingDecisionData.getFundingDecisions().get(2L));
     }
     
-    @Test
-    public void testSaveNotExistingFundingDecisionData() {
-    	
-    	Application application1 = newApplication().withId(1L).withCompetition(competition).withApplicationStatus(openStatus).build();
-     	Application application2 = newApplication().withId(2L).withCompetition(competition).withApplicationStatus(openStatus).build();
-    	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(Arrays.asList(application1, application2));
-
-    	when(fundingDecisionDataRepositoryMock.findOne(competition.getId())).thenReturn(null);
-    	
-    	Map<Long, FundingDecision> decision = asMap(1L, FUNDED);
-    	
-    	ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
-    	
-    	assertTrue(result.isSuccess());
-    	verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId());
-    	assertEquals(openStatus, application1.getApplicationStatus());
-    	assertEquals(openStatus, application2.getApplicationStatus());
-    	assertNull(competition.getFundersPanelEndDate());
-    	verify(fundingDecisionDataRepositoryMock).save(isA(FundingDecisionData.class));
-    }
-    
-    @Test
-    public void testGetFundingDecisionData() {
-    	
-    	FundingDecisionData fundingDecisionData = new FundingDecisionData();
-    	fundingDecisionData.getFundingDecisions().put(1L, FundingDecisionStatus.FUNDED);
-    	fundingDecisionData.getFundingDecisions().put(2L, FundingDecisionStatus.UNDECIDED);
-    	fundingDecisionData.getFundingDecisions().put(3L, FundingDecisionStatus.UNFUNDED);
-    	when(fundingDecisionDataRepositoryMock.findOne(competition.getId())).thenReturn(fundingDecisionData);
-    	
-    	ServiceResult<Map<Long, FundingDecision>> result = service.getFundingDecisionData(competition.getId());
-    	
-    	assertTrue(result.isSuccess());
-    	assertEquals(FundingDecision.FUNDED, result.getSuccessObject().get(1L));
-    	assertEquals(FundingDecision.UNDECIDED, result.getSuccessObject().get(2L));
-    	assertEquals(FundingDecision.UNFUNDED, result.getSuccessObject().get(3L));
-    }
-
-    private Notification createFullNotificationExpectations(Notification expectedNotification) {
+	private Notification createFullNotificationExpectations(Notification expectedNotification) {
 
         return createLambdaMatcher(notification -> {
             assertEquals(expectedNotification.getFrom(), notification.getFrom());
@@ -431,4 +386,5 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 			return true;
 		});
 	}
+	
 }

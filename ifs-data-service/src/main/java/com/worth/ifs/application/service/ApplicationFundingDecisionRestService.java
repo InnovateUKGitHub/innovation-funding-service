@@ -25,11 +25,4 @@ public interface ApplicationFundingDecisionRestService {
 	 * @return rest result to indicate if this has successfully been done
 	 */
 	RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
-
-	/**
-	 * Retrieve the saved funding decision.
-	 * @param competitionId the id of the competition for which we are providing the funding decision
-	 * @return rest result containing the saved funding decision
-	 */
-	RestResult<Map<Long, FundingDecision>> getApplicationFundingDecisionData(Long competitionId);
 }

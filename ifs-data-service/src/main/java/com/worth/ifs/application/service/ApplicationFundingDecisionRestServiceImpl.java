@@ -3,7 +3,6 @@ package com.worth.ifs.application.service;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.resource.FundingDecision;
@@ -26,14 +25,9 @@ public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService i
 
 	@Override
 	public RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
-		 return putWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId, applicationIdToFundingDecision, Void.class);
+		 return postWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId, applicationIdToFundingDecision, Void.class);
 	}
 
-	@Override
-	public RestResult<Map<Long, FundingDecision>> getApplicationFundingDecisionData(Long competitionId) {
-		return getWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId, new ParameterizedTypeReference<Map<Long, FundingDecision>>() {});
-	}
-	
 	protected void setApplicationFundingDecisionRestURL(String applicationFundingDecisionRestURL) {
 		this.applicationFundingDecisionRestURL = applicationFundingDecisionRestURL;
 	}

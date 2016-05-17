@@ -3,7 +3,6 @@ package com.worth.ifs.controller;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.application.service.ApplicationFundingDecisionService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -42,9 +39,6 @@ public class CompetitionManagementController {
 
     @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
-    
-    @Autowired
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
     
     @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
@@ -102,8 +96,6 @@ public class CompetitionManagementController {
 		} else {
 			queryForm.setPage(1);
 			populateSubmittedModel(model, competitionId, queryForm, Integer.MAX_VALUE);
-			Map<Long, FundingDecision> fundingDecisionData = applicationFundingDecisionService.getApplicationFundingDecisionData(competitionId);
-			model.addAttribute("fundingDecisionData", fundingDecisionData);
 		}
 		return "comp-mgt-funders-panel";
 	}

@@ -3,7 +3,6 @@ package com.worth.ifs.application.documentation;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -64,16 +63,4 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         		.andDo( this.document.snippets());
     }
     
-    @Test
-    public void getFundingDecisionData() throws Exception {
-        Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
-
-        when(applicationFundingServiceMock.getFundingDecisionData(competitionId)).thenReturn(serviceSuccess(decision));
-
-        mockMvc.perform(get("/applicationfunding/1")
-        			.contentType(MediaType.APPLICATION_JSON))
-        		.andDo( this.document.snippets());
-    }
-
 }

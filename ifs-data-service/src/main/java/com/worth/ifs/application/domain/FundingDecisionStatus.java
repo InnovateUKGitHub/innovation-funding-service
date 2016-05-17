@@ -1,4 +1,4 @@
-package com.worth.ifs.fundingdecisiondata.domain;
+package com.worth.ifs.application.domain;
 
 public enum FundingDecisionStatus {
 	FUNDED,

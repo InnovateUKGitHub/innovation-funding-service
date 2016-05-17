@@ -178,9 +178,9 @@
 	           <td th:text="${result.duration}"></td>
 	           <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
 	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" th:name="${result.id}" th:attr="competition=${competition.competitionId}">
-           			<option th:selected="${fundingDecisionData == null || fundingDecisionData?.get(result.id) == null || fundingDecisionData?.get(result.id).name() == 'UNDECIDED'}" value="-">-</option>
-           			<option th:selected="${fundingDecisionData?.get(result.id)?.name() == 'FUNDED'}" value="Y">Yes</option>
-           			<option th:selected="${fundingDecisionData?.get(result.id)?.name() == 'UNFUNDED'}" value="N">No</option>
+           			<option th:selected="${result.fundingDecision == null || result.fundingDecision.name() == 'UNDECIDED'}" value="-">-</option>
+           			<option th:selected="${result.fundingDecision?.name() == 'FUNDED'}" value="Y">Yes</option>
+           			<option th:selected="${result.fundingDecision?.name() == 'UNFUNDED'}" value="N">No</option>
            		  </select>
            		  <span class="funding-decision-save-info" th:id="${'funding-decision-save-info-' + result.id}"></span>
 	           </td>

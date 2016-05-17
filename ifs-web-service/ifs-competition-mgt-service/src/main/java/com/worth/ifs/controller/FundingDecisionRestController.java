@@ -2,6 +2,8 @@ package com.worth.ifs.controller;
 
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,8 @@ import com.worth.ifs.util.MapFunctions;
 @RestController
 public class FundingDecisionRestController {
 
+	private static final Log LOG = LogFactory.getLog(FundingDecisionRestController.class);
+	
 	@Autowired
 	private ApplicationFundingDecisionService applicationFundingDecisionService;
 	
@@ -27,8 +31,12 @@ public class FundingDecisionRestController {
 		
 		Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(applicationId, applicationFundingDecisionService.fundingDecisionForString(decision));
 		
-		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
-		
+		try {
+			applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+		} catch (RuntimeException e) {
+			LOG.error("exception thrown when saving application funding decision data", e);
+			return MapFunctions.asMap("success", "false");
+		}
 		return MapFunctions.asMap("success", "true");
     }
 

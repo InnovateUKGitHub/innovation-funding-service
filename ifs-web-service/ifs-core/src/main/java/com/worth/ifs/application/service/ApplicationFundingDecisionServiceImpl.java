@@ -28,11 +28,6 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 	
 	@Override
-	public Map<Long, FundingDecision> getApplicationFundingDecisionData(Long competitionId) {
-		return applicationFundingDecisionRestService.getApplicationFundingDecisionData(competitionId).getSuccessObjectOrThrowException();
-	}
-	
-	@Override
 	public boolean verifyAllApplicationsRepresented(Map<String, String[]> parameterMap, List<Long> applicationIds) {
 		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToDeterminedFundingDecisionFromRequestParams(parameterMap, applicationIds);
 		
@@ -57,17 +52,16 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	
 	@Override
 	public FundingDecision fundingDecisionForString(String val) {
-		FundingDecision decision;
-		if ("Y".equals(val)) {
-			decision = FundingDecision.FUNDED;
-		} else if ("N".equals(val)) {
-			decision = FundingDecision.UNFUNDED;
-		} else if ("-".equals(val)) {
-			decision = FundingDecision.UNDECIDED;
-		} else {
-			decision = null;
+		switch(val) {
+			case "Y":
+				return FundingDecision.FUNDED;
+			case "N":
+				return FundingDecision.UNFUNDED;
+			case "-":
+				return FundingDecision.UNDECIDED;
+			default:
+				return null;	
 		}
-		return decision;
 	}
 	
 	private Map<Long, FundingDecision> applicationIdToDeterminedFundingDecisionFromRequestParams(Map<String, String[]> parameterMap, List<Long> applicationIds) {

@@ -26,10 +26,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -41,14 +38,12 @@ import org.springframework.stereotype.Service;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.FundingDecisionStatus;
 import com.worth.ifs.application.mapper.FundingDecisionMapper;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.fundingdecisiondata.domain.FundingDecisionData;
-import com.worth.ifs.fundingdecisiondata.domain.FundingDecisionStatus;
-import com.worth.ifs.fundingdecisiondata.repository.FundingDecisionDataRepository;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
@@ -64,9 +59,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	@Autowired
 	private NotificationService notificationService;
 
-    @Autowired
-    private FundingDecisionDataRepository fundingDecisionDataRepository;
-    
 	@Autowired
 	private SystemNotificationSource systemNotificationSource;
 	
@@ -85,7 +77,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
 	@Override
 	public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-		
 		return getCompetition(competitionId).andOnSuccess(competition -> {
 			List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
 
@@ -94,20 +85,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	}
 	
 	@Override
-	public ServiceResult<Map<Long, FundingDecision>> getFundingDecisionData(Long competitionId) {
-		FundingDecisionData data = fundingDecisionDataRepository.findOne(competitionId);
-		if(data == null) {
-			return serviceSuccess(new HashMap<>());
-		}
-		
-		Map<Long, FundingDecision> result = data.getFundingDecisions().entrySet().stream()
-				.collect(Collectors.toMap(Entry::getKey, this::fundingDecisionFromValue));
-		return serviceSuccess(result);
-	}
-	
-	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-
 		return getCompetition(competitionId).andOnSuccess(competition -> {
 
 			if (competition.getAssessorFeedbackDate() == null) {
@@ -175,54 +153,22 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	}
 
 	private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
-		return findByCompetitionIdFunctionForStatus(ApplicationStatusConstants.SUBMITTED.getId()).apply(competitionId);
-	}
-	
-	private Function<Long, List<Application>> findByCompetitionIdFunctionForStatus(Long statusId) {
-		return compId -> applicationRepository.findByCompetitionIdAndApplicationStatusId(compId, statusId);
-	}
-	
-	private FundingDecision fundingDecisionFromValue(Entry<Long, FundingDecisionStatus> entry) {
-		return fundingDecisionMapper.mapToResource(entry.getValue());
+		return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
 	}
 	
 	private ServiceResult<Void> saveFundingDecisionData(Competition competition, List<Application> applicationsForCompetition, Map<Long, FundingDecision> decision) {
-
-		Map<Long, FundingDecision> relevantDecision = decision.entrySet().stream()
-				.filter(decisionEntry -> {
-						Long applicationId = decisionEntry.getKey();
-						return isApplicationIdInRelevantApplications(applicationsForCompetition).apply(applicationId);
-					})
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		decision.forEach((applicationId, decisionValue) -> {
+			Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findFirst();
+			if(applicationForDecision.isPresent()) {
+				Application application = applicationForDecision.get();
+				FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
+				application.setFundingDecision(fundingDecision);
+			}
+		});
 		 
-		FundingDecisionData data = fundingDecisionDataRepository.findOne(competition.getId());
-		
-		if(data == null) {
-			data = new FundingDecisionData();
-			data.setId(competition.getId());
-		}
-		
-		populateFundingDecisionData(data).accept(relevantDecision);
-		
-		fundingDecisionDataRepository.save(data);
-		
 		return serviceSuccess();
 	}
 
-	private Consumer<Map<Long, FundingDecision>> populateFundingDecisionData(FundingDecisionData data) {
-		return relevantDecision -> {
-			relevantDecision.entrySet().forEach(entry -> {
-				Long applicationId = entry.getKey();
-				FundingDecisionStatus status = fundingDecisionMapper.mapToDomain(entry.getValue());
-				data.getFundingDecisions().put(applicationId, status);
-			});
-		};
-	}
-	
-	private Function<Long, Boolean> isApplicationIdInRelevantApplications(List<Application> applicationsForCompetition) {
-		return applicationId -> applicationsForCompetition.stream().anyMatch(e -> applicationId.equals(e.getId()));
-	}
-	
 	private ServiceResult<Notification> createFundingDecisionNotification(Long competitionId, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
 
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
@@ -257,16 +203,12 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
 	private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
 		if(FUNDED.equals(applicationFundingDecision)) {
-			return statusFromConstant(APPROVED);
+			return applicationStatusRepository.findOne(APPROVED.getId());
 		} else {
-			return statusFromConstant(REJECTED);
+			return applicationStatusRepository.findOne(REJECTED.getId());
 		}
 	}
 
-	private ApplicationStatus statusFromConstant(ApplicationStatusConstants applicationStatusConstant) {
-		return applicationStatusRepository.findOne(applicationStatusConstant.getId());
-	}
-	
 	protected void setFundingDecisionMapper(FundingDecisionMapper fundingDecisionMapper) {
 		this.fundingDecisionMapper = fundingDecisionMapper;
 	}

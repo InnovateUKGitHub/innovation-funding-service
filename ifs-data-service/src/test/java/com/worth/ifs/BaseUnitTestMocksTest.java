@@ -34,7 +34,6 @@ import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
-import com.worth.ifs.fundingdecisiondata.repository.FundingDecisionDataRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
@@ -132,9 +131,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected QuestionStatusRepository questionStatusRepositoryMock;
 
-    @Mock
-    protected FundingDecisionDataRepository fundingDecisionDataRepositoryMock;
-    
     @Mock
     protected QuestionMapper questionMapperMock;
 

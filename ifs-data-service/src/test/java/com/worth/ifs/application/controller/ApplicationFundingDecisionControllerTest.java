@@ -1,26 +1,24 @@
 package com.worth.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.commons.rest.RestErrorResponse;
-import com.worth.ifs.util.MapFunctions;
-import org.junit.Test;
-import org.springframework.http.MediaType;
-
-import java.util.Map;
-
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Map;
+
+import org.junit.Test;
+import org.springframework.http.MediaType;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.util.MapFunctions;
 
 public class ApplicationFundingDecisionControllerTest extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
@@ -66,24 +64,11 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
 
         when(applicationFundingServiceMock.saveFundingDecisionData(competitionId, decision)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/applicationfunding/1")
+        mockMvc.perform(post("/applicationfunding/1")
         			.contentType(MediaType.APPLICATION_JSON)
         			.content(new ObjectMapper().writeValueAsString(decision)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }
     
-    @Test
-    public void testGetApplicationFundingDecisionData() throws Exception {
-        Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
-
-        when(applicationFundingServiceMock.getFundingDecisionData(competitionId)).thenReturn(serviceSuccess(decision));
-
-        mockMvc.perform(get("/applicationfunding/1")
-        			.contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(decision)));
-    }
-
 }

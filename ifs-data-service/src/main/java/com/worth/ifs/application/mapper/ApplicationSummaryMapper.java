@@ -26,6 +26,9 @@ public abstract class ApplicationSummaryMapper {
 	@Autowired
 	private ApplicationSummarisationService applicationSummarisationService;
 	
+	@Autowired
+	private FundingDecisionMapper fundingDecisionMapper;
+	
 	public ApplicationSummaryResource mapToResource(Application source){
 		
 		ApplicationSummaryResource result = new ApplicationSummaryResource();
@@ -40,7 +43,9 @@ public abstract class ApplicationSummaryMapper {
 		result.setLead(source.getLeadOrganisation().getName());
 		result.setName(source.getName());
 		result.setDuration(source.getDurationInMonths());
-		
+		if(source.getFundingDecision() != null) {
+			result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
+		}
 		
 		BigDecimal grantRequested = getGrantRequested(source);
 		result.setGrantRequested(grantRequested);

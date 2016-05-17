@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.worth.ifs.application.domain.FundingDecisionStatus;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.fundingdecisiondata.domain.FundingDecisionStatus;
 
 public class FundingDecisionMapperTest {
 

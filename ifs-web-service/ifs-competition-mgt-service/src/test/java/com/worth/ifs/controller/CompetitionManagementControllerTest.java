@@ -1,7 +1,6 @@
 
 package com.worth.ifs.controller;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -10,8 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.application.service.ApplicationFundingDecisionService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
@@ -47,9 +42,6 @@ public class CompetitionManagementControllerTest  {
 
     @Mock
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
-    
-    @Mock
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
     
     private MockMvc mockMvc;
     
@@ -225,7 +217,6 @@ public class CompetitionManagementControllerTest  {
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
     
-    @SuppressWarnings("unchecked")
 	@Test
     public void getByCompetitionIdForCompetitionFundersPanelSubmittedRequested() throws Exception {
     	
@@ -238,17 +229,13 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE)).thenReturn(summary);
 
-        Map<Long, FundingDecision> fundingDecisionData = mock(Map.class);
-        when(applicationFundingDecisionService.getApplicationFundingDecisionData(123L)).thenReturn(fundingDecisionData);
-        
     	mockMvc.perform(get("/competition/123?tab=submitted"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", summary))
                 .andExpect(model().attribute("activeTab", "submitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"))
-    			.andExpect(model().attribute("fundingDecisionData", fundingDecisionData));
+    			.andExpect(model().attribute("activeSortField", "sortfield"));
     	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);

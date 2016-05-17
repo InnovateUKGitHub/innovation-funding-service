@@ -79,28 +79,6 @@ public class ApplicationFundingDecisionServiceImplTest {
 		service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testGetFundingDecisionData() {
-		Long competitionId = 123L;
-		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
-		
-		when(applicationFundingDecisionRestService.getApplicationFundingDecisionData(competitionId)).thenReturn(restSuccess(applicationIdToFundingDecision));
-
-		Map<Long, FundingDecision> result = service.getApplicationFundingDecisionData(competitionId);
-		
-		assertEquals(applicationIdToFundingDecision, result);
-		verify(applicationFundingDecisionRestService).getApplicationFundingDecisionData(competitionId);
-	}
-	
-	@Test(expected = GeneralUnexpectedErrorException.class)
-	public void testErrorGettingFundingDecisionData() {
-		Long competitionId = 123L;
-		
-		when(applicationFundingDecisionRestService.getApplicationFundingDecisionData(competitionId)).thenReturn(restFailure(CommonErrors.internalServerErrorError()));
-		service.getApplicationFundingDecisionData(competitionId);
-	}
-	
 	@Test
 	public void testVerifyAllApplicationsRepresented() {
 		Map<String, String[]> parameterMap = asMap("1", val("Y"), "2", val("N"));
