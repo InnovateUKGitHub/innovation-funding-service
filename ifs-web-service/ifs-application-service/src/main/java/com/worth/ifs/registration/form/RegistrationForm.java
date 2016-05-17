@@ -71,8 +71,6 @@ public class RegistrationForm {
     @NotBlank(message = "In order to register an account you have to agree to the Terms and Conditions")
     private String termsAndConditions;
 
-    private String actionUrl;
-
     public String getPassword() {
         return password;
     }
@@ -87,14 +85,6 @@ public class RegistrationForm {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getActionUrl() {
-        return actionUrl;
-    }
-
-    public void setActionUrl(String actionUrl) {
-        this.actionUrl = actionUrl;
     }
 
     public String getRetypedPassword() {

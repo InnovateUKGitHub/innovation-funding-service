@@ -15,6 +15,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${valid_pdf}      testing.pdf
 ${valid_pdf_excerpt}    Adobe PDF is an ideal format for electronic document distribution
+${quarantine_warning}   This file has been quarantined by the virus scanner
 
 *** Test Cases ***
 Comp admin can open the view mode of the application
@@ -36,6 +37,8 @@ Comp admin can open the view mode of the application
     And the user should see the text in the page    A novel solution to an old problem
     And the user should see the text in the page   ${valid_pdf}
     And the user can view this file without any errors
+    # And the user should see the text in the page         ${quarantine_pdf}
+    # nad the user cannot see this file but gets a quarantined message
 
 Comp admin should not be able to edit the finances
     [Documentation]    INFUND-2443
@@ -58,3 +61,9 @@ the user can see the option to upload a file on the page
 the user can view this file without any errors
     the user clicks the button/link         link=testing.pdf(7 KB)
     the user should see the text in the page    ${valid_pdf_excerpt}
+    the user goes back to the previous page
+
+the user cannot see this file but gets a quarantined message
+    the user clicks the button/link      link=test_quarantine.pdf(7 KB)
+    the user should not see the text in the page    ${valid_pdf_excerpt}
+    the user should see the text in the page        ${quarantine_warning}

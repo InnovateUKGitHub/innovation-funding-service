@@ -17,9 +17,13 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Monitoring officer'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Monitoring Officer'})" th:remove="tag" />
 
 	<div  th:unless="${param.status != null and param.status[0] == 'noMo'}">
+
+		<div class="success-alert extra-margin-bottom">
+			<p><strong>Your project has been assigned a Monitoring Officer</strong></p>
+		</div>
 		
 		<p><strong>Machine learning in robots</strong> has been assigned a Monitoring Officer. No action needs to be taken by your team. The Monitoring Officer will make contact in due course. If you have any questions about this appointment please contact Innovate UK.</p>
 

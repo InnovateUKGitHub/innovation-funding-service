@@ -133,10 +133,12 @@ public class AcceptInviteController extends BaseController {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
+                CookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
+
                 model.addAttribute("invite", inviteResource);
                 model.addAttribute("organisation", organisation);
                 model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
-                model.addAttribute("registerUrl", RegistrationController.BASE_URL + "?" + RegistrationController.ORGANISATION_ID_PARAMETER_NAME + "=" + inviteOrganisation.getOrganisation());
+                model.addAttribute("registerUrl", RegistrationController.BASE_URL);
                 return "registration/confirm-invited-organisation";
             } else {
                 return handleAcceptedInvite(cookieFlashMessageFilter, response);

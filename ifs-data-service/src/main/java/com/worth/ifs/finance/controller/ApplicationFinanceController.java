@@ -156,17 +156,16 @@ public class ApplicationFinanceController {
     @RequestMapping(value = "/financeDocument", method = GET)
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
-
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
-            FileEntryResource fileEntry = doGetFile(applicationFinanceId).getSuccessObject();
-            return fileService.getFileByFileEntryId(fileEntry.getId()).handleSuccessOrFailure(
+            return costService.getFileContents(applicationFinanceId).handleSuccessOrFailure(
                     failure -> {
                         RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
                     },
                     success -> {
-                        InputStream inputStream = success.get();
+                        FileEntryResource fileEntry = success.getKey();
+                        InputStream inputStream = success.getValue().get();
                         ByteArrayResource inputStreamResource = new ByteArrayResource(StreamUtils.copyToByteArray(inputStream));
                         HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentLength(fileEntry.getFilesizeBytes());
@@ -174,17 +173,11 @@ public class ApplicationFinanceController {
                         return new ResponseEntity<>(inputStreamResource, httpHeaders, OK);
                     }
             );
-
-
         } catch (Exception e) {
             LOG.error("Error retrieving file", e);
             return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private ServiceResult<FileEntryResource> doGetFile(long applicationFinanceId) {
-        return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId);
-    }
+    } 
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
         return () -> {

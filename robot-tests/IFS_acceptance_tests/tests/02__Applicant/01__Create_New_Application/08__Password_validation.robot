@@ -16,7 +16,7 @@ Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
 Invalid password (from the blacklist)
     [Documentation]    INFUND-1147
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -166,7 +166,7 @@ Password left blank
     And The user should see the text in the page    Passwords must match
     And The user should see the text in the page    Please enter your password
 
-User can not login with invalid password
+User cannot login with invalid password
     [Tags]    Pending
     Then the user cannot login with their new details    ${valid_email2}    ${short_password}
 
