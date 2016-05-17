@@ -54,11 +54,10 @@ Academic organisation (accept invitation flow)
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And guest user log-in    worth.email.test+inviteacademics@gmail.com    Passw0rd123
-    When the user clicks the button/link    link=Technology Inspired
+    When the user clicks the button/link    link=Connected digital additive manufacturing
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
     And the user should not see the text in the page    Labour
     And the user should not see an error in the page
 
 *** Keywords ***
-
