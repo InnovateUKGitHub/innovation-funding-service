@@ -177,11 +177,7 @@ public class ApplicationFinanceController {
             LOG.error("Error retrieving file", e);
             return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
-    }
-
-//    private ServiceResult<FileEntryResource> doGetFile(long applicationFinanceId) {
-//        return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId);
-//    }
+    } 
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
         return () -> {
