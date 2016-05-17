@@ -13,6 +13,7 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -23,15 +24,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Arrays.asList;
 
 @Service
 public class FormInputServiceImpl extends BaseTransactionalService implements FormInputService {
@@ -90,31 +86,24 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
-    public ServiceResult<FormInputResponse> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String htmlUnescapedValue) {
-
-        // TODO DW - INFUND-1555 - this should come out and be part of the permissions-checking work
+    public ServiceResult<FormInputResponse> saveQuestionResponse(FormInputResponseCommand formInputResponseCommand) {
+        long applicationId = formInputResponseCommand.getApplicationId();
+        long formInputId = formInputResponseCommand.getFormInputId();
+        String htmlUnescapedValue = formInputResponseCommand.getValue();
+        long userId = formInputResponseCommand.getUserId();
         ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(userId, applicationId);
-        if (userAppRole == null) {
-            return serviceFailure(forbiddenError("Unable to update question response"));
-        } else if (!asList(COLLABORATOR.getName(), LEADAPPLICANT.getName()).contains(userAppRole.getRole().getName())) {
-            return serviceFailure(forbiddenError("Unable to update question response"));
-        }
-
         return find(user(userId), application(applicationId), formInput(formInputId)).
-                andOnSuccess((user, application, formInput) -> 
-
-            getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
-
-                if (!response.getValue().equals(htmlUnescapedValue)) {
-                    response.setUpdateDate(LocalDateTime.now());
-                    response.setUpdatedBy(userAppRole);
-                }
-
-                response.setValue(htmlUnescapedValue);
-                formInputResponseRepository.save(response);
-                return response;
-            })
-        );
+                andOnSuccess((user, application, formInput) ->
+                                getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
+                                    if (!response.getValue().equals(htmlUnescapedValue)) {
+                                        response.setUpdateDate(LocalDateTime.now());
+                                        response.setUpdatedBy(userAppRole);
+                                    }
+                                    response.setValue(htmlUnescapedValue);
+                                    formInputResponseRepository.save(response);
+                                    return response;
+                                })
+                );
     }
 
     private ServiceResult<FormInputResponse> getOrCreateResponse(Application application, FormInput formInput, ProcessRole userAppRole) {

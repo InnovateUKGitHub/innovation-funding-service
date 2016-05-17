@@ -20,6 +20,7 @@ ${incorrect_funding_level_message}    This field should be
 One of the org size options must be selected
     [Documentation]    INFUND-2643
     [Tags]    Organisation    Funding    Finance
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page    ${newly_created_application_your_finances_url}
     And the applicant enters the funding level    50
     When the applicant chooses to save and return to application overview
