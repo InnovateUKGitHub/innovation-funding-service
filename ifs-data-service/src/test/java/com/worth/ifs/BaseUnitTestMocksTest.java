@@ -2,7 +2,6 @@ package com.worth.ifs;
 
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
-import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.alert.mapper.AlertMapper;
 import com.worth.ifs.alert.repository.AlertRepository;
 import com.worth.ifs.alert.transactional.AlertService;
@@ -141,9 +140,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressLookupService addressLookupServiceMock;
-
-    @Mock
-    protected AddressService addressServiceMock;
 
     @Mock
     protected OrganisationService organisationServiceMock;
