@@ -66,7 +66,7 @@ Non registered users CH route (email step)
     And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=Technology Inspired
+    And the user clicks the button/link    link=Connected digital additive manufacturing
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
 
@@ -119,7 +119,7 @@ Non registered users non CH route (email step)
     And the guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=Technology Inspired
+    And the user clicks the button/link    link=Connected digital additive manufacturing
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
 
@@ -158,7 +158,7 @@ the user clicks the Not on company house link
     the user clicks the button/link    jQuery=.button:contains("Continue")
 
 the user edits the competition title
-    the user clicks the button/link    link=Technology Inspired
+    the user clicks the button/link    link=Connected digital additive manufacturing
     the user should see the element    link=Application details
     the user clicks the button/link    link=Application details
     Input Text    id=application_details-title    test title

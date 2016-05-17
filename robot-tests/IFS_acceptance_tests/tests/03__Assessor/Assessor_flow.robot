@@ -23,7 +23,7 @@ Resource          ../../resources/keywords/User_actions.robot
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
 ${accept_application_name}    Using natural gas to heat homes
-${competition_name}    Technology Inspired
+${competition_name}    Connected digital additive manufacturing
 ${deadline_month}    December deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
@@ -224,7 +224,7 @@ Competition has a deadline
     Element Should Contain    css=.competition-deadline .month    ${deadline_month}
 
 Competition has a number of days remaining
-    ${number_of_days_element_text}=    Get Text    //*[@class='in-progress' and .//*[contains(text(),"Technology Inspired")]]//div[./span[contains(text(), "Days left")]]/div
+    ${number_of_days_element_text}=    Get Text    //*[@class='in-progress' and .//*[contains(text(),"Connected digital additive manufacturing")]]//div[./span[contains(text(), "Days left")]]/div
     Should Match Regexp    ${number_of_days_element_text}    ^[0-9]{1,3}$
 
 Competitions for Assessment shows an amount of competitions

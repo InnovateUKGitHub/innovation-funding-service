@@ -12,7 +12,7 @@ Resource          ../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${application_name}    Mobile Phone Data for Logistics Analytics
-${competition_name}    Technology Inspired
+${competition_name}    Connected digital additive manufacturing
 
 *** Test Cases ***
 Submitting an application shows a confirmation popup
@@ -61,6 +61,3 @@ Application is not submitted
 Application is submitted
     Reload Page
     Page Should Contain Element    xpath=//*[@class="submitted"]//*[contains(text(),'${application_name}')]
-
-
-
