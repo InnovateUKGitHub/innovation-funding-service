@@ -42,7 +42,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static com.google.common.primitives.Longs.asList;
+import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyList;
@@ -93,7 +93,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
      public void testApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
-        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Set<Long> sections = newHashSet(1L,2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
@@ -129,7 +129,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
        ApplicationResource app = applications.get(0);
-        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
@@ -166,7 +166,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
        ApplicationResource app = applications.get(0);
-        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
@@ -200,7 +200,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
        ApplicationResource app = applications.get(0);
-        Set<Long> sections = new HashSet<>(asList(1L,2L));
+        Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);

@@ -112,12 +112,9 @@ public class ApplicationOverviewModel{
 
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
-        boolean hasFinanceSection;
-        Long financeSectionId;
-        if(financeSections.isEmpty()) {
-            hasFinanceSection = false;
-            financeSectionId = null;
-        } else {
+        boolean hasFinanceSection = false;
+        Long financeSectionId = null;
+        if (!financeSections.isEmpty()) {
             hasFinanceSection = true;
             financeSectionId = financeSections.get(0).getId();
         }
