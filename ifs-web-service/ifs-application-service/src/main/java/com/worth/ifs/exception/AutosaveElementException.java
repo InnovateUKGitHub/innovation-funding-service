@@ -70,7 +70,7 @@ public class AutosaveElementException extends RuntimeException {
             return handler.getMessage(originalException);
         }
 
-        return "Please enter a valid value.";
+        return "Please enter a valid value";
     }
 
     public ObjectNode createJsonResponse() {

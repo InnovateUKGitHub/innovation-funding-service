@@ -1,16 +1,16 @@
 package com.worth.ifs.finance.resource.cost;
 
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
 import java.math.BigDecimal;
 
 public class GrantClaim implements CostItem {
     private Long id;
 
-    @Max(100)
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer grantClaimPercentage;
+
     private String name;
+
     public GrantClaim() {
         this.name = getCostType().getType();
     }

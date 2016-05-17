@@ -2,10 +2,10 @@ package com.worth.ifs.security;
 
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 
@@ -52,4 +52,9 @@ public class SecurityRuleUtil {
     public static boolean isAnonymous(final UserResource user){
         return CustomPermissionEvaluator.isAnonymous(user);
     }
+
+    public static UserResource getAnonymous(){
+        return CustomPermissionEvaluator.getAnonymous();
+    }
+
 }
