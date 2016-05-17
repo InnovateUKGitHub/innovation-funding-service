@@ -26,14 +26,35 @@ Don't use the javascript underneath which is just for demo, just add the html fr
 <script>
 function showAlert(){
   var html = '\
-  <div class="event-alert-error">\
-      <p><span>This is a alert</span></p>\
+  <div class="event-alert error">\
+      <p><span>This is an alert</span></p>\
   </div>';
   jQuery('body').append(html)
 }
 </script>
 
 <button class="button" onclick="showAlert()">show the alert</button>
+
+```
+*/
+
+/* SG
+# IFS/Alert - alert
+
+Don't use the javascript underneath which is just for demo, just add the html fragment
+```
+
+<script>
+function showWarning(){
+  var html = '\
+  <div class="event-alert warning">\
+      <p><span>This is a warning</span></p>\
+  </div>';
+  jQuery('body').append(html)
+}
+</script>
+
+<button class="button" onclick="showWarning()">show the alert</button>
 
 ```
 */
@@ -85,28 +106,29 @@ function showAlert(){
             padding: 15px 0 15px 35px;
         }
     }
+    &.no-animation {
+      position: relative;
+      @include animation(none);
 
-    &-warning {
-
-        p {
-            border-top: 10px solid $beta-colour;
-
-            span {
-                background-image: url(/images/icons/icon-important.png);
-                padding: 15px 0 15px 45px;
-            }
-        }
     }
 
-    &-error {
+    &.event-warning p {
+          border-top: 10px solid $beta-colour;
 
-        p {
-            border-top: 10px solid $error-colour;
+          span {
+              background-image: url(/images/icons/icon-important.png);
+              padding: 15px 0 15px 45px;
+          }
 
-            span {
-                background-image: url(/images/icons/icon-important.png);
-                padding: 15px 0 15px 45px;
-            }
-        }
+    }
+
+    &.event-error   p {
+          border-top: 10px solid $error-colour;
+
+          span {
+              background-image: url(/images/icons/icon-important.png);
+              padding: 15px 0 15px 45px;
+          }
+
     }
 }
