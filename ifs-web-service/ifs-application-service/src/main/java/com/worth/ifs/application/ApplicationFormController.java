@@ -404,10 +404,12 @@ public class ApplicationFormController extends AbstractApplicationController {
             applicationService.save(application);
         }
 
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
-        financeErrors.forEach((k, errorsList) ->
-        errorsList.forEach(e -> addNonDuplicateFieldError(bindingResult, k, e)));
+        if(!isMarkSectionAsIncompleteRequest(params)) {
+            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+            Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+            financeErrors.forEach((k, errorsList) ->
+            errorsList.forEach(e -> addNonDuplicateFieldError(bindingResult, k, e)));
+        }
 
         if(isMarkQuestionRequest(params)) {
             markApplicationQuestions(application, processRole.getId(), request, response, errors);
@@ -492,6 +494,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private boolean isMarkSectionRequest(@NotNull Map<String, String[]> params){
         return params.containsKey(MARK_SECTION_AS_COMPLETE) || params.containsKey(MARK_SECTION_AS_INCOMPLETE);
+    }
+
+    private boolean isMarkSectionAsIncompleteRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(MARK_SECTION_AS_INCOMPLETE);
     }
 
     private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {

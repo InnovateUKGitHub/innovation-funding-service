@@ -80,7 +80,7 @@ public class FormInputResponsePermissionRules {
                     "2) Have the web layer only call the update when it is meant to, i.e. not when it is in read only mode as it currently does")
     public boolean aConsortiumMemberCanUpdateAFormInputResponse(final FormInputResponseCommand response, final UserResource user) {
         final long applicationId = response.getApplicationId();
-        final ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), response.getApplicationId());
+        final ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
         final boolean isLead = checkRole(user, applicationId, UserRoleType.LEADAPPLICANT, processRoleRepository);
         final boolean isCollaborator = checkRole(user, applicationId, UserRoleType.COLLABORATOR, processRoleRepository);
         return isLead || isCollaborator;
