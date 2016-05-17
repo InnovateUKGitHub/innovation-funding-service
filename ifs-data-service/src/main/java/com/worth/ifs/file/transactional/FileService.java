@@ -16,19 +16,15 @@ import java.util.function.Supplier;
  */
 public interface FileService {
 
-    //@NotSecured("This Service is to be used within other secured services")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource file, Supplier<InputStream> inputStreamSupplier);
 
-//    @NotSecured("This Service is to be used within other secured services")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId);
 
-//    @NotSecured("This Service is to be used within other secured services")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier);
 
-//    @NotSecured("This Service is to be used within other secured services")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<FileEntry> deleteFile(long fileEntryId);
 }
