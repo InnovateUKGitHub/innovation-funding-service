@@ -109,9 +109,30 @@ public class ApplicationOverviewModel{
                 SectionResource::getId,
                 s -> getQuestionsBySection(s.getQuestions(), questions)
             ));
+
+        final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
+
+        boolean hasFinanceSection;
+        Long financeSectionId;
+        if(financeSections.isEmpty()) {
+            hasFinanceSection = false;
+            financeSectionId = null;
+        } else {
+            hasFinanceSection = true;
+            financeSectionId = financeSections.get(0).getId();
+        }
+
         model.addAttribute("sections", sections);
         model.addAttribute("subSections", subSections);
         model.addAttribute("sectionQuestions", sectionQuestions);
+        model.addAttribute("hasFinanceSection", hasFinanceSection);
+        model.addAttribute("financeSectionId", financeSectionId);
+    }
+
+    private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections){
+        return sections.stream()
+            .filter(s -> SectionType.FINANCE.equals(s.getType()))
+            .collect(Collectors.toList());
     }
     
     private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
@@ -175,25 +196,11 @@ public class ApplicationOverviewModel{
         final Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         final Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         final Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
-        final List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
-
-        boolean hasFinanceSection;
-        Long financeSectionId;
-        if(financeSections.isEmpty()) {
-            hasFinanceSection = false;
-            financeSectionId = null;
-        } else {
-            hasFinanceSection = true;
-            financeSectionId = financeSections.get(0).getId();
-        }
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         model.addAttribute("markedAsComplete", markedAsComplete);
-        model.addAttribute("hasFinanceSection", hasFinanceSection);
-        model.addAttribute("financeSectionId", financeSectionId);
-
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
