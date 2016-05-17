@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Have the menu links globally available for each controller.
- * So it does not have to be added to each call separately anymore.
+ * Look for alertmessages on every page that has a modelAndView
  */
 public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
 
