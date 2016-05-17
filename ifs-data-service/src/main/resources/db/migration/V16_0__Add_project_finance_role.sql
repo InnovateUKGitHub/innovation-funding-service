@@ -1,0 +1,1 @@
+INSERT IGNORE INTO `role` (`id`, `name`) VALUES (8,'project_finance');
