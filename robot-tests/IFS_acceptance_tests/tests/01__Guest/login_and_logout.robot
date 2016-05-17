@@ -71,7 +71,7 @@ Reset password (psw does not match)
     [Tags]    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
-    When the user clicks the button/link    link=Forgot your password?
+    When the user clicks the button/link    link=forgot your password?
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
@@ -89,7 +89,7 @@ Reset password
     [Tags]    HappyPath
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
-    When the user clicks the button/link    link=Forgot your password?
+    When the user clicks the button/link    link=forgot your password?
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
