@@ -134,10 +134,7 @@ the user follows the flow to register their organisation
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link    id=postcode-lookup
-    Then the user should see the element    css=#select-address-block
-    And the user clicks the button/link    css=#select-address-block > button
+    And the user selects the checkbox       id=address-same
     And the user clicks the button/link     jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link     jQuery=.button:contains("Save")
 
