@@ -17,11 +17,12 @@ ${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/2/details
 
 Competition brief link exists on the competition page
     [Documentation]     INFUND-2448
-    [Tags]
+    [Tags]   Pending
+    # Pending until shib image drop 14
     Given the user navigates to the page        ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then the user should see the element    link=Full competition brief
-    And the user should see the element     xpath=//a[contains(@href, 'https://interact.innovateuk.org/-/technology-inspired-innovation-may-2015-advanced-materials')]
+    And the user should see the element     xpath=//a[contains(@href, 'https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief')]
 
 
 

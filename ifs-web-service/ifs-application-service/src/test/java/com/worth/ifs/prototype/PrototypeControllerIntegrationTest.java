@@ -19,6 +19,7 @@ import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 /**
  * Integration test of the Prototype Controller with the "prototypes" profile to check that requests are found when they should be.
  */
+@Ignore("Ignored since fetching these pages invokes com.worth.ifs.interceptors.AlertMessageHandlerInterceptor.addAlertMessages and the data controllers are not deployed to the embedded Tomcat")
 @ActiveProfiles("prototypes")
 public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
 
