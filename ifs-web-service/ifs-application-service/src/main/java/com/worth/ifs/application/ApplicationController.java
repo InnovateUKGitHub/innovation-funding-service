@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.model.ApplicationOverviewModel;
+import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -48,7 +48,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class ApplicationController extends AbstractApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
     @Autowired
-    private ApplicationOverviewModel applicationOverviewModel;
+    private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -60,7 +60,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request) {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        applicationOverviewModel.populateModel(applicationId, userId, form, model);
+        applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
         return "application-details";
     }
 

@@ -5,8 +5,8 @@ import java.util.EnumMap;
 import java.util.HashSet;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.model.OpenSectionModel;
-import com.worth.ifs.application.model.QuestionModel;
+import com.worth.ifs.application.model.OpenSectionModelPopulator;
+import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
@@ -63,11 +63,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Spy
     @InjectMocks
-    private QuestionModel questionModel;
+    private QuestionModelPopulator questionModelPopulator;
 
     @Spy
     @InjectMocks
-    private OpenSectionModel openSectionModel;
+    private OpenSectionModelPopulator openSectionModel;
 
     @Mock
     private Model model;

@@ -19,7 +19,6 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.QuestionService;
@@ -49,15 +48,12 @@ import static java.util.Collections.singletonList;
  * Class for populating the model for the "Your Finances" section
  */
 @Component
-public class OpenFinanceSectionSectionModel extends BaseSectionModel {
+public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPopulator {
     @Autowired
     FormInputResponseService formInputResponseService;
 
     @Autowired
     QuestionService questionService;
-
-    @Autowired
-    ApplicationService applicationService;
 
     @Autowired
     SectionService sectionService;
@@ -86,6 +82,7 @@ public class OpenFinanceSectionSectionModel extends BaseSectionModel {
     @Autowired
     FinanceHandler financeHandler;
 
+    @Override
     public void populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 

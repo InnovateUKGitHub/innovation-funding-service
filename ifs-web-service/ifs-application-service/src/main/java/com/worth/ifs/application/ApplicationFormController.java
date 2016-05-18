@@ -28,9 +28,9 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModel;
-import com.worth.ifs.application.model.OpenSectionModel;
-import com.worth.ifs.application.model.QuestionModel;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.model.OpenSectionModelPopulator;
+import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -106,13 +106,13 @@ public class ApplicationFormController extends AbstractApplicationController {
     MessageSource messageSource;
 
     @Autowired
-    private QuestionModel questionModel;
+    private QuestionModelPopulator questionModelPopulator;
 
     @Autowired
-    private OpenSectionModel openSectionModel;
+    private OpenSectionModelPopulator openSectionModel;
 
     @Autowired
-    private OpenFinanceSectionSectionModel openFinanceSectionModel;
+    private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -128,7 +128,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        questionModel.populateModel(questionId, applicationId, user, model, form, bindingResult);
+        questionModelPopulator.populateModel(questionId, applicationId, user, model, form, bindingResult);
         return APPLICATION_FORM;
     }
 

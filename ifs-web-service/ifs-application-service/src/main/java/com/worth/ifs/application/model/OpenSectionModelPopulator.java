@@ -63,7 +63,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
  * These are rendered in the ApplicationFormController.applicationFormWithOpenSection method
  */
 @Component
-public class OpenSectionModel extends BaseSectionModel {
+public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     @Autowired
     FormInputResponseService formInputResponseService;
@@ -104,6 +104,7 @@ public class OpenSectionModel extends BaseSectionModel {
     @Autowired
     FinanceHandler financeHandler;
 
+    @Override
     public void populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
