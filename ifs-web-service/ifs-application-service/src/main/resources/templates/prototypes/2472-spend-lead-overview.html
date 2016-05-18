@@ -19,6 +19,12 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
+	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<div class="success-alert extra-margin-bottom">
+			<p><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
+		</div>
+	</div>
+
 	<p>This overview details the spend profile status of each partner in your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">

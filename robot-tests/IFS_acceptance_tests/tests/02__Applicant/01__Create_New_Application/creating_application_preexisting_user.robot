@@ -83,10 +83,10 @@ Non-logged in user can log in and continue with an existing application
 
 The user can see this new application on their dashboard
     the user navigates to the page    ${applicant_dashboard_url}
-    the user should see the text in the page    Technology Inspired
+    the user should see the text in the page    Connected digital additive manufacturing
 
 The project start date is blank
-    the user clicks the button/link    link=Technology Inspired
+    the user clicks the button/link    link=Connected digital additive manufacturing
     the user clicks the button/link    link=Application details
     the user should see the element    xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
     the user should see the element    xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
@@ -97,4 +97,4 @@ The user can save the page with the blank date
     # note that the below validation is being used rather than a specific application number so that the test is
     # not broken by other tests that run before it and may change this application's number
     the user should see the text in the page    Application overview
-    the user should see the text in the page    Technology Inspired
+    the user should see the text in the page    Connected digital additive manufacturing

@@ -3,7 +3,7 @@ package com.worth.ifs.finance.service;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
-import com.worth.ifs.application.security.ApplicationRules;
+import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
@@ -17,8 +17,10 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     private CostFieldPermissionsRules costFieldPermissionsRules;
     private CostPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
-    private ApplicationRules applicationRules;
+    private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CostLookupStrategy costLookupStrategy;
     private CostFieldLookupStrategy costFieldLookupStrategy;
@@ -55,7 +57,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         costFieldPermissionsRules = getMockPermissionRulesBean(CostFieldPermissionsRules.class);
         costPermissionsRules = getMockPermissionRulesBean(CostPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
-        applicationRules = getMockPermissionRulesBean(ApplicationRules.class);
+        applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
         costFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostFieldLookupStrategy.class);
@@ -217,6 +219,53 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     }
 
     @Test
+    public void testDeleteFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.deleteFinanceFileEntry(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testCreateFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.createFinanceFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testUpdateFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.updateFinanceFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testGetFileContents() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.getFileContents(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
     public void testGetCosts() {
         final Long costId = 1L;
         final String costTypeName = "academic";
@@ -374,6 +423,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
 
         @Override
         public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinance) {
             return null;
         }
     }

@@ -8,7 +8,7 @@ import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
-import com.worth.ifs.application.security.ApplicationRules;
+import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
 import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -48,13 +48,13 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
     private FormInputResponseFileUploadRules fileUploadRules;
     private FormInputResponseFileUploadLookupStrategies fileUploadLookup;
-    private ApplicationRules applicationRules;
+    private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         fileUploadRules = getMockPermissionRulesBean(FormInputResponseFileUploadRules.class);
-        applicationRules = getMockPermissionRulesBean(ApplicationRules.class);
+        applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         fileUploadLookup = getMockPermissionEntityLookupStrategiesBean(FormInputResponseFileUploadLookupStrategies.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }

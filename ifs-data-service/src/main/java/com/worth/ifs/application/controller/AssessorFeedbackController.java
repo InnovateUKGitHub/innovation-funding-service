@@ -99,7 +99,7 @@ public class AssessorFeedbackController {
         }
     }
 
-    @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
+    @RequestMapping(value = "/assessorFeedbackDocument/fileentry", method = GET, produces = "application/json")
     public @ResponseBody ResponseEntity<Object> getFileEntryDetails(
             @RequestParam("applicationId") long applicationId) throws IOException {
 

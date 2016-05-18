@@ -29,7 +29,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void testSystemRegistrationUserCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), user));
             } else {
@@ -40,7 +40,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void testCompAdminsCanViewAnyOrganisation() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(compAdminUser())) {
                 assertTrue(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
@@ -51,7 +51,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void testSystemRegistrationUsersCanViewAnyOrganisation() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
@@ -140,7 +140,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void testSystemRegistrationUserCanCreateOrganisations() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanCreateOrganisations(newOrganisationResource().build(), user));
             } else {
@@ -151,7 +151,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void testSystemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(newOrganisationResource().build(), user));
             } else {
@@ -163,7 +163,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     @Test
     public void testSystemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToApplication() {
         OrganisationResource organisation = newOrganisationResource().withProcessRoles(singletonList(123L)).build();
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user));
         });
     }
@@ -171,14 +171,14 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     @Test
     public void testSystemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToUsers() {
         OrganisationResource organisation = newOrganisationResource().withUsers(singletonList(123L)).build();
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user));
         });
     }
 
     @Test
     public void testSystemRegistrationUserCanSeeOrganisationSearchResults() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanSeeOrganisationSearchResults(new OrganisationSearchResult(), user));
             } else {

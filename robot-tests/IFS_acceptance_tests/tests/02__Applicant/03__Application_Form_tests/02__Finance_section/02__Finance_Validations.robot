@@ -46,12 +46,23 @@ Labour server side
     And the user should see the element    css=.error-summary-list
     [Teardown]    Remove row    jQuery=button:contains("Labour")    jQuery=.labour-costs-table button:contains("Remove")
 
-Admin costs (custom cost)
+Admin costs client side
     [Documentation]    INFUND-844
-    [Tags]
     Given the user clicks the button/link    jQuery=button:contains("Administration support costs")
     When user selects the admin costs    overheads-type-29-51    CUSTOM_RATE
     And the user enters text to a text field    id=cost-overheads-51-customRate    ${EMPTY}
+    Then the user gets the expected validation errors    This field cannot be left blank    This field should be 1 or higher
+    When the user enters text to a text field    id=cost-overheads-51-customRate    101
+    Then the user gets the expected validation errors    This field should be 100 or lower    This field should be 100 or lower    #Entered two times the same error because this keyword expects two errors
+    When the user enters text to a text field    id=cost-overheads-51-customRate    12121212121212121212121212
+    Then the user gets the expected validation errors    You must enter a value less than 10 digits    You must enter a value less than 10 digits    #Entered two times the same error because this keyword expects two errors
+    When the user enters text to a text field    id=cost-overheads-51-customRate    -1
+    Then the user gets the expected validation errors    This field should be 1 or higher    This field should be 1 or higher    #Entered two times the same error because this keyword expects two errors
+
+Admin costs server side
+    [Documentation]    INFUND-844
+    [Tags]
+    When the user enters text to a text field    id=cost-overheads-51-customRate    ${EMPTY}
     And the user marks the finances as complete
     Then the user should see an error    This field should be 1 or higher
     And the user enters text to a text field    id=cost-overheads-51-customRate    101
@@ -98,17 +109,17 @@ Capital usage client side
     Given the user clicks the button/link    jQuery=button:contains("Capital usage")
     And the user clicks the button/link    jQuery=button:contains('Add another asset')
     When the user enters text to a text field    css=.form-finances-capital-usage-depreciation    ${EMPTY}
-    And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    12121212121212
+    And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    12121212121212121212121212121
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
     And the user enters text to a text field    css=.form-finances-capital-usage-utilisation    101
-    #Then the user gets the expected validation errors    This field should be 1 or higher    You must enter a value less than 10 digits
-    #And the user gets the expected validation errors    This field should be 0 or higher    This field should be 100 or lower
+    Then the user gets the expected validation errors    This field should be 1 or higher    You must enter a value less than 20 digits
+    And the user gets the expected validation errors    This field cannot be left blank    This field should be 100 or lower
     When the user enters text to a text field    css=.form-finances-capital-usage-depreciation    12121212121212121212121212121
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    -1
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
     And the user enters text to a text field    css=.form-finances-capital-usage-utilisation    101
     Then the user gets the expected validation errors    You must enter a value less than 10 digits    This field should be 1 or higher
-    #And the user gets the expected validation errors    This field should be 0 or higher    This field should be 100 or lower
+    And the user gets the expected validation errors    This field should be 0 or higher    This field should be 100 or lower
 
 Capital usage server side
     [Documentation]    INFUND-844
@@ -214,7 +225,7 @@ Funding level server side
     When the user enters text to a text field    id=cost-financegrantclaim    61
     And the user marks the finances as complete
     Then the user should see an error    This field should be 60% or lower
-    [Teardown]     the user enters text to a text field    id=cost-financegrantclaim    59
+    [Teardown]    the user enters text to a text field    id=cost-financegrantclaim    59
 
 Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
@@ -224,6 +235,7 @@ Mark as complete with empty other funding row should be impossible
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
     Then the user should see the element    css=.error-summary-list
+    #Then the user should see an error    You should provide at least 1 source of other funding
 
 Other funding client side
     [Setup]    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
@@ -248,13 +260,15 @@ Other funding server side
 
 Select NO and mark as complete should be possible
     [Documentation]    INFUND-2214
+    ...
+    ...    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
     [Tags]
     Given the users selects no in the other fundings section
     And the user marks the finances as complete
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
-    [Teardown]    the user navigates to the page    ${YOUR_FINANCES_URL}
-    # ...    AND    Focus    jQuery=button:contains("Edit")
-    # ...    AND    the user clicks the button/link    jQuery=button:contains("Edit")
+    [Teardown]    Run keywords    the user navigates to the page    ${YOUR_FINANCES_URL}
+    ...    AND    Run Keyword And Ignore Error    Focus    jQuery=button:contains("Edit")
+    ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
 
 *** Keywords ***
 the user marks the finances as complete
@@ -269,7 +283,7 @@ user selects the admin costs
     focus    css=.app-submit-btn
 
 the field with the wrong input should be saved
-    sleep   300ms
+    sleep    300ms
     ${input_value} =    Get Value    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Should Be Equal As Strings    ${input_value}    -1
 
