@@ -1,5 +1,5 @@
 /*
-  This script adds some example users with project finance role and Innovate UK as organisation
+  This script adds some example users with project finance role
 */
 
 INSERT  IGNORE INTO `project_finance_emails` (`email`) VALUES ('worth.email.test+project.finance1@gmail.com');

@@ -1,1 +1,1 @@
-INSERT IGNORE INTO `role` (`id`, `name`) VALUES (8,'project_finance');
+INSERT IGNORE INTO `role` (`id`, `name`, `url`) VALUES (8,'project_finance', 'management/projectfinancedashboard');
