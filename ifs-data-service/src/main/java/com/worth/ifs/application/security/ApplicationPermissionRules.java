@@ -105,7 +105,7 @@ public class ApplicationPermissionRules {
             description = "A Comp Admin user can upload Assessor Feedback documentation for an Application whilst " +
                           "the Application's Competition is in Funders' Panel or Assessor Feedback state",
             particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
-    public boolean compAdminCanUploadAssessorFeedbackToApplicationInAssessmentOrFundersPanelState(ApplicationResource application, UserResource user) {
+    public boolean compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
 
         if (!isCompAdmin(user)) {
             return false;

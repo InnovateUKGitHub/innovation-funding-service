@@ -6,10 +6,12 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +20,9 @@ import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -28,7 +33,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyList;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<ApplicationPermissionRules> {
 
@@ -154,5 +159,41 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertFalse(rules.aLeadApplicantCanSendApplicationSubmittedNotification(applicationResource1, user2));
     }
 
+    @Test
+    public void compAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
+
+        //
+        // For each possible Competition Status...
+        //
+        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+
+            //
+            // For each possible role
+            //
+            allRoleUsers.forEach(user -> {
+
+                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
+                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+
+                // if the user is not a Comp Admin, immediately fail
+                if (!user.equals(compAdminUser())) {
+                    assertFalse(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
+
+                } else {
+
+                    when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+                    if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
+                        assertTrue(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    } else {
+                        assertFalse(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    }
+
+                    verify(competitionRepositoryMock).findOne(competition.getId());
+                }
+            });
+        });
+    }
 
 }

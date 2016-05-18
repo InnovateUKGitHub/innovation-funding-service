@@ -42,7 +42,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         assertAccessDenied(() -> service.createAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
-            verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInAssessmentOrFundersPanelState(application, getLoggedInUser());
+            verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
         });
     }
 
@@ -54,7 +54,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         assertAccessDenied(() -> service.updateAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
-            verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInAssessmentOrFundersPanelState(application, getLoggedInUser());
+            verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
         });
     }
 
