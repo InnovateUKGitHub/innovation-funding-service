@@ -134,7 +134,7 @@ public class ApplicationPermissionRules {
     @PermissionRule(
             value = "DOWNLOAD_ASSESSOR_FEEDBACK",
             description = "A Comp Admin user can see and download Assessor Feedback at any time for any Application")
-    public boolean compAdminCanSeeAndDownloadAllAssessorFeedback(ApplicationResource application, UserResource user) {
+    public boolean compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(ApplicationResource application, UserResource user) {
         return isCompAdmin(user);
     }
 
