@@ -9,7 +9,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for Cost entities.
+ * Builder for {@link CostValueResource} entities.
  */
 public class CostValueResourceBuilder extends BaseBuilder<CostValueResource, CostValueResourceBuilder> {
 
