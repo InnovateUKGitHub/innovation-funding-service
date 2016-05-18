@@ -1,17 +1,15 @@
 package com.worth.ifs.application.service;
 
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.calls;
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +34,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private CompetitionsRestService competitionsRestService;
 
     private Long userId;
+    
+    private CompetitionResource openCompetition;
+    private CompetitionResource inAssessmentCompetition;
+    private CompetitionResource fundersPanelCompetition;
+    private CompetitionResource closedCompetition;
 
     @Override
     @Before
@@ -43,30 +46,41 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         super.setUp();
 
         userId = 1L;
-        
 
-        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
-        CompetitionResource closedCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
+        openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        inAssessmentCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
+        fundersPanelCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.FUNDERS_PANEL).build();
+        closedCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.ASSESSOR_FEEDBACK).build();
 
         List<ApplicationResource> applications = newApplicationResource()
-        		.withId(1L, 2L, 3L, 4L)
+        		.withId(1L, 2L, 3L, 4L, 5L, 6L)
         		.withApplicationStatus(ApplicationStatusConstants.CREATED.getId(),
 				        				ApplicationStatusConstants.OPEN.getId(),
 				        				ApplicationStatusConstants.OPEN.getId(),
+				        				ApplicationStatusConstants.SUBMITTED.getId(),
+				        				ApplicationStatusConstants.SUBMITTED.getId(),
 				        				ApplicationStatusConstants.SUBMITTED.getId())
         		.withCompetition(openCompetition.getId(),
 		        				openCompetition.getId(),
-		        				closedCompetition.getId(),
+		        				inAssessmentCompetition.getId(),
+		        				inAssessmentCompetition.getId(),
+		        				fundersPanelCompetition.getId(),
 		        				closedCompetition.getId())
-        		.build(4);
+        		.build(6);
 
         when(competitionsRestService.getCompetitionById(openCompetition.getId())).thenReturn(restSuccess(openCompetition));
+        when(competitionsRestService.getCompetitionById(inAssessmentCompetition.getId())).thenReturn(restSuccess(inAssessmentCompetition));
+        when(competitionsRestService.getCompetitionById(fundersPanelCompetition.getId())).thenReturn(restSuccess(fundersPanelCompetition));
         when(competitionsRestService.getCompetitionById(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
 
     	when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
  
-    	  when(applicationRestService.getCompleteQuestionsPercentage(1L)).thenReturn(settable(restSuccess(0d)));
-          when(applicationRestService.getCompleteQuestionsPercentage(2L)).thenReturn(settable(restSuccess(20.5d)));
+    	when(applicationRestService.getCompleteQuestionsPercentage(1L)).thenReturn(settable(restSuccess(0d)));
+        when(applicationRestService.getCompleteQuestionsPercentage(2L)).thenReturn(settable(restSuccess(20.5d)));
+        when(applicationRestService.getCompleteQuestionsPercentage(3L)).thenReturn(settable(restSuccess(0d)));
+        when(applicationRestService.getCompleteQuestionsPercentage(4L)).thenReturn(settable(restSuccess(0d)));
+        when(applicationRestService.getCompleteQuestionsPercentage(5L)).thenReturn(settable(restSuccess(0d)));
+        when(applicationRestService.getCompleteQuestionsPercentage(6L)).thenReturn(settable(restSuccess(0d)));
     }
 
     @Override
@@ -105,9 +119,18 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void testGetInProgressReliesOnApplicationStatusAndCompetitionStatus() throws Exception {
         List<ApplicationResource> returnedApplications = service.getInProgress(userId);
-        assertEquals(2, returnedApplications.size());
+        assertEquals(4, returnedApplications.size());
         assertEquals(ApplicationStatusConstants.CREATED.getId(), returnedApplications.get(0).getApplicationStatus());
+        assertEquals(openCompetition.getId(), returnedApplications.get(0).getCompetition());
+
         assertEquals(ApplicationStatusConstants.OPEN.getId(), returnedApplications.get(1).getApplicationStatus());
+        assertEquals(openCompetition.getId(), returnedApplications.get(1).getCompetition());
+        
+        assertEquals(ApplicationStatusConstants.SUBMITTED.getId(), returnedApplications.get(2).getApplicationStatus());
+        assertEquals(inAssessmentCompetition.getId(), returnedApplications.get(2).getCompetition());
+        
+        assertEquals(ApplicationStatusConstants.SUBMITTED.getId(), returnedApplications.get(3).getApplicationStatus());
+        assertEquals(fundersPanelCompetition.getId(), returnedApplications.get(3).getCompetition());
     }
 
     @Test
@@ -115,7 +138,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         List<ApplicationResource> returnedApplications = service.getFinished(userId);
         assertEquals(2, returnedApplications.size());
         assertEquals(ApplicationStatusConstants.OPEN.getId(), returnedApplications.get(0).getApplicationStatus());
+        assertEquals(inAssessmentCompetition.getId(), returnedApplications.get(0).getCompetition());
+
         assertEquals(ApplicationStatusConstants.SUBMITTED.getId(), returnedApplications.get(1).getApplicationStatus());
+        assertEquals(closedCompetition.getId(), returnedApplications.get(1).getCompetition());
     }
     
     @Test
@@ -129,7 +155,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Test
     public void testGetProgressNull() throws Exception {
-    	Long applicationId = 5L;
+    	Long applicationId = 7L;
         
         Map<Long, Integer> progress = service.getProgress(userId);
         
