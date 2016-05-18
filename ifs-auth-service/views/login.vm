@@ -70,6 +70,8 @@
       <div id="global-cookie-message">
           <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
       </div>
+      <div id="global-alert-message">
+      </div>
 
     <header role="banner" id="global-header">
         <div class="header-wrapper">
@@ -219,6 +221,19 @@
     <script type="text/javascript">
         IFS.formValidation.init();
     </script>
-
+    <script>
+        jQuery(document).ready(function(){
+            jQuery.ajax({ 
+              url: '//#springMessageText('ifs.webserver.resources.url', '#')/alert/findAllVisibleByType/maintenance', 
+              method: 'GET'
+            }).done(function(data) {
+              for(var i=0; i < data.length; i++) {
+                jQuery("#global-alert-message").append('<div class="event-alert event-warning no-animation"><p><span>' + 
+                  data[i].message + 
+                  '</span></p></div>');
+              }; 
+            });
+        });
+    </script> 
     </body>
 </html>
