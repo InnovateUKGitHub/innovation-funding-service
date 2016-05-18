@@ -1,5 +1,24 @@
 package com.worth.ifs.application;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +28,8 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModel;
+import com.worth.ifs.application.model.OpenSectionModel;
 import com.worth.ifs.application.model.QuestionModel;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
@@ -29,6 +50,7 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,21 +67,20 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import static com.worth.ifs.application.resource.SectionType.FINANCE;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -86,6 +107,12 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private QuestionModel questionModel;
+
+    @Autowired
+    private OpenSectionModel openSectionModel;
+
+    @Autowired
+    private OpenFinanceSectionSectionModel openFinanceSectionModel;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -140,18 +167,15 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        SectionResource section = sectionService.getById(sectionId);
-
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        addNavigation(section, applicationId, model);
-
-        form.setBindingResult(bindingResult);
-        form.setObjectErrors(bindingResult.getAllErrors());
-        model.addAttribute("form", form);
+        if (FINANCE.equals(section.getType())) {
+            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        } else {
+            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        }
 
         return APPLICATION_FORM;
     }
