@@ -23,11 +23,9 @@
       </div>
   </div>
 
-    <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
-        <p><span>A funding decision is required for all applications to the competition.</span></p>
-    </div>
-    
   <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
+
+<div th:unless="${activeTab == 'overview'}" th:remove="tag">
 
     <div class="grid-row competition-data">
         <div class="column-fifth">
@@ -40,24 +38,76 @@
     <h2 class="bold-large" th:if="${activeTab == 'overview'}">Overview</h2>
     <h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
     <h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
-    <h2 class="bold-large" th:if="${activeTab == 'projectsInSetup'}">Projects in setup</h2>
 
-
-    <div class="grid-row sort-by">
-        <div class="column-two-thirds">
-        </div>
-        <div class="column-third alignright">
-          <div th:include="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" th:remove="tag" />
-        </div>
-    </div>
-
-
-    <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-
+	
+	 	<div class="grid-row sort-by">
+	       <div class="column-two-thirds">
+	         <h3>
+	           <span class="heading-large" th:text="${results.totalElements}" /> applications
+	         </h3>
+	       </div>
+	       <div class="column-third alignright">
+	         <div th:include="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" th:remove="tag" />
+	       </div>
+	   </div>
+	   
+	    <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
+	    
+	    <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
  
-     </form>
-  </div>
-</div>
+	 </form>
+ 	</div>
+ 	</div>
+	</div>
+ 	<div th:if="${activeTab == 'overview'}" th:remove="tag">
+ 		<div class="grid-row constrain-width">
+		<div class="column-two-thirds">
+			
+			<dl class="standard-definition-list">
+			</dl>
+
+		</div>
+
+		<div class="column-third">
+			<div class="boxed">
+				<h2 class="heading-medium no-margin">
+						Project setup
+				</h2>
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<p>
+						</p>
+					</div>
+					<div class="column-third">
+						<div class="deadline" style="text-align: center; margin-top: 10px;">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<hr />
+	
+	<div class="grid-row extra-margin constrain-width">
+			<div class="column-third">
+				<a class="button-dashboard highlight" href="/prototypes/1998-application-feedback?status=assessorFeedback">
+					<span class="heading-large">X</span><br />Applications requiring feedback
+				</a>
+			</div>
+			<div class="column-third">
+				<a class="button-dashboard highlight" href="/prototypes/2000-project-setup?status=assessorFeedback">
+					<span class="heading-large">X</span><br />Projects being setup
+				</a>
+			</div>
+			<div class="column-third">
+				<a class="button-dashboard" href="/prototypes/1348-not-submitted-applications?status=assessorFeedback">
+					<p><span class="heading-large" th:text="${competitionSummary.applicationsNotSubmitted}" /><br />Applications not submitted</p>
+				</a>
+			</div>
+		</div>
+ 	</div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

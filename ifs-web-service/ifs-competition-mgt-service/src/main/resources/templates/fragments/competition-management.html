@@ -111,6 +111,18 @@
 
           <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
       </div>
+      
+      <div th:case="'ASSESSOR_FEEDBACK'" class="info-area boxed">
+          <p>
+          <span class="bold-medium">
+            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+          </span> Assessment deadline
+          </p>
+          <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+          <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
+          <a href="#" class="button" th:if="${activeTab == 'submitted'}">Publish assessor feedback</a>
+      </div>
 
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
           <p>
@@ -153,7 +165,7 @@
      </tbody>
    </table>
 
-   <div th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL'}" th:remove="tag">
+   <div th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL' or competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" th:remove="tag">
 	    <table th:if="${activeTab == 'submitted'}">
 	       <thead>
 	         <tr>
@@ -165,6 +177,7 @@
 	           <th scope="col">Total project cost (£)</th>
 	           <th scope="col">Duration (months)</th>
 	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Fund project?</th>
+	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">Funded</th>
 	         </tr>
 	       </thead>
 	       <tbody>
@@ -182,6 +195,10 @@
            			<option value="Y">Yes</option>
            			<option value="N">No</option>
            		  </select>
+	           </td>
+	           <td scope="col" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" >
+	           		<span th:if="${result.isFunded()}" th:remove="tag">Yes</span>
+	           		<span th:unless="${result.isFunded()}" th:remove="tag">No</span>
 	           </td>
 	         </tr>
 	       </tbody>

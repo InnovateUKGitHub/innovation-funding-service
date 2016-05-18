@@ -110,10 +110,8 @@ public class CompetitionManagementController {
 			populateOverviewModel(model);
 		} else if("notSubmitted".equals(queryForm.getTab())) {
 			populateNotSubmittedModel(model, competitionId, queryForm);
-		} else if("submitted".equals(queryForm.getTab())) {
-			populateSubmittedModel(model, competitionId, queryForm, PAGE_SIZE);
 		} else {
-			populateInProjectSetupModel(model);
+			populateSubmittedModel(model, competitionId, queryForm, PAGE_SIZE);
 		}
 	}
 
@@ -133,10 +131,6 @@ public class CompetitionManagementController {
 		model.addAttribute("activeSortField", sort);
 	}
 	
-	private void populateInProjectSetupModel(Model model) {
-		model.addAttribute("activeTab", "projectsInSetup");
-	}
-
 	private void populateOverviewModel(Model model) {
 		model.addAttribute("activeTab", "overview");
 	}

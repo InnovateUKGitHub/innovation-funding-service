@@ -50,6 +50,11 @@ public abstract class ApplicationSummaryMapper {
 		
 		BigDecimal totalProjectCost = getTotalProjectCost(source);
 		result.setTotalProjectCost(totalProjectCost);
+		
+		if(ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
+			result.setFunded(true);
+		}
+		
 		return result;
 	}
 

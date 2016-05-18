@@ -2,6 +2,7 @@ package com.worth.ifs.application.mapper;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -79,6 +80,7 @@ public class ApplicationSummaryMapperTest {
 		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
 		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
 		assertEquals(Long.valueOf(7L), result.getDuration());
+		assertFalse(result.isFunded());
 	}
 
 	private ProcessRole leadProcessRole(Organisation organisation) {
