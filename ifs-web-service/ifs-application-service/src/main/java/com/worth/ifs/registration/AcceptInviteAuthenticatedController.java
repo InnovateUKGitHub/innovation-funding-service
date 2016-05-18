@@ -1,8 +1,19 @@
 package com.worth.ifs.registration;
 
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.worth.ifs.BaseController;
-import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
@@ -11,25 +22,11 @@ import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.OrganisationTypeRestService;
-import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.util.CookieUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
@@ -37,17 +34,10 @@ import java.util.Optional;
 @Controller
 public class AcceptInviteAuthenticatedController extends BaseController{
     public static final String INVITE_HASH = "invite_hash";
-    private static final Log LOG = LogFactory.getLog(AcceptInviteAuthenticatedController.class);
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
-    private InviteOrganisationRestService inviteOrganisationRestService;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-    @Autowired
-    private OrganisationTypeRestService organisationTypeRestService;
     @Autowired
     private OrganisationService organisationService;
     @Autowired

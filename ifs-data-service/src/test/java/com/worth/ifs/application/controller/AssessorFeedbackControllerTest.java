@@ -1,24 +1,18 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseBuilderAmendFunctions;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.controller.AssessorFeedbackController;
-import com.worth.ifs.application.resource.AssessorFeedbackResource;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
@@ -26,8 +20,6 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.AssessorFeedbackDocs.assessorFeedbackResourceBuilder;
-import static com.worth.ifs.documentation.AssessorFeedbackDocs.assessorFeedbackResourceFields;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -35,19 +27,17 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -125,6 +115,56 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         verify(assessorFeedbackServiceMock).updateAssessorFeedbackFileEntry(eq(123L), createFileEntryResourceExpectations(fileAttributesAfterValidation), createInputStreamExpectations(dummyContent));
     }
 
+    @Test
+    public void testDeleteAssessorFeedback() throws Exception {
+
+        when(assessorFeedbackServiceMock.deleteAssessorFeedbackFileEntry(123L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                delete("/assessorfeedback/assessorFeedbackDocument").
+                        param("applicationId", "123").
+                        header("IFS_AUTH_TOKEN", "123abc")
+        ).
+                andExpect(status().isNoContent()).
+                andExpect(content().string("")).
+                andDo(documentDeleteAssessorFeedbackDocument());
+
+        verify(assessorFeedbackServiceMock).deleteAssessorFeedbackFileEntry(123L);
+    }
+
+    @Test
+    public void testGetAssessorFeedbackFileContents() throws Exception {
+
+        FileEntryResource returnedFileEntry = newFileEntryResource().build();
+
+        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
+
+        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntry(123L)).thenReturn(serviceSuccess(Pair.of(returnedFileEntry, inputStreamSupplier)));
+
+        MvcResult response = mockMvc.
+                perform(
+                        MockMvcRequestBuilders.get("/assessorfeedback/assessorFeedbackDocument").
+                                param("applicationId", "123").
+                                header("IFS_AUTH_TOKEN", "123abc")
+                ).
+                andExpect(status().isOk()).
+                andDo(documentGetAssessorFeedbackDocumentationContents()).
+                andReturn();
+
+        assertEquals("The returned binary file data", response.getResponse().getContentAsString());
+    }
+
+    private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationContents() {
+
+        return document("assessor-feedback/assessorFeedbackDocument_getFileContents",
+                requestParameters(
+                        parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to")
+                ),
+                requestHeaders(
+                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                ));
+    }
+
     private RestDocumentationResultHandler documentCreateAssessorFeedbackDocument() {
 
         return document("assessor-feedback/assessorFeedbackDocument_create",
@@ -159,6 +199,17 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                         headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
                 ),
                 requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")));
+    }
+
+    private RestDocumentationResultHandler documentDeleteAssessorFeedbackDocument() {
+
+        return document("assessor-feedback/assessorFeedbackDocument_delete",
+                requestParameters(
+                        parameterWithName("applicationId").description("Id of the Application that the Assessor Feedback document is being deleted from")
+                ),
+                requestHeaders(
+                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                ));
     }
 
     private Supplier<InputStream> createInputStreamExpectations(String dummyContent) {

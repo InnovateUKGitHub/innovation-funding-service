@@ -38,3 +38,17 @@ include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/http-respo
 
 ==== Curl Example
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/curl-request.adoc[]
+
+
+
+=== Delete Assessor Feedback document for an Application
+==== Request
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/http-request.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/request-parameters.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/request-fields.adoc[]
+
+==== Response
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/curl-request.adoc[]

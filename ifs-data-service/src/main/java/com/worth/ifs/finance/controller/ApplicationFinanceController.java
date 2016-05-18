@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
@@ -43,17 +44,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {
+
     private static final Log LOG = LogFactory.getLog(ApplicationFinanceController.class);
+
     public static final String RESEARCH_PARTICIPATION_PERCENTAGE = "researchParticipationPercentage";
 
     @Autowired
     private CostService costService;
-
-    @Autowired
-    private FileEntryService fileEntryService;
-
-    @Autowired
-    private FileService fileService;
 
     @Autowired
     @Qualifier("applicationFinanceFileValidator")
@@ -159,14 +156,14 @@ public class ApplicationFinanceController {
 
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
-            FileEntryResource fileEntry = doGetFile(applicationFinanceId).getSuccessObject();
-            return fileService.getFileByFileEntryId(fileEntry.getId()).handleSuccessOrFailure(
+            return costService.getFileContents(applicationFinanceId).handleSuccessOrFailure(
                     failure -> {
                         RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
                     },
                     success -> {
-                        InputStream inputStream = success.get();
+                        FileEntryResource fileEntry = success.getKey();
+                        InputStream inputStream = success.getValue().get();
                         ByteArrayResource inputStreamResource = new ByteArrayResource(StreamUtils.copyToByteArray(inputStream));
                         HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentLength(fileEntry.getFilesizeBytes());
@@ -174,15 +171,9 @@ public class ApplicationFinanceController {
                         return new ResponseEntity<>(inputStreamResource, httpHeaders, OK);
                     }
             );
-
-
         } catch (Exception e) {
             LOG.error("Error retrieving file", e);
             return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private ServiceResult<FileEntryResource> doGetFile(long applicationFinanceId) {
-        return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId);
-    }
+    } 
 }
