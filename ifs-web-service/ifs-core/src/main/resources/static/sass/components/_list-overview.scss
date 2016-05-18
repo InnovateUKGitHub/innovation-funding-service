@@ -162,7 +162,9 @@ ol.list-counted {
 	ol ol {
 		padding-left:15px;
 	}
-
+	> li > ol {
+		 margin-left:-45px;
+	}
 	//making sure the text columns are straight
 	li {
 		padding-left: 45px;
@@ -179,7 +181,7 @@ ol.list-counted {
 		}
 	ol ol ol {
 			margin-left:-20px;
-		}
+	}
 	ol ol	ol li {
 			padding-left: 70px;
 			&:before {
