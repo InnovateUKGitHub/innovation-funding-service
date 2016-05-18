@@ -118,11 +118,11 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource2, leadOnApplication1));
     }
 
+    @Test
     public void testCompAdminsCanViewApplications() {
-        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, compAdmin));
-        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
+        assertTrue(rules.compAdminsCanViewApplications(applicationResource1, compAdmin));
+        assertFalse(rules.compAdminsCanViewApplications(applicationResource1, leadOnApplication1));
     }
-
 
     @Test
     public void onlyUsersPartOfTheApplicationCanChangeApplicationResourceTest() {
@@ -269,7 +269,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testLeadApplicantCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications() {
+    public void testApplicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications() {
 
         long competitionId = 123L;
 
@@ -300,18 +300,18 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaboratorUser.getId(), application.getId())).thenReturn(collaboratorProcessRole);
                 when(processRoleRepositoryMock.findByUserIdAndApplicationId(assessorUser.getId(), application.getId())).thenReturn(assessorProcessRole);
 
-                // if the user under test is the lead applicant for the application, the rule will pass IF the Competition is in Project Setup
-                if (user == leadApplicantUser) {
+                // if the user under test is the lead applicant or a collaboraator for the application, the rule will pass IF the Competition is in Project Setup
+                if (user == leadApplicantUser || user == collaboratorUser) {
 
                     when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
                     if (singletonList(PROJECT_SETUP).contains(competitionStatus)) {
-                        assertTrue(rules.leadApplicantCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
+                        assertTrue(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
                     } else {
-                        assertFalse(rules.leadApplicantCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
+                        assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
                     }
 
-                    verify(processRoleRepositoryMock).findByUserIdAndApplicationId(user.getId(), application.getId());
+                    verify(processRoleRepositoryMock, times(2)).findByUserIdAndApplicationId(user.getId(), application.getId());
                     verify(competitionRepositoryMock).findOne(competition.getId());
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
 
@@ -319,8 +319,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 // otherwise this rule doesn't apply to the user under test, so it should fail
                 else {
 
-                    assertFalse(rules.leadApplicantCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
-                    verify(processRoleRepositoryMock).findByUserIdAndApplicationId(user.getId(), application.getId());
+                    assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
+                    verify(processRoleRepositoryMock, times(2)).findByUserIdAndApplicationId(user.getId(), application.getId());
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
                 }
             });

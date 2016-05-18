@@ -79,7 +79,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> service.getAssessorFeedbackFileEntry(123L), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
             verify(rules).compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
-            verify(rules).leadApplicantCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
+            verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
         });
     }
 

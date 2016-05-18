@@ -12,7 +12,6 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -140,13 +139,14 @@ public class ApplicationPermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_ASSESSOR_FEEDBACK",
-            description = "A Lead Applicant can see and download Assessor Feedback attached to their Application when it has been published",
+            description = "A member of the Application Team can see and download Assessor Feedback attached to their Application when it has been published",
             particularBusinessState = "Application's Competition Status = 'Project Setup' or beyond")
-    public boolean leadApplicantCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(ApplicationResource application, UserResource user) {
+    public boolean applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(ApplicationResource application, UserResource user) {
 
-        boolean isLeadApplicantForApplication = checkRole(user, application.getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+        boolean isLeadApplicantForApplication = checkRole(user, application.getId(), LEADAPPLICANT, processRoleRepository);
+        boolean isCollaboratorForApplication = checkRole(user, application.getId(), COLLABORATOR, processRoleRepository);
 
-        if (isLeadApplicantForApplication) {
+        if (isLeadApplicantForApplication || isCollaboratorForApplication) {
             Long competitionId = application.getCompetition();
             Competition competition = competitionRepository.findOne(competitionId);
             return ASSESSOR_FEEDBACK_PUBLISHED_STATES.contains(competition.getCompetitionStatus());
