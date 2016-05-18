@@ -120,3 +120,71 @@ dl dt.font-small {
 	}
 
 }
+
+
+ol.list-alpha {
+  counter-reset: item;
+	padding:15px 0;
+
+	li {
+		display: block;
+		padding:10px 0 10px 45px;
+	  counter-increment: item;
+	}
+	li:before {
+			position: absolute;
+			content: counter(item, upper-alpha);
+			margin-left:-45px; //negative of the ol li padding
+	}
+}
+
+ol.list-counted {
+	counter-reset: item;
+	padding:15px 0;
+	li {
+		display: block;
+		padding:10px 0;
+	}
+
+	li:before {
+		 content: counters(item, ".") ". ";
+		 counter-increment: item
+	}
+
+	li.list-bold:before,
+	li.list-bold > span {
+			font-weight: bold;
+	}
+
+	ol {
+		counter-reset: item;
+	}
+	ol ol {
+		padding-left:15px;
+	}
+
+	//making sure the text columns are straight
+	li {
+		padding-left: 45px;
+		&:before {
+			position: absolute;
+			margin-left:-45px; //negative of the ol li padding
+		}
+	}
+	ol li	li {
+			padding-left: 55px;
+			&:before {
+				margin-left:-55px;
+			}
+		}
+	ol ol ol {
+			margin-left:-20px;
+		}
+	ol ol	ol li {
+			padding-left: 70px;
+			&:before {
+				margin-left:-70px;
+			}
+		}
+
+}
