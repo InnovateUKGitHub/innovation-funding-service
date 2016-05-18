@@ -148,8 +148,7 @@ Non pdf uploads not allowed
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
     ...    INFUND-2684
-    # We should get the pretend quarantined file into the bamboo agent so we can test on the dev server.
-    [Tags]    LocalFilesOnly    Upload
+    [Tags]        Upload
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_team_url}
     When the user should see the text in the page    test_quarantine.pdf

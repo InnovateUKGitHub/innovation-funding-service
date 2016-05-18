@@ -13,12 +13,12 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div class="page-title">
-        <h1 class="heading-xlarge" th:text="${currentCompetition.name}" />
+        <h1 class="heading-xlarge" th:text="${'Funding competition: '+currentCompetition.name}" />
     </div>
 
     <div class="grid-row">
         <div th:class="${#authorization.expression('isAuthenticated()')  ? 'column-half' : 'column-two-thirds'}">
-            <p>Investment of up to &pound;3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
+            <p>Innovate UK are to invest up to &pound;4.5 million in collaborative research and development. The focus of this competition is to stimulate development in the commercial growth of additive manufacturing, which is also known as 3D printing.</p>
         </div>
         <div th:class="${#authorization.expression('isAuthenticated()')  ? 'column-half' : 'column-third'}">
             <div th:include="competition/fragments :: apply-button" th:remove="tag" />
@@ -31,39 +31,41 @@
                 <dt class="font-small">Opens:</dt>
                 <dd th:text="${#temporals.format(currentCompetition.startDate, 'd MMM yyyy')}" />
 
+                <dt class="font-small extra-margin">Registration closes:</dt>
+                <dd>12:00PM 20 July 2016</dd>
+
                 <dt class="font-small extra-margin">Closes:</dt>
                 <dd th:text="${#temporals.format(currentCompetition.endDate, 'dd MMM yyyy')}" />
-
-                <dt class="font-small extra-margin">Innovative area:</dt>
-                <dd>Digital economy</dd>
-
-                <dt class="font-small extra-margin">Programme type:</dt>
-                <dd>Collaborative R&amp;D</dd>
             </dl>
             <h2 class="heading-small">Eligibility:</h2>
             <ul class="list-bullet">
-                <li>All organisations must be UK based</li>
-                <li>Project must be led by a small or micro business</li>
+              <li>a UK-based business must lead the project</li>
+              <li>you must carry out your project in the UK</li>
+              <li>you must work with at least one other business on this project</li>
+              <li>research partners may participate as collaborators</li>
+              <li>your innovation project must last no more than 3 years</li>
+              <li>your innovation project must focus on industrial research</li>
             </ul>
         </div>
         <div class="column-two-thirds">
-            <p>Innovate UK is to invest up to &pound;9 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
+            <p>We are looking to help businesses overcome barriers to commercial growth in additive manufacturing. Proposals must encourage and support businesses to develop their wider digital manufacturing capability.</p>
             <ul class="list-bullet">
-                <li><a rel="external" target="_blank" href="https://interact.innovateuk.org/-/technology-inspired-innovation-may-2015-advanced-materials">Full competition brief</a></li>
+                <li><a rel="external" target="_blank" href="https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief">Full competition brief</a></li>
             </ul>
-            <p>The aim of this competition is to ensure that small and micro businesses in the UK are well positioned to respond to market opportunities across a range of economic sectors.</p>
-            <p>Studies must be led by a business. Projects are open to companies of any size, but must be led by a small or micro company, working in collaboration with one or more business or research partners.</p>
-            <p>Small or micro businesses could receive up to 70% of their eligible project costs, medium-sized businesses 60% and large businesses 50%.</p>
-            <p>We expect projects to last 6 to 15 months and to range in size from total costs of £50,000 to £150,000, although we may consider projects outside this range.</p>
-            <p>This competition opens on  <span th:remove="tag" th:text="${#temporals.format(currentCompetition.startDate, 'd MMMM yyyy')}" />, and the deadline for applications is at <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'hh:mma')}" /> on <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'd MMMM yyyy')}" />. There will be a briefing day for potential applicants in London on 20 May 2016.</p>
+            <p>Projects must also be able to show an innovative step in both additive manufacturing and connected digital manufacturing.</p>
+            <p>If you are a small or micro businesses, you could receive up to 70% of your eligible project costs. If you are a medium-sized business, you could get up to 60% or 50% if you are a large business.</p>
+            <p>Projects must range in size from &pound;500,000 to £1.5 million.</p>
+            <p>If you are a business, you can invite research organisations to work with you on your project.</p>
+            <p>There will be a briefing event for potential applicants on 7 June 2016.</p>
         </div>
     </div>
 
     <div class="grid-row">
         <div class="column-two-thirds">
             <h2 class="heading-large">Background</h2>
-            <p>Innovate UK aims to stimulate business innovation across four key technology areas: advanced materials; biosciences; electronics, sensors and photonics; and ICT.</p>
-            <p>The four areas are what we call ‘enabling technologies' because they underpin the development of high-value products and services that meet market needs in many industrial sectors. Advances in these areas will keep UK industry at the forefront of technological innovation and help to generate significant growth. As our <a href="https://www.gov.uk/government/publications/enabling-technologies-strategy-2012-to-2015">Enabling technologies strategy 2012–15</a> makes clear, supporting these technology areas is a  key aim of Innovate UK.</p>
+            <p>Additive manufacturing is a process that converts 3D design data into manufacturing instructions. It is game-changing technology that offers huge potential for UK businesses but there are barriers to growth. Recent research and other technology advances can help to resolve some of these barriers.</p>
+            <p>Globally the market for additive manufacturing products was worth &#36;4.1 billion in 2014 and this figure is growing annually by 35%. We estimate that the UK can win around 5% of this market. It’s a market that is set to reach &pound;70 billion by 2025.</p>
+            <p>Innovate UK has already invested over &pound;30 million in additive manufacturing projects. This new competition is looking to address some of the remaining technical challenges.</p>
         </div>
     </div>
 

@@ -57,3 +57,5 @@ ext.postcodeLookupURL="http://ws.postcoder.com/pcw"
 ext.postcodeLookupKey=""
 
 ext.ifsVirusScanningEnabled=false
+
+ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout/"

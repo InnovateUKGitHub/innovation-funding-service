@@ -24,6 +24,11 @@
 
 	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
+		<div class="success-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'submitted'}">
+			<p><strong>These documents have been submitted to Innovate UK</strong></p>
+		</div>
+
+
 		<p>As the lead partner in this project you must supply the additional documents to support your grant application.</p>
 		
 		<p>These documents are:</p>
@@ -48,6 +53,8 @@
 			<div class="upload-section">
 				
 				<h2 class="heading-medium no-margin">Collaboration agreement</h2>
+
+				<p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It must be signed by all partners.</p>
 
 				<details>
 				    <summary><span class="summary">What should I include in the collaboration agreement?</span></summary>
@@ -152,7 +159,27 @@
 
 			<p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
 
-			<button class="button button-large">Submit documents</button>
+			<a href="#" class="button button-large" data-js-modal="modal-submit-documents">Submit documents</a>
+
+			<div class="modal-submit-documents" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+
+					<h2 class="heading-medium no-margin">Submit documents</h2>
+
+					<p>Are you sure that you wish to send these documents to Innovate UK for review, if further clarification is required they will contact the project manager.</p>
+
+					<hr />
+
+	            	<div class="alignright-button">
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	            		<a href="/prototypes/1588-project-status?stage=level5" class="button">Send</a>
+	            	</div>
+
+		        </div>
+		    </div>
 
 
 		</div>
