@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
+import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -152,6 +153,49 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 andReturn();
 
         assertEquals("The returned binary file data", response.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void testGetAssessorFeedbackFileEntry() throws Exception {
+
+        FileEntryResource returnedFileEntry = newFileEntryResource().
+                withName("lookedup.pdf").
+                withMediaType("application/pdf").
+                withFilesizeBytes(1000).build();
+
+        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
+
+        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntry(123L)).thenReturn(serviceSuccess(Pair.of(returnedFileEntry, inputStreamSupplier)));
+
+        mockMvc.
+                perform(
+                        MockMvcRequestBuilders.get("/assessorfeedback/assessorFeedbackDocument/fileentry").
+                                param("applicationId", "123").
+                                header("IFS_AUTH_TOKEN", "123abc")
+                ).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(returnedFileEntry))).
+                andDo(documentGetAssessorFeedbackDocumentationFileEntry());
+
+        verify(assessorFeedbackServiceMock).getAssessorFeedbackFileEntry(123L);
+
+    }
+
+    private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationFileEntry() {
+
+        return document("assessor-feedback/assessorFeedbackDocument_getFileContents",
+                requestParameters(
+                        parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to")
+                ),
+                requestHeaders(
+                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                ),
+                responseFields(
+                        fieldWithPath("id").description("Id of the FileEntry that was looked up"),
+                        fieldWithPath("name").description("Name of the FileEntry that was looked up"),
+                        fieldWithPath("mediaType").description("Media type of the FileEntry that was looked up"),
+                        fieldWithPath("filesizeBytes").description("File size in bytes of the FileEntry that was looked up")
+                ));
     }
 
     private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationContents() {
