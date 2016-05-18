@@ -1,7 +1,9 @@
 package com.worth.ifs.application.security;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
@@ -10,28 +12,34 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static com.worth.ifs.user.resource.UserRoleType.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 @PermissionRules
 @Component
-public class ApplicationRules {
+public class ApplicationPermissionRules {
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
+    public static final List<CompetitionResource.Status> ASSESSOR_FEEDBACK_PUBLISHED_STATES = singletonList(PROJECT_SETUP);
+    public static final List<CompetitionResource.Status> EDITABLE_ASSESSOR_FEEDBACK_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private CompetitionRepository competitionRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
@@ -87,13 +95,68 @@ public class ApplicationRules {
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
     public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
-        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(LEADAPPLICANT.getName(), COLLABORATOR.getName()));
+        List<Role> allApplicantRoles = roleRepository.findByNameIn(asList(LEADAPPLICANT.getName(), COLLABORATOR.getName()));
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, application.getId());
         return !applicantProcessRoles.isEmpty();
     }
 
+    @PermissionRule(
+            value = "UPLOAD_ASSESSOR_FEEDBACK",
+            description = "A Comp Admin user can upload Assessor Feedback documentation for an Application whilst " +
+                          "the Application's Competition is in Funders' Panel or Assessor Feedback state",
+            particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
+    public boolean compAdminCanUploadAssessorFeedbackToApplicationInAssessmentOrFundersPanelState(ApplicationResource application, UserResource user) {
+
+        if (!isCompAdmin(user)) {
+            return false;
+        }
+
+        Long competitionId = application.getCompetition();
+        Competition competition = competitionRepository.findOne(competitionId);
+        return EDITABLE_ASSESSOR_FEEDBACK_STATES.contains(competition.getCompetitionStatus());
+    }
+
+    @PermissionRule(
+            value = "REMOVE_ASSESSOR_FEEDBACK",
+            description = "A Comp Admin user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
+            particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
+    public boolean compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
+
+        if (!isCompAdmin(user)) {
+            return false;
+        }
+
+        Long competitionId = application.getCompetition();
+        Competition competition = competitionRepository.findOne(competitionId);
+        return !ASSESSOR_FEEDBACK_PUBLISHED_STATES.contains(competition.getCompetitionStatus());
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_ASSESSOR_FEEDBACK",
+            description = "A Comp Admin user can see and download Assessor Feedback at any time for any Application")
+    public boolean compAdminCanSeeAndDownloadAllAssessorFeedback(ApplicationResource application, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_ASSESSOR_FEEDBACK",
+            description = "A Lead Applicant can see and download Assessor Feedback attached to their Application when it has been published",
+            particularBusinessState = "Application's Competition Status = 'Project Setup' or beyond")
+    public boolean leadApplicantCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(ApplicationResource application, UserResource user) {
+
+        boolean isLeadApplicantForApplication = checkRole(user, application.getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+
+        if (isLeadApplicantForApplication) {
+            Long competitionId = application.getCompetition();
+            Competition competition = competitionRepository.findOne(competitionId);
+            return ASSESSOR_FEEDBACK_PUBLISHED_STATES.contains(competition.getCompetitionStatus());
+        }
+
+        return false;
+    }
+
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
+        ProcessRole processRole =  processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
         return processRole != null;
     }
 }

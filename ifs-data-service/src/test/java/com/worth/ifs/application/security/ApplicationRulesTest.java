@@ -30,11 +30,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.when;
 
-public class ApplicationRulesTest extends BasePermissionRulesTest<ApplicationRules> {
+public class ApplicationRulesTest extends BasePermissionRulesTest<ApplicationPermissionRules> {
 
     @Override
-    protected ApplicationRules supplyPermissionRulesUnderTest() {
-        return new ApplicationRules();
+    protected ApplicationPermissionRules supplyPermissionRulesUnderTest() {
+        return new ApplicationPermissionRules();
     }
 
     private ApplicationStatusResource applicationStatusOpen;
