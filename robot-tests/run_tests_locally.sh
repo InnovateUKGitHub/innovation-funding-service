@@ -113,6 +113,7 @@ function startServers {
       ./startup.sh
     fi
 
+
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
     touch ${dataLogFilePath}
     tail -F -n0 ${dataLogFilePath} | while read logLine
