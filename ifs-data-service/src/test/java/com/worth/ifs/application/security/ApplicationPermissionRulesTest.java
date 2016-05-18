@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.when;
 
-public class ApplicationRulesTest extends BasePermissionRulesTest<ApplicationPermissionRules> {
+public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<ApplicationPermissionRules> {
 
     @Override
     protected ApplicationPermissionRules supplyPermissionRulesUnderTest() {
