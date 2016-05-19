@@ -75,7 +75,6 @@ public class RegistrationController {
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
         CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
         if(referer == null || !referer.contains(request.getServerName() + "/registration/register")){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
@@ -110,6 +109,10 @@ public class RegistrationController {
             return getRedirectUrlForUser(user);
         }
 
+        if (getOrganisationId(request) == null){
+            return  "redirect:/login";
+        }
+
         try {
         	addRegistrationFormToModel(model, request, response);
         }
@@ -117,7 +120,7 @@ public class RegistrationController {
         	cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
         	return "redirect:/login";
         }
-        
+
         String destination = "registration-register";
 
         if (!processOrganisation(request, model)) {
@@ -211,6 +214,7 @@ public class RegistrationController {
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
                 acceptInvite(response, request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
+                CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
                 destination = "redirect:/registration/success";
             } else {
                 if (!processOrganisation(request, model)) {
