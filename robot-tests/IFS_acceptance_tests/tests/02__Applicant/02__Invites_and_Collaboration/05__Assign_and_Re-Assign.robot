@@ -83,6 +83,10 @@ Collaborator should see the review button instead of the review and submit
     And the user should see the text in the page    All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
     [Teardown]
 
+Collaborator should see the terms and conditions from the overview page
+    [Documentation]    INFUND-2417
+    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+
 Collaborators cannot assign a question
     [Documentation]    INFUND-839
     [Tags]
