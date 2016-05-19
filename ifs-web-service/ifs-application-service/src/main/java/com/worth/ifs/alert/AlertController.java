@@ -20,22 +20,11 @@ import java.util.List;
 public class AlertController {
 
     @Autowired
-    AlertService alertService;
-
-    private static Log LOG = LogFactory.getLog(AlertController.class);
+    private AlertService alertService;
 
     @RequestMapping(value = "/findAllVisibleByType/{type}", method = RequestMethod.GET)
     public @ResponseBody
-    List<AlertResource> getAlertByTypeJSON(@PathVariable("type") String type) {
-        List<AlertResource> alerts = new ArrayList();
-
-        try {
-            AlertType alertType = AlertType.valueOf(type.toUpperCase());
-            alerts = alertService.findAllVisibleByType(alertType);
-        } catch (IllegalArgumentException e) {
-            LOG.debug(e.getMessage());
-        }
-
-        return alerts;
+    List<AlertResource> getAlertByTypeJSON(@PathVariable("type") AlertType type) {
+        return alertService.findAllVisibleByType(type);
     }
 }
