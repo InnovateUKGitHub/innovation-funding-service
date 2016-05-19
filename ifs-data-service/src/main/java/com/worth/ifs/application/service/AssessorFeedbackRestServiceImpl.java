@@ -44,6 +44,12 @@ public class AssessorFeedbackRestServiceImpl extends BaseRestService implements 
         return getWithRestResult(url, ByteArrayResource.class);
     }
 
+    @Override
+    public RestResult<FileEntryResource> getAssessorFeedbackFileDetails(Long applicationId) {
+        String url = restUrl + "/assessorFeedbackDocument/fileentry?applicationId=" + applicationId;
+        return getWithRestResult(url, FileEntryResource.class);
+    }
+
     private HttpHeaders createHeader(String contentType, long contentLength){
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
