@@ -19,11 +19,6 @@ public class AddressRestServiceImpl extends BaseRestService implements AddressRe
     String addressRestUrl;
 
     @Override
-    public RestResult<AddressResource> findOne(Long id) {
-        return getWithRestResult(addressRestUrl + "/" + id, AddressResource.class);
-    }
-
-    @Override
     public RestResult<List<AddressResource>> doLookup(String lookup) {
         return getWithRestResult(addressRestUrl + "/doLookup/" + lookup, ParameterizedTypeReferences.addressResourceListType());
     }
