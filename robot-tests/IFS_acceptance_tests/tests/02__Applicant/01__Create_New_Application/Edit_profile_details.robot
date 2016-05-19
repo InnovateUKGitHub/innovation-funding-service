@@ -130,6 +130,7 @@ the user can change their details back again
     the user enters their old profile details
 
 the user enters their old profile details
+    Wait Until Element Is Visible       id=title
     Select From List By Index    id=title    4
     Input Text    id=firstName    Steve
     Input Text    id=lastName    Smith

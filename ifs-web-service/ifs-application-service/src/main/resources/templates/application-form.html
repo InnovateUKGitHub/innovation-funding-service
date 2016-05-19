@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Form'"  th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle=${title != null ? title : 'Application Form'}"  th:remove="tag" />
 </head>
 <body class="app-form">
 
@@ -46,6 +46,7 @@
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
+
             <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             <div class="alignright-button" th:if="${(currentSection != null) and (currentSection.getName() != null) and (#strings.equals(currentSection.getName(), 'Your finances'))}">
                 <div th:include="question-type/form-elements :: form-mark-all-as-complete-buttons" th:remove="tag"/>
@@ -66,6 +67,8 @@
                 </li>
             </ul>
         </form>
+        <input type="hidden" id="cacheTest" value="" />
+
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 <div th:include="fragments/layout :: footer" th:remove="tag" />

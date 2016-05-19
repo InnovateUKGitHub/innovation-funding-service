@@ -58,6 +58,7 @@
 
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+      <link rel="shortcut icon" href="//#springMessageText('ifs.webserver.resources.url', '#')/images/favicon.ico" type="image/x-icon" />
     </head>
   	<body>
       <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
@@ -69,7 +70,7 @@
       <div id="global-cookie-message">
           <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
       </div>
-
+      
     <header role="banner" id="global-header">
         <div class="header-wrapper">
             <div class="header-global">
@@ -218,6 +219,22 @@
     <script type="text/javascript">
         IFS.formValidation.init();
     </script>
-
+    <script>
+        jQuery(document).ready(function(){
+            jQuery.ajax({ 
+                url: '//#springMessageText('ifs.webserver.resources.url', '#')/alert/findAllVisibleByType/MAINTENANCE', 
+                method: 'GET'
+            }).done(function(data) {
+                if (data.length) {
+                    jQuery('#global-cookie-message').after('<div id="global-alert-message"/>');
+                    jQuery.each(data, function(index, value) { 
+                        jQuery('#global-alert-message').append('<div class="event-alert event-warning no-animation"><p><span>' + 
+                          value.message + 
+                          '</span></p></div>');
+                    });
+                }
+            });
+        });
+    </script> 
     </body>
 </html>

@@ -28,8 +28,6 @@ Labour
     ...
     ...    INFUND-1256
     [Tags]    Finances
-    #Pending due to Ithe remaining tasks of the NFUND-844
-    sleep    5s
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
@@ -47,18 +45,12 @@ Administration support costs
     ...
     ...    INFUND-736
     [Tags]    Finances
-    #Pending due to Ithe remaining tasks of the NFUND-844
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    And user selects the admin costs    overheads-rateType-29-51    DEFAULT_PERCENTAGE
+    And user selects the admin costs    overheads-type-29-51    DEFAULT_PERCENTAGE
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    And user selects the admin costs    overheads-rateType-29-51    CUSTOM_RATE
+    And user selects the admin costs    overheads-type-29-51    CUSTOM_RATE
     And the user enters text to a text field    id=cost-overheads-51-customRate    30
     Then admin costs total should be correct    id=section-total-10-custom    £ 14,400
-    And user selects the admin costs    overheads-rateType-29-51    SPECIAL_AGREED_RATE
-    And the user enters text to a text field    id=cost-overheads-51-agreedRate    40
-    Then admin costs total should be correct    id=section-total-10-special    £ 19,200
-    And the user reloads the page
-    Then admin costs total should be correct    id=section-total-10-special    £ 19,200
     [Teardown]    Click Element    jQuery=button:contains("Administration support costs")
 
 Materials
@@ -92,7 +84,6 @@ Subcontracting costs
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
     And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
-    And the user cannot see a validation error in the page
     And the user reloads the page
     Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
     [Teardown]    Click Element    jQuery=button:contains("Subcontracting costs")
@@ -129,7 +120,7 @@ Other Funding
     And the applicant cannot see the 'other funding' details
 
 Funding level
-    [Tags]    Applicant    Autosave    Finance    HappyPath
+    [Tags]    Finance
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
@@ -178,11 +169,13 @@ the applicant edits the Subcontracting costs section
     Click Element    jQuery=button:contains('Add another subcontractor')
     Wait Until Page Contains    Subcontractor name
     Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
-    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=companyName]    test
+    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
+    Mouse Out    css=input
+    focus    jQuery=button:contains('Add another subcontractor')
     Click Element    jQuery=button:contains('Add another subcontractor')
     Wait Until Page Contains Element    css=#collapsible-4 .form-row:nth-child(2)
     Input Text    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
-    input text    css=#collapsible-4 .form-row:nth-child(2) input[id$=companyName]    test
+    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
     focus    css=.app-submit-btn
 
 the applicant fills the 'capital usage' field
@@ -210,8 +203,9 @@ the Applicant fills the Travel fields
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    #focus    css=.app-submit-btn
+    Mouse Out    css=input
     #sleep    1s
+    focus    jQuery=button:contains('Add another travel cost')
     Click Element    jQuery=button:contains('Add another travel cost')
     Wait Until Page Contains Element    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10

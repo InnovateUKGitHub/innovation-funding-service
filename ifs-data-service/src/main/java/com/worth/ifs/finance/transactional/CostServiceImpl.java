@@ -8,6 +8,7 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
@@ -16,8 +17,10 @@ import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
+import com.worth.ifs.finance.mapper.CostMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
@@ -32,6 +35,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -45,6 +49,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static org.apache.commons.lang3.tuple.Pair.of;
 
 @Service
 public class CostServiceImpl extends BaseTransactionalService implements CostService {
@@ -52,16 +57,18 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     private static final Log LOG = LogFactory.getLog(CostServiceImpl.class);
 
     @Autowired
-    OrganisationFinanceDelegate organisationFinanceDelegate;
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Autowired
-    FileEntryRepository fileEntryRepository;
+    private FileEntryRepository fileEntryRepository;
 
     @Autowired
     private CostFieldMapper costFieldMapper;
 
     @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;
+    @Autowired
+    private CostMapper costMapper;
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -82,6 +89,9 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private FileEntryService fileEntryService;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
@@ -171,7 +181,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
                     .peek(c -> LOG.debug("CostValue: " + c.getValue()))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
-            return updatedCost;
+            // refresh the object, since we need to reload the costvalues, on the cost object.
+            return savedCost;
         });
     }
 
@@ -209,7 +220,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     @Override
-    public ServiceResult<ApplicationFinanceResource> addCost(final ApplicationFinanceResourceId applicationFinanceResourceId ) {
+    public ServiceResult<ApplicationFinanceResource> addCost(final ApplicationFinanceResourceId applicationFinanceResourceId) {
         final Long applicationId = applicationFinanceResourceId.getApplicationId();
         final Long organisationId = applicationFinanceResourceId.getOrganisationId();
         ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
@@ -283,8 +294,15 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
         return getApplicationFinanceById(applicationFinanceId).
                 andOnSuccess(finance -> fileService.deleteFile(finance.getFinanceFileEntry()).
-                andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
+                        andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
                 andOnSuccessReturnVoid();
+    }
+
+    @Override
+    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinanceId) {
+        return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId)
+                .andOnSuccess(fileEntry -> fileService.getFileByFileEntryId(fileEntry.getId())
+                        .andOnSuccessReturn(stream -> of(fileEntry, stream)));
     }
 
     private ServiceResult<ApplicationFinanceResource> removeFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
@@ -297,7 +315,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
         ApplicationFinanceResource applicationFinanceResource = getApplicationFinanceById(applicationFinanceId).getSuccessObject();
 
-        if(applicationFinanceResource!=null) {
+        if (applicationFinanceResource != null) {
             applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
             updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
         }
@@ -353,7 +371,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
         costValue.setCost(savedCost);
         costValue.setCostField(costField);
-        costValueRepository.save(costValue);
+        costValue = costValueRepository.save(costValue);
+        savedCost.addCostValues(costValue);
     }
 
 
@@ -384,4 +403,18 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
         }
     }
+
+    /**
+     * Get the cost handler by costItemId. This CostHandler can be used for validation or conversion of the CostItem.
+     */
+    @Override
+    public CostHandler getCostHandler(Long costItemId) {
+        Cost cost = costMapper.mapIdToDomain(costItemId);
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(cost.getApplicationFinance().getOrganisation().getOrganisationType().getName());
+        CostItem costItem = organisationFinanceHandler.costToCostItem(cost);
+        CostHandler costHandler = organisationFinanceHandler.getCostHandler(costItem.getCostType());
+        return costHandler;
+    }
+
+
 }

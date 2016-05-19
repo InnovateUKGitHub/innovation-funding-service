@@ -58,10 +58,10 @@ function clearDownFileRepository {
     echo "***********Deleting any quarantined files***************"
     echo "virusScanQuarantinedFolder:	${virusScanQuarantinedFolder}"
     rm -rf ${virusScanQuarantinedFolder}
-    
+
     echo "***********Deleting any scanned files***************"
     echo "virusScanScannedFolder:	${virusScanScannedFolder}"
-    rm -rf ${virusScanScannedFolder}    
+    rm -rf ${virusScanScannedFolder}
 }
 
 function addTestFiles {
@@ -101,17 +101,20 @@ function startServers {
     echo "********START SHIBBOLETH***********"
     cd ${shibbolethScriptsPath}
     ./startup-shibboleth.sh
-
+    wait
+    cd ../shibboleth/ui
+    ./deploy-ui.sh
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
 
-    if [ "$startServersInDebugMode" ]; then 
+    if [ "$startServersInDebugMode" ]; then
       export JPDA_ADDRESS=8000
       export JPDA_TRANSPORT=dt_socket
       ./catalina.sh jpda start
     else
       ./startup.sh
     fi
+
 
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
     touch ${dataLogFilePath}
@@ -123,7 +126,7 @@ function startServers {
     touch ${webTomcatBinPath}
     cd ${webTomcatBinPath}
 
-    if [ "$startServersInDebugMode" ]; then 
+    if [ "$startServersInDebugMode" ]; then
       export JPDA_ADDRESS=8001
       export JPDA_TRANSPORT=dt_socket
       ./catalina.sh jpda start
@@ -346,13 +349,3 @@ else
     startServers
     runTests
 fi
-
-
-
-
-
-
-
-
-
-
