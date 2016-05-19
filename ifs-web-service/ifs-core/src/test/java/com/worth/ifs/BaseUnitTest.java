@@ -36,14 +36,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.ApplicationStatusRestService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
@@ -159,6 +152,8 @@ public class BaseUnitTest {
     public ProcessRoleService processRoleService;
     @Mock
     public UserService userService;
+    @Mock
+    public AlertService alertService;
     @Mock
     public FinanceService financeService;
     @Mock
