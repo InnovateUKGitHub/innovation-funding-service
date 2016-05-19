@@ -15,5 +15,9 @@ public interface ApplicationSummaryService {
 
 	ApplicationSummaryPageResource getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
 
+	Integer getFundedApplicationCountByCompetitionId(Long competitionId);
+	
+	Integer getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId);
+
 	ByteArrayResource downloadByCompetition(Long competitionId);
 }

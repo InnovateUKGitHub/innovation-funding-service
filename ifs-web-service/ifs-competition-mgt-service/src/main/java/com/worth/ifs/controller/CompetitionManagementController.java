@@ -107,7 +107,7 @@ public class CompetitionManagementController {
 
 	private void populateModelBasedOnAssessorTabState(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
 		if("overview".equals(queryForm.getTab())) {
-			populateOverviewModel(model);
+			populateOverviewModel(model, competitionId);
 		} else if("notSubmitted".equals(queryForm.getTab())) {
 			populateNotSubmittedModel(model, competitionId, queryForm);
 		} else {
@@ -131,7 +131,9 @@ public class CompetitionManagementController {
 		model.addAttribute("activeSortField", sort);
 	}
 	
-	private void populateOverviewModel(Model model) {
+	private void populateOverviewModel(Model model, Long competitionId) {
+		model.addAttribute("applicationsRequiringFeedback", applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(competitionId));
+		model.addAttribute("projectsBeingSetUp", applicationSummaryService.getFundedApplicationCountByCompetitionId(competitionId));
 		model.addAttribute("activeTab", "overview");
 	}
 

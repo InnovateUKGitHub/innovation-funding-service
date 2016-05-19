@@ -1,6 +1,7 @@
 
 package com.worth.ifs.controller;
 
+import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -24,7 +25,6 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.controller.CompetitionManagementController;
 import com.worth.ifs.service.ApplicationSummarySortFieldService;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,10 +53,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForOpenCompetition() throws Exception {
-    	
-    	
-        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-        competitionSummaryResource.setCompetitionStatus(Status.OPEN);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForOpenCompetition(null)).thenReturn("sortfield");
@@ -78,9 +75,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForOpenCompetitionProvidingPage() throws Exception {
-    	
-        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-        competitionSummaryResource.setCompetitionStatus(Status.OPEN);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForOpenCompetition(null)).thenReturn("sortfield");
@@ -102,9 +97,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdProvidingSort() throws Exception {
-    	
-        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-        competitionSummaryResource.setCompetitionStatus(Status.OPEN);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForOpenCompetition("lead")).thenReturn("properSort");
@@ -126,9 +119,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionInAssessmentSubmittedIsDefault() throws Exception {
-    	
-    	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-    	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.IN_ASSESSMENT).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
@@ -149,9 +140,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionInAssessmentSubmittedRequested() throws Exception {
-    	
-    	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-    	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.IN_ASSESSMENT).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
@@ -172,9 +161,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionInAssessmentNotSubmittedRequested() throws Exception {
-    	
-    	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-    	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.IN_ASSESSMENT).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
@@ -196,9 +183,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionFundersPanelNotSubmittedRequested() throws Exception {
-    	
-    	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-    	competitionSummaryResource.setCompetitionStatus(Status.FUNDERS_PANEL);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
@@ -220,9 +205,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionFundersPanelSubmittedRequested() throws Exception {
-    	
-    	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-    	competitionSummaryResource.setCompetitionStatus(Status.FUNDERS_PANEL);
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
@@ -239,6 +222,66 @@ public class CompetitionManagementControllerTest  {
     			.andExpect(model().attribute("activeSortField", "sortfield"));
     	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE);
+    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+    }
+    
+    @Test
+    public void getByCompetitionIdForCompetitionAssessorFeedbackNotSubmittedRequested() throws Exception {
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.ASSESSOR_PANEL).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+
+        when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
+
+    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
+        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+
+    	mockMvc.perform(get("/competition/123?tab=notSubmitted"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-assessor-feedback"))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
+                .andExpect(model().attribute("results", summary))
+                .andExpect(model().attribute("activeTab", "notSubmitted"))
+    			.andExpect(model().attribute("activeSortField", "sortfield"));
+    	
+    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+    }
+    
+    @Test
+    public void getByCompetitionIdForCompetitionAssessorFeedbackSubmittedRequested() throws Exception {
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.ASSESSOR_FEEDBACK).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+
+        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+
+    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+
+    	mockMvc.perform(get("/competition/123?tab=submitted"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-assessor-feedback"))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
+                .andExpect(model().attribute("results", summary))
+                .andExpect(model().attribute("activeTab", "submitted"))
+    			.andExpect(model().attribute("activeSortField", "sortfield"));
+    	
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+    }
+    
+    @Test
+    public void getByCompetitionIdForCompetitionAssessorFeedbackOverviewRequested() throws Exception {
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.ASSESSOR_FEEDBACK).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+
+    	mockMvc.perform(get("/competition/123?tab=overview"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-assessor-feedback"))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
+                .andExpect(model().attribute("activeTab", "overview"))
+                .andExpect(model().attribute("applicationsRequiringFeedback", 3))
+                .andExpect(model().attribute("projectsBeingSetUp", 4));
+    	
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
     

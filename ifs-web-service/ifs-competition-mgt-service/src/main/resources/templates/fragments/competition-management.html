@@ -47,7 +47,6 @@
     <li th:class="${activeTab == 'overview' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=overview'}">Overview</a></li>
     <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=submitted'}">Applications submitted</a></li>
     <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=notSubmitted'}">Applications not submitted</a></li>
-    <li th:class="${activeTab == 'projectsInSetup' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=projectsInSetup'}">Projects in setup</a></li>
   </ul>
 </div>
 

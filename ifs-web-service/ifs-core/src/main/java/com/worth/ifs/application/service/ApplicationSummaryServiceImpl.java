@@ -40,4 +40,16 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 		return applicationSummaryRestService.downloadByCompetition(competitionId).getSuccessObjectOrThrowException();
 	}
 
+	@Override
+	public Integer getFundedApplicationCountByCompetitionId(Long competitionId) {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public Integer getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId) {
+		// TODO
+		return null;
+	}
+
 }
