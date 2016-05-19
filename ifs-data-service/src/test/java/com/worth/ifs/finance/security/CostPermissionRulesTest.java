@@ -104,20 +104,20 @@ public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermiss
 
     @Test
     public void testConsortiumCanReadACostForTheirApplicationAndOrganisation() {
-        assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, leadApplicant));
-        assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, collaborator));
+        assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(cost, leadApplicant));
+        assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(cost, collaborator));
 
-        assertFalse(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, otherLeadApplicant));
-        assertFalse(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, compAdmin));
+        assertFalse(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(cost, otherLeadApplicant));
+        assertFalse(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(cost, compAdmin));
     }
 
     @Test
     public void testConsortiumCanReadACostForTheirApplicationAndOrganisation2() {
-        assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, leadApplicant));
-        assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, collaborator));
+        assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, leadApplicant));
+        assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, collaborator));
 
-        assertFalse(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, otherLeadApplicant));
-        assertFalse(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, compAdmin));
+        assertFalse(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, otherLeadApplicant));
+        assertFalse(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, compAdmin));
     }
 
 }

@@ -3,6 +3,7 @@ package com.worth.ifs.finance.security;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.resource.CostValueResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
@@ -44,13 +45,19 @@ public class CostPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
-    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+    public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
-    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final CostItem costItem, final UserResource user) {
+    public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final CostItem costItem, final UserResource user) {
         return isCollaborator(costRepository.findOne(costItem.getId()), user);
+    }
+
+    @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
+    public boolean consortiumCanReadACostValueForTheirApplicationAndOrganisation(final CostValueResource costValueResource, final UserResource user) {
+        final Cost cost = costRepository.findOne(costValueResource.getCost());
+        return isCollaborator(cost, user);
     }
 
     private boolean isCollaborator(final Cost cost, final UserResource user) {
