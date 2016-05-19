@@ -4,8 +4,16 @@ IFS.repeatableRows = (function() {
 
     return {
         init: function(){
-            jQuery('body').on('click', '[data-repeatable-rowcontainer]', function(e){  e.preventDefault(); IFS.repeatableRows.addRow(this,e); });
-            jQuery('body').on('click', '.js-remove-row',function(e){ IFS.repeatableRows.removeRow(this,e); });
+            IFS.repeatableRows.reloadIfInvalidatedBFcache();
+            jQuery('body').on('click', '[data-repeatable-rowcontainer]', function(e){
+              e.preventDefault();
+              IFS.repeatableRows.invalidateBfCache();
+              IFS.repeatableRows.addRow(this,e);
+            });
+            jQuery('body').on('click', '.js-remove-row',function(e){
+              IFS.repeatableRows.invalidateBfCache();
+              IFS.repeatableRows.removeRow(this,e);
+            });
         },
         getAjaxUrl : function(el){
             var url = '';
@@ -51,6 +59,21 @@ IFS.repeatableRows = (function() {
                   }
               });
             }
+        },
+        reloadIfInvalidatedBFcache : function(){
+          //for INFUND-2965
+          var input = jQuery('#cacheTest');
+          if (input.val() !== "") {
+            // the page has been loaded from the cache as the #cachetest has a value
+            // equivalent of persisted == true
+            jQuery('#cacheTest').val("");
+            window.location.reload();
+          }
+        },
+        invalidateBfCache : function(){
+          // change the input value so that we can detect
+          // if the page is reloaded from cache later
+          jQuery('#cacheTest').val("cached");
         }
     };
 })();
