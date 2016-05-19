@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.model.ApplicationOverviewModel;
+import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.model.OrganisationDetailsModel;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
@@ -49,10 +49,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class ApplicationController extends AbstractApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
     @Autowired
-    private ApplicationOverviewModel applicationOverviewModel;
-
-    @Autowired
-    protected OrganisationDetailsModel organisationDetailsModel;
+    private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -64,7 +61,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request) {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        applicationOverviewModel.populateModel(applicationId, userId, form, model);
+        applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
         return "application-details";
     }
 
@@ -247,7 +244,7 @@ public class ApplicationController extends AbstractApplicationController {
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<QuestionResource> question = getQuestion(currentSection, questionId);
 
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
+        super.addApplicationAndSections(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
         super.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
 
         model.addAttribute("currentUser", user);
