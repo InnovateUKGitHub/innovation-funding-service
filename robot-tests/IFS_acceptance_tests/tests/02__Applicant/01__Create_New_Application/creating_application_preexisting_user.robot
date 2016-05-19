@@ -50,7 +50,7 @@ Non-logged in user has the option to log into an existing account
     When the user navigates to the page    ${competition_details_url}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user should be redirected to the correct page    ${ELIGIBILITY_INFO_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQUery=.button:contains("Login")
     And the guest user inserts user email & password    jessica.doe@ludlow.co.uk    Passw0rd
     And the guest user clicks the log-in button
@@ -69,7 +69,7 @@ Non-logged in user can log in and continue with an existing application
     When the user navigates to the page    ${competition_details_url}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user should be redirected to the correct page    ${ELIGIBILITY_INFO_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQUery=.button:contains("Login")
     And the guest user inserts user email & password    jessica.doe@ludlow.co.uk    Passw0rd
     And the guest user clicks the log-in button

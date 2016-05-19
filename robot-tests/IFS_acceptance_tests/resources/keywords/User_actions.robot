@@ -129,7 +129,7 @@ the user submits the form
 the user follows the flow to register their organisation
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
@@ -395,7 +395,7 @@ we create a new user
     [Arguments]    ${EMAIL_INVITED}
     The user navigates to the page    ${COMPETITION_DETAILS_URL}
     The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create account")
     The user clicks the button/link    jQuery=.button:contains("Create")
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
@@ -417,7 +417,7 @@ the lead applicant invites a registered user
     The guest user opens the browser
     The user navigates to the page    ${COMPETITION_DETAILS_URL}
     The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create account")
     The user clicks the button/link    jQuery=.button:contains("Create")
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
