@@ -123,7 +123,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
         return org;
     }
     
-    public void setCompanyHouseUrl(String companyHouseUrl) {
+    protected void setCompanyHouseUrl(String companyHouseUrl) {
 		this.companyHouseUrl = companyHouseUrl;
 	}
 }
