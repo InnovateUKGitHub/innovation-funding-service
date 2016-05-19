@@ -19,6 +19,7 @@ import java.util.List;
 public class LabourCostHandler extends CostHandler {
     private static final Log LOG = LogFactory.getLog(LabourCostHandler.class);
     public static final String COST_KEY = "labour";
+    public static final Integer DEFAULT_WORKING_DAYS = 232;
 
     @Override
     public void validate(CostItem costItem, BindingResult bindingResult) {
@@ -54,7 +55,7 @@ public class LabourCostHandler extends CostHandler {
 
     private Cost initializeWorkingDays() {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
-        Integer labourDays = null;
+        Integer labourDays = DEFAULT_WORKING_DAYS;
         LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description);
         return toCost(costItem);
     }

@@ -2,6 +2,7 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.registration.AcceptInviteController;
+import com.worth.ifs.registration.OrganisationCreationController;
 import com.worth.ifs.registration.RegistrationController;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
@@ -45,6 +46,8 @@ public class ApplicationCreationController extends AbstractApplicationController
         model.addAttribute(COMPETITION_ID, competitionId);
         CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
+        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
+
         return "create-application/check-eligibility";
     }
 

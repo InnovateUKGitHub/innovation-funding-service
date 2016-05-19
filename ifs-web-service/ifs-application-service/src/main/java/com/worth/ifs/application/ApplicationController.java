@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.model.ApplicationOverviewModel;
+import com.worth.ifs.model.OrganisationDetailsModel;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -50,6 +51,9 @@ public class ApplicationController extends AbstractApplicationController {
     @Autowired
     private ApplicationOverviewModel applicationOverviewModel;
 
+    @Autowired
+    protected OrganisationDetailsModel organisationDetailsModel;
+
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
     }
@@ -85,7 +89,7 @@ public class ApplicationController extends AbstractApplicationController {
         SectionResource section = sectionService.getById(sectionId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         return "application-details";
     }
@@ -101,7 +105,7 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
@@ -132,7 +136,7 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-confirm-submit";
     }
 
@@ -147,7 +151,7 @@ public class ApplicationController extends AbstractApplicationController {
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-submitted";
     }
 
@@ -158,7 +162,7 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-track";
     }
     @ProfileExecution
@@ -243,7 +247,7 @@ public class ApplicationController extends AbstractApplicationController {
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<QuestionResource> question = getQuestion(currentSection, questionId);
 
-        super.addApplicationAndSections(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
         super.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
 
         model.addAttribute("currentUser", user);
@@ -318,7 +322,7 @@ public class ApplicationController extends AbstractApplicationController {
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
-        addOrganisationDetails(model, application, userApplicationRoles);
+        organisationDetailsModel.populateModel(model, application.getId(), userApplicationRoles);
         addQuestionsDetails(model, application, null);
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);
@@ -326,5 +330,14 @@ public class ApplicationController extends AbstractApplicationController {
         financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
 
         return "/application/print";
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, final Model model, final ApplicationForm form) {
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, userId, Optional.empty(), Optional.empty(), model, form);
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
+        organisationDetailsModel.populateModel(model, application.getId());
+        addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
     }
 }

@@ -39,7 +39,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing how the secured methods in CostService interact with Spring Security
+ * Testing how the secured methods in {@link CostService} interact with Spring Security
  */
 public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService> {
 
@@ -214,7 +214,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         assertAccessDenied(
                 () -> service.getCostItem(costId),
                 () -> {
-                    verify(costPermissionsRules).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+                    verify(costPermissionsRules).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
                 });
     }
 
@@ -272,7 +272,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long questionId = 2L;
 
         service.getCosts(costId, costTypeName, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
     }
 
     @Test
@@ -282,7 +282,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long questionId = 2L;
 
         service.getCostItems(costId, costTypeName, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
     }
 
     @Test
@@ -290,7 +290,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long applicationFinanceId = 1L;
         final Long questionId = 2L;
         service.getCostItems(applicationFinanceId, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
     }
 
     private void verifyApplicationFinanceResourceReadRulesCalled() {
