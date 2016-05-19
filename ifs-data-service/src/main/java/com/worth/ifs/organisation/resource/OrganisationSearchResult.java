@@ -1,15 +1,16 @@
 package com.worth.ifs.organisation.resource;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.util.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.worth.ifs.address.resource.AddressResource;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Resource object to store the company details, from the company house api.
@@ -33,11 +34,17 @@ public class OrganisationSearchResult implements Serializable{
 
     @JsonIgnore
     public String getLocation() {
-        String locationString = "";
-        locationString +=  organisationAddress.getAddressLine1();
-        locationString +=  ", "+ organisationAddress.getTown();
-        locationString +=  ", "+ organisationAddress.getPostcode();
-        return locationString;
+    	List<String> parts = new ArrayList<>();
+    	if(!StringUtils.isEmpty(organisationAddress.getAddressLine1())){
+    		parts.add(organisationAddress.getAddressLine1());
+    	}
+    	if(!StringUtils.isEmpty(organisationAddress.getTown())){
+    		parts.add(organisationAddress.getTown());
+    	}
+    	if(!StringUtils.isEmpty(organisationAddress.getPostcode())){
+    		parts.add(organisationAddress.getPostcode());
+    	}
+    	return String.join(", ", parts);
     }
 
     public String getName() {
