@@ -9,7 +9,10 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
-import com.worth.ifs.application.model.QuestionModel;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.model.OpenSectionModelPopulator;
+import com.worth.ifs.application.model.QuestionModelPopulator;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -51,6 +54,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -84,7 +96,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private OpenSectionModelPopulator openSectionModel;
 
     @Autowired
-    private OrganisationDetailsModel organisationDetailsModel;
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
     private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
@@ -104,7 +116,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         questionModelPopulator.populateModel(questionId, applicationId, user, model, form, bindingResult);
-        organisationDetailsModel.populateModel(model, applicationId);
+        organisationDetailsModelPopulator.populateModel(model, applicationId);
         return APPLICATION_FORM;
     }
 
@@ -143,8 +155,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        SectionResource section = sectionService.getById(sectionId);
-
         ApplicationResource application = applicationService.getById(applicationId);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
@@ -166,7 +176,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRoleResource> userApplicationRoles){
         addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
-        organisationDetailsModel.populateModel(model, application.getId(), userApplicationRoles);
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
@@ -884,7 +894,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, final Model model, final ApplicationForm form) {
-        organisationDetailsModel.populateModel(model, application.getId());
+        organisationDetailsModelPopulator.populateModel(model, application.getId());
         addApplicationAndSections(application, competition, userId, section, Optional.empty(), model, form);
     }
 }
