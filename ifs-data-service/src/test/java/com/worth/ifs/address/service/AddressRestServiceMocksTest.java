@@ -22,18 +22,6 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
     }
 
     @Test
-    public void testFindOne() throws Exception{
-        String expectedUrl = addressRestURL + "/" + 1;
-        AddressResource response = newAddressResource().build();
-        setupGetWithRestResultExpectations(expectedUrl, AddressResource.class, response);
-
-        // now run the method under test
-        AddressResource address = service.findOne(1L).getSuccessObject();
-        assertNotNull(address);
-        assertEquals(response, address);
-    }
-
-    @Test
     public void testDoLookup() throws Exception{
         String expectedUrl = addressRestURL + "/doLookup/BS348XU";
         List<AddressResource> returnedAddresses = newAddressResource().build(4);

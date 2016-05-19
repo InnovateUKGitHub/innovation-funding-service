@@ -36,7 +36,6 @@ Lead applicant can access the Application team page
     And the user should see the text in the page    View and manage your contributors and partners in the application.
     And the lead applicant should have the correct status
 
-
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath
@@ -61,7 +60,7 @@ Business organisation (accept invitation)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath     Email
+    [Tags]    HappyPath    Email
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    1
@@ -69,41 +68,37 @@ Business organisation (accept invitation)
     And the user enters text to a text field    id=organisationSearchName    Nomensa
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=NOMENSA LTD
-    And the user selects the checkbox       id=address-same
+    And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
-
 User who accepted the invite should be able to log-in and see the new company name throughout the application
-    [Documentation]     INFUND-2083
-    [Tags]      Failing     Email
+    [Documentation]    INFUND-2083
+    [Tags]    Email
     Given the user clicks the button/link    jQuery=.button:contains("Log in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
-    [Teardown]  Logout as user
-
+    [Teardown]    Logout as user
 
 User who accepted the invite can invite others to their own organisation
     [Documentation]    INFUND-2335
-    [Tags]      Email
+    [Tags]    Email
     Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
     Then the user can invite another person to their own organisation
 
-
 User who accepted the invite cannot invite others to other organisations
     [Documentation]    INFUND-2335
-    [Tags]      Email
+    [Tags]    Email
     Then the user cannot invite another person to a different organisation
-
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath     Email
+    [Tags]    HappyPath    Email
     [Setup]    Run keywords    User closes the browser
     ...    AND    Log in as user    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROJECT_SUMMARY_URL}
@@ -152,19 +147,18 @@ The Lead applicant invites a non registered user in the same organisation
     [Teardown]    User closes the browser
 
 the status of the invitees is correct on the overview page
-    [Documentation]     INFUND-2738
-    [Tags]  Collaboration   Pending
+    [Documentation]    INFUND-2738
+    [Tags]    Collaboration    Pending
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     # Pending completion of INFUND-2050
-    [Setup]     Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page        ${application_details_url}
-    Then the user should see the text in the page        foobar
-
+    When the user navigates to the page    ${application_details_url}
+    Then the user should see the text in the page    foobar
 
 The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
-    [Tags]     Email
+    [Tags]    Email
     [Setup]    The guest user opens the browser
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user should see the text in the page    Join an application
@@ -176,7 +170,6 @@ The user should not create new org but should follow the create account flow
     And the user fills the create account form    Roger    Axe
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-
 
 *** Keywords ***
 the applicant enters valid inputs
@@ -224,7 +217,6 @@ the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
 
-
 the lead applicant logs out
     Logout as user
 
@@ -238,11 +230,11 @@ the user can see the updated company name throughout the application
     the user should see the text in the page    NOMENSA LTD
 
 the user can invite another person to their own organisation
-    ${OWN_ORG}=     Get WebElement      jQuery=li:has(input[value='NOMENSA LTD'])
-    the user clicks the button/link     jQuery=button:contains('Add person')
-    the user should see the element     jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
-    the user should not see the element     jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
+    ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
+    the user clicks the button/link    jQuery=button:contains('Add person')
+    the user should see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
+    the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
-    ${OTHER_ORG}=     Get WebElement  jQuery=li:has(input[value='HIVE IT LIMITED'])
-    the user should see the element   jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
+    ${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
+    the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]

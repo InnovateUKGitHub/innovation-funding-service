@@ -74,6 +74,9 @@ public class ApplicationManagementController extends AbstractApplicationControll
     private FormInputRestService formInputRestService;
 
     @Autowired
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
 
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
@@ -93,6 +96,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        organisationDetailsModelPopulator.populateModel(model, application.getId());
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         addAppendices(applicationId, responses, model);
 
