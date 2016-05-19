@@ -87,6 +87,30 @@ public class CompanyHouseApiServiceImplTest {
 	}
 	
 	@Test
+	public void searchOrganisationsNullAddress() {
+		
+		Map<String, Object> companyResultMap = companyResultMap();
+		companyResultMap.put("address", null);
+		JsonNode resultNode = new ObjectMapper().valueToTree(asMap("items", asList(companyResultMap)));
+		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
+		when(adapter.restGetEntity("baseurl/search/companies?items_per_page=10&q=searchtext", JsonNode.class)).thenReturn(response);
+		
+		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations("searchtext");
+		
+		verify(adapter).restGetEntity("baseurl/search/companies?items_per_page=10&q=searchtext", JsonNode.class);
+		assertTrue(result.isSuccess());
+		assertEquals(1, result.getSuccessObject().size());
+		assertEquals("company name", result.getSuccessObject().get(0).getName());
+		assertEquals("1234", result.getSuccessObject().get(0).getOrganisationSearchId());
+		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine1());
+		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine2());
+		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine3());
+		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getTown());
+		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getCounty());
+		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getPostcode());
+	}
+	
+	@Test
 	public void searchCompany() {
 		
 		Map<String, Object> companyMap = companyMap();
@@ -106,6 +130,29 @@ public class CompanyHouseApiServiceImplTest {
 		assertEquals("loc", result.getSuccessObject().getOrganisationAddress().getTown());
 		assertEquals("reg", result.getSuccessObject().getOrganisationAddress().getCounty());
 		assertEquals("ba1", result.getSuccessObject().getOrganisationAddress().getPostcode());
+	}
+	
+	@Test
+	public void searchCompanyNulAddress() {
+		
+		Map<String, Object> companyMap = companyMap();
+		companyMap.put("registered_office_address", null);
+		JsonNode resultNode = new ObjectMapper().valueToTree(companyMap);
+		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
+		when(adapter.restGetEntity("baseurl/company/123", JsonNode.class)).thenReturn(response);
+		
+		ServiceResult<OrganisationSearchResult> result = service.getOrganisationById("123");
+		
+		verify(adapter).restGetEntity("baseurl/company/123", JsonNode.class);
+		assertTrue(result.isSuccess());
+		assertEquals("company name", result.getSuccessObject().getName());
+		assertEquals("1234", result.getSuccessObject().getOrganisationSearchId());
+		assertNull(result.getSuccessObject().getOrganisationAddress().getAddressLine1());
+		assertNull(result.getSuccessObject().getOrganisationAddress().getAddressLine2());
+		assertNull(result.getSuccessObject().getOrganisationAddress().getAddressLine3());
+		assertNull(result.getSuccessObject().getOrganisationAddress().getTown());
+		assertNull(result.getSuccessObject().getOrganisationAddress().getCounty());
+		assertNull(result.getSuccessObject().getOrganisationAddress().getPostcode());
 	}
 
 	private Map<String, Object> companyResultMap() {
