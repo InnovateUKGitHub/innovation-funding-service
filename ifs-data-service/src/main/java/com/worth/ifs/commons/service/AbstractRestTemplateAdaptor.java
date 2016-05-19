@@ -52,27 +52,27 @@ public abstract class AbstractRestTemplateAdaptor {
 
     // Synchronous public calls
     @RestCacheResult
-    public final <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
+    public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(path, GET, jsonEntity(null), c);
     }
 
     @RestCacheResult
-    public final <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
+    public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
         return getRestTemplate().exchange(path, GET, new HttpEntity<Object>(null, headers), c);
     }
 
     @RestCacheResult
-    public final <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType) {
+    public <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType) {
         return getRestTemplate().exchange(path, GET, jsonEntity(null), returnType);
     }
 
     @RestCacheInvalidateResult
-    public final <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
+    public <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
         return getRestTemplate().postForEntity(path, jsonEntity(postEntity), responseType);
     }
 
     @RestCacheInvalidateResult
-    public final <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    public <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         try {
             ResponseEntity<String> asString = restPostWithEntity(path, postEntity, String.class);
             return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
@@ -83,27 +83,27 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     @RestCacheInvalidateResult
-    public final <T> ResponseEntity<T> restPutWithEntity(String path, Class<T> c) {
+    public <T> ResponseEntity<T> restPutWithEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(path, PUT, jsonEntity(null), c);
     }
 
     @RestCacheInvalidateResult
-    public final <T> ResponseEntity<T> restPutWithEntity(String path, Object putEntity, Class<T> c) {
+    public <T> ResponseEntity<T> restPutWithEntity(String path, Object putEntity, Class<T> c) {
         return getRestTemplate().exchange(path, PUT, jsonEntity(putEntity), c);
     }
 
     @RestCacheInvalidateResult
-    public final void restPut(String path, Object entity) {
+    public void restPut(String path, Object entity) {
         getRestTemplate().exchange(path, PUT, jsonEntity(entity), Void.class);
     }
 
     @RestCacheInvalidateResult
-    public final <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
+    public <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
         return getRestTemplate().exchange(path, PUT, jsonEntity(entity), c);
     }
 
     @RestCacheInvalidateResult
-    public final <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPutWithEntity(String path, Object putEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    public <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPutWithEntity(String path, Object putEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         try {
             ResponseEntity<String> asString = restPutWithEntity(path, putEntity, String.class);
             return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
@@ -114,13 +114,13 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     @RestCacheInvalidateResult
-    public final void restDelete(String path) {
+    public void restDelete(String path) {
         getRestTemplate().exchange(path, DELETE, jsonEntity(null), Void.class);
     }
 
     // Asynchronous public calls
     @RestCacheResult
-    public final <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
+    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
         return withEmptyCallback(getAsyncRestTemplate().exchange(path, HttpMethod.GET, jsonEntity(""), clazz));
     }
 
