@@ -15,11 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by rvanrumpt on 18/05/16.
- */
-
-
 @Controller
 @RequestMapping("/alert")
 public class AlertController {
