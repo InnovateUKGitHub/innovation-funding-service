@@ -5,6 +5,8 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-877: As a collaborator I want to be able to mark application questions that have been assigned to me as complete, so that my lead applicant is aware of my progress
 ...
 ...               INFUND-2219 As a collaborator I do not want to be able to submit an application so that only the lead applicant has authority to do so
+...
+...               INFUND-2417 As a collaborator I want to be able to review the grant Terms and Conditions so that the lead applicant can agree to them on my behalf
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags
@@ -86,6 +88,9 @@ Collaborator should see the review button instead of the review and submit
 Collaborator should see the terms and conditions from the overview page
     [Documentation]    INFUND-2417
     Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    When the user clicks the button/link    link=View conditions of grant offer
+    Then the user should see the text in the page    Terms and Conditions of an Innovate UK Grant Award
+    And the user should see the text in the page    Entire Agreement
 
 Collaborators cannot assign a question
     [Documentation]    INFUND-839
