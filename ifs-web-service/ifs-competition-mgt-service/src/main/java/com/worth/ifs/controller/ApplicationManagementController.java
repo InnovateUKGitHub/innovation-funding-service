@@ -48,6 +48,8 @@ import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUND
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
@@ -80,7 +82,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
 
-    @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
+    @RequestMapping(value= "/{applicationId}", method = GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
                                                                 @ModelAttribute("form") ApplicationForm form,
                                                                 Model model,
@@ -110,7 +112,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
         return "competition-mgt-application-overview";
     }
 
-    @RequestMapping(value = "/{applicationId}/assessorFeedback", method = RequestMethod.GET)
+    @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") final Long applicationId) {
 
@@ -118,7 +120,18 @@ public class ApplicationManagementController extends AbstractApplicationControll
         return getPdfFile(resource);
     }
 
-    @RequestMapping(value = "/{applicationId}", params = "uploadAssessorFeedback", method = RequestMethod.POST)
+    @RequestMapping(value = "/{applicationId}", params = "removeAssessorFeedback", method = POST)
+    public String removeAssessorFeedbackFile(@PathVariable("applicationId") final Long applicationId,
+                                             @ModelAttribute ApplicationForm applicationForm,
+                                             Model model,
+                                             HttpServletRequest request) {
+
+        assessorFeedbackRestService.removeAssessorFeedbackDocument(applicationId).getSuccessObjectOrThrowException();
+
+        return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
+    }
+
+    @RequestMapping(value = "/{applicationId}", params = "uploadAssessorFeedback", method = POST)
     public  String uploadAssessorFeedbackFile(
             @PathVariable("applicationId") final Long applicationId,
             @ModelAttribute ApplicationForm applicationForm,
@@ -130,9 +143,8 @@ public class ApplicationManagementController extends AbstractApplicationControll
         return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
     }
 
-    @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = GET)
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             HttpServletRequest request) throws ExecutionException, InterruptedException {

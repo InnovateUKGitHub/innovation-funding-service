@@ -51,7 +51,7 @@
                          <a th:href='${"/competition/" + currentApplication.competition + "/application/" + currentApplication.id + "/assessorFeedback"}' class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
                      </div>
                      <div th:unless="${assessorFeedback.readonly}" class="alignright">
-                         <button class="button-secondary no-margin-right" type="submit" name="remove_uploaded_file">Remove</button>
+                         <button class="button-secondary no-margin-right" type="submit" name="removeAssessorFeedback">Remove</button>
                      </div>
                  </div>
                  <div th:unless="${!assessorFeedback.noFileUploaded}">
