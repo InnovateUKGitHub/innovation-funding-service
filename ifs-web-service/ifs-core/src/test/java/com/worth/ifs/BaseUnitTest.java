@@ -63,6 +63,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.model.OrganisationDetailsModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
@@ -76,7 +77,9 @@ import com.worth.ifs.user.service.UserService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -193,6 +196,10 @@ public class BaseUnitTest {
     public FinanceOverviewModelManager financeOverviewModelManager;
     @Mock
     public FinanceFormHandler financeFormHandler;
+
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModel organisationDetailsModel;
 
     @Mock
     public Environment env;

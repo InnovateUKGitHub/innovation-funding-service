@@ -197,7 +197,6 @@ public abstract class AbstractApplicationController extends BaseController {
         }
         form.setApplication(application);
 
-        //addOrganisationDetails(model, application, userApplicationRoles);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
@@ -239,27 +238,6 @@ public abstract class AbstractApplicationController extends BaseController {
             model.addAttribute("application_startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             model.addAttribute("application_startdate_year", String.valueOf(application.getStartDate().getYear()));
         }
-    }
-
-    protected void addOrganisationDetails(Model model, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
-        model.addAttribute("applicationOrganisations", organisations);
-        
-        List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
-        
-        List<String> pendingOrganisationNames = pendingInvitations(application).stream()
-        		.map(InviteResource::getInviteOrganisationName)
-        		.distinct()
-        		.filter(orgName -> StringUtils.hasText(orgName)
-                        && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
-
-        model.addAttribute("pendingOrganisationNames", pendingOrganisationNames);
-        
-        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
-        leadOrganisation.ifPresent(org ->
-                        model.addAttribute("leadOrganisation", org)
-        );
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
@@ -468,14 +446,6 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
     }
 
-    private void addCompletedQuestionsForAllOrganisations(Model model, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
-        // only keep the questionIDs of questions that are complete by all organisations
-        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
-        model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
-    }
-
     protected void addSectionDetails(Model model, Optional<SectionResource> currentSection) {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
@@ -521,7 +491,6 @@ public abstract class AbstractApplicationController extends BaseController {
                                                                              ApplicationForm form) {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addOrganisationDetails(model, application, userApplicationRoles);
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
         
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
@@ -544,37 +513,6 @@ public abstract class AbstractApplicationController extends BaseController {
 	            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
 	        }
         }
-    }
-
-    public SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRoleResource> userApplicationRoles) {
-        Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                            || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
-                .collect(Collectors.toCollection(supplier));
-    }
-
-    public SortedSet<OrganisationResource> getAcademicOrganisations(SortedSet<OrganisationResource> organisations) {
-        Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-        ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
-
-        return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(o.getOrganisationType()))
-                .collect(Collectors.toCollection(supplier));
-    }
-
-    public Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
-
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
-                .findFirst();
     }
 
     public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {

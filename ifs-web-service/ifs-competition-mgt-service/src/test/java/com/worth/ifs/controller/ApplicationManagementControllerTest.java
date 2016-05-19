@@ -1,6 +1,5 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.controller.ApplicationManagementController;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
