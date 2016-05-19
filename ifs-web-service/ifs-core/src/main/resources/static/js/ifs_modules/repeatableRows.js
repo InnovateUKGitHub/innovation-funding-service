@@ -4,14 +4,14 @@ IFS.repeatableRows = (function() {
 
     return {
         init: function(){
-            IFS.repeatableRows.reloadIfInvalidatedBFcache();
+            IFS.repeatableRows.backForwardCacheReload();
             jQuery('body').on('click', '[data-repeatable-rowcontainer]', function(e){
               e.preventDefault();
-              IFS.repeatableRows.invalidateBfCache();
+              IFS.repeatableRows.backForwardCacheInvalidate();
               IFS.repeatableRows.addRow(this,e);
             });
             jQuery('body').on('click', '.js-remove-row',function(e){
-              IFS.repeatableRows.invalidateBfCache();
+              IFS.repeatableRows.backForwardCacheInvalidate();
               IFS.repeatableRows.removeRow(this,e);
             });
         },
@@ -60,8 +60,8 @@ IFS.repeatableRows = (function() {
               });
             }
         },
-        reloadIfInvalidatedBFcache : function(){
-          //for INFUND-2965
+        backForwardCacheReload : function(){
+          //INFUND-2965 ajax results don't show when using the back button on the page after
           var input = jQuery('#cacheTest');
           if (input.val() !== "") {
             // the page has been loaded from the cache as the #cachetest has a value
@@ -70,7 +70,7 @@ IFS.repeatableRows = (function() {
             window.location.reload();
           }
         },
-        invalidateBfCache : function(){
+        backForwardCacheInvalidate : function(){
           // change the input value so that we can detect
           // if the page is reloaded from cache later
           jQuery('#cacheTest').val("cached");
