@@ -1,6 +1,5 @@
 package com.worth.ifs.application.builder;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 import java.util.List;
@@ -16,8 +15,8 @@ public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSu
         super(multiActions);
     }
 
-    public static CompetitionSummaryResourceBuilder newApplicationStatus() {
-        return new CompetitionSummaryResourceBuilder(emptyList()).with(uniqueIds());
+    public static CompetitionSummaryResourceBuilder newCompetitionSummaryResource() {
+        return new CompetitionSummaryResourceBuilder(emptyList());
     }
 
     @Override

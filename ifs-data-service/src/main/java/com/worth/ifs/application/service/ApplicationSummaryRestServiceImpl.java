@@ -33,13 +33,20 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	@Override
 	public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/submitted";
-		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);	}
+		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
+	}
 
 	@Override
 	public RestResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/not-submitted";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
-		}
+	}
+	
+	@Override
+	public RestResult<ApplicationSummaryPageResource> getFundedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/funded";
+		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
+	}
 	
 	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, Integer pageNumber, Integer pageSize, String sortField) {
 		

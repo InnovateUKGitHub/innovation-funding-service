@@ -94,6 +94,15 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS));
 	}
 	
+	@Override
+	public ServiceResult<ApplicationSummaryPageResource> getFundedApplicationSummariesByCompetitionId(
+			Long competitionId, String sortBy, int pageIndex, int pageSize) {
+		
+		return applicationSummaries(sortBy, pageIndex, pageSize,
+				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId(), pageable),
+				() -> applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId()));
+	}
+	
 	private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, int pageSize, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
 		String[] sortField = getApplicationSummarySortField(sortBy);
 		Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(Sort.Direction.ASC, sortField));

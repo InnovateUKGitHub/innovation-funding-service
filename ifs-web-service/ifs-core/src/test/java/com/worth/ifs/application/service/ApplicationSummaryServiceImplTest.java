@@ -61,4 +61,25 @@ public class ApplicationSummaryServiceImplTest {
 		
 		assertEquals(resource, result);
 	}
+	
+	@Test
+	public void testFindFundedByCompetitionId() {
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		when(applicationSummaryRestService.getFundedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20)).thenReturn(restSuccess(resource));
+		
+		ApplicationSummaryPageResource result = service.getFundedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20);
+		
+		assertEquals(resource, result);
+	}
+	
+	@Test
+	public void testFindFundedCountByCompetitionId() {
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		resource.setTotalElements(987L);
+		when(applicationSummaryRestService.getFundedApplicationSummariesByCompetitionId(Long.valueOf(123L), null, 0, 1)).thenReturn(restSuccess(resource));
+		
+		Long result = service.getFundedApplicationCountByCompetitionId(Long.valueOf(123L));
+		
+		assertEquals(Long.valueOf(987L), result);
+	}
 }

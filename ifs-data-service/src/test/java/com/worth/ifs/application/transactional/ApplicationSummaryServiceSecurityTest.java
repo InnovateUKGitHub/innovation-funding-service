@@ -166,6 +166,56 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 			}
 		});
 	}
+	
+	@Test
+	public void test_fundedApplicationSummariesByCompetitionId_allowedIfGlobalCompAdminRole() {
+
+		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		service.getFundedApplicationSummariesByCompetitionId(123L, null, 0, 20);
+	}
+
+	@Test
+	public void test_fundedApplicationSummariesByCompetitionId_deniedIfNotLoggedIn() {
+
+		setLoggedInUser(null);
+		try {
+			service.getFundedApplicationSummariesByCompetitionId(123L, null, 0, 20);
+			fail("Should not have been able to get funded application summaries without first logging in");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void test_fundedApplicationSummariesByCompetitionId_deniedIfNoGlobalRolesAtAll() {
+
+		try {
+			service.getFundedApplicationSummariesByCompetitionId(123L, null, 0, 20);
+			fail("Should not have been able to get funded application summaries without the global comp admin role");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void test_fundedApplicationSummariesByCompetitionId_deniedIfNotCorrectGlobalRoles() {
+
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+				.collect(toList());
+
+		nonCompAdminRoles.forEach(role -> {
+
+			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+
+			try {
+				service.getFundedApplicationSummariesByCompetitionId(123L, null, 0, 20);
+				fail("Should not have been able to get funded application summaries without the global Comp Admin role");
+			} catch (AccessDeniedException e) {
+				// expected behaviour
+			}
+		});
+	}
 
 	@Override
 	protected Class<? extends ApplicationSummaryService> getServiceClass() {
@@ -188,6 +238,12 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
 		@Override
 		public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
+				Long competitionId, String sortBy, int pageIndex, int pageSize) {
+			return null;
+		}
+
+		@Override
+		public ServiceResult<ApplicationSummaryPageResource> getFundedApplicationSummariesByCompetitionId(
 				Long competitionId, String sortBy, int pageIndex, int pageSize) {
 			return null;
 		}

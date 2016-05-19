@@ -24,6 +24,7 @@ import org.springframework.data.domain.Sort.Order;
 
 import com.google.common.collect.Lists;
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
 import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
@@ -379,6 +380,24 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 		
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(resource, result.getSuccessObject());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void findByCompetitionFundedApplications() throws Exception {
+
+		Page<Application> page = mock(Page.class);
+
+		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
+		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+		
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(eq(COMP_ID), eq(ApplicationStatusConstants.APPROVED.getId()), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFundedApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());

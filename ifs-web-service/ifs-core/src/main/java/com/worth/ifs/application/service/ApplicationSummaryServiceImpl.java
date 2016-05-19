@@ -34,22 +34,27 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		return applicationSummaryRestService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
 	}
+	
+	@Override
+	public ApplicationSummaryPageResource getFundedApplicationSummariesByCompetitionId(
+			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+		return applicationSummaryRestService.getFundedApplicationSummariesByCompetitionId(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
+	}
 
+	@Override
+	public Long getFundedApplicationCountByCompetitionId(Long competitionId) {
+		ApplicationSummaryPageResource page = applicationSummaryRestService.getFundedApplicationSummariesByCompetitionId(competitionId, null, 0, 1).getSuccessObjectOrThrowException();
+		return page.getTotalElements();
+	}
+
+	@Override
+	public Long getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId) {
+		return -1L;
+	}
+	
 	@Override
 	public ByteArrayResource downloadByCompetition(Long competitionId) {
 		return applicationSummaryRestService.downloadByCompetition(competitionId).getSuccessObjectOrThrowException();
-	}
-
-	@Override
-	public Integer getFundedApplicationCountByCompetitionId(Long competitionId) {
-		// TODO
-		return null;
-	}
-
-	@Override
-	public Integer getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId) {
-		// TODO
-		return null;
 	}
 
 }

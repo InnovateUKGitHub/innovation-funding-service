@@ -227,7 +227,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionAssessorFeedbackNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.ASSESSOR_PANEL).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.ASSESSOR_FEEDBACK).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
@@ -274,13 +274,16 @@ public class CompetitionManagementControllerTest  {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.ASSESSOR_FEEDBACK).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
+        when(applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(COMPETITION_ID)).thenReturn(3L);
+        when(applicationSummaryService.getFundedApplicationCountByCompetitionId(COMPETITION_ID)).thenReturn(4L);
+
     	mockMvc.perform(get("/competition/123?tab=overview"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-assessor-feedback"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("activeTab", "overview"))
-                .andExpect(model().attribute("applicationsRequiringFeedback", 3))
-                .andExpect(model().attribute("projectsBeingSetUp", 4));
+                .andExpect(model().attribute("applicationsRequiringFeedback", 3L))
+                .andExpect(model().attribute("projectsBeingSetUp", 4L));
     	
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
