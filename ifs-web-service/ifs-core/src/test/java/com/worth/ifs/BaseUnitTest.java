@@ -56,7 +56,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.model.OrganisationDetailsModel;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
@@ -194,7 +194,7 @@ public class BaseUnitTest {
 
     @Spy
     @InjectMocks
-    private OrganisationDetailsModel organisationDetailsModel;
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Mock
     public Environment env;

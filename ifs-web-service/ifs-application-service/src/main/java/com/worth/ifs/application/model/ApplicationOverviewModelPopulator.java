@@ -48,8 +48,8 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
  */
 
 @Component
-public class ApplicationOverviewModel{
-    private static final Log LOG = LogFactory.getLog(ApplicationOverviewModel.class);
+public class ApplicationOverviewModelPopulator {
+    private static final Log LOG = LogFactory.getLog(ApplicationOverviewModelPopulator.class);
     @Autowired
     private ApplicationService applicationService;
     @Autowired
