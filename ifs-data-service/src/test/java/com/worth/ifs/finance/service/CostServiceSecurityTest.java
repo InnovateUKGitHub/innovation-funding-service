@@ -272,7 +272,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long questionId = 2L;
 
         service.getCosts(costId, costTypeName, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
     }
 
     @Test
