@@ -9,7 +9,10 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
-import com.worth.ifs.application.model.QuestionModel;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.model.OpenSectionModelPopulator;
+import com.worth.ifs.application.model.QuestionModelPopulator;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -60,6 +63,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.resource.SectionType.FINANCE;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -85,7 +90,16 @@ public class ApplicationFormController extends AbstractApplicationController {
     MessageSource messageSource;
 
     @Autowired
-    private QuestionModel questionModel;
+    private QuestionModelPopulator questionModelPopulator;
+
+    @Autowired
+    private OpenSectionModelPopulator openSectionModel;
+
+    @Autowired
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -101,7 +115,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        questionModel.populateModel(questionId, applicationId, user, model, form, bindingResult);
+        questionModelPopulator.populateModel(questionId, applicationId, user, model, form, bindingResult);
+        organisationDetailsModelPopulator.populateModel(model, applicationId);
         return APPLICATION_FORM;
     }
 
@@ -140,18 +155,15 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        SectionResource section = sectionService.getById(sectionId);
-
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        addNavigation(section, applicationId, model);
-
-        form.setBindingResult(bindingResult);
-        form.setObjectErrors(bindingResult.getAllErrors());
-        model.addAttribute("form", form);
+        if (FINANCE.equals(section.getType())) {
+            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        } else {
+            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        }
 
         return APPLICATION_FORM;
     }
@@ -164,7 +176,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRoleResource> userApplicationRoles){
         addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
-        addOrganisationDetails(model, application, userApplicationRoles);
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
@@ -571,7 +583,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         if(bindingResult.hasErrors()){
             SectionResource section = sectionService.getById(sectionId);
-            addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+            addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
             addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
             addNavigation(section, applicationId, model);
             return APPLICATION_FORM;
@@ -876,8 +888,13 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
 
-    public void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
+    private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, final Model model, final ApplicationForm form) {
+        organisationDetailsModelPopulator.populateModel(model, application.getId());
+        addApplicationAndSections(application, competition, userId, section, Optional.empty(), model, form);
     }
 }

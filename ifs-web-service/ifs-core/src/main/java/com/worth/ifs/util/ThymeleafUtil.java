@@ -27,6 +27,6 @@ public class ThymeleafUtil {
         if (request == null) {
             throw new IllegalArgumentException("Cannot determine request URI with query string for null request.");
         }
-        return request.getQueryString() == null ? request.getRequestURI() : format("%s?%s", request.getRequestURI(), request.getQueryString());
+        return request.getQueryString() == null ? "~" + request.getRequestURI() : format("~%s?%s", request.getRequestURI(), request.getQueryString());
     }
 }

@@ -37,7 +37,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     private static final Log LOG = LogFactory.getLog(CompanyHouseApiServiceImpl.class);
 
     @Value("${ifs.data.company-house.url}")
-    private final String COMPANY_HOUSE_API = null;
+    private String companyHouseUrl = null;
 
     private static final int SEARCH_ITEMS_MAX = 10;
 
@@ -69,7 +69,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     }
 
     protected <T> T restGet(String path, Class<T> c) {
-        return adaptor.restGetEntity(COMPANY_HOUSE_API + path, c).getBody();
+        return adaptor.restGetEntity(companyHouseUrl + path, c).getBody();
     }
 
     private OrganisationSearchResult companyProfileMapper(JsonNode jsonNode) {
@@ -83,18 +83,25 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     }
 
     private AddressResource getAddress(JsonNode jsonNode, String path) {
-        AddressResource address = new AddressResource(
-                jsonNode.path(path).path("address_line_1").asText(),
-                jsonNode.path(path).path("address_line_2").asText(),
-                jsonNode.path(path).path("address_line_3").asText(),
-                jsonNode.path(path).path("locality").asText(),
-                jsonNode.path(path).path("region").asText(),
-                jsonNode.path(path).path("postal_code").asText()
-                );
-        return address;
+    	String line1 = stringOrNull(jsonNode, path, "address_line_1");
+    	String line2 = stringOrNull(jsonNode, path, "address_line_2");
+    	String line3 = stringOrNull(jsonNode, path, "address_line_3");
+    	String locality = stringOrNull(jsonNode, path, "locality");
+    	String region = stringOrNull(jsonNode, path, "region");
+    	String postcode = stringOrNull(jsonNode, path, "postal_code");
+         
+        return new AddressResource(line1, line2, line3, locality, region, postcode);
     }
 
-    private ServiceResult<String> decodeString(String encodedSearchText) {
+    private String stringOrNull(JsonNode jsonNode, String path, String path2) {
+    	JsonNode node = jsonNode.path(path);
+    	if(node.hasNonNull(path2)) {
+    		return node.path(path2).asText();
+    	}
+    	return null;
+	}
+
+	private ServiceResult<String> decodeString(String encodedSearchText) {
         try {
             return serviceSuccess(UriUtils.decode(encodedSearchText, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
@@ -115,4 +122,8 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
         org.setOrganisationAddress(officeAddress);
         return org;
     }
+    
+    protected void setCompanyHouseUrl(String companyHouseUrl) {
+		this.companyHouseUrl = companyHouseUrl;
+	}
 }

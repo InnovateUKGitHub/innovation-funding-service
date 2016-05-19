@@ -15,29 +15,18 @@
         <h1 class="heading-xlarge"  >Application submitted</h1>
         <h2 class="heading-large" th:text="${currentApplication.getName()}"></h2>
 
-        <p>Thank you for entering the "<span th:text="${currentCompetition.getName()}"></span>" competition. We have received your application and this will now enter into the next stage of the competitions process.</p>
-        <p>You and each partner in this application will receive email confirmation of this submission with a copy of the application for your records.</p>
+
+        <p>Thank you for entering the '<span th:remove="tag" th:text="${currentCompetition.getName()}" />' competition. You have now submitted your application.</p>
 
         <h2 class="heading-large">Next steps:</h2>
         <ul class="list-bullet">
-            <li>Once the competition submission deadline is reached, all applications submitted to the competition are sent for assessment.</li>
-            <li>Your application is assessed independently by experts taken from both business and academia.</li>
-            <li>Each application is assessed by up to five Assessors and against the same set of gateway and criteria questions.</li>
-            <li>Each Assessor is required to complete and submit a score-sheet with comments for each application they are assigned to assess.</li>
-            <li>A report is compiled to identify ranked order of the applications.</li>
+          <li>once the competition submission deadline is reached, submitted applications are sent for assessment</li>
+          <li>your application is assessed independently by experts taken from both business and academia</li>
         </ul>
-
-        <details role="group">
-            <summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false"><span class="summary">Find our more about the assessment process</span></summary>
-            <div class="panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
-                <p>More to come...</p>
-            </div>
-        </details>
 
         <h2 class="heading-large">Key dates:</h2>
         <ul class="list-bullet">
-            <li>You will be notified of our decision by 1st of January 2016</li>
-            <li>You will receive feedback from our assessors by 31st of January 2016</li>
+          <li>you will be notified of our decision by 14 October 2016</li>
         </ul>
 
         <p><a class="button" tabindex="0" role="button" th:href="${userDashboardLink}">Return to dashboard</a></p>

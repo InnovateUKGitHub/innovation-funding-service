@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.model.ApplicationOverviewModel;
+import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -70,7 +70,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Spy
     @InjectMocks
-    private ApplicationOverviewModel applicationOverviewModel;
+    private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {

@@ -15,4 +15,6 @@ public interface AssessorFeedbackRestService {
     RestResult<Void> removeAssessorFeedbackDocument(Long applicationId);
 
     RestResult<ByteArrayResource> getAssessorFeedbackFile(Long applicationId);
+
+    RestResult<FileEntryResource> getAssessorFeedbackFileDetails(Long applicationId);
 }
