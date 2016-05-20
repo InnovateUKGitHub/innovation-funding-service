@@ -1,14 +1,14 @@
 package com.worth.ifs.user.transactional;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.LambdaMatcher.lambdaMatches;
+import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
-import static com.worth.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -21,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,7 +29,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import org.junit.Test;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.LambdaMatcher;
 import com.worth.ifs.authentication.service.RestIdentityProviderService;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
@@ -73,7 +71,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(singletonList(applicantRole));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
-        LambdaMatcher<User> expectedUserMatcher = lambdaMatches(user -> {
+        User expectedCreatedUser = createLambdaMatcher(user -> {
 
             assertNull(user.getId());
             assertEquals("First Last", user.getName());
@@ -92,19 +90,17 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             return true;
         });
 
-        User expectedCreatedUser = argThat(expectedUserMatcher);
-
         User savedUser = newUser().with(id(999L)).build();
 
         when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
 
-        Token expectedToken = argThat(lambdaMatches(token -> {
+        Token expectedToken = createLambdaMatcher(token -> {
             assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
             assertEquals(User.class.getName(), token.getClassName());
             assertEquals(savedUser.getId(), token.getClassPk());
             assertFalse(token.getHash().isEmpty());
             return true;
-        }));
+        });
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
@@ -229,7 +225,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findByName(COMP_ADMIN.getName())).thenReturn(singletonList(compAdminRole));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
-        LambdaMatcher<User> expectedUserMatcher = lambdaMatches(user -> {
+        User expectedCreatedUser = createLambdaMatcher(user -> {
 
             assertNull(user.getId());
             assertEquals("First Last", user.getName());
@@ -248,19 +244,17 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             return true;
         });
 
-        User expectedCreatedUser = argThat(expectedUserMatcher);
-
         User savedUser = newUser().with(id(999L)).build();
 
         when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
 
-        Token expectedToken = argThat(lambdaMatches(token -> {
+        Token expectedToken = createLambdaMatcher(token -> {
             assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
             assertEquals(User.class.getName(), token.getClassName());
             assertEquals(savedUser.getId(), token.getClassPk());
             assertFalse(token.getHash().isEmpty());
             return true;
-        }));
+        });
 
         CompAdminEmail compAdminEmail = newCompAdminEmail().withEmail("email@example.com").build();
 
@@ -320,7 +314,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findByName(PROJECT_FINANCE.getName())).thenReturn(singletonList(projectFinanceRole));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
-        LambdaMatcher<User> expectedUserMatcher = lambdaMatches(user -> {
+        User expectedCreatedUser = createLambdaMatcher(user -> {
 
             assertNull(user.getId());
             assertEquals("First Last", user.getName());
@@ -339,19 +333,17 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             return true;
         });
 
-        User expectedCreatedUser = argThat(expectedUserMatcher);
-
         User savedUser = newUser().with(id(999L)).build();
 
         when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
 
-        Token expectedToken = argThat(lambdaMatches(token -> {
+        Token expectedToken = createLambdaMatcher(token -> {
             assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
             assertEquals(User.class.getName(), token.getClassName());
             assertEquals(savedUser.getId(), token.getClassPk());
             assertFalse(token.getHash().isEmpty());
             return true;
-        }));
+        });
 
         ProjectFinanceEmail projectFinanceEmail = newProjectFinanceEmail().withEmail("email@example.com").build();
 
