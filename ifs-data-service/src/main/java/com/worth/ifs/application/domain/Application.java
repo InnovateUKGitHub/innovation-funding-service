@@ -51,6 +51,9 @@ public class Application {
     @OneToMany(mappedBy="application")
     private List<Invite> invites;
 
+    @Enumerated(EnumType.STRING)
+    private FundingDecisionStatus fundingDecision;
+
     @ManyToOne
     @JoinColumn(name="assessorFeedbackFileEntryId", referencedColumnName="id")
     private FileEntry assessorFeedbackFileEntry;
@@ -192,6 +195,14 @@ public class Application {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+    
+    public void setFundingDecision(FundingDecisionStatus fundingDecision) {
+	this.fundingDecision = fundingDecision;
+    }
+    
+    public FundingDecisionStatus getFundingDecision() {
+	return fundingDecision;
     }
 
     public FileEntry getAssessorFeedbackFileEntry() {
