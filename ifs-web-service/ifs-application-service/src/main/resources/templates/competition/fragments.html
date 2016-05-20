@@ -16,7 +16,7 @@
 
 <div th:fragment="sign-in-to-apply-button">
     <a th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" role="button" tabindex="0" class="button"
-       th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Sign in to apply</a>
+       th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Create account</a>
     <a th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" role="button" tabindex="0" class="button"
        th:href="@{/application/create-authenticated/{competitionId}(competitionId=${competitionId})}">Apply now</a>
 </div>

@@ -54,8 +54,8 @@ import static java.util.Collections.singletonList;
  * View model for the single question pages
  */
 @Component
-public class QuestionModel{
-    private static final Log LOG = LogFactory.getLog(QuestionModel.class);
+public class QuestionModelPopulator {
+    private static final Log LOG = LogFactory.getLog(QuestionModelPopulator.class);
     @Autowired
     private ApplicationService applicationService;
     @Autowired

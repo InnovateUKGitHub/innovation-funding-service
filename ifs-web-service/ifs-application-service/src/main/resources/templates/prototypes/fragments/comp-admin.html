@@ -61,10 +61,22 @@
     </div>
 </div>
 
+<!-- =================Tabbed navigation competion setup=========================== -->
+
+<div th:fragment="prototype-comp-setup-navigation">
+    <ul class="inline-nav cf">
+        <li><a th:href="@{'?section=essential'}">Essential information</a></li>
+        <li><a th:href="@{'?section=additional'}">Additional information</a></li>
+        <li><a th:href="@{'?section=eligibility'}">Eligibility</a></li>
+        <li><a th:href="@{'?section=milestones'}">Milestones</a></li>
+        <li><a th:href="@{'?section=assessors'}">Assessors</a></li>
+        <li><a th:href="@{'?section=application'}">Application form</a></li>
+    </ul>
+</div>
 
 
+<!-- ===================Tabbed navigation competion ============================== -->
 
-<!-- ===================Tabbed navigation============================== -->
 <div th:fragment="prototype-comp-navigation">
 
     <div th:if="${status == 'open'}" th:remove="tag">

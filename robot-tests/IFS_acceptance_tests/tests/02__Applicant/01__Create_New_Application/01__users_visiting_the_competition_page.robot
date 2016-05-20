@@ -17,7 +17,8 @@ ${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/2/details
 
 Competition brief link exists on the competition page
     [Documentation]     INFUND-2448
-    [Tags]
+    [Tags]   Pending
+    # Pending until shib image drop 14
     Given the user navigates to the page        ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then the user should see the element    link=Full competition brief
@@ -29,7 +30,7 @@ Non logged in users see the Apply now button
     [Documentation]    INFUND-921
     [Tags]    Applicant
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    Then the user should see the element    jQuery=.column-third .button:contains('Apply now')
+    Then the user should see the element    jQuery=.button:contains('Apply now')
 
 
 Apply button should be disable when competion is in assessment

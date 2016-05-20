@@ -28,4 +28,4 @@ User can navigate to the Before you apply pages
     And the user goes back to the previous page
     When the user clicks the button/link    link=What we ask you
     Then the user should be redirected to the correct page    ${What we ask you}
-    And the user should see the text in the page    The application is split into 3 sections.
+    And the user should see the text in the page   The application has the following sections

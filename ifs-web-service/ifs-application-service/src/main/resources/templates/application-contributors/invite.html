@@ -51,9 +51,11 @@
                   <h3 class="heading-medium">
                     Lead Organisation "<span th:remove="tag" th:text="${organisationInviteForm.organisationName}"/>"
                   </h3>
-                   <p>You are the lead partner for both the project and application.
+                    <p th:if="${leadApplicant?.id eq authenticatedUser?.id}">You are the lead partner for both the project and application.
                       Add members of your own organisation to contribute to this application.
-                  </p>
+                    </p>
+                    <p th:unless="${leadApplicant?.id eq authenticatedUser?.id}">Only the lead applicant can add members of their own organisation.
+                    </p>
                 </div>
                 <!--/* partner org */-->
                 <div th:unless="${organisationStats.index == 0}" th:remove="tag">
