@@ -173,7 +173,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
 
     private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationFileEntry() {
 
-        return document("assessor-feedback/assessorFeedbackDocument_getFileContents",
+        return document("assessor-feedback/assessorFeedbackDocument_getFileEntry",
                 requestParameters(
                         parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to")
                 ),

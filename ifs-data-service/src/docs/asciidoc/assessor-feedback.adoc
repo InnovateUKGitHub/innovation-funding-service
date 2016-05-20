@@ -13,6 +13,8 @@ include::{snippets}/assessor-feedback/find-one/curl-request.adoc[]
 
 
 === Upload Assessor Feedback document for an Application
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
 ==== Request
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/http-request.adoc[]
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/request-parameters.adoc[]
@@ -27,7 +29,40 @@ include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/curl-reque
 
 
 
+=== Download Assessor Feedback document for an Application
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileContents/http-request.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileContents/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileContents/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileContents/curl-request.adoc[]
+
+
+
+=== Get Assessor Feedback document file details for an Application
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/http-request.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/http-response.adoc[]
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/curl-request.adoc[]
+
+
+
 === Update Assessor Feedback document for an Application
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
 ==== Request
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/http-request.adoc[]
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/request-parameters.adoc[]
@@ -42,10 +77,11 @@ include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/curl-reque
 
 
 === Delete Assessor Feedback document for an Application
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
 ==== Request
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/http-request.adoc[]
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/request-parameters.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/http-response.adoc[]
