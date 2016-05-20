@@ -81,7 +81,7 @@ public class ApplicationContributorController{
             leadOrg.get().setId(0L);
         }
 
-        Map<Long, InviteOrganisationResource> organisationInvites = new HashMap<>();
+        Map<Long, InviteOrganisationResource> organisationInvites = new LinkedHashMap<>();
         savedInvites.stream().forEachOrdered(a -> organisationInvites.put(a.getId(), a));
 
         model.addAttribute("authenticatedUser", user);
