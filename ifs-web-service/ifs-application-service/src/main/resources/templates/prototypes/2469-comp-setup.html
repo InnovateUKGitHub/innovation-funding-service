@@ -60,6 +60,61 @@
 				jQuery('.comp-stream-group').hide();
 			}
 		});
+
+		jQuery('#comp-type').on('change',function(e){ 
+
+			var compType = jQuery(this).val();
+
+			if(compType == 'Programme' || compType == 'Managed services'){
+				jQuery('#state-aid').show();
+				jQuery('#state-aid .yes').show();
+				jQuery('#state-aid .no').hide();
+			}else if(compType == 'SBRI' || compType == 'Special'){
+				jQuery('#state-aid').show();
+				jQuery('#state-aid .no').show();
+				jQuery('#state-aid .yes').hide();
+			}else{
+				jQuery('#state-aid').hide();
+			}
+
+		});
+
+		jQuery('#comp-innovation-sector').on('change',function(e){ 
+
+			var compSector = jQuery(this).val();
+
+			if(compSector == 'health'){
+				jQuery('#comp-innovation-area .health').show();
+				jQuery('#comp-innovation-area .materials').hide();
+				jQuery('#comp-innovation-area .emerging').hide();
+				jQuery('#comp-innovation-area .infrastructure').hide();
+			}
+
+			if(compSector == 'materials'){
+				jQuery('#comp-innovation-area .health').hide();
+				jQuery('#comp-innovation-area .materials').show();
+				jQuery('#comp-innovation-area .emerging').hide();
+				jQuery('#comp-innovation-area .infrastructure').hide();
+			}
+
+			if(compSector == 'emerging'){
+				jQuery('#comp-innovation-area .health').hide();
+				jQuery('#comp-innovation-area .materials').hide();
+				jQuery('#comp-innovation-area .emerging').show();
+				jQuery('#comp-innovation-area .infrastructure').hide();
+			}
+
+			if(compSector == 'emerging'){
+				jQuery('#comp-innovation-area .health').hide();
+				jQuery('#comp-innovation-area .materials').hide();
+				jQuery('#comp-innovation-area .emerging').hide();
+				jQuery('#comp-innovation-area .infrastructure').show();
+			}
+
+		});
+
+
+
 	});
 	// ]]>
 </script>
