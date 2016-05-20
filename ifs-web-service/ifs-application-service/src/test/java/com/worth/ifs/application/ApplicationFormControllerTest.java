@@ -5,7 +5,8 @@ import java.util.EnumMap;
 import java.util.HashSet;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.model.QuestionModel;
+import com.worth.ifs.application.model.OpenSectionModelPopulator;
+import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
@@ -62,7 +63,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Spy
     @InjectMocks
-    private QuestionModel questionModel;
+    private QuestionModelPopulator questionModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private OpenSectionModelPopulator openSectionModel;
 
     @Mock
     private Model model;
@@ -120,6 +125,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         mockMvc.perform(get("/application/1/form/section/"+currentSectionId))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
@@ -137,6 +143,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testQuestionPage() throws Exception {
         ApplicationResource application = applications.get(0);
 
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 

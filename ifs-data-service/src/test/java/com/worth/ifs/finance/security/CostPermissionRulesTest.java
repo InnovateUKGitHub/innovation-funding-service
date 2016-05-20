@@ -113,11 +113,11 @@ public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermiss
 
     @Test
     public void testConsortiumCanReadACostForTheirApplicationAndOrganisation2() {
-        assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, leadApplicant));
-        assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, collaborator));
+        assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, leadApplicant));
+        assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, collaborator));
 
-        assertFalse(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, otherLeadApplicant));
-        assertFalse(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(costItem, compAdmin));
+        assertFalse(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, otherLeadApplicant));
+        assertFalse(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, compAdmin));
     }
 
 }

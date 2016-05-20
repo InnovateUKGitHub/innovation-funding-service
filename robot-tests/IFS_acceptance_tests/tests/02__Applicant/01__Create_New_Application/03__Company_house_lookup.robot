@@ -78,5 +78,5 @@ Applicant goes to the create organisation page
     Given the guest user opens the browser
     And the user navigates to the page    ${COMPETITION_DETAILS_URL}
     and the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")

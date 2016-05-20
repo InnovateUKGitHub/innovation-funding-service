@@ -30,7 +30,7 @@ Non logged in users see the Apply now button
     [Documentation]    INFUND-921
     [Tags]    Applicant
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    Then the user should see the element    jQuery=.column-third .button:contains('Apply now')
+    Then the user should see the element    jQuery=.button:contains('Apply now')
 
 
 Apply button should be disable when competion is in assessment

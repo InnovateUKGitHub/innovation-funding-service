@@ -1,18 +1,16 @@
 package com.worth.ifs.address.documentation;
 
-import java.util.List;
-
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.controller.AddressController;
 import com.worth.ifs.address.resource.AddressResource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import java.util.List;
+
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AddressDocs.addressResourceBuilder;
-import static com.worth.ifs.documentation.AddressDocs.addressResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -51,20 +49,6 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                 ));
     }
 
-    @Test
-    public void findOne() throws Exception {
-        Long addressId = 1L;
-
-        when(addressServiceMock.findOne(addressId)).thenReturn(serviceSuccess(addressResourceBuilder.build()));
-
-        mockMvc.perform(get("/address/{id}", addressId))
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("id").description("Id of the address that needs to be found")
-                        ),
-                        responseFields(addressResourceFields)
-                ));
-    }
 
     @Test
     public void lookup() throws Exception {

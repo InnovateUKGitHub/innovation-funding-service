@@ -31,7 +31,7 @@ Registration for a user who is in the list
 User creates new account verifies email and login
     [Arguments]    ${CREATE_ACCOUNT_EMAIL}
     the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    the user clicks the button/link    jQuery=.button:contains("Create account")
     the user clicks the button/link    jQuery=.button:contains("Create")
     the user enters text to a text field    id=organisationSearchName    Innovate
     the user clicks the button/link    id=org-search

@@ -46,7 +46,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void test_leadApplicantCanInviteAnOrganisationToTheApplication() throws Exception {
+    public void testLeadApplicantCanInviteAnOrganisationToTheApplication() throws Exception {
         final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
         final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
@@ -56,7 +56,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void test_leadApplicantCanViewOrganisationInviteToTheApplication() throws Exception {
+    public void testLeadApplicantCanViewOrganisationInviteToTheApplication() throws Exception {
         final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
         final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
@@ -66,13 +66,23 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void test_collaboratorCanViewOrganisationInviteToTheApplication() throws Exception {
+    public void testCollaboratorCanViewOrganisationInviteToTheApplication() throws Exception {
         final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
         final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.collaboratorCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, collaborator));
         assertFalse(rules.collaboratorCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.collaboratorCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, otherApplicant));
+    }
+
+    @Test
+    public void testLeadApplicantCanSaveInviteAnOrganisationToTheApplication() throws Exception {
+        final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+
+        assertTrue(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
+        assertFalse(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, collaborator));
+        assertFalse(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, otherApplicant));
     }
 
 }

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- =================Tabbed navigation competion setup=========================== -->
+
+<div th:fragment="prototype-comp-setup-navigation">
+    <ul class="inline-nav cf">
+        <li th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Essential information</a></li>
+        <li th:class="${(param.section != null and param.section[0] == 'additional' ? 'selected' : '')}"><a th:href="@{'?section=additional'}">Additional information</a></li>
+        <li th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><a th:href="@{'?section=eligibility'}">Eligibility</a></li>
+        <li th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><a th:href="@{'?section=milestones'}">Milestones</a></li>
+        <li th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><a th:href="@{'?section=assessors'}">Assessors</a></li>
+        <li th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><a th:href="@{'?section=application'}">Application form</a></li>
+    </ul>
+</div>
+
+
+<!-- =================Section: Essential information=========================== -->
+
+<div th:fragment="prototype-section-essential">
+    <h2 class="heading-medium no-margin-top">Essential information</h2>
+    <form>
+        <fieldset>
+            <legend class="visuallyhidden">Essential information</legend>
+            
+            <div class="form-group">
+                <label class="form-label" for="comp-executive">
+                    <span class="form-label-bold">Competition executive</span>
+                </label>
+                <select class="form-control width-large" id="comp-executive" name="comp-executive">
+                    <option value="">Name 1</option>
+                    <option value="">Name 2</option>
+                    <option value="">Name 3</option>
+                </select>
+            </div>
+
+            <fieldset class="form-group">
+                <h3 class="heading-small no-margin">Opening date</h3>
+                <legend class="visuallyhidden">Opening date</legend>
+                <div class="date-group">
+                    <div class="day">
+                        <label class="form-label" for="start-day">
+                                <div>Day</div>
+                            </label>
+                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="start-day" name="start-day" value="01" /> 
+                    </div>
+
+                    <div class="month">
+                        <label class="form-label" for="start-month">
+                                <div>Month</div>
+                            </label>
+                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
+                    </div>
+
+                    <div class="year">
+                        <label class="form-label" for="start-year">
+                                <div>Year</div>
+                            </label>
+                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-title">
+                    <span class="form-label-bold">Competition title</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-title" name="comp-title" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-innovation-sector">
+                    <span class="form-label-bold">Innovation sector</span>
+                </label>
+                <select class="form-control width-large" id="comp-innovation-sector" name="comp-innovation-sector">
+                    <option value="">Sector 1</option>
+                    <option value="">Sector 2</option>
+                    <option value="">Sector 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-innovation-area">
+                    <span class="form-label-bold">Innovation area</span>
+                </label>
+                <select class="form-control width-large" id="comp-innovation-area" name="comp-innovation-area">
+                    <option value="">Area 1</option>
+                    <option value="">Area 2</option>
+                    <option value="">Area 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-type">
+                    <span class="form-label-bold">Competition type</span>
+                </label>
+                <select class="form-control width-large" id="comp-type" name="comp-type">
+                    <option value="">Comp type 1</option>
+                    <option value="">Comp type 2</option>
+                    <option value="">Comp type 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-lead-technologist">
+                    <span class="form-label-bold">Competition Lead technologist</span>
+                </label>
+                <select class="form-control width-large" id="comp-lead-technologist" name="comp-lead-technologist">
+                    <option value="">Lead technologist 1</option>
+                    <option value="">Lead technologist 2</option>
+                    <option value="">Lead technologist 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-paf">
+                    <span class="form-label-bold">PAF number</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-paf" name="comp-paf" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-budget-code">
+                    <span class="form-label-bold">Budget code</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-budget-code" name="comp-budget-code" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-code">
+                    <span class="form-label-bold">Competition code</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-code" name="comp-code" />
+            </div>
+        </fieldset>
+        <a th:href="@{'?section=additional'}" class="button">Done</a>
+    </form>
+</div>
+
+
+<!-- =================Section: Additional information=========================== -->
+
+<div th:fragment="prototype-section-additional">
+    <h2 class="heading-medium no-margin-top">Additional information</h2>
+    <form>
+        <fieldset>
+            <legend class="visuallyhidden">Additional information</legend>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-activity-code">
+                    <span class="form-label-bold">Activity code (optional)</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-activity-code" name="comp-activity-code" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="comp-budget">
+                    <span class="form-label-bold">Innovate budget (optional)</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-budget" name="comp-budget" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="comp-co-funders">
+                    <span class="form-label-bold">Co-funders (optional)</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-co-funders" name="comp-co-funders" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="comp-co-funders-budget">
+                    <span class="form-label-bold">Co-funders budget (optional)</span>
+                </label>
+                <input class="form-control width-x-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
+            </div>
+        </fieldset>
+        <a th:href="@{'?section=eligibility'}" class="button">Done</a>
+    </form>
+</div>
+
+
+<!-- =================Section: Eligibility=========================== -->
+
+<div th:fragment="prototype-section-eligibility">
+    <h2 class="heading-medium no-margin-top">Eligibility</h2>
+    <form>
+        <fieldset>
+            <legend class="visuallyhidden">Eligibility</legend>
+            <div class="form-group">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Stream</legend>
+                    <p>Does the competition have multiple streams?</p>
+                    <label class="block-label" for="comp-stream-yes">
+                        <input id="comp-stream-yes" name="comp-streams-group" value="Yes" type="radio" />
+                    Yes
+                    </label>
+                    <label class="block-label" for="comp-stream-no">
+                        <input id="comp-stream-no" name="comp-streams-group" value="No" type="radio" />
+                    No
+                    </label>
+                </fieldset>
+            </div>
+
+            <fieldset class="comp-stream-group" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label" for="comp-stream">
+                        <span class="form-label-bold">Stream name or number</span>
+                    </label>
+                    <input class="form-control width-x-large" id="comp-stream" name="comp-stream" />
+                </div>
+                
+                <h3 class="heading-small">Project size (&pound;)</h3>
+                <p>This indicates the size of the project based on the budget</p>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <div class="form-group">
+                            <label class="form-label" for="project-size-from">
+                                <span class="form-label">From (min)</span>
+                            </label>
+                            <input class="form-control width-small" id="project-size-from" name="project-size-from" />
+                        </div>
+                    </div>
+                    <div class="column-quarter">
+                        <div class="form-group">
+                            <label class="form-label" for="project-size-to">
+                                <span class="form-label">To (max)</span>
+                            </label>
+                            <input class="form-control width-small" id="project-size-to" name="project-size-to" />
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="heading-small">Project length (months)</h3>
+                <p>This indicates the length of the project in months (max 36)</p>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <div class="form-group">
+                            <label class="form-label" for="project-length-from">
+                                <span class="form-label">From (min)</span>
+                            </label>
+                            <input class="form-control width-small" id="project-length-from" name="project-length-from" />
+                        </div>
+                    </div>
+                    <div class="column-quarter">
+                        <div class="form-group">
+                            <label class="form-label" for="project-length-to">
+                                <span class="form-label">To (max)</span>
+                            </label>
+                            <input class="form-control width-small" id="project-length-to" name="project-length-to" />
+                        </div>
+                    </div>
+                </div>
+
+                
+
+
+            </fieldset>
+
+            <div class="form-group">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Research categories</legend>
+                    <label class="block-label" for="comp-research-tech-feasibilty">
+                        <input id="comp-research-tech-feasibilty" value="comp-research-tech-feasibilty" type="checkbox" />
+                        Technical feasibility
+                    </label>
+                    <label class="block-label" for="comp-research-industrial">
+                        <input id="comp-research-industrial" value="comp-research-industrial" type="checkbox" />
+                        Industrial research
+                    </label>
+                    <label class="block-label" for="comp-research-experimental">
+                        <input id="comp-research-exoerimental" value="comp-research-exoerimental" type="checkbox" />
+                        Experimental development
+                    </label>
+                </fieldset>
+            </div>
+
+            <div class="form-group">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Single or Collaborative?</legend>
+                    <p>Is this a single or collaborative project?</p>
+                    <label class="block-label" for="comp-type-single">
+                        <input id="comp-type-single" name="comp-type-group" value="Single" type="radio" />
+                        Single
+                    </label>
+                    <label class="block-label" for="comp-type-collaborative">
+                        <input id="comp-type-collaborative" name="comp-type-group" value="Collaborative" type="radio" />
+                        Collaborative
+                    </label>
+                    <label class="block-label" for="comp-type-single-collaborative">
+                        <input id="comp-type-single-collaborative" name="comp-type-group" value="Single or collaborative" type="radio" />
+                        Single or collaborative
+                    </label>
+                </fieldset>
+            </div>
+
+            <div class="form-group">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Lead applicant</legend>
+                    <p>Select the Lead Applicant type required</p>
+                    <label class="block-label" for="comp-lead-business">
+                        <input id="comp-lead-business" name="comp-lead-group" value="Business" type="radio" />
+                        Business
+                    </label>
+                    <label class="block-label" for="comp-lead-research">
+                        <input id="comp-lead-research" name="comp-lead-group" value="Research" type="radio" />
+                        Research
+                    </label>
+                    <label class="block-label" for="comp-lead-either">
+                        <input id="comp-lead-either" name="comp-lead-group" value="Either" type="radio" />
+                        Either
+                    </label>
+                </fieldset>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="comp-participation">
+                    <span class="form-label-bold">Research participation</span>
+                    <span class="form-hint">This indicates the maximum level of Research participation alllowe</span>
+                </label>
+                <select class="form-control width-large" id="comp-participation" name="comp-participation">
+                    <option value="">30%</option>
+                    <option value="">50%</option>
+                    <option value="">100%</option>
+                    <option value="">None</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Are resubmissions allowed</legend>
+                    <p>Please indicate whether you wish to make resubmission allowed</p>
+                    <label class="block-label" for="comp-resubmission-yes">
+                        <input id="comp-resubmission-yes" name="comp-resubmission-group" value="Yes" type="radio" />
+                    Yes
+                    </label>
+                    <label class="block-label" for="comp-resubmission-no">
+                        <input id="comp-resubmission-no" name="comp-resubmission-group" value="No" type="radio" />
+                    No
+                    </label>
+                </fieldset>
+            </div>
+
+            <a th:href="@{'?section=milestones'}" class="button">Done</a>
+
+        </fieldset>
+    </form>
+</div>
+
+
+<!-- =================Section: Milestones=========================== -->
+
+<div th:fragment="prototype-section-milestones">
+    Milestones
+</div>
+
+
+<!-- =================Section: Assessors=========================== -->
+
+<div th:fragment="prototype-section-assessors">
+    Assessors
+</div>
+
+
+<!-- =================Section: Application form=========================== -->
+
+<div th:fragment="prototype-section-application">
+    Application
+</div>
+
+
+
+</html>
+
