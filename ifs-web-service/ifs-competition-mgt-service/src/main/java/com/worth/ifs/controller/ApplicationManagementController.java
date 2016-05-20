@@ -121,18 +121,20 @@ public class ApplicationManagementController extends AbstractApplicationControll
     }
 
     @RequestMapping(value = "/{applicationId}", params = "removeAssessorFeedback", method = POST)
-    public String removeAssessorFeedbackFile(@PathVariable("applicationId") final Long applicationId,
+    public String removeAssessorFeedbackFile(@PathVariable("competitionId") final Long competitionId,
+                                             @PathVariable("applicationId") final Long applicationId,
                                              @ModelAttribute ApplicationForm applicationForm,
                                              Model model,
                                              HttpServletRequest request) {
 
         assessorFeedbackRestService.removeAssessorFeedbackDocument(applicationId).getSuccessObjectOrThrowException();
 
-        return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
+        return redirectToApplicationOverview(competitionId, applicationId);
     }
 
     @RequestMapping(value = "/{applicationId}", params = "uploadAssessorFeedback", method = POST)
     public  String uploadAssessorFeedbackFile(
+            @PathVariable("competitionId") final Long competitionId,
             @PathVariable("applicationId") final Long applicationId,
             @ModelAttribute ApplicationForm applicationForm,
             Model model,
@@ -140,7 +142,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         List<String> validationErrors = saveFileUpload(applicationId, request);
 
-        return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
+        return redirectToApplicationOverview(competitionId, applicationId);
     }
 
     @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = GET)
@@ -232,5 +234,9 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         LOG.error("No assessorFeedback file was available during upload within the multipart request");
         throw new UnableToReadUploadedFile();
+    }
+
+    private String redirectToApplicationOverview(Long competitionId, Long applicationId) {
+        return "redirect:/competition/" + competitionId + "/application/" + applicationId;
     }
 }
