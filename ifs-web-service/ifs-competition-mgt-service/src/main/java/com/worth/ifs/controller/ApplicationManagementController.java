@@ -14,7 +14,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputRestService;
-import com.worth.ifs.model.OrganisationDetailsModel;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -64,7 +64,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
     protected FormInputRestService formInputRestService;
 
     @Autowired
-    private OrganisationDetailsModel organisationDetailsModel;
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
@@ -85,7 +85,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        organisationDetailsModel.populateModel(model, application.getId());
+        organisationDetailsModelPopulator.populateModel(model, application.getId());
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         addAppendices(applicationId, responses, model);
 

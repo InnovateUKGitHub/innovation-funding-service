@@ -11,14 +11,14 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Explore Group" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Explore Group" enabled="true">
         <stringProp name="TestPlan.comments">These users are exploring the site. e.g. no registration / application actions</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">2</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <longProp name="ThreadGroup.start_time">1463337930000</longProp>
         <longProp name="ThreadGroup.end_time">1463337930000</longProp>
@@ -68,7 +68,7 @@
         </HTTPSamplerProxy>
         <hashTree>
           <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
-            <stringProp name="ConstantTimer.delay">20000</stringProp>
+            <stringProp name="ConstantTimer.delay">2000</stringProp>
             <stringProp name="RandomTimer.range">10000</stringProp>
           </GaussianRandomTimer>
           <hashTree/>
@@ -94,7 +94,7 @@
         </HTTPSamplerProxy>
         <hashTree>
           <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
-            <stringProp name="ConstantTimer.delay">10000</stringProp>
+            <stringProp name="ConstantTimer.delay">2000</stringProp>
             <stringProp name="RandomTimer.range">5000</stringProp>
           </GaussianRandomTimer>
           <hashTree/>
@@ -292,7 +292,7 @@
         </HTTPSamplerProxy>
         <hashTree>
           <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
-            <stringProp name="ConstantTimer.delay">2000</stringProp>
+            <stringProp name="ConstantTimer.delay">5000</stringProp>
             <stringProp name="RandomTimer.range">5000</stringProp>
           </GaussianRandomTimer>
           <hashTree/>
@@ -327,7 +327,7 @@
           </RegexExtractor>
           <hashTree/>
           <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
-            <stringProp name="ConstantTimer.delay">2000</stringProp>
+            <stringProp name="ConstantTimer.delay">5000</stringProp>
             <stringProp name="RandomTimer.range">5000</stringProp>
           </GaussianRandomTimer>
           <hashTree/>
@@ -2145,7 +2145,7 @@ hello world</stringProp>
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">ifs-local-dev</stringProp>
+        <stringProp name="HTTPSampler.domain">ifs.uat.innovateuk.org</stringProp>
         <stringProp name="HTTPSampler.port"></stringProp>
         <stringProp name="HTTPSampler.connect_timeout"></stringProp>
         <stringProp name="HTTPSampler.response_timeout"></stringProp>
@@ -2167,7 +2167,7 @@ hello world</stringProp>
       </CookieManager>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-        <stringProp name="filename">load_test_data.csv</stringProp>
+        <stringProp name="filename">load_test_data_uat.csv</stringProp>
         <stringProp name="fileEncoding"></stringProp>
         <stringProp name="variableNames">username,password,application_id</stringProp>
         <stringProp name="delimiter">,</stringProp>
@@ -2176,6 +2176,18 @@ hello world</stringProp>
         <boolProp name="stopThread">false</boolProp>
         <stringProp name="shareMode">shareMode.all</stringProp>
       </CSVDataSet>
+      <hashTree/>
+      <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
+        <collectionProp name="AuthManager.auth_list">
+          <elementProp name="" elementType="Authorization">
+            <stringProp name="Authorization.url"></stringProp>
+            <stringProp name="Authorization.username">ifs</stringProp>
+            <stringProp name="Authorization.password">Fund1ng</stringProp>
+            <stringProp name="Authorization.domain"></stringProp>
+            <stringProp name="Authorization.realm"></stringProp>
+          </elementProp>
+        </collectionProp>
+      </AuthManager>
       <hashTree/>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>

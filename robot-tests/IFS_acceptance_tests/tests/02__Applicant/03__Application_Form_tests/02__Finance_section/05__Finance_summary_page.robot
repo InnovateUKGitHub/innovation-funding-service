@@ -35,7 +35,7 @@ ${OVERVIEW_MARK_AS_COMPLETE}    ${SERVER}/application/7
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Failing
+    [Tags]
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
@@ -44,14 +44,13 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Failing
+    [Tags]
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
-    # Then the contribution to project and funding sought should be 0 and not a negative number
-    # commented out this step for now as the numbers need to be readjusted TODO EC
+    Then the contribution to project and funding sought should be 0 and not a negative number
     [Teardown]    Log out as user
 
 Red warning should show when the finances are incomplete
@@ -114,17 +113,17 @@ Alert should not show If research participation is below the maximum level
 *** Keywords ***
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £128,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £129,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(1)    £60,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £60,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £8,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
 
 the finance summary calculations should be correct
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £128,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £60,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
 

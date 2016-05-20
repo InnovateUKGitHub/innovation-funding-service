@@ -1,9 +1,10 @@
 package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.invite.constant.InviteStatusConstants;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class InviteResourceTest {
     InviteResource setInviteResource;
@@ -44,25 +45,36 @@ public class InviteResourceTest {
 
     @Test
     public void gettingAnyAttributeAfterSettingShouldReturnCorrectValue() throws Exception {
-        Assert.assertEquals(inviteId, setInviteResource.getId());
-        Assert.assertEquals(name, setInviteResource.getName());
-        Assert.assertEquals(nameConfirmed, setInviteResource.getNameConfirmed());
-        Assert.assertEquals(email, setInviteResource.getEmail());
-        Assert.assertEquals(applicationId, setInviteResource.getApplication());
-        Assert.assertEquals(hash, setInviteResource.getHash());
-        Assert.assertEquals((Long)inviteOrganisationId, setInviteResource.getInviteOrganisation());
-        Assert.assertEquals(status, setInviteResource.getStatus());
+        assertEquals(inviteId, setInviteResource.getId());
+        assertEquals(name, setInviteResource.getName());
+        assertEquals(nameConfirmed, setInviteResource.getNameConfirmed());
+        assertEquals(email, setInviteResource.getEmail());
+        assertEquals(applicationId, setInviteResource.getApplication());
+        assertEquals(hash, setInviteResource.getHash());
+        assertEquals((Long)inviteOrganisationId, setInviteResource.getInviteOrganisation());
+        assertEquals(status, setInviteResource.getStatus());
     }
 
     @Test
     public void constructedInviteShouldReturnCorrectAttributes() throws Exception {
-        Assert.assertEquals(inviteId, constructedInviteResource.getId());
-        Assert.assertEquals(name, constructedInviteResource.getName());
-        Assert.assertEquals(email, constructedInviteResource.getEmail());
-        Assert.assertEquals(applicationId, constructedInviteResource.getApplication());
-        Assert.assertEquals(hash, constructedInviteResource.getHash());
-        Assert.assertEquals((Long)inviteOrganisationId, constructedInviteResource.getInviteOrganisation());
-        Assert.assertEquals(status, constructedInviteResource.getStatus());
+        assertEquals(inviteId, constructedInviteResource.getId());
+        assertEquals(name, constructedInviteResource.getName());
+        assertEquals(email, constructedInviteResource.getEmail());
+        assertEquals(applicationId, constructedInviteResource.getApplication());
+        assertEquals(hash, constructedInviteResource.getHash());
+        assertEquals((Long)inviteOrganisationId, constructedInviteResource.getInviteOrganisation());
+        assertEquals(status, constructedInviteResource.getStatus());
+    }
+
+    @Test
+    public void test_getInviteOrganisationNameConfirmedSafe() throws Exception {
+        InviteResource inviteResource = new InviteResource();
+
+        inviteResource.setInviteOrganisationName("Unconfirmed name");
+        assertEquals("Unconfirmed name", inviteResource.getInviteOrganisationNameConfirmedSafe());
+
+        inviteResource.setInviteOrganisationNameConfirmed("Confirmed name");
+        assertEquals("Confirmed name", inviteResource.getInviteOrganisationNameConfirmedSafe());
     }
 
 }

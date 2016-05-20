@@ -53,7 +53,7 @@ Academic finance calculations
 
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]    Upload
     When the academic partner uploads a file    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
 
