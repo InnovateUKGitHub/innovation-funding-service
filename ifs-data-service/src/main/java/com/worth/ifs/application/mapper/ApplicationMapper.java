@@ -38,4 +38,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
+    
+    @Mapping(target = "fundingDecision", ignore = true)
+    @Override
+    public abstract Application mapToDomain(ApplicationResource resource);
 }

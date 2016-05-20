@@ -72,7 +72,57 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			}
 		});
 	}
+	
+	@Test
+	public void testSaveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
 
+		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+	}
+
+	@Test
+	public void testSaveFundingDecisionDataDeniedIfNotLoggedIn() {
+
+		setLoggedInUser(null);
+		try {
+			service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+			fail("Should not have been able to save funding decision data without first logging in");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testSaveFundingDecisionDataDeniedIfNoGlobalRolesAtAll() {
+
+		try {
+			service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+			fail("Should not have been able to save funding decision data without the global comp admin role");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testSaveFundingDecisionDataDeniedIfNotCorrectGlobalRoles() {
+
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+				.collect(toList());
+
+		nonCompAdminRoles.forEach(role -> {
+
+			setLoggedInUser(
+					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+			try {
+				service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+				fail("Should not have been able to save funding decision data without the global Comp Admin role");
+			} catch (AccessDeniedException e) {
+				// expected behaviour
+			}
+		});
+	}
+	
 	@Override
 	protected Class<? extends ApplicationFundingService> getServiceClass() {
 		return TestApplicationFundingService.class;
@@ -89,5 +139,11 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 			return null;
 		}
+
+		@Override
+		public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> decision) {
+			return null;
+		}
+
 	}
 }
