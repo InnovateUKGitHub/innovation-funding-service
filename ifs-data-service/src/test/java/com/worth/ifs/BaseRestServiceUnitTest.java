@@ -2,15 +2,11 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.service.AnonymousUserRestTemplateAdaptor;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -19,6 +15,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.*;
@@ -80,20 +77,28 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     }
 
     protected <T> HttpEntity<T> httpEntityForRestCall(T body) {
-        HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
+        HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, VALID_AUTH_TOKEN);
         return new HttpEntity<>(body, headers);
     }
 
     protected <T> HttpEntity<T> httpEntityForRestCallAnonymous(T body) {
-        HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
+        HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, ANONYMOUS_AUTH_TOKEN);
         return new HttpEntity<>(body, headers);
     }
 
     protected <T> HttpEntity<T> httpEntityForRestCallWithoutAuthToken(T body) {
-        HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
+        HttpHeaders headers = getJSONHeaders();
         return new HttpEntity<>(body, headers);
+    }
+
+    protected HttpEntity<byte[]> httpEntityForRestCallWithFileUpload(String requestBody, String contentType, long filesizeBytes) {
+        HttpHeaders headers = getJSONHeaders();
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentLength(filesizeBytes);
+        headers.set(AUTH_TOKEN, VALID_AUTH_TOKEN);
+        return new HttpEntity<>(requestBody.getBytes(), headers);
     }
 
     protected HttpEntity<String> httpEntityForRestCall() {
@@ -137,6 +142,12 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     protected <T> ResponseEntity<T> setupPostWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> ResponseEntity<T> setupFileUploadWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, String requestBody, String mediaType, long filesizeBytes, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCallWithFileUpload(requestBody, mediaType, filesizeBytes), responseType)).thenReturn(response);
         return response;
     }
 

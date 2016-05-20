@@ -23,7 +23,8 @@ public class ApplicationDocs {
             fieldWithPath("applicationStatusName").description("ApplicationStatus name"),
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
-            fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's")
+            fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"),
+            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
@@ -37,6 +38,7 @@ public class ApplicationDocs {
             .withApplicationStatus(ApplicationStatusConstants.OPEN)
             .withCompetition(1L)
             .withCompetitionName("competition name")
-            .withInviteList(asList(1L,2L,3L));
+            .withInviteList(asList(1L,2L,3L))
+            .withAssessorFeedbackFileEntry(123L);
 
 }

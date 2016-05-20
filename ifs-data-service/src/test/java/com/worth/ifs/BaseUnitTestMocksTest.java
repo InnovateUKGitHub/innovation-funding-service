@@ -1,9 +1,5 @@
 package com.worth.ifs;
 
-import org.junit.Before;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
 import com.worth.ifs.alert.mapper.AlertMapper;
@@ -11,22 +7,15 @@ import com.worth.ifs.alert.repository.AlertRepository;
 import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.application.repository.SectionRepository;
-import com.worth.ifs.application.transactional.ApplicationFundingService;
-import com.worth.ifs.application.transactional.ApplicationService;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.application.transactional.ResponseService;
+import com.worth.ifs.application.repository.*;
+import com.worth.ifs.application.transactional.*;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
+import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.file.transactional.FileValidator;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
@@ -41,15 +30,13 @@ import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.UserMapper;
-import com.worth.ifs.user.repository.CompAdminEmailRepository;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.ProjectFinanceEmailRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * This is a convenience subclass for all tests that require Mockito support.  At its simplest this class is simply a
@@ -195,7 +182,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    protected FileValidator fileValidatorMock;
+    protected FileHttpHeadersValidator fileValidatorMock;
+
+    @Mock
+    protected FileEntryMapper fileEntryMapperMock;
+
+    @Mock
+    protected AssessorFeedbackService assessorFeedbackServiceMock;
 
     @Before
     public void setupMockInjection() {
