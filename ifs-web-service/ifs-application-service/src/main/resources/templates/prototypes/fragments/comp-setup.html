@@ -5,12 +5,13 @@
 
 <div th:fragment="prototype-comp-setup-navigation">
     <ul class="inline-nav cf">
-        <li th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Essential information</a></li>
-        <li th:class="${(param.section != null and param.section[0] == 'additional' ? 'selected' : '')}"><a th:href="@{'?section=additional'}">Additional information</a></li>
+        <li th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Essential info</a></li>
+        <li th:class="${(param.section != null and param.section[0] == 'additional' ? 'selected' : '')}"><a th:href="@{'?section=additional'}">Additional info</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><a th:href="@{'?section=eligibility'}">Eligibility</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><a th:href="@{'?section=milestones'}">Milestones</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><a th:href="@{'?section=assessors'}">Assessors</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><a th:href="@{'?section=application'}">Application form</a></li>
+        <li th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><a th:href="@{'?section=finance'}">Finance</a></li>
     </ul>
 </div>
 
@@ -27,7 +28,8 @@
                 <label class="form-label" for="comp-executive">
                     <span class="form-label-bold">Competition executive</span>
                 </label>
-                <select class="form-control width-large" id="comp-executive" name="comp-executive">
+                <select class="form-control width-x-large" id="comp-executive" name="comp-executive">
+                    <option value="">Please select &hellip;</option>
                     <option value="">Name 1</option>
                     <option value="">Name 2</option>
                     <option value="">Name 3</option>
@@ -72,7 +74,8 @@
                 <label class="form-label" for="comp-innovation-sector">
                     <span class="form-label-bold">Innovation sector</span>
                 </label>
-                <select class="form-control width-large" id="comp-innovation-sector" name="comp-innovation-sector">
+                <select class="form-control width-x-large" id="comp-innovation-sector" name="comp-innovation-sector">
+                    <option value="">Please select &hellip;</option>
                     <option value="">Sector 1</option>
                     <option value="">Sector 2</option>
                     <option value="">Sector 3</option>
@@ -83,7 +86,8 @@
                 <label class="form-label" for="comp-innovation-area">
                     <span class="form-label-bold">Innovation area</span>
                 </label>
-                <select class="form-control width-large" id="comp-innovation-area" name="comp-innovation-area">
+                <select class="form-control width-x-large" id="comp-innovation-area" name="comp-innovation-area">
+                    <option value="">Please select &hellip;</option>
                     <option value="">Area 1</option>
                     <option value="">Area 2</option>
                     <option value="">Area 3</option>
@@ -94,10 +98,12 @@
                 <label class="form-label" for="comp-type">
                     <span class="form-label-bold">Competition type</span>
                 </label>
-                <select class="form-control width-large" id="comp-type" name="comp-type">
-                    <option value="">Comp type 1</option>
-                    <option value="">Comp type 2</option>
-                    <option value="">Comp type 3</option>
+                <select class="form-control width-x-large" id="comp-type" name="comp-type">
+                    <option value="">Please select &hellip;</option>
+                    <option value="Programme">Programme</option>
+                    <option value="Managed services">Managed services</option>
+                    <option value="SBRI">SBRI</option>
+                    <option value="Special">Special</option>
                 </select>
             </div>
 
@@ -105,7 +111,8 @@
                 <label class="form-label" for="comp-lead-technologist">
                     <span class="form-label-bold">Competition Lead technologist</span>
                 </label>
-                <select class="form-control width-large" id="comp-lead-technologist" name="comp-lead-technologist">
+                <select class="form-control width-x-large" id="comp-lead-technologist" name="comp-lead-technologist">
+                    <option value="">Please select &hellip;</option>
                     <option value="">Lead technologist 1</option>
                     <option value="">Lead technologist 2</option>
                     <option value="">Lead technologist 3</option>
@@ -133,8 +140,16 @@
                 <input class="form-control width-x-large" id="comp-code" name="comp-code" />
             </div>
         </fieldset>
-        <a th:href="@{'?section=additional'}" class="button">Done</a>
+        <a th:href="@{'?section=essential&#38;status=done'}" class="button">Done</a>
     </form>
+    <ul class="pagination">
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=additional'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Additional information</span>
+            </a>
+        </li>
+    </ul>
 </div>
 
 
@@ -171,8 +186,22 @@
                 <input class="form-control width-x-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
             </div>
         </fieldset>
-        <a th:href="@{'?section=eligibility'}" class="button">Done</a>
+        <a th:href="@{'?section=additional&#38;status=done'}" class="button">Done</a>
     </form>
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=essential'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Essential information</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=eligibility'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+    </ul>
 </div>
 
 
@@ -339,10 +368,25 @@
                 </fieldset>
             </div>
 
-            <a th:href="@{'?section=milestones'}" class="button">Done</a>
+            <a th:href="@{'?section=eligibility&#38;status=done'}" class="button">Done</a>
 
         </fieldset>
     </form>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=additional'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Addtional information</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=milestones'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Milestones</span>
+            </a>
+        </li>
+    </ul>
 </div>
 
 
@@ -350,6 +394,22 @@
 
 <div th:fragment="prototype-section-milestones">
     Milestones
+
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=eligibility'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=assessors'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Assessors</span>
+            </a>
+        </li>
+    </ul>
 </div>
 
 
@@ -357,6 +417,22 @@
 
 <div th:fragment="prototype-section-assessors">
     Assessors
+    
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=milestones'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Milestones</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=application'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Application</span>
+            </a>
+        </li>
+    </ul>
+
 </div>
 
 
@@ -364,6 +440,38 @@
 
 <div th:fragment="prototype-section-application">
     Application
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=assessors'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Assessors</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=finance'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Finance</span>
+            </a>
+        </li>
+    </ul>
+
+</div>
+
+<!-- =================Section: Essential information=========================== -->
+
+<div th:fragment="prototype-section-finance">
+    Finance
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=application'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Application form</span>
+            </a>
+        </li>
+    </ul>
+
 </div>
 
 

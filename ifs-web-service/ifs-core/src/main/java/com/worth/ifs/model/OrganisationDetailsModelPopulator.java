@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * View model for Organisation Details
  */
 @Component
-public class OrganisationDetailsModel {
+public class OrganisationDetailsModelPopulator {
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -48,7 +48,7 @@ public class OrganisationDetailsModel {
         final List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
 
         final List<String> pendingOrganisationNames = pendingInvitations(applicationId).stream()
-                .map(InviteResource::getInviteOrganisationName)
+                .map(InviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .filter(orgName -> StringUtils.hasText(orgName)
                         && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());

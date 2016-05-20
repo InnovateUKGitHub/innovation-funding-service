@@ -45,7 +45,7 @@ public class CostPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
-    public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 

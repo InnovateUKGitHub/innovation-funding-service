@@ -237,13 +237,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private void initializeInvitee(Invite invite, User user) {
-        LOG.error("initializeInvitee");
         Application application = invite.getApplication();
         Role role = roleRepository.findByName("collaborator").get(0);
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application, role, organisation);
         processRoleRepository.save(processRole);
-        LOG.error("initializeInvitee saved");
     }
 
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -160,48 +161,6 @@ public class InviteResource {
         this.user = user;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        InviteResource that = (InviteResource) o;
-
-        return new EqualsBuilder()
-                .append(leadOrganisation, that.leadOrganisation)
-                .append(leadApplicant, that.leadApplicant)
-                .append(id, that.id)
-                .append(name, that.name)
-                .append(email, that.email)
-                .append(application, that.application)
-                .append(competitionId, that.competitionId)
-                .append(competitionName, that.competitionName)
-                .append(applicationName, that.applicationName)
-                .append(inviteOrganisation, that.inviteOrganisation)
-                .append(hash, that.hash)
-                .append(status, that.status)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(leadOrganisation)
-                .append(leadApplicant)
-                .append(id)
-                .append(name)
-                .append(email)
-                .append(application)
-                .append(competitionId)
-                .append(competitionName)
-                .append(applicationName)
-                .append(inviteOrganisation)
-                .append(hash)
-                .append(status)
-                .toHashCode();
-    }
-
     public String getInviteOrganisationName() {
         return inviteOrganisationName;
     }
@@ -224,5 +183,65 @@ public class InviteResource {
 
     public void setInviteOrganisationNameConfirmed(String inviteOrganisationNameConfirmed) {
         this.inviteOrganisationNameConfirmed = inviteOrganisationNameConfirmed;
+    }
+
+    public String getInviteOrganisationNameConfirmedSafe() {
+        return StringUtils.isBlank(getInviteOrganisationNameConfirmed()) ? getInviteOrganisationName() : getInviteOrganisationNameConfirmed();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        InviteResource that = (InviteResource) o;
+
+        return new EqualsBuilder()
+                .append(leadOrganisation, that.leadOrganisation)
+                .append(leadApplicant, that.leadApplicant)
+                .append(leadApplicantEmail, that.leadApplicantEmail)
+                .append(id, that.id)
+                .append(user, that.user)
+                .append(name, that.name)
+                .append(nameConfirmed, that.nameConfirmed)
+                .append(email, that.email)
+                .append(application, that.application)
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(applicationName, that.applicationName)
+                .append(inviteOrganisation, that.inviteOrganisation)
+                .append(inviteOrganisationName, that.inviteOrganisationName)
+                .append(inviteOrganisationNameConfirmed, that.inviteOrganisationNameConfirmed)
+                .append(hash, that.hash)
+                .append(status, that.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(leadOrganisation)
+                .append(leadApplicant)
+                .append(leadApplicantEmail)
+                .append(id)
+                .append(user)
+                .append(name)
+                .append(nameConfirmed)
+                .append(email)
+                .append(application)
+                .append(competitionId)
+                .append(competitionName)
+                .append(applicationName)
+                .append(inviteOrganisation)
+                .append(inviteOrganisationName)
+                .append(inviteOrganisationNameConfirmed)
+                .append(hash)
+                .append(status)
+                .toHashCode();
     }
 }
