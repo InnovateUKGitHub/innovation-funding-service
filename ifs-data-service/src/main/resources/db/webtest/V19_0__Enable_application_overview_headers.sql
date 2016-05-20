@@ -4,4 +4,4 @@ update form_input set description = 'Application details' where description = 'F
 
 update form_input set form_input_type_id = 5 where description = 'Application details';
 
-update application set start_date = '2020-10-01 00:00:00' where id = 16;
+update application set start_date = '2020-10-01 00:00:00' where start_date is null;
