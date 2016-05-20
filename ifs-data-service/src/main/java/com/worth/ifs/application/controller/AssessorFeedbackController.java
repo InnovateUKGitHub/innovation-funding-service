@@ -60,7 +60,7 @@ public class AssessorFeedbackController {
 
         ServiceResult<FileEntryResource> fileAddedResult =
                 fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                        assessorFeedbackService.createAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+                assessorFeedbackService.createAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
 
         return fileAddedResult.toPostCreateResponse();
     }
@@ -73,7 +73,7 @@ public class AssessorFeedbackController {
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
 
-            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = assessorFeedbackService.getAssessorFeedbackFileEntry(applicationId);
+            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = assessorFeedbackService.getAssessorFeedbackFileEntryContents(applicationId);
 
             return getFileResult.handleSuccessOrFailure(
                     failure -> {
@@ -100,30 +100,10 @@ public class AssessorFeedbackController {
     }
 
     @RequestMapping(value = "/assessorFeedbackDocument/fileentry", method = GET, produces = "application/json")
-    public @ResponseBody ResponseEntity<Object> getFileEntryDetails(
+    public RestResult<FileEntryResource> getFileEntryDetails(
             @RequestParam("applicationId") long applicationId) throws IOException {
 
-        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
-        try {
-
-            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = assessorFeedbackService.getAssessorFeedbackFileEntry(applicationId);
-
-            return getFileResult.handleSuccessOrFailure(
-                    failure -> {
-                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
-                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
-                    },
-                    success -> {
-                        FileEntryResource fileEntry = success.getKey();
-                        return new ResponseEntity<>(fileEntry, OK);
-                    }
-            );
-
-        } catch (Exception e) {
-
-            LOG.error("Error retrieving file details", e);
-            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file details")), INTERNAL_SERVER_ERROR);
-        }
+        return assessorFeedbackService.getAssessorFeedbackFileEntryDetails(applicationId).toGetResponse();
     }
 
 

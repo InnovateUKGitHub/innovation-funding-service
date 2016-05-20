@@ -57,7 +57,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getAssessorFeedbackFileEntry(long applicationId) {
+    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getAssessorFeedbackFileEntryContents(long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
 
@@ -69,6 +69,21 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 
             ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(assessorFeedbackFileEntry.getId());
             return getFileResult.andOnSuccessReturn(inputStream -> Pair.of(fileEntryMapper.mapToResource(assessorFeedbackFileEntry), inputStream));
+        });
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getAssessorFeedbackFileEntryDetails(long applicationId) {
+
+        return getApplication(applicationId).andOnSuccess(application -> {
+
+            FileEntry assessorFeedbackFileEntry = application.getAssessorFeedbackFileEntry();
+
+            if (assessorFeedbackFileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(assessorFeedbackFileEntry));
         });
     }
 

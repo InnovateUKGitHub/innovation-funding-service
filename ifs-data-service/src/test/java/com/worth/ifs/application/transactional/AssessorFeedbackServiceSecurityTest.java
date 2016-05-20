@@ -71,12 +71,25 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGetAssessorFeedbackFileEntry() {
+    public void testGetAssessorFeedbackFileEntryContents() {
 
         ApplicationResource application = newApplicationResource().build();
         when(lookupStrategy.getApplicationResource(123L)).thenReturn(application);
 
-        assertAccessDenied(() -> service.getAssessorFeedbackFileEntry(123L), () -> {
+        assertAccessDenied(() -> service.getAssessorFeedbackFileEntryContents(123L), () -> {
+            verify(lookupStrategy).getApplicationResource(123L);
+            verify(rules).compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
+            verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
+        });
+    }
+
+    @Test
+    public void testGetAssessorFeedbackFileEntryDetails() {
+
+        ApplicationResource application = newApplicationResource().build();
+        when(lookupStrategy.getApplicationResource(123L)).thenReturn(application);
+
+        assertAccessDenied(() -> service.getAssessorFeedbackFileEntryDetails(123L), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
             verify(rules).compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
             verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
@@ -106,7 +119,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getAssessorFeedbackFileEntry(long applicationId) {
+        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getAssessorFeedbackFileEntryContents(long applicationId) {
             return null;
         }
 
@@ -117,6 +130,11 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Void> deleteAssessorFeedbackFileEntry(long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> getAssessorFeedbackFileEntryDetails(long applicationId) {
             return null;
         }
     }

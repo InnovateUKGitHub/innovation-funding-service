@@ -23,24 +23,16 @@ import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,7 +132,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
 
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
-        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntry(123L)).thenReturn(serviceSuccess(Pair.of(returnedFileEntry, inputStreamSupplier)));
+        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntryContents(123L)).thenReturn(serviceSuccess(Pair.of(returnedFileEntry, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -163,9 +155,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 withMediaType("application/pdf").
                 withFilesizeBytes(1000).build();
 
-        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
-
-        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntry(123L)).thenReturn(serviceSuccess(Pair.of(returnedFileEntry, inputStreamSupplier)));
+        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntryDetails(123L)).thenReturn(serviceSuccess(returnedFileEntry));
 
         mockMvc.
                 perform(
@@ -177,7 +167,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 andExpect(content().json(toJson(returnedFileEntry))).
                 andDo(documentGetAssessorFeedbackDocumentationFileEntry());
 
-        verify(assessorFeedbackServiceMock).getAssessorFeedbackFileEntry(123L);
+        verify(assessorFeedbackServiceMock).getAssessorFeedbackFileEntryDetails(123L);
 
     }
 

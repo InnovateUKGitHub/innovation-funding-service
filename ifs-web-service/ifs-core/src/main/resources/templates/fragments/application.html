@@ -38,11 +38,16 @@
                  <p>Upload the assessor feedback page</p>
 
                  <div th:unless="${assessorFeedback.readonly}" th:if="${assessorFeedback.noFileUploaded}"
-                      th:action="@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition}, applicationId=${currentApplication.id})}">
+                      th:action="@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition}, applicationId=${currentApplication.id})}"
+                      th:classappend="${#fields.hasErrors('assessorFeedback')} ? error : ''">
 
-                    <input type="file" id="assessorFeedback" name="assessorFeedback" class="inputfile"/>
-                    <label for="assessorFeedback" class="button-secondary extra-margin">+ Upload</label>
-                    <button th:unless="${assessorFeedback.readonly}" th:if="${assessorFeedback.noFileUploaded}" name="uploadAssessorFeedback" class="button-secondary" type="submit" data-for-file-upload="assessorFeedback">Save</button>
+                     <div th:if="${#fields.hasErrors('assessorFeedback')}" th:remove="tag">
+                         <span class="error-message" th:each="err : ${#fields.errors('assessorFeedback')}" th:text="${err}" />
+                     </div>
+
+                     <input type="file" id="assessorFeedback" name="assessorFeedback" class="inputfile"/>
+                     <label for="assessorFeedback" class="button-secondary extra-margin">+ Upload</label>
+                     <button th:unless="${assessorFeedback.readonly}" th:if="${assessorFeedback.noFileUploaded}" name="uploadAssessorFeedback" class="button-secondary" type="submit" data-for-file-upload="assessorFeedback">Save</button>
                  </div>
 
                  <!--<div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />-->
