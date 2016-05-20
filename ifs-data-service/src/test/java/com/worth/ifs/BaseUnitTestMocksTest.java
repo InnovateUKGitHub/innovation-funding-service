@@ -44,6 +44,7 @@ import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.ProjectFinanceEmailRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
