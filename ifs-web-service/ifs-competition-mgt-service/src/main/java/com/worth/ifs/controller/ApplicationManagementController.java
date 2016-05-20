@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -237,7 +237,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
     private RestResult<FileEntryResource> uploadFormInput(Long applicationId, HttpServletRequest request) {
 
-        final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
+        final Map<String, MultipartFile> fileMap = ((MultipartHttpServletRequest) request).getFileMap();
         final MultipartFile file = fileMap.get("assessorFeedback");
 
         if (file != null && !file.isEmpty()) {
