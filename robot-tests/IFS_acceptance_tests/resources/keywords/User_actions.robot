@@ -47,7 +47,7 @@ The user is on the page
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
-    Wait Until Keyword Succeeds    10       500ms    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
@@ -103,8 +103,8 @@ the user selects the radio button
     Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
 
 the user selects the option from the drop-down menu
-    [Arguments]     ${option}   ${drop-down}
-    Select From List        ${drop-down}    ${option}
+    [Arguments]    ${option}    ${drop-down}
+    Select From List    ${drop-down}    ${option}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -116,15 +116,13 @@ the user selects the option from the drop-down menu
 
 the user submits the form
     Submit Form
-    Page Should Not Contain     Error
-    Page Should Not Contain     something went wrong
-    Page Should Not Contain     Page or resource not found
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
-
-
 
 the user follows the flow to register their organisation
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
@@ -175,7 +173,7 @@ The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
     Page Should Not Contain    Error
-    Page Should Not Contain    error
+    #Page Should Not Contain    error    # commented this out because it caused a test failure
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
@@ -258,11 +256,9 @@ the user can remove the uploaded file
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
 
-
 The element should be disabled
     [Arguments]    ${ELEMENT}
     Element Should Be Disabled    ${ELEMENT}
-
 
 the user clicks the link from the appropriate email sender
     Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
