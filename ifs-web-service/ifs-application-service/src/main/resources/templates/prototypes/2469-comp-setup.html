@@ -81,6 +81,8 @@
 
 		jQuery('#comp-innovation-sector').on('change',function(e){ 
 
+			jQuery('#comp-innovation-area').val('');
+
 			var compSector = jQuery(this).val();
 
 			if(compSector == 'health'){
@@ -110,6 +112,14 @@
 				jQuery('#comp-innovation-area .emerging').hide();
 				jQuery('#comp-innovation-area .infrastructure').show();
 			}
+
+		});
+
+		jQuery('#comp-innovation-area').on('change',function(e){ 
+
+			var compInnovationArea = jQuery(this).find('option:selected').attr('class');
+
+			jQuery('#comp-innovation-sector').val(compInnovationArea);
 
 		});
 

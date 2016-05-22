@@ -5,7 +5,7 @@
 
 <div th:fragment="prototype-comp-setup-navigation">
     <ul class="inline-nav cf">
-        <li th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Essential info</a></li>
+        <li th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Initial details</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'additional' ? 'selected' : '')}"><a th:href="@{'?section=additional'}">Additional info</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><a th:href="@{'?section=eligibility'}">Eligibility</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><a th:href="@{'?section=milestones'}">Milestones</a></li>
@@ -19,10 +19,15 @@
 <!-- =================Section: Essential information=========================== -->
 
 <div th:fragment="prototype-section-essential">
-    <h2 class="heading-medium no-margin-top">Essential information</h2>
+    <h2 class="heading-medium no-margin-top">Step 1: Initial competition details</h2>
+    
+    <div class="panel-indent">
+        This will create a new Competition - you will be able to specify more details as you proceed
+    </div>
+
     <form>
         <fieldset>
-            <legend class="visuallyhidden">Essential information</legend>
+            <legend class="visuallyhidden">Initial details</legend>
             
             <div class="form-group">
                 <label class="form-label" for="comp-executive">
@@ -94,21 +99,21 @@
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
                     <option value="Biosciences" class="health">Biosciences</option>
                     
-                    <option value="" class="materials">High value manufacturing</option>
-                    <option value="" class="materials">Resource efficiency</option>
-                    <option value="" class="materials">Advanced materials</option>
+                    <option value="High value manufacturing" class="materials">High value manufacturing</option>
+                    <option value="Resource efficiency" class="materials">Resource efficiency</option>
+                    <option value="Advanced materials" class="materials">Advanced materials</option>
 
-                    <option value="" class="emerging">Digital</option>
-                    <option value="" class="emerging">Satellite applications</option>
-                    <option value="" class="emerging">ICT</option>
-                    <option value="" class="emerging">Design and creative economy</option>
-                    <option value="" class="emerging">Emerging tech and industries</option>
-                    <option value="" class="emerging">Robotics and autonomous systems</option>
-                    <option value="" class="emerging">Electronics, sensors and photonics</option>
+                    <option value="Digital" class="emerging">Digital</option>
+                    <option value="Satellite applications" class="emerging">Satellite applications</option>
+                    <option value="ICT" class="emerging">ICT</option>
+                    <option value="Design and creative economy" class="emerging">Design and creative economy</option>
+                    <option value="Emerging tech and industries" class="emerging">Emerging tech and industries</option>
+                    <option value="Robotics and autonomous systems" class="emerging">Robotics and autonomous systems</option>
+                    <option value="Electronics, sensors and photonics" class="emerging">Electronics, sensors and photonics</option>
 
-                    <option value="" class="infrastructure">Transport</option>
-                    <option value="" class="infrastructure">Energy</option>
-                    <option value="" class="infrastructure">Urban living and built</option>
+                    <option value="Transport" class="infrastructure">Transport</option>
+                    <option value="Energy" class="infrastructure">Energy</option>
+                    <option value="Urban living and built" class="infrastructure">Urban living and built</option>
 
                 </select>
             </div>
@@ -150,21 +155,21 @@
                 <label class="form-label" for="comp-paf">
                     <span class="form-label-bold">PAF number</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-paf" name="comp-paf" />
+                <input class="form-control width-large" id="comp-paf" name="comp-paf" />
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="comp-budget-code">
                     <span class="form-label-bold">Budget code</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-budget-code" name="comp-budget-code" />
+                <input class="form-control width-large" id="comp-budget-code" name="comp-budget-code" />
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="comp-code">
                     <span class="form-label-bold">Competition code</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-code" name="comp-code" />
+                <input class="form-control width-large" id="comp-code" name="comp-code" />
             </div>
         </fieldset>
         <a th:href="@{'?section=essential&#38;status=done'}" class="button">Done</a>
