@@ -188,7 +188,12 @@
 <!-- =================Section: Additional information=========================== -->
 
 <div th:fragment="prototype-section-additional">
-    <h2 class="heading-medium no-margin-top">Additional information</h2>
+    <h2 class="heading-medium no-margin-top">Step 2: Additional competition information</h2>
+    
+    <div class="panel-indent">
+        These fields are for reporting purposes
+    </div>
+
     <form>
         <fieldset>
             <legend class="visuallyhidden">Additional information</legend>
@@ -471,7 +476,40 @@
 <!-- =================Section: Application form=========================== -->
 
 <div th:fragment="prototype-section-application">
-    Application
+    
+    <h2 class="heading-medium no-margin-top">Step 6: Application form questions</h2>
+    
+    <div class="panel-indent">
+        These match the template for the competition type you chose - to change questions you can change the competition type in step 1
+    </div>
+
+
+    <div class="collapsible section-overview">
+        
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Potential market'}, question=${'What is the size of the potential market for your project?'}, questionNo=2" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project exploitation'}, question=${'How will you exploit and market your project?'}, questionNo=3" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Economic benefit'}, question=${'What economic, social and environmental benefits do you expect your project to deliver and when?'}, questionNo=4" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Technical approach'}, question=${'Required'}, questionNo=5" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Innovation'}, question=${'Required'}, questionNo=6" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Risks'}, question=${'Required'}, questionNo=7" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project team'}, question=${'Required'}, questionNo=8" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Funding'}, question=${'Required'}, questionNo=9" th:remove="tag"/>
+        
+         <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
+
+
+    </div>
+
+
 
     <ul class="pagination">
         <li class="prev">
@@ -506,6 +544,43 @@
 
 </div>
 
+
+<!-- =================Section: application questions=========================== -->
+
+<div th:fragment="prototype-application-question">
+    <h2 th:text="${questionNo+'. '+questionTitle}">
+                <!-- <div class="section-status section-incomplete">Incomplete</div> -->
+    </h2>
+                
+    <div class="question">
+
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
+                <span class="form-label-bold">Question title</span>
+            </label>
+            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
+                <span class="form-label-bold">Competition subtitle</span>
+            </label>
+            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
+        </div>
+
+
+        <div class="form-group">
+            
+            <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
+            
+            <div class="textarea-wrapped "> 
+                
+                <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}" readonly="readonly"></textarea>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </html>
