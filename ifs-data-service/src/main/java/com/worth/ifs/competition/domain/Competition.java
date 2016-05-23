@@ -31,9 +31,11 @@ public class Competition {
             return CompetitionResource.Status.IN_ASSESSMENT;
         }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
         	return CompetitionResource.Status.FUNDERS_PANEL;
+        }else if(getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
+            return CompetitionResource.Status.ASSESSOR_FEEDBACK;
         }
 
-        return CompetitionResource.Status.ASSESSOR_FEEDBACK;
+        return CompetitionResource.Status.PROJECT_SETUP;
     }
 
     @Id
@@ -66,6 +68,7 @@ public class Competition {
     private LocalDateTime fundersPanelEndDate;
 	@DateTimeFormat
     private LocalDateTime assessorFeedbackDate;
+
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 

@@ -174,15 +174,17 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     private Map<String, List<String>> storeJESUpload(HttpServletRequest request, Long userId, Long applicationId) {
         final Map<String, String[]> params = request.getParameterMap();
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+        
 
         Map<String, List<String>> errorMap = new HashMap<>();
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
+        	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
         } else {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
             final MultipartFile file = fileMap.get("jes-upload");
             if (file != null && !file.isEmpty()) {
+            	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
                 try {
                     RestResult<FileEntryResource> result = financeService.addFinanceDocument(applicationFinance.getId(),
                             file.getContentType(),

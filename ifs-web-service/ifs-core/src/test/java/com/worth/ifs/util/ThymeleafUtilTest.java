@@ -18,7 +18,7 @@ public class ThymeleafUtilTest {
     public void uriWithQueryString() throws Exception {
         final String requestURI = "/application/1/form";
         final String queryString = "test=true,newApplication=true";
-        final String expected = requestURI + "?" + queryString;
+        final String expected = "~" + requestURI + "?" + queryString;
 
         final MockHttpServletRequest request = new MockHttpServletRequest(null, requestURI);
         request.setQueryString(queryString);
@@ -37,6 +37,6 @@ public class ThymeleafUtilTest {
 
         final MockHttpServletRequest request = new MockHttpServletRequest(null, reqeuestURI);
 
-        Assert.assertEquals(reqeuestURI, thymeleafUtil.uriWithQueryString(request));
+        Assert.assertEquals("~" + reqeuestURI, thymeleafUtil.uriWithQueryString(request));
     }
 }

@@ -29,15 +29,29 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.applicationfinance.valid.media.types}")
     private List<String> validMediaTypesForApplicationFinance;
 
+    @Value("${ifs.data.service.file.storage.assessorfeedback.max.filesize.bytes}")
+    private Long maxFilesizeBytesForAssessorFeedback;
+
+    @Value("${ifs.data.service.file.storage.assessorfeedback.valid.media.types}")
+    private List<String> validMediaTypesForAssessorFeedback;
+
     @Bean(name = "formInputResponseFileValidator")
-    public FileValidator getFormInputResponseFileValidator() {
-        List<MediaType> mediaTypes = simpleMap(validMediaTypesForFormInputResponses, MediaType::valueOf);
-        return new FilesizeAndTypeFileValidator(maxFilesizeBytesForFormInputResponses, mediaTypes);
+    public FileHttpHeadersValidator getFormInputResponseFileValidator() {
+        return createFileValidator(validMediaTypesForFormInputResponses, maxFilesizeBytesForFormInputResponses);
     }
 
     @Bean(name = "applicationFinanceFileValidator")
-    public FileValidator getApplicationFinanceFileValidator() {
-        List<MediaType> mediaTypes = simpleMap(validMediaTypesForApplicationFinance, MediaType::valueOf);
-        return new FilesizeAndTypeFileValidator(maxFilesizeBytesForApplicationFinance, mediaTypes);
+    public FileHttpHeadersValidator getApplicationFinanceFileValidator() {
+        return createFileValidator(validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance);
+    }
+
+    @Bean(name = "assessorFeedbackFileValidator")
+    public FileHttpHeadersValidator getAssessorFeedbackFileValidator() {
+        return createFileValidator(validMediaTypesForAssessorFeedback, maxFilesizeBytesForAssessorFeedback);
+    }
+
+    private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {
+        List<MediaType> mediaTypes = simpleMap(validMediaTypes, MediaType::valueOf);
+        return new FilesizeAndTypeFileValidator(maxFilesizeBytes, mediaTypes);
     }
 }

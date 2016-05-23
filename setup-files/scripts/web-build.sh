@@ -15,4 +15,4 @@ elif [ "$1" == "-js" ]; then
     gulp
     cd -
 fi
-./gradlew -s cleanDeploy 
+./gradlew -s cleanDeploy -x test

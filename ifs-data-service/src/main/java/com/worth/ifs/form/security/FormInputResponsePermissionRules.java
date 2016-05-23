@@ -2,7 +2,7 @@ package com.worth.ifs.form.security;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.security.ApplicationRules;
+import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.resource.FormInputResponseCommand;
@@ -29,7 +29,7 @@ import static com.worth.ifs.user.resource.UserRoleType.*;
 @PermissionRules
 @Component
 public class FormInputResponsePermissionRules {
-    private static final Log LOG = LogFactory.getLog(ApplicationRules.class);
+    private static final Log LOG = LogFactory.getLog(ApplicationPermissionRules.class);
 
     @Autowired
     private ApplicationRepository applicationRepository;

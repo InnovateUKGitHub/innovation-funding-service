@@ -48,30 +48,38 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public CompetitionBuilder withCompetitionStatus(Status status) {
-    	
-    	if(Status.NOT_STARTED.equals(status)) {
-    		return withStartDate(LocalDateTime.now().plusDays(1L));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if(Status.NOT_STARTED.equals(status)) {
+    		return withStartDate(now.plusDays(1L));
     	} else if(Status.OPEN.equals(status)) {
-    		return withStartDate(LocalDateTime.now().minusDays(1L))
-    				.withEndDate(LocalDateTime.now().plusDays(1L));
+    		return withStartDate(now.minusDays(1L))
+    				.withEndDate(now.plusDays(1L));
     	} else if(Status.IN_ASSESSMENT.equals(status)) {
-    		return withStartDate(LocalDateTime.now().minusDays(2L))
-    				.withEndDate(LocalDateTime.now().minusDays(1L))
-    				.withAssessmentEndDate(LocalDateTime.now().plusDays(1L));
+    		return withStartDate(now.minusDays(2L))
+    				.withEndDate(now.minusDays(1L))
+    				.withAssessmentEndDate(now.plusDays(1L));
     	} else if(Status.FUNDERS_PANEL.equals(status)) {
-    		return withStartDate(LocalDateTime.now().minusDays(3L))
-    				.withEndDate(LocalDateTime.now().minusDays(2L))
-    				.withAssessmentEndDate(LocalDateTime.now().minusDays(1L))
+    		return withStartDate(now.minusDays(3L))
+    				.withEndDate(now.minusDays(2L))
+    				.withAssessmentEndDate(now.minusDays(1L))
     				.withFundersPanelEndDate(null);
     	} else if(Status.ASSESSOR_FEEDBACK.equals(status)) {
-    		return withStartDate(LocalDateTime.now().minusDays(4L))
-    				.withEndDate(LocalDateTime.now().minusDays(3L))
-    				.withAssessmentEndDate(LocalDateTime.now().minusDays(2L))
-    				.withFundersPanelEndDate(LocalDateTime.now().minusDays(1L));
-    	} else {
-    		throw new RuntimeException("status " + status + " not yet supported by CompetitionBuilder.withCompetitionStatus method");
-    	}
-    }
+            return withStartDate(now.minusDays(4L))
+                    .withEndDate(now.minusDays(3L))
+                    .withAssessmentEndDate(now.minusDays(2L))
+                    .withFundersPanelEndDate(now.minusDays(1L));
+        } else if(Status.PROJECT_SETUP.equals(status)) {
+            return withStartDate(now.minusDays(5L))
+                    .withEndDate(now.minusDays(4L))
+                    .withAssessmentEndDate(now.minusDays(3L))
+                    .withFundersPanelEndDate(now.minusDays(2L))
+                    .withAssessorFeedbackDate(now.minusDays(1L));
+        } else {
+                throw new RuntimeException("status " + status + " not yet supported by CompetitionBuilder.withCompetitionStatus method");
+            }
+        }
     
     public CompetitionBuilder withAssessorFeedbackDate(LocalDateTime... endDate) {
         return withArray((date, competition) -> competition.setAssessorFeedbackDate(date), endDate);

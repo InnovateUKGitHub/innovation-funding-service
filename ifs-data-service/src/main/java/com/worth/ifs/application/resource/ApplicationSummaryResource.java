@@ -17,7 +17,7 @@ public class ApplicationSummaryResource {
 	private BigDecimal grantRequested;
 	private BigDecimal totalProjectCost;
 	private Long duration;
-	private boolean funded;
+	private FundingDecision fundingDecision;
 	
 	public Long getId() {
 		return id;
@@ -76,10 +76,13 @@ public class ApplicationSummaryResource {
 		this.duration = duration;
 	}
 	public boolean isFunded() {
-		return funded;
+		return FundingDecision.FUNDED.equals(fundingDecision);
 	}
-	public void setFunded(boolean funded) {
-		this.funded = funded;
+	public FundingDecision getFundingDecision() {
+		return fundingDecision;
+	}
+	public void setFundingDecision(FundingDecision fundingDecision) {
+		this.fundingDecision = fundingDecision;
 	}
     
 }

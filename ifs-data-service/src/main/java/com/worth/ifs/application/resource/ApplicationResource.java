@@ -33,6 +33,7 @@ public class ApplicationResource {
     private Long competition;
     private String competitionName;
     private List<Long> invites;
+    private Long assessorFeedbackFileEntry;
 
     public Long getId() {
         return id;
@@ -136,6 +137,14 @@ public class ApplicationResource {
         setApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId());
     }
 
+    public Long getAssessorFeedbackFileEntry() {
+        return assessorFeedbackFileEntry;
+    }
+
+    public void setAssessorFeedbackFileEntry(Long assessorFeedbackFileEntry) {
+        this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -154,6 +163,7 @@ public class ApplicationResource {
                 .append(applicationStatus, that.applicationStatus)
                 .append(competition, that.competition)
                 .append(invites, that.invites)
+                .append(assessorFeedbackFileEntry, that.assessorFeedbackFileEntry)
                 .isEquals();
     }
 
@@ -169,6 +179,7 @@ public class ApplicationResource {
                 .append(applicationStatus)
                 .append(competition)
                 .append(invites)
+                .append(assessorFeedbackFileEntry)
                 .toHashCode();
     }
 

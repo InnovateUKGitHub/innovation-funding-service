@@ -203,7 +203,7 @@ public class CompetitionManagementControllerTest  {
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
     
-    @Test
+	@Test
     public void getByCompetitionIdForCompetitionFundersPanelSubmittedRequested() throws Exception {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withCompetitionStatus(Status.FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);

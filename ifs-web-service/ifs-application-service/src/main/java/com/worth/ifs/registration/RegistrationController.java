@@ -190,7 +190,7 @@ public class RegistrationController {
         }
         
         if(setInviteEmailAddress){
-            LOG.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
+            LOG.info("setInviteeEmailAddress: "+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
             validator.validate(registrationForm, bindingResult);

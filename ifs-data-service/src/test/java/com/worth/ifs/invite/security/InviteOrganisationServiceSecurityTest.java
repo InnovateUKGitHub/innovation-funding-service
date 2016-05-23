@@ -12,7 +12,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.invite.security.InviteOrganisationServiceSecurityTest.TestInviteOrganisationService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,9 +46,17 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
         assertAccessDenied(
                 () -> service.findOne(inviteId),
                 () -> {
-                    verify(inviteOrganisationPermissionRules).collaboratorCanViewOrganisationInviteToTheApplication(any(InviteOrganisationResource.class), any(UserResource.class));
-                    verify(inviteOrganisationPermissionRules).leadApplicantCanViewOrganisationInviteToTheApplication(any(InviteOrganisationResource.class), any(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
                 });
+    }
+
+    @Test
+    public void testSave() {
+        assertAccessDenied(
+                () -> service.save(newInviteOrganisationResource().build()),
+                () -> verify(inviteOrganisationPermissionRules).leadApplicantCanSaveInviteAnOrganisationToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class))
+        );
     }
 
 

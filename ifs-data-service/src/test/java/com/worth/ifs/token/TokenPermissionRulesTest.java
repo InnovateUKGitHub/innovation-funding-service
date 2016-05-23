@@ -17,7 +17,7 @@ public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermi
 
     @Test
     public void testSystemRegistrationUserCanReadTokens() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanReadTokens(new Token(), user));
             } else {
@@ -28,7 +28,7 @@ public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermi
 
     @Test
     public void testSystemRegistrationUserCanReadTokensOptional() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanReadTokensOptional(Optional.of(new Token()), user));
             } else {
@@ -39,7 +39,7 @@ public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermi
 
     @Test
     public void testSystemRegistrationUserCanDeleteTokens() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanDeleteTokens(new Token(), user));
             } else {

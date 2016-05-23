@@ -3,7 +3,9 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.FundingDecisionStatus;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import java.time.LocalDate;
@@ -38,8 +40,8 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((id, application) -> setField("id", id, application), ids);
     }
 
-    public ApplicationBuilder withCompetition(Competition competition) {
-        return with(application -> application.setCompetition(competition));
+    public ApplicationBuilder withCompetition(Competition... competitions) {
+        return withArray((competition, application) -> application.setCompetition(competition), competitions);
     }
 
     public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
@@ -54,8 +56,20 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return with(application -> application.setProcessRoles(asList(processRoles)));
     }
 
-    public ApplicationBuilder withName(String name) {
-        return with(application -> application.setName(name));
+    public ApplicationBuilder withName(String... names) {
+    	return withArray((name, application) -> application.setName(name), names);
+    }
+    
+    public ApplicationBuilder withFundingDecision(FundingDecisionStatus... fundingDecisionStatus) {
+    	return withArray((fundingDecision, application) -> application.setFundingDecision(fundingDecision), fundingDecisionStatus);
+    }
+
+    public ApplicationBuilder withAssessorFeedbackFileEntry(FileEntry... fileEntry) {
+        return withArray((file, application) -> application.setAssessorFeedbackFileEntry(file), fileEntry);
+    }
+    
+    public ApplicationBuilder withDurationInMonths(Long... durationInMonths) {
+        return withArray((duration, application) -> application.setDurationInMonths(duration), durationInMonths);
     }
 
     @Override
