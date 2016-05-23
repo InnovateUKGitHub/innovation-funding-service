@@ -43,6 +43,12 @@
             </ul>
         </div>
     </div>
+
+    <div class="form-group download extra-margin" th:if="${assessorFeedback}">
+        <h3 class="heading-small no-margin">View your application feedback:</h3>
+        <a href="#" th:href="'/application/'+${currentApplication.getId()}+'/assessorFeedback'" th:text="${assessorFeedback.filename}">10294856feedback.pdf (161.96 KB)</a>
+    </div>
+
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
