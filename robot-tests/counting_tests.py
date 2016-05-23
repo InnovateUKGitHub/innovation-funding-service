@@ -86,7 +86,6 @@ pending_tests = tidyUpPybotOutput(pending_tests_pybot_output)
 if pending_tests != "0 tests":
   pending_test_list = shell("grep -R Pending IFS_acceptance_tests/")
   tidy_pending_test_list = tidyUpPendingTestSearch(pending_test_list)
-  print tidy_pending_test_list
   pending_document_tuples = grabDocumentingComments(tidy_pending_test_list)
 
 print "Counting total tests..."
