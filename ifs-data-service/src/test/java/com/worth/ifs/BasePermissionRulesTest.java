@@ -4,6 +4,7 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import org.junit.Before;
 import org.mockito.InjectMocks;
 
 import java.util.List;
@@ -28,11 +29,11 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
 
-    protected List<Role> allRoles =  newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
+    protected List<Role> allRoles;
 
-    protected List<RoleResource> allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
+    protected List<RoleResource> allRolesResources;
 
-    protected List<UserResource> allRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
+    protected List<UserResource> allGlobalRoleUsers;
 
     protected RoleResource compAdminRole() {
         return getRoleResource(COMP_ADMIN);
@@ -54,13 +55,20 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(SYSTEM_REGISTRATION_USER);
     }
 
+    @Before
+    public void setupSetsOfData() {
+        allRoles = newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
+        allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
+        allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
+    }
+
     private UserResource createUserWithRoles(UserRoleType... types) {
         List<RoleResource> roles = simpleMap(asList(types), this::getRoleResource);
         return newUserResource().withRolesGlobal(roles).build();
     }
 
     protected UserResource getUserWithRole(UserRoleType type) {
-        return simpleFilter(allRoleUsers, user -> simpleMap(user.getRoles(), RoleResource::getName).contains(type.getName())).get(0);
+        return simpleFilter(allGlobalRoleUsers, user -> simpleMap(user.getRoles(), RoleResource::getName).contains(type.getName())).get(0);
     }
 
     private RoleResource getRoleResource(UserRoleType type) {

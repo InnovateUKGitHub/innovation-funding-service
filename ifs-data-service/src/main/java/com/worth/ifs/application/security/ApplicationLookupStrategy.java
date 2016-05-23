@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
 @Component
 @PermissionEntityLookupStrategies
 public class ApplicationLookupStrategy {
-    @Autowired
-    ApplicationRepository applicationRepository;
 
     @Autowired
-    ApplicationMapper applicationMapper;
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ApplicationMapper applicationMapper;
 
     @PermissionEntityLookupStrategy
     public Application getApplication(Long applicationId) {

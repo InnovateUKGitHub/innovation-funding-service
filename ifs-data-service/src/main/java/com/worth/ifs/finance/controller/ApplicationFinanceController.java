@@ -7,8 +7,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileEntryService;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.file.transactional.FileValidator;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -43,21 +44,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {
+
     private static final Log LOG = LogFactory.getLog(ApplicationFinanceController.class);
+
     public static final String RESEARCH_PARTICIPATION_PERCENTAGE = "researchParticipationPercentage";
 
     @Autowired
     private CostService costService;
 
     @Autowired
-    private FileEntryService fileEntryService;
-
-    @Autowired
-    private FileService fileService;
-
-    @Autowired
     @Qualifier("applicationFinanceFileValidator")
-    private FileValidator fileValidator;
+    private FileHttpHeadersValidator fileValidator;
 
     @RequestMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
@@ -156,6 +153,7 @@ public class ApplicationFinanceController {
     @RequestMapping(value = "/financeDocument", method = GET)
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
+
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
             return costService.getFileContents(applicationFinanceId).handleSuccessOrFailure(
@@ -178,15 +176,4 @@ public class ApplicationFinanceController {
             return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
     } 
-
-    private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
-        return () -> {
-            try {
-                return request.getInputStream();
-            } catch (IOException e) {
-                LOG.error("Unable to open an input stream from request", e);
-                throw new RuntimeException("Unable to open an input stream from request", e);
-            }
-        };
-    }
 }

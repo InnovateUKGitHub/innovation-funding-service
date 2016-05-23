@@ -24,7 +24,6 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.controller.CompetitionManagementController;
 import com.worth.ifs.service.ApplicationSummarySortFieldService;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -218,7 +217,7 @@ public class CompetitionManagementControllerTest  {
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
     
-    @Test
+	@Test
     public void getByCompetitionIdForCompetitionFundersPanelSubmittedRequested() throws Exception {
     	
     	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();

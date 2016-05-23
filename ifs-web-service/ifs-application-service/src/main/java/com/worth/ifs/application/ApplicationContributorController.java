@@ -80,7 +80,9 @@ public class ApplicationContributorController{
             Optional<InviteOrganisationResource> leadOrg = savedInvites.stream().filter(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId())).findAny();
             leadOrg.get().setId(0L);
         }
-        Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));
+
+        Map<Long, InviteOrganisationResource> organisationInvites = new LinkedHashMap<>();
+        savedInvites.stream().forEachOrdered(a -> organisationInvites.put(a.getId(), a));
 
         model.addAttribute("authenticatedUser", user);
         model.addAttribute("currentApplication", application);

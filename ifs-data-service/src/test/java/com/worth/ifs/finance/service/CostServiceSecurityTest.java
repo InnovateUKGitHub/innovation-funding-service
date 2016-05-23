@@ -3,7 +3,7 @@ package com.worth.ifs.finance.service;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
-import com.worth.ifs.application.security.ApplicationRules;
+import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
@@ -46,7 +46,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     private CostFieldPermissionsRules costFieldPermissionsRules;
     private CostPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
-    private ApplicationRules applicationRules;
+    private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CostLookupStrategy costLookupStrategy;
     private CostFieldLookupStrategy costFieldLookupStrategy;
@@ -57,7 +57,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         costFieldPermissionsRules = getMockPermissionRulesBean(CostFieldPermissionsRules.class);
         costPermissionsRules = getMockPermissionRulesBean(CostPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
-        applicationRules = getMockPermissionRulesBean(ApplicationRules.class);
+        applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
         costFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostFieldLookupStrategy.class);

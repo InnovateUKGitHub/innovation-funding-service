@@ -1,6 +1,7 @@
 package com.worth.ifs.application.form;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -12,6 +13,8 @@ public class ApplicationForm extends Form {
 
     @Valid
     private ApplicationResource application;
+
+    private MultipartFile assessorFeedback;
 
     private boolean adminMode = false;
 
@@ -33,5 +36,13 @@ public class ApplicationForm extends Form {
 
     public void setAdminMode(boolean adminMode) {
         this.adminMode = adminMode;
+    }
+
+    public MultipartFile getAssessorFeedback() {
+        return assessorFeedback;
+    }
+
+    public void setAssessorFeedback(MultipartFile assessorFeedback) {
+        this.assessorFeedback = assessorFeedback;
     }
 }
