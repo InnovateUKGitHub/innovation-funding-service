@@ -8,7 +8,8 @@ IFS.upload = (function(){
         init : function(){
             s = this.settings;
             jQuery('body').on('change',s.uploadEl,function(){
-                jQuery('[name="upload_file"]').click();
+                var fileInputId = jQuery(this).attr("id");
+                jQuery('[data-for-file-upload="' + fileInputId + '"]').click();
             });
         }
     };

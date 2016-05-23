@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.user.domain.Organisation;
@@ -22,6 +23,7 @@ import java.util.*;
  */
 @Entity
 public class Application {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -49,6 +51,12 @@ public class Application {
     @OneToMany(mappedBy="application")
     private List<Invite> invites;
 
+    @Enumerated(EnumType.STRING)
+    private FundingDecisionStatus fundingDecision;
+
+    @ManyToOne
+    @JoinColumn(name="assessorFeedbackFileEntryId", referencedColumnName="id")
+    private FileEntry assessorFeedbackFileEntry;
 
     public Application() {
         /*default constructor*/}
@@ -187,5 +195,21 @@ public class Application {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+    
+    public void setFundingDecision(FundingDecisionStatus fundingDecision) {
+	this.fundingDecision = fundingDecision;
+    }
+    
+    public FundingDecisionStatus getFundingDecision() {
+	return fundingDecision;
+    }
+
+    public FileEntry getAssessorFeedbackFileEntry() {
+        return assessorFeedbackFileEntry;
+    }
+
+    public void setAssessorFeedbackFileEntry(FileEntry assessorFeedbackFileEntry) {
+        this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
     }
 }

@@ -11,7 +11,8 @@ public enum UserRoleType {
     LEADAPPLICANT("leadapplicant"),
     COMP_ADMIN("comp_admin"),
     SYSTEM_MAINTAINER("system_maintainer"),
-    SYSTEM_REGISTRATION_USER("system_registrar");
+    SYSTEM_REGISTRATION_USER("system_registrar"),
+    PROJECT_FINANCE("project_finance");
 
     private final String name;
 

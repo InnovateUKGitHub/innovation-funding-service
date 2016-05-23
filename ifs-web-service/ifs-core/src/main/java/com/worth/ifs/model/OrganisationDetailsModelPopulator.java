@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * View model for Organisation Details
  */
 @Component
-public class OrganisationDetailsModel {
+public class OrganisationDetailsModelPopulator {
 
     @Autowired
     private ProcessRoleService processRoleService;

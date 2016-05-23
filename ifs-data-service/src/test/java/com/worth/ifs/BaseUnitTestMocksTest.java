@@ -2,23 +2,20 @@ package com.worth.ifs;
 
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
-import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.alert.mapper.AlertMapper;
 import com.worth.ifs.alert.repository.AlertRepository;
 import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.*;
-import com.worth.ifs.application.transactional.ApplicationFundingService;
-import com.worth.ifs.application.transactional.ApplicationService;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.application.transactional.ResponseService;
+import com.worth.ifs.application.transactional.*;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
+import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.file.transactional.FileValidator;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
@@ -84,6 +81,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompAdminEmailRepository compAdminEmailRepositoryMock;
+    
+    @Mock
+    protected ProjectFinanceEmailRepository projectFinanceEmailRepositoryMock;
 
     @Mock
     protected RoleRepository roleRepositoryMock;
@@ -143,9 +143,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AddressLookupService addressLookupServiceMock;
 
     @Mock
-    protected AddressService addressServiceMock;
-
-    @Mock
     protected OrganisationService organisationServiceMock;
 
     @Mock
@@ -185,7 +182,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    protected FileValidator fileValidatorMock;
+    protected FileHttpHeadersValidator fileValidatorMock;
+
+    @Mock
+    protected FileEntryMapper fileEntryMapperMock;
+
+    @Mock
+    protected AssessorFeedbackService assessorFeedbackServiceMock;
 
     @Before
     public void setupMockInjection() {

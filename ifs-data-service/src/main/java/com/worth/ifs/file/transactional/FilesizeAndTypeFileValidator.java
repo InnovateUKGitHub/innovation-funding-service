@@ -15,10 +15,10 @@ import static com.worth.ifs.util.ParsingFunctions.validLongResult;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * A basic implementation of FileValidator that, given a set of HTTP headers about the file being uploaded will be able to
+ * A basic implementation of FileHttpHeadersValidator that, given a set of HTTP headers about the file being uploaded will be able to
  * validate their format and additionally ensure that the filesize and media type of the file conforms to a set of restrictions
  */
-public class FilesizeAndTypeFileValidator implements FileValidator {
+public class FilesizeAndTypeFileValidator implements FileHttpHeadersValidator {
 
     private long maxFilesizeBytes;
     private List<MediaType> validMediaTypes;

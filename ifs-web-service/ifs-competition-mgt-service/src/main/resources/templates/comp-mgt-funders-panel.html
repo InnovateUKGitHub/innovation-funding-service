@@ -57,7 +57,8 @@
     <form method="post" action="#" id="submit-funding-decision-form" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
       <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
       <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
-      <button id="no-js-notify-applicants" type="submit" class="button no-margin">Notify Applicants</button>
+      <button id="no-js-save-funding-decision" type="submit" class="button no-margin" name="action" value="save">Save</button>
+      <button id="no-js-notify-applicants" type="submit" class="button no-margin" name="action" value="notify">Notify Applicants</button>
     </form>
     
   </div>

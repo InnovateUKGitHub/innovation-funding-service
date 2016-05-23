@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -25,8 +24,8 @@ import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
@@ -45,8 +44,8 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -60,7 +59,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
-import static com.worth.ifs.application.service.Futures.call;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -256,10 +254,6 @@ public abstract class AbstractApplicationController extends BaseController {
         );
         form.setFormInput(values);
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
-    }
-
-    protected List<ResponseResource> getResponses(ApplicationResource application) {
-        return responseService.getByApplication(application.getId());
     }
 
     protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
@@ -492,7 +486,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
-        
+
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addSectionDetails(model, section);
 

@@ -29,6 +29,23 @@
 	}
 }
 
+/*----- Setting widths of inputs ----*/
+
+
+
+input{
+	&.width-x-large{
+		width: 60%;
+	}
+}
+
+select.form-control{
+	&.width-x-large{
+		width: 60%;
+	}
+}
+
+
 /*----- Inline form elements for academic finances ----*/
 
 .form-inline{

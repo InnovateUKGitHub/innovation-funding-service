@@ -33,8 +33,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void testAnyoneCanViewThemselves() {
-        allRoleUsers.forEach(user -> {
-            allRoleUsers.forEach(otherUser -> {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(otherUser)) {
                     assertTrue(rules.anyUserCanViewThemselves(otherUser, user));
                 } else {
@@ -46,8 +46,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void testCompAdminsCanViewEveryone() {
-        allRoleUsers.forEach(user -> {
-            allRoleUsers.forEach(otherUser -> {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(compAdminUser())) {
                     assertTrue(rules.compAdminsCanViewEveryone(otherUser, user));
                 } else {
@@ -59,8 +59,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void testSystemRegistrationUserCanViewEveryone() {
-        allRoleUsers.forEach(user -> {
-            allRoleUsers.forEach(otherUser -> {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(systemRegistrationUser())) {
                     assertTrue(rules.systemRegistrationUserCanViewEveryone(otherUser, user));
                 } else {
@@ -72,7 +72,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void testSystemRegistrationUserCanCreateUsers() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
             } else {
@@ -83,7 +83,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void testSystemRegistrationUserCanActivateUsers() {
-        allRoleUsers.forEach(user -> {
+        allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanActivateUsers(newUserResource().build(), user));
             } else {
@@ -94,8 +94,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void testSystemRegistrationUserChangeUsersPasswords() {
-        allRoleUsers.forEach(user -> {
-            allRoleUsers.forEach(otherUser -> {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(systemRegistrationUser())) {
                     assertTrue(rules.systemRegistrationUserCanChangePasswordsForUsers(otherUser, user));
                 } else {
@@ -107,8 +107,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void testAnyoneCanChangeTheirOwnPassword() {
-        allRoleUsers.forEach(user -> {
-            allRoleUsers.forEach(otherUser -> {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(otherUser)) {
                     assertTrue(rules.usersCanChangeTheirOwnPassword(otherUser, user));
                 } else {

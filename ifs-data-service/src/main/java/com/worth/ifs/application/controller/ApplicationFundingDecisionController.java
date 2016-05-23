@@ -18,10 +18,17 @@ public class ApplicationFundingDecisionController {
     @Autowired
     private ApplicationFundingService applicationFundingService;
 
-    @RequestMapping(value="/{competitionId}", method=RequestMethod.POST)
+    @RequestMapping(value="/{competitionId}/submit", method=RequestMethod.POST)
     public RestResult<Void> makeFundingDecision(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
         return applicationFundingService.makeFundingDecision(competitionId, applicationFundingDecisions).
                 andOnSuccess(() -> applicationFundingService.notifyLeadApplicantsOfFundingDecisions(competitionId, applicationFundingDecisions)).
                 toPostResponse();
     }
+    
+    @RequestMapping(value="/{competitionId}", method=RequestMethod.POST)
+    public RestResult<Void> saveFundingDecisionData(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
+        return applicationFundingService.saveFundingDecisionData(competitionId, applicationFundingDecisions).
+                toPutResponse();
+    }
+    
 }

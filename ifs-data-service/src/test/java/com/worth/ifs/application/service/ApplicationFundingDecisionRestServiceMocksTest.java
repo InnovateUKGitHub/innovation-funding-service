@@ -25,7 +25,21 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     }
 
     @Test
-    public void testFundingDecision() {
+    public void testMakeFundingDecision() {
+
+    	Long competitionId = 123L;
+    	Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.FUNDED);
+    	
+        String expectedUrl = applicationFundingDecisionRestURL + "/" + 123 + "/submit";
+        setupPostWithRestResultExpectations(expectedUrl, applicationIdToFundingDecision, HttpStatus.OK);
+
+        RestResult<Void> result = service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+    
+    @Test
+    public void testSaveFundingDecision() {
 
     	Long competitionId = 123L;
     	Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.FUNDED);
@@ -33,9 +47,9 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
         String expectedUrl = applicationFundingDecisionRestURL + "/" + 123;
         setupPostWithRestResultExpectations(expectedUrl, applicationIdToFundingDecision, HttpStatus.OK);
 
-        RestResult<Void> result = service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
+        RestResult<Void> result = service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
-
+    
 }

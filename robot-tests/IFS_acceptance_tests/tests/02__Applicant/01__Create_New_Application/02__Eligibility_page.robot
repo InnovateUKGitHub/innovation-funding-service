@@ -24,8 +24,8 @@ User can navigate to the Before you apply pages
     [Documentation]    INFUND-1859
     When the user clicks the button/link    Link=Using the new online Innovation Funding Service
     Then the user should be redirected to the correct page    ${Before you apply}
-    And the user should see the text in the page    This innovation funding service is an online service run by Innovate UK.
+    And the user should see the text in the page    The innovation funding service is an online service run by Innovate UK.
     And the user goes back to the previous page
     When the user clicks the button/link    link=What we ask you
     Then the user should be redirected to the correct page    ${What we ask you}
-    And the user should see the text in the page    This application has the following sections
+    And the user should see the text in the page   The application has the following sections

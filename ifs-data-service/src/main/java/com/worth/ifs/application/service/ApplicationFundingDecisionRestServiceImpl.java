@@ -20,9 +20,14 @@ public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService i
 
 	@Override
 	public RestResult<Void> makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
+		 return postWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId + "/submit", applicationIdToFundingDecision, Void.class);
+	}
+
+	@Override
+	public RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
 		 return postWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId, applicationIdToFundingDecision, Void.class);
 	}
-	
+
 	protected void setApplicationFundingDecisionRestURL(String applicationFundingDecisionRestURL) {
 		this.applicationFundingDecisionRestURL = applicationFundingDecisionRestURL;
 	}

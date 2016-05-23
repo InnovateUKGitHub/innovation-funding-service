@@ -8,7 +8,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
-import com.worth.ifs.file.transactional.FileValidator;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -47,7 +48,7 @@ public class FormInputResponseFileUploadController {
 
     @Autowired
     @Qualifier("formInputResponseFileValidator")
-    private FileValidator fileValidator;
+    private FileHttpHeadersValidator fileValidator;
 
     @RequestMapping(value = "/file", method = POST, produces = "application/json")
     public RestResult<FormInputResponseFileEntryCreatedResponse> createFile(
@@ -177,16 +178,5 @@ public class FormInputResponseFileUploadController {
     private FormInputResponseFileEntryResource createFormInputResponseFileEntry(FileHeaderAttributes fileAttributes, long formInputId, long applicationId, long processRoleId) {
         FileEntryResource fileEntry = fileAttributes.toFileEntryResource();
         return new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-    }
-
-    private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
-        return () -> {
-            try {
-                return request.getInputStream();
-            } catch (IOException e) {
-                LOG.error("Unable to open an input stream from request", e);
-                throw new RuntimeException("Unable to open an input stream from request", e);
-            }
-        };
     }
 }

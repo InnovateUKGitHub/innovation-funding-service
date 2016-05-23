@@ -27,33 +27,36 @@ public class InviteOrganisationPermissionRules {
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
-    @PermissionRule(value = "SEND", description = "consortium can send an organisation invite to the application")
+    @PermissionRule(value = "SEND", description = "lead applicant can send an organisation invite for the application")
     public boolean leadApplicantCanInviteAnOrganisationToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        return isApplicantTypeForInviteOrganisation(LEADAPPLICANT, inviteOrganisation, user);
+        return hasRoleForAllApplicationsInOrganisationInvite(LEADAPPLICANT, inviteOrganisation, user);
     }
 
     @PermissionRule(value = "READ", description = "a lead applicant can view an organisation invite to the application")
     public boolean leadApplicantCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        return isApplicantTypeForInviteOrganisation(LEADAPPLICANT, inviteOrganisation, user);
+        return hasRoleForAllApplicationsInOrganisationInvite(LEADAPPLICANT, inviteOrganisation, user);
     }
 
     @PermissionRule(value = "READ", description = "a collaborator can view an organisation invite to the application")
     public boolean collaboratorCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        return isApplicantTypeForInviteOrganisation(COLLABORATOR, inviteOrganisation, user);
+        return hasRoleForAllApplicationsInOrganisationInvite(COLLABORATOR, inviteOrganisation, user);
     }
 
-    private final boolean isApplicantTypeForInviteOrganisation(final UserRoleType userRoleType, final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        final List<InviteResource> invites = inviteOrganisation.getInviteResources();
+    @PermissionRule(value = "SAVE", description = "lead applicant can save an organisation invite for the application")
+    public boolean leadApplicantCanSaveInviteAnOrganisationToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
+        return hasRoleForAllApplicationsInOrganisationInvite(LEADAPPLICANT, inviteOrganisation, user);
+    }
 
+    private final boolean hasRoleForAllApplicationsInOrganisationInvite(final UserRoleType userRoleType, final InviteOrganisationResource inviteOrganisation, final UserResource user) {
+        final List<InviteResource> invites = inviteOrganisation.getInviteResources();
         if (invites == null || invites.isEmpty()) {
             return false; // Unable to check the application so default to false;
         }
-
         return invites.stream()
-                .allMatch(inviteResource -> isApplicantTypeOnApplication(userRoleType, user, inviteResource.getApplication()));
+                .allMatch(inviteResource -> hasRoleOnApplication(userRoleType, user, inviteResource.getApplication()));
     }
 
-    private boolean isApplicantTypeOnApplication(final UserRoleType userRoleType, final UserResource user, final Long applicationId) {
+    private boolean hasRoleOnApplication(final UserRoleType userRoleType, final UserResource user, final Long applicationId) {
         return checkRole(user, applicationId, userRoleType, processRoleRepository);
     }
 }
