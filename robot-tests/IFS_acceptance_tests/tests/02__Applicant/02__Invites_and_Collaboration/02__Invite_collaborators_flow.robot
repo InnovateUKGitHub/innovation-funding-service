@@ -45,6 +45,14 @@ Valid invitation submit
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    Invites sent
 
+Pending partners are visible in the Application details page
+    [Documentation]    INFUND-2966
+    ...
+    ...    INFUND-2738
+    [Tags]
+    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
+    Then pending partners should be visible in the page
+
 Pending users are visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
@@ -238,3 +246,7 @@ the user can invite another person to their own organisation
 the user cannot invite another person to a different organisation
     ${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
     the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
+
+pending partners should be visible in the page
+    Element Should Contain    xpath=//*[@id="form-input-9"]/div[3]/ul/li[4]/span    Fannie May
+    Element Should Contain    xpath=//*[@id="form-input-9"]/div[3]/ul/li[4]/small    (pending)
