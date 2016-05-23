@@ -1038,6 +1038,7 @@ LOCK TABLES `form_validator` WRITE;
 INSERT  IGNORE INTO `form_validator` (`id`, `clazz_name`, `title`) VALUES (1,'com.worth.ifs.validator.EmailValidator','EmailValidator');
 INSERT  IGNORE INTO `form_validator` (`id`, `clazz_name`, `title`) VALUES (2,'com.worth.ifs.validator.NotEmptyValidator','NotEmptyValidator');
 INSERT  IGNORE INTO `form_validator` (`id`, `clazz_name`, `title`) VALUES (3,'com.worth.ifs.validator.WordCountValidator','WordCountValidator');
+INSERT  IGNORE INTO `form_validator` (`id`, `clazz_name`, `title`) VALUES (4,'com.worth.ifs.validator.ApplicationMarkAsCompleteValidator','ApplicationMarkAsCompleteValidator');
 /*!40000 ALTER TABLE `form_validator` ENABLE KEYS */;
 UNLOCK TABLES;
 
