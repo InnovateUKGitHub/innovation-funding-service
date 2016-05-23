@@ -400,7 +400,7 @@ we create a new user
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
     The guest user clicks the log-in button
     user closes the browser
@@ -422,7 +422,7 @@ the lead applicant invites a registered user
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
     The guest user clicks the log-in button
     The user clicks the button/link    link=Connected digital additive manufacturing
