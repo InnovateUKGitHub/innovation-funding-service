@@ -11,7 +11,9 @@ def shell(command):
 
 # Clean up pybot's output to give a simple number of running tests
 def tidyUpPybotOutput(pybot_output):
-  for match in re.finditer("\d* tests", pybot_output):
+  match = False
+  single_match = False
+  for match in re.finditer("\d+ tests", pybot_output):
     pass
   if match:
     return match.group()
