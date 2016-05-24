@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
@@ -447,11 +449,18 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testDownloadAssessorFeedback() throws Exception {
 
         ByteArrayResource fileContents = new ByteArrayResource("File contents".getBytes());
-        when(assessorFeedbackRestService.getAssessorFeedbackFile(applications.get(0).getId())).thenReturn(restSuccess(fileContents));
+        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/special").build();
 
-        mockMvc.perform(get("/application/" + applications.get(0).getId() + "/assessorFeedback"))
+        when(assessorFeedbackRestService.getAssessorFeedbackFile(123L)).thenReturn(restSuccess(fileContents));
+        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(123L)).thenReturn(restSuccess(fileEntry));
+
+        mockMvc.perform(get("/application/123/assessorFeedback"))
             .andExpect(status().isOk())
-            .andExpect(content().string("File contents"));
+            .andExpect(content().string("File contents"))
+            .andExpect(header().string("Content-Type", "text/special"))
+            .andExpect(header().longValue("Content-Length", "File contents".length()));
 
+        verify(assessorFeedbackRestService).getAssessorFeedbackFile(123L);
+        verify(assessorFeedbackRestService).getAssessorFeedbackFileDetails(123L);
     }
 }

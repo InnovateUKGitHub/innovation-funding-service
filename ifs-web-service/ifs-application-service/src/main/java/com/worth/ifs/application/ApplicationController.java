@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
@@ -19,9 +20,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -234,7 +233,8 @@ public class ApplicationController extends AbstractApplicationController {
             @PathVariable("applicationId") final Long applicationId) {
 
         final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
-        return getPdfFile(resource);
+        FileEntryResource fileDetails = assessorFeedbackRestService.getAssessorFeedbackFileDetails(applicationId).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails);
     }
 
     private String doAssignQuestionAndReturnSectionFragment(Model model,
@@ -347,13 +347,5 @@ public class ApplicationController extends AbstractApplicationController {
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
         organisationDetailsModelPopulator.populateModel(model, application.getId());
         addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
-    }
-
-    // TODO DW - INFUND-2607 - remove duplicated code
-    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentLength(resource.contentLength());
-        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
-        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }
 }

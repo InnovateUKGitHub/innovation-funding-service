@@ -4,6 +4,7 @@ import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
@@ -28,9 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +50,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -124,7 +123,8 @@ public class ApplicationManagementController extends AbstractApplicationControll
             @PathVariable("applicationId") final Long applicationId) {
 
         final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
-        return getPdfFile(resource);
+        final FileEntryResource fileDetails = assessorFeedbackRestService.getAssessorFeedbackFileDetails(applicationId).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails);
     }
 
     @RequestMapping(value = "/{applicationId}", params = "uploadAssessorFeedback", method = POST)
@@ -178,7 +178,8 @@ public class ApplicationManagementController extends AbstractApplicationControll
         }
 
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        return getPdfFile(resource);
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
     private void addErrorsToForm(@ModelAttribute ApplicationForm applicationForm, Model model, BindingResult bindingResult, List<String> validationErrors) {
@@ -186,13 +187,6 @@ public class ApplicationManagementController extends AbstractApplicationControll
         applicationForm.setBindingResult(bindingResult);
         applicationForm.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", applicationForm);
-    }
-
-    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentLength(resource.contentLength());
-        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
-        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {

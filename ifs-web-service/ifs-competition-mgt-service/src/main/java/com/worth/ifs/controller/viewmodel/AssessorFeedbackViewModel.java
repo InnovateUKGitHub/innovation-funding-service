@@ -45,11 +45,11 @@ public class AssessorFeedbackViewModel {
     }
 
     public String getFilename() {
-        return fileDetails.getFilename();
+        return fileDetails != null ? fileDetails.getFilename() : null;
     }
 
     public BigDecimal getFilesizeKbytes() {
-        return fileDetails.getFilesizeKbytes();
+        return fileDetails != null ? fileDetails.getFilesizeKbytes() : null;
     }
 
     @Override
