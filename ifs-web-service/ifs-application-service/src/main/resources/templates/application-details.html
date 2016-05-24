@@ -46,7 +46,7 @@
 
     <div class="form-group download extra-margin" th:if="${assessorFeedback}">
         <h3 class="heading-small no-margin">View your application feedback:</h3>
-        <a href="#" th:href="'/application/'+${currentApplication.getId()}+'/assessorFeedback'" th:text="${assessorFeedback.filename}">10294856feedback.pdf (161.96 KB)</a>
+        <a href="#" th:href="'/application/'+${currentApplication.getId()}+'/assessorFeedback'" th:text="${assessorFeedback.filename + ' ' + assessorFeedback.filesizeKbytes + ' KB'}">10294856feedback.pdf (161.96 KB)</a>
     </div>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
