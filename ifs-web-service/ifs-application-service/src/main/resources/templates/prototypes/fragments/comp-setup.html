@@ -5,7 +5,7 @@
 
 <div th:fragment="prototype-comp-setup-navigation">
     <ul class="inline-nav cf">
-        <li th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Essential info</a></li>
+        <li th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Initial details</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'additional' ? 'selected' : '')}"><a th:href="@{'?section=additional'}">Additional info</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><a th:href="@{'?section=eligibility'}">Eligibility</a></li>
         <li th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><a th:href="@{'?section=milestones'}">Milestones</a></li>
@@ -19,10 +19,15 @@
 <!-- =================Section: Essential information=========================== -->
 
 <div th:fragment="prototype-section-essential">
-    <h2 class="heading-medium no-margin-top">Essential information</h2>
+    <h2 class="heading-medium no-margin-top">Step 1: Initial competition details</h2>
+    
+    <div class="panel-indent">
+        This will create a new Competition - you will be able to specify more details as you proceed
+    </div>
+
     <form>
         <fieldset>
-            <legend class="visuallyhidden">Essential information</legend>
+            <legend class="visuallyhidden">Initial details</legend>
             
             <div class="form-group">
                 <label class="form-label" for="comp-executive">
@@ -76,9 +81,11 @@
                 </label>
                 <select class="form-control width-x-large" id="comp-innovation-sector" name="comp-innovation-sector">
                     <option value="">Please select &hellip;</option>
-                    <option value="">Sector 1</option>
-                    <option value="">Sector 2</option>
-                    <option value="">Sector 3</option>
+                    <option value="health">Health and life sciences</option>
+                    <option value="materials">Materials and manufacturing</option>
+                    <option value="emerging">Emerging and enabling</option>
+                    <option value="infrastructure">Infrastructure</option>
+                    <option value="open">Open</option>
                 </select>
             </div>
 
@@ -88,9 +95,26 @@
                 </label>
                 <select class="form-control width-x-large" id="comp-innovation-area" name="comp-innovation-area">
                     <option value="">Please select &hellip;</option>
-                    <option value="">Area 1</option>
-                    <option value="">Area 2</option>
-                    <option value="">Area 3</option>
+                    <option value="Health and care" class="health">Health and care</option>
+                    <option value="Agriculture and food" class="health">Agriculture and food</option>
+                    <option value="Biosciences" class="health">Biosciences</option>
+                    
+                    <option value="High value manufacturing" class="materials">High value manufacturing</option>
+                    <option value="Resource efficiency" class="materials">Resource efficiency</option>
+                    <option value="Advanced materials" class="materials">Advanced materials</option>
+
+                    <option value="Digital" class="emerging">Digital</option>
+                    <option value="Satellite applications" class="emerging">Satellite applications</option>
+                    <option value="ICT" class="emerging">ICT</option>
+                    <option value="Design and creative economy" class="emerging">Design and creative economy</option>
+                    <option value="Emerging tech and industries" class="emerging">Emerging tech and industries</option>
+                    <option value="Robotics and autonomous systems" class="emerging">Robotics and autonomous systems</option>
+                    <option value="Electronics, sensors and photonics" class="emerging">Electronics, sensors and photonics</option>
+
+                    <option value="Transport" class="infrastructure">Transport</option>
+                    <option value="Energy" class="infrastructure">Energy</option>
+                    <option value="Urban living and built" class="infrastructure">Urban living and built</option>
+
                 </select>
             </div>
 
@@ -105,6 +129,14 @@
                     <option value="SBRI">SBRI</option>
                     <option value="Special">Special</option>
                 </select>
+            </div>
+
+            <div class="form-group" id="state-aid" style="display: none">
+                <h3 class="heading-small">State aid</h3>
+                <p>
+                    <span class="yes">Yes</span>
+                    <span class="no">No</span>
+                </p>
             </div>
 
             <div class="form-group">
@@ -123,21 +155,21 @@
                 <label class="form-label" for="comp-paf">
                     <span class="form-label-bold">PAF number</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-paf" name="comp-paf" />
+                <input class="form-control width-large" id="comp-paf" name="comp-paf" />
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="comp-budget-code">
                     <span class="form-label-bold">Budget code</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-budget-code" name="comp-budget-code" />
+                <input class="form-control width-large" id="comp-budget-code" name="comp-budget-code" />
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="comp-code">
                     <span class="form-label-bold">Competition code</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-code" name="comp-code" />
+                <input class="form-control width-large" id="comp-code" name="comp-code" />
             </div>
         </fieldset>
         <a th:href="@{'?section=essential&#38;status=done'}" class="button">Done</a>
@@ -156,7 +188,12 @@
 <!-- =================Section: Additional information=========================== -->
 
 <div th:fragment="prototype-section-additional">
-    <h2 class="heading-medium no-margin-top">Additional information</h2>
+    <h2 class="heading-medium no-margin-top">Step 2: Additional competition information</h2>
+    
+    <div class="panel-indent">
+        These fields are for reporting purposes
+    </div>
+
     <form>
         <fieldset>
             <legend class="visuallyhidden">Additional information</legend>
@@ -171,7 +208,7 @@
                 <label class="form-label" for="comp-budget">
                     <span class="form-label-bold">Innovate budget (optional)</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-budget" name="comp-budget" />
+                <input class="form-control width-large" id="comp-budget" name="comp-budget" />
             </div>
             <div class="form-group">
                 <label class="form-label" for="comp-co-funders">
@@ -183,7 +220,7 @@
                 <label class="form-label" for="comp-co-funders-budget">
                     <span class="form-label-bold">Co-funders budget (optional)</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
+                <input class="form-control width-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
             </div>
         </fieldset>
         <a th:href="@{'?section=additional&#38;status=done'}" class="button">Done</a>
@@ -208,7 +245,12 @@
 <!-- =================Section: Eligibility=========================== -->
 
 <div th:fragment="prototype-section-eligibility">
-    <h2 class="heading-medium no-margin-top">Eligibility</h2>
+    <h2 class="heading-medium no-margin-top">Step 3. Eligibility criteria</h2>
+
+     <div class="panel-indent">
+        INTRO TEXT REQUIRED
+    </div>
+
     <form>
         <fieldset>
             <legend class="visuallyhidden">Eligibility</legend>
@@ -393,8 +435,39 @@
 <!-- =================Section: Milestones=========================== -->
 
 <div th:fragment="prototype-section-milestones">
-    Milestones
+    
+    <h2 class="heading-medium no-margin-top">Step 4: Add milestone dates</h2>
+    
+    <div class="panel-indent">
+        Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
+    </div>
 
+    <table>
+        <thead>
+            <tr>
+                <th scope="col" style="width: 40%" id="milestone">Milestone</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="weekday">Weekday</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="day">Day</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="month">Month</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="year">Year</th>
+                <th scope="col" style="width: 15%" class="aligncentre" id="date-picker">Calendar view</th>
+            </tr>
+        </thead>
+        <tbody>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
+        </tbody>
+    </table>
 
     <ul class="pagination">
         <li class="prev">
@@ -410,6 +483,21 @@
             </a>
         </li>
     </ul>
+</div>
+
+<!-- =============Section: Milestone table rows==================== -->
+
+<div th:fragment="prototype-section-milestones-row">
+
+    <tr>
+        <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
+        <td class="aligncentre" th:id="${'row-'+rowNo + '-weekday'}">-</td>
+        <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
+        <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
+        <td><input type="text" class="form-control width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
+        <td></td>
+    </tr>
+
 </div>
 
 
@@ -439,7 +527,40 @@
 <!-- =================Section: Application form=========================== -->
 
 <div th:fragment="prototype-section-application">
-    Application
+    
+    <h2 class="heading-medium no-margin-top">Step 6: Application form questions</h2>
+    
+    <div class="panel-indent">
+        These match the template for the competition type you chose - to change questions you can change the competition type in step 1
+    </div>
+
+
+    <div class="collapsible section-overview">
+        
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Potential market'}, question=${'What is the size of the potential market for your project?'}, questionNo=2" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project exploitation'}, question=${'How will you exploit and market your project?'}, questionNo=3" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Economic benefit'}, question=${'What economic, social and environmental benefits do you expect your project to deliver and when?'}, questionNo=4" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Technical approach'}, question=${'Required'}, questionNo=5" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Innovation'}, question=${'Required'}, questionNo=6" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Risks'}, question=${'Required'}, questionNo=7" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project team'}, question=${'Required'}, questionNo=8" th:remove="tag"/>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Funding'}, question=${'Required'}, questionNo=9" th:remove="tag"/>
+        
+         <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
+
+
+    </div>
+
+
 
     <ul class="pagination">
         <li class="prev">
@@ -474,6 +595,89 @@
 
 </div>
 
+
+<!-- =================Section: application questions=========================== -->
+
+<div th:fragment="prototype-application-question">
+    <h2 th:text="${questionNo+'. '+questionTitle}">
+                <!-- <div class="section-status section-incomplete">Incomplete</div> -->
+    </h2>
+                
+    <div class="question extra-margin">
+
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
+                <span class="form-label-bold">Question title</span>
+            </label>
+            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
+                <span class="form-label-bold">Competition subtitle</span>
+            </label>
+            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
+                <span class="form-label-bold">Question guidance title</span>
+            </label>
+            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
+            <div class="textarea-wrapped "> 
+                <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
+                <span class="form-label-bold">Max word count</span>
+            </label>
+            <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
+        </div>
+
+        <div class="grid-row">
+             <div class="column-half">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Is the answer scored?</legend>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
+                        <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                    Yes
+                    </label>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
+                         <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                    No
+                    </label>
+                </fieldset>
+            </div>
+
+
+            <div class="column-half">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Allow appendix?</legend>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
+                        <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                    Yes
+                    </label>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
+                         <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                    No
+                    </label>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="alignright">
+        <a href="#" class="button button-large">Save and close</a>
+    </div>
+
+</div>
 
 
 </html>
