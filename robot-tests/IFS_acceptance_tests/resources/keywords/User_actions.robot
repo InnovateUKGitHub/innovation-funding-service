@@ -63,6 +63,15 @@ the user should be redirected to the correct page without the usual headers
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
 
+the user should be redirected to the correct page without error checking
+    [Arguments]    ${URL}
+    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
+    # Header checking (INFUND-1892)
+    Wait Until Element Is Visible    id=global-header
+    Page Should Contain    BETA
+
+
+
 the user reloads the page
     Reload Page
     # Error checking
@@ -113,6 +122,21 @@ the user selects the option from the drop-down menu
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
+
+the user should see the dropdown option selected
+    [Arguments]     ${option}   ${drop-down}
+    List Selection Should Be    ${drop-down}    ${option}
+    # Error checking
+    Page Should Not Contain     Error
+    Page Should Not Contain     something went wrong
+    Page Should Not Contain     Page or resource not found
+    Page Should Not Contain     You do not have the necessary permissions for your request
+    # Header checking   (INFUND-1892)
+    Element Should Not Be Visible   id=global-header
+    Page Should Contain     BETA
+
+
+
 
 the user submits the form
     Submit Form
