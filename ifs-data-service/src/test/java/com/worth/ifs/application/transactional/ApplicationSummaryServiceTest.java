@@ -24,7 +24,6 @@ import org.springframework.data.domain.Sort.Order;
 
 import com.google.common.collect.Lists;
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
 import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
@@ -395,7 +394,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 		
-		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(ApplicationStatusConstants.APPROVED.getId()), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 		
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
 		

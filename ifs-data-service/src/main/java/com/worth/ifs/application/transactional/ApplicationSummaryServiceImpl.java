@@ -98,8 +98,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
 			Long competitionId, String sortBy, int pageIndex, int pageSize) {
 		return applicationSummaries(sortBy, pageIndex, pageSize,
-				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdAndAssessorFeedbackFileEntryIsNull(competitionId, ApplicationStatusConstants.APPROVED.getId(), pageable),
-				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdAndAssessorFeedbackFileEntryIsNull(competitionId, ApplicationStatusConstants.APPROVED.getId()));
+				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS, pageable),
+				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS));
 	
 	}
 	
