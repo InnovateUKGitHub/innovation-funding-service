@@ -33,7 +33,7 @@
                </div>
              </div>
 
-             <div th:if="${assessorFeedback}" th:remove="tag"
+             <div th:if="${assessorFeedback != null}" th:remove="tag"
                   th:with="assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}">
 
                  <div class="upload-section" th:if="${form.adminMode and !assessorFeedback.readonly}">
@@ -66,12 +66,14 @@
                      </div>
                  </div>
 
-                 <div th:if="${assessorFeedback.fileUploaded and assessorFeedback.readonly}"
-                      th:replace="question-type/form-elements :: readonly-file-download
+                 <div th:if="${assessorFeedback.fileUploaded and assessorFeedback.readonly}" th:remove="tag">
+                     <div th:replace="question-type/form-elements :: readonly-file-download
                                  (filename=${assessorFeedback.filename},
                                   filesizeKbytes=${assessorFeedback.filesizeKbytes},
                                   fileDescription=${'View the application feedback:'},
-                                  downloadURL=${assessorFeedbackDownloadLink})" />
+                                  downloadURL=${assessorFeedbackDownloadLink})">
+                     </div>
+                 </div>
 
              </div>
 
