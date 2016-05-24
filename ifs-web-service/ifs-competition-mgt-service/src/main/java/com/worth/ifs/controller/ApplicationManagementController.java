@@ -215,7 +215,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         if (assessorFeedbackFileEntry != null) {
             RestResult<FileEntryResource> fileEntry = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-            return AssessorFeedbackViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException().getName(), readonly);
+            return AssessorFeedbackViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
         } else {
             return AssessorFeedbackViewModel.withNoFile(readonly);
         }
