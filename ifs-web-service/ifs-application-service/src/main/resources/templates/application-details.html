@@ -44,10 +44,12 @@
         </div>
     </div>
 
-    <div class="form-group download extra-margin" th:if="${assessorFeedback}">
-        <h3 class="heading-small no-margin">View your application feedback:</h3>
-        <a href="#" th:href="'/application/'+${currentApplication.getId()}+'/assessorFeedback'" th:text="${assessorFeedback.filename + ' (' + assessorFeedback.filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
-    </div>
+    <div th:if="${assessorFeedback}"
+         th:replace="question-type/form-elements :: readonly-file-download
+                    (filename=${assessorFeedback.filename},
+                     filesizeKbytes=${assessorFeedback.filesizeKbytes},
+                     fileDescription=${'View your application feedback:'},
+                     downloadURL=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.getId()})})" />
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">

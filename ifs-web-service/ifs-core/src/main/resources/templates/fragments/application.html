@@ -36,7 +36,7 @@
              <div th:if="${assessorFeedback}" th:remove="tag"
                   th:with="assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}">
 
-                 <div class="upload-section" th:if="${!assessorFeedback.readonly}">
+                 <div class="upload-section" th:if="${form.adminMode and !assessorFeedback.readonly}">
                      <h3 class="heading-small no-margin">Assessor feedback</h3>
                      <p>Upload the assessor feedback page</p>
 
@@ -66,10 +66,14 @@
                      </div>
                  </div>
 
-                 <div class="form-group download extra-margin" th:if="${assessorFeedback.fileUploaded and assessorFeedback.readonly}">
-                     <h3 class="heading-small no-margin">View the application feedback:</h3>
-                     <a href="#" th:href="${assessorFeedbackDownloadLink}" th:text="${assessorFeedback.filename + ' (' + assessorFeedback.filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
-                 </div>
+                 <div th:if="${assessorFeedback.fileUploaded and assessorFeedback.readonly}"
+                      th:replace="question-type/form-elements :: readonly-file-download
+                                 (filename=${assessorFeedback.filename},
+                                  filesizeKbytes=${assessorFeedback.filesizeKbytes},
+                                  fileDescription=${'View the application feedback:'},
+                                  downloadURL=${assessorFeedbackDownloadLink})" />
+
+
 
              </div>
 

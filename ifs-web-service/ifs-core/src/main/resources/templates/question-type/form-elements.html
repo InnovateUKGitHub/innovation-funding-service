@@ -418,4 +418,12 @@
 		</span>
     </div>
 </div>
+
+
+<!-- ===========================Form: readonly file download link =========================== -->
+<div th:fragment="readonly-file-download (filename, filesizeKbytes, fileDescription, downloadURL)" class="form-group download extra-margin">
+    <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
+    <a href="#" th:href="${downloadURL}" th:text="${filename + ' (' + filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
+</div>
+
 </html>
