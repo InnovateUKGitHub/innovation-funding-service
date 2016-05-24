@@ -6,6 +6,7 @@ import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -17,6 +18,11 @@ import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -43,7 +50,10 @@ public class ApplicationController extends AbstractApplicationController {
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
     @Autowired
-    protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private AssessorFeedbackRestService assessorFeedbackRestService;
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -220,6 +230,14 @@ public class ApplicationController extends AbstractApplicationController {
         return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
     }
 
+    @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
+            @PathVariable("applicationId") final Long applicationId) {
+
+        final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
+        return getPdfFile(resource);
+    }
+
     private String doAssignQuestionAndReturnSectionFragment(Model model,
                                                             @PathVariable("applicationId") Long applicationId,
                                                             @RequestParam("sectionId") Optional<Long> sectionId,
@@ -330,5 +348,12 @@ public class ApplicationController extends AbstractApplicationController {
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
         organisationDetailsModelPopulator.populateModel(model, application.getId());
         addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+    }
+
+    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentLength(resource.contentLength());
+        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
+        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }
 }
