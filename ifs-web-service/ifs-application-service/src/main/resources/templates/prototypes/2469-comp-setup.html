@@ -51,13 +51,17 @@
 
 			if(jQuery(this).is(':checked')){
 				jQuery('.comp-stream-group').show();
+				jQuery('#add-stream').show();
 			}
+
 		});
 
 		jQuery('#comp-stream-no').on('click',function(e){ 
 
 			if(jQuery(this).is(':checked')){
 				jQuery('.comp-stream-group').hide();
+				jQuery('#add-stream').hide();
+				jQuery('#show-stream-2').hide();
 			}
 		});
 
@@ -120,6 +124,13 @@
 			var compInnovationArea = jQuery(this).find('option:selected').attr('class');
 
 			jQuery('#comp-innovation-sector').val(compInnovationArea);
+
+		});
+
+		jQuery('#add-stream').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#show-stream-2').show();
 
 		});
 

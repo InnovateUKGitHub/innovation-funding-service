@@ -254,6 +254,7 @@
     <form>
         <fieldset>
             <legend class="visuallyhidden">Eligibility</legend>
+            
             <div class="form-group">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Stream</legend>
@@ -263,156 +264,29 @@
                     Yes
                     </label>
                     <label class="block-label" for="comp-stream-no">
-                        <input id="comp-stream-no" name="comp-streams-group" value="No" type="radio" />
+                        <input id="comp-stream-no" name="comp-streams-group" value="No" type="radio" checked="checked" />
                     No
                     </label>
                 </fieldset>
             </div>
 
-            <fieldset class="comp-stream-group" style="display: none;">
-                <div class="form-group">
-                    <label class="form-label" for="comp-stream">
-                        <span class="form-label-bold">Stream name or number</span>
-                    </label>
-                    <input class="form-control width-x-large" id="comp-stream" name="comp-stream" />
-                </div>
-                
-                <h3 class="heading-small">Project size (&pound;)</h3>
-                <p>This indicates the size of the project based on the budget</p>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-eligibility-stream" th:with="streamNo=1" />
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-eligibility-stream" th:with="streamNo=2" th:id="show-stream-2" style="display: none"/>
 
-                <div class="grid-row">
-                    <div class="column-quarter">
-                        <div class="form-group">
-                            <label class="form-label" for="project-size-from">
-                                <span class="form-label">From (min)</span>
-                            </label>
-                            <input class="form-control width-small" id="project-size-from" name="project-size-from" />
-                        </div>
-                    </div>
-                    <div class="column-quarter">
-                        <div class="form-group">
-                            <label class="form-label" for="project-size-to">
-                                <span class="form-label">To (max)</span>
-                            </label>
-                            <input class="form-control width-small" id="project-size-to" name="project-size-to" />
-                        </div>
-                    </div>
-                </div>
-
-                <h3 class="heading-small">Project length (months)</h3>
-                <p>This indicates the length of the project in months (max 36)</p>
-
-                <div class="grid-row">
-                    <div class="column-quarter">
-                        <div class="form-group">
-                            <label class="form-label" for="project-length-from">
-                                <span class="form-label">From (min)</span>
-                            </label>
-                            <input class="form-control width-small" id="project-length-from" name="project-length-from" />
-                        </div>
-                    </div>
-                    <div class="column-quarter">
-                        <div class="form-group">
-                            <label class="form-label" for="project-length-to">
-                                <span class="form-label">To (max)</span>
-                            </label>
-                            <input class="form-control width-small" id="project-length-to" name="project-length-to" />
-                        </div>
-                    </div>
-                </div>
-
-                
-
-
-            </fieldset>
-
-            <div class="form-group">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Research categories</legend>
-                    <label class="block-label" for="comp-research-tech-feasibilty">
-                        <input id="comp-research-tech-feasibilty" value="comp-research-tech-feasibilty" type="checkbox" />
-                        Technical feasibility
-                    </label>
-                    <label class="block-label" for="comp-research-industrial">
-                        <input id="comp-research-industrial" value="comp-research-industrial" type="checkbox" />
-                        Industrial research
-                    </label>
-                    <label class="block-label" for="comp-research-experimental">
-                        <input id="comp-research-exoerimental" value="comp-research-exoerimental" type="checkbox" />
-                        Experimental development
-                    </label>
-                </fieldset>
-            </div>
-
-            <div class="form-group">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Single or Collaborative?</legend>
-                    <p>Is this a single or collaborative project?</p>
-                    <label class="block-label" for="comp-type-single">
-                        <input id="comp-type-single" name="comp-type-group" value="Single" type="radio" />
-                        Single
-                    </label>
-                    <label class="block-label" for="comp-type-collaborative">
-                        <input id="comp-type-collaborative" name="comp-type-group" value="Collaborative" type="radio" />
-                        Collaborative
-                    </label>
-                    <label class="block-label" for="comp-type-single-collaborative">
-                        <input id="comp-type-single-collaborative" name="comp-type-group" value="Single or collaborative" type="radio" />
-                        Single or collaborative
-                    </label>
-                </fieldset>
-            </div>
-
-            <div class="form-group">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Lead applicant</legend>
-                    <p>Select the Lead Applicant type required</p>
-                    <label class="block-label" for="comp-lead-business">
-                        <input id="comp-lead-business" name="comp-lead-group" value="Business" type="radio" />
-                        Business
-                    </label>
-                    <label class="block-label" for="comp-lead-research">
-                        <input id="comp-lead-research" name="comp-lead-group" value="Research" type="radio" />
-                        Research
-                    </label>
-                    <label class="block-label" for="comp-lead-either">
-                        <input id="comp-lead-either" name="comp-lead-group" value="Either" type="radio" />
-                        Either
-                    </label>
-                </fieldset>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="comp-participation">
-                    <span class="form-label-bold">Research participation</span>
-                    <span class="form-hint">This indicates the maximum level of Research participation alllowe</span>
-                </label>
-                <select class="form-control width-large" id="comp-participation" name="comp-participation">
-                    <option value="">30%</option>
-                    <option value="">50%</option>
-                    <option value="">100%</option>
-                    <option value="">None</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Are resubmissions allowed</legend>
-                    <p>Please indicate whether you wish to make resubmission allowed</p>
-                    <label class="block-label" for="comp-resubmission-yes">
-                        <input id="comp-resubmission-yes" name="comp-resubmission-group" value="Yes" type="radio" />
-                    Yes
-                    </label>
-                    <label class="block-label" for="comp-resubmission-no">
-                        <input id="comp-resubmission-no" name="comp-resubmission-group" value="No" type="radio" />
-                    No
-                    </label>
-                </fieldset>
-            </div>
-
-            <a th:href="@{'?section=eligibility&#38;status=done'}" class="button">Done</a>
 
         </fieldset>
+
+
+        <div class="grid-row">
+            <div class="column-half">
+                 <a th:href="@{'?section=eligibility&#38;status=done'}" class="button">Done</a>
+            </div>
+            <div class="column-half alignright">
+                <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
+            </div>
+        </div>
+
+
     </form>
 
     <ul class="pagination">
@@ -429,6 +303,153 @@
             </a>
         </li>
     </ul>
+</div>
+
+<!-- =================Section: Eligibility stream data=========================== -->
+
+<div th:fragment="prototype-section-eligibility-stream">
+
+    <fieldset class="comp-stream-group extra-margin" style="display: none;">
+        <div class="form-group">
+            <label class="form-label" th:for="${'stream-'+streamNo+'-comp-stream'}">
+                <span class="form-label-bold">Stream name or number</span>
+            </label>
+            <input class="form-control width-x-large" th:id="${'stream-'+streamNo+'-comp-stream'}" th:name="${'stream-'+streamNo+'-comp-stream'}" th:placeholder="${'Stream '+streamNo}" />
+        </div>
+        
+        <h3 class="heading-small">Project size (&pound;)</h3>
+        <p>This indicates the size of the project based on the budget</p>
+
+        <div class="grid-row">
+            <div class="column-quarter">
+                <div class="form-group">
+                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-size-from'}">
+                        <span class="form-label">From (min)</span>
+                    </label>
+                    <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-size-from'}" th:name="${'stream-'+streamNo+'-project-size-from'}" />
+                </div>
+            </div>
+            <div class="column-quarter">
+                <div class="form-group">
+                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-size-to'}">
+                        <span class="form-label">To (max)</span>
+                    </label>
+                    <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-size-to'}" th:name="${'stream-'+streamNo+'-project-size-to'}" />
+                </div>
+            </div>
+        </div>
+
+        <h3 class="heading-small">Project length (months)</h3>
+        <p>This indicates the length of the project in months (max 36)</p>
+
+        <div class="grid-row">
+            <div class="column-quarter">
+                <div class="form-group">
+                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-length-from'}">
+                        <span class="form-label">From (min)</span>
+                    </label>
+                    <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-length-from'}" th:name="${'stream-'+streamNo+'-project-length-from'}" />
+                </div>
+            </div>
+            <div class="column-quarter">
+                <div class="form-group">
+                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-length-to'}">
+                        <span class="form-label">To (max)</span>
+                    </label>
+                    <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-length-to'}" th:name="${'stream-'+streamNo+'-project-length-to'}" />
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <div class="form-group">
+        <fieldset class="inline">
+            <legend class="form-label-bold">Research categories</legend>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}">
+                <input th:id="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}" value="comp-research-tech-feasibilty" type="checkbox" />
+                Technical feasibility
+            </label>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-research-tech-industrial'}">
+                <input th:id="${'stream-'+streamNo+'-comp-research-tech-industrial'}" value="comp-research-industrial" type="checkbox" />
+                Industrial research
+            </label>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-research-tech-experimental'}">
+                <input th:id="${'stream-'+streamNo+'-comp-research-tech-experimental'}" value="comp-research-exoerimental" type="checkbox" />
+                Experimental development
+            </label>
+        </fieldset>
+    </div>
+
+    <div class="form-group">
+        <fieldset class="inline">
+            <legend class="form-label-bold">Single or Collaborative?</legend>
+            <p>Is this a single or collaborative project?</p>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-type-single'}">
+                <input th:id="${'stream-'+streamNo+'-comp-type-single'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Single" type="radio" />
+                Single
+            </label>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-type-collaborative'}">
+                <input th:id="${'stream-'+streamNo+'-comp-type-collaborative'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Collaborative" type="radio" />
+                Collaborative
+            </label>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-type-single-collaborative'}">
+                <input th:id="${'stream-'+streamNo+'-comp-type-single-collaborative'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Single or collaborative" type="radio" />
+                Single or collaborative
+            </label>
+        </fieldset>
+    </div>
+
+    <div class="form-group">
+        <fieldset class="inline">
+            <legend class="form-label-bold">Lead applicant</legend>
+            <p>Select the Lead Applicant type required</p>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
+                <input th:id="${'stream-'+streamNo+'-comp-lead-business'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Business" type="radio" checked="checked" />
+                Business
+            </label>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-research'}">
+                <input th:id="${'stream-'+streamNo+'-comp-lead-research'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Research" type="radio" />
+                Research
+            </label>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-either'}">
+                <input th:id="${'stream-'+streamNo+'-comp-lead-either'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Either" type="radio" />
+                Either
+            </label>
+        </fieldset>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" th:for="${'stream-'+streamNo+'-comp-participation'}">
+            <span class="form-label-bold">Research participation</span>
+            <span class="form-hint">This indicates the maximum level of Research participation alllowed</span>
+        </label>
+        <select class="form-control width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
+            <option value="">30%</option>
+            <option value="">50%</option>
+            <option value="">100%</option>
+            <option value="">None</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <fieldset class="inline">
+            <legend class="form-label-bold">Are resubmissions allowed</legend>
+            <p>Please indicate whether you wish to make resubmission allowed</p>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-resubmission-yes'}">
+                <input th:id="${'stream-'+streamNo+'-comp-resubmission-yes'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="Yes" type="radio" />
+            Yes
+            </label>
+            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-resubmission-no'}">
+                <input th:id="${'stream-'+streamNo+'-comp-resubmission-no'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="No" type="radio" />
+            No
+            </label>
+        </fieldset>  
+        <hr />
+    </div>
+
+ 
+
 </div>
 
 
