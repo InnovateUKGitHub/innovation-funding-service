@@ -113,6 +113,7 @@ The collaborator who accepted the invite should be visible in the assign list
     When the user navigates to the page    ${PROJECT_SUMMARY_URL}
     And the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
+    [Teardown]   Logout as user
 
 Status of the invited people (Application team page)
     [Documentation]    INFUND-929
@@ -125,6 +126,7 @@ Status of the invited people (Application team page)
 Status of the invited people (Manage contributors page)
     [Documentation]    INFUND-928
     [Tags]    HappyPath
+    [Setup]     Log in as user      &{lead_applicant_credentials}
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
