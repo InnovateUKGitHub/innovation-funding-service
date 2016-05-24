@@ -2,6 +2,7 @@
 Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Pending
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -12,6 +13,7 @@ Resource          ../../../../resources/keywords/User_actions.robot
 Empty project title field
     [Documentation]    -INFUND-43
     [Tags]    Applicant
+    # pending INFUND-2707
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     When the applicant clears the application title field
     Then The applicant should get a validation error message    Please enter the full title of the project.
@@ -19,6 +21,7 @@ Empty project title field
 Invalid date (Year)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    HappyPath
+    # pending INFUND-2707
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error message    Please enter a future date
@@ -30,6 +33,7 @@ Invalid date (Year)
 Invalid date (day)
     [Documentation]    -INFUND-43
     [Tags]    Applicant
+    # pending INFUND-2707
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_day    32
     And the applicant should get a validation error message    Please enter a valid date
@@ -45,6 +49,7 @@ Invalid date (day)
 Invalid date (month)
     [Documentation]    -INFUND-43
     [Tags]    Applicant
+    # pending INFUND-2707
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_month    0
     And the applicant should get a validation error message    Please enter a valid date
@@ -60,6 +65,7 @@ Invalid date (month)
 Invalid duration field
     [Documentation]    -INFUND-43
     [Tags]    Applicant
+    # pending INFUND-2707
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-duration    0
     And the applicant should get a validation error message    Please enter a valid duration
@@ -73,6 +79,7 @@ Invalid duration field
 Empty text area
     [Documentation]    -INFUND-43
     [Tags]    Applicant
+    # pending INFUND-2707
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error message    Please enter some text

@@ -36,6 +36,22 @@ If a Fund Project option is chosen for each application then the option to notif
     And the user selects the option from the drop-down menu     No       id=fund17
     Then the option to notify applicants is enabled
 
+Comp admin can navigate away from the page and the fund project options persist
+    [Documentation]     INFUND-2885
+    [Tags]  Pending
+    When the user reloads the page
+    Then the user should see the dropdown option selected       Yes     id=fund16
+    And the user should see the dropdown option selected        No      id=fund17
+    And the option to notify applicants is enabled
+    When the user navigates to the page  ${competition_details_url}
+    And the user navigates to the page  ${funders_panel_competition_url}
+    Then the user should see the dropdown option selected       Yes         id=fund16
+    And the user should see the dropdown option selected        No          id=fund17
+    And the option to notify applicants is enabled
+
+
+
+
 Comp admin can unselect a Fund Project and the option to notify applicants become disabled
     [Documentation]     INFUND-2601
     [Tags]

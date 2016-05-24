@@ -52,8 +52,9 @@ ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/1
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/1/application/1
-${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}      ${SERVER}/application/23/form/section/7
+${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}      ${SERVER}/application/24/form/section/7
 ${CONFIRM_ORGANISATION_URL}     ${SERVER}/organisation/create/confirm-organisation
+${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only

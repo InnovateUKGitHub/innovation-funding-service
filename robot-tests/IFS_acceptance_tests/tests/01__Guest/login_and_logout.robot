@@ -67,6 +67,19 @@ Valid login as Comp Admin
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_OPEN}
     [Teardown]    Logout as user
 
+Valid login as Project Finance role
+    [Documentation]     INFUND-2609
+    [Tags]
+    Given the user is not logged-in
+    When the guest user enters the log in credentials   project.finance1@innovateuk.test    Passw0rd
+    And the user clicks the button/link     css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page without error checking   ${PROJECT_FINANCE_DASHBOARD_URL}
+    # note that I haven't used error checking on this redirect as this page will currently produce an error
+    # in sprint 9 PS we have created the role, which redirects to a page which will be created in sprint 10 PS
+    # at that point this can be changed to include error checking
+
+
+
 Reset password (psw does not match)
     [Documentation]    INFUND-1889
     [Tags]    Email     Pending
