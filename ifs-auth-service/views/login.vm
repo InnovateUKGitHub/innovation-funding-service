@@ -137,9 +137,7 @@
 
             #if ($passwordEnabled)
               <div class="form-group extra-margin">
-                <button class="button" type="submit" name="_eventId_proceed"
-                    onClick="this.childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")'"
-                    >Sign in</button>
+                <button class="button" type="submit" name="_eventId_proceed">Sign in</button>
               </div>
             #end
 
@@ -221,6 +219,16 @@
     </script>
     <script>
         jQuery(document).ready(function(){
+            jQuery("form").submit(function(event) {
+                var emailField = jQuery("[type='email']").first();
+                var passwordField = jQuery("[type='password']").first();
+                var button = jQuery("button[type='submit']").first();
+                var valid = IFS.formValidation.checkEmail(emailField, false) && IFS.formValidation.checkRequired(passwordField, false);
+                if (valid) {
+                    button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
+                }
+            });
+
             jQuery.ajax({ 
                 url: '//#springMessageText('ifs.webserver.resources.url', '#')/alert/findAllVisibleByType/MAINTENANCE', 
                 method: 'GET'

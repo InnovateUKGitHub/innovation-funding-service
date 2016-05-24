@@ -430,8 +430,44 @@
 <!-- =================Section: Milestones=========================== -->
 
 <div th:fragment="prototype-section-milestones">
-    Milestones
+    
+    <h2 class="heading-medium no-margin-top">Step 4: Add milestone dates</h2>
+    
+    <div class="panel-indent">
+        Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
+    </div>
 
+    <table>
+        <thead>
+            <tr>
+                <th scope="col" style="width: 40%">Milestone</th>
+                <th scope="col" style="width: 10%">Weekday</th>
+                <th scope="col" style="width: 10%">Day</th>
+                <th scope="col" style="width: 10%">Month</th>
+                <th scope="col" style="width: 10%">Year</th>
+                <th scope="col" style="width: 15%">Calendar view</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">2. Briefing event</th>
+                <td>-</td>
+                <td><input type="text" class="form-control width-small" placeholder="DD"/></td>
+                <td><input type="text" class="form-control width-small" placeholder="MM"/></td>
+                <td><input type="text" class="form-control width-small" placeholder="YYYY"/></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th scope="row">3. Submission date</th>
+                <td>-</td>
+                <td><input type="text" class="form-control width-small" placeholder="DD"/></td>
+                <td><input type="text" class="form-control width-small" placeholder="MM"/></td>
+                <td><input type="text" class="form-control width-small" placeholder="YYYY"/></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 
     <ul class="pagination">
         <li class="prev">
@@ -552,7 +588,7 @@
                 <!-- <div class="section-status section-incomplete">Incomplete</div> -->
     </h2>
                 
-    <div class="question">
+    <div class="question extra-margin">
 
         <div class="form-group">
             <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
@@ -567,19 +603,65 @@
             </label>
             <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
         </div>
-
+        
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
+                <span class="form-label-bold">Question guidance title</span>
+            </label>
+            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
+        </div>
 
         <div class="form-group">
-            
             <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
-            
             <div class="textarea-wrapped "> 
-                
-                <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}" readonly="readonly"></textarea>
-
+                <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
+                <span class="form-label-bold">Max word count</span>
+            </label>
+            <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
+        </div>
+
+        <div class="grid-row">
+             <div class="column-half">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Is the answer scored?</legend>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
+                        <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                    Yes
+                    </label>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
+                         <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                    No
+                    </label>
+                </fieldset>
+            </div>
+
+
+            <div class="column-half">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Allow appendix?</legend>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
+                        <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                    Yes
+                    </label>
+                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
+                         <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                    No
+                    </label>
+                </fieldset>
+            </div>
+
+        </div>
     </div>
+    
+    <div class="alignright">
+        <a href="#" class="button button-large">Save and close</a>
+    </div>
+
 </div>
 
 
