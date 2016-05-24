@@ -28,7 +28,7 @@ The invited registered user should redirect to the correct page
 The user clicks the login link
     [Documentation]    INFUND-1458
     [Tags]
-    When the user clicks the button/link    link=Click here to login
+    When the user clicks the button/link    link=Click here to sign in
     And the guest user inserts user email & password    worth.email.test+invitedregistered@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
