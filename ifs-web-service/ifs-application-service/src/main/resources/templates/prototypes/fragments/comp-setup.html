@@ -208,7 +208,7 @@
                 <label class="form-label" for="comp-budget">
                     <span class="form-label-bold">Innovate budget (optional)</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-budget" name="comp-budget" />
+                <input class="form-control width-large" id="comp-budget" name="comp-budget" />
             </div>
             <div class="form-group">
                 <label class="form-label" for="comp-co-funders">
@@ -220,7 +220,7 @@
                 <label class="form-label" for="comp-co-funders-budget">
                     <span class="form-label-bold">Co-funders budget (optional)</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
+                <input class="form-control width-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
             </div>
         </fieldset>
         <a th:href="@{'?section=additional&#38;status=done'}" class="button">Done</a>
@@ -245,7 +245,12 @@
 <!-- =================Section: Eligibility=========================== -->
 
 <div th:fragment="prototype-section-eligibility">
-    <h2 class="heading-medium no-margin-top">Eligibility</h2>
+    <h2 class="heading-medium no-margin-top">Step 3. Eligibility criteria</h2>
+
+     <div class="panel-indent">
+        INTRO TEXT REQUIRED
+    </div>
+
     <form>
         <fieldset>
             <legend class="visuallyhidden">Eligibility</legend>
@@ -440,32 +445,27 @@
     <table>
         <thead>
             <tr>
-                <th scope="col" style="width: 40%">Milestone</th>
-                <th scope="col" style="width: 10%">Weekday</th>
-                <th scope="col" style="width: 10%">Day</th>
-                <th scope="col" style="width: 10%">Month</th>
-                <th scope="col" style="width: 10%">Year</th>
-                <th scope="col" style="width: 15%">Calendar view</th>
+                <th scope="col" style="width: 40%" id="milestone">Milestone</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="weekday">Weekday</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="day">Day</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="month">Month</th>
+                <th scope="col" style="width: 10%" class="aligncentre" id="year">Year</th>
+                <th scope="col" style="width: 15%" class="aligncentre" id="date-picker">Calendar view</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">2. Briefing event</th>
-                <td>-</td>
-                <td><input type="text" class="form-control width-small" placeholder="DD"/></td>
-                <td><input type="text" class="form-control width-small" placeholder="MM"/></td>
-                <td><input type="text" class="form-control width-small" placeholder="YYYY"/></td>
-                <td></td>
-            </tr>
-
-            <tr>
-                <th scope="row">3. Submission date</th>
-                <td>-</td>
-                <td><input type="text" class="form-control width-small" placeholder="DD"/></td>
-                <td><input type="text" class="form-control width-small" placeholder="MM"/></td>
-                <td><input type="text" class="form-control width-small" placeholder="YYYY"/></td>
-                <td></td>
-            </tr>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
         </tbody>
     </table>
 
@@ -483,6 +483,21 @@
             </a>
         </li>
     </ul>
+</div>
+
+<!-- =============Section: Milestone table rows==================== -->
+
+<div th:fragment="prototype-section-milestones-row">
+
+    <tr>
+        <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
+        <td class="aligncentre" th:id="${'row-'+rowNo + '-weekday'}">-</td>
+        <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
+        <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
+        <td><input type="text" class="form-control width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
+        <td></td>
+    </tr>
+
 </div>
 
 
