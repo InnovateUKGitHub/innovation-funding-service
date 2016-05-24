@@ -1,19 +1,5 @@
 package com.worth.ifs.application;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
@@ -28,7 +14,6 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,12 +23,19 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
@@ -51,16 +43,10 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -455,5 +441,17 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationCreateConfirmCompetitionView() throws Exception {
         mockMvc.perform(get("/application/create-confirm-competition"))
                 .andExpect(view().name("application-create-confirm-competition"));
+    }
+
+    @Test
+    public void testDownloadAssessorFeedback() throws Exception {
+
+        ByteArrayResource fileContents = new ByteArrayResource("File contents".getBytes());
+        when(assessorFeedbackRestService.getAssessorFeedbackFile(applications.get(0).getId())).thenReturn(restSuccess(fileContents));
+
+        mockMvc.perform(get("/application/" + applications.get(0).getId() + "/assessorFeedback"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("File contents"));
+
     }
 }

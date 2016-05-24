@@ -71,8 +71,7 @@ public class ApplicationController extends AbstractApplicationController {
 
     @ProfileExecution
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
-    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletResponse response, HttpServletRequest request) {
+    public String applicationDetails(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         assignQuestion(request, applicationId);
 
@@ -350,6 +349,7 @@ public class ApplicationController extends AbstractApplicationController {
         addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
     }
 
+    // TODO DW - INFUND-2607 - remove duplicated code
     private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentLength(resource.contentLength());

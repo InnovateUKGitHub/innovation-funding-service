@@ -28,6 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.singletonList;
 
@@ -206,7 +207,8 @@ public class ApplicationOverviewModelPopulator {
 
     private FileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application, CompetitionResource competition) {
 
-        if (!singletonList(CompetitionResource.Status.PROJECT_SETUP).contains(competition.getCompetitionStatus())) {
+        // TODO DW - INFUND-2607 - extract logic into ApplicationResource (with CompetitionStatus pulledin by default?)
+        if (!singletonList(PROJECT_SETUP).contains(competition.getCompetitionStatus())) {
             return null;
         }
 
