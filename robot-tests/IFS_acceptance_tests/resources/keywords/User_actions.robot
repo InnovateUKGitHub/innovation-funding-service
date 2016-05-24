@@ -63,6 +63,15 @@ the user should be redirected to the correct page without the usual headers
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
 
+the user should be redirected to the correct page without error checking
+    [Arguments]    ${URL}
+    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
+    # Header checking (INFUND-1892)
+    Wait Until Element Is Visible    id=global-header
+    Page Should Contain    BETA
+
+
+
 the user reloads the page
     Reload Page
     # Error checking
@@ -114,6 +123,21 @@ the user selects the option from the drop-down menu
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
+the user should see the dropdown option selected
+    [Arguments]     ${option}   ${drop-down}
+    List Selection Should Be    ${drop-down}    ${option}
+    # Error checking
+    Page Should Not Contain     Error
+    Page Should Not Contain     something went wrong
+    Page Should Not Contain     Page or resource not found
+    Page Should Not Contain     You do not have the necessary permissions for your request
+    # Header checking   (INFUND-1892)
+    Element Should Be Visible   id=global-header
+    Page Should Contain     BETA
+
+
+
+
 the user submits the form
     Submit Form
     Page Should Not Contain    Error
@@ -132,9 +156,9 @@ the user follows the flow to register their organisation
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox       id=address-same
-    And the user clicks the button/link     jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link     jQuery=.button:contains("Save")
+    And the user selects the checkbox    address-same
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
 
 the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
@@ -393,7 +417,7 @@ we create a new user
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    id=address-same
+    select Checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
@@ -415,7 +439,7 @@ the lead applicant invites a registered user
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    id=address-same
+    select Checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_LEAD}

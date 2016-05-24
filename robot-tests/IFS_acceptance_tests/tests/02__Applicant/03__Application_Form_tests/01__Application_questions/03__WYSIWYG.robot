@@ -50,7 +50,8 @@ the Applicant clicks on the Italic button in the "business opportunity" field
 
 all text entered should be Bold and stay the same after page refresh
     Input Text    css=#form-input-1 .editor    Entering text to verify BOLD.
-    Element Should Be Visible    css=#form-input-1 .editor b
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor b
+    Run Keyword If    '${status}' == 'FAIL'    Element Should Be Visible    css=#form-input-1 .editor strong
     Focus    css=.app-submit-btn
     Sleep    1s
     Reload Page
@@ -60,7 +61,7 @@ the Applicant clicks on the Numbering bullet button in the "business opportunity
     Input Text    css=#form-input-1 .editor    This is testing for numbering bullets.
     Click Element    css=.insertOrderedList_button
     Focus    css=.app-submit-btn
-    Sleep    1s
+    Sleep    500ms
 
 the Applicant clicks on the Bullet format button in the "business opportunity" field
     Input Text    css=#form-input-1 .editor    testing
@@ -70,7 +71,8 @@ the Applicant clicks on the Bullet format button in the "business opportunity" f
 
 all text entered should be Italic and stay the same after page refresh
     Input Text    css=#form-input-1 .editor    Entering text to verify ITALIC.
-    Element Should Be Visible    css=#form-input-1 .editor i
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor i
+    Run Keyword If    '${status}' == 'FAIL'    Element Should Be Visible    css=#form-input-1 .editor em
     Focus    css=.app-submit-btn
     Sleep    1s
     Reload Page
@@ -78,13 +80,16 @@ all text entered should be Italic and stay the same after page refresh
 
 all text entered should be in Numbering bullets and stay the same after page refresh
     Element Should Be Visible    css=#form-input-1 .editor ol
+    Focus    css=.app-submit-btn
     Reload Page
+    Run Keyword And Ignore Error    Confirm Action
     Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Page Contains Element    css=#form-input-1 .editor ol
 
 all text entered should be in Bullet format and stay the same after page refresh
     Element Should Be Visible    css=#form-input-1 .editor li
+    Focus    css=.app-submit-btn
     Reload Page
     Focus    css=.app-submit-btn
     Sleep    1s
