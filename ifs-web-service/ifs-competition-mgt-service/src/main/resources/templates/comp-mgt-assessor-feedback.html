@@ -97,12 +97,12 @@
 				</a>
 			</div>
 			<div class="column-third">
-				<a class="button-dashboard highlight" href="#">
-					<span class="heading-large" th:text="${projectsBeingSetUp}" /><br />Projects being setup
+				<a class="button-dashboard highlight" th:href="@{/competition/{competitionId}?tab=submitted(competitionId=${competitionSummary.competitionId})}">
+					<span class="heading-large" th:text="${competitionSummary.applicationsFunded}" /><br />Projects being setup
 				</a>
 			</div>
 			<div class="column-third">
-				<a class="button-dashboard" th:href="@{/ompetition/{competitionId}?tab=notSubmitted(competitionId=${competitionSummary.competitionId})}">
+				<a class="button-dashboard" th:href="@{/competition/{competitionId}?tab=notSubmitted(competitionId=${competitionSummary.competitionId})}">
 					<p><span class="heading-large" th:text="${competitionSummary.applicationsNotSubmitted}" /><br />Applications not submitted</p>
 				</a>
 			</div>

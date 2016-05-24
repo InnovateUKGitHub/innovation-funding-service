@@ -43,8 +43,8 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 	
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getFundedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
-		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/funded";
+	public RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/feedback-required";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
 	}
 	
@@ -85,5 +85,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	public void setApplicationSummaryRestUrl(String applicationSummaryRestUrl) {
 		this.applicationSummaryRestUrl = applicationSummaryRestUrl;
 	}
+
+	
 
 }

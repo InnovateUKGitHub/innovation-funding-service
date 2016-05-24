@@ -36,20 +36,15 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 	}
 	
 	@Override
-	public ApplicationSummaryPageResource getFundedApplicationSummariesByCompetitionId(
+	public ApplicationSummaryPageResource getApplicationsRequiringFeedbackByCompetitionId(
 			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
-		return applicationSummaryRestService.getFundedApplicationSummariesByCompetitionId(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
+		return applicationSummaryRestService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, null, 0, 1).getSuccessObjectOrThrowException();
 	}
-
-	@Override
-	public Long getFundedApplicationCountByCompetitionId(Long competitionId) {
-		ApplicationSummaryPageResource page = applicationSummaryRestService.getFundedApplicationSummariesByCompetitionId(competitionId, null, 0, 1).getSuccessObjectOrThrowException();
-		return page.getTotalElements();
-	}
-
+	
 	@Override
 	public Long getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId) {
-		return -1L;
+		ApplicationSummaryPageResource page = applicationSummaryRestService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, null, 0, 1).getSuccessObjectOrThrowException();
+		return page.getTotalElements();
 	}
 	
 	@Override

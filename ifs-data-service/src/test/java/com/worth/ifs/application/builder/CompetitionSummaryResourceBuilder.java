@@ -29,6 +29,10 @@ public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSu
         return new CompetitionSummaryResource();
     }
 
+    public CompetitionSummaryResourceBuilder withId(Long... competitionIds) {
+        return withArray((competitionId, competition) -> competition.setCompetitionId(competitionId), competitionIds);
+    }
+    
     public CompetitionSummaryResourceBuilder withCompetitionStatus(Status... competitionStatus) {
         return withArray((competitionState, competition) -> competition.setCompetitionStatus(competitionState), competitionStatus);
     }

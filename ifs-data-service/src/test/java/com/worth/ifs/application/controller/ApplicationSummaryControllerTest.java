@@ -104,29 +104,29 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
     
     @Test
-    public void searchFundedByCompetitionId() throws Exception {
+    public void searchFeedbackRequiredByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getFundedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20)).thenReturn(serviceSuccess(resource));
         
-    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/funded?page=6"))
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/feedback-required?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getFundedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
+    	verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
     
     @Test
-    public void searchFundedByCompetitionIdWithSortField() throws Exception {
+    public void searchFeedbackRequiredByCompetitionIdWithSortField() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getFundedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20)).thenReturn(serviceSuccess(resource));
         
-    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/funded?page=6&sort=id"))
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/feedback-required?page=6&sort=id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getFundedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
+    	verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
 
 }

@@ -37,6 +37,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	List<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds);
 
+	Page<Application> findByCompetitionIdAndApplicationStatusIdAndAssessorFeedbackFileEntryIsNull(Long competitionId, Long applicationStatusId, Pageable pageable);
+	
+	List<Application> findByCompetitionIdAndApplicationStatusIdAndAssessorFeedbackFileEntryIsNull(Long competitionId, Long applicationStatusId);
+	
     Long countByCompetitionId(Long competitionId);
 
     Long countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);

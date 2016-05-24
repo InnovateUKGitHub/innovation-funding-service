@@ -95,12 +95,12 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 	
 	@Override
-	public ServiceResult<ApplicationSummaryPageResource> getFundedApplicationSummariesByCompetitionId(
+	public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
 			Long competitionId, String sortBy, int pageIndex, int pageSize) {
-		
 		return applicationSummaries(sortBy, pageIndex, pageSize,
-				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId(), pageable),
-				() -> applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId()));
+				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdAndAssessorFeedbackFileEntryIsNull(competitionId, ApplicationStatusConstants.APPROVED.getId(), pageable),
+				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdAndAssessorFeedbackFileEntryIsNull(competitionId, ApplicationStatusConstants.APPROVED.getId()));
+	
 	}
 	
 	private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, int pageSize, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
@@ -150,5 +150,5 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		}
 		return result;
 	}
-	
+
 }

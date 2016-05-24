@@ -18,6 +18,7 @@ public class CompetitionSummaryResource {
 	private Long applicationsInProgress;
 	private Long applicationsSubmitted;
 	private Long applicationsNotSubmitted;
+	private Long applicationsFunded;
 
 	public Long getCompetitionId() {
 		return competitionId;
@@ -96,5 +97,13 @@ public class CompetitionSummaryResource {
 
 	public void setCompetitionStatus(CompetitionResource.Status competitionStatus) {
 		this.competitionStatus = competitionStatus;
+	}
+	
+	public Long getApplicationsFunded() {
+		return applicationsFunded;
+	}
+	
+	public void setApplicationsFunded(Long applicationsFunded) {
+		this.applicationsFunded = applicationsFunded;
 	}
 }
