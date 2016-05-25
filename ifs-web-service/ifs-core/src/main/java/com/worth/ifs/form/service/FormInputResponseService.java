@@ -1,5 +1,6 @@
 package com.worth.ifs.form.service;
 
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -19,5 +20,6 @@ public interface FormInputResponseService {
                                              Long contentLength, String originalFileName, byte[] file);
     RestResult<Void> removeFile(Long formInputId, Long applicationId, Long processRoleId);
     RestResult<ByteArrayResource> getFile(Long formInputId, Long applicationId, Long processRoleId);
+    RestResult<FormInputResponseFileEntryResource> getFileDetails(Long formInputId, Long applicationId, Long processRoleId);
     RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(Long formInputId, Long applicationId);
 }

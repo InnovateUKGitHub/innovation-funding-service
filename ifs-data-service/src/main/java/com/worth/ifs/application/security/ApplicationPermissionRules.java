@@ -1,7 +1,6 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.PermissionRule;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static com.worth.ifs.user.resource.UserRoleType.*;
@@ -29,7 +28,6 @@ import static java.util.Collections.singletonList;
 public class ApplicationPermissionRules {
 
     public static final List<CompetitionResource.Status> ASSESSOR_FEEDBACK_PUBLISHED_STATES = singletonList(PROJECT_SETUP);
-    public static final List<CompetitionResource.Status> EDITABLE_ASSESSOR_FEEDBACK_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -105,14 +103,7 @@ public class ApplicationPermissionRules {
                           "the Application's Competition is in Funders' Panel or Assessor Feedback state",
             particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
     public boolean compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
-
-        if (!isCompAdmin(user)) {
-            return false;
-        }
-
-        Long competitionId = application.getCompetition();
-        Competition competition = competitionRepository.findOne(competitionId);
-        return EDITABLE_ASSESSOR_FEEDBACK_STATES.contains(competition.getCompetitionStatus());
+        return isCompAdmin(user) && application.isInEditableAssessorFeedbackState();
     }
 
     @PermissionRule(
@@ -120,14 +111,7 @@ public class ApplicationPermissionRules {
             description = "A Comp Admin user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
             particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
     public boolean compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
-
-        if (!isCompAdmin(user)) {
-            return false;
-        }
-
-        Long competitionId = application.getCompetition();
-        Competition competition = competitionRepository.findOne(competitionId);
-        return !ASSESSOR_FEEDBACK_PUBLISHED_STATES.contains(competition.getCompetitionStatus());
+        return isCompAdmin(user) && !application.isInPublishedAssessorFeedbackState();
     }
 
     @PermissionRule(
@@ -142,17 +126,18 @@ public class ApplicationPermissionRules {
             description = "A member of the Application Team can see and download Assessor Feedback attached to their Application when it has been published",
             particularBusinessState = "Application's Competition Status = 'Project Setup' or beyond")
     public boolean applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(ApplicationResource application, UserResource user) {
+        return application.isInPublishedAssessorFeedbackState() && isMemberOfProjectTeam(application, user);
+    }
+
+    private boolean isMemberOfProjectTeam(ApplicationResource application, UserResource user) {
 
         boolean isLeadApplicantForApplication = checkRole(user, application.getId(), LEADAPPLICANT, processRoleRepository);
-        boolean isCollaboratorForApplication = checkRole(user, application.getId(), COLLABORATOR, processRoleRepository);
 
-        if (isLeadApplicantForApplication || isCollaboratorForApplication) {
-            Long competitionId = application.getCompetition();
-            Competition competition = competitionRepository.findOne(competitionId);
-            return ASSESSOR_FEEDBACK_PUBLISHED_STATES.contains(competition.getCompetitionStatus());
+        if (isLeadApplicantForApplication) {
+            return true;
         }
 
-        return false;
+        return checkRole(user, application.getId(), COLLABORATOR, processRoleRepository);
     }
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {

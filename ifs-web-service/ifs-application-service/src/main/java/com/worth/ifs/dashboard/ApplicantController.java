@@ -1,20 +1,5 @@
 package com.worth.ifs.dashboard;
 
-import static com.worth.ifs.util.CollectionFunctions.combineLists;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
@@ -23,10 +8,23 @@ import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.ProcessRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -37,19 +35,19 @@ import com.worth.ifs.user.service.ProcessRoleService;
 public class ApplicantController {
 
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
     @Autowired
-    ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
 
     @Autowired
-    ApplicationStatusRestService applicationStatusService;
+    private ApplicationStatusRestService applicationStatusService;
 
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {

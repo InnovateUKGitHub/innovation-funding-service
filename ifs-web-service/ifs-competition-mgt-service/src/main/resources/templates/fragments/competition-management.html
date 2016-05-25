@@ -107,7 +107,7 @@
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
           <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
-          <a href="#" id="publish-funding-decision" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+          <button id="publish-funding-decision" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</button>
 
           <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
       </div>
@@ -232,7 +232,7 @@
         <option value="grantRequested" th:selected="${(activeSortField == 'grantRequested')}">Grant requested</option>
         <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost</option>
         <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
-        
+
     </select>
     <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'notSubmitted'}">
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>

@@ -1,5 +1,6 @@
 /* SG
-#IFS/Text
+
+# IFS/Text
 
 ```
 <p>I am <strong>such a strong character</strong></p>
@@ -53,7 +54,7 @@ small {
 
 /* SG
 
-#IFS/Right aligned buttons
+# IFS/Right aligned buttons
 ```
 <div class="alignright-button">
 	<button class="button">Button 1</button>
@@ -98,10 +99,10 @@ small {
   }
 
   /* SG
-  #IFS/Large button
+  # IFS/Large button
 
   ```
-  <button class="large">Bigger is always better</button>
+  <button class="button large">Bigger is always better</button>
   <a href="#" tabindex="0" role="button" class="button large">In Texas</a>
   ```
   */

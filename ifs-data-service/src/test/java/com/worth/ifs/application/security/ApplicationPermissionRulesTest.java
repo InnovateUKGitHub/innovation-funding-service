@@ -174,8 +174,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
             //
             allGlobalRoleUsers.forEach(user -> {
 
-                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
-                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+                ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
 
                 // if the user is not a Comp Admin, immediately fail
                 if (!user.equals(compAdminUser())) {
@@ -184,15 +183,11 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                 } else {
 
-                    when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-
                     if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
                         assertTrue(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     } else {
                         assertFalse(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     }
-
-                    verify(competitionRepositoryMock).findOne(competition.getId());
                 }
             });
         });
@@ -211,8 +206,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
             //
             allGlobalRoleUsers.forEach(user -> {
 
-                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
-                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+                ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
 
                 // if the user is not a Comp Admin, immediately fail
                 if (!user.equals(compAdminUser())) {
@@ -221,15 +215,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                 } else {
 
-                    when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-
                     if (!singletonList(PROJECT_SETUP).contains(competitionStatus)) {
                         assertTrue(rules.compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(application, user));
                     } else {
                         assertFalse(rules.compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(application, user));
                     }
 
-                    verify(competitionRepositoryMock).findOne(competition.getId());
                     verifyNoMoreInteractions(competitionRepositoryMock);
                     reset(competitionRepositoryMock);
                 }
@@ -290,11 +281,11 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
-            Competition competition = newCompetition().withId(competitionId).withCompetitionStatus(competitionStatus).build();
+            application.setCompetitionStatus(competitionStatus);
 
             allUsersToTests.forEach(user -> {
 
-                reset(competitionRepositoryMock, processRoleRepositoryMock);
+                reset(processRoleRepositoryMock);
 
                 when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicantUser.getId(), application.getId())).thenReturn(leadApplicantProcessRole);
                 when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaboratorUser.getId(), application.getId())).thenReturn(collaboratorProcessRole);
@@ -303,24 +294,32 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 // if the user under test is the lead applicant or a collaboraator for the application, the rule will pass IF the Competition is in Project Setup
                 if (user == leadApplicantUser || user == collaboratorUser) {
 
-                    when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-
                     if (singletonList(PROJECT_SETUP).contains(competitionStatus)) {
                         assertTrue(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
+
+                        if (user == leadApplicantUser) {
+                            verify(processRoleRepositoryMock, times(1)).findByUserIdAndApplicationId(user.getId(), application.getId());
+                        } else {
+                            verify(processRoleRepositoryMock, times(2)).findByUserIdAndApplicationId(user.getId(), application.getId());
+                        }
+
                     } else {
                         assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
+                        verify(processRoleRepositoryMock, never()).findByUserIdAndApplicationId(user.getId(), application.getId());
                     }
 
-                    verify(processRoleRepositoryMock, times(2)).findByUserIdAndApplicationId(user.getId(), application.getId());
-                    verify(competitionRepositoryMock).findOne(competition.getId());
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
-
                 }
                 // otherwise this rule doesn't apply to the user under test, so it should fail
                 else {
 
                     assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
-                    verify(processRoleRepositoryMock, times(2)).findByUserIdAndApplicationId(user.getId(), application.getId());
+
+                    if (singletonList(PROJECT_SETUP).contains(competitionStatus)) {
+                        verify(processRoleRepositoryMock, times(2)).findByUserIdAndApplicationId(user.getId(), application.getId());
+                    } else {
+                        verify(processRoleRepositoryMock, never()).findByUserIdAndApplicationId(user.getId(), application.getId());
+                    }
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
                 }
             });

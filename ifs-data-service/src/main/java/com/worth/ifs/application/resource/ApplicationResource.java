@@ -2,6 +2,7 @@ package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,10 +14,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 public class ApplicationResource {
     private static final String ID_PATTERN = "#00000000";
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
+
+    private static final List<CompetitionResource.Status> PUBLISHED_ASSESSOR_FEEDBACK_STATES = singletonList(PROJECT_SETUP);
+    private static final List<CompetitionResource.Status> EDITABLE_ASSESSOR_FEEDBACK_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
 
     private Long id;
     private String name;
@@ -34,6 +44,7 @@ public class ApplicationResource {
     private String competitionName;
     private List<Long> invites;
     private Long assessorFeedbackFileEntry;
+    private CompetitionResource.Status competitionStatus;
 
     public Long getId() {
         return id;
@@ -205,5 +216,27 @@ public class ApplicationResource {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public CompetitionResource.Status getCompetitionStatus() {
+        return competitionStatus;
+    }
+
+    public void setCompetitionStatus(CompetitionResource.Status competitionStatus) {
+        this.competitionStatus = competitionStatus;
+    }
+
+    public boolean hasPublishedAssessorFeedback() {
+        return isInPublishedAssessorFeedbackState() && getAssessorFeedbackFileEntry() != null;
+    }
+
+    @JsonIgnore
+    public boolean isInPublishedAssessorFeedbackState() {
+        return PUBLISHED_ASSESSOR_FEEDBACK_STATES.contains(competitionStatus);
+    }
+
+    @JsonIgnore
+    public boolean isInEditableAssessorFeedbackState() {
+        return EDITABLE_ASSESSOR_FEEDBACK_STATES.contains(competitionStatus);
     }
 }

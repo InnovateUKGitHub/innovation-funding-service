@@ -43,6 +43,16 @@
             </ul>
         </div>
     </div>
+
+    <div th:if="${assessorFeedback != null}" th:remove="tag">
+        <div th:replace="question-type/form-elements :: readonly-file-download
+                    (filename=${assessorFeedback?.filename},
+                     filesizeKbytes=${assessorFeedback?.filesizeKbytes},
+                     fileDescription=${'View your application feedback:'},
+                     downloadURL=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.getId()})})">
+        </div>
+    </div>
+
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">

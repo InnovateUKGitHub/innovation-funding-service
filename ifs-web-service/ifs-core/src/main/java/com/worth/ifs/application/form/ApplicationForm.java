@@ -17,6 +17,8 @@ public class ApplicationForm extends Form {
     private MultipartFile assessorFeedback;
 
     private boolean adminMode = false;
+    private Long impersonateOrganisationId;
+
 
     public ApplicationForm() {
         super();
@@ -36,6 +38,14 @@ public class ApplicationForm extends Form {
 
     public void setAdminMode(boolean adminMode) {
         this.adminMode = adminMode;
+    }
+
+    public Long getImpersonateOrganisationId() {
+        return impersonateOrganisationId;
+    }
+
+    public void setImpersonateOrganisationId(Long impersonateOrganisationId) {
+        this.impersonateOrganisationId = impersonateOrganisationId;
     }
 
     public MultipartFile getAssessorFeedback() {
