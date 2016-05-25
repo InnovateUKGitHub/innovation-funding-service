@@ -5,6 +5,7 @@ import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -15,10 +16,9 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputRestService;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.ProcessRoleService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -96,7 +96,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
         Long applicationId = Long.valueOf(applicationIdString);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(competition.getId());
+        SectionResource financeSection = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES).get(0);
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
         UserResource impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
 
@@ -115,18 +115,17 @@ public class ApplicationManagementController extends AbstractApplicationControll
     private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") String organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
         UserResource user;
         form.setImpersonateOrganisationId(Long.valueOf(organisationId));
-        List<ProcessRole> processRoles = processRoleService.findAssignableProcessRoles(applicationId).get();
-        Optional<User> impersonateOptionalUser = processRoles.stream()
-                .filter(p -> p.getOrganisation().getId().equals(Long.valueOf(organisationId)))
+        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        Optional<Long> userId = processRoles.stream()
+                .filter(p -> p.getOrganisation().equals(Long.valueOf(organisationId)))
                 .map(p -> p.getUser())
                 .findAny();
 
-        if (!impersonateOptionalUser.isPresent()) {
+        if (!userId.isPresent()) {
             LOG.error("Found no user to impersonate.");
             return null;
         }
-        User impersonateUser = impersonateOptionalUser.get();
-        user = userService.retrieveUserById(impersonateUser.getId()).getSuccessObject();
+        user = userService.retrieveUserById(userId.get()).getSuccessObject();
         return user;
     }
 
@@ -136,7 +135,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
             @PathVariable("formInputId") final Long formInputId,
             HttpServletRequest request) throws ExecutionException, InterruptedException {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole;
+        ProcessRoleResource processRole;
         if (user.hasRole(UserRoleType.COMP_ADMIN)) {
             long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
