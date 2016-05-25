@@ -38,7 +38,7 @@ If a Fund Project option is chosen for each application then the option to notif
 
 Comp admin can navigate away from the page and the fund project options persist
     [Documentation]     INFUND-2885
-    [Tags]  Pending
+    [Tags]
     When the user reloads the page
     Then the user should see the dropdown option selected       Yes     id=fund16
     And the user should see the dropdown option selected        No      id=fund17

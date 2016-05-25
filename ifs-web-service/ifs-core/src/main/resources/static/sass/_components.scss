@@ -15,53 +15,20 @@
 ##1. List elements
 */
 
-@import "components/app-sidebar";
 @import "components/boxed-list";
 @import "components/navigation-list";
 @import "components/collapsible-sections";
 @import "components/list-overview";
 @import "components/progress-list";
-/*
-##2. Pie charts
-*/
+
 @import "components/pie-charts";
-
-/*
-##3. Progress-indicator
-*/
 @import "components/progress-indicator";
-
-/*
-##4. Event alert
-*/
 @import "components/event-alert";
 @import "components/message-alerts";
-
-/*
-##5. Extra form elements
-*/
 @import "components/forms";
-
-/*
-##6. Small elements
-*/
 @import "layout/small";
-
-/*
-##7. Pagination
-*/
 @import "components/pagination";
-
-/*
-##8. Assign team members
-*/
 @import "components/assign-team";
-
-
-
-/*
-##10. Statuses
-*/
 @import "components/statusses";
 
 /*

@@ -132,7 +132,7 @@ the user should see the dropdown option selected
     Page Should Not Contain     Page or resource not found
     Page Should Not Contain     You do not have the necessary permissions for your request
     # Header checking   (INFUND-1892)
-    Element Should Not Be Visible   id=global-header
+    Element Should Be Visible   id=global-header
     Page Should Contain     BETA
 
 

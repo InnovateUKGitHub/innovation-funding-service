@@ -222,7 +222,7 @@ table td{
 
 select.form-control{
   -webkit-appearance: menulist;
-  width:auto;  
+  width:auto;
 }
 
 .feedback .textarea-wrapped textarea{
@@ -274,12 +274,7 @@ select.form-control{
 	font-weight: bold;
 	margin: 10px 0;
 }
-
-
-
-.form-group{
-	&.download{
+.form-group.download{
 		padding: 5px 0 0 50px;
 		background: url(../images/icons/icon-download.png) no-repeat;
-	}
 }

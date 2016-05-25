@@ -47,17 +47,57 @@
 <script type="text/javascript">
 	// <![CDATA[
 	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+
+	    var sectionId = $_GET('sectionId'),
+			status = $_GET('status');
+
+		
+		for(i = 1; i < jQuery(".inline-nav li").length+1; i++) {
+			
+			if(sectionId == i && status == 'done'){
+				localStorage.setItem('section'+i, 'section-'+i+'-complete')				
+			}
+
+			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
+				jQuery('#section-'+i).addClass('marked-as-complete');
+			}
+		} 
+			
+
+
+
+
 		jQuery('#comp-stream-yes').on('click',function(e){ 
 
 			if(jQuery(this).is(':checked')){
 				jQuery('.comp-stream-group').show();
+				jQuery('#add-stream').show();
 			}
+
 		});
 
 		jQuery('#comp-stream-no').on('click',function(e){ 
 
 			if(jQuery(this).is(':checked')){
 				jQuery('.comp-stream-group').hide();
+				jQuery('#add-stream').hide();
+				jQuery('#show-stream-2').hide();
 			}
 		});
 
@@ -120,6 +160,13 @@
 			var compInnovationArea = jQuery(this).find('option:selected').attr('class');
 
 			jQuery('#comp-innovation-sector').val(compInnovationArea);
+
+		});
+
+		jQuery('#add-stream').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#show-stream-2').show();
 
 		});
 
