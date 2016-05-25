@@ -135,7 +135,7 @@ Catapult search (accept invitation flow with email step)
     [Tags]  Invite  Catapult    Email
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    When the user clicks the button/link    jQuery=.button:contains("Log in")
+    When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=A novel solution to an old problem
