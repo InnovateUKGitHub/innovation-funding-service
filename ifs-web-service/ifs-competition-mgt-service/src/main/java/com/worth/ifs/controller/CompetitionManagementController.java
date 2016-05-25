@@ -139,6 +139,13 @@ public class CompetitionManagementController {
 	
 	private void populateOverviewModel(Model model, CompetitionSummaryResource competitionSummary) {
 		model.addAttribute("applicationsRequiringFeedback", applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(competitionSummary.getCompetitionId()));
+		
+		CompetitionResource competition = competitionService.getById(competitionSummary.getCompetitionId());
+
+		model.addAttribute("assessmentEndDate", competition.getAssessmentEndDate());
+		model.addAttribute("assessmentDaysLeft", competition.getAssessmentDaysLeft());
+		model.addAttribute("assessmentDaysLeftPercentage", competition.getAssessmentDaysLeftPercentage());
+
 		model.addAttribute("activeTab", "overview");
 	}
 

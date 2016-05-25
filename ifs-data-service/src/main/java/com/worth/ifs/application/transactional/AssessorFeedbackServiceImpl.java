@@ -115,7 +115,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 	@Override
 	public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
 		return getCompetition(competitionId).andOnSuccessReturn(competition -> {
-			competition.setAssessmentEndDate(LocalDateTime.now());
+			competition.setAssessorFeedbackDate(LocalDateTime.now());
 			return null;
 		});
 	}

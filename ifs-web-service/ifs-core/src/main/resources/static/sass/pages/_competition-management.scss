@@ -68,3 +68,20 @@
       }
   }
 }
+
+.button-dashboard{
+    background: $grey-4;
+    padding: 20px 20px 15px 20px;
+    display: block;
+    min-height: 110px;
+    text-decoration: none;
+
+    &:hover{
+        background: $highlight-colour;
+    }
+
+    &.highlight{
+        background: $button-colour;
+        color: white;
+    }
+}

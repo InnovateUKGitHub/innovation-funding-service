@@ -2,6 +2,7 @@
 package com.worth.ifs.controller;
 
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +28,7 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.AssessorFeedbackService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.service.ApplicationSummarySortFieldService;
 
@@ -284,12 +288,25 @@ public class CompetitionManagementControllerTest  {
 
         when(applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(COMPETITION_ID)).thenReturn(3L);
 
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime assessmentStartDate = now.minusDays(7L);
+        LocalDateTime assessmentEndDate = now.plusDays(3L);
+        
+        CompetitionResource competition = newCompetitionResource()
+        		.withAssessmentStartDate(assessmentStartDate)
+        		.withAssessmentEndDate(assessmentEndDate)
+        		.build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        
     	mockMvc.perform(get("/competition/123?tab=overview"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-assessor-feedback"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("activeTab", "overview"))
-                .andExpect(model().attribute("applicationsRequiringFeedback", 3L));
+                .andExpect(model().attribute("applicationsRequiringFeedback", 3L))
+                .andExpect(model().attribute("assessmentEndDate", assessmentEndDate))
+                .andExpect(model().attribute("assessmentDaysLeft", 2L))
+                .andExpect(model().attribute("assessmentDaysLeftPercentage", 80L));
     	
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }

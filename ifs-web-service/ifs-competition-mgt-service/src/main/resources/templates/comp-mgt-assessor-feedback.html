@@ -77,13 +77,20 @@
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<p>
+						12:00<br /><span th:unless="${assessmentEndDate == null}" th:text="${#temporals.format(assessmentEndDate, 'd MMMM yyyy')}" th:remove="tag"></span>
 						</p>
 					</div>
 					<div class="column-third">
-						<div class="deadline" style="text-align: center; margin-top: 10px;">
-							
-						</div>
-					</div>
+                         <div class="deadline" style="text-align: center; margin-top: 10px;">
+                             <div class="pie-container">
+                                 <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title><span th:text="${assessmentDaysLeftPercentage}" th:remove="tag"></span>%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+                                 <div class="pie-overlay">
+                                     <div th:text="${assessmentDaysLeft}"></div>
+                                 </div>
+                             </div>
+                             <small>Days</small>
+                         </div>
+                     </div>
 				</div>
 			</div>
 		</div>
