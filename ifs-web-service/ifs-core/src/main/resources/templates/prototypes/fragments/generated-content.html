@@ -2078,72 +2078,94 @@
 <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
             </div>
   		</div>
-  		<div class="section" id="IFS-Alert_-_alert" data-section="IFS" data-heading="Alert - alert">
+  		<div class="section" id="IFS-Alerts" data-section="IFS" data-heading="Alerts">
         <div class="comment">
-            <h1 class="heading-medium">Alert - alert</h1>
+            <h1 class="heading-medium">Alerts</h1>
             <p>Don&apos;t use the javascript underneath which is just for demo, just add the html fragment</p>
         </div>
 
             <div class="result">
-                <![CDATA[//><script>
-function showAlert(){
-  var html = '\
-  <div class="event-alert-error">\
-      <p><span>This is a alert</span></p>\
-  </div>';
-  jQuery('body').append(html)
-}
+                <![CDATA[//><div style="display:none" id="event-examples">
+
+  <!-- the html of the alerts -->
+  <div class="event-alert">
+      <p><span>This is an info</span></p>
+  </div>
+
+  <div class="event-alert event-warning">
+      <p><span>This is a warning</span></p>
+  </div>
+
+  <div class="event-alert event-error">
+      <p><span>This is an error</span></p>
+  </div>
+
+  <div class="event-alert no-animation">
+      <p><span>This is a message that sticks and never goes away because it has the no-animation css class</span></p>
+  </div>
+
+</div>
+<script>
+  function showAlertInfo(){
+    jQuery('body').prepend(jQuery('#event-examples .event-alert:nth-child(1)')[0].outerHTML);
+  }
+  function showAlertWarning(){
+    jQuery('body').prepend(jQuery('#event-examples .event-alert.event-warning')[0].outerHTML);
+  }
+  function showAlertError(){
+    jQuery('body').prepend(jQuery('#event-examples .event-alert.event-error')[0].outerHTML);
+  }
+  function showNoAnimation(){
+    jQuery('body').prepend(jQuery('#event-examples .event-alert.no-animation')[0].outerHTML);
+  }
 </script>
 
-<button class="button" onclick="showAlert()">show the alert</button><!]]>
+<button onclick="showAlertInfo()">Show an info alert</button>
+<button onclick="showAlertWarning()">Show a warning alert</button>
+<button onclick="showAlertError()">Show an error alert</button>
+<button onclick="showNoAnimation()">Show an alert that stays on top</button><!]]>
             </div>
 
             <div class="markup hljs">
-              <pre><span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="handlebars"><span class="xml">
-function showAlert(){
-  var html = '\
-  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"event-alert-error"</span>&gt;</span>\
-      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>This is a alert<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>\
-  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>';
-  jQuery('body').append(html)
-}
-</span></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"display:none"</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"event-examples"</span>&gt;</span>
 
-<span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"showAlert()"</span>&gt;</span>show the alert<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span></pre>
-            </div>
-  		</div>
-  		<div class="section" id="IFS-Alert_-_warning" data-section="IFS" data-heading="Alert - warning">
-        <div class="comment">
-            <h1 class="heading-medium">Alert - warning</h1>
-            
-        </div>
+  <span class="hljs-comment">&lt;!-- the html of the alerts --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"event-alert"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>This is an info<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
-            <div class="result">
-                <![CDATA[//><script>
-function showWarning(){
-  var html = '\
-  <div class="event-alert">\
-      <p><span>This is a warning</span></p>\
-  </div>';
-  jQuery('body').append(html)
-}
-</script>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"event-alert event-warning"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>This is a warning<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
-<button class="button" onclick="showWarning()">show the warning alert</button><!]]>
-            </div>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"event-alert event-error"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>This is an error<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
-            <div class="markup hljs">
-              <pre><span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="handlebars"><span class="xml">
-function showWarning(){
-  var html = '\
-  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"event-alert"</span>&gt;</span>\
-      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>This is a warning<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>\
-  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>';
-  jQuery('body').append(html)
-}
-</span></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"event-alert no-animation"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>This is a message that sticks and never goes away because it has the no-animation css class<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
-<span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"showWarning()"</span>&gt;</span>show the warning alert<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span></pre>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="actionscript">
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showAlertInfo</span><span class="hljs-params">()</span></span>{
+    jQuery(<span class="hljs-string">'body'</span>).prepend(jQuery(<span class="hljs-string">'#event-examples .event-alert:nth-child(1)'</span>)[<span class="hljs-number">0</span>].outerHTML);
+  }
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showAlertWarning</span><span class="hljs-params">()</span></span>{
+    jQuery(<span class="hljs-string">'body'</span>).prepend(jQuery(<span class="hljs-string">'#event-examples .event-alert.event-warning'</span>)[<span class="hljs-number">0</span>].outerHTML);
+  }
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showAlertError</span><span class="hljs-params">()</span></span>{
+    jQuery(<span class="hljs-string">'body'</span>).prepend(jQuery(<span class="hljs-string">'#event-examples .event-alert.event-error'</span>)[<span class="hljs-number">0</span>].outerHTML);
+  }
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showNoAnimation</span><span class="hljs-params">()</span></span>{
+    jQuery(<span class="hljs-string">'body'</span>).prepend(jQuery(<span class="hljs-string">'#event-examples .event-alert.no-animation'</span>)[<span class="hljs-number">0</span>].outerHTML);
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"showAlertInfo()"</span>&gt;</span>Show an info alert<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"showAlertWarning()"</span>&gt;</span>Show a warning alert<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"showAlertError()"</span>&gt;</span>Show an error alert<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"showNoAnimation()"</span>&gt;</span>Show an alert that stays on top<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span></pre>
             </div>
   		</div>
   		<div class="section" id="IFS-Application_Deadline" data-section="IFS" data-heading="Application Deadline">
@@ -2180,112 +2202,68 @@ function showWarning(){
 &lt;/<span class="hljs-keyword">div</span>&gt;</pre>
             </div>
   		</div>
-  		<div class="section" id="IFS-Application_sidebar" data-section="IFS" data-heading="Application sidebar">
-        <div class="comment">
-            <h1 class="heading-medium">Application sidebar</h1>
-            <p>Navigation used to access the different sections of the application</p>
-        </div>
-
-            <div class="result">
-                <![CDATA[//><nav role="navigation" class="app-sidebar">
-    <ul>
-        <li>
-            <a href="#">Application details</a>
-        </li>
-        <li>
-            <a href="#">Scope</a>
-        </li>
-        <li>
-            <a href="#">Business proposition</a>
-        </li>
-        <li class="active">
-            <a href="#">Project approach </a>
-        </li>
-    </ul>
-</nav><!]]>
-            </div>
-
-            <div class="markup hljs">
-              <pre><span class="hljs-tag">&lt;<span class="hljs-title">nav</span> <span class="hljs-attribute">role</span>=<span class="hljs-value">"navigation"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"app-sidebar"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Application details<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Scope<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Business proposition<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"active"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Project approach <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">nav</span>&gt;</span></pre>
-            </div>
-  		</div>
-  		<div class="section" id="IFS-Application_sidebar_statuses" data-section="IFS" data-heading="Application sidebar statuses">
-        <div class="comment">
-            <h1 class="heading-medium">Application sidebar statuses</h1>
-            
-        </div>
-
-            <div class="result">
-                <![CDATA[//><nav role="navigation" class="app-sidebar">
-    <ul>
-        <li><a href="#">Item 1</a></li>
-        <li class="section-status assigned"><a href="#">Item 2</a></li>
-        <li class="section-status complete"><a href="#">Item 3</a></li>
-    </ul>
-</nav><!]]>
-            </div>
-
-            <div class="markup hljs">
-              <pre><span class="hljs-tag">&lt;<span class="hljs-title">nav</span> <span class="hljs-attribute">role</span>=<span class="hljs-value">"navigation"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"app-sidebar"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Item 1<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"section-status assigned"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Item 2<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"section-status complete"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Item 3<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">nav</span>&gt;</span></pre>
-            </div>
-  		</div>
   		<div class="section" id="IFS-Assign-container" data-section="IFS" data-heading="Assign-container">
         <div class="comment">
             <h1 class="heading-medium">Assign-container</h1>
-            
+            <p>The assign container normally a select, which gets transformed by javascript to a list of buttons</p>
         </div>
 
             <div class="result">
-                <![CDATA[//><div class="assign-container collapsible">
-    <div class="assign-button">Assign question</div>
+                <![CDATA[//><p>Without javascript (what should be inside of the template)</p>
+
+<div class="assign-container">
+    <div class="assign-button">
+        <span>Assigned to:</span>
+         <strong>You</strong>
+    </div>
     <div class="assign-team">
-        <ul class="list-bullet">
-            <li>
-                <button class="buttonlink" name="assign_question" type="submit">Jessica Doe (Collaborator)</button>
-            </li>
-            <li>
-                <button class="buttonlink" name="assign_question" type="submit">Steve Smith (Lead Applicant)</button>
-            </li>
-        </ul>
+        <select class="prog-menu" name="assign_question">
+            <option value="pete">Pete Tom</option>
+            <option value="adrian">Adrian Booth</option>
+            <option value="steve" disabled="disabled" selected="selected">Steve Smith</option><!-- currently selected user -->
+            <option value="jessica">Jessica Doe</option>
+              <option disabled="disabled">michael (pending)</option><!-- pending user -->
+        </select>
+        <button type="submit">Reassign</button>
     </div>
 </div><!]]>
             </div>
 
             <div class="markup hljs">
-              <pre><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-container collapsible"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-button"</span>&gt;</span>Assign question<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Without javascript (what should be inside of the template)<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-container"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-button"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Assigned to:<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-title">strong</span>&gt;</span>You<span class="hljs-tag">&lt;/<span class="hljs-title">strong</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-team"</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"list-bullet"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"buttonlink"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"assign_question"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span>&gt;</span>Jessica Doe (Collaborator)<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
-            <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"buttonlink"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"assign_question"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span>&gt;</span>Steve Smith (Lead Applicant)<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
-            <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"prog-menu"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"assign_question"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"pete"</span>&gt;</span>Pete Tom<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"adrian"</span>&gt;</span>Adrian Booth<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"steve"</span> <span class="hljs-attribute">disabled</span>=<span class="hljs-value">"disabled"</span> <span class="hljs-attribute">selected</span>=<span class="hljs-value">"selected"</span>&gt;</span>Steve Smith<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span><span class="hljs-comment">&lt;!-- currently selected user --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"jessica"</span>&gt;</span>Jessica Doe<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">disabled</span>=<span class="hljs-value">"disabled"</span>&gt;</span>michael (pending)<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span><span class="hljs-comment">&lt;!-- pending user --&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span>&gt;</span>Reassign<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
+            </div>
+  		</div>
+  		<div class="section" id="IFS-Large_button" data-section="IFS" data-heading="Large button">
+        <div class="comment">
+            <h1 class="heading-medium">Large button</h1>
+            
+        </div>
+
+            <div class="result">
+                <![CDATA[//><button class="button large">Bigger is always better</button>
+  <a href="#" tabindex="0" role="button" class="button large">In Texas</a><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre>&lt;button <span class="hljs-keyword">class</span>=<span class="hljs-string">"button large"</span>&gt;Bigger <span class="hljs-keyword">is</span> always better&lt;/button&gt;
+  &lt;a href=<span class="hljs-string">"#"</span> tabindex=<span class="hljs-string">"0"</span> role=<span class="hljs-string">"button"</span> <span class="hljs-keyword">class</span>=<span class="hljs-string">"button large"</span>&gt;In Texas&lt;/a&gt;</pre>
             </div>
   		</div>
   		<div class="section" id="IFS-Message_Alert_Dialog" data-section="IFS" data-heading="Message Alert Dialog">
@@ -2498,6 +2476,52 @@ function showWarning(){
 <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"pie small"</span>&gt;</span>10%<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
             </div>
   		</div>
+  		<div class="section" id="IFS-Right_aligned_buttons" data-section="IFS" data-heading="Right aligned buttons">
+        <div class="comment">
+            <h1 class="heading-medium">Right aligned buttons</h1>
+            
+        </div>
+
+            <div class="result">
+                <![CDATA[//><div class="alignright-button">
+    <button class="button">Button 1</button>
+    <button class="button">Button 2</button>
+</div><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre>&lt;div class=<span class="hljs-string">"alignright-button"</span>&gt;
+    &lt;<span class="hljs-keyword">button </span>class=<span class="hljs-string">"button"</span>&gt;<span class="hljs-keyword">Button </span><span class="hljs-number">1</span>&lt;/<span class="hljs-keyword">button&gt;
+</span>    &lt;<span class="hljs-keyword">button </span>class=<span class="hljs-string">"button"</span>&gt;<span class="hljs-keyword">Button </span><span class="hljs-number">2</span>&lt;/<span class="hljs-keyword">button&gt;
+</span>&lt;/div&gt;</pre>
+            </div>
+  		</div>
+  		<div class="section" id="IFS-Text" data-section="IFS" data-heading="Text">
+        <div class="comment">
+            <h1 class="heading-medium">Text</h1>
+            
+        </div>
+
+            <div class="result">
+                <![CDATA[//><p>I am <strong>such a strong character</strong></p>
+
+<p>Be mean or be <span class="greentext">Green</span></p>
+
+Hello world <small>(just testing smalltext)</small>
+
+<div class="blue-block">test</div><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>I am <span class="hljs-tag">&lt;<span class="hljs-title">strong</span>&gt;</span>such a strong character<span class="hljs-tag">&lt;/<span class="hljs-title">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Be mean or be <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"greentext"</span>&gt;</span>Green<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+
+Hello world <span class="hljs-tag">&lt;<span class="hljs-title">small</span>&gt;</span>(just testing smalltext)<span class="hljs-tag">&lt;/<span class="hljs-title">small</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"blue-block"</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
+            </div>
+  		</div>
   		<div class="section" id="IFS-Wrapped_textareas_:_Assigned_to_me" data-section="IFS" data-heading="Wrapped textareas : Assigned to me">
         <div class="comment">
             <h1 class="heading-medium">Wrapped textareas : Assigned to me</h1>
@@ -2505,25 +2529,47 @@ function showWarning(){
         </div>
 
             <div class="result">
-                <![CDATA[//><div class="textarea-wrapped assigned-to-me">
-    <div class="textarea-header">
-        <p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>
+                <![CDATA[//><div class="textarea-wrapped assigned-to-me  word-count">
+     <div class="textarea-header">
+        <img class="assigned-to-me" alt="" src="/images/field/field-assigned.png">
+        <div class="assignee assigned-to-me">
+            This question has been reassigned to
+              <span>you</span> by
+              <span>Jessica Doe</span>
+        </div>
     </div>
-
-    <textarea data-max_words="500" id="question-2" name="question[2]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
-    </textarea>
+        <textarea data-max_words="400"></textarea>
+    <div class="textarea-footer">
+          <p>
+            <small>Last updated: Yesterday by you</small>
+                <span class="count-label">
+                        <span aria-live="polite" class="count-down positive">Words remaining: 400</span>
+                </span>
+          </p>
+    </div>
 </div><!]]>
             </div>
 
             <div class="markup hljs">
-              <pre>&lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"textarea-wrapped assigned-to-me"</span>&gt;
-    &lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"textarea-header"</span>&gt;
-        &lt;p&gt;&lt;small&gt;&lt;span&gt;Last updated:&lt;/span&gt;&lt;span&gt;&lt;span&gt;<span class="hljs-number">18</span> September <span class="hljs-number">10</span>:<span class="hljs-number">35</span>AM&lt;/span&gt; &lt;/span&gt;<span class="hljs-keyword">by</span> &lt;span&gt;you&lt;/span&gt;&lt;/small&gt;&lt;/p&gt;
-    &lt;/<span class="hljs-keyword">div</span>&gt;
-
-    &lt;textarea data-max_words=<span class="hljs-string">"500"</span> <span class="hljs-property">id</span>=<span class="hljs-string">"question-2"</span> <span class="hljs-property">name</span>=<span class="hljs-string">"question[2]"</span> readonly=<span class="hljs-string">"readonly"</span>&gt;Wastage <span class="hljs-keyword">in</span> our industry can be attributed <span class="hljs-keyword">in</span> no small part <span class="hljs-keyword">to</span> one issue.  To <span class="hljs-type">date</span> businesses have been reluctant <span class="hljs-keyword">to</span> tackle <span class="hljs-keyword">that</span> problem <span class="hljs-keyword">and</span> instead worked <span class="hljs-keyword">around</span> <span class="hljs-keyword">it</span>.  That has stifled progress.The <span class="hljs-keyword">end</span> <span class="hljs-constant">result</span> <span class="hljs-keyword">of</span> our project will be a novel tool <span class="hljs-keyword">to</span> manage <span class="hljs-keyword">the</span> issue <span class="hljs-keyword">and</span> substantially reduce <span class="hljs-keyword">the</span> wastage caused <span class="hljs-keyword">by</span> <span class="hljs-keyword">it</span>.
-    &lt;/textarea&gt;
-&lt;/<span class="hljs-keyword">div</span>&gt;</pre>
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"textarea-wrapped assigned-to-me  word-count"</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"textarea-header"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assigned-to-me"</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">""</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"/images/field/field-assigned.png"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assignee assigned-to-me"</span>&gt;</span>
+            This question has been reassigned to
+              <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>you<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> by
+              <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Jessica Doe<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">textarea</span> <span class="hljs-attribute">data-max_words</span>=<span class="hljs-value">"400"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">textarea</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"textarea-footer"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">small</span>&gt;</span>Last updated: Yesterday by you<span class="hljs-tag">&lt;/<span class="hljs-title">small</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"count-label"</span>&gt;</span>
+                        <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">aria-live</span>=<span class="hljs-value">"polite"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"count-down positive"</span>&gt;</span>Words remaining: 400<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
             </div>
   		</div>
   		<div class="section" id="IFS-Wrapped_textareas_:_Complete" data-section="IFS" data-heading="Wrapped textareas : Complete">
@@ -2533,25 +2579,39 @@ function showWarning(){
         </div>
 
             <div class="result">
-                <![CDATA[//><div class="textarea-wrapped marked-as-complete">
+                <![CDATA[//><div class="textarea-wrapped marked-as-complete word-count">
     <div class="textarea-header">
-        <p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>
+         <img class="marked-as-complete" alt="" src="/images/field/field-done.png">
+         <div class="assignee">This question is <strong>marked as complete</strong></div>
     </div>
-
-    <textarea data-max_words="500" id="question-1" name="question[1]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
-    </textarea>
+        <textarea readonly="readonly" name="formInput[12]" id="form-textarea-12" data-max_words="400"></textarea>
+    <div class="textarea-footer">
+          <p>
+            <small>Last updated: Yesterday by you</small>
+                <span class="count-label">
+                    <span aria-live="polite" class="count-down positive">Words remaining: 400 </span>
+                  </span>
+          </p>
+    </div>
 </div><!]]>
             </div>
 
             <div class="markup hljs">
-              <pre>&lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"textarea-wrapped marked-as-complete"</span>&gt;
-    &lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"textarea-header"</span>&gt;
-        &lt;p&gt;&lt;small&gt;&lt;span&gt;Last updated:&lt;/span&gt;&lt;span&gt;&lt;span&gt;<span class="hljs-number">18</span> September <span class="hljs-number">10</span>:<span class="hljs-number">35</span>AM&lt;/span&gt; &lt;/span&gt;<span class="hljs-keyword">by</span> &lt;span&gt;you&lt;/span&gt;&lt;/small&gt;&lt;/p&gt;
-    &lt;/<span class="hljs-keyword">div</span>&gt;
-
-    &lt;textarea data-max_words=<span class="hljs-string">"500"</span> <span class="hljs-property">id</span>=<span class="hljs-string">"question-1"</span> <span class="hljs-property">name</span>=<span class="hljs-string">"question[1]"</span> readonly=<span class="hljs-string">"readonly"</span>&gt;Wastage <span class="hljs-keyword">in</span> our industry can be attributed <span class="hljs-keyword">in</span> no small part <span class="hljs-keyword">to</span> one issue.  To <span class="hljs-type">date</span> businesses have been reluctant <span class="hljs-keyword">to</span> tackle <span class="hljs-keyword">that</span> problem <span class="hljs-keyword">and</span> instead worked <span class="hljs-keyword">around</span> <span class="hljs-keyword">it</span>.  That has stifled progress.The <span class="hljs-keyword">end</span> <span class="hljs-constant">result</span> <span class="hljs-keyword">of</span> our project will be a novel tool <span class="hljs-keyword">to</span> manage <span class="hljs-keyword">the</span> issue <span class="hljs-keyword">and</span> substantially reduce <span class="hljs-keyword">the</span> wastage caused <span class="hljs-keyword">by</span> <span class="hljs-keyword">it</span>.
-    &lt;/textarea&gt;
-&lt;/<span class="hljs-keyword">div</span>&gt;</pre>
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"textarea-wrapped marked-as-complete word-count"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"textarea-header"</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"marked-as-complete"</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">""</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"/images/field/field-done.png"</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assignee"</span>&gt;</span>This question is <span class="hljs-tag">&lt;<span class="hljs-title">strong</span>&gt;</span>marked as complete<span class="hljs-tag">&lt;/<span class="hljs-title">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">textarea</span> <span class="hljs-attribute">readonly</span>=<span class="hljs-value">"readonly"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"formInput[12]"</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"form-textarea-12"</span> <span class="hljs-attribute">data-max_words</span>=<span class="hljs-value">"400"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">textarea</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"textarea-footer"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">small</span>&gt;</span>Last updated: Yesterday by you<span class="hljs-tag">&lt;/<span class="hljs-title">small</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"count-label"</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">aria-live</span>=<span class="hljs-value">"polite"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"count-down positive"</span>&gt;</span>Words remaining: 400 <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+                  <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
             </div>
   		</div>
   		<div class="section" id="IFS-boxed-list" data-section="IFS" data-heading="boxed-list">
@@ -2617,13 +2677,13 @@ function showWarning(){
         }
 
         jQuery('body').on('click','.sectionlink',function(){
-              jQuery('.sectionlink.selected').removeClass('selected');
+              jQuery('.selected').removeClass('selected');
               var section = jQuery(this);
-              section.addClass('selected');
+              section.parent().addClass('selected');
               showSection(section.data('section'));
         });
         var readySection = jQuery('.sectionlink').first();
-        readySection.addClass('selected');
+        readySection.parent().addClass('selected');
         showSection(readySection.data('section'));
       });
   /* <!]]>*/
