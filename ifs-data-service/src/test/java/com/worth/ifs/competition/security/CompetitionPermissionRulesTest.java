@@ -1,8 +1,6 @@
 package com.worth.ifs.competition.security;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -24,16 +22,4 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertTrue(rules.anyoneCanViewCompetitions(newCompetitionResource().build(), null));
     }
     
-    @Test
-    public void compAdminCanCheckForAssessorFeedbackUploaded() {
-        assertTrue(rules.compAdminCanCheckForAssessorFeedbackUploaded(newCompetitionResource().build(), compAdminUser()));
-        assertFalse(rules.compAdminCanCheckForAssessorFeedbackUploaded(newCompetitionResource().build(), newUserResource().build()));
-    }
-    
-    @Test
-    public void compAdminCanSubmitAssessorFeedback() {
-        assertTrue(rules.compAdminCanSubmitAssessorFeedback(newCompetitionResource().build(), compAdminUser()));
-        assertFalse(rules.compAdminCanSubmitAssessorFeedback(newCompetitionResource().build(), newUserResource().build()));
-    }
-
 }

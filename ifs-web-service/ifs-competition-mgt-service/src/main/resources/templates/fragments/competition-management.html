@@ -106,7 +106,7 @@
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
           <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
-          <a href="#" id="publish-funding-decision" class="button" th:if="${activeTab == 'submitted'}" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+          <button id="publish-funding-decision" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</button>
 
           <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
       </div>
@@ -121,7 +121,10 @@
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
           <p th:if="${activeTab == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
           <p th:if="${activeTab == 'submitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsFunded}" /> Funded</p>
-          <a href="#" id="publish-assessor-feedback" th:disabled="${!canPublishAssessorFeedback}" class="button" th:if="${activeTab == 'submitted'}" data-js-modal="modal-submit-assessor-feedback">Publish assessor feedback</a>
+          <button id="publish-assessor-feedback" th:disabled="${!canPublishAssessorFeedback}" class="button" th:if="${activeTab == 'submitted'}" data-js-modal="modal-submit-assessor-feedback">Publish assessor feedback</button>
+          <form method="post" action="#" id="submit-funding-decision-form-no-js" th:action="@{/competition/{competitionId}/assessorfeedback(competitionId=${competitionSummary.getCompetitionId()})}">
+            <button id="publish-assessor-feedback-no-js" th:disabled="${!canPublishAssessorFeedback}" class="button" th:if="${activeTab == 'submitted'}" >Publish assessor feedback</button>
+          </form>
           <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
       
       </div>

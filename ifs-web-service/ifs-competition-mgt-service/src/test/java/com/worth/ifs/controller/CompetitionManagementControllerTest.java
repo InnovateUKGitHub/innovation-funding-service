@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.AssessorFeedbackService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.service.ApplicationSummarySortFieldService;
@@ -43,6 +44,9 @@ public class CompetitionManagementControllerTest  {
 
     @Mock
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
+    
+    @Mock
+    private AssessorFeedbackService assessorFeedbackService;
     
     private MockMvc mockMvc;
     
@@ -257,7 +261,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
 
-        when(applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(COMPETITION_ID)).thenReturn(3L);
+        when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
 
     	mockMvc.perform(get("/competition/123?tab=submitted"))
                 .andExpect(status().isOk())
@@ -270,7 +274,7 @@ public class CompetitionManagementControllerTest  {
     	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    	verify(applicationSummaryService).getApplicationsRequiringFeedbackCountByCompetitionId(COMPETITION_ID);
+    	verify(assessorFeedbackService).feedbackUploaded(COMPETITION_ID);
     }
     
     @Test

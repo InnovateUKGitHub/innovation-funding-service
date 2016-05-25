@@ -52,10 +52,11 @@
 	   </div>
 	   
 	    <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-        <div th:include="fragments/modals :: modal-submit-assessor-feedback" th:remove="tag" />
 	    <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
  
 	 </form>
+     <div th:include="fragments/modals :: modal-submit-assessor-feedback" th:remove="tag" />
+	 
  	</div>
  	</div>
 	</div>

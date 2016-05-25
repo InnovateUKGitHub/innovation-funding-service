@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.AssessorFeedbackService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.form.ApplicationSummaryQueryForm;
@@ -39,6 +40,9 @@ public class CompetitionManagementController {
 
     @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
+    
+    @Autowired
+    private AssessorFeedbackService assessorFeedbackService;
     
     @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
@@ -111,7 +115,7 @@ public class CompetitionManagementController {
 		} else if("notSubmitted".equals(queryForm.getTab())) {
 			populateNotSubmittedModel(model, competitionSummary, queryForm);
 		} else {
-			boolean canPublishAssessorFeedback = Long.valueOf(0L).equals(applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(competitionSummary.getCompetitionId()));
+			boolean canPublishAssessorFeedback = assessorFeedbackService.feedbackUploaded(competitionSummary.getCompetitionId());
 			model.addAttribute("canPublishAssessorFeedback", canPublishAssessorFeedback);
 			populateSubmittedModel(model, competitionSummary, queryForm, PAGE_SIZE);
 		}

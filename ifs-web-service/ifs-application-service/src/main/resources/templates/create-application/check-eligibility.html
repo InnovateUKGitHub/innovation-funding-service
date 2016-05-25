@@ -16,9 +16,9 @@
         <section class="column-half" th:with="redirectAfterLogin= '/application/create-authenticated/'+${competitionId}">
 
             <h1 class="heading-large">Sign in</h1>
-            <p>If you have used this service before you must <a th:href="${redirectAfterLogin}">login</a></p>
+            <p>If you have used this service before you must <a th:href="${redirectAfterLogin}">sign in</a></p>
 
-            <a th:href="${redirectAfterLogin}" class="button" value="create-account" type="submit">Login</a>
+            <a th:href="${redirectAfterLogin}" class="button" value="create-account" type="submit">Sign in</a>
 
         </section>
 
