@@ -11,7 +11,9 @@ def shell(command):
 
 # Clean up pybot's output to give a simple number of running tests
 def tidyUpPybotOutput(pybot_output):
-  for match in re.finditer("\d* tests", pybot_output):
+  match = False
+  single_match = False
+  for match in re.finditer("\d+ tests", pybot_output):
     pass
   if match:
     return match.group()
@@ -84,7 +86,6 @@ pending_tests = tidyUpPybotOutput(pending_tests_pybot_output)
 if pending_tests != "0 tests":
   pending_test_list = shell("grep -R Pending IFS_acceptance_tests/")
   tidy_pending_test_list = tidyUpPendingTestSearch(pending_test_list)
-  print tidy_pending_test_list
   pending_document_tuples = grabDocumentingComments(tidy_pending_test_list)
 
 print "Counting total tests..."

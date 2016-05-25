@@ -140,6 +140,34 @@ Verify the name of the new application
     And the user clicks the button/link    link=test title
     And the user should see the text in the page    test title
 
+Special Projecct Finance role
+    [Documentation]     INFUND-2609
+    [Tags]
+    [Setup]     The guest user opens the browser
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the Not on company house link
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user enters the details and clicks the create account    worth.email.test+project.finance1@gmail.com
+    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+
+
+Special Project Finance role (email step)
+    [Documentation]     INFUND-2609
+    [Tags]      Email
+    [Setup]    The guest user opens the browser
+    Given the user opens the mailbox and verifies the email from
+    When the user clicks the button/link    jQuery=.button:contains("Log in")
+    And the guest user inserts user email & password    worth.email.test+project.finance1@gmail.com    Passw0rd123
+    And the guest user clicks the log-in button
+    Then the user should be redirected to the correct page without error checking   ${PROJECT_FINANCE_DASHBOARD_URL}
+    [Teardown]      Logout as user
+
+
+
+
 *** Keywords ***
 the new application should be visible in the dashboard page
     the user clicks the button/link    link= My dashboard

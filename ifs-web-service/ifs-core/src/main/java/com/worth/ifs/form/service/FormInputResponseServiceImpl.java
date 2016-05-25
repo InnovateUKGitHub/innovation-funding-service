@@ -1,5 +1,6 @@
 package com.worth.ifs.form.service;
 
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.service.ResponseRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -56,6 +57,11 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     @Override
     public RestResult<ByteArrayResource> getFile(Long formInputId, Long applicationId, Long processRoleId) {
         return responseRestService.getFile(formInputId, applicationId, processRoleId);
+    }
+
+    @Override
+    public RestResult<FormInputResponseFileEntryResource> getFileDetails(Long formInputId, Long applicationId, Long processRoleId) {
+        return responseRestService.getFileDetails(formInputId, applicationId, processRoleId);
     }
 
     @Override

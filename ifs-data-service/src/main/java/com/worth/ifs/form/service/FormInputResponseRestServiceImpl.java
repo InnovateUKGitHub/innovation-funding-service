@@ -3,10 +3,10 @@ package com.worth.ifs.form.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -85,6 +85,16 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                 "&processRoleId=" + processRoleId;
 
         return getWithRestResult(url, ByteArrayResource.class);
+    }
+
+    @Override
+    public RestResult<FormInputResponseFileEntryResource> getFileDetails(long formInputId, long applicationId, long processRoleId) {
+        String url = formInputResponseRestURL + "/fileentry" +
+                "?formInputId=" + formInputId +
+                "&applicationId=" + applicationId +
+                "&processRoleId=" + processRoleId;
+
+        return getWithRestResult(url, FormInputResponseFileEntryResource.class);
     }
 
     @Override
