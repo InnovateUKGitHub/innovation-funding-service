@@ -47,19 +47,131 @@
 <script type="text/javascript">
 	// <![CDATA[
 	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+
+	    var sectionId = $_GET('sectionId'),
+			status = $_GET('status');
+
+		
+		for(i = 1; i < jQuery(".inline-nav li").length+1; i++) {
+			
+			if(sectionId == i && status == 'done'){
+				localStorage.setItem('section'+i, 'section-'+i+'-complete')				
+			}
+
+			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
+				jQuery('#section-'+i).addClass('marked-as-complete');
+			}
+		} 
+			
+
+
+
+
 		jQuery('#comp-stream-yes').on('click',function(e){ 
 
 			if(jQuery(this).is(':checked')){
 				jQuery('.comp-stream-group').show();
+				jQuery('#add-stream').show();
 			}
+
 		});
 
 		jQuery('#comp-stream-no').on('click',function(e){ 
 
 			if(jQuery(this).is(':checked')){
 				jQuery('.comp-stream-group').hide();
+				jQuery('#add-stream').hide();
+				jQuery('#show-stream-2').hide();
 			}
 		});
+
+		jQuery('#comp-type').on('change',function(e){ 
+
+			var compType = jQuery(this).val();
+
+			if(compType == 'Programme' || compType == 'Managed services'){
+				jQuery('#state-aid').show();
+				jQuery('#state-aid .yes').show();
+				jQuery('#state-aid .no').hide();
+			}else if(compType == 'SBRI' || compType == 'Special'){
+				jQuery('#state-aid').show();
+				jQuery('#state-aid .no').show();
+				jQuery('#state-aid .yes').hide();
+			}else{
+				jQuery('#state-aid').hide();
+			}
+
+		});
+
+		jQuery('#comp-innovation-sector').on('change',function(e){ 
+
+			jQuery('#comp-innovation-area').val('');
+
+			var compSector = jQuery(this).val();
+
+			if(compSector == 'health'){
+				jQuery('#comp-innovation-area .health').show();
+				jQuery('#comp-innovation-area .materials').hide();
+				jQuery('#comp-innovation-area .emerging').hide();
+				jQuery('#comp-innovation-area .infrastructure').hide();
+			}
+
+			if(compSector == 'materials'){
+				jQuery('#comp-innovation-area .health').hide();
+				jQuery('#comp-innovation-area .materials').show();
+				jQuery('#comp-innovation-area .emerging').hide();
+				jQuery('#comp-innovation-area .infrastructure').hide();
+			}
+
+			if(compSector == 'emerging'){
+				jQuery('#comp-innovation-area .health').hide();
+				jQuery('#comp-innovation-area .materials').hide();
+				jQuery('#comp-innovation-area .emerging').show();
+				jQuery('#comp-innovation-area .infrastructure').hide();
+			}
+
+			if(compSector == 'emerging'){
+				jQuery('#comp-innovation-area .health').hide();
+				jQuery('#comp-innovation-area .materials').hide();
+				jQuery('#comp-innovation-area .emerging').hide();
+				jQuery('#comp-innovation-area .infrastructure').show();
+			}
+
+		});
+
+		jQuery('#comp-innovation-area').on('change',function(e){ 
+
+			var compInnovationArea = jQuery(this).find('option:selected').attr('class');
+
+			jQuery('#comp-innovation-sector').val(compInnovationArea);
+
+		});
+
+		jQuery('#add-stream').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#show-stream-2').show();
+
+		});
+
+
+
 	});
 	// ]]>
 </script>

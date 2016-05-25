@@ -154,11 +154,10 @@
 
 <!-- =========================== Element: Formatted Date =========================== -->
 <div  th:fragment="pretty-date (date)" >
-    <span th:with="today=(${#temporals.createToday()})">
-        <span th:if="${date.toLocalDate().equals(today)}" th:text="Today"/>
-        <span th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="Yesterday"/>
-
-        <span th:unless="${date.toLocalDate().equals(today)} or ${date.toLocalDate().equals(today.minusDays(1))}"
+    <span th:remove="tag" th:with="today=(${#temporals.createToday()})">
+        <span th:remove="tag" th:if="${date.toLocalDate().equals(today)}" th:text="Today"/>
+        <span th:remove="tag" th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="Yesterday"/>
+        <span th:remove="tag" th:unless="${date.toLocalDate().equals(today)} or ${date.toLocalDate().equals(today.minusDays(1))}"
                   th:text="${#temporals.format(date, 'dd MMMM hh:mma')}"/>
     </span>
 </div>

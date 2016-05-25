@@ -1,37 +1,12 @@
 package com.worth.ifs.application;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -45,19 +20,22 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -505,7 +483,11 @@ public abstract class AbstractApplicationController extends BaseController {
 	        if(!form.isAdminMode()){
 	            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
 	            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
-	        }
+	        } else if(form.getImpersonateOrganisationId() != null){
+                // find user in the organisation we want to impersonate.
+                String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+            }
         }
     }
 
@@ -519,5 +501,66 @@ public abstract class AbstractApplicationController extends BaseController {
 
     public UserAuthenticationService getUserAuthenticationService() {
         return userAuthenticationService;
+    }
+
+    protected void addNavigation(SectionResource section, Long applicationId, Model model) {
+        if (section == null) {
+            return;
+        }
+        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
+        addPreviousQuestionToModel(previousQuestion, applicationId, model);
+        Optional<QuestionResource> nextQuestion = questionService.getNextQuestionBySection(section.getId());
+        addNextQuestionToModel(nextQuestion, applicationId, model);
+    }
+
+    protected void addNavigation(QuestionResource question, Long applicationId, Model model) {
+        if (question == null) {
+            return;
+        }
+
+        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
+        addPreviousQuestionToModel(previousQuestion, applicationId, model);
+        Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
+        addNextQuestionToModel(nextQuestion, applicationId, model);
+    }
+
+    protected void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, Model model) {
+        String previousUrl;
+        String previousText;
+
+        if (previousQuestionOptional.isPresent()) {
+            QuestionResource previousQuestion = previousQuestionOptional.get();
+            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
+            if (previousSection.isQuestionGroup()) {
+                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
+                previousText = previousSection.getName();
+            } else {
+                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
+                previousText = previousQuestion.getShortName();
+            }
+            model.addAttribute("previousUrl", previousUrl);
+            model.addAttribute("previousText", previousText);
+        }
+    }
+
+    protected void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, Model model) {
+        String nextUrl;
+        String nextText;
+
+        if (nextQuestionOptional.isPresent()) {
+            QuestionResource nextQuestion = nextQuestionOptional.get();
+            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
+
+            if (nextSection.isQuestionGroup()) {
+                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
+                nextText = nextSection.getName();
+            } else {
+                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
+                nextText = nextQuestion.getShortName();
+            }
+
+            model.addAttribute("nextUrl", nextUrl);
+            model.addAttribute("nextText", nextText);
+        }
     }
 }

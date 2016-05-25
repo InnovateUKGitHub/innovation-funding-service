@@ -2,20 +2,27 @@
 
 # IFS/Assign-container
 
+The assign container normally a select, which gets transformed by javascript to a list of buttons
 ```
-<div class="assign-container collapsible">
-    <div class="assign-button">Assign question</div>
+<p>Without javascript (what should be inside of the template)</p>
+
+<div class="assign-container">
+    <div class="assign-button">
+        <span>Assigned to:</span>
+         <strong>You</strong>
+    </div>
     <div class="assign-team">
-        <ul class="list-bullet">
-            <li>
-                <button  class="buttonlink" name="assign_question" type="submit">Jessica Doe (Collaborator)</button>
-            </li>
-            <li>
-                <button class="buttonlink" name="assign_question" type="submit">Steve Smith (Lead Applicant)</button>
-            </li>
-        </ul>
+        <select class="prog-menu" name="assign_question">
+            <option value="pete">Pete Tom</option>
+            <option value="adrian">Adrian Booth</option>
+            <option value="steve" disabled="disabled" selected="selected">Steve Smith</option><!-- currently selected user -->
+            <option value="jessica">Jessica Doe</option>
+  	        <option disabled="disabled">michael (pending)</option><!-- pending user -->
+        </select>
+        <button type="submit">Reassign</button>
     </div>
 </div>
+
 ```
 */
 
