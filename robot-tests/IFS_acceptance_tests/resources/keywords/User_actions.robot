@@ -70,8 +70,6 @@ the user should be redirected to the correct page without error checking
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
 
-
-
 the user reloads the page
     Reload Page
     # Error checking
@@ -124,19 +122,16 @@ the user selects the option from the drop-down menu
     Page Should Contain    BETA
 
 the user should see the dropdown option selected
-    [Arguments]     ${option}   ${drop-down}
+    [Arguments]    ${option}    ${drop-down}
     List Selection Should Be    ${drop-down}    ${option}
     # Error checking
-    Page Should Not Contain     Error
-    Page Should Not Contain     something went wrong
-    Page Should Not Contain     Page or resource not found
-    Page Should Not Contain     You do not have the necessary permissions for your request
-    # Header checking   (INFUND-1892)
-    Element Should Be Visible   id=global-header
-    Page Should Contain     BETA
-
-
-
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking    (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 the user submits the form
     Submit Form
@@ -449,7 +444,7 @@ the lead applicant invites a registered user
     The user clicks the button/link    jQuery=.button:contains("Log in")
     The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
     The guest user clicks the log-in button
-    The user clicks the button/link    link=Connected digital additive manufacturing
+    The user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate
     Input Text    name=organisations[1].invites[0].personName    Partner name

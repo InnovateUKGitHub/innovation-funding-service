@@ -14,24 +14,20 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/2/details
 
 *** Test Cases ***
-
 Competition brief link exists on the competition page
-    [Documentation]     INFUND-2448
-    [Tags]   Pending
+    [Documentation]    INFUND-2448
+    [Tags]    Pending
     # Pending until shib image drop 14
-    Given the user navigates to the page        ${LOG_OUT}
+    Given the user navigates to the page    ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then the user should see the element    link=Full competition brief
-    And the user should see the element     xpath=//a[contains(@href, 'https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief')]
-
-
+    And the user should see the element    xpath=//a[contains(@href, 'https://www.gov.uk/government/publications/funding-competition-${OPEN_COMPETITION_LINK}/connected-digital-additive-manufacturing-competition-brief')]
 
 Non logged in users see the Apply now button
     [Documentation]    INFUND-921
     [Tags]    Applicant
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then the user should see the element    jQuery=.button:contains('Apply now')
-
 
 Apply button should be disable when competion is in assessment
     [Documentation]    INFUND-2312
@@ -41,6 +37,3 @@ Apply button should be disable when competion is in assessment
     And the user should see the text in the page    This competition has now closed
 
 *** Keywords ***
-
-
-
