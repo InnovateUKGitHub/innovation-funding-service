@@ -110,7 +110,7 @@ public class RegistrationController {
         }
 
         if (getOrganisationId(request) == null){
-            return  "redirect:/login";
+            return  "redirect:/";
         }
 
         try {
