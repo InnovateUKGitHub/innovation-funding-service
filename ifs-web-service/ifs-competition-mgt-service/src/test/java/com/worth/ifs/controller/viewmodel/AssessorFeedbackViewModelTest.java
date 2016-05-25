@@ -11,12 +11,12 @@ public class AssessorFeedbackViewModelTest {
 
         AssessorFeedbackViewModel editableViewModel = AssessorFeedbackViewModel.withNoFile(false);
         assertNull(editableViewModel.getFilename());
-        assertTrue(editableViewModel.isNoFileUploaded());
+        assertFalse(editableViewModel.isFileUploaded());
         assertFalse(editableViewModel.isReadonly());
 
         AssessorFeedbackViewModel readOnlyViewModel = AssessorFeedbackViewModel.withNoFile(true);
         assertNull(readOnlyViewModel.getFilename());
-        assertTrue(readOnlyViewModel.isNoFileUploaded());
+        assertFalse(readOnlyViewModel.isFileUploaded());
         assertTrue(readOnlyViewModel.isReadonly());
 
         assertEquals(AssessorFeedbackViewModel.withNoFile(false), AssessorFeedbackViewModel.withNoFile(false));
@@ -27,19 +27,20 @@ public class AssessorFeedbackViewModelTest {
     @Test
     public void testWithExistingFile() {
 
-        AssessorFeedbackViewModel editableViewModel = AssessorFeedbackViewModel.withExistingFile("myfile", false);
+        AssessorFeedbackViewModel editableViewModel = AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, false);
         assertEquals("myfile", editableViewModel.getFilename());
-        assertFalse(editableViewModel.isNoFileUploaded());
+        assertTrue(editableViewModel.isFileUploaded());
         assertFalse(editableViewModel.isReadonly());
 
-        AssessorFeedbackViewModel readOnlyViewModel = AssessorFeedbackViewModel.withExistingFile("myfile", true);
+        AssessorFeedbackViewModel readOnlyViewModel = AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, true);
         assertEquals("myfile", readOnlyViewModel.getFilename());
-        assertFalse(readOnlyViewModel.isNoFileUploaded());
+        assertTrue(readOnlyViewModel.isFileUploaded());
         assertTrue(readOnlyViewModel.isReadonly());
 
-        assertEquals(AssessorFeedbackViewModel.withExistingFile("myfile", false), AssessorFeedbackViewModel.withExistingFile("myfile", false));
-        assertEquals(AssessorFeedbackViewModel.withExistingFile("myfile", true), AssessorFeedbackViewModel.withExistingFile("myfile", true));
-        assertNotEquals(AssessorFeedbackViewModel.withExistingFile("myfile", true), AssessorFeedbackViewModel.withExistingFile("myfile", false));
-        assertNotEquals(AssessorFeedbackViewModel.withExistingFile("myfile", true), AssessorFeedbackViewModel.withExistingFile("notmyfile", true));
+        assertEquals(AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, false), AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, false));
+        assertEquals(AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, true), AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, true));
+        assertNotEquals(AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, true), AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, false));
+        assertNotEquals(AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, true), AssessorFeedbackViewModel.withExistingFile("notmyfile", 1000L, true));
+        assertNotEquals(AssessorFeedbackViewModel.withExistingFile("myfile", 1000L, true), AssessorFeedbackViewModel.withExistingFile("myfile", 9999L, true));
     }
 }
