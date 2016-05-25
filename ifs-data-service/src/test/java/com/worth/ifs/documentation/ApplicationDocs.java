@@ -2,6 +2,7 @@ package com.worth.ifs.documentation;
 
 import com.worth.ifs.application.builder.ApplicationResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class ApplicationDocs {
             fieldWithPath("applicationStatusName").description("ApplicationStatus name"),
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
+            fieldWithPath("competitionStatus").description("Competition Status"),
             fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"),
             fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application")
     };
@@ -38,6 +40,7 @@ public class ApplicationDocs {
             .withApplicationStatus(ApplicationStatusConstants.OPEN)
             .withCompetition(1L)
             .withCompetitionName("competition name")
+            .withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP)
             .withInviteList(asList(1L,2L,3L))
             .withAssessorFeedbackFileEntry(123L);
 

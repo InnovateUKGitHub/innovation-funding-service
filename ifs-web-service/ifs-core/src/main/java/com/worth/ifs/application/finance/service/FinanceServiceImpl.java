@@ -19,7 +19,6 @@ import java.util.List;
 /**
  * {@code FinanceServiceImpl} implements {@link FinanceService} handles the finances for each of the organisations.
  */
-// TODO DW - INFUND-1555 - get the service calls below to use RestResults
 @Service
 public class FinanceServiceImpl implements FinanceService {
 
@@ -57,19 +56,12 @@ public class FinanceServiceImpl implements FinanceService {
         return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
     }
 
-
     @Override
     public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId) {
         return applicationFinanceRestService.getFinanceTotals(applicationId).handleSuccessOrFailure(
                 failure -> Collections.<ApplicationFinanceResource> emptyList(),
                 success -> success
         );
-    }
-
-
-    @Override
-    public List<CostItem> getCosts(Long applicationFinanceId) {
-       return costRestService.getCosts(applicationFinanceId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -88,8 +80,13 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
-    public RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceId) {
-        return fileEntryRestService.findOne(applicationFinanceId);
+    public RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceFileEntryId) {
+        return fileEntryRestService.findOne(applicationFinanceFileEntryId);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> getFinanceEntryByApplicationFinanceId(Long applicationFinanceId) {
+        return applicationFinanceRestService.getFileDetails(applicationFinanceId);
     }
 
     @Override
