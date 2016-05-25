@@ -75,9 +75,10 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
 
         applications.get(0).setAssessorFeedbackFileEntry(123L);
 
-        FileEntryResource existingFileEntry = newFileEntryResource().withName("myfile").build();
+        FileEntryResource existingFileEntry = newFileEntryResource().withName("myfile").withFilesizeBytes(1000).build();
+
         when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(applications.get(0).getId())).thenReturn(restSuccess(existingFileEntry));
-        assertApplicationOverviewExpectations(AssessorFeedbackViewModel.withExistingFile("myfile", true));
+        assertApplicationOverviewExpectations(AssessorFeedbackViewModel.withExistingFile("myfile", 1000, true));
     }
 
     @Test
@@ -90,11 +91,17 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
         this.setupOrganisationTypes();
 
         ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
+        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
+
         when(assessorFeedbackRestService.getAssessorFeedbackFile(applications.get(0).getId())).thenReturn(restSuccess(fileContents));
+        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(applications.get(0).getId())).thenReturn(restSuccess(fileEntry));
 
         mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessorFeedback") )
                 .andExpect(status().isOk())
-                .andExpect(content().string("The returned file data"));
+                .andExpect(content().string("The returned file data"))
+                .andExpect(header().string("Content-Type", "text/hello"))
+                .andExpect(header().longValue("Content-Length", "The returned file data".length()))
+        ;
     }
 
     @Test

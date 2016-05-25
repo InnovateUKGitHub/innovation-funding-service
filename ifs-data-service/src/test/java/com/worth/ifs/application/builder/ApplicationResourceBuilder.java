@@ -3,6 +3,7 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +40,10 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
 
     public ApplicationResourceBuilder withCompetition(Long... competitionIds) {
         return withArray((competition, application) -> setField("competition", competition, application), competitionIds);
+    }
+
+    public ApplicationResourceBuilder withCompetitionStatus(CompetitionResource.Status... competitionStatus) {
+        return withArray((status, application) -> application.setCompetitionStatus(status), competitionStatus);
     }
 
     public ApplicationResourceBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
