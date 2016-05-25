@@ -279,7 +279,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             QuestionStatus questionStatus = null;
 
             if (question.hasMultipleStatuses()) {
-                // The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
+                //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
                 List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
                 Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
                         .map(m -> getQuestionStatusByMarkedAsCompleteId(question, applicationId, m.getId()))
@@ -289,7 +289,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             } else {
                 questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
             }
-            
+
             if (questionStatus == null) {
                 questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
             } else if (markAsComplete) {
