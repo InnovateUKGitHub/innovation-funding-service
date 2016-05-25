@@ -43,7 +43,7 @@ User creates new account verifies email and login
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user opens the mailbox and verifies the email from
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    the user clicks the button/link    jQuery=.button:contains("Log in")
+    the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
     the guest user clicks the log-in button
 
