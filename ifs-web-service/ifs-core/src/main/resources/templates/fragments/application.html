@@ -33,35 +33,48 @@
                </div>
              </div>
 
-             <div class="upload-section" th:if="${assessorFeedback}">
-                 <h3 class="heading-small no-margin">Assessor feedback</h3>
-                 <p>Upload the assessor feedback page</p>
+             <div th:if="${assessorFeedback != null}" th:remove="tag"
+                  th:with="assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}">
 
-                 <div th:unless="${assessorFeedback.readonly}" th:if="${assessorFeedback.noFileUploaded}"
-                      th:action="@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition}, applicationId=${currentApplication.id})}"
-                      th:classappend="${#fields.hasErrors('assessorFeedback')} ? error : ''">
+                 <div class="upload-section" th:if="${form.adminMode and !assessorFeedback.readonly}">
+                     <h3 class="heading-small no-margin">Assessor feedback</h3>
+                     <p>Upload the assessor feedback page</p>
 
-                     <div th:if="${#fields.hasErrors('assessorFeedback')}" th:remove="tag">
-                         <span class="error-message" th:each="err : ${#fields.errors('assessorFeedback')}" th:text="${err}" />
+                     <div th:if="${!assessorFeedback.fileUploaded}"
+                          th:action="@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition}, applicationId=${currentApplication.id})}"
+                          th:classappend="${#fields.hasErrors('assessorFeedback')} ? error : ''">
+
+                         <div th:if="${#fields.hasErrors('assessorFeedback')}" th:remove="tag">
+                             <span class="error-message" th:each="err : ${#fields.errors('assessorFeedback')}" th:text="${err}" />
+                         </div>
+
+                         <input type="file" id="assessorFeedback" name="assessorFeedback" class="inputfile"/>
+                         <label for="assessorFeedback" class="button-secondary extra-margin">+ Upload</label>
+                         <button th:if="${!assessorFeedback.fileUploaded}" name="uploadAssessorFeedback" class="button-secondary" type="submit" data-for-file-upload="assessorFeedback">Save</button>
                      </div>
 
-                     <input type="file" id="assessorFeedback" name="assessorFeedback" class="inputfile"/>
-                     <label for="assessorFeedback" class="button-secondary extra-margin">+ Upload</label>
-                     <button th:unless="${assessorFeedback.readonly}" th:if="${assessorFeedback.noFileUploaded}" name="uploadAssessorFeedback" class="button-secondary" type="submit" data-for-file-upload="assessorFeedback">Save</button>
+                     <div th:if="${assessorFeedback.fileUploaded}">
+                         <div>
+                             <a th:href="${assessorFeedbackDownloadLink}" class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
+                         </div>
+                         <div class="alignright">
+                             <button class="button-secondary no-margin-right" type="submit" name="removeAssessorFeedback">Remove</button>
+                         </div>
+                     </div>
+                     <div th:if="${!assessorFeedback.fileUploaded}">
+                         <p class="uploaded-file">No file currently uploaded</p>
+                     </div>
                  </div>
 
-                 <!--<div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />-->
-                 <div th:if="${!assessorFeedback.noFileUploaded}">
-                     <div>
-                         <a th:href='${"/competition/" + currentApplication.competition + "/application/" + currentApplication.id + "/assessorFeedback"}' class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
-                     </div>
-                     <div th:unless="${assessorFeedback.readonly}" class="alignright">
-                         <button class="button-secondary no-margin-right" type="submit" name="removeAssessorFeedback">Remove</button>
+                 <div th:if="${assessorFeedback.fileUploaded and assessorFeedback.readonly}" th:remove="tag">
+                     <div th:replace="question-type/form-elements :: readonly-file-download
+                                 (filename=${assessorFeedback.filename},
+                                  filesizeKbytes=${assessorFeedback.filesizeKbytes},
+                                  fileDescription=${'View the application feedback:'},
+                                  downloadURL=${assessorFeedbackDownloadLink})">
                      </div>
                  </div>
-                 <div th:unless="${!assessorFeedback.noFileUploaded}">
-                     <p class="uploaded-file">No file currently uploaded</p>
-                 </div>
+
              </div>
 
              <h2 th:text="${section.name}" class="heading-medium" />
