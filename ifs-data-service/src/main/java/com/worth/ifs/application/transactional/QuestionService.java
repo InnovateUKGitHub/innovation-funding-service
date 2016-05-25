@@ -2,6 +2,7 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
@@ -17,8 +18,9 @@ import java.util.Set;
  */
 public interface QuestionService {
 
-    @NotSecured("Any loggedIn user can read a question")
-    ServiceResult<Question> getQuestionById(final Long id);
+    // @NotSecured("Any loggedIn user can read a question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<QuestionResource> getQuestionById(final Long id);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
@@ -43,25 +45,28 @@ public interface QuestionService {
     ServiceResult<Void> updateNotification(final Long questionStatusId,
                             final Boolean notify);
 
-    @NotSecured("Any loggedIn user can get any question")
-    ServiceResult<List<Question>> findByCompetition(final Long competitionId);
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<QuestionResource>> findByCompetition(final Long competitionId);
 
-    @NotSecured("Any loggedIn user can get any question")
-    ServiceResult<Question> getNextQuestion(final Long questionId);
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<QuestionResource> getNextQuestion(final Long questionId);
 
-    @NotSecured("Any loggedIn user can get any question")
-    ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId);
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<QuestionResource> getPreviousQuestionBySection(final Long sectionId);
 
-    @NotSecured("Any loggedIn user can get any question")
-    ServiceResult<Question> getNextQuestionBySection(final Long sectionId);
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<QuestionResource> getNextQuestionBySection(final Long sectionId);
 
-    @NotSecured("Any loggedIn user can get any question")
-    ServiceResult<Question> getPreviousQuestion(final Long questionId);
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
-    @NotSecured("Any loggedIn user can get any question")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
 
     @PostFilter("hasPermission(filterObject, 'READ')")

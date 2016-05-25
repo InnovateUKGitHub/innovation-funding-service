@@ -14,7 +14,7 @@ Enter Valid Postcode and see the results in the dropdown
     [Tags]    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
@@ -30,7 +30,7 @@ Empty Postcode field
     [Tags]    Postcode
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
@@ -44,20 +44,14 @@ Same Operating address
     [Tags]    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox "The registered address is the same as the operating address"
+    And the user selects the checkbox       id=address-same
     Then the user should not see the element    id=manual-company-input
-    And the user unselects the checkbox "The registered address is the same as the operating address"
+    And the user unselects the checkbox     id=address-same
     And the user should see the element    id=manual-company-input
 
 *** Keywords ***
-the user selects the checkbox "The registered address is the same as the operating address"
-    SLeep    1s
-    Select Checkbox    id=address-same
-
-the user unselects the checkbox "The registered address is the same as the operating address"
-    Unselect Checkbox    id=address-same

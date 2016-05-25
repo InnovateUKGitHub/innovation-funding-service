@@ -10,8 +10,8 @@ import java.util.List;
  * Lookup for addresses
  */
 public interface AddressLookupService {
-    @NotSecured("Everyone may do a lookup it is used as part of the registration process")
+    @NotSecured(value = "Everyone may do a lookup it is used as part of the registration process", mustBeSecuredByOtherServices = false)
     ServiceResult<List<AddressResource>> doLookup(String lookup);
-    @NotSecured("Everyone should be able to do a postcode verification")
+    @NotSecured(value = "Everyone should be able to do a postcode verification", mustBeSecuredByOtherServices = false)
     ServiceResult<Boolean> validatePostcode(String postcode);
 }

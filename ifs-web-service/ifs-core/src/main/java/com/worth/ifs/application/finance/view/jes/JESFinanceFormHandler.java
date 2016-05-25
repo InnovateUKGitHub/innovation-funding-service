@@ -1,11 +1,11 @@
 package com.worth.ifs.application.finance.view.jes;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.view.item.CostHandler;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -70,16 +70,16 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value) {
         if (fieldName != null && value != null) {
             if (fieldName.startsWith("cost-")) {
-                storeField(fieldName.replace("cost-", ""), value, userId, applicationId);
+                return storeField(fieldName.replace("cost-", ""), value, userId, applicationId);
             }
         }
         return null;
     }
 
-    private void storeField(String fieldName, String value, Long userId, Long applicationId) {
+    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
         if(financeFormField==null)
-            return;
+            return null;
 
         CostHandler costHandler = new AcademicFinanceHandler();
         Long costFormFieldId = 0L;
@@ -87,7 +87,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
-        storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
     }
 
     private FinanceFormField getCostFormField(String costTypeKey, String value) {
@@ -100,12 +100,23 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         return null;
     }
 
-    private void storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private ValidationMessages storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         if (costItem.getId().equals(0L)) {
             addCostItem(costItem, userId, applicationId, question);
         } else {
-            costService.update(costItem);
+            RestResult<ValidationMessages> messages = costService.update(costItem);
+            ValidationMessages validationMessages = messages.getSuccessObject();
+
+            if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
+                LOG.debug("no validation errors on cost items");
+                return messages.getSuccessObject();
+            } else {
+                messages.getSuccessObject().getErrors().stream()
+                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
+                return messages.getSuccessObject();
+            }
         }
+        return null;
     }
 
     private void addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
@@ -118,7 +129,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     private Long getQuestionId(String costFieldName) {
-        Question question;
+        QuestionResource question;
         switch (costFieldName) {
             case "tsb_reference":
                 question = questionService.getQuestionByFormInputType("your_finance").getSuccessObject();
@@ -163,15 +174,17 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     private Map<String, List<String>> storeJESUpload(HttpServletRequest request, Long userId, Long applicationId) {
         final Map<String, String[]> params = request.getParameterMap();
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+        
 
         Map<String, List<String>> errorMap = new HashMap<>();
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
+        	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
         } else {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
             final MultipartFile file = fileMap.get("jes-upload");
             if (file != null && !file.isEmpty()) {
+            	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
                 try {
                     RestResult<FileEntryResource> result = financeService.addFinanceDocument(applicationFinance.getId(),
                             file.getContentType(),

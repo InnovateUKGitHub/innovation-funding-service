@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Create a new application?'" th:remove="tag"/>
+</head>
+<body class="create-application-eligibility">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+    <div th:include="fragments/layout :: header-sub"
+         th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" th:remove="tag"/>
+    <div class="grid-row">
+
+
+        <h1 class="heading-large">Application in progress</h1>
+        <p>You have already started an application in this competition. Please confirm whether you want to continue with your existing application or create a new one.</p>
+
+        <form method="post" action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+
+            <fieldset>
+                <legend class="visuallyhidden">Create a new application?</legend>
+                <div class="form-group">
+                    <label class="block-label" for="new-application-yes">
+                        <input id="new-application-yes"
+                               type="radio"
+                               th:name="create-application"
+                               value="true"/>
+                        Yes I want to create a new application
+                    </label>
+                    <label class="block-label" for="new-application-no">
+                        <input type="radio"
+                               id="new-application-no"
+                               name="create-application"
+                               value="false"/>
+                        No I wish to continue with an existing application
+                    </label>
+                </div>
+            </fieldset>
+
+
+            <button type="submit" name="create-application-submit" class="button">
+                Continue
+            </button>
+        </form>
+
+
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>

@@ -1,5 +1,10 @@
 package com.worth.ifs.application.transactional;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,9 +14,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
@@ -26,18 +37,8 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.validator.util.ValidationUtil;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -60,6 +61,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private ValidationUtil validationUtil;
 
     @Override
     public ServiceResult<SectionResource> getById(final Long sectionId) {
@@ -133,7 +137,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
             Set<Long> questions = collectAllQuestionFrom(section);
 
-            List<ValidationMessages> sectionIsValid = ValidationUtil.isSectionValid(markedAsCompleteById, section, application);
+            List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");
@@ -212,16 +216,15 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
 	@Override
-	public ServiceResult<SectionResource> getFinanceSectionByCompetitionId(final Long competitionId) {
-		return getCompetition(competitionId).andOnSuccessReturn(this::financeSection);
+	public ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(final Long competitionId, final SectionType type) {
+		return getCompetition(competitionId).andOnSuccessReturn(comp -> sectionsOfType(comp, type));
 	}
 	
-	private SectionResource financeSection(Competition competition) {
+	private List<SectionResource> sectionsOfType(Competition competition, SectionType type) {
 		return competition.getSections().stream()
-				.filter(Section::isFinance)
-				.findAny()
+				.filter(s -> s.isType(type))
 				.map(sectionMapper::mapToResource)
-				.orElse(null);
+				.collect(Collectors.toList());
 	}
 	
     // TODO DW - INFUND-1555 - work out the getSuccessObject call

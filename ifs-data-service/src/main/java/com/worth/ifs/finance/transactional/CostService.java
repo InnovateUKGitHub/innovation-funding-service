@@ -1,47 +1,53 @@
 package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.NotSecured;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.function.Supplier;
 
 public interface CostService {
 
     @PreAuthorize("hasPermission(#costFieldId, 'com.worth.ifs.finance.resource.CostFieldResource', 'READ')")
-    ServiceResult<CostField> getCostFieldById(@P("costFieldId")Long costFieldId);
+    ServiceResult<CostField> getCostFieldById(@P("costFieldId") Long costFieldId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
 
-    @NotSecured("TODO")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CostItem> getCostItem(Long costItemId);
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId);
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId);
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId);
 
     @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
-    ServiceResult<CostItem> addCost(@P("applicationFinanceId")Long applicationFinanceId, Long questionId, CostItem newCostItem);
+    ServiceResult<CostItem> addCost(@P("applicationFinanceId") Long applicationFinanceId, Long questionId, CostItem newCostItem);
 
     @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'UPDATE')")
     ServiceResult<CostItem> updateCost(@P("costId")Long costId, CostItem newCostItem);
 
     @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'DELETE')")
-    ServiceResult<Void> deleteCost(@P("costId")Long costId);
+    ServiceResult<Void> deleteCost(@P("costId") Long costId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId);
@@ -50,20 +56,36 @@ public interface CostService {
     ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
-    ServiceResult<Double> getResearchParticipationPercentage(@P("applicationId")Long applicationId);
+    ServiceResult<Double> getResearchParticipationPercentage(@P("applicationId") Long applicationId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<ApplicationFinanceResource> addCost(Long applicationId, Long organisationId);
+    @PreAuthorize("hasPermission(#applicationFinanceResourceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
+    ServiceResult<ApplicationFinanceResource> addCost(@P("applicationFinanceResourceId") final ApplicationFinanceResourceId applicationFinanceResourceId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<ApplicationFinanceResource> updateCost(Long applicationFinanceId, ApplicationFinanceResource applicationFinance);
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_COST')")
+    ServiceResult<ApplicationFinanceResource> updateCost(@P("applicationFinanceId")Long applicationFinanceId, ApplicationFinanceResource applicationFinance);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
-    ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId")Long applicationId);
+    ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId") Long applicationId);
+
+    @NotSecured(value = "This is not getting date from the database, just getting a CostHandler", mustBeSecuredByOtherServices = false)
+    CostHandler getCostHandler(Long costItemId);
+
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'CREATE_FILE_ENTRY')")
+    ServiceResult<FileEntryResource> createFinanceFileEntry(@P("applicationFinanceId")long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_FILE_ENTRY')")
+    ServiceResult<FileEntryResource> updateFinanceFileEntry(@P("applicationFinanceId")long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'DELETE_FILE_ENTRY')")
+    ServiceResult<Void> deleteFinanceFileEntry(@P("applicationFinanceId")long applicationFinanceId);
+
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
+    ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId")long applicationFinanceId);
+
 }

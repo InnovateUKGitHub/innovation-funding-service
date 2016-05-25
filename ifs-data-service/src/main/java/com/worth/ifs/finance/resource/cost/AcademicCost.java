@@ -1,17 +1,19 @@
 package com.worth.ifs.finance.resource.cost;
 
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 public class AcademicCost implements CostItem {
     private Long id;
     private String name;
-    private CostType costType;
+
+    @DecimalMin("0")
     private BigDecimal cost;
+
     private String item;
 
     public AcademicCost() {
     	// no-arg constructor
-        costType = CostType.ACADEMIC;
     }
 
     public AcademicCost(Long id, String name, BigDecimal cost, String item) {
@@ -46,6 +48,16 @@ public class AcademicCost implements CostItem {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
     }
 
     public BigDecimal getCost() {

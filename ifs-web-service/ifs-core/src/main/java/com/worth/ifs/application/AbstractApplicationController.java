@@ -1,65 +1,43 @@
 package com.worth.ifs.application;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.worth.ifs.BaseController;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 
-import static com.worth.ifs.application.service.Futures.call;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
@@ -124,6 +102,9 @@ public abstract class AbstractApplicationController extends BaseController {
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
+    protected FormInputService formInputService;
+
+    @Autowired
     protected CompetitionService competitionService;
 
     @Autowired
@@ -159,7 +140,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
     protected void assignQuestion(HttpServletRequest request, Long applicationId) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         Map<String, String[]> params = request.getParameterMap();
         if(params.containsKey(ASSIGN_QUESTION_PARAM)){
@@ -180,25 +161,25 @@ public abstract class AbstractApplicationController extends BaseController {
                                                         Optional<Long> currentQuestionId,
                                                         Model model,
                                                         ApplicationForm form,
-                                                        List<ProcessRole> userApplicationRoles) {
+                                                        List<ProcessRoleResource> userApplicationRoles) {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
 
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
         if(form == null){
             form = new ApplicationForm();
         }
         form.setApplication(application);
 
-        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
         addMappedSectionsDetails(model, application, competition, section, userOrganisation);
 
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
-        addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
+        addCompletedDetails(model, application, userOrganisation);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
@@ -208,7 +189,11 @@ public abstract class AbstractApplicationController extends BaseController {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() != null){
+        if(application.getStartDate() == null){
+            formInputs.put("application_details-startdate_day", "");
+            formInputs.put("application_details-startdate_month", "");
+            formInputs.put("application_details-startdate_year", "");
+        }else{
             formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
             formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
@@ -219,37 +204,16 @@ public abstract class AbstractApplicationController extends BaseController {
     protected  void addApplicationInputs(ApplicationResource application, Model model) {
         model.addAttribute("application_title", application.getName());
         model.addAttribute("application_duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() != null){
+        if(application.getStartDate() == null){
+            model.addAttribute("application_startdate_day", "");
+            model.addAttribute("application_startdate_month", "");
+            model.addAttribute("application_startdate_year", "");
+        }
+        else{
             model.addAttribute("application_startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
             model.addAttribute("application_startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             model.addAttribute("application_startdate_year", String.valueOf(application.getStartDate().getYear()));
         }
-    }
-
-    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation,
-                                          List<ProcessRole> userApplicationRoles) {
-
-        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        model.addAttribute("applicationOrganisations", organisations);
-        model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
-        
-        model.addAttribute("applicationOrganisations", organisations);
-        
-        List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
-        
-        List<String> pendingOrganisationNames = pendingInvitations(application).stream()
-        		.map(InviteResource::getInviteOrganisationName)
-        		.distinct()
-        		.filter(orgName -> StringUtils.hasText(orgName)
-                        && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
-
-        model.addAttribute("pendingOrganisationNames", pendingOrganisationNames);
-        
-        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
-        leadOrganisation.ifPresent(org ->
-                        model.addAttribute("leadOrganisation", org)
-        );
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
@@ -270,18 +234,17 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
     }
 
-    protected List<Response> getResponses(ApplicationResource application) {
-        return responseService.getByApplication(application.getId());
-    }
-
     protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
         return formInputResponseService.getByApplication(application.getId());
     }
 
     protected void addUserDetails(Model model, ApplicationResource application, Long userId) {
         Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
-        model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
+        model.addAttribute("leadApplicant", leadApplicant);
     }
 
     protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
@@ -321,7 +284,7 @@ public abstract class AbstractApplicationController extends BaseController {
         questionService.removeNotifications(notifications);
 
         List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
-        
+
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
         model.addAttribute("questionAssignees", questionAssignees);
@@ -331,7 +294,7 @@ public abstract class AbstractApplicationController extends BaseController {
     private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
         if(!application.isOpen() || userOrganisation == null){
             //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<ProcessRole>());
+            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
             model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
             model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
@@ -353,62 +316,75 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
                                             Optional<OrganisationResource> userOrganisation) {
-        List<SectionResource> sectionsList = sectionService.filterParentSections(sectionService.getAllByCompetitionId(competition.getId()));
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
+        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
         Map<Long, SectionResource> sections =
-                sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,
+                parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
-        List<Question> questions = questionService.findByCompetition(competition.getId());
+        List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+
+        List<FormInputResource> formInputResources = formInputService.findByCompetitionId(competition.getId());
 
         model.addAttribute("sections", sections);
-        Map<Long, List<Question>> sectionQuestions = sectionsList.stream()
+        Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
                         s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
+            .flatMap(a -> a.stream())
+            .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
+        model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
 
+        Map<Long, List<QuestionResource>> subsectionQuestions = new HashMap<>();
         if(currentSection.isPresent()){
             Map<Long, List<SectionResource>>  subSections = new HashMap<>();
-            subSections.put(currentSection.get().getId(), simpleMap(currentSection.get().getChildSections(), sectionService::getById));
+            subSections.put(currentSection.get().getId(), getSectionsFromListByIdList(currentSection.get().getChildSections(), allSections));
 
             model.addAttribute("subSections", subSections);
-            Map<Long, List<Question>> subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
+            subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }else{
-            Map<Long, List<SectionResource>>   subSections = sectionsList.stream()
+            Map<Long, List<SectionResource>>   subSections = parentSections.stream()
                     .collect(Collectors.toMap(
-                            SectionResource::getId, s -> simpleMap(s.getChildSections(), sectionService::getById)
+                            SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
                     ));
             model.addAttribute("subSections", subSections);
-            Map<Long, List<Question>> subsectionQuestions = sectionsList.stream()
+            subsectionQuestions = parentSections.stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
+        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
+        model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
     }
 
-    private List<Question> getQuestionsBySection(final List<Long> questionIds, final List<Question> questions) {
+    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
+        return simpleFilter(allSections, section -> childSections.contains(section.getId()));
+    }
+
+    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
+        return simpleFilter(list, input -> input.getId().equals(id));
+    }
+
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRole> userApplicationRoles) {
+
+    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
-
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
-        // only keep the questionIDs of questions that are complete by all organisations
-        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
-        model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
@@ -418,27 +394,41 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         
-        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(application.getCompetition());
-        boolean hasFinanceSection = financeSection != null;
+        List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
+        boolean hasFinanceSection;
         Long financeSectionId;
-        if(hasFinanceSection) {
-        	financeSectionId = financeSection.getId();
-        } else {
+        if(financeSections.isEmpty()) {
+        	hasFinanceSection = false;
         	financeSectionId = null;
+        } else {
+        	hasFinanceSection = true;
+        	financeSectionId = financeSections.get(0).getId();
         }
         
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
+        
+        List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES);
+        Long eachCollaboratorFinanceSectionId;
+        if(eachOrganisationFinanceSections.isEmpty()) {
+        	eachCollaboratorFinanceSectionId = null;
+        } else {
+        	eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
+        }        
+        model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
     }
 
     protected void addSectionDetails(Model model, Optional<SectionResource> currentSection) {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
         if(currentSection.isPresent()) {
-            List<Question> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
-            Map<Long, List<Question>> sectionQuestions = new HashMap<>();
+            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
+            questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
+            Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
+            Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
 
+            model.addAttribute("questionFormInputs", questionFormInputs);
             model.addAttribute("sectionQuestions", sectionQuestions);
             model.addAttribute("title", currentSection.get().getName());
         }
@@ -472,10 +462,9 @@ public abstract class AbstractApplicationController extends BaseController {
                                                                              Model model,
                                                                              ApplicationForm form) {
 
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
-        
+
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addSectionDetails(model, section);
 
@@ -486,11 +475,10 @@ public abstract class AbstractApplicationController extends BaseController {
                                                         Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
         
-        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(competitionId);
-        boolean hasFinanceSection = financeSection != null;
+        List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FINANCE);
+        boolean hasFinanceSection = !financeSections.isEmpty();
         
         if(hasFinanceSection) {
-        
 	        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 	        if(!form.isAdminMode()){
 	            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
@@ -503,48 +491,11 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    public SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
-        Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
+    public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
-        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                            || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(ProcessRole::getOrganisation)
-                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
-                .collect(Collectors.toCollection(supplier));
-    }
-
-    public SortedSet<OrganisationResource> getAcademicOrganisations(SortedSet<OrganisationResource> organisations) {
-        Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-        ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
-
-        return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(o.getOrganisationType()))
-                .collect(Collectors.toCollection(supplier));
-    }
-
-    public Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRole> userApplicationRoles) {
-
-        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(ProcessRole::getOrganisation)
-                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
-                .findFirst();
-    }
-
-    public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRole> userApplicationRoles) {
-
-        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getUser().getId().equals(userId))
-                .map(ProcessRole::getOrganisation)
-                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
+                .filter(uar -> uar.getUser().equals(userId))
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 
@@ -556,29 +507,29 @@ public abstract class AbstractApplicationController extends BaseController {
         if (section == null) {
             return;
         }
-        Optional<Question> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
+        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<Question> nextQuestion = questionService.getNextQuestionBySection(section.getId());
+        Optional<QuestionResource> nextQuestion = questionService.getNextQuestionBySection(section.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
 
-    protected void addNavigation(Question question, Long applicationId, Model model) {
+    protected void addNavigation(QuestionResource question, Long applicationId, Model model) {
         if (question == null) {
             return;
         }
 
-        Optional<Question> previousQuestion = questionService.getPreviousQuestion(question.getId());
+        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<Question> nextQuestion = questionService.getNextQuestion(question.getId());
+        Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
 
-    protected void addPreviousQuestionToModel(Optional<Question> previousQuestionOptional, Long applicationId, Model model) {
+    protected void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, Model model) {
         String previousUrl;
         String previousText;
 
         if (previousQuestionOptional.isPresent()) {
-            Question previousQuestion = previousQuestionOptional.get();
+            QuestionResource previousQuestion = previousQuestionOptional.get();
             SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
                 previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
@@ -592,12 +543,12 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    protected void addNextQuestionToModel(Optional<Question> nextQuestionOptional, Long applicationId, Model model) {
+    protected void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, Model model) {
         String nextUrl;
         String nextText;
 
         if (nextQuestionOptional.isPresent()) {
-            Question nextQuestion = nextQuestionOptional.get();
+            QuestionResource nextQuestion = nextQuestionOptional.get();
             SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
             if (nextSection.isQuestionGroup()) {

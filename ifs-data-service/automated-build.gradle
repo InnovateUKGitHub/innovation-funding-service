@@ -33,3 +33,6 @@ ext.cookieSecure=true
 ext.cookieHTTPOnly=false
 
 ext.ifsFileStorageLocation="/tmp"
+
+ext.ifsVirusScanningEnabled="false"
+ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout"

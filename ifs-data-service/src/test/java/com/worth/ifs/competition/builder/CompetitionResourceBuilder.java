@@ -2,6 +2,7 @@ package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public static CompetitionResourceBuilder newCompetitionResource() {
         return new CompetitionResourceBuilder(emptyList()).with(uniqueIds());
+    }
+
+    public CompetitionResourceBuilder withApplications(List<Long> applications) {
+        return with(competition -> competition.setApplications(applications));
     }
 
     public CompetitionResourceBuilder withSections(List<Long> sections) {
@@ -53,12 +58,20 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((assessmentEndDate, object) -> setField("assessmentEndDate", assessmentEndDate, object), assessmentEndDates);
     }
 
+    public CompetitionResourceBuilder withAssessorFeedbackDate(LocalDateTime... assessorFeedbackDate) {
+        return withArray((date, object) -> object.setAssessorFeedbackDate(date), assessorFeedbackDate);
+    }
+
     public CompetitionResourceBuilder withMaxResearchRatio(Integer... maxResearchRatios) {
         return withArray((maxResearchRatio, object) -> setField("maxResearchRatio", maxResearchRatio, object), maxResearchRatios);
     }
 
     public CompetitionResourceBuilder withAcademicGrantClaimPercentage(Integer... grantClaimPercentages) {
         return withArray((grantClaimPercentage, object) -> setField("academicGrantPercentage", grantClaimPercentage, object), grantClaimPercentages);
+    }
+    
+    public CompetitionResourceBuilder withCompetitionStatus(Status... statuses) {
+    	return withArray((status, object) -> setField("competitionStatus", status, object), statuses);
     }
 
     @Override

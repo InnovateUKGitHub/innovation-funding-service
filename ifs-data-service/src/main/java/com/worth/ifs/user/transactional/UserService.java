@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public interface UserService {
 
-    @NotSecured("This UID method is needed prior to being able to put a User on the SecurityContext, and so it cannot be secured itself")
+    @NotSecured(value = "This UID method is needed prior to being able to put a User on the SecurityContext, and so it cannot be secured itself", mustBeSecuredByOtherServices = false)
     ServiceResult<UserResource> getUserResourceByUid(final String uid);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")

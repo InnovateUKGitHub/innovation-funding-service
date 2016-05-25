@@ -1,26 +1,75 @@
 <div th:fragment="application-summary">
-  <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
-      <h2 th:text="${section.getName()}" class="heading-medium"/>
-      <div class="collapsible" th:each="question : ${sectionQuestions.get(section.id)}">
-          <h3>
-              <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag"/>
-              <div th:remove="tag" th:if="${currentApplication.isOpen()}">
-                  <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">
-                      Complete
-                  </div>
-                  <div class="section-status section-incomplete"
-                       th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete
-                  </div>
-              </div>
-          </h3>
-          <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}'
-               th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
-               th:id="'form-input-'+${formInput.getId()}">
-              <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}"
-                   th:unless='${formInput.getFormInputType().getTitle().equals("finance"}'/>
-          </div>
+  <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
+
+      <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and !currentApplication.isOpen()}"/>
+
+      <div th:remove="tag" th:each="question : ${sectionQuestions.get(section.id)}">
+          <div class="collapsible" th:unless="${question.shortName.equals('Application details') and !currentApplication.isOpen()}">
+            <h3>
+                <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag"/>
+                <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                    <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">
+                        Complete
+                    </div>
+                    <div class="section-status section-incomplete"
+                         th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete
+                    </div>
+                </div>
+            </h3>
+            <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
+                 th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
+                 th:id="'form-input-'+${formInput.getId()}">
+                <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}"
+                     th:unless='${formInput.getFormInputTypeTitle().equals("finance"}'/>
+            </div>
+        </div>
+         <div th:remove="tag" th:if="${question.shortName.equals('Application details') and !currentApplication.isOpen()}">
+             <div class="boxed extra-margin">
+               <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
+                    th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
+                    th:id="'form-input-'+${formInput.getId()}">
+                   <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}"
+                        th:unless='${formInput.getFormInputTypeTitle().equals("finance"}'/>
+               </div>
+             </div>
+
+             <div class="upload-section" th:if="${assessorFeedback}">
+                 <h3 class="heading-small no-margin">Assessor feedback</h3>
+                 <p>Upload the assessor feedback page</p>
+
+                 <div th:unless="${assessorFeedback.readonly}" th:if="${assessorFeedback.noFileUploaded}"
+                      th:action="@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition}, applicationId=${currentApplication.id})}"
+                      th:classappend="${#fields.hasErrors('assessorFeedback')} ? error : ''">
+
+                     <div th:if="${#fields.hasErrors('assessorFeedback')}" th:remove="tag">
+                         <span class="error-message" th:each="err : ${#fields.errors('assessorFeedback')}" th:text="${err}" />
+                     </div>
+
+                     <input type="file" id="assessorFeedback" name="assessorFeedback" class="inputfile"/>
+                     <label for="assessorFeedback" class="button-secondary extra-margin">+ Upload</label>
+                     <button th:unless="${assessorFeedback.readonly}" th:if="${assessorFeedback.noFileUploaded}" name="uploadAssessorFeedback" class="button-secondary" type="submit" data-for-file-upload="assessorFeedback">Save</button>
+                 </div>
+
+                 <!--<div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />-->
+                 <div th:if="${!assessorFeedback.noFileUploaded}">
+                     <div>
+                         <a th:href='${"/competition/" + currentApplication.competition + "/application/" + currentApplication.id + "/assessorFeedback"}' class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
+                     </div>
+                     <div th:unless="${assessorFeedback.readonly}" class="alignright">
+                         <button class="button-secondary no-margin-right" type="submit" name="removeAssessorFeedback">Remove</button>
+                     </div>
+                 </div>
+                 <div th:unless="${!assessorFeedback.noFileUploaded}">
+                     <p class="uploaded-file">No file currently uploaded</p>
+                 </div>
+             </div>
+
+             <h2 th:text="${section.name}" class="heading-medium" />
+         </div>
       </div>
+
   </section>
+
   <section th:if="${hasFinanceSection}">
       <h2 class="heading-medium">Finance</h2>
       <div class="collapsible">

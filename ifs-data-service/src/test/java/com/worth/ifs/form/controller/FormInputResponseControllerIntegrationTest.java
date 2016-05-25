@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.security.SecuritySetter;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +51,10 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     @Rollback
     public void test_saveNotAllowed() {
 
+        setLoggedInUser(getAnonUser());
         Long applicationId = 1L;
         Long formInputId = 1L;
         String inputValue = "NOT ALLOWED";
-
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode jsonObj = mapper.createObjectNode();
         jsonObj.put("userId", Long.MAX_VALUE);
@@ -67,8 +64,8 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         RestResult<List<String>> result = controller.saveQuestionResponse(jsonObj);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(forbiddenError("Unable to update question response")));
-
+        assertTrue(result.getFailure().is(forbiddenError("This action is not permitted.")));
+        setLoggedInUser(getSteveSmith());
         List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
         Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();
 

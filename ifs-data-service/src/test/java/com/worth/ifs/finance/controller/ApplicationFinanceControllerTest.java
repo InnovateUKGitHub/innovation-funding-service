@@ -2,8 +2,10 @@ package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Before;
@@ -12,6 +14,7 @@ import org.mockito.Mock;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,10 +25,9 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private CostService costServiceMock;
 
-    private ApplicationFinance applicationFinance;
     private ApplicationFinanceResource applicationFinanceResource;
     private Organisation organisation;
-    private Application application;
+    private ApplicationResource application;
 
     @Override
     protected ApplicationFinanceController supplyControllerUnderTest() {
@@ -34,11 +36,10 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
     @Before
     public void setUp() {
-        application = new Application();
+        application = new ApplicationResource();
         application.setId(1L);
         organisation = new Organisation(1L, "Worth Internet Systems");
-        applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
-        applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
+        applicationFinanceResource = newApplicationFinanceResource().withApplication(application.getId()).withOrganisation(organisation.getId()).build();
     }
 
     @Test
@@ -103,12 +104,12 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void addShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
 
-        when(costServiceMock.addCost(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(costServiceMock.addCost(any(ApplicationFinanceResourceId.class))).thenReturn(serviceSuccess(applicationFinanceResource));
 
         mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isCreated());
 
-        verify(costServiceMock, times(1)).addCost(123L, 456L);
+        verify(costServiceMock, times(1)).addCost(any(ApplicationFinanceResourceId.class));
     }
 
     @Test

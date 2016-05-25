@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.logging.Log;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -40,7 +42,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
     public void getNextQuestionTest() throws Exception {
         Competition competition = newCompetition().build();
         Section section = newSection().build();
-        Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(competition, section, 2).build();
+        QuestionResource nextQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, section, 2).build();
         when(questionService.getNextQuestion(anyLong())).thenReturn(serviceSuccess(nextQuestion));
         mockMvc.perform(get("/question/getNextQuestion/" + 1L))
                 .andExpect(status().isOk())
@@ -52,7 +54,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
     public void getPreviousQuestionTest() throws Exception {
         Competition competition = newCompetition().build();
         Section section = newSection().build();
-        Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(competition, section, 2).build();
+        QuestionResource previousQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, section, 2).build();
 
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(serviceSuccess(previousQuestion));
 
@@ -65,7 +67,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
     public void getPreviousQuestionFromOtherSectionTest() throws Exception {
         Competition competition = newCompetition().build();
         Section section = newSection().build();
-        Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(competition, section, 1).build();
+        QuestionResource previousQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, section, 1).build();
 
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(serviceSuccess(previousQuestion));
 
@@ -76,7 +78,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
     @Test
     public void getPreviousQuestionBySectionTest() throws Exception {
-        Question previousSectionQuestion = newQuestion().build();
+        QuestionResource previousSectionQuestion = newQuestionResource().build();
 
         when(questionService.getPreviousQuestionBySection(anyLong())).thenReturn(serviceSuccess(previousSectionQuestion));
 

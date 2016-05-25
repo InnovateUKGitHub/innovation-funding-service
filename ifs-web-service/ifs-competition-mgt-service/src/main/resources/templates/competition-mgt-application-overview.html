@@ -15,7 +15,7 @@
           <div class="column-two-thirds">
                 <div class="page-title">
                     <p class="subtitle"><div th:text="${#numbers.formatInteger(currentCompetition.id,8)}" th:remove="tag" /> : Innovate UK</p>
-                    <h1 class="heading-xlarge" th:text="${currentCompetition.name}" />
+                    <h1 class="heading-large" th:text="${currentCompetition.name}" />
                 </div>
           </div>
           <div class="column-third alignright extra-margin">
@@ -30,7 +30,7 @@
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
         <h1 class="heading-xlarge no-margin">Application Overview</h1>
     </div>
-    <form action="#" method="post" th:object="${form}" class="form-serialize-js section-overview">
+    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" class="form-serialize-js section-overview">
         <div th:include="fragments/application :: application-summary" th:remove="tag"/>
         <div class="extra-margin">
             <a th:href="${'/application/' + currentApplication.id + '/print'}" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>

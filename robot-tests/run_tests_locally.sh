@@ -48,7 +48,28 @@ function resetDB {
 
 function clearDownFileRepository {
     echo "***********Deleting any uploaded files***************"
-    rm -rf /tmp/ifs/
+    echo "storedFileFolder:		${storedFileFolder}"
+    rm -rf ${storedFileFolder}
+
+    echo "***********Deleting any holding for scan files***************"
+    echo "virusScanHoldingFolder:	${virusScanHoldingFolder}"
+    rm -rf ${virusScanHoldingFolder}
+
+    echo "***********Deleting any quarantined files***************"
+    echo "virusScanQuarantinedFolder:	${virusScanQuarantinedFolder}"
+    rm -rf ${virusScanQuarantinedFolder}
+
+    echo "***********Deleting any scanned files***************"
+    echo "virusScanScannedFolder:	${virusScanScannedFolder}"
+    rm -rf ${virusScanScannedFolder}
+}
+
+function addTestFiles {
+    echo "***********Adding test files***************"
+    echo "***********Making the quarantined directory ***************"
+    mkdir -p ${virusScanQuarantinedFolder}
+    echo "***********Adding pretend quarantined file ***************"
+    cp ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
 }
 
 
@@ -80,10 +101,21 @@ function startServers {
     echo "********START SHIBBOLETH***********"
     cd ${shibbolethScriptsPath}
     ./startup-shibboleth.sh
-
+    wait
+    cd ../shibboleth/ui
+    ./deploy-ui.sh
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
-    ./startup.sh
+
+    if [ "$startServersInDebugMode" ]; then
+      export JPDA_ADDRESS=8000
+      export JPDA_TRANSPORT=dt_socket
+      ./catalina.sh jpda start
+    else
+      ./startup.sh
+    fi
+
+
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
     touch ${dataLogFilePath}
     tail -F -n0 ${dataLogFilePath} | while read logLine
@@ -93,7 +125,15 @@ function startServers {
     echo "********START THE WEB SERVER********"
     touch ${webTomcatBinPath}
     cd ${webTomcatBinPath}
-    ./startup.sh
+
+    if [ "$startServersInDebugMode" ]; then
+      export JPDA_ADDRESS=8001
+      export JPDA_TRANSPORT=dt_socket
+      ./catalina.sh jpda start
+    else
+      ./startup.sh
+    fi
+
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
     tail -F -n0 ${webLogFilePath} | while read logLine
     do
@@ -122,7 +162,7 @@ function runHappyPathTests {
     then
         pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
     else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
     fi
 }
 
@@ -161,12 +201,23 @@ echo "dataPort:          ${dataPort}"
 mysqlUser=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourceUsername'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "mysqlUser:         ${mysqlUser}"
 mysqlPassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourcePassword'  | cut -d "=" -f2 | sed 's/"//g'`
+baseFileStorage=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`
+echo "${baseFileStorage}"
+storedFileFolder=${baseFileStorage}/ifs/
+echo "${storedFileFolder}"
+virusScanHoldingFolder=${baseFileStorage}/virus-scan-holding/
+echo "virusScanHoldingFolder:		${virusScanHoldingFolder}"
+virusScanQuarantinedFolder=${baseFileStorage}/virus-scan-quarantined
+echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
+virusScanScannedFolder=${baseFileStorage}/virus-scan-scanned
+echo "virusScanScannedFolder:		${virusScanScannedFolder}"
+echo "We are about to delete the above directories, make sure that they are right ones!"
 postcodeLookupKey=`sed '/^\#/d' dev-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
 if [ "$postcodeLookupKey" = '' ]
 then
     echo "Postcode lookup not implemented"
-    unset postcodeLookupImplemented
+    postcodeLookupImplemented='NO'
 else
     echo "Postcode lookup implemented. The tests will expect proper data from the SuT."
     postcodeLookUpImplemented='YES'
@@ -205,10 +256,11 @@ unset testScrub
 unset happyPath
 useXvfb=true
 unset remoteRun
+unset startServersInDebugMode
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :x" opt ; do
+while getopts ":q :t :h :p :r :d: :D :x" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -230,6 +282,9 @@ while getopts ":q :t :h :p :r :d: :x" opt ; do
         ;;
         d)
          testDirectory="$OPTARG"
+        ;;
+        D)
+         startServersInDebugMode=true
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
@@ -255,6 +310,7 @@ then
     resetDB
     resetLDAP
     clearDownFileRepository
+    addTestFiles
     runTests
 elif [ "$testScrub" ]
 then
@@ -262,6 +318,7 @@ then
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
 elif [ "$happyPath" ]
@@ -270,6 +327,7 @@ then
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
     runHappyPathTests
@@ -286,17 +344,8 @@ else
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
     runTests
 fi
-
-
-
-
-
-
-
-
-
-

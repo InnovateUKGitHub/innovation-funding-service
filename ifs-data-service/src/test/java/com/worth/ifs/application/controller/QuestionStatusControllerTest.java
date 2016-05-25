@@ -2,7 +2,7 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import org.junit.Test;
@@ -11,9 +11,11 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -33,8 +35,8 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
     @Test
     public void getNextQuestionFromOtherSectionTest() throws Exception {
-        Application application = newApplication().withCompetition(newCompetition().build()).build();
-        QuestionStatusResource questionStatus = newQuestionStatusResource().withApplication(application).build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(newCompetitionResource().build().getId()).build();
+        QuestionStatusResource questionStatus = newQuestionStatusResource().withApplication(applicationResource).build();
         List<QuestionStatusResource> questionStatuses = singletonList(questionStatus);
 
         when(questionService.getQuestionStatusByApplicationIdAndAssigneeId(1L, 2L)).thenReturn(serviceSuccess(questionStatuses));

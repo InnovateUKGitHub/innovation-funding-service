@@ -4,8 +4,15 @@ import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static com.worth.ifs.util.CollectionFunctions.nullSafe;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
@@ -38,8 +45,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public BaseEitherBackedResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler) {
 
-        if (result.isLeft()) {
-            return createFailure((FailingOrSucceedingResult<Void, FailureType>) this);
+        if (isLeft()) {
+            return (BaseEitherBackedResult<Void, FailureType>) this;
         }
 
         try {
@@ -54,8 +61,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public BaseEitherBackedResult<T, FailureType> andOnSuccess(Runnable successHandler) {
 
-        if (result.isLeft()) {
-            return createFailure(this);
+        if (isLeft()) {
+            return this;
         }
 
         try {
@@ -69,12 +76,12 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
 
     @Override
     public <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<FailingOrSucceedingResult<R, FailureType>> successHandler) {
-        if (result.isLeft()) {
-            return (BaseEitherBackedResult<R, FailureType>) createFailure(this);
+        if (isLeft()) {
+            return (BaseEitherBackedResult<R, FailureType>) this;
         }
 
         try {
-            return (FailingOrSucceedingResult<R, FailureType>) successHandler.get();
+            return successHandler.get();
         } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
@@ -84,8 +91,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler) {
 
-        if (result.isLeft()) {
-            return (BaseEitherBackedResult<R, FailureType>) createFailure(this);
+        if (isLeft()) {
+            return (BaseEitherBackedResult<R, FailureType>) this;
         }
 
         try {
@@ -101,6 +108,20 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
         return flatMap(successHandler);
+    }
+
+    @Override
+    public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Supplier<FailingOrSucceedingResult<R, FailureType>>  failureHandler) {
+        if (isRight()) {
+            return (BaseEitherBackedResult<R, FailureType>) this;
+        }
+
+        try {
+            return failureHandler.get();
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing failure function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -139,7 +160,7 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     }
 
     public T getSuccessObjectOrThrowException() {
-        return isRight() ? getRight() :  findAndThrowException(getLeft());
+        return isRight() ? getRight() : findAndThrowException(getLeft());
     }
 
     public abstract T findAndThrowException(FailureType failureType);
@@ -182,6 +203,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
 
     protected abstract <R> BaseEitherBackedResult<R, FailureType> createSuccess(R success);
 
+    protected abstract <R> BaseEitherBackedResult<R, FailureType> createFailure(FailureType failure);
+
     protected abstract <R> BaseEitherBackedResult<R, FailureType> createFailure(FailingOrSucceedingResult<R, FailureType> failure);
 
     private boolean isLeft() {
@@ -198,5 +221,51 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
 
     private T getRight() {
         return result.getRight();
+    }
+
+
+    /**
+     * Function to aggregate a {@link List} of {@link BaseEitherBackedResult}.
+     *
+     * @param input
+     * @param failureCollector
+     * @param emptyResult
+     * @param <Item>
+     * @param <FailureType>
+     * @param <Result>
+     * @param <Input>
+     * @return
+     */
+    protected static <Item,
+            FailureType,
+            Result extends BaseEitherBackedResult<List<Item>, FailureType>,
+            Input extends BaseEitherBackedResult<Item, FailureType>>
+    Result aggregate(final List<Input> input,
+                     final BinaryOperator<FailureType> failureCollector,
+                     final Result emptyResult) {
+        if (input == null || input.isEmpty()) {
+            return emptyResult;
+        }
+        final Input firstResult = input.get(0);
+        final List<Item> items = new ArrayList<>();
+        final List<FailureType> failures = new ArrayList<FailureType>();
+        for (final Input i : input) {
+            if (i.isSuccess()) {
+                items.add(i.getSuccessObject());
+            } else {
+                failures.add(i.getFailure());
+            }
+        }
+        if (failures.isEmpty()) {
+            return (Result) firstResult.createSuccess(items);
+        } else {
+            final BaseEitherBackedResult<Item, FailureType> failure = firstResult.createFailure(failures.stream().reduce(null, nullSafe(failureCollector)));
+            return (Result) failure;
+        }
+    }
+
+
+    public static <T, FailureType, R extends BaseEitherBackedResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
+        return results.stream().filter(result -> result.isSuccess() ? true : errorsFilter.test(result.getFailure())).collect(toList());
     }
 }

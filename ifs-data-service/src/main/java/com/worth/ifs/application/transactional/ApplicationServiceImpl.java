@@ -69,7 +69,7 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -118,7 +118,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
         Application application = new Application();
         application.setName(applicationName);
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = null;
         application.setStartDate(currentDate);
 
         String name = ApplicationStatusConstants.CREATED.getName();
@@ -422,7 +422,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserAndCompetition(String applicationName, User user, Competition competition) {
     	  Application application = new Application();
           application.setName(applicationName);
-          LocalDate currentDate = LocalDate.now();
+          LocalDate currentDate = null;
           application.setStartDate(currentDate);
 
           String name = ApplicationStatusConstants.CREATED.getName();

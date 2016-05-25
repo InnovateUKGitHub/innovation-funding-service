@@ -42,9 +42,6 @@ td.form-group {
   &.error  {
     border-left:none;
   }
-  &:first-child {
-    padding-left:1.25em;
-  }
 }
 .field-error {
   @include box-shadow(none);
@@ -223,10 +220,9 @@ table td{
 //     }
 // }
 
-select{
-    &.form-control{
-        -webkit-appearance: menulist;
-    }
+select.form-control{
+  -webkit-appearance: menulist;
+  width:auto;  
 }
 
 .feedback .textarea-wrapped textarea{
@@ -256,7 +252,7 @@ select{
     margin:16px 0;
     font-size:17px;
 }
-.js-enabled [name="upload_file"] {
+.js-enabled [data-for-file-upload] {
     display:none;
 }
 .js-enabled .upload-section .inputfile{

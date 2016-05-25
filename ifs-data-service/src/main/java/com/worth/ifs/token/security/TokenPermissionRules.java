@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 
 /**
  * Rules around who has permissions to perform CRUD around Tokens

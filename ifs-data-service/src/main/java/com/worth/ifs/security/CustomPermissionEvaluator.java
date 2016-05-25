@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -43,6 +44,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     public static boolean isAnonymous(UserResource user) {
         return user == ANONYMOUS_USER;
+    }
+
+    public static UserResource getAnonymous() {
+        return ANONYMOUS_USER;
     }
 
     @PostConstruct
@@ -97,17 +102,17 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private static final void validate(final PermissionedObjectClassesToListOfLookup lookupsStrategyMap) {
         for (final Entry<Class<?>, ListOfOwnerAndMethod> permissionedObjectClassTolookupsStrategies : lookupsStrategyMap.entrySet()) {
-            if (!lookupsWithMethodsThatDoNotHaveASingleParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()){
+            if (!lookupsWithMethodsThatDoNotHaveASingleParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()) {
                 final String error = "Lookups must have a single parameter";
                 LOG.error(error);
                 throw new IllegalArgumentException(error);
             }
-            if (!lookupsWithMethodsThatDoNotHaveASerializableParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()){
+            if (!lookupsWithMethodsThatDoNotHaveASerializableParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()) {
                 final String error = "Lookups must have a serializable parameter";
                 LOG.error(error);
                 throw new IllegalArgumentException(error);
             }
-            if (!lookupsWithMethodsThatHaveDuplicateLookupKeyParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()){
+            if (!lookupsWithMethodsThatHaveDuplicateLookupKeyParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()) {
                 final String error = "There must not be any duplicates";
                 LOG.error(error);
                 throw new IllegalArgumentException(error);
@@ -217,21 +222,26 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     @Override
-    public boolean hasPermission(final Authentication authentication, final Object targetDomainObject, final Object permission) {
-
-        if (targetDomainObject == null) {
+    public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
+        if (targetObject == null) {
             return true;
         }
-
-        Class<?> dtoClass = targetDomainObject.getClass();
-        ListOfOwnerAndMethod methodsToCheck =
-                rulesMap.getOrDefault(dtoClass, emptyPermissions())
-                        .getOrDefault(permission, emptyMethods());
-        return methodsToCheck.stream().map(
-                methodAndBean -> callHasPermissionMethod(methodAndBean, targetDomainObject, authentication)
-        ).reduce(
-                false, (a, b) -> a || b
-        );
+        final Class<?> targetClass = targetObject.getClass();
+        final List<PermissionsToPermissionsMethods> permissionsWithPermissionsMethodsForTargetClassList
+                = rulesMap.entrySet().stream().
+                filter(e -> e.getKey().isAssignableFrom(targetClass)). // Any super class of the target class will do.
+                map(Entry::getValue).collect(toList());
+        final List<ListOfOwnerAndMethod> permissionMethodsForPermissionList
+                = permissionsWithPermissionsMethodsForTargetClassList.stream().
+                map(permissionsToPermissionsMethods -> permissionsToPermissionsMethods.get(permission)).
+                filter(Objects::nonNull). // Filter any nulls
+                collect(toList());
+        final ListOfOwnerAndMethod permissionMethodsForPermissionAggregate
+                = permissionMethodsForPermissionList.stream().
+                reduce(new ListOfOwnerAndMethod(), (f1, f2) -> ListOfOwnerAndMethod.from(combineLists(f1, f2)));
+        return permissionMethodsForPermissionAggregate.stream().
+                map(methodAndBean -> callHasPermissionMethod(methodAndBean, targetObject, authentication)).
+                reduce(false, (a, b) -> a || b);
     }
 
     public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {

@@ -22,7 +22,7 @@ Academic organisations search (empty & invalid inputs)
     When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
     When the user enters text to a text field    id=organisationSearchName    abcd
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Sorry we couldn't find any results.
@@ -54,13 +54,10 @@ Academic organisation (accept invitation flow)
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And guest user log-in    worth.email.test+inviteacademics@gmail.com    Passw0rd123
-    When the user clicks the button/link    link=Technology Inspired
+    When the user clicks the button/link    link=Connected digital additive manufacturing
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
     And the user should not see the text in the page    Labour
     And the user should not see an error in the page
 
 *** Keywords ***
-the user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}

@@ -2,20 +2,21 @@ package com.worth.ifs.finance.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.user.builder.RoleResourceBuilder;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,49 +35,62 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     private UserResource otherLeadApplicant;
     private OrganisationResource otherOrganisation;
 
+
+
     @Override
     protected ApplicationFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ApplicationFinancePermissionRules();
     }
 
     @Before
-    public void setup() throws Exception {;
-
-        // Set up roles
-        final Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-        final Role collaboratorRole = newRole().withType(COLLABORATOR).build();
-        final Role assessorRole = newRole().withType(ASSESSOR).build();
+    public void setup() throws Exception {
+        ;
 
         // Create a compAdmin
-        final RoleResource compAdminRole = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build();
-        compAdmin = newUserResource().withRolesGlobal(asList(compAdminRole)).build();
+        compAdmin = this.compAdminUser();
 
-        // Set up users on an organisation and application
-        final long applicationId = 1l;
-        organisation = newOrganisationResource().build();
-        applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(applicationId).build();
-        leadApplicant = newUserResource().build();
-        assessor = newUserResource().build();
-        collaborator = newUserResource().build();
+        // Set up global role method mocks
+        for (Role role : allRoles) {
+            when(roleRepositoryMock.findByName(role.getName())).thenReturn(asList(role));
+        }
 
-        setupUserOnApplication(leadApplicantRole, leadApplicant, applicationId, organisation.getId());
-        setupUserOnApplication(collaboratorRole, collaborator, applicationId, organisation.getId());
-        setupUserOnApplication(assessorRole, assessor, applicationId, organisation.getId());
+        {
+            // Set up users on an organisation and application
+            final long applicationId = 1l;
+            final long organisationId = 2l;
+            organisation = newOrganisationResource().with(id(organisationId)).build();
+            applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(applicationId).build();
+            leadApplicant = newUserResource().build();
+            assessor = newUserResource().build();
+            collaborator = newUserResource().build();
 
+            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicant.getId(), getRole(LEADAPPLICANT).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(assessor.getId(), getRole(ASSESSOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
 
-        // set up different users on an organisation and application to check that there is no bleed through of permissions
-        final long otherApplicationId = 2l;
-        otherOrganisation = newOrganisationResource().build();
-        otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
-        otherLeadApplicant = newUserResource().build();
-        setupUserOnApplication(leadApplicantRole, otherLeadApplicant, otherApplicationId, otherOrganisation.getId());
+            Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
+            Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
+            Role compAdminRole = newRole().withType(UserRoleType.COMP_ADMIN).build();
+
+            ProcessRole leadApplicantProcessRole = newProcessRole().withRole(leadApplicantRole).build();
+            ProcessRole collaboratorProcessRole = newProcessRole().withRole(collaboratorRole).build();
+            ProcessRole compAdminProcessRole = newProcessRole().withRole(compAdminRole).build();
+
+            when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationId)).thenReturn(leadApplicantProcessRole);
+            when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationId)).thenReturn(collaboratorProcessRole);
+            when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
+
+        }
+        {
+            // Set up different users on an organisation and application to check that there is no bleed through of permissions
+            final long otherApplicationId = 3l;
+            final long otherOrganisationId = 4l;
+            otherOrganisation = newOrganisationResource().with(id(otherOrganisationId)).build();
+            otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
+            otherLeadApplicant = newUserResource().build();
+            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
+        }
     }
-
-    private void setupUserOnApplication(final Role role, final UserResource userResource, final long applicationId, final long organisationId){
-        when(roleRepositoryMock.findByName(role.getName())).thenReturn(asList(role));
-        when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(userResource.getId(), role.getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
-    }
-
 
 
     @Test
@@ -96,8 +110,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void compAdminCanSeeApplicationFinancesForOrganisations() {
-        allRoleUsers.forEach(user -> {
-            allRoleUsers.forEach(otherUser -> {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(compAdminUser())) {
                     assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
                 } else {
@@ -106,4 +120,59 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             });
         });
     }
+
+    @Test
+    public void testUpdateCosts() {
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
+    }
+
+    @Test
+    public void testAddCosts() {
+        assertTrue(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+
+        assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
+    }
+
+    @Test
+    public void testLeadCanGetFileResourceForPartner() {
+        assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, compAdmin));
+    }
+
+    @Test
+    public void testCompAdminCanGetFileResourceForPartner(){
+        assertTrue(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
+        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+    }
+
+    @Test
+    public void testConsortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
+    @Test
+    public void testConsortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
+    @Test
+    public void testConsortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
 }

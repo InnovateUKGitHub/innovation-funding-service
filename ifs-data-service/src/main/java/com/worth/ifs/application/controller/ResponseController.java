@@ -1,8 +1,8 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.application.transactional.ResponseService;
-import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.assessment.resource.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.security.CustomPermissionEvaluator;
@@ -30,8 +30,8 @@ public class ResponseController {
     private ResponseService responseService;
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
-    public RestResult<List<Response>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
-        return responseService.findResponsesByApplication(applicationId).toGetResponse();
+    public RestResult<List<ResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
+        return responseService.findResponseResourcesByApplication(applicationId).toGetResponse();
     }
 
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")

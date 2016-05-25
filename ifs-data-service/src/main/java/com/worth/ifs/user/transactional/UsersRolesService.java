@@ -2,7 +2,7 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 
 import java.util.List;
 
@@ -11,18 +11,21 @@ import java.util.List;
  */
 public interface UsersRolesService {
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
-    ServiceResult<ProcessRole> getProcessRoleById(final Long id);
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
+    ServiceResult<ProcessRoleResource> getProcessRoleById(final Long id);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
-    ServiceResult<List<ProcessRole>> getProcessRolesByApplicationId(final Long applicationId);
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<ProcessRoleResource>> getProcessRolesByIds(final Long[] ids);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
-    ServiceResult<ProcessRole> getProcessRoleByUserIdAndApplicationId(final Long userId, final Long applicationId);
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(final Long applicationId);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
-    ServiceResult<List<ProcessRole>> getProcessRolesByUserId(final Long userId);
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
+    ServiceResult<ProcessRoleResource> getProcessRoleByUserIdAndApplicationId(final Long userId, final Long applicationId);
 
-    @NotSecured("TODO DW - INFUND-1555 - add correct permissions")
-    ServiceResult<List<ProcessRole>> getAssignableProcessRolesByApplicationId(final Long applicationId);
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<ProcessRoleResource>> getProcessRolesByUserId(final Long userId);
+
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<ProcessRoleResource>> getAssignableProcessRolesByApplicationId(final Long applicationId);
 }

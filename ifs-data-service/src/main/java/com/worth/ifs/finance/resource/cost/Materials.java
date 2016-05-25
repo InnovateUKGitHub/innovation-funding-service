@@ -1,10 +1,12 @@
 package com.worth.ifs.finance.resource.cost;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -13,23 +15,27 @@ import java.math.BigDecimal;
 public class Materials implements CostItem {
     private Long id;
 
+    @NotNull
     @NotBlank
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
 
     private String name;
+
+    @NotNull
     @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal cost;
 
+    @NotNull
     @Min(1)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0)
     private Integer quantity;
 
     private BigDecimal total = BigDecimal.ZERO; // calculated, no validation
-    private CostType costType;
 
     public Materials() {
-        this.costType = CostType.MATERIALS;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public Materials(Long id, String item, BigDecimal cost, Integer quantity) {
@@ -69,7 +75,7 @@ public class Materials implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.MATERIALS;
     }
 
     public void setItem(String item) {
@@ -87,5 +93,15 @@ public class Materials implements CostItem {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
     }
 }

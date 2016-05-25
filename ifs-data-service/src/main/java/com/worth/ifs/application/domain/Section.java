@@ -3,7 +3,9 @@ package com.worth.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.competition.domain.Competition;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -55,8 +57,9 @@ public class Section implements Comparable<Section> {
     @Column(nullable = false)
     private boolean displayInAssessmentApplicationSummary = false;
     
-    @Column(nullable = false)
-    private boolean finance = false;
+    @Enumerated(EnumType.STRING)
+    @Column(name="section_type")
+    private SectionType type = SectionType.GENERAL;
 
     public Section(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
         this.id = id;
@@ -147,9 +150,10 @@ public class Section implements Comparable<Section> {
 
     public String getAssessorGuidanceDescription() { return assessorGuidanceDescription; }
 
-    public boolean isFinance() {
-		return finance;
-	}
+    public boolean isType(SectionType queriedType) {
+    	return queriedType.equals(type);
+    }
+    
     public void setAssessorGuidanceDescription(String assessorGuidanceDescription) { this.assessorGuidanceDescription = assessorGuidanceDescription; }
 
     public boolean isDisplayInAssessmentApplicationSummary() {
@@ -184,8 +188,12 @@ public class Section implements Comparable<Section> {
         this.id = id;
     }
     
-    public void setFinance(boolean finance) {
-		this.finance = finance;
+    public void setType(SectionType type) {
+		this.type = type;
+	}
+    
+    public SectionType getType() {
+		return type;
 	}
 
     @Override
@@ -210,7 +218,7 @@ public class Section implements Comparable<Section> {
             .append(this.questions, rhs.questions)
             .append(this.childSections, rhs.childSections)
             .append(this.displayInAssessmentApplicationSummary, rhs.displayInAssessmentApplicationSummary)
-            .append(this.finance, rhs.finance)
+            .append(this.type, rhs.type)
             .isEquals();
     }
 
@@ -226,7 +234,7 @@ public class Section implements Comparable<Section> {
             .append(questions)
             .append(childSections)
             .append(displayInAssessmentApplicationSummary)
-            .append(finance)
+            .append(type)
             .toHashCode();
     }
 }

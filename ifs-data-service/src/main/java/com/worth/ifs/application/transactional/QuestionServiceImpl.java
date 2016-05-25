@@ -1,5 +1,22 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.mapper.QuestionMapper;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -7,22 +24,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -54,9 +55,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
 
+    @Autowired
+    private QuestionMapper questionMapper;
+
     @Override
-    public ServiceResult<Question> getQuestionById(final Long id) {
-        return getQuestion(id);
+    public ServiceResult<QuestionResource> getQuestionById(final Long id) {
+        return getQuestionResource(id);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
 
-        return find(question(ids.questionId), application(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+        return find(getQuestion(ids.questionId), application(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
 
             QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
 
@@ -117,15 +121,15 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<List<Question>> findByCompetition(final Long competitionId) {
-        return serviceSuccess(questionRepository.findByCompetitionId(competitionId));
+    public ServiceResult<List<QuestionResource>> findByCompetition(final Long competitionId) {
+        return serviceSuccess(questionsToResources(questionRepository.findByCompetitionId(competitionId)));
     }
 
     // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
-    public ServiceResult<Question> getNextQuestion(final Long questionId) {
+    public ServiceResult<QuestionResource> getNextQuestion(final Long questionId) {
 
-        return find(question(questionId)).andOnSuccess(question -> {
+        return find(getQuestion(questionId)).andOnSuccess(question -> {
 
             // retrieve next question within current section
             Question nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
@@ -142,12 +146,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                         question.getCompetition().getId(), question.getPriority());
             }
 
-            return serviceSuccess(nextQuestion);
+            return serviceSuccess(questionMapper.mapToResource(nextQuestion));
         });
     }
 
     @Override
-    public ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId) {
+    public ServiceResult<QuestionResource> getPreviousQuestionBySection(final Long sectionId) {
         return sectionService.getById(sectionId).andOnSuccess(section -> {
 
             if (section.getParentSection() != null) {
@@ -158,41 +162,41 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                             .map(questionRepository::findOne)
                             .max(comparing(Question::getPriority));
                     if(lastQuestionInSection.isPresent()){
-                        return serviceSuccess(lastQuestionInSection.get());
+                        return serviceSuccess(questionMapper.mapToResource(lastQuestionInSection.get()));
                     }
                 }
             }
-            return serviceFailure(notFoundError(Question.class, "getPreviousQuestionBySection", sectionId));
+            return serviceFailure(notFoundError(QuestionResource.class, "getPreviousQuestionBySection", sectionId));
         });
     }
 
     @Override
-    public ServiceResult<Question> getNextQuestionBySection(final Long sectionId) {
+    public ServiceResult<QuestionResource> getNextQuestionBySection(final Long sectionId) {
 
         return sectionService.getById(sectionId)
                 .andOnSuccess(section -> {
 
-            if (section.getParentSection() != null) {
-                Optional<SectionResource> nextSection = sectionService.getNextSection(section).getOptionalSuccessObject();
-                if(nextSection.isPresent()) {
-                    Optional<Question> firstQuestionInSection = nextSection.get().getQuestions()
-                            .stream()
-                            .map(questionRepository::findOne)
-                            .min(comparing(Question::getPriority));
+                    if (section.getParentSection() != null) {
+                        Optional<SectionResource> nextSection = sectionService.getNextSection(section).getOptionalSuccessObject();
+                        if (nextSection.isPresent()) {
+                            Optional<Question> firstQuestionInSection = nextSection.get().getQuestions()
+                                    .stream()
+                                    .map(questionRepository::findOne)
+                                    .min(comparing(Question::getPriority));
 
-                    if(firstQuestionInSection.isPresent()){
-                        return serviceSuccess(firstQuestionInSection.get());
+                            if (firstQuestionInSection.isPresent()) {
+                                return serviceSuccess(questionMapper.mapToResource(firstQuestionInSection.get()));
+                            }
+                        }
                     }
-                }
-            }
-            return serviceFailure(notFoundError(Question.class, "getNextQuestionBySection", sectionId));
-        });
+                    return serviceFailure(notFoundError(QuestionResource.class, "getNextQuestionBySection", sectionId));
+                });
     }
 
     @Override
-    public ServiceResult<Question> getPreviousQuestion(final Long questionId) {
+    public ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId) {
 
-        return find(question(questionId)).andOnSuccess(question -> {
+        return find(getQuestion(questionId)).andOnSuccess(question -> {
 
             Question previousQuestion = null;
             if (question != null) {
@@ -203,8 +207,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                     previousQuestion = getPreviousQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
                 }
             }
-
-            return serviceSuccess(previousQuestion);
+            if(previousQuestion == null){
+                return serviceFailure(notFoundError(QuestionResource.class, "getPreviousQuestion", questionId));
+            }else{
+                return serviceSuccess(questionMapper.mapToResource(previousQuestion));
+            }
         });
 
     }
@@ -254,13 +261,18 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
+    public ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle) {
+        return getQuestionByFormInputType(formInputTypeTitle).andOnSuccessReturn(questionMapper::mapToResource);
+    }
+
+    @Override
     public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId){
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
 
     private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
-        return find(processRole(processRoleId), application(applicationId), question(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
+        return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
 
             QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
             if (questionStatus == null) {
@@ -369,11 +381,15 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                 .collect(Collectors.toList());
     }
 
-    private Supplier<ServiceResult<Question>> question(Long questionId) {
-        return () -> getQuestion(questionId);
+    private Supplier<ServiceResult<Question>> getQuestion(Long questionId) {
+        return () -> find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
 
-    private ServiceResult<Question> getQuestion(Long questionId) {
-        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
+    private ServiceResult<QuestionResource> getQuestionResource(Long questionId) {
+        return find(questionRepository.findOne(questionId), notFoundError(QuestionResource.class, questionId)).andOnSuccessReturn(questionMapper::mapToResource);
+    }
+
+    private List<QuestionResource> questionsToResources(List<Question> filtered) {
+        return simpleMap(filtered, question -> questionMapper.mapToResource(question));
     }
 }

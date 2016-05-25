@@ -1,8 +1,10 @@
 package com.worth.ifs;
 
+import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.catalina.security.SecurityUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Rollback
 @Transactional
-public abstract class BaseControllerIntegrationTest<ControllerType> extends BaseWebIntegrationTest {
+public abstract class BaseControllerIntegrationTest<ControllerType> extends BaseIntegrationTest {
 
     public Log LOG = LogFactory.getLog(getClass());
 
@@ -42,6 +44,10 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
 
     protected UserResource getCompAdmin() {
         return getByEmail("compadmin@innovateuk.test");
+    }
+
+    protected UserResource getAnonUser() {
+        return SecurityRuleUtil.getAnonymous();
     }
 
     protected UserResource getSystemRegistrationUser() {

@@ -13,8 +13,10 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -50,6 +52,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
+    public <R> ServiceResult<R> andOnFailure(Supplier<FailingOrSucceedingResult<R, ServiceFailure>> failureHandler) {
+        return (ServiceResult<R>) super.andOnFailure(failureHandler);
+    }
+
+    @Override
     public ServiceResult<Void> andOnSuccessReturnVoid(Runnable successHandler) {
         return (ServiceResult<Void>) super.andOnSuccessReturnVoid(successHandler);
     }
@@ -72,6 +79,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     /**
      * Not used currently TODO Implement this in future for consistency with RestResult
+     *
      * @param serviceFailure - failure object with information about failure
      * @return always returns null
      */
@@ -83,6 +91,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
         return serviceSuccess(success.getSuccessObject());
+    }
+
+    @Override
+    protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(ServiceFailure failure) {
+        return serviceFailure(failure);
     }
 
     @Override
@@ -98,7 +111,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     /**
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a GET request that is requesting
      * data.
-     *
+     * <p>
      * This will be a RestResult containing the body of the ServiceResult and a "200 - OK" response.
      */
     public RestResult<T> toGetResponse() {
@@ -108,9 +121,9 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     /**
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
      * creating data.
-     *
+     * <p>
      * This will be a RestResult containing the body of the ServiceResult and a "201 - Created" response.
-     *
+     * <p>
      * This is an appropriate response for a POST that is creating data.  To update data, consider using a PUT.
      */
     public RestResult<T> toPostCreateResponse() {
@@ -118,22 +131,19 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     /**
-     * @deprecated should use POSTs to create new data, and PUTs to update data.
-     *
-     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
-     * updating data (although PUTs should really be used).
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that has updated
+     * data though not at the location POSTED to.
      *
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
-    @Deprecated
-    public RestResult<Void> toPostUpdateResponse() {
-        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPostUpdateResponse());
+    public RestResult<Void> toPostResponse() {
+        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPostResponse());
     }
 
     /**
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
      * updating data.
-     *
+     * <p>
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
     public RestResult<Void> toPutResponse() {
@@ -142,10 +152,10 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     /**
      * @deprecated PUTs shouldn't generally return results in their bodies
-     *
+     * <p>
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
      * updating data.
-     *
+     * <p>
      * This will be a RestResult containing the body of the ServiceResult with a "200 - OK" response, although ideally
      * PUT responses shouldn't need to inculde bodies.
      */
@@ -157,7 +167,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     /**
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a DELETE request that is
      * deleting data.
-     *
+     * <p>
      * This will be a bodiless RestResult with a "204 - No content" response.
      */
     public RestResult<Void> toDeleteResponse() {
@@ -197,6 +207,13 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     /**
+     * A factory method to generate a failing ServiceResult based upon an ErrorTemplate.
+     */
+    public static <T> ServiceResult<T> serviceFailure(ErrorTemplate errorTemplate) {
+        return serviceFailure(singletonList(new Error(errorTemplate)));
+    }
+
+    /**
      * A factory method to generate a failing ServiceResult based upon an Error.
      */
     public static <T> ServiceResult<T> serviceFailure(List<Error> errors) {
@@ -217,7 +234,25 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     /**
      * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
-     * all ServiceResults are successful.
+     * all ServiceResults are successful.  In the event of a failure, all encountered failing ServiceResults' Errors will
+     * be combined into a single failing ServiceResult
+     */
+    public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, ServiceResult<T> successResponse) {
+        List<ServiceResult<R>> failures = simpleFilter(results, ServiceResult::isFailure);
+
+        if (failures.isEmpty()) {
+            return successResponse;
+        }
+
+        List<List<Error>> errorLists = simpleMap(failures, failure -> failure.getFailure().getErrors());
+        List<Error> combinedErrors = flattenLists(errorLists);
+        return serviceFailure(combinedErrors);
+    }
+
+
+    /**
+     * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
+     * all ServiceResults are successful, and return a specific failure in the event that there were any errors detected.
      */
     public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, ServiceResult<T> failureResponse, ServiceResult<T> successResponse) {
         return results.stream().anyMatch(ServiceResult::isFailure) ? failureResponse : successResponse;
@@ -226,14 +261,13 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     /**
      * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
      * response (an Either with a left of ServiceFailure).
-     *
+     * <p>
      * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
      * type GENERAL_UNEXPECTED_ERROR.
      *
      * @param serviceCode - code that performs some process and returns a successful or failing ServiceResult, the state
-     *                      of which then allows this wrapper to perform additional actions
-     *
-     * @param <T> - the successful return type of the ServiceResult
+     *                    of which then allows this wrapper to perform additional actions
+     * @param <T>         - the successful return type of the ServiceResult
      * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
      * was thrown in serviceCode
      */
@@ -244,14 +278,13 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     /**
      * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
      * response (an Either with a left of ServiceFailure).
-     *
+     * <p>
      * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
      * type GENERAL_UNEXPECTED_ERROR.
      *
      * @param serviceCode - code that performs some process and returns a successful or failing ServiceResult, the state
-     *                      of which then allows this wrapper to perform additional actions
-     *
-     * @param <T> - the successful return type of the ServiceResult
+     *                    of which then allows this wrapper to perform additional actions
+     * @param <T>         - the successful return type of the ServiceResult
      * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
      * was thrown in serviceCode
      */
@@ -259,19 +292,19 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return handlingErrors(new Error(catchAllErrorTemplate), serviceCode);
     }
 
-        /**
-         * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
-         * response (an Either with a left of ServiceFailure).
-         *
-         * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-         * type GENERAL_UNEXPECTED_ERROR.
-         *
-         * @param <T> - the successful return type of the ServiceResult
-         * @param serviceCode - code that performs some process and returns a successful or failing ServiceResult, the state
-         *                      of which then allows this wrapper to perform additional actions
-         * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
-         * was thrown in serviceCode
-         */
+    /**
+     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
+     * response (an Either with a left of ServiceFailure).
+     * <p>
+     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
+     * type GENERAL_UNEXPECTED_ERROR.
+     *
+     * @param <T>         - the successful return type of the ServiceResult
+     * @param serviceCode - code that performs some process and returns a successful or failing ServiceResult, the state
+     *                    of which then allows this wrapper to perform additional actions
+     * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
+     * was thrown in serviceCode
+     */
     public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
             return serviceCode.get();
@@ -280,4 +313,21 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
             return serviceFailure(catchAllError);
         }
     }
+
+
+    /**
+     * Aggregate a {@link List} of {@link ServiceResult} into a {@link ServiceResult} containing a {@list List}
+     * @param input
+     * @param <T>
+     * @return
+     */
+    public static <T> ServiceResult<List<T>> aggregate(final List<ServiceResult<T>> input) {
+        return BaseEitherBackedResult.aggregate(
+                input,
+                (f1, f2) -> new ServiceFailure(combineLists(f1.getErrors(), f2.getErrors())),
+                serviceSuccess(emptyList()));
+    }
+
+
+
 }

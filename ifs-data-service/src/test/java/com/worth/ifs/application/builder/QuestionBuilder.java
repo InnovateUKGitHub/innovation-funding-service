@@ -1,10 +1,5 @@
 package com.worth.ifs.application.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
@@ -14,9 +9,12 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.form.domain.FormInput;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
@@ -36,9 +34,7 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
                 .with(idBasedNames("Section "))
                 .withNeedingAssessorScore(true)
                 .withPriority(0)
-                .withQuestionNumber("1")
-                .withGuidanceQuestion("Some Guidance Question Text")
-                .withGuidanceAnswer("Some Guidance Answer Text");
+                .withQuestionNumber("1");
     }
 
     public QuestionBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
@@ -47,14 +43,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withQuestionNumber(String value) {
         return with(question -> setField("questionNumber", value, question));
-    }
-
-    public QuestionBuilder withGuidanceQuestion(String value) {
-        return with(question -> setField("guidanceQuestion", value, question));
-    }
-
-    public QuestionBuilder withGuidanceAnswer(String value) {
-        return with(question -> setField("guidanceAnswer", value, question));
     }
 
     public QuestionBuilder withPriority(int priority) {
@@ -103,6 +91,10 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withSection(Section... sections) {
         return withArray((section, object) -> setField("section", section, object), sections);
+    }
+
+    public QuestionBuilder withMultipleStatuses(Boolean... multipleStatuses) {
+        return withArray((multipleStatus, object) -> setField("multipleStatuses", multipleStatus, object), multipleStatuses);
     }
 
     public QuestionBuilder withResponses(List<Response>... responses) {

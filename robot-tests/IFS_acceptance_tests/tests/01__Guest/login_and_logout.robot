@@ -7,6 +7,7 @@ Documentation     INFUND-399: As a client, I would like to demo the system with 
 ...
 ...               INFUND-2130: As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Guest
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -15,62 +16,77 @@ Resource          ../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Log-out
-    [Tags]    Guest    HappyPath
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    Given the Applicant is logged-in
+    Given the user should see the element        link=Logout
     Logout as user
 
 Invalid Login
-    [Tags]    Guest
+    [Tags]
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
 Valid login as Applicant
-    [Tags]    Guest    HappyPath
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the Applicant is logged-in
+    Then the user should see the element        link=Logout
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
 Valid login as Collaborator
-    [Tags]    Guest    HappyPath
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the Applicant is logged-in
+    Then the user should see the element        link=Logout
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor    Guest    HappyPath
+    [Tags]    Assessor    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the Applicant is logged-in
+    Then the user should see the element        link=Logout
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should be logged-in as an Assessor
     [Teardown]    Logout as user
 
 Valid login as Comp Admin
     [Documentation]    INFUND-2130
+    [Tags]
     Given the user is not logged-in
     When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the Applicant is logged-in
+    Then the user should see the element        link=Logout
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_OPEN}
     [Teardown]    Logout as user
 
+Valid login as Project Finance role
+    [Documentation]     INFUND-2609
+    [Tags]
+    Given the user is not logged-in
+    When the guest user enters the log in credentials   project.finance1@innovateuk.test    Passw0rd
+    And the user clicks the button/link     css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page without error checking   ${PROJECT_FINANCE_DASHBOARD_URL}
+    # note that I haven't used error checking on this redirect as this page will currently produce an error
+    # in sprint 9 PS we have created the role, which redirects to a page which will be created in sprint 10 PS
+    # at that point this can be changed to include error checking
+
+
+
 Reset password (psw does not match)
     [Documentation]    INFUND-1889
-    [Tags]    FailingForLocal
+    [Tags]    Email     Pending
+    # Pending until shib image drop 14
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
-    When the user clicks the button/link    link=Forgot your password?
+    When the user clicks the button/link    link=forgot your password?
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
@@ -85,13 +101,20 @@ Reset password (psw does not match)
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    FailingForLocal    HappyPath
+    [Tags]    HappyPath     Pending
+    # Pending until shib image drop 14
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
-    When the user clicks the button/link    link=Forgot your password?
+    When the user clicks the button/link    link=forgot your password?
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
+
+Reset password (email step)
+    [Documentation]    INFUND-1889
+    [Tags]    Email    HappyPath    Pending
+    # Pending until shib image drop 14
+    [Setup]    The guest user opens the browser
     And the user opens the mailbox and clicks the reset link
     And the user should see the text in the page    Password reset
     And the user enters text to a text field    id=id_password    Passw0rdnew
@@ -104,24 +127,22 @@ Reset password
     Then the guest user should get an error message
     When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the Applicant is logged-in
+    Then the user should see the element        link=Logout
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
 
 *** Keywords ***
 the user is not logged-in
-    Element Should Not Be Visible    link=My dashboard
-    Element Should Not Be Visible    link=Logout
+    the user should not see the element    link=My dashboard
+    the user should not see the element    link=Logout
 
 the guest user should get an error message
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
-    Page Should Contain    Your username/password combination doesn't seem to work
-    Page Should Not Contain Element    link=Logout
+    the user should see the text in the page    Your login was unsuccessful because of the following issue(s)
+    the user should see the text in the page    Your username/password combination doesn't seem to work
+    the user should not see the element    link=Logout
 
-the Applicant is logged-in
-    Wait Until Element Is Visible    link=Logout
 
 the user should be logged-in as an Assessor
-    Title Should Be    Innovation Funding Service - Assessor Dashboard
+    Title Should Be    Assessor Dashboard - Innovation Funding Service
 
 the user opens the mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1

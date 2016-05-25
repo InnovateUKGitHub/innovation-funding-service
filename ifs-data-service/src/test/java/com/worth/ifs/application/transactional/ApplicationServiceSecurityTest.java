@@ -7,13 +7,16 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.security.ApplicationLookupStrategy;
+import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
 import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,10 +30,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -44,16 +48,44 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
     private FormInputResponseFileUploadRules fileUploadRules;
     private FormInputResponseFileUploadLookupStrategies fileUploadLookup;
+    private ApplicationPermissionRules applicationRules;
+    private ApplicationLookupStrategy applicationLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         fileUploadRules = getMockPermissionRulesBean(FormInputResponseFileUploadRules.class);
+        applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         fileUploadLookup = getMockPermissionEntityLookupStrategiesBean(FormInputResponseFileUploadLookupStrategies.class);
+        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
 
     @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
+    public void testSendNotificationApplicationSubmitted() {
+        final long applicationId = 1L;
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> service.sendNotificationApplicationSubmitted(applicationId),
+                () -> verify(applicationRules).aLeadApplicantCanSendApplicationSubmittedNotification(isA(ApplicationResource.class), isA(UserResource.class))
+        );
+    }
 
+
+    @Test
+    public void testGetApplicationResource() {
+        final long applicationId = 1L;
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> service.getApplicationById(applicationId),
+                () -> {
+                    verify(applicationRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).compAdminsCanViewApplications(isA(ApplicationResource.class), isA(UserResource.class));
+                }
+        );
+    }
+
+
+    @Test
+    public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
         service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
     }
@@ -264,6 +296,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         verify(fileUploadRules, never()).applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
+
     @Override
     protected Class<? extends ApplicationService> getServiceClass() {
         return TestApplicationService.class;
@@ -360,11 +393,10 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
-		@Override
-		public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId,
-				Collection<Long> applicationStatusId) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        @Override
+        public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId,
+                                                                                        Collection<Long> applicationStatusId) {
+            return null;
+        }
     }
 }

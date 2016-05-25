@@ -1,7 +1,5 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,12 +15,10 @@ public class QuestionResource {
     private String name;
     private String shortName;
     private String description;
-    private String guidanceQuestion;
-    private String guidanceAnswer;
     private final List<Long> formInputs = new ArrayList<>();
-    private final Boolean markAsCompletedEnabled = false;
+    private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
-    private final Boolean multipleStatuses = false;
+    private Boolean multipleStatuses = false;
     private Integer priority;
     private boolean needingAssessorScore;
     private boolean needingAssessorFeedback;
@@ -46,24 +42,8 @@ public class QuestionResource {
         return this.shortName;
     }
 
-    public void setSection(Section section) {
-        this.section = section.getId();
-    }
-
-    public void setCompetition(Competition competition) {
-        this.competition = competition.getId();
-    }
-
     public Long getId() {
         return this.id;
-    }
-
-    public String getGuidanceAnswer() {
-        return this.guidanceAnswer;
-    }
-
-    public String getGuidanceQuestion() {
-        return this.guidanceQuestion;
     }
 
     public String getDescription() {
@@ -108,6 +88,14 @@ public class QuestionResource {
 
     public Boolean getMarkAsCompletedEnabled() {
         return this.markAsCompletedEnabled;
+    }
+
+    public void setMarkAsCompletedEnabled(Boolean markAsCompletedEnabled) {
+        this.markAsCompletedEnabled = markAsCompletedEnabled;
+    }
+
+    public void setMultipleStatuses(Boolean multipleStatuses) {
+        this.multipleStatuses = multipleStatuses;
     }
 
     public Boolean isAssignEnabled() {
@@ -164,8 +152,6 @@ public class QuestionResource {
             .append(this.id, question.id)
             .append(this.name, question.name)
             .append(this.description, question.description)
-            .append(this.guidanceQuestion, question.guidanceQuestion)
-            .append(this.guidanceAnswer, question.guidanceAnswer)
             .append(this.formInputs, question.formInputs)
             .append(this.markAsCompletedEnabled, question.markAsCompletedEnabled)
             .append(this.assignEnabled, question.assignEnabled)
@@ -189,8 +175,6 @@ public class QuestionResource {
             .append(this.id)
             .append(this.name)
             .append(this.description)
-            .append(this.guidanceQuestion)
-            .append(this.guidanceAnswer)
             .append(this.formInputs)
             .append(this.markAsCompletedEnabled)
             .append(this.assignEnabled)
@@ -238,14 +222,6 @@ public class QuestionResource {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setGuidanceQuestion(String guidanceQuestion) {
-        this.guidanceQuestion = guidanceQuestion;
-    }
-
-    public void setGuidanceAnswer(String guidanceAnswer) {
-        this.guidanceAnswer = guidanceAnswer;
     }
 
     public void setPriority(Integer priority) {

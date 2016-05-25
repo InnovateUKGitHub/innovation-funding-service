@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.commons.service.BaseEitherBackedResult;
-import com.worth.ifs.commons.service.ExceptionThrowingFunction;
-import com.worth.ifs.commons.service.FailingOrSucceedingResult;
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.service.*;
 import com.worth.ifs.util.Either;
 
 import org.apache.commons.logging.Log;
@@ -20,12 +17,14 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.*;
 
@@ -68,60 +67,68 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     public T findAndThrowException(RestFailure restFailure) {
         final Error error = getMostRelevantErrorForEndUser(restFailure.getErrors());
 
-        if(restFailure.has(CommonFailureKeys.GENERAL_NOT_FOUND)){
+        if(restFailure.has(GENERAL_NOT_FOUND)){
             throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.GENERAL_FORBIDDEN)){
+        if(restFailure.has(GENERAL_FORBIDDEN)){
             throw new ForbiddenActionException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
+        if(restFailure.has(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
             throw new UnableToRenderNotificationTemplateException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
+        if(restFailure.has(GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
             throw new GeneralUnexpectedErrorException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
+        if(restFailure.has(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
             throw new UnableToSendEmailsException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_DUPLICATE_FILE_CREATED)){
+        if(restFailure.has(FILES_DUPLICATE_FILE_CREATED)){
             throw new DuplicateFileCreatedException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
+        if(restFailure.has(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
             throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_FILESIZE)){
+        if(restFailure.has(FILES_INCORRECTLY_REPORTED_FILESIZE)){
             throw new IncorrectlyReportedFileSizeException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
+        if(restFailure.has(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
             throw new IncorrectlyReportedMediaTypeException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE)){
+        if(restFailure.has(FILES_UNABLE_TO_CREATE_FILE)){
             throw new UnableToCreateFileException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FOLDERS)){
+        if(restFailure.has(FILES_UNABLE_TO_CREATE_FOLDERS)){
             throw new UnableToCreateFoldersException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE)){
+        if(restFailure.has(FILES_UNABLE_TO_DELETE_FILE)){
             throw new UnableToDeleteFileException(error.getErrorMessage(), error.getArguments());
         }
 
-        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_UPDATE_FILE)){
+        if(restFailure.has(FILES_UNABLE_TO_UPDATE_FILE)){
             throw new UnableToUpdateFileException(error.getErrorMessage(), error.getArguments());
         }
 
-        if (restFailure.has(CommonFailureKeys.GENERAL_INCORRECT_TYPE)){
+        if (restFailure.has(GENERAL_INCORRECT_TYPE)){
             throw new IncorrectArgumentTypeException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if (restFailure.has(FILES_FILE_AWAITING_VIRUS_SCAN)){
+            throw new FileAwaitingVirusScanException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if (restFailure.has(FILES_FILE_QUARANTINED)){
+            throw new FileQuarantinedException(error.getErrorMessage(), error.getArguments());
         }
 
         throw new RuntimeException();
@@ -156,6 +163,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         }
 
         return (RestResult<R>) restFailure(INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    protected <R> BaseEitherBackedResult<R, RestFailure> createFailure(RestFailure failure) {
+        return restFailure(failure);
     }
 
     public HttpStatus getStatusCode() {
@@ -262,15 +274,12 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     /**
-     * @deprecated should use POSTs to create new data, and PUTs to update data.
-     *
-     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
-     * updating data (although PUTs should really be used).
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that has updated
+     * data though not at the location POSTED to.
      *
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
-    @Deprecated
-    public static RestResult<Void> toPostUpdateResponse() {
+    public static RestResult<Void> toPostResponse() {
         return restSuccess();
     }
 
@@ -307,5 +316,21 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     public static RestResult<Void> toDeleteResponse() {
         return restSuccess(NO_CONTENT);
     }
+
+
+    /**
+     * Aggregate a {@link List} of {@link RestResult} into a {@link RestResult} containing a {@list List}
+     *
+     * @param input
+     * @param <T>
+     * @return
+     */
+    public static <T> RestResult<List<T>> aggregate(final List<RestResult<T>> input) {
+        return BaseEitherBackedResult.aggregate(
+                input,
+                (f1, f2) -> new RestFailure(combineLists(f1.getErrors(), f2.getErrors())),
+                restSuccess(emptyList()));
+    }
+
 
 }

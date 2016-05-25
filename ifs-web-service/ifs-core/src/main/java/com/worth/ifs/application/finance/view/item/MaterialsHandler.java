@@ -31,7 +31,7 @@ public class MaterialsHandler extends CostHandler {
                         quantity = getIntegerValue(fieldValue, 0);
                         break;
                     default:
-                        log.info("Unused costField: " + financeFormField.getCostName());
+                        LOG.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

@@ -92,8 +92,13 @@
         </select>
     </div>
 
+    <div th:include="prototypes/fragments/project-setup :: prototype-manual-address" th:remove="tag" />
+  
+</div>
 
-    <fieldset id="address-details" class="extra-margin" style="display: none">
+<!-- ===========================Bank account details=========================== -->
+<div th:fragment="prototype-manual-address">
+    <fieldset id="address-details" class="extra-margin" th:style="${(user=='internal'?'display: block':'display: none')}">
         <legend class="visuallyhidden">Address details</legend>
         <div class="form-group">
             <label class="form-label" for="street">
@@ -134,6 +139,41 @@
     </fieldset>
 </div>
 
+
+<!-- ===========================Bank account details=========================== --> 
+
+<div th:fragment="prototype-bank-details">
+    <fieldset>
+        <h2 class="heading-medium no-margin-bottom">Account details</h2>
+
+        <legend class="visuallyhidden">Account details</legend>
+
+        <p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
+
+        <div class="form-group extra-margin">
+            <label class="form-label" for="bank-sort-code">
+                <span class="form-label-bold">Account number</span>
+            </label>
+            <p class="form-hint">For example: 1548965</p>
+            <input class="form-control" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
+        </div>
+
+        <div class="form-group ">
+            <label class="form-label" for="bank-sort-code">
+                <span class="form-label-bold">Sort code</span>
+            </label>
+            <p class="form-hint">For example: 311212</p>
+            <input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
+        </div>
+
+        <h2 class="heading-medium no-margin-bottom">Billing address</h2>
+
+        <p class="form-hint">Please provide the billing address of your bank account. This is not the address of the bank.</p>
+
+        <div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" th:unless="${user == 'internal'}"/>
+
+    </fieldset>
+</div>
 
 
 </html>

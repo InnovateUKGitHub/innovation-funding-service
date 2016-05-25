@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag"></div>
+  <div th:include="fragments/layout :: head" th:remove="tag" th:with="pageTitle='You do not have the necessary permissions for your request'"  />
 </head>
 <body class="error forbidden">
 
@@ -32,7 +32,7 @@
     </div>
 
 
-    <span th:if="${message} and ${message.length() != 0}" th:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
+    <span th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
         Error message will be displayed here for developers on dev/UAT environment
     </span>
 
@@ -40,7 +40,7 @@
     <p th:unless="${exception} or (${message} and ${message.length() != 0})">
         Cause unknown (no exception details available)</p>
 
-    <pre th:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+    <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
         Stack trace will be printed here...
     </pre>
 

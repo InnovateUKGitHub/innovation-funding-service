@@ -3,6 +3,7 @@ package com.worth.ifs.token.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.token.JpaConverterJson;
+import com.worth.ifs.token.resource.TokenType;
 
 import javax.persistence.*;
 

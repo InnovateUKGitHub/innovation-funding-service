@@ -1,36 +1,51 @@
 package com.worth.ifs.profile;
 
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.Arrays;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.servlet.http.HttpServletRequest;
-
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 
 public class ProfileControllerTest extends BaseUnitTest {
     @InjectMocks
     private ProfileController profileController;
 
-    UserResource user;
-
-    @Before
+    private UserResource user;
+    
+    private OrganisationResource organisation;
+    
+    @SuppressWarnings("unchecked")
+	@Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
@@ -44,20 +59,104 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
                 .withEmail("email@provider.com")
+                .withOrganisations(Arrays.asList(6L))
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
     }
+    
+	@SuppressWarnings("unchecked")
+	private void setupOrganisation(OrganisationAddressResource...addressResources) {
+        organisation = newOrganisationResource()
+        		.withName("orgname")
+        		.withCompanyHouseNumber("companyhousenumber")
+        		.withAddress(Arrays.asList(addressResources))
+        		.build();
+        when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
+	}
 
+   private OrganisationAddressResource organisationAddress(AddressType addressType) {
+    	return newOrganisationAddressResource()
+        		.withAddressType(addressType)
+        		.withAddress(newAddressResource()
+	        		.withAddressLine1("line1" + addressType.name())
+	        		.withAddressLine2("line2" + addressType.name())
+	        		.withAddressLine3("line3" + addressType.name())
+	        		.withTown("town" + addressType.name())
+	        		.withCounty("county" + addressType.name())
+	        		.withPostcode("postcode" + addressType.name())
+	        		.build())
+        		.build();
+    }
+   
     @Test
-    public void userProfileDetailsAreAddedToModelWhenViewingDetails() throws Exception {
-        mockMvc.perform(get("/profile/view"))
+    public void userProfileDetailsAndOrganisationDetailsAreAddedToModelWhenViewingDetails() throws Exception {
+    	
+    	OrganisationAddressResource operatingOrgAddress = organisationAddress(AddressType.OPERATING);
+    	setupOrganisation(operatingOrgAddress);
+    	
+        ResultActions result = mockMvc.perform(get("/profile/view"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("title", Matchers.equalTo(user.getTitle()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName", Matchers.equalTo(user.getFirstName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("lastName", Matchers.equalTo(user.getLastName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("email", Matchers.equalTo(user.getEmail()))));
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("email", Matchers.equalTo(user.getEmail()))))
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("organisationName", Matchers.equalTo(organisation.getName()))))
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("companyHouseNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))));
+
+        verifyOrganisationAddress(result, operatingOrgAddress);
     }
+    
+    @Test
+    public void operationAddressForOrganisationIsFavouredWhenRegisteredAddressIsAlsoPresent() throws Exception {
+
+    	OrganisationAddressResource registeredOrgAddress = organisationAddress(AddressType.REGISTERED);
+    	OrganisationAddressResource operatingOrgAddress = organisationAddress(AddressType.OPERATING);
+    	setupOrganisation(registeredOrgAddress, operatingOrgAddress);
+    	
+        ResultActions result = mockMvc.perform(get("/profile/view"))
+                .andExpect(status().is2xxSuccessful());
+        
+        verifyOrganisationAddress(result, operatingOrgAddress);
+    }
+
+	@Test
+    public void registeredAddressIsUsedWhenOperatingAddressIsAbsent() throws Exception {
+
+    	OrganisationAddressResource registeredOrgAddress = organisationAddress(AddressType.REGISTERED);
+    	setupOrganisation(registeredOrgAddress);
+    	
+        ResultActions result = mockMvc.perform(get("/profile/view"))
+                .andExpect(status().is2xxSuccessful());
+        
+
+        verifyOrganisationAddress(result, registeredOrgAddress);
+    }
+	
+	@Test
+    public void nullValuesUsedWhenNoAddressPresent() throws Exception {
+
+    	setupOrganisation();
+    	
+        mockMvc.perform(get("/profile/view"))
+                .andExpect(status().is2xxSuccessful())
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine1", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine2", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine3", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("town", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("county", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("postcode", Matchers.isEmptyOrNullString())));
+    }
+	
+    private void verifyOrganisationAddress(ResultActions result, OrganisationAddressResource registeredOrgAddress) throws Exception {
+   	 result
+	    	 	.andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine1", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine1()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine2", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine2()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine3", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine3()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("town", Matchers.equalTo(registeredOrgAddress.getAddress().getTown()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("county", Matchers.equalTo(registeredOrgAddress.getAddress().getCounty()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("postcode", Matchers.equalTo(registeredOrgAddress.getAddress().getPostcode()))));
+	}
 
     @Test
     public void userProfileDetailsAreAddedToModelWhenViewingDetailsForm() throws Exception {

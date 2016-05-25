@@ -41,8 +41,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource testApplicationResource1 = newApplicationResource().withId(application1Id).withCompetition(competition.getId()).withName("testApplication1Name").build();
         ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withCompetition(competition.getId()).withName("testApplication2Name").build();
 
-        when(applicationService.getApplicationById(testApplication1.getId())).thenReturn(serviceSuccess(testApplicationResource1));
-        when(applicationService.getApplicationById(testApplication2.getId())).thenReturn(serviceSuccess(testApplicationResource2));
+        when(applicationServiceMock.getApplicationById(testApplication1.getId())).thenReturn(serviceSuccess(testApplicationResource1));
+        when(applicationServiceMock.getApplicationById(testApplication2.getId())).thenReturn(serviceSuccess(testApplicationResource2));
 
         mockMvc.perform(get("/application/{id}", application1Id))
                 .andExpect(status().isOk())
@@ -63,8 +63,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withName("testApplication2Name").build();
         ApplicationResource testApplicationResource3 = newApplicationResource().withId(3L).withName("testApplication3Name").build();
 
-        when(applicationService.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(asList(testApplicationResource1, testApplicationResource2)));
-        when(applicationService.findByUserId(testUser2.getId())).thenReturn(serviceSuccess(asList(testApplicationResource2, testApplicationResource3)));
+        when(applicationServiceMock.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(asList(testApplicationResource1, testApplicationResource2)));
+        when(applicationServiceMock.findByUserId(testUser2.getId())).thenReturn(serviceSuccess(asList(testApplicationResource2, testApplicationResource3)));
 
         mockMvc.perform(get("/application/findByUser/{id}", userId))
                 .andExpect(status().isOk())
@@ -85,7 +85,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void applicationControllerShouldReturnAllApplications() throws Exception {
         int applicationNumber = 3;
         List<ApplicationResource> applications = newApplicationResource().build(applicationNumber);
-        when(applicationService.findAll()).thenReturn(serviceSuccess(applications));
+        when(applicationServiceMock.findAll()).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -103,7 +103,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
 
-        when(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
                 .contentType(APPLICATION_JSON)

@@ -1,6 +1,7 @@
 package com.worth.ifs.application.form;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -12,6 +13,8 @@ public class ApplicationForm extends Form {
 
     @Valid
     private ApplicationResource application;
+
+    private MultipartFile assessorFeedback;
 
     private boolean adminMode = false;
     private Long impersonateOrganisationId;
@@ -43,5 +46,13 @@ public class ApplicationForm extends Form {
 
     public void setImpersonateOrganisationId(Long impersonateOrganisationId) {
         this.impersonateOrganisationId = impersonateOrganisationId;
+    }
+
+    public MultipartFile getAssessorFeedback() {
+        return assessorFeedback;
+    }
+
+    public void setAssessorFeedback(MultipartFile assessorFeedback) {
+        this.assessorFeedback = assessorFeedback;
     }
 }

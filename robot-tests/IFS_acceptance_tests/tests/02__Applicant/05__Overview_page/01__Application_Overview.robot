@@ -70,4 +70,4 @@ the applicant should see three sections
     Element Should Be Visible    css=#section-6 .heading-medium
 
 the user should get a new print window
-    Select Window    Title=Innovation Funding Service - Print Application
+    Select Window    Title=Print Application - Innovation Funding Service

@@ -1,14 +1,18 @@
 package com.worth.ifs.user.builder;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.user.domain.*;
+
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserStatus;
+import com.worth.ifs.user.resource.UserStatus;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -26,7 +30,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public static UserBuilder newUser() {
         return new UserBuilder(emptyList()).
-                with(uniqueIds());
+                with(uniqueIds()).
+                withFirstName("User").
+                with(idBasedLastNames()).
+                with(idBasedEmails());
     }
 
     @Override
@@ -85,5 +92,13 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
     @Override
     protected User createInitial() {
         return new User();
+    }
+
+    private static Consumer<User> idBasedLastNames() {
+        return user -> user.setLastName(user.getId() + "");
+    }
+
+    private static Consumer<User> idBasedEmails() {
+        return user -> user.setEmail("user" + user.getId() + "@example.com");
     }
 }

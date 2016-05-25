@@ -1,12 +1,12 @@
 package com.worth.ifs.finance.resource.cost;
 
+import com.worth.ifs.finance.resource.category.LabourCostCategory;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -15,27 +15,36 @@ import java.math.RoundingMode;
  * {@code LabourCost} implements {@link CostItem}
  */
 public class LabourCost implements CostItem {
+
+    public interface YearlyWorkingDays {}
     private Long id;
 
     private String name;
 
-    @NotBlank
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @NotBlank(groups = Default.class)
     private String role;
 
-    @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @NotNull(groups = Default.class)
+    @DecimalMin(value = "1", groups = Default.class)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class)
     private BigDecimal grossAnnualSalary;
 
     @NotNull
-    @Min(0)
+
+    @Min.List({
+            @Min(value=1, groups = Default.class),
+            @Min(value=1, groups = LabourCost.YearlyWorkingDays.class)
+    })
+    @Max(value=365, groups = LabourCost.YearlyWorkingDays.class)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
     private Integer labourDays;
     private BigDecimal rate; // calculated field, no validation
     private String description;
     private BigDecimal total; // calculated field, no validation
-    private CostType costType;
 
     public LabourCost() {
-        this.costType = CostType.LABOUR;
+
     }
 
     public LabourCost(Long id, String name, String role, BigDecimal grossAnnualSalary, Integer labourDays, String description) {
@@ -43,12 +52,19 @@ public class LabourCost implements CostItem {
         this.id = id;
         this.name = name;
         this.role = role;
+        if(StringUtils.isNotEmpty(this.name)
+                && this.name.equals(LabourCostCategory.WORKING_DAYS_KEY)
+                && StringUtils.isEmpty(this.role)){
+            // User is only allowed to enter the labourDays on this instance, so need to fill the role field for validation.
+            this.role =LabourCostCategory.WORKING_DAYS_PER_YEAR;
+        }
         this.grossAnnualSalary = grossAnnualSalary;
         this.labourDays = labourDays;
         this.description = description;
     }
 
     @Override
+
     public Long getId() {
         return id;
     }
@@ -56,6 +72,16 @@ public class LabourCost implements CostItem {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
     }
 
     public String getRole() {
@@ -132,7 +158,7 @@ public class LabourCost implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.LABOUR;
     }
 
     public void setDescription(String description) {

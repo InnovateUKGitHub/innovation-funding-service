@@ -1,6 +1,7 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputType;
 
@@ -38,6 +39,12 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
     public FormInputBuilder withFormInputType(FormInputType formInputType) {
         return with(formInput -> formInput.setFormInputType(formInputType));
     }
+
+    public FormInputBuilder withQuestion(Question... questions) {
+        return withArray((id, question) -> setField("question", id, question), questions);
+    }
+
+
 
     @Override
     protected FormInput createInitial() {

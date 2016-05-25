@@ -21,7 +21,7 @@ Lead applicant details should show in the invite page
     When the user clicks the button/link    jQuery=.button:contains("Create")
     Then the user should see the text in the page    Lead organisation: Empire Ltd
     And the user should see the text in the page    Lead applicant: Steve Smith
-    And the user should see the element    link=Technology Inspired
+    And the user should see the element    link=Connected digital additive manufacturing
     And the user should see the text in the page    Worth Internet Systems
 
 User cannot continue if an organisation type is not selected
@@ -112,7 +112,7 @@ Catapult search (empty, invalid & valid inputs)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user should see the text in the page    Catapult
     When the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    This field cannot be left blank
+    Then the user should see the text in the page    ${empty_field_warning_message}
     When the user enters text to a text field    name=organisationName    Digital Catapult
     When the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user should see the text in the page    Please enter a UK postcode
@@ -123,23 +123,24 @@ Catapult search (empty, invalid & valid inputs)
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult    Pending
-    # Pending due to INFUND-2542
+    [Tags]    Invite    Catapult
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Thierry    Henry
-    And the user opens the mailbox and verifies the email from
-    # And the user verifies the email
+
+Catapult search (accept invitation flow with email step)
+    [Documentation]     INFUND-1230
+    [Tags]  Invite  Catapult    Email
+    Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And guest user log-in    worth.email.test+invite1@gmail.com    testtest
+    When the user clicks the button/link    jQuery=.button:contains("Log in")
+    And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=A novel solution to an old problem
+    And the user clicks the button/link    link=A novel solution to an old problem
     And the user clicks the button/link    link=Your finances
-    Then the user should see the text in the page    TSB reference
-    And the user should not see the text in the page    Labour
+    And the user should see the text in the page    Digital Catapult
 
 *** Keywords ***
 the user selects the radio button

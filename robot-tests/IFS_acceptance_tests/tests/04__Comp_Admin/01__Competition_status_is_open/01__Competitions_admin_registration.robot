@@ -21,7 +21,7 @@ If user from the list is not registered shouldn't be able to login
 
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
-    [Tags]    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
@@ -30,22 +30,22 @@ Registration for a user who is in the list
 *** Keywords ***
 User creates new account verifies email and login
     [Arguments]    ${CREATE_ACCOUNT_EMAIL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user enters text to a text field    id=organisationSearchName    Innovate
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    LINK=INNOVATE LTD
-    Select Checkbox    id=address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
-    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd
-    And the guest user clicks the log-in button
+    the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link    jQuery=.button:contains("Create")
+    the user enters text to a text field    id=organisationSearchName    Innovate
+    the user clicks the button/link    id=org-search
+    the user clicks the button/link    LINK=INNOVATE LTD
+    the user selects the checkbox    id=address-same
+    the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
+    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    the user opens the mailbox and verifies the email from
+    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    the user clicks the button/link    jQuery=.button:contains("Log in")
+    the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
+    the guest user clicks the log-in button
 
 the user enters the details and clicks the create account
     [Arguments]    ${CREATE_ACCOUNT_EMAIL}
@@ -53,7 +53,7 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    Cantona
     Input Text    id=phoneNumber    0505050508
     Input Text    id=email    ${CREATE_ACCOUNT_EMAIL}
-    Input Password    id=password    Passw0rd
-    Input Password    id=retypedPassword    Passw0rd
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
     Select Checkbox    termsAndConditions
     Submit Form

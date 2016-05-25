@@ -14,29 +14,33 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/2/details
 
 *** Test Cases ***
+
+Competition brief link exists on the competition page
+    [Documentation]     INFUND-2448
+    [Tags]   Pending
+    # Pending until shib image drop 14
+    Given the user navigates to the page        ${LOG_OUT}
+    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    Then the user should see the element    link=Full competition brief
+    And the user should see the element     xpath=//a[contains(@href, 'https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief')]
+
+
+
 Non logged in users see the Apply now button
     [Documentation]    INFUND-921
     [Tags]    Applicant
-    Given the user navigates to the page    ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    Then the user should see the element    jQuery=.column-third .button:contains('Apply now')
+    Then the user should see the element    jQuery=.button:contains('Apply now')
 
-Logged in users should see a warning
-    [Documentation]    INFUND-921
-    [Tags]    Applicant
-    Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    Then the user should see the element    css=.warning-alert
-    And the user should see the text in the page    You are already logged in. You can only create one application per account. If you want to apply to another competition please logout and create a new account.
 
 Apply button should be disable when competion is in assessment
     [Documentation]    INFUND-2312
     Given the user navigates to the page    ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_IN_ASSESSMENT}
-    The element should be disabled    jQuery=.column-third .button:contains('Apply now')
+    Then the element should be disabled    jQuery=.column-third .button:contains('Apply now')
     And the user should see the text in the page    This competition has now closed
 
 *** Keywords ***
-The element should be disabled
-    [Arguments]    ${ELEMENT}
-    Element Should Be Disabled    ${ELEMENT}
+
+
+

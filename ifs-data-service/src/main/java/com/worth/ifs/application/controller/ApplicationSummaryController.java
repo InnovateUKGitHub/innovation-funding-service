@@ -19,6 +19,8 @@ import com.worth.ifs.commons.rest.RestResult;
 @RestController
 @RequestMapping("/applicationSummary")
 public class ApplicationSummaryController {
+	private static final String DEFAULT_PAGE_SIZE = "20";
+	
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
     
@@ -26,8 +28,8 @@ public class ApplicationSummaryController {
     private CompetitionSummaryService competitionSummaryService;
 	
     @RequestMapping("/findByCompetition/{competitionId}")
-    public RestResult<ApplicationSummaryPageResource> getApplicationSummaryByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="page", defaultValue="0") int pageIndex, @RequestParam(value="sort", required=false) String sortBy) {
-        return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, pageIndex, sortBy).toGetResponse();
+    public RestResult<ApplicationSummaryPageResource> getApplicationSummaryByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="sort", required=false) String sortBy, @RequestParam(value="page", defaultValue="0") int pageIndex, @RequestParam(value="size", defaultValue=DEFAULT_PAGE_SIZE) int pageSize) {
+        return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
     @RequestMapping("/getCompetitionSummary/{id}")
@@ -36,13 +38,13 @@ public class ApplicationSummaryController {
     }
     
     @RequestMapping("/findByCompetition/{competitionId}/submitted")
-    public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="page", defaultValue="0") int pageIndex, @RequestParam(value="sort", required=false) String sortBy) {
-        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, pageIndex, sortBy).toGetResponse();
+    public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="sort", required=false) String sortBy, @RequestParam(value="page", defaultValue="0") int pageIndex, @RequestParam(value="size", defaultValue=DEFAULT_PAGE_SIZE) int pageSize) {
+        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
     
     @RequestMapping("/findByCompetition/{competitionId}/not-submitted")
-    public RestResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="page", defaultValue="0") int pageIndex, @RequestParam(value="sort", required=false) String sortBy) {
-        return applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, pageIndex, sortBy).toGetResponse();
+    public RestResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="sort", required=false) String sortBy, @RequestParam(value="page", defaultValue="0") int pageIndex, @RequestParam(value="size", defaultValue=DEFAULT_PAGE_SIZE) int pageSize) {
+        return applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
     
 }

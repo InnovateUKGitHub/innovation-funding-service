@@ -54,7 +54,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 build();
         List<FormInputResponseResource> formInputResponseResources = Collections.singletonList(formInputResponseResource);
 
-        when(formInputService.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(serviceSuccess(formInputResponseResources));
+        when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(serviceSuccess(formInputResponseResources));
 
         mockMvc.
                 perform(
@@ -92,7 +92,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
     private void assertGetByFormInputIdAndApplicationIdButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
         ServiceResult<List<FormInputResponseResource>> failureResponse = serviceFailure(errorToReturn);
 
-        when(formInputService.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
+        when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
         MvcResult response = mockMvc.
                 perform(
                         get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", 456, 123).

@@ -28,7 +28,6 @@ import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +53,7 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -124,7 +123,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
             assertEquals(applicationStatus.getId(), created.getApplicationStatus().getId());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
-            assertEquals(LocalDate.now(), created.getStartDate());
+            assertNull(created.getStartDate());
 
             assertEquals(1, created.getProcessRoles().size());
             ProcessRole createdProcessRole = created.getProcessRoles().get(0);

@@ -5,7 +5,7 @@
 <div th:fragment="head">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-    <title th:text="'Innovation Funding Service - '+${pageTitle}"></title>
+    <title th:text="${pageTitle}+' - Innovation Funding Service'"></title>
 
     <script type="text/javascript">
       if (!window.console) console = {log: function() {}, warn: function(){}};
@@ -80,6 +80,7 @@
 
     <div th:include="fragments/elements :: skiplink-container" th:remove="tag"></div>
     <div th:include="fragments/elements :: global-cookie-message" th:remove="tag"></div>
+    <div th:include="fragments/elements :: global-alert-message"  th:remove="tag"></div>
 
 </div>
 
@@ -110,6 +111,7 @@
     <script src="/js/vendor/govuk/govuk-template.js" type="text/javascript"></script>
     <script src="/js/vendor/govuk/selection-buttons.js" type="text/javascript"></script>
 
+    <script src="/js/ifs_modules/ajaxPluginWithCsrfProtection.js" type="text/javascript"></script>
     <script src="/js/ifs_modules/autoSave.js" type="text/javascript"></script>
     <script src="/js/ifs_modules/closeCss.js" type="text/javascript"></script>
     <script src="/js/ifs_modules/collapsible.js" type="text/javascript"></script>

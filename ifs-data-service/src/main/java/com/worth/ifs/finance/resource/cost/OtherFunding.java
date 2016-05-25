@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.resource.cost;
 
-import org.hibernate.validator.constraints.NotBlank;
+import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -10,24 +10,18 @@ import java.math.BigDecimal;
 public class OtherFunding implements CostItem {
     private Long id;
 
-    @NotBlank
-    private String otherPublicFunding; // the date
-    @NotBlank
+    private String otherPublicFunding;
     private String fundingSource;
-    @NotBlank
     private String securedDate;
 
     @NotNull
-    @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal fundingAmount;
 
-    private CostType costType;
     private String name;
 
     public OtherFunding() {
-        this.costType = CostType.OTHER_FUNDING;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
@@ -68,12 +62,30 @@ public class OtherFunding implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.OTHER_FUNDING;
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean excludeInRowCount() {
+        return (OtherFundingCostCategory.OTHER_FUNDING.equals(fundingSource) || isEmpty());
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if((StringUtils.isBlank(fundingSource) && StringUtils.isBlank(securedDate) && (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) == 0))){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 1;
     }
 
     public void setId(Long id) {
@@ -94,10 +106,6 @@ public class OtherFunding implements CostItem {
 
     public void setFundingAmount(BigDecimal fundingAmount) {
         this.fundingAmount = fundingAmount;
-    }
-
-    public void setCostType(CostType costType) {
-        this.costType = costType;
     }
 
     public void setName(String name) {

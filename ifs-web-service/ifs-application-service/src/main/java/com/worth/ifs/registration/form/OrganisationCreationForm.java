@@ -3,7 +3,7 @@ package com.worth.ifs.registration.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -99,6 +99,7 @@ public class OrganisationCreationForm implements Serializable {
         this.organisationSearching = organisationSearching;
     }
 
+    @JsonIgnore
     public List<OrganisationSearchResult> getOrganisationSearchResults() {
         return organisationSearchResults;
     }

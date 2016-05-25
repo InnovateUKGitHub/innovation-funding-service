@@ -1,13 +1,19 @@
 package com.worth.ifs.address.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.organisation.domain.OrganisationAddress;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.organisation.domain.OrganisationAddress;
 
 /**
  * Resource object to store the address details, from the company, from the company house api.
@@ -18,16 +24,13 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
     
-    @NotBlank
     private String town;
     private String county;
     
-    @NotBlank
     @Length(max = 9)
     private String postcode;
 

@@ -2,10 +2,12 @@ package com.worth.ifs.application.mapper;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,14 +17,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.FundingDecisionStatus;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ApplicationSummarisationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,6 +43,14 @@ public class ApplicationSummaryMapperTest {
 	@Mock
 	private ApplicationSummarisationService applicationSummarisationService;
 	
+	@Mock
+	private FundingDecisionMapper fundingDecisionMapper;
+	
+	@Before
+	public void setUp() {
+		when(fundingDecisionMapper.mapToResource(FundingDecisionStatus.FUNDED)).thenReturn(FundingDecision.FUNDED);
+	}
+	
 	@Test
 	public void testMap() {
 		
@@ -47,6 +59,7 @@ public class ApplicationSummaryMapperTest {
 		source.setName("appname");
 		source.setApplicationStatus(new ApplicationStatus(ApplicationStatusConstants.OPEN.getId(), ApplicationStatusConstants.OPEN.getName()));
 		source.setDurationInMonths(7L);
+		source.setFundingDecision(FundingDecisionStatus.FUNDED);
 		
 		Organisation org1 = new Organisation(1L, "leadorg");
 		Organisation org2 = new Organisation(2L, "otherorg1");
@@ -79,6 +92,9 @@ public class ApplicationSummaryMapperTest {
 		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
 		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
 		assertEquals(Long.valueOf(7L), result.getDuration());
+		assertEquals(FundingDecision.FUNDED, result.getFundingDecision());
+		
+		verify(fundingDecisionMapper).mapToResource(FundingDecisionStatus.FUNDED);
 	}
 
 	private ProcessRole leadProcessRole(Organisation organisation) {

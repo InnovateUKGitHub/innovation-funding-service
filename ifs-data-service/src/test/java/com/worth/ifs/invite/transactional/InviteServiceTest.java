@@ -48,7 +48,7 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -266,13 +266,16 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         Invite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+        InviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
+
 
         when(inviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
 
         ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
         assertTrue(organisationInvite.isSuccess());
 
-        List<InviteResource> expectedInvites = singletonList(new InviteResource(invite));
+
+        List<InviteResource> expectedInvites = singletonList(inviteResource);
 
         InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
                 withId(inviteOrganisation.getId()).

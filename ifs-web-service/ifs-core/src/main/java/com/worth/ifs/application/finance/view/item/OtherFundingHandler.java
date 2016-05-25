@@ -7,6 +7,8 @@ import com.worth.ifs.finance.resource.cost.OtherFunding;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+
 /**
  * Handles the conversion of form fields to other funding item
  */
@@ -16,7 +18,7 @@ public class OtherFundingHandler extends CostHandler {
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         String otherPublicFunding = null;
         String fundingSource = null;
-        String dateSecured = null;
+        String securedDate = null;
         BigDecimal fundingAmount = null;
 
         for (FinanceFormField financeFormField : financeFormFields) {
@@ -24,7 +26,7 @@ public class OtherFundingHandler extends CostHandler {
             if (fieldValue != null) {
                 switch (financeFormField.getCostName()) {
                     case "otherPublicFunding":
-                        fundingSource = "Other Funding";
+                        fundingSource = OTHER_FUNDING;
                         otherPublicFunding = fieldValue;
                         break;
                     case "fundingAmount":
@@ -33,16 +35,16 @@ public class OtherFundingHandler extends CostHandler {
                     case "fundingSource":
                         fundingSource = fieldValue;
                         break;
-                    case "dateSecured":
-                        dateSecured = fieldValue;
+                    case "securedDate":
+                        securedDate = fieldValue;
                         break;
                     default:
-                        log.info("Unused costField: " + financeFormField.getCostName());
+                        LOG.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }
         }
 
-        return new OtherFunding(id, otherPublicFunding, fundingSource, dateSecured, fundingAmount);
+        return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
     }
 }

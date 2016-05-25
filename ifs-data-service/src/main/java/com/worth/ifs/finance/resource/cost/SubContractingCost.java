@@ -1,7 +1,10 @@
 package com.worth.ifs.finance.resource.cost;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
@@ -9,16 +12,25 @@ import java.math.BigDecimal;
  */
 public class SubContractingCost implements CostItem {
     private Long id;
-    @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = 0)
-    private BigDecimal cost;
-    private String country;
-    private String name;
-    private String role;
-    private CostType costType;
 
-    public SubContractingCost() {
-        this.costType = CostType.SUBCONTRACTING_COSTS;
+    @NotNull
+    @DecimalMin(value = "1")
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
+    private BigDecimal cost;
+
+    @NotBlank
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    private String country;
+
+    @NotBlank
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    private String name;
+
+    @NotBlank
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    private String role;
+
+    public SubContractingCost(){
     }
 
     public SubContractingCost(Long id, BigDecimal cost, String country, String name, String role) {
@@ -40,16 +52,27 @@ public class SubContractingCost implements CostItem {
     }
 
     public String getCountry() {
-        return country;
+
+        return (StringUtils.length(country) >  MAX_DB_STRING_LENGTH ? country.substring(0, MAX_DB_STRING_LENGTH) : country);
     }
 
     @Override
     public String getName() {
-        return name;
+        return (StringUtils.length(name) >  MAX_DB_STRING_LENGTH ? name.substring(0, MAX_DB_STRING_LENGTH) : name);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
     }
 
     public String getRole() {
-        return role;
+        return (StringUtils.length(role) >  MAX_DB_STRING_LENGTH ? role.substring(0, MAX_DB_STRING_LENGTH) : role);
     }
 
     @Override
@@ -59,6 +82,22 @@ public class SubContractingCost implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.SUBCONTRACTING_COSTS;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -22,7 +22,7 @@ Not in Companies House company link
     Then the user should see the text in the page    Organisation name
     And the user should see the text in the page    Postcode
 
-Manually add the address and this persists on refresh
+The address can be manually added and this persists on refresh
     [Documentation]    INFUND-888
     [Tags]    Applicant    Company    Companies House
     When the user clicks the button/link    name=manual-address
@@ -30,10 +30,10 @@ Manually add the address and this persists on refresh
     And the user should see the text in the page    Town
     And the user should see the text in the page    County
     And the user should see the text in the page    Postcode
-    And the applicant can reload the page
+    And the user reloads the page
     And the user should see the text in the page    Street
 
-Manually can enter and see details pass to the confirmation page
+The address can be manually added and the details pass to the confirmation page
     [Documentation]    INFUND-888
     [Tags]    Applicant    Company    Companies House
     When the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    The East Wing
@@ -51,5 +51,4 @@ Manually can enter and see details pass to the confirmation page
     And the user should see the text in the page    POPPS123
 
 *** Keywords ***
-the applicant can reload the page
-    Reload Page
+

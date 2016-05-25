@@ -1,11 +1,20 @@
 package com.worth.ifs.application.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.ProcessRole;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import javax.persistence.*;
 
 /**
  * An entity representing an Assessor's assessment of a given Response to an assessable question.
@@ -29,9 +38,6 @@ public class AssessorFeedback {
     @ManyToOne
     @JoinColumn(name="assessorId", referencedColumnName="id")
     private ProcessRole assessor;
-
-    @Column(name = "assessorId", insertable = false, updatable = false)
-    private Long assessorId;
 
     private String assessmentValue;
 
@@ -74,13 +80,8 @@ public class AssessorFeedback {
         return response;
     }
 
-    public Long getAssessorId() {
-        return assessorId;
-    }
-
     void setAssessor(ProcessRole assessor) {
         this.assessor = assessor;
-        this.assessorId = assessor.getId();
     }
 
     @JsonIgnore
@@ -105,10 +106,6 @@ public class AssessorFeedback {
         return this.assessor;
     }
 
-    public void setAssessorId(Long assessorId) {
-        this.assessorId = assessorId;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -125,7 +122,6 @@ public class AssessorFeedback {
             .append(this.id, rhs.id)
             .append(this.response, rhs.response)
             .append(this.assessor, rhs.assessor)
-            .append(this.assessorId, rhs.assessorId)
             .append(this.assessmentValue, rhs.assessmentValue)
             .append(this.assessmentFeedback, rhs.assessmentFeedback)
             .isEquals();
@@ -137,13 +133,9 @@ public class AssessorFeedback {
             .append(id)
             .append(response)
             .append(assessor)
-            .append(assessorId)
             .append(assessmentValue)
             .append(assessmentFeedback)
             .toHashCode();
     }
 
-    public Long getAssessorIdOrAssessor() {
-        return assessor == null ? assessorId : assessor.getId();
-    }
 }

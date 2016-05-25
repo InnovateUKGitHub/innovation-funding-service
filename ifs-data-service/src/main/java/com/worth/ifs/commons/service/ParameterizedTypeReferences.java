@@ -1,24 +1,23 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.application.resource.ResponseResource;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -52,24 +51,20 @@ public final class ParameterizedTypeReferences {
      * IFS types
      */
 
+    public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
+        return new ParameterizedTypeReference<List<AlertResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<ProcessRole>> processRoleListType() {
-        return new ParameterizedTypeReference<List<ProcessRole>>() {};
+    public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
+        return new ParameterizedTypeReference<List<ProcessRoleResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<UserResource>> userListType() {
         return new ParameterizedTypeReference<List<UserResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<UserResource>> userResourceListType() {
-        return new ParameterizedTypeReference<List<UserResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<Competition>> competitionListType() {
-        return new ParameterizedTypeReference<List<Competition>>() {};
     }
 
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
@@ -80,16 +75,20 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<QuestionStatusResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<Response>> responseListType() {
-        return new ParameterizedTypeReference<List<Response>>() {};
+    public static ParameterizedTypeReference<List<FormInputResource>> formInputResourceListType() {
+        return new ParameterizedTypeReference<List<FormInputResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<Question>> questionListType() {
-        return new ParameterizedTypeReference<List<Question>>() {};
+    public static ParameterizedTypeReference<List<ResponseResource>> responseResourceListType() {
+        return new ParameterizedTypeReference<List<ResponseResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<Assessment>> assessmentListType() {
-        return new ParameterizedTypeReference<List<Assessment>>() {};
+    public static ParameterizedTypeReference<List<QuestionResource>> questionResourceListType() {
+        return new ParameterizedTypeReference<List<QuestionResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<FormInputResponseResource>> formInputResponseListType() {

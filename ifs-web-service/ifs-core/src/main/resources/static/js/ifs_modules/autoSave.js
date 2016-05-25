@@ -9,10 +9,14 @@ IFS.autoSave = (function(){
             inputs : '.form-serialize-js input:not([type="button"],[readonly="readonly"],[type="hidden"])',
             textareas : '.form-serialize-js textarea:not([readonly="readonly"])',
             typeTimeout : 500,
-            minimumUpdateTime : 1000 // the minimum time between the ajax request, and displaying the result of the ajax call.
+            minimumUpdateTime : 1000,
+            hideAjaxValidation : ''// the minimum time between the ajax request, and displaying the result of the ajax call.
         },
         init : function(){
             s = this.settings;
+
+            s.hideAjaxValidation = jQuery('input[type="hidden"][value="hideAjaxValidation"]').length ? true : false;
+
             jQuery('body').on('change keyup', s.textareas, function(e){
                 if(e.type == 'keyup'){
                   //wait until the user stops typing
@@ -32,10 +36,25 @@ IFS.autoSave = (function(){
             var name = field.attr('name');
             var fieldId = field.attr('id').replace('form-textarea-','');
             var applicationId = jQuery("#application_id").val();
+            var autoSaveEnabled = true;
+            if(field.hasClass('js-autosave-disabled')){
+              autoSaveEnabled = false;
+            }
 
-            if((typeof(applicationId) !== 'undefined') && (typeof(name) !== 'undefined')) {
+            if((typeof(applicationId) !== 'undefined') && (typeof(name) !== 'undefined') && autoSaveEnabled) {
+              //for the 3 seperate field date that has to be send as one
+
+              var fieldValue = field.val();
+              var datefield = field.attr('data-date');
+              if(typeof datefield !== typeof undefined && datefield !== false){
+                fieldValue = field.attr('data-date');
+                var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                name = fieldInfo.attr('name');
+                fieldId = fieldInfo.attr('id');
+              }
+
               var jsonObj = {
-                  value: field.val(),
+                  value: fieldValue,
                   formInputId: fieldId,
                   fieldName: name,
                   applicationId: applicationId
@@ -61,7 +80,7 @@ IFS.autoSave = (function(){
                formTextareaSaveInfo = formGroup.find('.textarea-save-info');
             }
 
-            jQuery.ajax({
+            jQuery.ajaxProtected({
                 type: 'POST',
                 url: '/application/'+applicationId+'/form/saveFormElement',
                 data: data,
@@ -87,10 +106,12 @@ IFS.autoSave = (function(){
                     setTimeout(function(){
                         IFS.autoSave.clearServerSideValidationErrors(field);
                         formTextareaSaveInfo.html('Saved!');
-                        jQuery.each(data.validation_errors, function(index, value){
-                            IFS.formValidation.setInvalid(field,value);
-                            serverSideValidationErrors.push(value);
-                        });
+                        if(s.hideAjaxValidation === false){
+                          jQuery.each(data.validation_errors, function(index, value){
+                              IFS.formValidation.setInvalid(field,value);
+                              serverSideValidationErrors.push(value);
+                          });
+                        }
                     }, remainingWaitingTime);
                 }
             }).fail(function(data) {

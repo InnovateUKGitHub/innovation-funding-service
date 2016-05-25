@@ -1,8 +1,5 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -19,12 +16,12 @@ public class ResponseResource {
     private Long application;
     private List<Long> responseAssessmentFeedbacks = new ArrayList<>();
 
-    public ResponseResource(Long id, LocalDateTime updateDate, ProcessRole updatedBy, Question question, Application app) {
+    public ResponseResource(Long id, LocalDateTime updateDate, Long updatedBy, Long questionId, ApplicationResource app) {
         this.id = id;
         this.updateDate = updateDate;
-        this.question = question.getId();
+        this.question = questionId;
         this.application = app.getId();
-        this.updatedBy = updatedBy.getId();
+        this.updatedBy = updatedBy;
     }
 
     public ResponseResource() {
@@ -51,20 +48,12 @@ public class ResponseResource {
         this.updateDate = updateDate;
     }
 
-    public void setApplication(Application application) {
+    public void setApplication(ApplicationResource application) {
         this.application = application.getId();
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question.getId();
     }
 
     public Long getUpdatedBy() {
         return updatedBy;
-    }
-
-    public void setUpdatedBy(ProcessRole updatedBy) {
-        this.updatedBy = updatedBy.getId();
     }
 
     public Long getApplication() {

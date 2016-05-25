@@ -32,6 +32,15 @@
 .competition-management.app-summary #content  {
   padding-bottom:0;
 }
+
+#publish-funding-decision {
+	display: none;
+}
+
+.funding-decision-save-info {
+    font-size: 11px;
+}
+
 @media(max-width: 1200px){
   .competition-data .column-fifth,
   .competition-data .column-four-fifth {

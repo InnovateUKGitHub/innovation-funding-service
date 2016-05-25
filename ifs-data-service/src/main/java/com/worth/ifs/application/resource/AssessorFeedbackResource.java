@@ -1,7 +1,6 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -10,16 +9,15 @@ public class AssessorFeedbackResource {
     private Long id;
     private Long response;
     private Long assessor;
-    private Long assessorId;
     private String assessmentValue;
     private String assessmentFeedback;
 
-    private AssessorFeedbackResource(Response response, ProcessRole assessor) {
+    private AssessorFeedbackResource(ResponseResource response, ProcessRoleResource assessor) {
         this.response = response.getId();
         this.assessor = assessor.getId();
     }
 
-    public static AssessorFeedbackResource createForResponseAndAssessor(Response response, ProcessRole assessor) {
+    public static AssessorFeedbackResource createForResponseAndAssessor(ResponseResource response, ProcessRoleResource assessor) {
         return new AssessorFeedbackResource(response, assessor);
     }
 
@@ -71,14 +69,6 @@ public class AssessorFeedbackResource {
 
     public void setAssessor(Long assessor) {
         this.assessor = assessor;
-    }
-
-    public void setAssessorId(Long assessorId) {
-        this.assessorId = assessorId;
-    }
-
-    public Long getAssessorId() {
-        return this.assessorId;
     }
 
     @Override

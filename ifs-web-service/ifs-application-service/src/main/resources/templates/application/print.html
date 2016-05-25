@@ -17,9 +17,9 @@
         <section class="portrait" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
             <h1 th:text="${section.getName()}" class="heading-large" />
             <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
-                <div class="form-group"  th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}'
+                <div class="form-group"  th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.includedInApplicationSummary}'
                      th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})">
-                    <div th:replace="application/print-elements :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' th:remove="tag" />
+                    <div th:replace="application/print-elements :: ${formInput.getFormInputTypeTitle()}" th:unless='${formInput.getFormInputTypeTitle().equals("finance"}' th:remove="tag" />
                 </div>
             </div>
         </section>

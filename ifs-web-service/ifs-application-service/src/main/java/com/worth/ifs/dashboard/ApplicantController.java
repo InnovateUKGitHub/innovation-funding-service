@@ -1,28 +1,32 @@
 package com.worth.ifs.dashboard;
 
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.ApplicationStatusRestService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ApplicationStatusRestService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -56,26 +60,33 @@ public class ApplicantController {
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
+        List<ApplicationResource> projectsInSetup = projectsInSetup(finished);
+        
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
         Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
+        model.addAttribute("projectsInSetup", projectsInSetup);
         model.addAttribute("competitions", competitions);
         model.addAttribute("applicationStatuses", applicationStatusMap);
 
         return "applicant-dashboard";
     }
 
-    /**
+    private List<ApplicationResource> projectsInSetup(List<ApplicationResource> finished) {
+		return simpleFilter(finished, a -> ApplicationStatusConstants.APPROVED.getId().equals(a.getApplicationStatus()));
+	}
+
+	/**
      * Get a list of application ids, where one of the questions is assigned to the current user. This is only for the
      * collaborators, since the leadapplicant is the default assignee.
      */
     private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, UserResource user){
         return inProgress.stream().filter(applicationResource -> {
-                    ProcessRole role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
-                    if(!role.getRole().getName().equals("leadapplicant")){
+                    ProcessRoleResource role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
+                    if(!UserRoleType.LEADAPPLICANT.getName().equals(role.getRoleName())) {
                         int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
                         return count == 0 ? false : true;
                     }else{

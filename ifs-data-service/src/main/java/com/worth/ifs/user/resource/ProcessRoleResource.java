@@ -3,40 +3,48 @@ package com.worth.ifs.user.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.application.resource.ApplicationResource;
 
 public class ProcessRoleResource {
     private Long id;
-    private User user;
+    private Long user;
+    private String userName;
     private Long application;
     private Long role;
+    private String roleName;
     private Long organisation;
-    private List<Response> responses = new ArrayList<>();
+    private List<Long> responses = new ArrayList<>();
 
     public ProcessRoleResource(){
     	// no-arg constructor
     }
 
-    public ProcessRoleResource(Long id, User user, Application application, Role role, Organisation organisation) {
+    public ProcessRoleResource(Long id, UserResource user, ApplicationResource application, RoleResource role, OrganisationResource organisation) {
         this.id = id;
-        this.user = user;
+        this.user = user.getId();
+        this.userName = user.getName();
         this.application = application.getId();
         this.role = role.getId();
+        this.roleName = role.getName();
         this.organisation = organisation.getId();
     }
 
     public Long getId(){return id;}
 
-    public User getUser() {
+    public Long getUser() {
         return user;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public Long getRole() {
         return role;
+    }
+
+    public String getRoleName() {
+        return roleName;
     }
 
     public Long getOrganisation() {
@@ -47,8 +55,12 @@ public class ProcessRoleResource {
         return this.application;
     }
 
-    public void setUser(User user) {
+    public void setUser(Long user) {
         this.user = user;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setApplication(Long application) {
@@ -59,15 +71,19 @@ public class ProcessRoleResource {
         this.role = role;
     }
 
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
     public void setOrganisation(Long organisation) {
         this.organisation = organisation;
     }
 
-    public List<Response> getResponses() {
-        return this.responses;
+    public List<Long> getResponses() {
+        return responses;
     }
 
-    public void setResponses(List<Response> responses) {
+    public void setResponses(List<Long> responses) {
         this.responses = responses;
     }
 

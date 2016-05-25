@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
@@ -25,7 +26,7 @@ public class QuestionController {
     private QuestionService questionService;
 
     @RequestMapping("/id/{id}")
-    public RestResult<Question> getQuestionById(@PathVariable("id") final Long id) {
+    public RestResult<QuestionResource> getQuestionById(@PathVariable("id") final Long id) {
         return questionService.getQuestionById(id).toGetResponse();
     }
 
@@ -68,32 +69,32 @@ public class QuestionController {
     }
 
     @RequestMapping("/findByCompetition/{competitionId}")
-    public RestResult<List<Question>> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
+    public RestResult<List<QuestionResource>> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return questionService.findByCompetition(competitionId).toGetResponse();
     }
 
     @RequestMapping("/getNextQuestion/{questionId}")
-    public RestResult<Question> getNextQuestion(@PathVariable("questionId") final Long questionId) {
+    public RestResult<QuestionResource> getNextQuestion(@PathVariable("questionId") final Long questionId) {
         return questionService.getNextQuestion(questionId).toGetResponse();
     }
 
     @RequestMapping("/getPreviousQuestionBySection/{sectionId}")
-    public RestResult<Question> getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
+    public RestResult<QuestionResource> getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         return questionService.getPreviousQuestionBySection(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getNextQuestionBySection/{sectionId}")
-    public RestResult<Question> getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
+    public RestResult<QuestionResource> getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         return questionService.getNextQuestionBySection(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getPreviousQuestion/{questionId}")
-    public RestResult<Question> getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
+    public RestResult<QuestionResource> getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
         return questionService.getPreviousQuestion(questionId).toGetResponse();
     }
 
     @RequestMapping("/getQuestionByFormInputType/{formInputType}")
-    public RestResult<Question> getQuestionByFormInputType(@PathVariable("formInputType") final String formInputType) {
-        return questionService.getQuestionByFormInputType(formInputType).toGetResponse();
+    public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("formInputType") final String formInputType) {
+        return questionService.getQuestionResourceByFormInputType(formInputType).toGetResponse();
     }
 }

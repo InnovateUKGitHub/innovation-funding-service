@@ -1,12 +1,17 @@
 package com.worth.ifs.application.domain;
 
-import com.worth.ifs.competition.domain.Competition;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.worth.ifs.application.resource.SectionType;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.worth.ifs.competition.domain.Competition;
 
 public class SectionTest {
     Section section;
@@ -33,9 +38,34 @@ public class SectionTest {
 
     @Test
     public void sectionShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(section.getQuestions(), questions);
-        Assert.assertEquals(section.getId(), id);
-        Assert.assertEquals(section.getName(), name);
-        Assert.assertEquals(section.getParentSection(), parentSection);
+        assertEquals(section.getQuestions(), questions);
+        assertEquals(section.getId(), id);
+        assertEquals(section.getName(), name);
+        assertEquals(section.getParentSection(), parentSection);
+    }
+    
+    @Test
+    public void sectionWithAppropriateTypeIsFinanceSection() {
+    	section.setType(SectionType.FINANCE);
+    	
+    	assertTrue(section.isType(SectionType.FINANCE));
+    	assertFalse(section.isType(SectionType.ORGANISATION_FINANCES));
+    	assertFalse(section.isType(SectionType.GENERAL));
+    }
+    
+    @Test
+    public void sectionWithAppropriateTypeIsOrganisationFinancesSection() {
+    	section.setType(SectionType.ORGANISATION_FINANCES);
+    	
+    	assertFalse(section.isType(SectionType.FINANCE));
+    	assertTrue(section.isType(SectionType.ORGANISATION_FINANCES));
+    	assertFalse(section.isType(SectionType.GENERAL));
+    }
+    
+    @Test
+    public void sectionWithAppropriateTypeIsGeneralSection() {
+    	assertFalse(section.isType(SectionType.FINANCE));
+    	assertFalse(section.isType(SectionType.ORGANISATION_FINANCES));
+    	assertTrue(section.isType(SectionType.GENERAL));
     }
 }

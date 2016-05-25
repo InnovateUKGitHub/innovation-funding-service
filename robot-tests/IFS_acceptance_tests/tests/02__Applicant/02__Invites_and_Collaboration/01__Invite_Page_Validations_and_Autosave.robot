@@ -8,7 +8,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags
+Force Tags        Collaboration     Invite
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -32,6 +32,7 @@ lead applicant should be able to add/remove collaborators
 
 lead applicant shouldn't be able to remove himself
     [Documentation]    INFUND-901
+    [Tags]
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     Then the lead applicant cannot be removed
 
@@ -46,7 +47,7 @@ Validations for the name field
     [Documentation]    INFUND-901
     [Tags]
     When the applicant fills the lead organisation fields    ${EMPTY}    ewan+5@hiveit.co.uk
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
@@ -58,7 +59,7 @@ Link to remove partner organisation
     When The user clicks the button/link    jquery=li:nth-child(2) button:contains('Remove')
     Then The user should not see the text in the page    Organisation name
 
-Applicant inputsshould be autosaved (in cookie)
+Applicant's inputs should be autosaved (in cookie)
     [Documentation]    INFUND-1039
     [Tags]    HappyPath
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
@@ -70,13 +71,13 @@ Blank organisation name is not allowed
     [Tags]
     Given the user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    MR Tester
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    Collaborator 7    ewan+6@hiveit.co.uk
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Blank person name is not allowed
     [Documentation]    INFUND-896
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    ${EMPTY}    ewan+7@hiveit.co.uk
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Blank email is not allowed
     [Documentation]    INFUND-896
@@ -84,7 +85,7 @@ Blank email is not allowed
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ${EMPTY}
     And browser validations have been disabled
     And The user clicks the button/link    jquery=button:contains('Begin application')
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
@@ -105,6 +106,7 @@ Link to add multiple partner organisation
 
 The user's inputs should be autosaved
     [Documentation]    INFUND-901
+    [Tags]
     When the user fills the name and email field and reloads the page    1
     Then the user's inputs should still be visible    1
     And the user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}

@@ -2,11 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <div th:fragment="your_finance" th:remove="tag">
     <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
-    <p th:utext="${question.description}"/>
-    <div class="academic">
-        <input type="hidden" name="questionId" value="${question.id}"/>
-        <input type="hidden" name="applicationFinanceId" value="${applicationFinance.id}"/>
-
+    <p ifs:utext="${question.description}"/>
         <fieldset>
             <h2 class="heading-medium">Innovate UK funding</h2>
             <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
@@ -23,19 +19,20 @@
             <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
                 UK</p>
             <p>Enter the figures from the following fields on the Je-S form:</p>
-            <div class="form-group">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')}? 'error'">
                 <label class="form-label" for="tsb-ref">
-		    		<span class="form-label-bold">TSB reference
-		    			<span class="form-hint">This number is found at the top of your proposal output</span>
-		    		</span>
-
+          		    		<span class="form-label-bold">TSB reference</span>
+                      <span class="form-hint">This number is found at the top of your proposal output</span>
+                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.tsbReference?.id})" th:remove="tag" />
                 </label>
                 <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference"
                        th:value="${academicFinance.tsbReference?.value}"
-                       th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                       th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                       required="required"
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')}? 'field-error'" />
             </div>
         </fieldset>
-        <fieldset>
+        <fieldset class="academic">
             <h2 class="heading-medium no-margin">Financial resources</h2>
             <legend class="visuallyhidden">Financial resources</legend>
             <p>Please enter the following costs from the TSB Contribution column</p>
@@ -47,9 +44,12 @@
             <hr class="underline"/>
 
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group"
+                    th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'error'">
+
                     <label class="form-label column-third" for="incurred-staff">
                         <span>Staff</span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredStaff?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
                         <input type="text"
@@ -57,14 +57,17 @@
                                id="incurred-staff"
                                th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                                th:value="${academicFinance.incurredStaff?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                              th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'error'">
+
                     <label class="form-label column-third" for="travel">
                         <span>Travel &amp; subsistence </span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+ academicFinance.incurredTravelAndSubsistence?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
                         <input class="form-control width-full"
@@ -72,14 +75,16 @@
                                th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
                                type="text"
                                th:value="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'error'">
                     <label class="form-label column-third" for="other">
                         <span>Other costs</span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredOtherCosts?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
                         <input class="form-control width-full"
@@ -87,7 +92,8 @@
                                th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
                                type="text"
                                th:value="${academicFinance.incurredOtherCosts?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
             </div>
@@ -114,41 +120,50 @@
 
 
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'error'">
                     <label class="form-label column-third" for="investigators">
                         <span>Investigators</span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedInvestigators?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
-                        <input class="form-control width-full" id="investigators"
+                        <input class="form-control width-full"
+                               id="investigators"
                                th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
                                th:value="${academicFinance.allocatedInvestigators?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'error'">
                     <label class="form-label column-third" for="estates">
                         <span>Estates Costs</span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedEstatesCosts?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
-                        <input class="form-control width-full" id="estates"
+                        <input class="form-control width-full"
+                               id="estates"
                                th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
                                th:value="${academicFinance.allocatedEstatesCosts?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'error'">
                     <label class="form-label column-third" for="other-direct">
                         <span>Other costs</span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedOtherCosts?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
-                        <input class="form-control width-full" id="other-direct"
+                        <input class="form-control width-full"
+                               id="other-direct"
                                th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
                                th:value="${academicFinance.allocatedOtherCosts?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
             </div>
@@ -170,15 +185,19 @@
         <fieldset>
             <legend class="visuallyhidden">Indirect costs</legend>
             <div class="grid-row">
-                <div class="form-group border-top">
+                <div class="form-group border-top"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'error'">
                     <label class="form-label column-third" for="indirect">
                         <span class="form-label-bold">Indirect costs </span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.indirectCosts?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
-                        <input class="form-control width-full" id="indirect" th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
+                        <input class="form-control width-full"
+                               id="indirect"
+                               th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
                                type="text"
                                th:value="${academicFinance.indirectCosts?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
             </div>
@@ -191,28 +210,35 @@
             <hr class="underline"/>
 
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'error'">
                     <label class="form-label column-third" for="exceptions-staff">
                         <span>Staff</span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsStaff?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
-                        <input class="form-control width-full" id="exceptions-staff"
+                        <input class="form-control width-full"
+                               id="exceptions-staff"
                                th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
                                th:value="${academicFinance.exceptionsStaff?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'error'">
                     <label class="form-label column-third" for="exceptions-other-direct">
                         <span>Other costs</span>
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsOtherCosts?.id+'-cost'})" th:remove="tag" />
                     </label>
                     <div class="column-two-thirds">
-                        <input class="form-control width-full" id="exceptions-other-direct"
-                               th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs" type="text"
+                        <input class="form-control width-full"
+                               id="exceptions-other-direct"
+                               th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
+                               type="text"
                                th:value="${academicFinance.exceptionsOtherCosts?.numberValue}"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
             </div>
@@ -242,7 +268,6 @@
                 </div>
             </div>
         </fieldset>
-    </div>
 </div>
 
 <!-- ===========================Form: Fileupload =========================== -->
@@ -250,7 +275,8 @@
      th:with="currentUser=${#authentication.getDetails()},validationId='formInput[\'jes-upload\']',
          noFileUploaded=${(#strings.isEmpty(filename))},
          name='jes-upload',
-         downloadURL='/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download'">
+         downloadURL='/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download',
+         readonly=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}">
     <div th:include="question-type/types :: fileupload" th:remove="tag"/>
 </div>
 </html>
