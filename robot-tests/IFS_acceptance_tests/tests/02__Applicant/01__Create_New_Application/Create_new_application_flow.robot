@@ -62,7 +62,7 @@ Non registered users CH route (email step)
     [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    When the user clicks the button/link    jQuery=.button:contains("Log in")
+    When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
@@ -115,7 +115,7 @@ Non registered users non CH route (email step)
     [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
-    When the user clicks the button/link    jQuery=.button:contains("Log in")
+    When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
