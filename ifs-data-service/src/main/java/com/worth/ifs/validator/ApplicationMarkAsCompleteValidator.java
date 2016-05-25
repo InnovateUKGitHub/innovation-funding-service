@@ -9,8 +9,8 @@ import org.springframework.validation.Errors;
 
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action
+ *
  */
-//@todo refactor, test
 public class ApplicationMarkAsCompleteValidator extends BaseValidator{
     private static final Log LOG = LogFactory.getLog(ApplicationMarkAsCompleteValidator.class);
 
@@ -23,12 +23,12 @@ public class ApplicationMarkAsCompleteValidator extends BaseValidator{
 
         if (StringUtils.isEmpty(application.getName())) {
             LOG.debug("MarkAsComplete validation message for: " + application.getName());
-            errors.rejectValue("value", "response.emptyResponse", "Please enter some text");
+            errors.rejectValue("value", "response.emptyResponse", "Please enter the full title of the project");
         }
 
         if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < 0 || application.getDurationInMonths() > 99) {
             LOG.debug("MarkAsComplete validation message for: " + application.getDurationInMonths());
-            errors.rejectValue("value", "response.emptyResponse", "Please enter some text");
+            errors.rejectValue("value", "response.emptyResponse", "Please enter a valid duration");
         }
 
         if (StringUtils.isEmpty(application.getStartDate())) {
