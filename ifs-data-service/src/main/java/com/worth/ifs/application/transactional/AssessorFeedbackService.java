@@ -33,4 +33,10 @@ public interface AssessorFeedbackService {
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'REMOVE_ASSESSOR_FEEDBACK')")
     ServiceResult<Void> deleteAssessorFeedbackFileEntry(long applicationId);
+
+    @PreAuthorize("hasPermission(#competitionId, 'com.worth.ifs.application.resource.CompetitionResource', 'CHECK_ASSESSOR_FEEDBACK_UPLOADED')")
+	ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId);
+
+    @PreAuthorize("hasPermission(#competitionId, 'com.worth.ifs.application.resource.CompetitionResource', 'SUBMIT_ASSESSOR_FEEDBACK')")
+	ServiceResult<Void> submitAssessorFeedback(long competitionId);
 }

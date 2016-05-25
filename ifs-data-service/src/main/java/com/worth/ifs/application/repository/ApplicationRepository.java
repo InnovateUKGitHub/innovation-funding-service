@@ -46,5 +46,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     Long countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
 
     Long countByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> submittedStatusIds);
+
+	Long countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds);
     
 }
