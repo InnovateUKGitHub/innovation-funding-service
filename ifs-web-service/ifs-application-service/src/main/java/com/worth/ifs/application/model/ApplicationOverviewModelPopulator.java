@@ -28,9 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static java.util.Collections.singletonList;
 
 /**
  * view model for the application overview page
@@ -82,7 +80,7 @@ public class ApplicationOverviewModelPopulator {
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
 
-        FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
+        FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
     }
@@ -205,16 +203,9 @@ public class ApplicationOverviewModelPopulator {
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 
-    private FileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application, CompetitionResource competition) {
+    private FileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
 
-        // TODO DW - INFUND-2607 - extract logic into ApplicationResource (with CompetitionStatus pulledin by default?)
-        if (!singletonList(PROJECT_SETUP).contains(competition.getCompetitionStatus())) {
-            return null;
-        }
-
-        Long assessorFeedbackFileEntry = application.getAssessorFeedbackFileEntry();
-
-        if (assessorFeedbackFileEntry == null) {
+        if (!application.hasPublishedAssessorFeedback()) {
             return null;
         }
 
