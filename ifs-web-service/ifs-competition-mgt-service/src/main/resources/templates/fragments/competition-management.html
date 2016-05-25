@@ -121,7 +121,9 @@
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
           <p th:if="${activeTab == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
           <p th:if="${activeTab == 'submitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsFunded}" /> Funded</p>
-          <a href="#" id="publish-assessor-feedback" th:disabled="${!canPublishAssessorFeedback}" class="button" th:if="${activeTab == 'submitted'}">Publish assessor feedback</a>
+          <a href="#" id="publish-assessor-feedback" th:disabled="${!canPublishAssessorFeedback}" class="button" th:if="${activeTab == 'submitted'}" data-js-modal="modal-submit-assessor-feedback">Publish assessor feedback</a>
+          <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+      
       </div>
 
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
