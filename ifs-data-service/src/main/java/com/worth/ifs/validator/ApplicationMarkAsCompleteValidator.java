@@ -10,7 +10,7 @@ import org.springframework.validation.Errors;
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action
  */
-//@todo refactor, messages, conditions
+//@todo refactor, test
 public class ApplicationMarkAsCompleteValidator extends BaseValidator{
     private static final Log LOG = LogFactory.getLog(ApplicationMarkAsCompleteValidator.class);
 
