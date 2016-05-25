@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -24,4 +23,5 @@ public interface ApplicationFinanceRestService {
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
     RestResult<ByteArrayResource> getFile(Long applicationFinanceId);
+    RestResult<FileEntryResource> getFileDetails(Long applicationFinanceId);
 }

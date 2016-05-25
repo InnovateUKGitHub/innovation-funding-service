@@ -122,7 +122,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @ProfileExecution
     @RequestMapping(value = QUESTION_URL + "{"+QUESTION_ID+"}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
                                 @PathVariable(APPLICATION_ID) final Long applicationId,
                                 @PathVariable(QUESTION_ID) final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
@@ -135,11 +135,11 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
 
         final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
-        final FileEntryResource fileDetails = financeService.getFinanceEntry(applicationFinanceId).getSuccessObjectOrThrowException();
+        final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccessObjectOrThrowException();
         return getFileResponseEntity(resource, fileDetails);
     }
 

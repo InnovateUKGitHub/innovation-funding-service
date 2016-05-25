@@ -6,13 +6,12 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
-import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
@@ -154,7 +152,7 @@ public class ApplicationFinanceController {
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
-        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
+        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter or RestResult<ByteArrayResource>
         try {
             return costService.getFileContents(applicationFinanceId).handleSuccessOrFailure(
                     failure -> {
@@ -175,5 +173,12 @@ public class ApplicationFinanceController {
             LOG.error("Error retrieving file", e);
             return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
-    } 
+    }
+
+    @RequestMapping(value = "/financeDocument/fileentry", method = GET)
+    public RestResult<FileEntryResource> getFileDetails(@RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
+        return costService.getFileContents(applicationFinanceId).
+                andOnSuccessReturn(Pair::getKey).
+                toGetResponse();
+    }
 }
