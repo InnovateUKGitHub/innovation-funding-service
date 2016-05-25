@@ -377,3 +377,14 @@ table{
 		}
 	}
 } */
+
+/*--- Marked as complete on Inline lists ---*/
+
+.inline-nav{
+	.marked-as-complete{
+		@extend %mark-done-right;
+		background-position: 100% 0%;
+		background-size: 20px;
+	}
+}
+
