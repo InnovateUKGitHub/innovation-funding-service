@@ -201,6 +201,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 
             Map<String, Object> perNotificationTargetArguments = new HashMap<>();
             perNotificationTargetArguments.put("applicationName", application.getName());
+            perNotificationTargetArguments.put("applicationNumber", application.getFormattedId());
             return Pair.of(pair.getValue(), perNotificationTargetArguments);
         });
 
