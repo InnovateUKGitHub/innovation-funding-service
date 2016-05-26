@@ -4,6 +4,7 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ApplicationSummarisationService;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
@@ -43,8 +44,12 @@ public abstract class ApplicationSummaryMapper {
 		result.setLead(source.getLeadOrganisation().getName());
 		result.setName(source.getName());
 		result.setDuration(source.getDurationInMonths());
+
 		if(source.getFundingDecision() != null) {
 			result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
+		}
+		if(ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
+			result.setFundingDecision(FundingDecision.FUNDED);
 		}
 		
 		BigDecimal grantRequested = getGrantRequested(source);
@@ -55,6 +60,7 @@ public abstract class ApplicationSummaryMapper {
 		
 		BigDecimal totalProjectCost = getTotalProjectCost(source);
 		result.setTotalProjectCost(totalProjectCost);
+		
 		return result;
 	}
 

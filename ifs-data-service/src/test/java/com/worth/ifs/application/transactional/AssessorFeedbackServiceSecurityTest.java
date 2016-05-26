@@ -137,5 +137,15 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         public ServiceResult<FileEntryResource> getAssessorFeedbackFileEntryDetails(long applicationId) {
             return null;
         }
+
+		@Override
+		public ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId) {
+			return null;
+		}
+
+		@Override
+		public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
+			return null;
+		}
     }
 }

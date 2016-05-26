@@ -47,7 +47,6 @@
     <li th:class="${activeTab == 'overview' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=overview'}">Overview</a></li>
     <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=submitted'}">Applications submitted</a></li>
     <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=notSubmitted'}">Applications not submitted</a></li>
-    <li th:class="${activeTab == 'projectsInSetup' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=projectsInSetup'}">Projects in setup</a></li>
   </ul>
 </div>
 
@@ -111,6 +110,24 @@
 
           <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
       </div>
+      
+      <div th:case="'ASSESSOR_FEEDBACK'" class="info-area boxed">
+          <p>
+          <span class="bold-medium">
+            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+          </span> Assessment deadline
+          </p>
+          <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+          <p th:if="${activeTab == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
+          <p th:if="${activeTab == 'submitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsFunded}" /> Funded</p>
+          <button id="publish-assessor-feedback" th:disabled="${!canPublishAssessorFeedback}" class="button" th:if="${activeTab == 'submitted'}" data-js-modal="modal-submit-assessor-feedback">Publish assessor feedback</button>
+          <form method="post" action="#" id="submit-funding-decision-form-no-js" th:action="@{/competition/{competitionId}/assessorfeedback(competitionId=${competitionSummary.getCompetitionId()})}">
+            <button id="publish-assessor-feedback-no-js" th:disabled="${!canPublishAssessorFeedback}" class="button" th:if="${activeTab == 'submitted'}" >Publish assessor feedback</button>
+          </form>
+          <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+      
+      </div>
 
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
           <p>
@@ -153,7 +170,7 @@
      </tbody>
    </table>
 
-   <div th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL'}" th:remove="tag">
+   <div th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL' or competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" th:remove="tag">
 	    <table th:if="${activeTab == 'submitted'}">
 	       <thead>
 	         <tr>
@@ -165,6 +182,7 @@
 	           <th scope="col">Total project cost (£)</th>
 	           <th scope="col">Duration (months)</th>
 	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Fund project?</th>
+	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">Funded</th>
 	         </tr>
 	       </thead>
 	       <tbody>
@@ -183,6 +201,10 @@
            			<option th:selected="${result.fundingDecision?.name() == 'UNFUNDED'}" value="N">No</option>
            		  </select>
            		  <span class="funding-decision-save-info" th:id="${'funding-decision-save-info-' + result.id}"></span>
+	           </td>
+	           <td scope="col" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" >
+	           		<span th:if="${result.isFunded()}" th:remove="tag">Yes</span>
+	           		<span th:unless="${result.isFunded()}" th:remove="tag">No</span>
 	           </td>
 	         </tr>
 	       </tbody>
@@ -232,7 +254,7 @@
         <option value="grantRequested" th:selected="${(activeSortField == 'grantRequested')}">Grant requested</option>
         <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost</option>
         <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
-
+        
     </select>
     <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'notSubmitted'}">
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>

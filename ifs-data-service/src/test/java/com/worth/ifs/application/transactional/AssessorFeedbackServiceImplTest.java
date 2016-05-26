@@ -1,28 +1,31 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.file.resource.FileEntryResource;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Test;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.function.Supplier;
-
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Test;
+
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
 
 public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<AssessorFeedbackServiceImpl> {
 
@@ -195,6 +198,28 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
 
         verify(applicationRepositoryMock).findOne(application.getId());
         verifyNoMoreInteractions(addressRepositoryMock);
+    }
+    
+    @Test
+    public void testFeedbackUploadedNotUploaded() {
+    	
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(5L);
+    	
+    	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
+    	
+    	assertTrue(result.isSuccess());
+    	assertFalse(result.getSuccessObject());
+    }
+    
+    @Test
+    public void testFeedbackUploadedIsUploaded() {
+    	
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(0L);
+    	
+    	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
+    	
+    	assertTrue(result.isSuccess());
+    	assertTrue(result.getSuccessObject());
     }
 
     @Override
