@@ -1,15 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.resource.RoleResource;
-import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
-
-import java.util.List;
-
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -17,6 +7,17 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.fail;
+
+import java.util.List;
+
+import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
+
+import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserRoleType;
 
 public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummaryService> {
 
@@ -166,6 +167,56 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 			}
 		});
 	}
+	
+	@Test
+	public void test_feedbackRequiredApplicationSummariesByCompetitionId_allowedIfGlobalCompAdminRole() {
+
+		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		service.getFeedbackRequiredApplicationSummariesByCompetitionId(123L, null, 0, 20);
+	}
+
+	@Test
+	public void test_feedbackRequiredApplicationSummariesByCompetitionId_deniedIfNotLoggedIn() {
+
+		setLoggedInUser(null);
+		try {
+			service.getFeedbackRequiredApplicationSummariesByCompetitionId(123L, null, 0, 20);
+			fail("Should not have been able to get feedback required application summaries without first logging in");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void test_feedbackRequiredApplicationSummariesByCompetitionId_deniedIfNoGlobalRolesAtAll() {
+
+		try {
+			service.getFeedbackRequiredApplicationSummariesByCompetitionId(123L, null, 0, 20);
+			fail("Should not have been able to get feedback required application summaries without the global comp admin role");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void test_feedbackRequiredundedApplicationSummariesByCompetitionId_deniedIfNotCorrectGlobalRoles() {
+
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+				.collect(toList());
+
+		nonCompAdminRoles.forEach(role -> {
+
+			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+
+			try {
+				service.getFeedbackRequiredApplicationSummariesByCompetitionId(123L, null, 0, 20);
+				fail("Should not have been able to get feedback required application summaries without the global Comp Admin role");
+			} catch (AccessDeniedException e) {
+				// expected behaviour
+			}
+		});
+	}
 
 	@Override
 	protected Class<? extends ApplicationSummaryService> getServiceClass() {
@@ -188,6 +239,12 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
 		@Override
 		public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
+				Long competitionId, String sortBy, int pageIndex, int pageSize) {
+			return null;
+		}
+
+		@Override
+		public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
 				Long competitionId, String sortBy, int pageIndex, int pageSize) {
 			return null;
 		}

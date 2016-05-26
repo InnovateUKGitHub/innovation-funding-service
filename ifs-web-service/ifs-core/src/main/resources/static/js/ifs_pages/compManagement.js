@@ -12,6 +12,8 @@ IFS.competition_management = (function(){
           container : '.competition-data form',
           breakpoint : 1200, //px
           fundingDecisionSelects: '.funding-decision',
+          assessorFeedbackButton: '#publish-assessor-feedback',
+          noJsAssessorFeedbackButton: '#publish-assessor-feedback-no-js',
           submitFundingDecisionButton: '#publish-funding-decision',
           noJsSubmitFundingDecisionButton: '#no-js-notify-applicants',
           noJsSaveFundingDecisionButton: '#no-js-save-funding-decision',
@@ -27,6 +29,7 @@ IFS.competition_management = (function(){
 
             IFS.competition_management.handleFundingDecisionEnableOrDisable();
             IFS.competition_management.handleFundingDecisionButtons();
+            IFS.competition_management.handleAssessorFeedbackButtons();
             IFS.competition_management.alterSubmitDecisionFormAction();
 
             if(IFS.competition_management.stickyEnabled()){
@@ -103,6 +106,12 @@ IFS.competition_management = (function(){
         	var noJsSaveButton = jQuery(s.noJsSaveFundingDecisionButton);
         	noJsButton.hide();
         	noJsSaveButton.hide();
+        	button.show();
+        },
+        handleAssessorFeedbackButtons: function(){
+        	var button = jQuery(s.assessorFeedbackButton);
+        	var noJsButton = jQuery(s.noJsAssessorFeedbackButton);
+        	noJsButton.hide();
         	button.show();
         },
         disableFundingDecisonButton : function(){

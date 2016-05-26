@@ -37,6 +37,7 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
 		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
 		competitionSummaryResource.setApplicationsNotSubmitted(competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted());
 		competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
+		competitionSummaryResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId()));
 
 		return serviceSuccess(competitionSummaryResource);
 	}
@@ -44,7 +45,6 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
 
 
 	private long getApplicationStartedCountByCompetitionId(Long competitionId){
-		applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId());
 
 		Long startedCount = 0L;
 
