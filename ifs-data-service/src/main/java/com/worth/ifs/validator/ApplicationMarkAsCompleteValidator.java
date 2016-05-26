@@ -7,6 +7,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 
+import java.time.LocalDate;
+
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action
  *
@@ -16,6 +18,8 @@ public class ApplicationMarkAsCompleteValidator extends BaseValidator{
 
     @Override
     public void validate(Object target, Errors errors) {
+        LocalDate currentDate = LocalDate.now();
+
         LOG.debug("do ApplicationMarkAsComplete Validation");
 
         FormInputResponse response = (FormInputResponse) target;
@@ -31,10 +35,9 @@ public class ApplicationMarkAsCompleteValidator extends BaseValidator{
             errors.rejectValue("value", "response.emptyResponse", "Please enter a valid duration");
         }
 
-        if (StringUtils.isEmpty(application.getStartDate())) {
-           LOG.debug("MarkAsComplete validation message for: " + response.getId());
-         //   errors.rejectValue("value", "response.emptyResponse", "Please enter some text");
+        if (StringUtils.isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
+           LOG.debug("MarkAsComplete validation message for: " + application.getStartDate());
+            errors.rejectValue("value", "response.emptyResponse", "Please enter a future date");
         }
-
     }
 }
