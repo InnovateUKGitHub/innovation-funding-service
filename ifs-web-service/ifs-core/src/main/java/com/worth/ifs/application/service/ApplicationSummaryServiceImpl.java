@@ -38,7 +38,7 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 	@Override
 	public ApplicationSummaryPageResource getApplicationsRequiringFeedbackByCompetitionId(
 			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
-		return applicationSummaryRestService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, null, 0, 1).getSuccessObjectOrThrowException();
+		return applicationSummaryRestService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
 	}
 	
 	@Override
