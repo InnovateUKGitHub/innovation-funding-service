@@ -19,4 +19,7 @@ public interface ApplicationSummaryService {
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all not-yet submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
 	ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize);
 
+	@PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins can see all Application Summaries requiring feedback across the whole system", securedType = ApplicationSummaryPageResource.class)
+	ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize);
 }

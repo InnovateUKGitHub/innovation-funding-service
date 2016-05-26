@@ -61,4 +61,25 @@ public class ApplicationSummaryServiceImplTest {
 		
 		assertEquals(resource, result);
 	}
+	
+	@Test
+	public void testFindRequiringFeedbackByCompetitionId() {
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		when(applicationSummaryRestService.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20)).thenReturn(restSuccess(resource));
+		
+		ApplicationSummaryPageResource result = service.getApplicationsRequiringFeedbackByCompetitionId(Long.valueOf(123L), "sort", 0, 20);
+		
+		assertEquals(resource, result);
+	}
+	
+	@Test
+	public void testFindRequiringFeedbackCountByCompetitionId() {
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		resource.setTotalElements(987L);
+		when(applicationSummaryRestService.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(123L), null, 0, 1)).thenReturn(restSuccess(resource));
+		
+		Long result = service.getApplicationsRequiringFeedbackCountByCompetitionId(Long.valueOf(123L));
+		
+		assertEquals(Long.valueOf(987L), result);
+	}
 }

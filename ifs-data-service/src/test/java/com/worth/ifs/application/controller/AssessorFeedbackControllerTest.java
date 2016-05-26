@@ -170,6 +170,41 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         verify(assessorFeedbackServiceMock).getAssessorFeedbackFileEntryDetails(123L);
 
     }
+    
+    @Test
+    public void testAssessorFeedbackUploaded() throws Exception {
+
+        when(assessorFeedbackServiceMock.assessorFeedbackUploaded(123L)).thenReturn(serviceSuccess(true));
+
+        mockMvc.
+                perform(
+                        MockMvcRequestBuilders.get("/assessorfeedback/assessorFeedbackUploaded").
+                                param("competitionId", "123").
+                                header("IFS_AUTH_TOKEN", "123abc")
+                ).
+                andExpect(status().isOk()).
+                andExpect(content().string("true")).
+                andDo(documentAssessorFeedbackUploaded());
+
+        verify(assessorFeedbackServiceMock).assessorFeedbackUploaded(123L);
+    }
+    
+    @Test
+    public void testSubmitAssessorFeedback() throws Exception {
+
+        when(assessorFeedbackServiceMock.submitAssessorFeedback(123L)).thenReturn(serviceSuccess());
+
+        mockMvc.
+                perform(
+                        MockMvcRequestBuilders.post("/assessorfeedback/submitAssessorFeedback/123").
+                                header("IFS_AUTH_TOKEN", "123abc")
+                ).
+                andExpect(status().isOk()).
+                andExpect(content().string("")).
+                andDo(documentSubmitAssessorFeedback());
+
+        verify(assessorFeedbackServiceMock).submitAssessorFeedback(123L);
+    }
 
     private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationFileEntry() {
 
@@ -241,6 +276,23 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 requestParameters(
                         parameterWithName("applicationId").description("Id of the Application that the Assessor Feedback document is being deleted from")
                 ),
+                requestHeaders(
+                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                ));
+    }
+    
+    private RestDocumentationResultHandler documentAssessorFeedbackUploaded() {
+    	return document("assessor-feedback/assessorFeedbackUploaded",
+    			requestParameters(
+                        parameterWithName("competitionId").description("Id of the competition that we are checking if feedback is uploaded for all submitted applications")
+                ),
+                requestHeaders(
+                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                ));
+    }
+    
+    private RestDocumentationResultHandler documentSubmitAssessorFeedback() {
+    	return document("assessor-feedback/submitAssessorFeedback",
                 requestHeaders(
                         headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
                 ));
