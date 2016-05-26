@@ -37,7 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public ServiceResult<Notification> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
+    public ServiceResult<Void> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
 
         Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
 
@@ -45,7 +45,7 @@ public class NotificationServiceImpl implements NotificationService {
                 getNotificationSender(medium).andOnSuccess(serviceForMedium ->
                         serviceForMedium.sendNotification(notification)));
 
-        return processAnyFailuresOrSucceed(results, serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)), serviceSuccess(notification));
+        return processAnyFailuresOrSucceed(results, serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)), serviceSuccess());
     }
 
     private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {

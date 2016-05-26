@@ -127,12 +127,13 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
             assertEquals(1000, resource.getFileEntryResource().getFilesizeBytes());
             assertEquals("application/pdf", resource.getFileEntryResource().getMediaType());
             assertEquals(expectedFilename, resource.getFileEntryResource().getName());
-            return true;
         });
     }
 
     private Supplier<InputStream> createInputStreamExpectations(String dummyContent) {
-        return createLambdaMatcher(is -> assertInputStreamContents(is.get(), dummyContent));
+        return createLambdaMatcher(is -> {
+            assertInputStreamContents(is.get(), dummyContent);
+        });
     }
 
     @Test
