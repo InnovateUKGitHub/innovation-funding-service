@@ -49,7 +49,7 @@ Pending partners are visible in the Application details page
     [Documentation]    INFUND-2966
     ...
     ...    INFUND-2738
-    [Tags]
+    [Tags]  Pending
     # Pending as still in progress by Pradha Muniraj
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     Then pending partners should be visible in the page

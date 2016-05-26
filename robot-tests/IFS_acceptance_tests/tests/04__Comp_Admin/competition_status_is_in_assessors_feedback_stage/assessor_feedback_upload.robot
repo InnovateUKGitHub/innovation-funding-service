@@ -11,7 +11,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 
-${submitted_application}        https://ifs-local-dev/management/competition/3/application/16
+${submitted_application}        ${server}/management/competition/3/application/16
 
 
 *** Test Cases ***
