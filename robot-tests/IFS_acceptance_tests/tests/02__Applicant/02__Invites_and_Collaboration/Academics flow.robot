@@ -10,9 +10,10 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-Academic organisations search (empty & invalid inputs)
+Academic organisations search
     [Documentation]    INFUND-1231
     [Tags]    HappyPath    Email
+    [Setup]    Delete the emails from the test mailbox
     Given we create a new user    worth.email.test+invitedacademics@gmail.com
     Given the lead applicant invites a registered user    worth.email.test+invite3@gmail.com    worth.email.test+inviteacademics@gmail.com
     When the user opens the mailbox and accepts the invitation to collaborate
@@ -30,12 +31,16 @@ Academic organisations search (empty & invalid inputs)
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Please enter valid characters
 
-Academic organisation (accept invitation flow)
+Accept invitation flow as academic
     [Documentation]    INFUND-1166
     ...
     ...    INFUND-917
+    ...
     ...    INFUND-2450
+    ...
+    ...    INFUND-2256
     [Tags]    HappyPath    Email
+    [Setup]    Delete the emails from the test mailbox
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
@@ -51,6 +56,7 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
+    And If the user goes to the previous page he should redirect to the login page
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    worth.email.test+inviteacademics@gmail.com    Passw0rd123
@@ -61,3 +67,6 @@ Academic organisation (accept invitation flow)
     And the user should not see an error in the page
 
 *** Keywords ***
+If the user goes to the previous page he should redirect to the login page
+    And the user goes back to the previous page
+    Then the user should see the text in the page    New to this service?
