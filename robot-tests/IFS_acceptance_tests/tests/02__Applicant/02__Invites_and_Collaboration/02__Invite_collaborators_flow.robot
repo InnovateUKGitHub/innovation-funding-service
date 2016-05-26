@@ -49,7 +49,7 @@ Pending partners are visible in the Application details page
     [Documentation]    INFUND-2966
     ...
     ...    INFUND-2738
-    [Tags]  Pending
+    [Tags]
     # Pending as still in progress by Pradha Muniraj
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     Then pending partners should be visible in the page
@@ -87,7 +87,7 @@ Business organisation (accept invitation)
 User who accepted the invite should be able to log-in and see the new company name throughout the application
     [Documentation]    INFUND-2083
     [Tags]    Email     Failing
-    Given the user clicks the button/link    jQuery=.button:contains("Log in")
+    Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
@@ -251,5 +251,9 @@ the user cannot invite another person to a different organisation
     the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
 
 pending partners should be visible in the page
-    Element Should Contain    xpath=//*[@id="form-input-9"]/div[3]/ul/li[4]/span    Fannie May
-    Element Should Contain    xpath=//*[@id="form-input-9"]/div[3]/ul/li[4]/small    (pending)
+    the user should see the element    css=ul.list-bullet li:nth-child(5) span
+    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) span
+    Should Be Equal As Strings    ${input_value}    Fannie May
+    the user should see the element    css=ul.list-bullet li:nth-child(5) small
+    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) small
+    Should Be Equal As Strings    ${input_value}    (pending)

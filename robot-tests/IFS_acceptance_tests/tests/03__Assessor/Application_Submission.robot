@@ -2,9 +2,8 @@
 Documentation     INFUND-248: As an assessor I want to submit my assessments one at a time or as a batch, so I can work in the way I feel most comfortable.
 Suite Setup       Guest user log-in    &{assessor_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags          Pending
-# Pending due to upcoming refactoring work for the assessor story
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Force Tags        Pending
+Resource          ../../resources/GLOBAL_LIBRARIES.robot    # Pending due to upcoming refactoring work for the assessor story
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
@@ -12,13 +11,13 @@ Resource          ../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${application_name}    Mobile Phone Data for Logistics Analytics
-${competition_name}    Connected digital additive manufacturing
+${competition_name}    ${OPEN_COMPETITION_LINK}
 
 *** Test Cases ***
 Submitting an application shows a confirmation popup
     [Documentation]    INFUND-342
     [Tags]    Assessor    HappyPath
-    Given The user clicks the button/link  link=${competition_name}
+    Given The user clicks the button/link    link=${competition_name}
     When Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     Then Cancel the confirmation popup

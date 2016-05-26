@@ -120,32 +120,13 @@ public class FormInputResponseFileUploadController {
     }
 
     @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
-    public @ResponseBody ResponseEntity<Object> getFileEntryDetails(
+    public RestResult<FormInputResponseFileEntryResource> getFileEntryDetails(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
-        try {
-
-            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
-
-            return result.handleSuccessOrFailure(
-                    failure -> {
-                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
-                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
-                    },
-                    success -> {
-                        FormInputResponseFileEntryResource fileEntry = success.getKey();
-                        return new ResponseEntity<>(fileEntry, OK);
-                    }
-            );
-
-        } catch (Exception e) {
-
-            LOG.error("Error retrieving file details", e);
-            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file details")), INTERNAL_SERVER_ERROR);
-        }
+        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
+        return result.andOnSuccessReturn(Pair::getKey).toGetResponse();
     }
 
     @RequestMapping(value = "/file", method = DELETE, produces = "application/json")

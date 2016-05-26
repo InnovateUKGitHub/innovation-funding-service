@@ -1,29 +1,12 @@
 package com.worth.ifs.application.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -33,12 +16,16 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -49,7 +36,9 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ApplicationOverviewModelPopulator {
+
     private static final Log LOG = LogFactory.getLog(ApplicationOverviewModelPopulator.class);
+
     @Autowired
     private ApplicationService applicationService;
     @Autowired
@@ -66,6 +55,8 @@ public class ApplicationOverviewModelPopulator {
     private InviteRestService inviteRestService;
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private AssessorFeedbackRestService assessorFeedbackRestService;
     
     public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
@@ -88,6 +79,10 @@ public class ApplicationOverviewModelPopulator {
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+
+        FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
+        model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
+
     }
     
     private void addSections(Model model, CompetitionResource competition) {
@@ -206,5 +201,23 @@ public class ApplicationOverviewModelPopulator {
             organisationId = userOrganisation.get().getId();
         }
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
+    }
+
+    private FileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
+
+        if (!application.hasPublishedAssessorFeedback()) {
+            return null;
+        }
+
+        RestResult<FileEntryResource> fileEntryResult = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
+
+        if (fileEntryResult.isFailure()) {
+            LOG.error("Should have been able to find FileEntry " + application.getAssessorFeedbackFileEntry() +
+                    " for Assessor Feedback for application " + application.getId() + " - returning null");
+            return null;
+        }
+
+        FileEntryResource fileEntry = fileEntryResult.getSuccessObject();
+        return new FileDetailsViewModel(fileEntry);
     }
 }

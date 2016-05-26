@@ -619,23 +619,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetFileDetailsButApplicationServiceCallThrowsException() throws Exception {
-
-        when(applicationServiceMock.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenThrow(new RuntimeException("No files today!"));
-
-        MvcResult response = mockMvc.
-                perform(
-                        get("/forminputresponse/fileentry").
-                                param("formInputId", "123").
-                                param("applicationId", "456").
-                                param("processRoleId", "789")).
-                andExpect(status().isInternalServerError()).
-                andReturn();
-
-        assertResponseErrorMessageEqual("Error retrieving file details", internalServerErrorError("Error retrieving file details"), response);
-    }
-
-    @Test
     public void testGetFileDetailsButFileNotFound() throws Exception {
         assertGetFileDetailsButEntityNotFound(File.class, "fileNotFound", "File not found");
     }

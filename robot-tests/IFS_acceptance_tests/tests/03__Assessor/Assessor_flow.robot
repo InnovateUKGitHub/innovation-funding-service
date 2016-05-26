@@ -10,20 +10,17 @@ Suite Setup       Guest user log-in    &{assessor_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Test Setup
 Test Teardown
-Force Tags         Pending
-# Pending due to upcoming refactoring work for the assessor story
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Force Tags        Pending
+Resource          ../../resources/GLOBAL_LIBRARIES.robot    # Pending due to upcoming refactoring work for the assessor story
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
 
-
-
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
 ${accept_application_name}    Using natural gas to heat homes
-${competition_name}    Connected digital additive manufacturing
+${competition_name}    ${OPEN_COMPETITION_LINK}
 ${deadline_month}    December deadline
 ${deadline_day}    31
 ${competitions_for_assessment_string}    Competitions for Assessment
@@ -45,7 +42,7 @@ Assessment progress is 1 out of 4
 Assessor can see the applications details page
     [Documentation]    INFUND-337
     [Tags]    Assessor    HappyPath
-    When the user clicks the button/link        link=${competition_name}
+    When the user clicks the button/link    link=${competition_name}
     Then Competition's details page should be visible
 
 Application invitation review page shows the title
@@ -224,7 +221,7 @@ Competition has a deadline
     Element Should Contain    css=.competition-deadline .month    ${deadline_month}
 
 Competition has a number of days remaining
-    ${number_of_days_element_text}=    Get Text    //*[@class='in-progress' and .//*[contains(text(),"Connected digital additive manufacturing")]]//div[./span[contains(text(), "Days left")]]/div
+    ${number_of_days_element_text}=    Get Text    //*[@class='in-progress' and .//*[contains(text(),"${OPEN_COMPETITION_LINK}")]]//div[./span[contains(text(), "Days left")]]/div
     Should Match Regexp    ${number_of_days_element_text}    ^[0-9]{1,3}$
 
 Competitions for Assessment shows an amount of competitions
@@ -294,8 +291,6 @@ the feedback should be present
     ${selected_value} =    Get Selected List Value    xpath=//*[@class="question"]//select
     Should Be Equal As Strings    ${selected_value}    ${feedback_dropdown_value}
     Textarea Value Should Be    xpath=//*[@class="question"]//textarea    ${feedback_text_value}
-
-
 
 Assessor clicks the competition
     Go To    ${SERVER}/assessor/dashboard

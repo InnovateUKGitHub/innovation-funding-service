@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Academic organisations search (empty & invalid inputs)
     [Documentation]    INFUND-1231
-    [Tags]    HappyPath     Email
+    [Tags]    HappyPath    Email
     Given we create a new user    worth.email.test+invitedacademics@gmail.com
     Given the lead applicant invites a registered user    worth.email.test+invite3@gmail.com    worth.email.test+inviteacademics@gmail.com
     When the user opens the mailbox and accepts the invitation to collaborate
@@ -35,7 +35,7 @@ Academic organisation (accept invitation flow)
     ...
     ...    INFUND-917
     ...    INFUND-2450
-    [Tags]    HappyPath     Email
+    [Tags]    HappyPath    Email
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
@@ -52,9 +52,9 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
     And the user opens the mailbox and verifies the email from
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    worth.email.test+inviteacademics@gmail.com    Passw0rd123
-    When the user clicks the button/link    link=Connected digital additive manufacturing
+    When the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
     And the user should not see the text in the page    Labour

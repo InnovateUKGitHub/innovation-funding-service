@@ -12,8 +12,8 @@ import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
-import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -27,6 +27,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -37,9 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,6 +63,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
+import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -122,7 +122,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @ProfileExecution
     @RequestMapping(value = QUESTION_URL + "{"+QUESTION_ID+"}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
                                 @PathVariable(APPLICATION_ID) final Long applicationId,
                                 @PathVariable(QUESTION_ID) final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
@@ -130,22 +130,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        return getPdfFile(resource);
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
     @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
-            @PathVariable(APPLICATION_ID) final Long applicationId,
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
-        return getPdfFile(resource);
-    }
 
-    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentLength(resource.contentLength());
-        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
-        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
+        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
+        final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails);
     }
 
     @ProfileExecution
@@ -284,67 +279,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
             return "redirect:"+APPLICATION_BASE_URL + applicationId;
-        }
-    }
-
-    private void addNavigation(SectionResource section, Long applicationId, Model model) {
-        if (section == null) {
-            return;
-        }
-        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<QuestionResource> nextQuestion = questionService.getNextQuestionBySection(section.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
-    }
-
-    private void addNavigation(QuestionResource question, Long applicationId, Model model) {
-        if (question == null) {
-            return;
-        }
-
-        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
-    }
-
-    private void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, Model model) {
-        String previousUrl;
-        String previousText;
-
-        if (previousQuestionOptional.isPresent()) {
-            QuestionResource previousQuestion = previousQuestionOptional.get();
-            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
-            if (previousSection.isQuestionGroup()) {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
-                previousText = previousSection.getName();
-            } else {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
-                previousText = previousQuestion.getShortName();
-            }
-            model.addAttribute("previousUrl", previousUrl);
-            model.addAttribute("previousText", previousText);
-        }
-    }
-
-    private void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, Model model) {
-        String nextUrl;
-        String nextText;
-
-        if (nextQuestionOptional.isPresent()) {
-            QuestionResource nextQuestion = nextQuestionOptional.get();
-            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
-
-            if (nextSection.isQuestionGroup()) {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
-                nextText = nextSection.getName();
-            } else {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
-                nextText = nextQuestion.getShortName();
-            }
-
-            model.addAttribute("nextUrl", nextUrl);
-            model.addAttribute("nextText", nextText);
         }
     }
 

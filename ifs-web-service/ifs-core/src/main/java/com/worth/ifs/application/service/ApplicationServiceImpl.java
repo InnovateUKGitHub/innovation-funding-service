@@ -59,27 +59,63 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
     
     private boolean applicationInProgress(ApplicationResource a) {
-    	return applicationStatusInProgress(a) && competitionOpen(a);
+    	boolean applicationInProgressForOpenCompetition = applicationStatusInProgress(a) && competitionOpen(a);
+    	boolean applicationSubmittedForCompetitionNotYetFinishedFunding = applicationStatusSubmitted(a) && competitionFundingNotYetComplete(a);
+
+    	return applicationInProgressForOpenCompetition || applicationSubmittedForCompetitionNotYetFinishedFunding;
+    }
+   
+    private boolean applicationFinished(ApplicationResource a) {
+    	boolean applicationInProgressForClosedCompetition = applicationStatusInProgress(a) && competitionClosed(a);
+    	boolean applicationSubmittedForCompetitionFinishedFunding = applicationStatusSubmitted(a) && competitionFundingComplete(a);
+    	boolean applicationFinished = applicationStatusFinished(a);
+    	
+    	return applicationInProgressForClosedCompetition || applicationSubmittedForCompetitionFinishedFunding || applicationFinished;
     }
     
     private boolean applicationStatusInProgress(ApplicationResource a) {
-    	return a.getApplicationStatus().equals(ApplicationStatusConstants.CREATED.getId())
-		        || a.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED.getId())
-		        || a.getApplicationStatus().equals(ApplicationStatusConstants.OPEN.getId());
+    	return appStatusIn(a, ApplicationStatusConstants.CREATED, ApplicationStatusConstants.OPEN);
     }
-    
-    private boolean applicationFinished(ApplicationResource a) {
-    	return (applicationStatusInProgress(a) && competitionClosed(a)) || applicationStatusFinished(a);
+
+	private boolean applicationStatusFinished(ApplicationResource a) {
+		return appStatusIn(a, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED);
     }
-    
-    private boolean applicationStatusFinished(ApplicationResource a) {
-    	return a.getApplicationStatus().equals(ApplicationStatusConstants.APPROVED.getId())
-                || a.getApplicationStatus().equals(ApplicationStatusConstants.REJECTED.getId());
+	
+    private boolean applicationStatusSubmitted(ApplicationResource a) {
+    	return a.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED.getId());
     }
     
     private boolean competitionOpen(ApplicationResource a) {
     	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
     	return CompetitionResource.Status.OPEN.equals(competition.getCompetitionStatus());
+    }
+    
+    private boolean competitionFundingNotYetComplete(ApplicationResource a) {
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return compStatusIn(competition, CompetitionResource.Status.OPEN, CompetitionResource.Status.IN_ASSESSMENT, CompetitionResource.Status.FUNDERS_PANEL);
+    }
+    
+    private boolean competitionFundingComplete(ApplicationResource a) {
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return compStatusIn(competition, CompetitionResource.Status.ASSESSOR_FEEDBACK, CompetitionResource.Status.PROJECT_SETUP);
+	}
+    
+    private boolean appStatusIn(ApplicationResource app, ApplicationStatusConstants... statuses) {
+    	for(ApplicationStatusConstants status: statuses) {
+    		if(status.getId().equals(app.getApplicationStatus())) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    private boolean compStatusIn(CompetitionResource comp, CompetitionResource.Status... statuses) {
+    	for(CompetitionResource.Status status: statuses) {
+    		if(status.equals(comp.getCompetitionStatus())) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
     
     private boolean competitionClosed(ApplicationResource a) {
