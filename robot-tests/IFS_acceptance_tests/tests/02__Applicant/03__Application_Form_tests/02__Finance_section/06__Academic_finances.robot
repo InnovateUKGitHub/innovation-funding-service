@@ -86,6 +86,7 @@ Academics upload
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
     And the user should see the element    link=testing.pdf
+    And the user waits for the file to be scanned by the anti virus software
 
 Academic collaborator can view the file on the finances page
     [Documentation]    INFUND-917
@@ -238,3 +239,7 @@ the field should not contain the currency symbol
 Mark academic finances as complete
     Focus    jQuery=.button:contains("Mark all as complete")
     And the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+
+the user waits for the file to be scanned by the anti virus software
+    Sleep       5s
+    # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
