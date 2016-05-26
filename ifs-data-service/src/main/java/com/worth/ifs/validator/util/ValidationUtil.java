@@ -111,6 +111,8 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
+
+
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         LOG.debug("VALIDATE SECTION " + section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
@@ -123,7 +125,7 @@ public class ValidationUtil {
         return validationMessages;
     }
 
-    private List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
+    public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
@@ -146,7 +148,7 @@ public class ValidationUtil {
                 validationMessages.add(new ValidationMessages(messageSource, formInput.getId(), bindingResult));
             }
         }
-        return null;
+        return validationMessages;
     }
 
     private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {

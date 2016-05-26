@@ -7,6 +7,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.security.QuestionPermissionRules;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -113,12 +114,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<Void> markAsComplete(QuestionApplicationCompositeId ids, Long markedAsCompleteById) {
+        public ServiceResult<List<ValidationMessages>> markAsComplete(QuestionApplicationCompositeId ids, Long markedAsCompleteById) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> markAsInComplete(QuestionApplicationCompositeId ids, Long markedAsInCompleteById) {
+        public ServiceResult<List<ValidationMessages>> markAsInComplete(QuestionApplicationCompositeId ids, Long markedAsInCompleteById) {
             return null;
         }
 

@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -23,12 +24,12 @@ public interface QuestionService {
     ServiceResult<QuestionResource> getQuestionById(final Long id);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
-    ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
-                        final Long markedAsCompleteById);
+    ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
+                                                            final Long markedAsCompleteById);
 
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
-    ServiceResult<Void> markAsInComplete(final QuestionApplicationCompositeId ids,
+    ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                           final Long markedAsInCompleteById);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
