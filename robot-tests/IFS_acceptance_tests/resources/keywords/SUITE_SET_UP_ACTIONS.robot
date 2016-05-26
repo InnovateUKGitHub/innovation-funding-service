@@ -9,8 +9,9 @@ Resource          ../../resources/keywords/User_actions.robot
 log in and create new application if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
     ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    xpath=//*[@class='in-progress']/ul/li
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    3
-    Run Keyword If    '${status}' == 'PASS'    Create new application with the same user
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Robot test application
+    #${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    3
+    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user
 
 Create new application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
