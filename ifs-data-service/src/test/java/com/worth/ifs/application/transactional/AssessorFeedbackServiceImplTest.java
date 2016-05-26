@@ -25,10 +25,11 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.REJECTED;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createFullNotificationExpectations;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createSimpleNotificationExpectations;
 import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
 import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
 import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
@@ -42,7 +43,6 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
@@ -375,45 +375,6 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL));
         verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
-    }
-
-    private Notification createFullNotificationExpectations(Notification expectedNotification) {
-
-        return createLambdaMatcher(notification -> {
-            assertEquals(expectedNotification.getFrom(), notification.getFrom());
-
-            List<String> expectedToEmailAddresses = simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress);
-            List<String> actualToEmailAddresses = simpleMap(notification.getTo(), NotificationTarget::getEmailAddress);
-            assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
-
-            assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
-            assertEquals(expectedNotification.getGlobalArguments(), notification.getGlobalArguments());
-
-            Map<NotificationTarget, Map<String, Object>> expectedTargetSpecifics = expectedNotification.getPerNotificationTargetArguments();
-            Map<NotificationTarget, Map<String, Object>> actualTargetSpecifics = notification.getPerNotificationTargetArguments();
-
-            assertEquals(expectedTargetSpecifics.size(), actualTargetSpecifics.size());
-
-            expectedTargetSpecifics.forEach((target, expectedArguments) -> {
-                Map<String, Object> actualArguments = actualTargetSpecifics.get(target);
-                assertEquals(expectedArguments, actualArguments);
-            });
-
-            assertEquals(expectedTargetSpecifics, actualTargetSpecifics);
-        });
-    }
-
-    private Notification createSimpleNotificationExpectations(Notification expectedNotification) {
-
-        return createLambdaMatcher(notification -> {
-            assertEquals(expectedNotification.getFrom(), notification.getFrom());
-
-            List<String> expectedToEmailAddresses = simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress);
-            List<String> actualToEmailAddresses = simpleMap(notification.getTo(), NotificationTarget::getEmailAddress);
-            assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
-
-            assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
-        });
     }
 
     @Override

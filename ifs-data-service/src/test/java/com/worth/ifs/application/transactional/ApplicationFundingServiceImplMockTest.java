@@ -336,7 +336,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	assertNull(competition.getFundersPanelEndDate());
     }
     
-	private Notification createFullNotificationExpectations(Notification expectedNotification) {
+	public static Notification createFullNotificationExpectations(Notification expectedNotification) {
 
         return createLambdaMatcher(notification -> {
             assertEquals(expectedNotification.getFrom(), notification.getFrom());
@@ -362,7 +362,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         });
     }
 
-	private Notification createSimpleNotificationExpectations(Notification expectedNotification) {
+    public static Notification createSimpleNotificationExpectations(Notification expectedNotification) {
 
 		return createLambdaMatcher(notification -> {
 			assertEquals(expectedNotification.getFrom(), notification.getFrom());
