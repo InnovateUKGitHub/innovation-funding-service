@@ -1,12 +1,9 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.domain.FormInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +30,7 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
                 .with(idBasedNames("Section "))
                 .withNeedingAssessorScore(true)
                 .withPriority(0)
-                .withQuestionNumber("1")
-                .withGuidanceQuestion("Some Guidance Question Text")
-                .withGuidanceAnswer("Some Guidance Answer Text");
+                .withQuestionNumber("1");
     }
 
     public QuestionResourceBuilder withId(Long... ids) {
@@ -84,14 +79,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
 
     public QuestionResourceBuilder withQuestionNumber(String value) {
         return with(question -> setField("questionNumber", value, question));
-    }
-
-    public QuestionResourceBuilder withGuidanceQuestion(String value) {
-        return with(question -> setField("guidanceQuestion", value, question));
-    }
-
-    public QuestionResourceBuilder withGuidanceAnswer(String value) {
-        return with(question -> setField("guidanceAnswer", value, question));
     }
 
     public QuestionResourceBuilder withPriority(int priority) {

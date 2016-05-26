@@ -18,6 +18,8 @@
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
+	<div th:include="fragments/elements :: competition-status-message (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+
     <div class="grid-row">
         <div class="column-half">
           <dl class="dl-left">
@@ -37,10 +39,20 @@
         <div class="column-half">
             <ul class="list-bullet">
                 <li><a th:href="'/application/'+${currentApplication.getId()}+'/contributors'">View team members and add collaborators</a></li>
-                <li><a th:href="'/competition/'+${currentCompetition.id}+'/info/terms-and-conditions'">Grant Terms and Conditions</a></li>
+                <li><a th:href="'/competition/'+${currentCompetition.id}+'/info/terms-and-conditions'">View conditions of grant offer</a></li>
             </ul>
         </div>
     </div>
+
+    <div th:if="${assessorFeedback != null}" th:remove="tag">
+        <div th:replace="question-type/form-elements :: readonly-file-download
+                    (filename=${assessorFeedback?.filename},
+                     filesizeKbytes=${assessorFeedback?.filesizeKbytes},
+                     fileDescription=${'View your application feedback:'},
+                     downloadURL=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.getId()})})">
+        </div>
+    </div>
+
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">

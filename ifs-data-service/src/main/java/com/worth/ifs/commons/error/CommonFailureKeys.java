@@ -21,14 +21,22 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Files
      */
+    FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE("The file entry id could not be determined from the file", INTERNAL_SERVER_ERROR),
     FILES_UNABLE_TO_CREATE_FILE("The file could not be created", INTERNAL_SERVER_ERROR),
+    FILES_NO_SUCH_FILE("The file could founs created", INTERNAL_SERVER_ERROR),
+    FILES_UNABLE_TO_MOVE_FILE("The file could not be moved", INTERNAL_SERVER_ERROR),
     FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE("A file is already linked to this Form Input Response", CONFLICT),
     FILES_UNABLE_TO_UPDATE_FILE("The file could not be updated", INTERNAL_SERVER_ERROR),
     FILES_UNABLE_TO_DELETE_FILE("The file could not be deleted", INTERNAL_SERVER_ERROR),
     FILES_UNABLE_TO_CREATE_FOLDERS("Unable to create folders in order to store files", INTERNAL_SERVER_ERROR),
     FILES_DUPLICATE_FILE_CREATED("A matching file already exists", CONFLICT),
+    FILES_DUPLICATE_FILE_MOVED("A matching file already exists", CONFLICT),
+    FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT("The destination exists and the source does not", CONFLICT),
+    FILES_DUPLICATE_FILE_("The file has already been moved", CONFLICT),
     FILES_INCORRECTLY_REPORTED_MEDIA_TYPE("The actual file media type didn't match the reported media type", UNSUPPORTED_MEDIA_TYPE),
     FILES_INCORRECTLY_REPORTED_FILESIZE("The actual file size didn't match the reported file size", BAD_REQUEST),
+    FILES_FILE_AWAITING_VIRUS_SCAN("The file is awaiting virus scanning", FORBIDDEN),
+    FILES_FILE_QUARANTINED("The file has been quarantined by the virus scanner", FORBIDDEN),
 
     /**
      * Notifications
@@ -45,7 +53,14 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Users
      */
-    USERS_DUPLICATE_EMAIL_ADDRESS("This email address is already taken", CONFLICT)
+    USERS_DUPLICATE_EMAIL_ADDRESS("This email address is already taken", CONFLICT),
+
+    /**
+     * Funding Panel
+     */
+    FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED("Not all submitted applications are represented in the funding decision", BAD_REQUEST),
+    FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET("An Assessor Feedback Date has not yet been set for this competition", BAD_REQUEST),
+    FUNDING_PANEL_DECISION_WRONG_STATUS("competition not in correct status", BAD_REQUEST),
     ;
 
     private ErrorTemplate errorTemplate;

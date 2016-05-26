@@ -1,10 +1,13 @@
 package com.worth.ifs.commons.error;
 
+import org.springframework.http.MediaType;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.*;
 
@@ -36,8 +39,12 @@ public final class CommonErrors {
         return new Error(PAYLOAD_TOO_LARGE, "File upload was too large.  Max filesize in bytes is " + maxFileSizeBytes, PAYLOAD_TOO_LARGE);
     }
 
-    public static Error unsupportedMediaTypeError(List<String> validMediaTypes) {
+    public static Error unsupportedMediaTypeByNameError(List<String> validMediaTypes) {
         return new Error(UNSUPPORTED_MEDIA_TYPE, "Please supply a valid Content-Type HTTP header.  Valid types are " + simpleJoiner(validMediaTypes, ", "), UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    public static Error unsupportedMediaTypeError(List<MediaType> validMediaTypes) {
+        return unsupportedMediaTypeByNameError(simpleMap(validMediaTypes, Object::toString));
     }
 
     public static Error badRequestError(String message) {
@@ -58,6 +65,14 @@ public final class CommonErrors {
 
     public static Error forbiddenError(String message) {
         return new Error(GENERAL_FORBIDDEN, message, FORBIDDEN);
+    }
+
+    public static Error forbiddenError(Enum<?> key) {
+        return new Error(key, FORBIDDEN);
+    }
+
+    public static Error forbiddenError(Enum<?> key, List<Object> arguments) {
+        return new Error(key, arguments, FORBIDDEN);
     }
 
     public static Error incorrectTypeError(Class<?> clazz, List<Object> arguments) {

@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface OrganisationTypeService {
 
-    @NotSecured("Public objects, just a collection of all different organisation types.")
+    @NotSecured(value = "Public objects, just a collection of all different organisation types.", mustBeSecuredByOtherServices = false)
     ServiceResult<OrganisationTypeResource> findOne(Long id);
 
-    @NotSecured("Public objects, just a collection of all different organisation types.")
+    @NotSecured(value = "Public objects, just a collection of all different organisation types.", mustBeSecuredByOtherServices = false)
     ServiceResult<List<OrganisationTypeResource>> findAll();
 }

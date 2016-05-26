@@ -18,9 +18,9 @@ public interface FinanceService {
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
     List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
     CostItem addCost(Long applicationFinanceId , Long questionId);
-    List<CostItem> getCosts(Long applicationFinanceId);
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
-    RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceId);
+    RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceFileEntryId);
+    RestResult<FileEntryResource> getFinanceEntryByApplicationFinanceId(Long applicationFinanceId);
     RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId);
 }

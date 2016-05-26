@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
+import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.invite.mapper.InviteMapper;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
@@ -19,7 +20,8 @@ import org.mapstruct.Mappings;
         ApplicationFinanceMapper.class,
         ApplicationStatusMapper.class,
         CompetitionMapper.class,
-        InviteMapper.class
+        InviteMapper.class,
+        FileEntryMapper.class
     }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
@@ -33,9 +35,14 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
 
     @Mappings({
             @Mapping(source = "competition.name", target = "competitionName"),
+            @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
             @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
             @Mapping(target = "applicationStatusConstant", ignore = true)
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
+    
+    @Mapping(target = "fundingDecision", ignore = true)
+    @Override
+    public abstract Application mapToDomain(ApplicationResource resource);
 }

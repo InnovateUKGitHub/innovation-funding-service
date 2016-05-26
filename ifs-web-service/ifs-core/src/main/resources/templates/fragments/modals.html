@@ -1,7 +1,7 @@
 
 <!-- close button -->
 <div th:fragment="close-button">
-	<button class="js-close close" aria-label="Close Popup">X</button>
+	<button class="js-close close" type="button" aria-label="Close Popup">X</button>
 </div>
 
 <!-- overlay -->
@@ -19,7 +19,7 @@
         <p th:text="${message}"></p>
         <div>
             <a class="button large" th:href="${submitLink}" th:text="${submitText}"></a>
-            <button class="js-close button buttonlink large" th:text="${cancelText}"></button>
+            <button class="js-close button buttonlink large" type="button" th:text="${cancelText}"></button>
         </div>
     </div>
 </div>
@@ -50,7 +50,7 @@
         <p th:text="${message}"></p>
         <div>
             <button role="button" tabindex="0" class="button large" th:name="${submitName}" type="submit" th:text="${submitText}"></button>
-            <button class="js-close button buttonlink large" th:text="${cancelText}"></button>
+            <button class="js-close button buttonlink large" type="button" th:text="${cancelText}"></button>
         </div>
     </div>
 </div>
@@ -90,6 +90,48 @@
                 </form>
 
             <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
+        </div>
+    </div>
+</div>
+
+<!-- public funding decision modal window -->
+<div th:fragment="modal-publish-funding-decision">
+    <div class="modal-publish-funding-decision" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+
+		<h2 class="heading-medium no-margin">Notify applicants</h2>
+		<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+		<p>This step cannot be undone.</p>
+		<hr/>
+		<div class="grid-row extra-margin">
+           	<div class="column-half">
+           		<button type="button" class="js-close button buttonlink large">Cancel</button>
+           	</div>
+           	<div class="column-half alignright-button">
+           		<button class="button button-warning large" name="publish" value="publish" type="submit">Notify applicants</button>
+           	</div>
+        </div>
+    </div>
+</div>
+
+<!-- Publish assessor feedback modal window -->
+<div th:fragment="modal-submit-assessor-feedback">
+    <div class="modal-submit-assessor-feedback" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+
+        <h2 class="heading-medium no-margin">Publish assessor feedback</h2>
+        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+        <p>This step cannot be undone.</p>
+        <hr/>
+        <div class="grid-row extra-margin">
+	        <form method="post" action="#" id="submit-assessor-feedback-form" th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionSummary.getCompetitionId()})}">
+	            <div class="column-half">
+	                <button type="button" class="js-close button buttonlink large">Cancel</button>
+	            </div>
+	            <div class="column-half alignright-button">
+	                <button class="button button-warning large" name="publish" value="publish" type="submit">Notify applicants</button>
+	            </div>
+            </form>
         </div>
     </div>
 </div>

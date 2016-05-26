@@ -3,7 +3,7 @@ package com.worth.ifs.validator;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +18,12 @@ import org.springframework.validation.Validator;
 public class GrantClaimValidator implements Validator {
     private static final Log LOG = LogFactory.getLog(GrantClaimValidator.class);
 
+    @Autowired
     private CostRepository costRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
         return GrantClaim.class.equals(clazz);
-    }
-
-    @Autowired
-    public GrantClaimValidator(CostRepository costRepository) {
-        this.costRepository = costRepository;
     }
 
     @Override
@@ -42,6 +38,8 @@ public class GrantClaimValidator implements Validator {
             errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
         } else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
             errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", size.getMaxGrantClaimPercentage()));
+        } else if(response.getGrantClaimPercentage().intValue() <= 0){
+            errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", 1));
         }
     }
 }

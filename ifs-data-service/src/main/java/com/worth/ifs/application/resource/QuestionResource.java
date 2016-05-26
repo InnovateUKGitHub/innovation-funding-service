@@ -1,7 +1,5 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,8 +15,6 @@ public class QuestionResource {
     private String name;
     private String shortName;
     private String description;
-    private String guidanceQuestion;
-    private String guidanceAnswer;
     private final List<Long> formInputs = new ArrayList<>();
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
@@ -48,14 +44,6 @@ public class QuestionResource {
 
     public Long getId() {
         return this.id;
-    }
-
-    public String getGuidanceAnswer() {
-        return this.guidanceAnswer;
-    }
-
-    public String getGuidanceQuestion() {
-        return this.guidanceQuestion;
     }
 
     public String getDescription() {
@@ -164,8 +152,6 @@ public class QuestionResource {
             .append(this.id, question.id)
             .append(this.name, question.name)
             .append(this.description, question.description)
-            .append(this.guidanceQuestion, question.guidanceQuestion)
-            .append(this.guidanceAnswer, question.guidanceAnswer)
             .append(this.formInputs, question.formInputs)
             .append(this.markAsCompletedEnabled, question.markAsCompletedEnabled)
             .append(this.assignEnabled, question.assignEnabled)
@@ -189,8 +175,6 @@ public class QuestionResource {
             .append(this.id)
             .append(this.name)
             .append(this.description)
-            .append(this.guidanceQuestion)
-            .append(this.guidanceAnswer)
             .append(this.formInputs)
             .append(this.markAsCompletedEnabled)
             .append(this.assignEnabled)
@@ -238,14 +222,6 @@ public class QuestionResource {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setGuidanceQuestion(String guidanceQuestion) {
-        this.guidanceQuestion = guidanceQuestion;
-    }
-
-    public void setGuidanceAnswer(String guidanceAnswer) {
-        this.guidanceAnswer = guidanceAnswer;
     }
 
     public void setPriority(Integer priority) {

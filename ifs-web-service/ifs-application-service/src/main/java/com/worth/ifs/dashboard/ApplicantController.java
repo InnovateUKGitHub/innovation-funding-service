@@ -1,5 +1,6 @@
 package com.worth.ifs.dashboard;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.ApplicationService;
@@ -7,9 +8,9 @@ import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -33,19 +35,19 @@ import static com.worth.ifs.util.CollectionFunctions.combineLists;
 public class ApplicantController {
 
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
     @Autowired
-    ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
 
     @Autowired
-    ApplicationStatusRestService applicationStatusService;
+    private ApplicationStatusRestService applicationStatusService;
 
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
@@ -56,19 +58,26 @@ public class ApplicantController {
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
+        List<ApplicationResource> projectsInSetup = projectsInSetup(finished);
+        
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
         Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
         model.addAttribute("applicationsInProcess", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
+        model.addAttribute("projectsInSetup", projectsInSetup);
         model.addAttribute("competitions", competitions);
         model.addAttribute("applicationStatuses", applicationStatusMap);
 
         return "applicant-dashboard";
     }
 
-    /**
+    private List<ApplicationResource> projectsInSetup(List<ApplicationResource> finished) {
+		return simpleFilter(finished, a -> ApplicationStatusConstants.APPROVED.getId().equals(a.getApplicationStatus()));
+	}
+
+	/**
      * Get a list of application ids, where one of the questions is assigned to the current user. This is only for the
      * collaborators, since the leadapplicant is the default assignee.
      */

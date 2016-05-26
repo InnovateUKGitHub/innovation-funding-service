@@ -59,7 +59,7 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    INFUND-1887
-    [Tags]    Summary    HappyPath      Email
+    [Tags]    Summary    HappyPath
     [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
@@ -77,7 +77,7 @@ The applicant should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]      Email
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    Link=Marking it as complete
     When the user clicks the button/link    Link=View application
@@ -86,7 +86,7 @@ Submitted application is read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]      Email
+    [Tags]
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=Marking it as complete
@@ -97,26 +97,26 @@ Status of the submitted application
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
-    click element    jQuery=.button:contains("Submit application")
-    click element    jQuery=input[value*="Yes, I want to submit my application"]
+    the user clicks the button/link    jQuery=.button:contains("Submit application")
+    the user clicks the button/link    jQuery=input[value*="Yes, I want to submit my application"]
 
 the applicant marks the first question as incomplete
     The user navigates to the page    ${PROJECT_SUMMARY_APPLICATION_7}
     The user clicks the button/link    name=mark_as_incomplete
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
-    click element    jQuery=.button:contains("Submit application")
-    Click Element    jquery=button:contains("Cancel")
+    Wait Until Element Is Enabled     jQuery=.button:contains("Submit application")
+    the user clicks the button/link   jQuery=.button:contains("Submit application")
+    the user clicks the button/link   jquery=button:contains("Cancel")
 
 The user can check that the sections are read only
-    The user navigates to the page    ${PUBLIC_DESCRIPTION_APPLICATION_7}
-    Wait Until Element Is Visible    css=#form-input-12 .readonly
-    Element Should Not Be Visible    jQuery=button:contains("Edit")
-    The user navigates to the page    ${BUSINESS_OPPORTUNITY_APPLICATION_7}
-    Wait Until Element Is Visible    css=#form-input-1 .readonly
-    The user navigates to the page    ${POTENTIAL_MARKET_APPLICATION_7}
-    Wait Until Element Is Visible    css=#form-input-2 .readonly
+    the user navigates to the page    ${PUBLIC_DESCRIPTION_APPLICATION_7}
+    the user should see the element    css=#form-input-12 .readonly
+    the user should not see the element    jQuery=button:contains("Edit")
+    the user navigates to the page    ${BUSINESS_OPPORTUNITY_APPLICATION_7}
+    the user should see the element    css=#form-input-1 .readonly
+    the user navigates to the page    ${POTENTIAL_MARKET_APPLICATION_7}
+    the user should see the element    css=#form-input-2 .readonly
 
 the user should get a confirmation email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
@@ -130,11 +130,11 @@ the user should get a confirmation email
     close mailbox
 
 the submit button should be disabled
-    select Checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-terms-page
     Element Should Be Disabled    jQuery=button:contains("Submit application")
 
 the applicant accepts the terms and conditions
-    Select Checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-terms-page
 
 The user marks the finances as complete
     Given the user navigates to the page    ${FINANCE_SECTION_7}

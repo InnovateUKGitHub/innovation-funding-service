@@ -13,13 +13,13 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" th:remove="tag" />
 	
-	<p>Please supply the following details about your project and the team. We need these to carry out financial checks before the project begins.</p>
+	<p>Please supply the following details for your project and the team. We need these to setup your project.</p>
 
 	<h2 class="heading-medium">Project details</h2>
 
@@ -32,7 +32,7 @@
 			<tr>
 				<th scope="col" style="width: 45%">Question</th>
 				<th scope="col" style="width: 45%">Answer</th>
-				<th scope="col" style="width: 20%">Complete</th>
+				<th scope="col" style="width: 10%">Complete</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -78,13 +78,15 @@
 
 	<h2 class="heading-medium">Finance contacts</h2>
 
-	<p>Each partner must provide a finance contact who will be sent any queries from us around project finances.</p>
+	<p>Each partner must provide a finance contact who will be sent any queries from us around partner finances.</p>
 
 	<table>
 		<thead>
 			<tr>
 				<th scope="col" style="width: 45%">Partner</th>
 				<th scope="col" style="width: 45%">Finance contact</th>
+				<!-- <th scope="col" style="width: 15%">Turnover</th>
+				<th scope="col" style="width: 15%">Staff headcount</th> -->
 				<th scope="col" style="width: 10%">Complete</th>
 			</tr>
 		</thead>
@@ -97,6 +99,12 @@
 				<td>
 					<span id="finance-contact">John Smith</span>
 				</td>
+				<!-- <td>
+					<span id="finance-turnover">-</span>
+				</td>
+				<td>
+					<span id="finance-headcount">-</span>
+				</td> -->
 				<td>
 					<span id="finance-contact-status" class="yes">Yes</span>
 				</td>
@@ -109,6 +117,12 @@
 				<td>
 					<span id="finance-partner-contact">-</span>
 				</td>
+				<!-- <td>
+					<span id="finance-partner-turnover">-</span>
+				</td>
+				<td>
+					<span id="finance-partner-headcount">-</span>
+				</td> -->
 				<td>
 					<span id="finance-partner-contact-status" class="no">No</span>
 				</td>
@@ -120,6 +134,12 @@
 				<td>
 					Paula Moore
 				</td>
+				<!-- <td>
+					<span id="finance-turnover">&pound;2,023,092</span>
+				</td>
+				<td>
+					<span id="finance-headcount">76</span>
+				</td> -->
 				<td>
 					<span id="finance-partner2-contact-status">Pending</span>
 				</td>
@@ -127,10 +147,30 @@
 		</tbody>
 	</table>
 
-	<p class="extra-margin">Any new team members invited at this stage must join the project before this section can be marked as complete.</p>
-
 	<div class="extra-margin">
-		<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead?stage=level2' :'/prototypes/1588-project-status?stage=level2'}" class="button">Save and return to project setup</a>
+
+		<a href="#" class="button button-large" data-js-modal="modal-project-details" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Submit project details</a>
+		
+
+		<div class="modal-project-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Submit project details</h2>
+
+				<p>Are you sure that you wish to submit your project details to Innovate UK</p>
+
+				<hr />
+
+            	<div class="alignright-button">
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+            		<a href="/prototypes/1588-project-status?stage=level2" class="button">Submit</a>
+            	</div>
+
+	        </div>
+	    </div>
+
+
 	</div>
 
 	
@@ -172,6 +212,8 @@
 			pmNamePending = $_GET('name-pm1'),
 			financesName = $_GET('finances-name-group'),
 			financesNamePending = $_GET('name-finance-contact1'),
+			financesTurnover = $_GET('finance-turnover'),
+			financesHeadcount = $_GET('finance-headcount'),
 			userType = $_GET('user');
 
 		if (startDay != null || startMonth != null || startYear != null){
@@ -179,10 +221,12 @@
 		}
 		var startDate = localStorage.getItem('startDate');
 
+
 		if (postcode != null){
 			localStorage.setItem('projectAddress', street+','+town+','+postcode)
 		}
 		var projectAddress = localStorage.getItem('projectAddress');
+
 
 		if (pmName != null){
 			localStorage.setItem('pmName', pmName);
@@ -190,23 +234,72 @@
 		}
 		var pmName = localStorage.getItem('pmName');
 
+
 		if (pmNamePending != null){
 			localStorage.setItem('pmNamePending', pmNamePending);
 			localStorage.removeItem('pmName');
 		}
 		var pmNamePending = localStorage.getItem('pmNamePending');
 
-		if (financesName != null){
+
+		if (financesName != null && userType == null){
 			localStorage.setItem('financesName', financesName);
 			localStorage.removeItem('financesNamePending');
+		}else if(financesName != null && userType != null){
+			localStorage.setItem('financesPartnerName', financesName);
+			localStorage.removeItem('financesPartnerNamePending');
 		}
 		var financesName = localStorage.getItem('financesName');
+		var financesPartnerName = localStorage.getItem('financesPartnerName');
 
-		if (financesNamePending != null){
+		if (financesNamePending != null && userType == null){
 			localStorage.setItem('financesNamePending', financesNamePending);
 			localStorage.removeItem('financesName');
+		}else if (financesNamePending != null && userType != null){
+			localStorage.setItem('financesPartnerNamePending', financesNamePending);
+			localStorage.removeItem('financesPartnerName');
 		}
 		var financesNamePending = localStorage.getItem('financesNamePending');
+		var financesPartnerNamePending = localStorage.getItem('financesPartnerNamePending');
+
+		/*if (userType == null && financesTurnover != null){ // LEAD VIEW
+			localStorage.setItem('financesTurnoverLead', '£'+financesTurnover);
+		}else if(userType == null && financesTurnover == null){
+			localStorage.setItem('financesTurnoverLead', '£1,000,012');
+			localStorage.setItem('financesTurnoverNonLead', '-');
+		}
+		var financesTurnoverLead = decodeURIComponent(localStorage.getItem('financesTurnoverLead'));
+
+		//alert('lead'+financesTurnoverLead);
+
+		if (userType != null && financesTurnover != null){ // PARTNER VIEW
+			localStorage.setItem('financesTurnoverNonLead', '£'+financesTurnover);
+		}else if(userType != null && financesTurnover == null){
+			//localStorage.setItem('financesTurnoverLead', '-');
+			localStorage.setItem('financesTurnoverNonLead', '-');
+		}
+		var financesTurnoverNonLead = decodeURIComponent(localStorage.getItem('financesTurnoverNonLead'));
+
+		//alert('non lead'+financesTurnoverNonLead);
+
+
+		if (userType == null && financesHeadcount != null){ // LEAD VIEW
+			localStorage.setItem('financesHeadcountLead', financesHeadcount);
+		}else if(userType == null && financesHeadcount == null){
+			localStorage.setItem('financesHeadcountLead', '50');
+		}
+		var financesHeadcountLead = decodeURIComponent(localStorage.getItem('financesHeadcountLead'));
+
+		//alert('lead'+financesHeadcountLead);
+
+		if (userType != null && financesHeadcount != null){ // PARTNER VIEW
+			localStorage.setItem('financesHeadcountPartner', financesHeadcount);
+		}else if(userType == null && financesHeadcount == null){
+			localStorage.setItem('financesHeadcountPartner', '-');
+		}
+		var financesHeadcountPartner = decodeURIComponent(localStorage.getItem('financesHeadcountPartner'));
+
+		*/
 		
 
 		if(startDate == null){
@@ -258,15 +351,26 @@
 
 		if(financesName == null & userType == null){
 			jQuery('#finance-contact').text('John Smith');
-			jQuery('#finance-contact-status').text('No');
-			jQuery('#finance-contact-status').addClass('no');
-			jQuery('#finance-contact-status').removeClass('yes');
+			//jQuery('#finance-contact-status').text('No');
+			//jQuery('#finance-contact-status').addClass('no');
+			//jQuery('#finance-contact-status').removeClass('yes');
+
+			//jQuery('#finance-turnover').text(financesTurnoverLead);
+			//jQuery('#finance-headcount').text(financesHeadcountLead);
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+
+			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
 
 		}else if(financesName != null & userType == null){
 
+			//jQuery('#finance-turnover').text(financesTurnoverLead);
+			//jQuery('#finance-headcount').text(financesHeadcountLead);
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+
 			jQuery('#finance-contact').text(financesName.replace(/\+/g,' '));
-
-
+			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
 
 			if(financesNamePending == null){
 				jQuery('#finance-contact-status').text('Yes');
@@ -280,22 +384,30 @@
 			}
 		}
 
-		if(financesName == null & userType == 'nonLead'){
+		if(financesPartnerName == null & userType == 'nonLead'){
 			jQuery('#finance-partner-contact').text('-');
 			jQuery('#finance-partner-contact-status').text('No');
 			jQuery('#finance-partner-contact-status').addClass('no');
 			jQuery('#finance-partner-contact-status').removeClass('yes');
 
-		}else if(financesName != null & userType == 'nonLead'){
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
 
-			jQuery('#finance-partner-contact').text(financesName.replace(/\+/g,' '));
+		}else if(financesPartnerName != null & userType == 'nonLead'){
 
-			if(financesNamePending == null){
+			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
+			
+			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			//jQuery('#finance-turnover').text(financesTurnoverLead);
+			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+			//jQuery('#finance-headcount').text(financesHeadcountLead);
+
+
+			if(financesPartnerNamePending == null){
 				jQuery('#finance-partner-contact-status').text('Yes');
 				jQuery('#finance-partner-contact-status').addClass('yes');
 				jQuery('#finance-partner-contact-status').removeClass('no');
 			}else{
-				jQuery('#finance-partner-contact').text(financesNamePending.replace(/\+/g,' '));
+				jQuery('#finance-partner-contact').text(financesPartnerNamePending.replace(/\+/g,' '));
 				jQuery('#finance-partner-contact-status').text('Pending');
 				jQuery('#finance-partner-contact-status').removeClass('yes');
 				jQuery('#finance-partner-contact-status').removeClass('no');

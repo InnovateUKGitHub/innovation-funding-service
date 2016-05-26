@@ -5,7 +5,11 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.repository.FileEntryRepository;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileEntryService;
+import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -13,7 +17,10 @@ import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.item.CostHandler;
+import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
+import com.worth.ifs.finance.mapper.CostMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
@@ -24,11 +31,15 @@ import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,29 +49,52 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static org.apache.commons.lang3.tuple.Pair.of;
 
 @Service
 public class CostServiceImpl extends BaseTransactionalService implements CostService {
 
     private static final Log LOG = LogFactory.getLog(CostServiceImpl.class);
+
     @Autowired
-    OrganisationFinanceDelegate organisationFinanceDelegate;
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
+
     @Autowired
-    FileEntryRepository fileEntryRepository;
+    private FileEntryRepository fileEntryRepository;
+
     @Autowired
     private CostFieldMapper costFieldMapper;
+
+    @Autowired
+    private ApplicationFinanceMapper applicationFinanceMapper;
+    @Autowired
+    private CostMapper costMapper;
     @Autowired
     private QuestionRepository questionRepository;
+
     @Autowired
     private CostRepository costRepository;
+
     @Autowired
     private CostFieldRepository costFieldRepository;
+
     @Autowired
     private CostValueRepository costValueRepository;
+
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private FileEntryService fileEntryService;
+
+    @Autowired
+    private FileEntryMapper fileEntryMapper;
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
@@ -147,7 +181,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
                     .peek(c -> LOG.debug("CostValue: " + c.getValue()))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
-            return updatedCost;
+            // refresh the object, since we need to reload the costvalues, on the cost object.
+            return savedCost;
         });
     }
 
@@ -161,7 +196,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, final Long organisationId) {
         return find(applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId), notFoundError(ApplicationFinance.class, applicationId, organisationId)).
-                andOnSuccessReturn(finance -> new ApplicationFinanceResource(finance));
+                andOnSuccessReturn(finance -> applicationFinanceMapper.mapToResource(finance));
     }
 
     @Override
@@ -169,7 +204,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return find(applicationFinanceRepository.findByApplicationId(applicationId), notFoundError(ApplicationFinance.class, applicationId)).andOnSuccessReturn(applicationFinances -> {
             List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
             if (applicationFinances != null) {
-                applicationFinances.stream().forEach(af -> applicationFinanceResources.add(new ApplicationFinanceResource(af)));
+                applicationFinances.stream().forEach(af -> applicationFinanceResources.add(applicationFinanceMapper.mapToResource(af)));
             }
             return applicationFinanceResources;
         });
@@ -185,12 +220,12 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     @Override
-    public ServiceResult<ApplicationFinanceResource> addCost(final ApplicationFinanceResourceId applicationFinanceResourceId ) {
+    public ServiceResult<ApplicationFinanceResource> addCost(final ApplicationFinanceResourceId applicationFinanceResourceId) {
         final Long applicationId = applicationFinanceResourceId.getApplicationId();
         final Long organisationId = applicationFinanceResourceId.getOrganisationId();
         ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         if (existingFinances != null) {
-            return serviceSuccess(new ApplicationFinanceResource(existingFinances));
+            return serviceSuccess(applicationFinanceMapper.mapToResource(existingFinances));
         }
 
         return find(application(applicationId), organisation(organisationId)).andOnSuccess((application, organisation) -> {
@@ -199,13 +234,13 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
             applicationFinance = applicationFinanceRepository.save(applicationFinance);
             initialize(applicationFinance);
-            return serviceSuccess(new ApplicationFinanceResource(applicationFinance));
+            return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
         });
     }
 
     @Override
     public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
-        return find(applicationFinance(applicationFinanceId)).andOnSuccess(finance -> serviceSuccess(new ApplicationFinanceResource(finance)));
+        return find(applicationFinance(applicationFinanceId)).andOnSuccess(finance -> serviceSuccess(applicationFinanceMapper.mapToResource(finance)));
     }
 
     @Override
@@ -216,7 +251,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
             dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
             dbFinance = applicationFinanceRepository.save(dbFinance);
-            return serviceSuccess(new ApplicationFinanceResource(dbFinance));
+            return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
         });
     }
 
@@ -241,6 +276,51 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
         return getFinanceTotals(applicationId);
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return fileService.createFile(fileEntryResource, inputStreamSupplier).
+                andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults));
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults));
+    }
+
+    @Override
+    public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
+        return getApplicationFinanceById(applicationFinanceId).
+                andOnSuccess(finance -> fileService.deleteFile(finance.getFinanceFileEntry()).
+                        andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
+                andOnSuccessReturnVoid();
+    }
+
+    @Override
+    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinanceId) {
+        return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId)
+                .andOnSuccess(fileEntry -> fileService.getFileByFileEntryId(fileEntry.getId())
+                        .andOnSuccessReturn(stream -> of(fileEntry, stream)));
+    }
+
+    private ServiceResult<ApplicationFinanceResource> removeFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
+        applicationFinanceResource.setFinanceFileEntry(null);
+        return updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+    }
+
+    private FileEntryResource linkFileEntryToApplicationFinance(long applicationFinanceId, Pair<File, FileEntry> fileResults) {
+        FileEntry fileEntry = fileResults.getValue();
+
+        ApplicationFinanceResource applicationFinanceResource = getApplicationFinanceById(applicationFinanceId).getSuccessObject();
+
+        if (applicationFinanceResource != null) {
+            applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
+            updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+        }
+
+        return fileEntryMapper.mapToResource(fileEntry);
     }
 
     private ServiceResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {
@@ -289,7 +369,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
         costValue.setCost(savedCost);
         costValue.setCostField(costField);
-        costValueRepository.save(costValue);
+        costValue = costValueRepository.save(costValue);
+        savedCost.addCostValues(costValue);
     }
 
 
@@ -320,4 +401,18 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
         }
     }
+
+    /**
+     * Get the cost handler by costItemId. This CostHandler can be used for validation or conversion of the CostItem.
+     */
+    @Override
+    public CostHandler getCostHandler(Long costItemId) {
+        Cost cost = costMapper.mapIdToDomain(costItemId);
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(cost.getApplicationFinance().getOrganisation().getOrganisationType().getName());
+        CostItem costItem = organisationFinanceHandler.costToCostItem(cost);
+        CostHandler costHandler = organisationFinanceHandler.getCostHandler(costItem.getCostType());
+        return costHandler;
+    }
+
+
 }

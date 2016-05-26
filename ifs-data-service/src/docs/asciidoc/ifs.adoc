@@ -101,6 +101,10 @@ The errorMessage on the other hand is an optional "human-readable" field that ca
 == Address
 include::address.adoc[]
 
+[[alert]]
+== Alert
+include::alert.adoc[]
+
 [[application]]
 == Application
 include::application.adoc[]
@@ -108,6 +112,10 @@ include::application.adoc[]
 [[applicationstatus]]
 == Application Status
 include::application-status.adoc[]
+
+[[applicationfundingdecision]]
+== Application Funding Decision
+include::application-funding-decision.adoc[]
 
 [[assessorfeedback]]
 == AssessorFeedback

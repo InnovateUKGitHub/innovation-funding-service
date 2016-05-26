@@ -3,6 +3,7 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,8 +38,12 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((id, application) -> setField("id", id, application), ids);
     }
 
-    public ApplicationResourceBuilder withCompetition(Long competition) {
-        return with(application -> application.setCompetition(competition));
+    public ApplicationResourceBuilder withCompetition(Long... competitionIds) {
+        return withArray((competition, application) -> setField("competition", competition, application), competitionIds);
+    }
+
+    public ApplicationResourceBuilder withCompetitionStatus(CompetitionResource.Status... competitionStatus) {
+        return withArray((status, application) -> application.setCompetitionStatus(status), competitionStatus);
     }
 
     public ApplicationResourceBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
@@ -80,4 +85,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((inviteList, address) -> setField("invites", inviteList, address), inviteLists);
     }
 
+    public ApplicationResourceBuilder withAssessorFeedbackFileEntry(Long... assessorFeedbackFileEntryId) {
+        return withArray((fileEntryId, application) -> application.setAssessorFeedbackFileEntry(fileEntryId), assessorFeedbackFileEntryId);
+    }
 }

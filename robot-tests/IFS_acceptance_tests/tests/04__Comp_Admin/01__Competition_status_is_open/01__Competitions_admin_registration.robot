@@ -30,22 +30,22 @@ Registration for a user who is in the list
 *** Keywords ***
 User creates new account verifies email and login
     [Arguments]    ${CREATE_ACCOUNT_EMAIL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user enters text to a text field    id=organisationSearchName    Innovate
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    LINK=INNOVATE LTD
-    Select Checkbox    id=address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
-    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
-    And the guest user clicks the log-in button
+    the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link    jQuery=.button:contains("Create")
+    the user enters text to a text field    id=organisationSearchName    Innovate
+    the user clicks the button/link    id=org-search
+    the user clicks the button/link    LINK=INNOVATE LTD
+    the user selects the checkbox    id=address-same
+    the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
+    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    the user opens the mailbox and verifies the email from
+    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    the user clicks the button/link    jQuery=.button:contains("Sign in")
+    the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
+    the guest user clicks the log-in button
 
 the user enters the details and clicks the create account
     [Arguments]    ${CREATE_ACCOUNT_EMAIL}

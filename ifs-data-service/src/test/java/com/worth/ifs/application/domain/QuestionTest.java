@@ -1,13 +1,17 @@
 package com.worth.ifs.application.domain;
 
+import java.util.List;
+
 import com.worth.ifs.competition.domain.Competition;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.BuilderAmendFunctions.competition;
+import static com.worth.ifs.BuilderAmendFunctions.description;
+import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
@@ -37,8 +41,6 @@ public class QuestionTest {
         name = "testQuestionName";
         number = "testQuestionNumber";
         description = "testQuestionDescription";
-        guidanceQuestion = "testGuidanceQuestion";
-        guidanceAnswer = "testGuidanceAnswer";
         priority = 1;
 
         question = newQuestion().
@@ -47,8 +49,6 @@ public class QuestionTest {
                 with(name(name)).
                 withQuestionNumber(number).
                 with(description(description)).
-                withGuidanceQuestion(guidanceQuestion).
-                withGuidanceAnswer(guidanceAnswer).
                 withPriority(priority).
                 build();
 
@@ -64,8 +64,6 @@ public class QuestionTest {
         Assert.assertEquals(question.getCompetition(), competition);
         Assert.assertEquals(question.getSection(), section);
         Assert.assertEquals(question.getDescription(), description);
-        Assert.assertEquals(question.getGuidanceQuestion(), guidanceQuestion);
-        Assert.assertEquals(question.getGuidanceAnswer(), guidanceAnswer);
         Assert.assertEquals(question.getResponses(), responses);
         Assert.assertEquals(question.getPriority(), priority);
     }
@@ -78,8 +76,6 @@ public class QuestionTest {
                 with(name(name)).
                 withQuestionNumber(number).
                 with(description(description)).
-                withGuidanceQuestion(guidanceQuestion).
-                withGuidanceAnswer(guidanceAnswer).
                 withPriority(priority).
                 build();
         question1.setAssignEnabled(true);
@@ -89,8 +85,6 @@ public class QuestionTest {
                 with(name(name)).
                 withQuestionNumber(number).
                 with(description(description)).
-                withGuidanceQuestion(guidanceQuestion).
-                withGuidanceAnswer(guidanceAnswer).
                 withPriority(priority).
                 build();
         question2.setAssignEnabled(true);

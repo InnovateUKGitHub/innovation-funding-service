@@ -5,8 +5,7 @@ import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -56,10 +55,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
-    Validator validator;
+    private Validator validator;
+    
     private Cookie inviteHashCookie;
-
     private Cookie usedInviteHashCookie;
+    private Cookie organisationCookie;
 
     @Override
     protected RegistrationController supplyControllerUnderTest() {
@@ -84,10 +84,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
 
         when(userService.verifyEmail(eq(VERIFY_HASH))).thenReturn(restSuccess());
-        when(userService.verifyEmail(eq(INVALID_VERIFY_HASH))).thenReturn(restFailure(CommonErrors.notFoundError(Invite.class, INVALID_VERIFY_HASH)));
+        when(userService.verifyEmail(eq(INVALID_VERIFY_HASH))).thenReturn(restFailure(CommonErrors.notFoundError(InviteResource.class, INVALID_VERIFY_HASH)));
 
         inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
         usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
+        organisationCookie = new Cookie("organisationId", "1");
 
     }
 
@@ -96,12 +97,12 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(get("/registration/register?organisationId=1")
+        mockMvc.perform(get("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
-        ;
+                .andExpect(view().name("registration-register"));
     }
 
     @Test
@@ -109,8 +110,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(get("/registration/register?organisationId=1")
-                .cookie(inviteHashCookie)
+        mockMvc.perform(get("/registration/register")
+                .cookie(inviteHashCookie, organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
@@ -123,8 +124,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(get("/registration/register?organisationId=1")
-                .cookie(usedInviteHashCookie)
+        mockMvc.perform(get("/registration/register")
+                .cookie(usedInviteHashCookie, organisationCookie)
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login"));
@@ -137,8 +138,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
-        ;
+                .andExpect(view().name("redirect:/"));
     }
 
     @Test
@@ -159,26 +159,25 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void testVerifyEmail() throws Exception {
         mockMvc.perform(get("/registration/verify-email/" + VERIFY_HASH))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/registration/verified"))
-        ;
+                .andExpect(view().name("redirect:/registration/verified"));
     }
 
     @Test
     public void testVerifyEmailInvalid() throws Exception {
         mockMvc.perform(get("/registration/verify-email/"+INVALID_VERIFY_HASH))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE))
-        ;
+                .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE));
     }
 
     @Test
     public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenViewingForm() throws Exception {
-        mockMvc.perform(get("/registration/register?organisationId=1")
+    	
+        mockMvc.perform(get("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
-        ;
+                .andExpect(view().name("redirect:/"));
     }
 
     @Test
@@ -187,18 +186,17 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
-        ;
+                .andExpect(view().name("redirect:/"));
     }
 
     @Test
     public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenSubmittingForm() throws Exception {
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
-        ;
+                .andExpect(view().name("redirect:/"));
     }
 
     @Test
@@ -210,14 +208,14 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
         when(userService.findUserByEmailForAnonymousUserFlow(email)).thenReturn(restSuccess(new UserResource()));
 
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
                         .param("email", email)
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
-        ;
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
     }
 
     @Test
@@ -225,8 +223,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
                         .param("email", "")
                         .param("password", "")
                         .param("retypedPassword", "")
@@ -245,22 +244,22 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"))
-        ;
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"));
     }
 
     @Test
     public void invalidEmailFormatShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        mockMvc.perform(post("/registration/register?organisationId=1")
+
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
                         .param("email", "invalid email format")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
-        ;
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
     }
 
     @Test
@@ -268,35 +267,33 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
                         .param("email", "{a|b}@test.test")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
-        ;
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
 
         verifyNoMoreInteractions(userService);
     }
-
-
 
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
                         .param("password", "12345")
                         .param("retypedPassword", "123456789012345678901234567890123")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
-        ;
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
 
     @Test
@@ -304,15 +301,15 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
                         .param("password", "12345678")
                         .param("retypedPassword", "123456789")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
-        ;
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
 
     @Test
@@ -320,13 +317,13 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"))
-        ;
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"));
     }
 
     @Test
@@ -353,10 +350,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getPhoneNumber(),
                 1L,
                 null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(restFailure(notFoundError(User.class, "test@test.test")));
+        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(restFailure(notFoundError(UserResource.class, "test@test.test")));
 
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .cookie(organisationCookie)
                 .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
                 .param("retypedPassword", userResource.getPassword())
@@ -394,11 +392,12 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getPhoneNumber(),
                 1L,
                 null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(User.class, "invited@email.com")));
+        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(UserResource.class, "invited@email.com")));
         when(inviteRestService.acceptInvite(eq(INVITE_HASH),anyLong())).thenReturn(restSuccess());
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        
+        mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .cookie(inviteHashCookie)
+                .cookie(inviteHashCookie, organisationCookie)
                 .param("password", userResource.getPassword())
                 .param("retypedPassword", userResource.getPassword())
                 .param("title", userResource.getTitle())
@@ -417,8 +416,12 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(4L)).thenReturn(organisation);
-        mockMvc.perform(post("/registration/register?organisationId=4")
+        
+        organisationCookie = new Cookie("organisationId", "4");
+
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
         ).andExpect(model().attribute("organisationName", "uniqueOrganisationName"));
     }
 
@@ -430,10 +433,10 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 )).build()
         );
 
-        mockMvc.perform(get("/registration/register?organisationId=1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/testrolename/dashboard"))
-        ;
+        mockMvc.perform(get("/registration/register")
+        				.cookie(organisationCookie)
+        		).andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/testrolename/dashboard"));
 
     }
 
@@ -444,12 +447,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                         newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
                 )).build()
         );
-
-        mockMvc.perform(post("/registration/register?organisationId=1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/testrolename/dashboard"))
-        ;
-
+        
+        mockMvc.perform(post("/registration/register")
+        				.cookie(organisationCookie)
+        		).andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/testrolename/dashboard"));
     }
 
     @Test
@@ -475,8 +477,10 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
                 1L, null)).thenReturn(restFailure(error));
-        mockMvc.perform(post("/registration/register?organisationId=1")
+        
+        mockMvc.perform(post("/registration/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .cookie(organisationCookie)
                         .param("email", userResource.getEmail())
                         .param("password", userResource.getPassword())
                         .param("retypedPassword", userResource.getPassword())
@@ -486,7 +490,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                         .param("phoneNumber", userResource.getPhoneNumber())
                         .param("termsAndConditions", "1")
         )
-                .andExpect(model().hasErrors())
-        ;
+                .andExpect(model().hasErrors());
     }
 }

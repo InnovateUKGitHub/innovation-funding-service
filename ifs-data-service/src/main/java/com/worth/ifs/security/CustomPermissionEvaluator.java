@@ -46,6 +46,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return user == ANONYMOUS_USER;
     }
 
+    public static UserResource getAnonymous() {
+        return ANONYMOUS_USER;
+    }
+
     @PostConstruct
     void generateRules() {
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();
@@ -218,22 +222,25 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     @Override
-    public boolean hasPermission(final Authentication authentication, final Object targetDomainObject, final Object permission) {
-
-        if (targetDomainObject == null) {
+    public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
+        if (targetObject == null) {
             return true;
         }
-
-        final Class<?> dtoClass = targetDomainObject.getClass();
-
-        final ListOfOwnerAndMethod methodsToCheck = rulesMap.entrySet().stream().
-                filter(e -> e.getKey().isAssignableFrom(dtoClass)).
-                map(Entry::getValue).
-                map(e -> e.get(permission)).
-                filter(Objects::nonNull).
+        final Class<?> targetClass = targetObject.getClass();
+        final List<PermissionsToPermissionsMethods> permissionsWithPermissionsMethodsForTargetClassList
+                = rulesMap.entrySet().stream().
+                filter(e -> e.getKey().isAssignableFrom(targetClass)). // Any super class of the target class will do.
+                map(Entry::getValue).collect(toList());
+        final List<ListOfOwnerAndMethod> permissionMethodsForPermissionList
+                = permissionsWithPermissionsMethodsForTargetClassList.stream().
+                map(permissionsToPermissionsMethods -> permissionsToPermissionsMethods.get(permission)).
+                filter(Objects::nonNull). // Filter any nulls
+                collect(toList());
+        final ListOfOwnerAndMethod permissionMethodsForPermissionAggregate
+                = permissionMethodsForPermissionList.stream().
                 reduce(new ListOfOwnerAndMethod(), (f1, f2) -> ListOfOwnerAndMethod.from(combineLists(f1, f2)));
-        return methodsToCheck.stream().
-                map(methodAndBean -> callHasPermissionMethod(methodAndBean, targetDomainObject, authentication)).
+        return permissionMethodsForPermissionAggregate.stream().
+                map(methodAndBean -> callHasPermissionMethod(methodAndBean, targetObject, authentication)).
                 reduce(false, (a, b) -> a || b);
     }
 

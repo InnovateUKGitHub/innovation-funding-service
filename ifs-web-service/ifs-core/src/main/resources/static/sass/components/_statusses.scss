@@ -166,13 +166,20 @@ Status is displayed in the collapsible header area.
 /* SG
 # IFS/Wrapped textareas : Complete
 ```
-<div class="textarea-wrapped marked-as-complete">
-	<div class="textarea-header">
-		<p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>
+<div class="textarea-wrapped marked-as-complete word-count">
+    <div class="textarea-header">
+         <img class="marked-as-complete" alt="" src="/images/field/field-done.png">
+         <div class="assignee">This question is <strong>marked as complete</strong></div>
     </div>
-
-	<textarea data-max_words="500" id="question-1" name="question[1]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
-	</textarea>
+		<textarea readonly="readonly" name="formInput[12]" id="form-textarea-12" data-max_words="400"></textarea>
+    <div class="textarea-footer">
+          <p>
+            <small>Last updated: Yesterday by you</small>
+        		<span class="count-label">
+    		        <span aria-live="polite" class="count-down positive">Words remaining: 400 </span>
+    		  	</span>
+          </p>
+    </div>
 </div>
 ```
 */
@@ -180,13 +187,24 @@ Status is displayed in the collapsible header area.
 /* SG
 # IFS/Wrapped textareas : Assigned to me
 ```
-<div class="textarea-wrapped assigned-to-me">
-	<div class="textarea-header">
-		<p><small><span>Last updated:</span><span><span>18 September 10:35AM</span> </span>by <span>you</span></small></p>
+<div class="textarea-wrapped assigned-to-me  word-count">
+     <div class="textarea-header">
+        <img class="assigned-to-me" alt="" src="/images/field/field-assigned.png">
+        <div class="assignee assigned-to-me">
+            This question has been reassigned to
+              <span>you</span> by
+              <span>Jessica Doe</span>
+        </div>
     </div>
-
-	<textarea data-max_words="500" id="question-2" name="question[2]" readonly="readonly">Wastage in our industry can be attributed in no small part to one issue.  To date businesses have been reluctant to tackle that problem and instead worked around it.  That has stifled progress.The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.
-	</textarea>
+		<textarea data-max_words="400"></textarea>
+    <div class="textarea-footer">
+          <p>
+            <small>Last updated: Yesterday by you</small>
+        		<span class="count-label">
+        				<span aria-live="polite" class="count-down positive">Words remaining: 400</span>
+        		</span>
+          </p>
+    </div>
 </div>
 ```
 */
@@ -201,13 +219,6 @@ Status is displayed in the collapsible header area.
 		left:1px;
 		top: 1px;
 	}
-	// &.marked-as-complete .textarea-header {
-	// 	@extend %mark-done-left;
-	// }
-	// &.assigned-to-me .textarea-header {
-	// 	@extend %mark-assigned-left;
-	// }
-
 	&.marked-as-complete textarea[readonly],
 	&.marked-as-complete .readonly,
 	&.marked-as-complete .textarea-header {
@@ -229,35 +240,3 @@ Status is displayed in the collapsible header area.
    }
 
 }
-
-
-/* SG
-
-# IFS/Application sidebar statuses
-```
-<nav role="navigation" class="app-sidebar">
-	<ul>
-		<li><a href="#">Item 1</a></li>
-		<li class="section-status assigned"><a href="#">Item 2</a></li>
-		<li class="section-status complete"><a href="#">Item 3</a></li>
-	</ul>
-</nav>
-```
-*/
-
-.app-sidebar .section-status a {
-	background-position: 98% center;
-}
-
-.app-sidebar .section-status.complete a {
-	@extend %icon-tick;
-}
-.app-sidebar .section-status.assigned a {
-	@extend %icon-assigned;
-}
-
-//Assignees
-
-// .assignee.assigned-to-me{
-// 	font-weight:bold
-// }

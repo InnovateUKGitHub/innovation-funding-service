@@ -13,7 +13,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Email
+Force Tags        Collaboration
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -45,6 +45,15 @@ Valid invitation submit
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    Invites sent
 
+Pending partners are visible in the Application details page
+    [Documentation]    INFUND-2966
+    ...
+    ...    INFUND-2738
+    [Tags]
+    # Pending as still in progress by Pradha Muniraj
+    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
+    Then pending partners should be visible in the page
+
 Pending users are visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
@@ -60,63 +69,64 @@ Business organisation (accept invitation)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
-    And user selects the radio button    organisationType    1
+    And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user enters text to a text field    id=organisationSearchName    Nomensa
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=NOMENSA LTD
-    And the user selects the same address
+    And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
-
 User who accepted the invite should be able to log-in and see the new company name throughout the application
-    [Documentation]     INFUND-2083
-    [Tags]      Failing
-    Given the user clicks the button/link    jQuery=.button:contains("Log in")
+    [Documentation]    INFUND-2083
+    [Tags]    Email     Failing
+    Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
-    [Teardown]  Logout as user
-
+    [Teardown]    Logout as user
 
 User who accepted the invite can invite others to their own organisation
     [Documentation]    INFUND-2335
-    [Tags]  Failing
+    [Tags]    Email
     Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
     Then the user can invite another person to their own organisation
 
 User who accepted the invite cannot invite others to other organisations
     [Documentation]    INFUND-2335
-    [Tags]      Failing
+    [Tags]    Email
     Then the user cannot invite another person to a different organisation
-
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     [Setup]    Run keywords    User closes the browser
     ...    AND    Log in as user    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROJECT_SUMMARY_URL}
     And the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
+    [Teardown]   Logout as user
 
 Status of the invited people (Application team page)
     [Documentation]    INFUND-929
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Failing
+    [Setup]    Run keywords    User closes the browser
+    ...    AND    Log in as user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${APPLICATION_TEAM_PAGE}
     Then the status of the invited people should be correct in the application team page
 
 Status of the invited people (Manage contributors page)
     [Documentation]    INFUND-928
     [Tags]    HappyPath
+    [Setup]     Log in as user      &{lead_applicant_credentials}
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
@@ -147,11 +157,19 @@ The Lead applicant invites a non registered user in the same organisation
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
     [Teardown]    User closes the browser
 
+the status of the invitees is correct on the overview page
+    [Documentation]    INFUND-2738
+    [Tags]    Collaboration    Pending
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    # Pending completion of INFUND-2050
+    When the user navigates to the page    ${application_details_url}
+    Then the user should see the text in the page    foobar
+
 The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
-    [Tags]
+    [Tags]    Email
     [Setup]    The guest user opens the browser
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user should see the text in the page    Join an application
@@ -174,15 +192,15 @@ the applicant enters valid inputs
     Click Element    jquery=button:contains("Begin application")
 
 The lead applicant should have the correct status
-    page should contain element    css=#content h2.heading-medium
+    the user should see the element    css=#content h2.heading-medium
     ${input_value} =    get text    css=#content h2.heading-medium
     Should Be Equal As Strings    ${input_value}    Empire Ltd (Lead organisation)
-    page should contain link    Steve Smith
+    the user should see the element    link=Steve Smith
     ${input_value} =    get text    css=.list-bullet li small
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
 the user adds new collaborator
-    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input
+    the user should see the element    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    Roger Axe
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    worth.email.test+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add person')
@@ -195,16 +213,16 @@ The status of the invited people should be correct in the application team page
     Element Should Contain    css=div+ div .heading-medium small    (pending)
 
 the invited collaborators are not editable
-    page should contain element    jQuery=li:nth-child(1) tr:nth-of-type(1) td:nth-child(1) [readonly]
-    page should contain element    jQuery=li:nth-child(1) tr:nth-of-type(1) td:nth-child(2) [readonly]
-    page should contain element    jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(1) [readonly]
-    page should contain element    jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(2) [readonly]
-    page should contain element    jQuery=li:nth-child(3) tr:nth-of-type(1) td:nth-child(2) [readonly]
-    page should contain element    jQuery=li:nth-child(3) tr:nth-of-type(1) td:nth-child(1) [readonly]
+    the user should see the element    jQuery=li:nth-child(1) tr:nth-of-type(1) td:nth-child(1) [readonly]
+    the user should see the element    jQuery=li:nth-child(1) tr:nth-of-type(1) td:nth-child(2) [readonly]
+    the user should see the element    jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(1) [readonly]
+    the user should see the element    jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(2) [readonly]
+    the user should see the element    jQuery=li:nth-child(3) tr:nth-of-type(1) td:nth-child(2) [readonly]
+    the user should see the element    jQuery=li:nth-child(3) tr:nth-of-type(1) td:nth-child(1) [readonly]
 
 the applicant cannot assign to pending invitees
-    Click Element    jQuery=button:contains("Assigned to")
-    Page Should not Contain Element    jQuery=button:contains("Adrian Booth")
+    the user clicks the button/link    jQuery=button:contains("Assigned to")
+    the user should not see the element    jQuery=button:contains("Adrian Booth")
 
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
@@ -216,24 +234,26 @@ the lead applicant logs out
 the lead applicant logs back in
     guest user log-in    &{lead_applicant_credentials}
 
-user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
-
 the user can see the updated company name throughout the application
     the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     the user should see the text in the page    NOMENSA LTD
     the user navigates to the page    ${APPLICATION_TEAM_URL}
     the user should see the text in the page    NOMENSA LTD
 
-the user selects the same address
-    select Checkbox    id=address-same
-
-
 the user can invite another person to their own organisation
-    The user clicks the button/link     jQuery=button:contains('Add person')
-    wait until page contains element         jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2)
-    page should not contain element     jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2) [readonly]
+    ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
+    the user clicks the button/link    jQuery=button:contains('Add person')
+    the user should see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
+    the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
-    page should contain element         jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(2) [readonly]
+    ${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
+    the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
+
+pending partners should be visible in the page
+    the user should see the element    css=ul.list-bullet li:nth-child(5) span
+    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) span
+    Should Be Equal As Strings    ${input_value}    Fannie May
+    the user should see the element    css=ul.list-bullet li:nth-child(5) small
+    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) small
+    Should Be Equal As Strings    ${input_value}    (pending)

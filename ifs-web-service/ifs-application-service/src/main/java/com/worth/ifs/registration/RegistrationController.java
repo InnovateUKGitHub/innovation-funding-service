@@ -75,7 +75,6 @@ public class RegistrationController {
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
         CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
         if(referer == null || !referer.contains(request.getServerName() + "/registration/register")){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
@@ -110,14 +109,18 @@ public class RegistrationController {
             return getRedirectUrlForUser(user);
         }
 
+        if (getOrganisationId(request) == null){
+            return  "redirect:/";
+        }
+
         try {
-        	addRegistrationFormToModel(model, request);
+        	addRegistrationFormToModel(model, request, response);
         }
         catch (InviteAlreadyAcceptedException e) {
         	cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
         	return "redirect:/login";
         }
-        
+
         String destination = "registration-register";
 
         if (!processOrganisation(request, model)) {
@@ -140,9 +143,9 @@ public class RegistrationController {
         return success;
     }
 
-    private void addRegistrationFormToModel(Model model, HttpServletRequest request) {
+    private void addRegistrationFormToModel(Model model, HttpServletRequest request, HttpServletResponse response) {
         RegistrationForm registrationForm = new RegistrationForm();
-        setFormActionURL(registrationForm, request);
+        setOrganisationIdCookie(registrationForm, request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
     }
@@ -190,7 +193,7 @@ public class RegistrationController {
         }
         
         if(setInviteEmailAddress){
-            LOG.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
+            LOG.info("setInviteeEmailAddress: "+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
             validator.validate(registrationForm, bindingResult);
@@ -211,6 +214,7 @@ public class RegistrationController {
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
                 acceptInvite(response, request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
+                CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
                 destination = "redirect:/registration/success";
             } else {
                 if (!processOrganisation(request, model)) {
@@ -283,7 +287,7 @@ public class RegistrationController {
     }
 
     private Long getOrganisationId(HttpServletRequest request) {
-        String organisationParameter = request.getParameter(ORGANISATION_ID_PARAMETER_NAME);
+        String organisationParameter = CookieUtil.getCookieValue(request, ORGANISATION_ID_PARAMETER_NAME);
         Long organisationId = null;
 
         try {
@@ -297,9 +301,11 @@ public class RegistrationController {
         return organisationId;
     }
 
-    private void setFormActionURL(RegistrationForm registrationForm, HttpServletRequest request) {
+    private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
-        registrationForm.setActionUrl(BASE_URL + "?" + ORGANISATION_ID_PARAMETER_NAME + "=" + organisationId);
+        if(organisationId != null) {
+        	CookieUtil.saveToCookie(response, ORGANISATION_ID_PARAMETER_NAME, Long.toString(organisationId));
+        }
     }
 
     private boolean hasVerifiedCookieSet(final HttpServletRequest request) {

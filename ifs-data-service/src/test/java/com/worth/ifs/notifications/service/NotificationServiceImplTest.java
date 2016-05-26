@@ -4,6 +4,7 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.service.senders.NotificationSender;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;

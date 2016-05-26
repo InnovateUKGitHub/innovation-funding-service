@@ -4,7 +4,6 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.file.transactional.FileServiceImpl;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -35,14 +34,16 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
  */
 public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
+    public static final String[] SIMPLE_CSV_HEADERS = {"Entity", "Action", "Rule description", "Particular business state where rule is enforced"};
+    public static final String[] FULL_CSV_HEADERS = {"Entity", "Action", "Rule description", "Particular business state where rule is enforced", "Rule method", "Additional rule comments"};
+
     @Autowired
     private ApplicationContext context;
 
     List<Class<?>> excludedClasses
             = asList(
                     UidAuthenticationService.class,
-                    StatelessAuthenticationFilter.class,
-                    FileServiceImpl.class
+                    StatelessAuthenticationFilter.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
@@ -109,13 +110,11 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         });
 
         // output a simple csv of rule information
-        String[] simpleHeaders = {"Entity", "Action", "Rule description"};
-        List<String[]> simpleRows = simpleMap(allSecuredRows, row -> new String[]{row[0], row[1], row[2]});
-        writeCsv("build/permission-rules-summary.csv", simpleHeaders, simpleRows);
+        List<String[]> simpleRows = simpleMap(allSecuredRows, row -> new String[]{row[0], row[1], row[2], row[3]});
+        writeCsv("build/permission-rules-summary.csv", SIMPLE_CSV_HEADERS, simpleRows);
 
         // output a more complex csv of rule information
-        String[] fullHeaders = {"Entity", "Action", "Rule description", "Rule method", "Additional rule comments"};
-        writeCsv("build/permission-rules-full.csv", fullHeaders, allSecuredRows);
+        writeCsv("build/permission-rules-full.csv", FULL_CSV_HEADERS, allSecuredRows);
     }
 
     private List<String[]> getSimpleSpringSecurityBasedSecurity() {
@@ -134,7 +133,8 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
                 String ruleDescription = securityAnnotation.description();
                 String ruleMethod = getMethodCallDescription(method);
                 String ruleComments = securityAnnotation.additionalComments();
-                String[] securedMethodRow = new String[] {entity, action, ruleDescription, ruleMethod, ruleComments};
+                String ruleState = securityAnnotation.particularBusinessState();
+                String[] securedMethodRow = new String[] {entity, action, ruleDescription, ruleState, ruleMethod, ruleComments};
                 return securedMethodRow;
             });
         });
@@ -187,9 +187,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
             actionsSecuredForEntity.forEach(actionName -> {
 
-
                 CustomPermissionEvaluator.ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
-
 
                 permissionRuleMethodsForThisAction.forEach(serviceAndMethod -> {
 
@@ -198,8 +196,13 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
                     final String finalClassName = cleanEntityName(clazz);
 
-                    permissionRuleRows.add(new String[] {finalClassName, actionName, permissionRule.description(),
-                            getMethodCallDescription(ruleMethod), permissionRule.additionalComments()});
+                    permissionRuleRows.add(new String[] {
+                            finalClassName,
+                            actionName,
+                            permissionRule.description(),
+                            permissionRule.particularBusinessState(),
+                            getMethodCallDescription(ruleMethod),
+                            permissionRule.additionalComments()});
                 });
             });
         });

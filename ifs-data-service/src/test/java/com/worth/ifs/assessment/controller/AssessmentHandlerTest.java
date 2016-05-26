@@ -5,7 +5,7 @@ import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -93,7 +93,7 @@ public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
         // Set the mocks
         //
         when(assessmentRepository.findById(assessmentId)).thenReturn(assessment);
-        when(responseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(allResponses));
+        when(responseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(allResponses));
 
         //
         // Call the method under test
@@ -143,7 +143,7 @@ public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
         // Set the mocks
         //
         when(assessmentRepository.findById(assessmentId)).thenReturn(assessment);
-        when(responseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(responses));
+        when(responseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(responses));
 
         //
         // Call the method under test

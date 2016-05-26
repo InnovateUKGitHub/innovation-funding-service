@@ -1,0 +1,4 @@
+UPDATE form_input
+SET guidance_question="What should I include in the appendix?",
+    guidance_answer='<p>You should only include supporting information in your appendix. Don’t use your appendix to provide answers to the questions.</p><p>The appendix should:</p><ul class="list-bullet"><li>be in a Portable Document Format (.pdf)</li><li>be readable with 100% magnification</li><li>contain your application number and project title at the top.</li><li>not be any longer than 6 sides of A4. Longer appendices will only have the first 6 pages assessed</li><li>be less than 1mb in size</li></ul>'
+WHERE form_input_type_id = 4

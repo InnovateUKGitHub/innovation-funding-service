@@ -29,78 +29,104 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     public void searchByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20)).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null);
+    	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
     
     @Test
     public void searchByCompetitionIdWithSortField() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20)).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3?page=6&sort=id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id");
+    	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
     
     @Test
     public void searchSubmittedByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20)).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null);
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
     
     @Test
     public void searchSubmittedByCompetitionIdWithSortField() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20)).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6&sort=id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id");
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
     
     @Test
     public void searchNotSubmittedByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20)).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/not-submitted?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null);
+    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
     
     @Test
-    public void searchNotSubmittedByClosedCompetitionIdWithSortField() throws Exception {
+    public void searchNotSubmittedByCompetitionIdWithSortField() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20)).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/not-submitted?page=6&sort=id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id");
+    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
+    }
+    
+    @Test
+    public void searchFeedbackRequiredByCompetitionId() throws Exception {
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+    	when(applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20)).thenReturn(serviceSuccess(resource));
+        
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/feedback-required?page=6"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+    	
+    	verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
+    }
+    
+    @Test
+    public void searchFeedbackRequiredByCompetitionIdWithSortField() throws Exception {
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+    	when(applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20)).thenReturn(serviceSuccess(resource));
+        
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/feedback-required?page=6&sort=id"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+    	
+    	verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
 
 }

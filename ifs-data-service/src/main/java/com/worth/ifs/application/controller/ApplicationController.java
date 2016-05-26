@@ -19,7 +19,7 @@ import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -50,7 +50,7 @@ public class ApplicationController {
     public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
                                                    @RequestBody ApplicationResource application) {
 
-        return applicationService.saveApplicationDetails(id, application).toPostUpdateResponse();
+        return applicationService.saveApplicationDetails(id, application).toPostResponse();
     }
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")

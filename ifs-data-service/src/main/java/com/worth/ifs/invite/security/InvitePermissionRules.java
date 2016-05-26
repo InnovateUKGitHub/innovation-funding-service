@@ -7,7 +7,7 @@ import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
-import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 
 /**
  * Permission rules for {@link Invite} and {@link InviteResource} for permissioning

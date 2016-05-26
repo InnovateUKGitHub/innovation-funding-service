@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 
 /**
  * Rules defining who is allowed to upload files as part of an Application Form response to a Question

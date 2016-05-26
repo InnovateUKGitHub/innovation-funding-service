@@ -8,6 +8,7 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static java.util.Collections.emptyList;
 
 /**
@@ -50,6 +52,10 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
 
     public ProcessRoleBuilder withRole(Role... roles) {
         return withArray((role, processRole) -> processRole.setRole(role), roles);
+    }
+
+    public ProcessRoleBuilder withRole(UserRoleType... roles) {
+        return withArray((role, processRole) -> processRole.setRole(newRole().withType(role).build()), roles);
     }
 
     public ProcessRoleBuilder withApplication(Builder<Application, ?> application) {

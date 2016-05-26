@@ -29,40 +29,66 @@
 
 			<p class="form-hint">Who will be responsible for project finances in your organisation?</p>
 
-			<p>We will ask this person to provide bank details for your organisation, confirm project costs and financial forecasts before the project can begin.</p>
+			<p>We will ask this person to</p>
+
+			<ul class="list-bullet">
+				<li>provide bank details for your organisation</li>
+				<li>confirm any queries we have with your project costs</li>
+				<li>review the spend profile of your project costs</li>
+			</ul>
 
 		
 			<div class="form-group extra-margin">			
-					<label for="finances-name-1" class="block-label">
-						<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
-						John Smith
-					</label>
+				<label for="finances-name-1" class="block-label">
+					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+					John Smith
+				</label>
 
-					<label for="finances-name-2" class="block-label">
-						<input id="finances-name-2" type="radio" name="finances-name-group" value="Ann Jones" />
-						Ann Jones
-					</label>
+				<label for="finances-name-2" class="block-label">
+					<input id="finances-name-2" type="radio" name="finances-name-group" value="Ann Jones" />
+					Ann Jones
+				</label>
 
-					<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
-						<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
-						<span id="finance-name">Ann Jones (pending)</span>
-					</label>
+				<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
+					<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
+					<span id="finance-name">Ann Jones (pending)</span>
+				</label>
 
-					<label for="add-finance-contact" class="block-label">
-						<input id="add-finance-contact" type="radio" name="finances-name-group" value="Add new team member" />
-						Add new team member
-					</label>
+				<label for="add-finance-contact" class="block-label">
+					<input id="add-finance-contact" type="radio" name="finances-name-group" value="Add new team member" />
+					Add new team member
+					<span class="form-hint">A new team member will be invited to join the project</span>
+				</label>
 
-					<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />
-					
-				</div>
+				<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />
+				
+			</div>
 			
-
 		</fieldset>
 
 		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
 
-		<button class="button button-large extra-margin" style="display: none;" id="finance-cta">Save</button>
+		<!-- <fieldset class="extra-margin">
+			<legend class="visuallyhidden">Organisation details</legend>
+				
+			<div class="form-group">
+				<label class="form-label-bold" for="finance-turnover">Turnover (&pound;)
+					<span class="form-hint">Income during the previous year from the sale of products or the provision of services. Turnover should not include value added tax (VAT) or other indirect taxes.</span>
+				</label>
+				<input class="form-control width-large" id="finance-turnover" name="finance-turnover" type="text" value="" />
+			</div>
+			<div class="form-group">
+				<label class="form-label-bold" for="finance-headcount">Staff headcount
+					<span class="form-hint">
+						Anyone who is currently employed full time or Part time by your organisation.
+					</span>
+				</label>
+				<input class="form-control width-medium" id="finance-headcount" name="finance-headcount" type="text" value="" />
+			</div>
+
+		</fieldset> -->
+
+		<button class="button button-large extra-margin" id="finance-cta">Save</button>
 
 	</form>
 
@@ -78,6 +104,40 @@
 <script type="text/javascript">
 	// <![CDATA[
 	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+	    var userType = $_GET('user');
+
+	    /*if (userType == null){
+	    	var financesTurnoverLead = decodeURIComponent(localStorage.getItem('financesTurnoverLead'));
+	    	var financesHeadcountLead = decodeURIComponent(localStorage.getItem('financesHeadcountLead'));
+
+	    	jQuery('#finance-turnover').val(financesTurnoverLead);
+	    	jQuery('#finance-headcount').val(financesHeadcountLead);
+
+	    }else if(userType != null){
+
+	    	var financesTurnoverNonLead = decodeURIComponent(localStorage.getItem('financesTurnoverNonLead'));
+	    	var financesHeadcountPartner = decodeURIComponent(localStorage.getItem('financesHeadcountPartner'));
+
+	    	jQuery('#finance-turnover').val(financesTurnoverNonLead);
+	    	jQuery('#finance-headcount').val(financesHeadcountPartner);
+	    }*/
+
 
 		jQuery('#add-finance-contact').on('click',function(e){ 
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.AssessmentController;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
@@ -17,8 +18,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.AssessmentDocs.assessmentBuilder;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
+import static com.worth.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -56,7 +57,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         final Long assessorId = 1L;
         final Long competitionId = 2L;
 
-        final List<Assessment> returnObj = assessmentBuilder.build(2);
+        final List<AssessmentResource> returnObj = assessmentResourceBuilder.build(2);
 
         when(assessorService.getAllByCompetitionAndAssessor(competitionId, assessorId)).thenReturn(serviceSuccess(returnObj));
 
@@ -74,7 +75,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     public void findByProccessRole() throws Exception {
         final Long processRoleId = 1L;
 
-        final Assessment resultObj = assessmentBuilder.build();
+        final AssessmentResource resultObj = assessmentResourceBuilder.build();
 
         when(assessorService.getOneByProcessRole(processRoleId)).thenReturn(serviceSuccess(resultObj));
 
@@ -123,7 +124,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     public void acceptAssessment() throws Exception {
         final Long processRoleId = 1L;
 
-        final Assessment assessment = assessmentBuilder.build();
+        final AssessmentResource assessment = assessmentResourceBuilder.build();
         final ObjectMapper mapper = new ObjectMapper();
 
         when(assessorService.acceptAssessmentInvitation(processRoleId, assessment)).thenReturn(serviceSuccess(null));

@@ -19,13 +19,19 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
-	<p>This overview details whether each member of the project team has successfully entered the required information, allowing the revew and submittion of the profile spends for the project.</p>
+	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<div class="success-alert extra-margin-bottom">
+			<p><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
+		</div>
+	</div>
+
+	<p>This overview details the spend profile status of each partner in your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<h2 class="heading-medium">Profile spend</h2>
-		<p>All Spend Profiles have been submitted to InnovateUK and the Monitoring Officer assigned to this application, though it is still possible to view submitted Spend Profiles.</p>
+		<p>All Spend Profiles have been submitted to Innovate UK and the Monitoring officer assigned to this application. You may view the submitted spend profiles.</p>
 		
-		<a href="/prototypes/1592-spend?task=reviewProject&#38;status=Submitted">Technology inspired profile spend</a>
+		<a href="/prototypes/1592-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
 
 	</div>
 
@@ -43,15 +49,20 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>
+					<td th:unless="${param.status != null and param.status[0] == 'MarkedComplete'}">
 						<a th:href="${param.status != null and param.status[0] == 'Submitted' ? '/prototypes/1592-spend?status=Submitted':'/prototypes/1592-spend'}">Aptrans Ltd (Lead)</a>
 					</td>
-					<td th:unless="${param.status != null and param.status[0] == 'Submitted'}">
+					<td th:unless="${param.status == null or param.status[0] != 'MarkedComplete'}">
+						<a href="/prototypes/1592-spend?status=MarkedComplete">Aptrans Ltd (Lead)</a>
+					</td>
+					<td th:unless="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'MarkedComplete'}">
 						In progress
 					</td>
-					<td th:unless="${param.status == null or param.status[0] != 'Submitted'}">
-						<span class="yes">Complete</span>
-					</td>
+					<div th:if="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
+						<td>
+							<span class="yes">Complete</span>
+						</td>
+					</div>
 				</tr>
 				<tr>
 					<td>
@@ -78,9 +89,9 @@
 
 	<div th:if="${param.status == null or param.status[0] != 'Submitted'}" th:remove="tag">
 
-		<p class="extra-margin">When each of your partners have completed their project spend, they must be submitted to InnovateUK for review. If further refinement is required innovate return control of the project costs to the project team and inform of any required changes, these must them be resubmitted.</p>
+		<p class="extra-margin">When each of your partners have completed their project spend, as lead partner please review each partner's spend profile to ensure it fits the timelines of your project plan.</p>
 
-		<a href="/prototypes/1592-spend?task=reviewProject" class="button">Review and submit project profile spend</a>
+		<a href="/prototypes/1592-spend?task=reviewProject" class="button">Review and submit total project profile spend</a>
 
 	</div>
 

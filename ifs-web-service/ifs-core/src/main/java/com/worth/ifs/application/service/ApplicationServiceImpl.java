@@ -1,22 +1,24 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
-import com.worth.ifs.commons.rest.RestResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.application.service.Futures.call;
+import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.application.service.Futures.call;
-import static java.util.Map.Entry;
-import static java.util.stream.Collectors.toMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.service.CompetitionsRestService;
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
@@ -26,10 +28,10 @@ import static java.util.stream.Collectors.toMap;
 public class ApplicationServiceImpl implements ApplicationService {
 
     @Autowired
-    ApplicationRestService applicationRestService;
+    private ApplicationRestService applicationRestService;
 
     @Autowired
-    ApplicationStatusRestService applicationStatusRestService;
+    private CompetitionsRestService competitionsRestService;
 
     @Override
     public ApplicationResource getById(Long applicationId) {
@@ -44,28 +46,87 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getInProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.SUBMITTED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.OPEN.getName())
-                )
+                .filter(this::applicationInProgress)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
+    
     @Override
     public List<ApplicationResource> getFinished(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.APPROVED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.REJECTED.getName()))
+                .filter(this::applicationFinished)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+    
+    private boolean applicationInProgress(ApplicationResource a) {
+    	boolean applicationInProgressForOpenCompetition = applicationStatusInProgress(a) && competitionOpen(a);
+    	boolean applicationSubmittedForCompetitionNotYetFinishedFunding = applicationStatusSubmitted(a) && competitionFundingNotYetComplete(a);
 
+    	return applicationInProgressForOpenCompetition || applicationSubmittedForCompetitionNotYetFinishedFunding;
+    }
+   
+    private boolean applicationFinished(ApplicationResource a) {
+    	boolean applicationInProgressForClosedCompetition = applicationStatusInProgress(a) && competitionClosed(a);
+    	boolean applicationSubmittedForCompetitionFinishedFunding = applicationStatusSubmitted(a) && competitionFundingComplete(a);
+    	boolean applicationFinished = applicationStatusFinished(a);
+    	
+    	return applicationInProgressForClosedCompetition || applicationSubmittedForCompetitionFinishedFunding || applicationFinished;
+    }
+    
+    private boolean applicationStatusInProgress(ApplicationResource a) {
+    	return appStatusIn(a, ApplicationStatusConstants.CREATED, ApplicationStatusConstants.OPEN);
+    }
+
+	private boolean applicationStatusFinished(ApplicationResource a) {
+		return appStatusIn(a, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED);
+    }
+	
+    private boolean applicationStatusSubmitted(ApplicationResource a) {
+    	return a.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED.getId());
+    }
+    
+    private boolean competitionOpen(ApplicationResource a) {
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return CompetitionResource.Status.OPEN.equals(competition.getCompetitionStatus());
+    }
+    
+    private boolean competitionFundingNotYetComplete(ApplicationResource a) {
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return compStatusIn(competition, CompetitionResource.Status.OPEN, CompetitionResource.Status.IN_ASSESSMENT, CompetitionResource.Status.FUNDERS_PANEL);
+    }
+    
+    private boolean competitionFundingComplete(ApplicationResource a) {
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return compStatusIn(competition, CompetitionResource.Status.ASSESSOR_FEEDBACK, CompetitionResource.Status.PROJECT_SETUP);
+	}
+    
+    private boolean appStatusIn(ApplicationResource app, ApplicationStatusConstants... statuses) {
+    	for(ApplicationStatusConstants status: statuses) {
+    		if(status.getId().equals(app.getApplicationStatus())) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    private boolean compStatusIn(CompetitionResource comp, CompetitionResource.Status... statuses) {
+    	for(CompetitionResource.Status status: statuses) {
+    		if(status.equals(comp.getCompetitionStatus())) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    private boolean competitionClosed(ApplicationResource a) {
+    	return !competitionOpen(a);
+    }
+    
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return call(applications.stream()
-                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.OPEN.getName()))
+                .filter(this::applicationInProgress)
                 .map(ApplicationResource::getId)
                 .collect(toMap(id -> id, id -> applicationRestService.getCompleteQuestionsPercentage(id))))
                 .entrySet().stream()
@@ -106,10 +167,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return applicationRestService.findByProcessRoleId(id);
-    }
-
-    private ApplicationStatusResource fetchApplicationStatusFromId(Long id){
-        return applicationStatusRestService.getApplicationStatusById(id).getSuccessObjectOrThrowException();
     }
 
 }

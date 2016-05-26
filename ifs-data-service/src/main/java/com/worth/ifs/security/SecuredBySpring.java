@@ -41,6 +41,13 @@ public @interface SecuredBySpring {
     String additionalComments() default "";
 
     /**
+     * @return A description of a particular state of affairs that makes this rule alter its behaviour if key entities
+     * involved in the business logic are in particular states (e.g. this Rule being enforeced only if a Competition is
+     * in the Funders' Panel state)
+     */
+    String particularBusinessState() default "";
+
+    /**
      * A field for capturing a secured entity type if available
      *
      * @return

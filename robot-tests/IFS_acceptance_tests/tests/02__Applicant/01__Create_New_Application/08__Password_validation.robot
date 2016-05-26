@@ -16,7 +16,7 @@ Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
 Invalid password (from the blacklist)
     [Documentation]    INFUND-1147
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -24,7 +24,7 @@ Invalid password (from the blacklist)
     And the user enters text to a text field    id=password    ${blacklisted_password}
     And the user enters text to a text field    id=retypedPassword    ${blacklisted_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password is too weak
+    #due to INFUND-2567    Then the user should see an error    Password is too weak
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password is too weak
 
@@ -40,7 +40,7 @@ Invalid password (all lower case)
     And the user enters text to a text field    id=password    ${lower_case_password}
     And the user enters text to a text field    id=retypedPassword    ${lower_case_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password must contain at least one upper case letter
+    #due to INFUND-2567    Then the user should see an error    Password must contain at least one upper case letter
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password must contain at least one upper case letter
 
@@ -56,7 +56,7 @@ Invalid password (all upper case)
     And the user enters text to a text field    id=password    ${upper_case_password}
     And the user enters text to a text field    id=retypedPassword    ${upper_case_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password must contain at least one lower case letter
+    #due to INFUND-2567    Then the user should see an error    Password must contain at least one lower case letter
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password must contain at least one lower case letter
 
@@ -70,9 +70,7 @@ Invalid password (no numbers)
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${no_numbers_password}
     And the user enters text to a text field    id=retypedPassword    ${no_numbers_password}
-    Capture Page Screenshot
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password must contain at least one number
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password must contain at least one number
 
@@ -87,7 +85,7 @@ Invalid password (personal information)
     And the user enters text to a text field    id=password    ${personal_info_password}
     And the user enters text to a text field    id=retypedPassword    ${personal_info_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password should not contain your last name
+    #due to INFUND-2567    Then the user should see an error    Password should not contain your last name
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password should not contain your last name
 
@@ -135,7 +133,6 @@ Password and re-typed password do not match
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${incorrect_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see the text in the page    Passwords must match
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Passwords must match
 
@@ -150,7 +147,6 @@ Re-type password left blank
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${EMPTY}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Please re-type your password
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Passwords must match
     And The user should see the text in the page    Please re-type your password
@@ -166,13 +162,12 @@ Password left blank
     And the user enters text to a text field    id=password    ${EMPTY}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Please enter your password
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Passwords must match
     And The user should see the text in the page    Please enter your password
 
-User can not login with invalid password
-    [Tags]    Pending
+User cannot login with invalid password
+    [Tags]
     Then the user cannot login with their new details    ${valid_email2}    ${short_password}
 
 *** Keywords ***

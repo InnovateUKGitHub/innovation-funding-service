@@ -99,7 +99,7 @@
 
         <dl class="dl-pad">
             <dt th:text="${'Project start date'}">Title</dt>
-            <dd th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}">Date</dd>
+            <dd th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}">Date</dd>
 
             <dt th:text="${'Duration'}">Duration</dt>
             <dd th:text="${currentApplication.getDurationInMonths() + ' months'}">Months</dd>

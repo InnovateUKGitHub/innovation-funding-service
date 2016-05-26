@@ -58,6 +58,7 @@
 
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+      <link rel="shortcut icon" href="//#springMessageText('ifs.webserver.resources.url', '#')/images/favicon.ico" type="image/x-icon" />
     </head>
   	<body>
       <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
@@ -69,7 +70,7 @@
       <div id="global-cookie-message">
           <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
       </div>
-
+      
     <header role="banner" id="global-header">
         <div class="header-wrapper">
             <div class="header-global">
@@ -136,9 +137,7 @@
 
             #if ($passwordEnabled)
               <div class="form-group extra-margin">
-                <button class="button" type="submit" name="_eventId_proceed"
-                    onClick="this.childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")'"
-                    >Sign in</button>
+                <button class="button" type="submit" name="_eventId_proceed">Sign in</button>
               </div>
             #end
 
@@ -180,15 +179,10 @@
 
           </section>
           <section class="column-half">
-            <h1 class="heading-large">New to this service?</h1>
-            <p>If you haven't used this service before you must create an account, even if you already have an existing account with Innovate UK.</p>
-            <p>Currently this can be done by <a href="//#springMessageText("ifs.webserver.resources.url", "#")/competition/1/details">entering our 'Technology Inspired' competition.</a></p>
-            <ul class="list-bullet extra-margin">
-              #if ($passwordEnabled)
-                <li class="list-help-item"><a href="//#springMessageText("ifs.webserver.resources.url", "#")/login/reset-password">#springMessageText("idp.login.forgotPassword", "Forgot your password?")</a></li>
-              #end
-            </ul>
-        </section>
+
+          #parse("applicant.vm")
+
+          </section>
         </div>
 
         <p class="user-feedback"><span>Need help with this service?</span> <a href="//#springMessageText('ifs.webserver.resources.url', '#')/info/contact">Contact us</a></p>
@@ -223,6 +217,32 @@
     <script type="text/javascript">
         IFS.formValidation.init();
     </script>
+    <script>
+        jQuery(document).ready(function(){
+            jQuery("form").submit(function(event) {
+                var emailField = jQuery("[type='email']").first();
+                var passwordField = jQuery("[type='password']").first();
+                var button = jQuery("button[type='submit']").first();
+                var valid = IFS.formValidation.checkEmail(emailField, false) && IFS.formValidation.checkRequired(passwordField, false);
+                if (valid) {
+                    button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
+                }
+            });
 
+            jQuery.ajax({ 
+                url: '//#springMessageText('ifs.webserver.resources.url', '#')/alert/findAllVisibleByType/MAINTENANCE', 
+                method: 'GET'
+            }).done(function(data) {
+                if (data.length) {
+                    jQuery('#global-cookie-message').after('<div id="global-alert-message"/>');
+                    jQuery.each(data, function(index, value) { 
+                        jQuery('#global-alert-message').append('<div class="event-alert event-warning no-animation"><p><span>' + 
+                          value.message + 
+                          '</span></p></div>');
+                    });
+                }
+            });
+        });
+    </script> 
     </body>
 </html>

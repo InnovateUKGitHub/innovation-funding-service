@@ -2,7 +2,7 @@ package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.CostValue;
-import com.worth.ifs.finance.domain.CostValueId;
+import com.worth.ifs.finance.resource.CostValueId;
 import com.worth.ifs.finance.mapper.CostValueMapper;
 import com.worth.ifs.finance.repository.CostValueRepository;
 import com.worth.ifs.finance.resource.CostValueResource;
