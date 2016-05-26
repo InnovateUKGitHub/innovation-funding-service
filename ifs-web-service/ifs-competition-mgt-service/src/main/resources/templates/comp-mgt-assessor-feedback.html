@@ -77,7 +77,9 @@
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<p>
-						12:00<br /><span th:unless="${assessmentEndDate == null}" th:text="${#temporals.format(assessmentEndDate, 'd MMMM yyyy')}" th:remove="tag"></span>
+						<span th:unless="${assessmentEndDate == null}" th:text="${#temporals.format(assessmentEndDate, 'HH:mm')}" th:remove="tag">
+						<br />
+						<span th:unless="${assessmentEndDate == null}" th:text="${#temporals.format(assessmentEndDate, 'd MMMM yyyy')}" th:remove="tag"></span>
 						</p>
 					</div>
 					<div class="column-third">
