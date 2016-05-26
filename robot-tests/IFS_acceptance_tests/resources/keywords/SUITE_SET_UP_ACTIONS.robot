@@ -19,3 +19,6 @@ Create new application with the same user
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    link=Application details
+    And the user enters text to a text field    id=application_details-title    Robot test application
+    And the user clicks the button/link    jQuery=button:contains("Save and return")
