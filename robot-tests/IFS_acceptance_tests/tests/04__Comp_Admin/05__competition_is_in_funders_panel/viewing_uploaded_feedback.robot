@@ -9,81 +9,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
-*** Variables ***
-
-${successful_application_overview}        ${server}/management/competition/3/application/16
-${unsuccessful_application_overview}       ${server}/management/competition/3/application/17
-
-
 *** Test Cases ***
-
-
-Large pdf uploads not allowed
-    [Documentation]    INFUND-2602
-    [Tags]
-    Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    When the user uploads the file    ${too_large_pdf}
-    Then the user should get an error page    ${too_large_pdf_validation_error}
-
-Non pdf uploads not allowed
-    [Documentation]    INFUND-2602
-    [Tags]
-    Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    When the user uploads the file    ${text_file}
-    Then the user should get an error page    ${wrong_filetype_validation_error}
-
-Valid upload to a successful application
-   [Documentation]    INFUND-2602
-    [Tags]
-    Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    And the user uploads the file   ${valid_pdf}
-
-Comp admin can view the file
-    [Documentation]     INFUND-2602
-    [Tags]
-    Given the user should see the text in the page  ${valid_pdf}
-    And the file has been scanned for viruses
-    When the user clicks the button/link        link=${valid_pdf}
-    Then the user should see the text in the page   ${valid_pdf_excerpt}
-    [Teardown]  The user navigates to the page  ${successful_application_overview}
-
-Comp admin cannot upload more than one file
-    [Documentation]     INFUND-2602
-    [Tags]
-    When the user should see the text in the page   ${valid_pdf}
-    Then the user should not see the element    jQuery=.button:contains("Upload")
-
-Comp admin can remove the file
-    [Documentation]     INFUND-2602
-    [Tags]
-    Given the user should see the text in the page      ${valid_pdf}
-    And the user should see the text in the page         Remove
-    When the user clicks the button/link    name=removeAssessorFeedback
-    Then the user should not see the text in the page   ${valid_pdf}
-    And the user should see the text in the page    Upload
-
-Comp admin can re-upload after removing
-    [Documentation]     INFUND-2602
-    [Tags]
-    Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    And the user uploads the file   ${valid_pdf}
-
-
-Comp admin can upload a file to an unsuccessful application
-    [Documentation]     INFUND-2602
-    [Tags]
-    Given the user can see the option to upload a file on the page      ${unsuccessful_application_overview}
-    And the user uploads the file   ${valid_pdf}
-
-
-Comp admin can download the file
-    [Documentation]     INFUND-2602
-    [Tags]  Pending
-    # Pending until download functionality has been plugged in
-    Given the user should see the text in the page  ${valid_pdf}
-    When the user downloads the file from the link     ${valid_pdf}     ${download_link}
-    Then the file should be downloaded      ${valid_pdf}
-    [Teardown]  Remove File     ${valid_pdf}
 
 
 Partner can view the file
@@ -96,8 +22,6 @@ Partner can view the file
     And the user clicks the button/link     link=${valid_pdf}
     Then the user should see the text in the page   ${valid_pdf_excerpt}
     [Teardown]   the user navigates to the page     ${successful_application_overview}
-
-
 
 Partner cannot remove the file
     [Documentation]     INFUND-2607
@@ -115,6 +39,18 @@ Partner can download the file
     When the user downloads the file from the link     ${valid_pdf}     ${download_link}
     Then the file should be downloaded      ${valid_pdf}
     [Teardown]  Remove File     ${valid_pdf}
+
+
+Commp admin can view partner's feedback
+    [Docmentation]  INFUND-2607
+    [Tags]  Pending
+    [Setup]    Run Keywords     Logout as user
+    ...        AND  the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
+    Given the user navigates to the page
+
+
+Comp admin can view unsuccessful applicant's feedback
+
 
 
 Unsuccessful applicant can view the file
@@ -144,14 +80,3 @@ Unsuccessful applicant can download the file
     Then the file should be downloaded      ${valid_pdf}
     [Teardown]  Remove File     ${valid_pdf}
 
-
-
-
-
-
-*** Keywords ***
-
-the user uploads the file
-    [Arguments]     ${upload_filename}
-    Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
