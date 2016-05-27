@@ -165,7 +165,8 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isClosingSoon(){
-        return isOpen() && getDaysLeft() < 1;
+        long hoursToGo = ChronoUnit.HOURS.between(LocalDateTime.now(), this.endDate);
+        return isOpen() && hoursToGo < 3;
     }
 
 
