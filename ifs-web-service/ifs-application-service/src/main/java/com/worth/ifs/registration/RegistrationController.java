@@ -94,12 +94,9 @@ public class RegistrationController {
     @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response){
-        if(userService.verifyEmail(hash).isSuccess()){
-            cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
-            return "redirect:/registration/verified";
-        }else{
-            throw new InvalidURLException();
-        }
+        userService.verifyEmail(hash).getSuccessObjectOrThrowException();
+        cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
+        return "redirect:/registration/verified";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)

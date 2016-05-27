@@ -151,7 +151,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> verifyEmail(String hash){
-        return getWithRestResultAnonymous(userRestURL + "/verifyEmail/"+hash, Void.class);
+        return getWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, UserController.URL_VERIFY_EMAIL, hash), Void.class);
     }
 
     @Override

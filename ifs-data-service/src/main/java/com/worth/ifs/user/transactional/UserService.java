@@ -37,9 +37,6 @@ public interface UserService {
     @PreAuthorize("hasPermission(#user, 'CHANGE_PASSWORD')")
     ServiceResult<Void> sendPasswordResetNotification(@P("user") UserResource user);
 
-    @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'READ')")
-    ServiceResult<Void> checkPasswordResetHashValidity(@P("hash") String hash);
-
     @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
     ServiceResult<Void> changePassword(@P("hash") String hash, String password);
 }

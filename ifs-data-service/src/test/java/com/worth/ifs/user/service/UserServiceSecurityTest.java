@@ -85,18 +85,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testPasswordResetHashValidity() {
-
-        Token token = new Token();
-        when(tokenLookupStrategies.getTokenByHash("hash")).thenReturn(token);
-
-        assertAccessDenied(() -> service.checkPasswordResetHashValidity("hash"), () -> {
-            verify(tokenRules).systemRegistrationUserCanReadTokens(token, getLoggedInUser());
-            verifyNoMoreInteractionsWithRules();
-        });
-    }
-
-    @Test
     public void testSendPasswordResetNotification() {
 
         UserResource user = newUserResource().build();
@@ -177,11 +165,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         @Override
         public ServiceResult<Void> sendPasswordResetNotification(@P("user") UserResource user) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> checkPasswordResetHashValidity(@P("hash") String hash) {
             return null;
         }
 

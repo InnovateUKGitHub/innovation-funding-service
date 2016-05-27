@@ -7,6 +7,7 @@ import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 
 import java.util.ArrayList;
@@ -229,7 +230,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
         }
-        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
+        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, now(), extraInfo);
         tokenRepository.save(token);
         return hash;
     }
