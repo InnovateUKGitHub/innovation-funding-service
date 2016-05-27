@@ -1,6 +1,7 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.FundingDecisionStatus;
@@ -46,6 +47,15 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
         return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
+    }
+
+    public ApplicationBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
+        return withArray((applicationState, application) -> {
+
+            ApplicationStatus status = new ApplicationStatus(applicationState.getId(), applicationState.getName());
+            application.setApplicationStatus(status);
+
+        }, applicationStatus);
     }
 
     public ApplicationBuilder withStartDate(LocalDate... dates) {
