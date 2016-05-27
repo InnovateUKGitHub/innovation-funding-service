@@ -1,0 +1,71 @@
+version: '2'
+services:
+
+  shib:
+    container_name: ifs-local-dev
+    build:
+      context: .
+      dockerfile: shib-dockerfile
+    ports:
+      - "443:443"
+      - "389:389"
+    environment:
+      GRADLE_USER_HOME: .gradle/cache
+    links:
+      - web
+      - data
+    networks:
+      - front-tier
+
+  web:
+    container_name: ifs-web-service
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/code
+    working_dir: /code/ifs-web-service
+    environment:
+      GRADLE_USER_HOME: .gradle/cache
+    links:
+      - data
+    networks:
+      - front-tier
+
+  data:
+    container_name: ifs-data-service
+    build: .
+    ports:
+      - "8090:8080"
+    volumes:
+      - .:/code
+    working_dir: /code/ifs-data-service
+    depends_on:
+      - mysql
+    networks:
+      front-tier:
+        aliases:
+          - data-service
+      back-tier:
+        aliases:
+          - data-service
+
+  mysql:
+    container_name: ifs-database
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ifs
+    restart: on-failure
+    networks:
+      back-tier:
+        aliases:
+         - database
+
+networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
