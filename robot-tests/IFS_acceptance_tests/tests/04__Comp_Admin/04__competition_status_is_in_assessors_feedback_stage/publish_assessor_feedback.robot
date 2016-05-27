@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INFUND-2602 As a competition administrator I want a view of the Application Overview page that allows me to upload the assessor feedback document so that this can be shared with the applicants
+Documentation     INFUND-2672
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
 Force Tags        Comp admin   Upload
@@ -30,7 +30,7 @@ Comp admin can visit a competition page at "Assessor feedback" stage and the opt
 
 
 If feedback is uploaded for each application then the option to publish feedback is enabled
-    [Documentation]     INFUND-2601
+    [Documentation]     INFUND-2672
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     When the user uploads the file    ${valid_pdf}
@@ -41,7 +41,7 @@ If feedback is uploaded for each application then the option to publish feedback
 
 
 Comp admin can remove feedback and the option to publish feedback becomes disabled
-    [Documentation]     INFUND-2601
+    [Documentation]     INFUND-2672
     [Tags]
     Given the user navigates to the page    ${successful_application_overview}
     And the user should see the text in the page         Remove
@@ -50,7 +50,7 @@ Comp admin can remove feedback and the option to publish feedback becomes disabl
 
 
 Pushing the publish feedback button brings up a warning dialogue
-    [Documentation]     INFUND-2646
+    [Documentation]     INFUND-2672
     [Tags]
     [Setup]     Run Keywords    the user navigates to the page    ${successful_application_overview}
     ...         AND        the user uploads the file    ${valid_pdf}
@@ -62,7 +62,7 @@ Pushing the publish feedback button brings up a warning dialogue
 
 
 Choosing cancel on the dialogue goes back to the Assessor feedback page
-    [Documentation]     INFUND-2646
+    [Documentation]     INFUND-2672
     [Tags]
     When the user clicks the button/link        jQuery=.button:contains("Cancel")
     Then the user should be redirected to the correct page  ${assessor_feedback_competition_url}
@@ -71,7 +71,7 @@ Choosing cancel on the dialogue goes back to the Assessor feedback page
 
 
 Choosing Publish assessor feedback on the dialogue redirects to the Project setup page
-    [Documentation]     INFUND-2646
+    [Documentation]     INFUND-2672
     [Tags]
     When the user clicks the button/link    name=publish
     Then the user should be redirected to the correct page      ${assessor_feedback_competition_url}
@@ -81,13 +81,15 @@ Choosing Publish assessor feedback on the dialogue redirects to the Project setu
 
 
 Successful applicants are notified of the feedback
-    [Documentation]     INFUND-2603
+    [Documentation]     INFUND-2608
     [Tags]     Email    Pending
+    # Pending completion of the INFUND-2608 story
     Then the user should get a confirmation email       ${test_mailbox_one}     ${feedback_success_email}
 
 Unsuccessful applicants are notified of the feedback
-    [Documentation]     INFUND-2603
+    [Documentation]     INFUND-2608
     [Tags]           Email      Pending
+    # Pending completion of the INFUND-2608 story
     Then the user should get a confirmation email       ${test_mailbox_two}     ${feedback_failure_email}
 
 Once applicants are notified, the whole state of the competition changes to Project setup

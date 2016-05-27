@@ -72,7 +72,7 @@ Comp admin can view unsuccessful applicant's feedback
 Unsuccessful applicant can view the file
     [Documentation]     INFUND-2607
     [Tags]
-    [Setup]     the guest user enters the log in credentials    worth.email.test.two+fundfailure@gmail.com    Passw0rd
+    [Setup]     guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
     Given the user navigates to the page    ${unsuccessful_application_overview}
     When the user should see the text in the page   ${valid_pdf}
     And the user clicks the button/link     link=testing.pdf (7.94 KB)
