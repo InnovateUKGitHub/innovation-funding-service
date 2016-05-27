@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project details'" th:remove="tag" />
+</head>
+<body class="assessment-review">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
+
+    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${project.getApplicationDisplayName()} "/>
+        <h1 class="heading-xlarge no-margin">Project details</h1>
+    </div>
+
+    <legend class="visuallyhidden">Target project start date</legend>
+
+    <p>Please select the date you want the project to start. Projects must start on the first day of a month.</p>
+
+    <p><strong>Please remember the project can start only when</strong></p>
+
+    <ul class="list-bullet">
+        <li>you have provided the documents we need</li>
+        <li>we have approved your financial information</li>
+        <li>you have received, signed and returned the grant offer letter on behalf of the project</li>
+    </ul>
+
+    <p>Please consider the above information when selecting your target start date. The above processes must be complete before your project can begin.</p>
+
+    <p>If required the start date can be changed later.</p>
+
+    <div class="date-group extra-margin">
+        <div class="day">
+            <label class="form-label" for="start-day">
+                <div>Day</div>
+            </label>
+            <input class="form-control width-extra-small" type="number" placeholder="DD" id="start-day" name="start-day" value="01" />
+        </div>
+
+        <div class="month">
+            <label class="form-label" for="start-month">
+                <div>Month</div>
+            </label>
+            <input class="form-control width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
+        </div>
+
+        <div class="year">
+            <label class="form-label" for="start-year">
+                <div>Year</div>
+            </label>
+            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
+        </div>
+    </div>
+
+    <h3 class="heading-medium">Project duration</h3>
+
+    <p>Project duration stated in your application: <br /><strong>9 months</strong></p>
+
+    <button class="button button-large" formaction="/prototypes/1575-project-details">Save</button>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

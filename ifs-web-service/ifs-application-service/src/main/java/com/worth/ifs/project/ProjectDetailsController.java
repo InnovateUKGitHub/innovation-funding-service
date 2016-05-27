@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping("/project")
-public class ProjectController {
+public class ProjectDetailsController {
 
 	@Autowired
 	private ApplicationService applicationService;
 	
-    @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{projectId}/startdate", method = RequestMethod.GET)
     public String projectDetails(Model model, @PathVariable("projectId") final Long projectId) {
     	
     	ApplicationResource application = applicationService.getById(projectId);
     	model.addAttribute("project", application);
     	
-        return "project/details";
+        return "project/details-start-date";
     }
 }
