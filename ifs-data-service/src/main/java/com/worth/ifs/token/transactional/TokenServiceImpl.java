@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.RESET_PASSWORD;
@@ -37,7 +38,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public ServiceResult<Token> getEmailToken(final String hash) {
-        return find(repository.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName()), new Error(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED)).andOnSuccess(
+        return find(repository.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName()), new Error(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)).andOnSuccess(
                 token -> isTokenValid(token) ? serviceSuccess(token) : serviceFailure(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED));
     }
 
