@@ -71,8 +71,13 @@
          noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFilename())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))},
          downloadURL='/application/' + ${currentApplication.id} + '/form/question/' + ${question.id} + '/forminput/' + ${formInput.id} + '/download',
          compManagementDownloadURL=${currentApplication.id} + '/forminput/' + ${formInput.id} + '/download',
-         filename=${responses?.get(formInput.getId())?.getFilename()}">
+         filename=${responses?.get(formInput.getId())?.getFilename()},
+         readonly=${readonly} or
+                ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or
+                ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
+		 		(questionAssignee?.assignee==null and !userIsLeadApplicant)}">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
+
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
         <input th:unless="${readonly}" th:if="${noFileUploaded}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
         <label th:unless="${readonly}" th:if="${noFileUploaded}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
