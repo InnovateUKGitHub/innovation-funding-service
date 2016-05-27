@@ -13,7 +13,7 @@ import static org.junit.Assert.fail;
  */
 public class InputStreamTestUtil {
 
-    public static boolean assertInputStreamContents(InputStream inputStream, String expectedContents) {
+    public static void assertInputStreamContents(InputStream inputStream, String expectedContents) {
         try (InputStream retrievedInputStream = inputStream) {
             try (BufferedReader buffer = new BufferedReader(new InputStreamReader(retrievedInputStream))) {
                 assertEquals(expectedContents, buffer.readLine());
@@ -21,7 +21,5 @@ public class InputStreamTestUtil {
         } catch (IOException e) {
             fail("Error whilst validating input stream - " + e);
         }
-
-        return true;
     }
 }
