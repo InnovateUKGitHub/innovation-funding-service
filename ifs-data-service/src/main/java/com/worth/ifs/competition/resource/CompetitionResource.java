@@ -163,6 +163,10 @@ public class CompetitionResource {
         return getDaysBetween(this.startDate, this.endDate);
     }
 
+    @JsonIgnore
+    public boolean isClosingSoon(){
+        return isOpen() && getDaysLeft() < 1;
+    }
 
 
     /* Keep it D.R.Y */
