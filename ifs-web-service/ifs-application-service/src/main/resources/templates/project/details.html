@@ -1,22 +1,171 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project Status'" th:remove="tag" />
 </head>
 <body class="assessment-review">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${project.getApplicationDisplayName()} "/>
+        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
         <h1 class="heading-xlarge no-margin">Project setup status</h1>
     </div>
+
+    <p class="form-hint">You need to complete the following steps before this project can begin.</p>
+
+    <div class="warning-alert" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
+        <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
+        <p>To enable your project to be funded by Innovate UK <strong>[Business name]</strong> must be registered with Companies House. </p>
+        <p><a href="/prototypes/2537-partner-add-companies-house">Link [Business name] to Companies House registration</a></p>
+    </div>
+
+    <ul class="application-progress-list extra-margin">
+        <li class="complete">
+			<span>
+				<h2 class="heading-medium">Successful application</h2>
+				<p>The application <strong th:text="${app.applicationDisplayName}">Machine learning in robots</strong> has been successful within the <strong th:text="${competition.name}">Technology inspired</strong> competition</p>
+				<a href="/prototypes/2111-submitted-application-overview?status=successfulFeedback" class="buttonlink">View application and feedback</a>
+				<a href="#" class="buttonlink">View terms and conditions of grant offer</a>
+			</span>
+        </li>
+
+        <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'require-action' : 'complete')}">
+			<span>
+				<h2 class="heading-medium">
+					<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1575-project-details?user=nonLead' : '/prototypes/1575-project-details')}" th:unless="${param.stage != null and param.stage[0] == 'level2' or param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">Project details</a>
+
+					<a href="/prototypes/1575-project-details-submitted" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Project details</a>
+
+				</h2>
+
+				<p>Confirm the contact details, proposed start date and location of the project.</p>
+			</span>
+        </li>
+
+        <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'complete')}">
+			<span>
+				<h2 class="heading-medium"><a th:href="${(param.stage == null or param.stage[0] == 'level1' ? '/prototypes/2484-mo-partner?status=noMo' : '/prototypes/2484-mo-partner')}">Monitoring Officer</a></h2>
+
+				<p th:unless="${param.stage == null or param.stage[0] == 'level1'}">Your Monitoring Officer for this project is Tom Evans.</p>
+
+				<p th:unless="${param.stage != null and param.stage[0] != 'level1'}">
+					Innovate UK will assign you a Monitoring Officer
+				</p>
+
+			</span>
+        </li>
+
+        <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">
+			<span>
+				<h2 class="heading-medium"><a href="/prototypes/1578-bank-details">Bank details</a></h2>
+				<p>We need bank details for each consortium member so that we can pay the grant.</p>
+			</span>
+        </li>
+
+        <li th:if="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+			<span>
+				<h2 class="heading-medium"><a href="/prototypes/1578-bank-details-submitted">Bank details</a></h2>
+				<p>We need bank details for each consortium member so that we can pay the grant.</p>
+			</span>
+        </li>
+
+        <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'waiting')}" th:unless="${param.stage != null and param.stage[0] == 'level5'}">
+			<span>
+				<h2 class="heading-medium"><a href="#">Finance checks</a></h2>
+				<p>We will review all project costs and contact you if we have any queries.</p>
+			</span>
+        </li>
+
+
+        <li th:if="${param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+			<span>
+				<h2 class="heading-medium"><a href="#">Finance checks</a></h2>
+				<p>We will review all project costs and contact you if we have any queries.</p>
+			</span>
+        </li>
+
+        <li th:class="${(param.stage != null and param.stage[0] == 'level3' ? 'require-action' : '')}" th:unless="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">
+			<span>
+				<h2 class="heading-medium"><a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}">Spend profile</a></h2>
+				<p>Once we have approved your financial information, we will produce a spend profile.</p>
+			</span>
+        </li>
+
+        <li th:if="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+			<span>
+				<h2 class="heading-medium"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profile</a></h2>
+				<p>Once we have approved your financial information, we will produce a spend profile.</p>
+			</span>
+        </li>
+
+        <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level5'}">
+
+			<span>
+
+				<div th:unless="${param.user != null}" th:remove="tag">
+
+					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload">Other documents</a></h2>
+					<p>As the lead partner in the consortium, you will need to upload documents including:</p>
+
+				</div>
+
+				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
+
+					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead">Other documents</a></h2>
+					<p>The lead partner of the consortium will need to upload documents including:</p>
+
+				</div>
+
+				<ul class="list-bullet">
+					<li>a collaboration agreement</li>
+					<li>exploitation plan</li>
+				</ul>
+			</span>
+        </li>
+
+        <li th:if="${param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+			<span>
+
+				<div th:unless="${param.user != null}" th:remove="tag">
+
+					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?status=submitted">Other documents</a></h2>
+					<p>As the lead partner in the consortium, you will need to upload documents including:</p>
+
+				</div>
+
+				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
+
+					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead&#38;status=submitted">Other documents</a></h2>
+					<p>The lead partner of the consortium will need to upload documents including:</p>
+
+				</div>
+
+				<ul class="list-bullet">
+					<li>a collaboration agreement</li>
+					<li>exploitation plan</li>
+					<li>project plan</li>
+				</ul>
+			</span>
+        </li>
+
+        <li>
+			<span>
+				<h2 class="heading-medium">Grant offer letter</h2>
+				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+			</span>
+        </li>
+
+    </ul>
+
+    <hr />
+
+    <strong><a href="/prototypes/1589-team-status">What's the status of each of my partners</a></strong>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
