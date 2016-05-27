@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 
 ${funders_panel_competition_url}        ${server}/management/competition/3
-${dialogue_warning_message}
+${dialogue_warning_message}     Are you sure you wish to inform applicants if they have been successful in gaining funding.
 ${email_success_message}        We are pleased to inform you that your application
 ${email_failure_message}        Unfortunately Innovate UK is unable to fund
 

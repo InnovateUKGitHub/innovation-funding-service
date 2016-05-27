@@ -67,6 +67,7 @@ Comp admin can re-upload after removing
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     And the user uploads the file   ${valid_pdf}
+    [Teardown]  the user clicks the button/link     name=removeAssessorFeedback
 
 
 Comp admin can upload a file to an unsuccessful application
@@ -74,6 +75,7 @@ Comp admin can upload a file to an unsuccessful application
     [Tags]
     Given the user can see the option to upload a file on the page      ${unsuccessful_application_overview}
     And the user uploads the file   ${valid_pdf}
+    [Teardown]      the user clicks the button/link     name=removeAssessorFeedback
 
 
 Comp admin can download the file
