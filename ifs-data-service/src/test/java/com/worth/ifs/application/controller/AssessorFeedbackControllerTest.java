@@ -2,6 +2,7 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
@@ -20,12 +21,13 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -193,6 +195,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     public void testSubmitAssessorFeedback() throws Exception {
 
         when(assessorFeedbackServiceMock.submitAssessorFeedback(123L)).thenReturn(serviceSuccess());
+        when(assessorFeedbackServiceMock.notifyLeadApplicantsOfAssessorFeedback(123L)).thenReturn(serviceSuccess());
 
         mockMvc.
                 perform(
@@ -204,6 +207,24 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 andDo(documentSubmitAssessorFeedback());
 
         verify(assessorFeedbackServiceMock).submitAssessorFeedback(123L);
+        verify(assessorFeedbackServiceMock).notifyLeadApplicantsOfAssessorFeedback(123L);
+    }
+
+    @Test
+    public void testSubmitAssessorFeedbackButSubmissionFailsSoNoEmailsSent() throws Exception {
+
+        when(assessorFeedbackServiceMock.submitAssessorFeedback(123L)).thenReturn(serviceFailure(internalServerErrorError("Urgh!")));
+
+        mockMvc.
+                perform(
+                        MockMvcRequestBuilders.post("/assessorfeedback/submitAssessorFeedback/123").
+                                header("IFS_AUTH_TOKEN", "123abc")
+                ).
+                andExpect(status().isInternalServerError()).
+                andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError("Urgh!")))));
+
+        verify(assessorFeedbackServiceMock).submitAssessorFeedback(123L);
+        verify(assessorFeedbackServiceMock, never()).notifyLeadApplicantsOfAssessorFeedback(123L);
     }
 
     private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationFileEntry() {
@@ -299,7 +320,9 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     }
 
     private Supplier<InputStream> createInputStreamExpectations(String dummyContent) {
-        return createLambdaMatcher(is -> assertInputStreamContents(is.get(), dummyContent));
+        return createLambdaMatcher(is -> {
+            assertInputStreamContents(is.get(), dummyContent);
+        });
     }
 
     private FileEntryResource createFileEntryResourceExpectations(FileHeaderAttributes expectedAttributes) {

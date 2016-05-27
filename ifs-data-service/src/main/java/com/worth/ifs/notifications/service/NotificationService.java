@@ -11,5 +11,5 @@ import com.worth.ifs.security.NotSecured;
 public interface NotificationService {
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
-    ServiceResult<Notification> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia);
+    ServiceResult<Void> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia);
 }

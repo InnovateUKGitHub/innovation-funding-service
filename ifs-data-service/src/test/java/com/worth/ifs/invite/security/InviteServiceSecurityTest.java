@@ -7,7 +7,6 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -116,12 +115,12 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, List<Invite> invites) {
+        public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<Invite> invites) {
             return new ArrayList<>();
         }
 
         @Override
-        public ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
+        public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
             return null;
         }
 

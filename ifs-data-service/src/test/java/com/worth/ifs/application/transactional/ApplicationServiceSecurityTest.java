@@ -14,7 +14,6 @@ import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -369,7 +368,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<Notification> sendNotificationApplicationSubmitted(Long application) {
+        public ServiceResult<Void> sendNotificationApplicationSubmitted(Long application) {
             return null;
         }
 
