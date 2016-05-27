@@ -77,7 +77,7 @@ Unsuccessful applicant can view the file
     When the user should see the text in the page   ${valid_pdf}
     And the user clicks the button/link     link=testing.pdf (7.94 KB)
     Then the user should see the text in the page   ${valid_pdf_excerpt}
-    [Teardown]   the user navigates to the page     ${successful_application_overview}
+    [Teardown]   the user navigates to the page     ${unsuccessful_application_overview}
 
 
 Unsuccessful applicant cannot remove the file
