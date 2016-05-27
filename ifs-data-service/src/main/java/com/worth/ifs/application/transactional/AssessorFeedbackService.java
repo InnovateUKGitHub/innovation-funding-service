@@ -1,13 +1,11 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,4 +43,8 @@ public interface AssessorFeedbackService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value = "UPDATE", description = "Comp Admins can submit assessor feedback for a competition", securedType = CompetitionResource.class)
 	ServiceResult<Void> submitAssessorFeedback(long competitionId);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value = "UPDATE", description = "Comp Admins can send out emails to Lead Applicants notifying them of the Assessor Feedback on their Applications", securedType = CompetitionResource.class)
+    ServiceResult<Void> notifyLeadApplicantsOfAssessorFeedback(long competitionId);
 }
