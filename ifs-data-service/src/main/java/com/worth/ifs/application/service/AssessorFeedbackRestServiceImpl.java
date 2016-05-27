@@ -50,10 +50,23 @@ public class AssessorFeedbackRestServiceImpl extends BaseRestService implements 
         return getWithRestResult(url, FileEntryResource.class);
     }
 
+	@Override
+	public RestResult<Boolean> feedbackUploaded(Long competitionId) {
+		String url = restUrl + "/assessorFeedbackUploaded?competitionId=" + competitionId;
+        return getWithRestResult(url, Boolean.class);
+	}
+
+	@Override
+	public RestResult<Void> submitAssessorFeedback(Long competitionId) {
+		String url = restUrl + "/submitAssessorFeedback/" + competitionId;
+        return postWithRestResult(url, Void.class);
+	}
+	
     private HttpHeaders createHeader(String contentType, long contentLength){
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
         headers.setContentLength(contentLength);
         return headers;
     }
+
 }

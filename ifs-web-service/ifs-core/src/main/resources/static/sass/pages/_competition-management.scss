@@ -35,6 +35,12 @@
 
 #publish-funding-decision {
 	display: none;
+	white-space: nowrap;
+}
+
+#publish-assessor-feedback {
+    display: none;
+    white-space: nowrap;
 }
 
 .funding-decision-save-info {
@@ -61,4 +67,21 @@
         word-wrap:break-word;
       }
   }
+}
+
+.button-dashboard{
+    background: $grey-4;
+    padding: 20px 20px 15px 20px;
+    display: block;
+    min-height: 110px;
+    text-decoration: none;
+
+    &:hover{
+        background: $highlight-colour;
+    }
+
+    &.highlight{
+        background: $button-colour;
+        color: white;
+    }
 }

@@ -1,5 +1,19 @@
 package com.worth.ifs.application.transactional;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.mapper.AssessorFeedbackMapper;
@@ -11,18 +25,7 @@ import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.function.Supplier;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
 
 @Service
 public class AssessorFeedbackServiceImpl extends BaseTransactionalService implements AssessorFeedbackService {
@@ -101,6 +104,20 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
                 fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                 removeAssessorFeedbackFileFromApplication(application))));
     }
+    
+	@Override
+	public ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId) {
+		long countNotUploaded = applicationRepository.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS);
+		boolean allUploaded = countNotUploaded == 0L;
+		return serviceSuccess(allUploaded);
+	}
+
+	@Override
+	public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
+		return getCompetition(competitionId).andOnSuccessReturnVoid(competition -> {
+			competition.setAssessorFeedbackDate(LocalDateTime.now());
+		});
+	}
 
     private void removeAssessorFeedbackFileFromApplication(Application application) {
         application.setAssessorFeedbackFileEntry(null);
@@ -123,4 +140,5 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     private void linkAssessorFeedbackFileEntryToApplication(FileEntry fileEntry, Application application) {
         application.setAssessorFeedbackFileEntry(fileEntry);
     }
+
 }

@@ -94,6 +94,15 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS));
 	}
 	
+	@Override
+	public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
+			Long competitionId, String sortBy, int pageIndex, int pageSize) {
+		return applicationSummaries(sortBy, pageIndex, pageSize,
+				pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS, pageable),
+				() -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS));
+	
+	}
+	
 	private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, int pageSize, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
 		String[] sortField = getApplicationSummarySortField(sortBy);
 		Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(Sort.Direction.ASC, sortField));
@@ -141,5 +150,5 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		}
 		return result;
 	}
-	
+
 }
