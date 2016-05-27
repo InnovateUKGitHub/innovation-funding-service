@@ -32,6 +32,11 @@ public class ProjectServiceImpl implements ProjectService {
         return ServiceResult.serviceSuccess(projectsToResources(projectRepository.findAll()));
     }
 
+    @Override
+    public ServiceResult<ProjectResource> createProjectFromApplicationId(Long applicationId) {
+        return null;
+    }
+
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
