@@ -65,6 +65,7 @@ Comp admin can view unsuccessful applicant's feedback
     When the user should see the text in the page   ${valid_pdf}
     And the user clicks the button/link     link=testing.pdf (7.94 KB)
     Then the user should see the text in the page   ${valid_pdf_excerpt}
+    And the user navigates to the page  ${unsuccessful_application_overview}
     [Teardown]      Logout as user
 
 
