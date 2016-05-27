@@ -480,6 +480,11 @@ public final class CollectionFunctions {
      * @return
      */
     public static <T> Pair<List<T>, List<T>> simplePartition(List<T> list, Predicate<T> test) {
+
+        if (list == null || list.isEmpty()) {
+            return Pair.of(emptyList(), emptyList());
+        }
+
         Map<Boolean, List<T>> partitioned = list.stream().collect(partitioningBy(test));
         return Pair.of(partitioned.get(true), partitioned.get(false));
     }
