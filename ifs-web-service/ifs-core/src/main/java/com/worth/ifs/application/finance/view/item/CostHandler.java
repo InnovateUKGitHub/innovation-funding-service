@@ -35,7 +35,7 @@ public abstract class CostHandler {
         value = cleanNumberValue(value);
 
         if(StringUtils.isEmpty(value))
-            return new BigDecimal(defaultValue);
+            return defaultValue != null ? new BigDecimal(defaultValue) : BigDecimal.ZERO;
 
         NumberFormat nf = getNumberFormat(value);
         try {
@@ -50,7 +50,7 @@ public abstract class CostHandler {
     public Integer getIntegerValue(String inputValue, Integer defaultValue) {
         String value = cleanNumberValue(inputValue);
         if(StringUtils.isEmpty(value))
-            return defaultValue;
+            return defaultValue != null ? defaultValue : 0;
 
 
         NumberFormat nf = getNumberFormat(value);

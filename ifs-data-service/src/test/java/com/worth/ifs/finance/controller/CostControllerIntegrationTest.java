@@ -16,6 +16,7 @@ import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.OrganisationSize;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -407,7 +408,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertNotNull(subContractingCost.getName());
         assertNotNull(subContractingCost.getCountry());
         assertNotNull(subContractingCost.getRole());
-        assertNotNull(subContractingCost.getCost());
+        assertNull(subContractingCost.getCost());
 
         subContractingCost.setName("Tom Bloggs");
         subContractingCost.setCountry("UK");
@@ -619,6 +620,9 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(null, messages);
     }
 
+    @Rollback
+    @Ignore
+    @Test
     public void testValidationOtherFundingUpdateIncorrectValues() {
 
         assertEquals("Yes", otherFunding.getOtherPublicFunding());
@@ -630,10 +634,9 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(otherFundingCost.getId(), otherFundingCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(2, messages.getErrors().size());
+        assertEquals(3, messages.getErrors().size());
         assertEquals(otherFundingCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
         assertThat(messages.getErrors(), containsInAnyOrder(
                 allOf(
@@ -646,7 +649,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
                 ),
                 allOf(
                         hasProperty("errorKey", is("fundingAmount")),
-                        hasProperty("errorMessage", is("Funding source cannot be blank"))
+                        hasProperty("errorMessage", is("This field should be 1 or higher"))
                 )
         ));
     }
