@@ -347,16 +347,18 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private Cost mapCost(Cost currentCost, Cost newCost) {
-        currentCost.setCost(newCost.getCost());
-
+        if (newCost.getCost() != null) {
+            currentCost.setCost(newCost.getCost());
+        }
         if (newCost.getDescription() != null) {
             currentCost.setDescription(newCost.getDescription());
         }
         if (newCost.getItem() != null) {
             currentCost.setItem(newCost.getItem());
         }
-
-        currentCost.setQuantity(newCost.getQuantity());
+        if (newCost.getQuantity() != null) {
+            currentCost.setQuantity(newCost.getQuantity());
+        }
 
         return currentCost;
     }
