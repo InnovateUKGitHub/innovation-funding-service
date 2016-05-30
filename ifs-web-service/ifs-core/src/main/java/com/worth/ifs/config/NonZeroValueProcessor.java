@@ -11,9 +11,10 @@ import org.thymeleaf.standard.expression.StandardExpressionExecutionContext;
 import org.thymeleaf.standard.expression.StandardExpressions;
 
 /**
- * this class id responsible for the escaping of <script> tags inside thymeleaf code. it does the same as a th:utext tag except for the fact that it escapes the <script> tags
+ * this class is responsible for getting the value of the form input element.
+ * But we don't what value="0" on the input field, because we want to use the placeholder="0".
+ * That is why the value 0 is never returned.
  */
-
 class NonZeroValueProcessor extends AbstractUnescapedTextChildModifierAttrProcessor {
 
     NonZeroValueProcessor() {
@@ -30,20 +31,21 @@ class NonZeroValueProcessor extends AbstractUnescapedTextChildModifierAttrProces
         final IStandardExpression expression = expressionParser.parseExpression(configuration, arguments, attributeValue);
 
         final Object result =
-            expression.execute(configuration, arguments, StandardExpressionExecutionContext.UNESCAPED_EXPRESSION);
-        if(result==null){
+                expression.execute(configuration, arguments, StandardExpressionExecutionContext.UNESCAPED_EXPRESSION);
+        if (result == null) {
             return "";
         }
         String textValue = result.toString();
 
-        if(StringUtils.isEmpty(textValue) || Integer.parseInt(textValue) == 0){
+        if (StringUtils.isEmpty(textValue) || Integer.parseInt(textValue) == 0) {
             return "";
-        }else{
+        } else {
             return textValue;
         }
     }
 
-    @Override public int getPrecedence() {
+    @Override
+    public int getPrecedence() {
         return 1000;
     }
 }
