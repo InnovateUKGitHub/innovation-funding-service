@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.TravelCost;
+import com.worth.ifs.util.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

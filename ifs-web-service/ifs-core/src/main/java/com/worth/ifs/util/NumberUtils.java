@@ -1,4 +1,4 @@
-package com.worth.ifs.application.finance.view.item;
+package com.worth.ifs.util;
 
 import com.worth.ifs.exception.BigDecimalNumberFormatException;
 import com.worth.ifs.exception.IntegerNumberFormatException;

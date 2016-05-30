@@ -1,6 +1,6 @@
 package com.worth.ifs.config;
 
-import com.worth.ifs.application.finance.view.item.NumberUtils;
+import com.worth.ifs.util.NumberUtils;
 import com.worth.ifs.exception.IntegerNumberFormatException;
 import org.springframework.util.StringUtils;
 import org.thymeleaf.Arguments;

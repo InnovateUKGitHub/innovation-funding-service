@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.SubContractingCost;
+import com.worth.ifs.util.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
