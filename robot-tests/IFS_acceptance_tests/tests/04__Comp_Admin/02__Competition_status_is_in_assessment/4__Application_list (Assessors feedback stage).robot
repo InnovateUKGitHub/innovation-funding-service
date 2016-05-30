@@ -37,5 +37,8 @@ Publish assessor feedback button is now visible
     [Tags]
     When the user should not see the element    jQuery=.button:contains("Notify applicants")
     Then the user should see the element    jQuery=.button:contains("Publish assessor feedback")
+    And publish assessor feedback button should be disabled
 
 *** Keywords ***
+publish assessor feedback button should be disabled
+    Element Should Be Disabled    jQuery=.button:contains("Publish assessor feedback")
