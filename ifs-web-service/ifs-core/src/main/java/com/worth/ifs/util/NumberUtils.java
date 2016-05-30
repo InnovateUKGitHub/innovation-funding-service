@@ -11,6 +11,9 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+/**
+ * This class is a general util class containing method converting or handling some kind of {@link Number} object.
+ */
 public class NumberUtils {
     public static Locale LOCALE_UK = Locale.UK;
 
