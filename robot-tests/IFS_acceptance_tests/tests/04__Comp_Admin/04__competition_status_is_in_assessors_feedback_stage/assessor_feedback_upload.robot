@@ -11,7 +11,8 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 
-${submitted_application}        ${server}/management/competition/3/application/16
+${successful_application_overview}        ${server}/management/competition/3/application/16
+${unsuccessful_application_overview}       ${server}/management/competition/3/application/17
 
 
 *** Test Cases ***
@@ -20,39 +21,39 @@ ${submitted_application}        ${server}/management/competition/3/application/1
 Large pdf uploads not allowed
     [Documentation]    INFUND-2602
     [Tags]
-    Given the user can see the option to upload a file on the page    ${submitted_application}
+    Given the user can see the option to upload a file on the page    ${successful_application_overview}
     When the user uploads the file    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2602
     [Tags]
-    Given the user can see the option to upload a file on the page    ${submitted_application}
+    Given the user can see the option to upload a file on the page    ${successful_application_overview}
     When the user uploads the file    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
 
-Valid upload
+Valid upload to a successful application
    [Documentation]    INFUND-2602
     [Tags]
-    Given the user can see the option to upload a file on the page    ${submitted_application}
+    Given the user can see the option to upload a file on the page    ${successful_application_overview}
     And the user uploads the file   ${valid_pdf}
 
-User can view a file
+Comp admin can view the file
     [Documentation]     INFUND-2602
     [Tags]
     Given the user should see the text in the page  ${valid_pdf}
     And the file has been scanned for viruses
     When the user clicks the button/link        link=${valid_pdf}
     Then the user should see the text in the page   ${valid_pdf_excerpt}
-    [Teardown]  The user navigates to the page  ${submitted_application}
+    [Teardown]  The user navigates to the page  ${successful_application_overview}
 
-User cannot upload more than one file
+Comp admin cannot upload more than one file
     [Documentation]     INFUND-2602
     [Tags]
     When the user should see the text in the page   ${valid_pdf}
     Then the user should not see the element    jQuery=.button:contains("Upload")
 
-User can remove the file
+Comp admin can remove the file
     [Documentation]     INFUND-2602
     [Tags]
     Given the user should see the text in the page      ${valid_pdf}
@@ -61,8 +62,23 @@ User can remove the file
     Then the user should not see the text in the page   ${valid_pdf}
     And the user should see the text in the page    Upload
 
+Comp admin can re-upload after removing
+    [Documentation]     INFUND-2602
+    [Tags]
+    Given the user can see the option to upload a file on the page    ${successful_application_overview}
+    And the user uploads the file   ${valid_pdf}
+    [Teardown]  the user clicks the button/link     name=removeAssessorFeedback
 
-User can download a pdf file
+
+Comp admin can upload a file to an unsuccessful application
+    [Documentation]     INFUND-2602
+    [Tags]
+    Given the user can see the option to upload a file on the page      ${unsuccessful_application_overview}
+    And the user uploads the file   ${valid_pdf}
+    [Teardown]      the user clicks the button/link     name=removeAssessorFeedback
+
+
+Comp admin can download the file
     [Documentation]     INFUND-2602
     [Tags]  Pending
     # Pending until download functionality has been plugged in
@@ -70,6 +86,10 @@ User can download a pdf file
     When the user downloads the file from the link     ${valid_pdf}     ${download_link}
     Then the file should be downloaded      ${valid_pdf}
     [Teardown]  Remove File     ${valid_pdf}
+
+
+
+
 
 
 

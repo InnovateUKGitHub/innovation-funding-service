@@ -288,6 +288,9 @@ the field with the wrong input should be saved
     Should Be Equal As Strings    ${input_value}    -1
 
 the user reloads the page with validation errors
+    Mouse Out    css=input
+    Focus    jQuery=button:contains("Mark all as complete")
+    sleep    300ms
     Reload Page
     Run Keyword And Ignore Error    Confirm Action
 
