@@ -142,7 +142,6 @@ Academic finances JeS link showing
 
 Mark all as complete
     [Documentation]    INFUND-918
-    Given the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
@@ -216,6 +215,7 @@ Lead applicant marks the finances as incomplete
 
 the user reloads the page
     Reload Page
+    Run Keyword And Ignore Error    Confirm Action
 
 the user can see the link for more JeS details
     Element Should Be Visible    link=Je-S website
@@ -241,5 +241,5 @@ Mark academic finances as complete
     And the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
 
 the user waits for the file to be scanned by the anti virus software
-    Sleep       5s
+    Sleep    5s
     # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
