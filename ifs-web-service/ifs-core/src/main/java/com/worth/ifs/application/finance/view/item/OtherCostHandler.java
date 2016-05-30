@@ -24,7 +24,7 @@ public class OtherCostHandler extends CostHandler {
                         description = fieldValue;
                         break;
                     case "otherCost":
-                        cost = getBigDecimalValue(fieldValue, 0d);
+                        cost = NumberUtils.getBigDecimalValue(fieldValue, 0d);
                         break;
                     default:
                         LOG.info("Unused costField: " + financeFormField.getCostName());

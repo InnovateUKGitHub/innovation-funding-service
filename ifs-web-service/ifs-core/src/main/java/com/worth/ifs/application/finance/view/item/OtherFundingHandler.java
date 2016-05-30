@@ -30,7 +30,7 @@ public class OtherFundingHandler extends CostHandler {
                         otherPublicFunding = fieldValue;
                         break;
                     case "fundingAmount":
-                        fundingAmount = getBigDecimalValue(fieldValue, 0d);
+                        fundingAmount = NumberUtils.getBigDecimalValue(fieldValue, 0d);
                         break;
                     case "fundingSource":
                         fundingSource = fieldValue;

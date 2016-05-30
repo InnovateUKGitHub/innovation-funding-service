@@ -16,7 +16,7 @@ public class GrantClaimHandler extends CostHandler {
         Optional<FinanceFormField> grantClaimPercentageField = financeFormFields.stream().findFirst();
         Integer grantClaimPercentage = 0;
         if (grantClaimPercentageField.isPresent()) {
-            grantClaimPercentage = getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
+            grantClaimPercentage = NumberUtils.getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
         }
 
         return new GrantClaim(id, grantClaimPercentage);

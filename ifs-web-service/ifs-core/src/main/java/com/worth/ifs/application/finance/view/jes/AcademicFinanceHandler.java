@@ -2,6 +2,7 @@ package com.worth.ifs.application.finance.view.jes;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.view.item.CostHandler;
+import com.worth.ifs.application.finance.view.item.NumberUtils;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 
@@ -29,7 +30,7 @@ public class AcademicFinanceHandler extends CostHandler {
                 item = academicFormField.getValue();
                 break;
             default:
-                value = getBigDecimalValue(academicFormField.getValue(), 0.0);
+                value = NumberUtils.getBigDecimalValue(academicFormField.getValue(), 0.0);
         }
 
         return new AcademicCost(id, key, value, item);

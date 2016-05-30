@@ -27,7 +27,7 @@ public class SubContractingCostHandler extends CostHandler {
                         country = fieldValue;
                         break;
                     case "subcontractingCost":
-                        cost = getBigDecimalValue(fieldValue, 0D);
+                        cost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
                         break;
                     case "name":
                         name = fieldValue;

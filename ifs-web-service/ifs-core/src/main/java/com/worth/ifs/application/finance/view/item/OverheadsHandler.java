@@ -23,7 +23,7 @@ public class OverheadsHandler extends CostHandler {
                     rateType = financeFormField.getValue();
                     break;
                 case "customRate":
-                    customRate = getIntegerValue(financeFormField.getValue(), 0);
+                    customRate = NumberUtils.getIntegerValue(financeFormField.getValue(), 0);
                     break;
                 default:
                     LOG.info("Unused costField: " + financeFormField.getCostName());

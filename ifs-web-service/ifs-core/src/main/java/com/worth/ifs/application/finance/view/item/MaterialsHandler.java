@@ -25,10 +25,10 @@ public class MaterialsHandler extends CostHandler {
                         item = fieldValue;
                         break;
                     case "cost":
-                        cost = getBigDecimalValue(fieldValue, 0D);
+                        cost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
                         break;
                     case "quantity":
-                        quantity = getIntegerValue(fieldValue, 0);
+                        quantity = NumberUtils.getIntegerValue(fieldValue, 0);
                         break;
                     default:
                         LOG.info("Unused costField: " + financeFormField.getCostName());

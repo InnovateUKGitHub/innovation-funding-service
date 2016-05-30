@@ -26,16 +26,16 @@ public class LabourCostHandler extends CostHandler {
             if(fieldValue != null) {
                 switch (financeFormField.getCostName()) {
                     case "grossAnnualSalary":
-                        grossAnnualSalary = getBigDecimalValue(fieldValue, null);
+                        grossAnnualSalary = NumberUtils.getBigDecimalValue(fieldValue, null);
                         break;
                     case "role":
                         role = fieldValue;
                         break;
                     case "labourDays":
-                        labourDays = getIntegerValue(fieldValue, null);
+                        labourDays = NumberUtils.getIntegerValue(fieldValue, null);
                         break;
                     case "labourDaysYearly":
-                        labourDays = getIntegerValue(fieldValue, null);
+                        labourDays = NumberUtils.getIntegerValue(fieldValue, null);
                         description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
                         key = LabourCostCategory.WORKING_DAYS_PER_YEAR;
                         break;
