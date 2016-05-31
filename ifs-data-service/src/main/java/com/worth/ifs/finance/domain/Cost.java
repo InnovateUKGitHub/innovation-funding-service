@@ -52,6 +52,19 @@ public class Cost {
     	// no-arg constructor
     }
 
+    /**
+     * Constructor used to add a new and empty cost object.
+     */
+    public Cost(ApplicationFinance applicationFinance, Question question) {
+        this.name = "";
+        this.item = "";
+        this.description = "";
+        this.quantity = null;
+        this.cost = null;
+        this.applicationFinance = applicationFinance;
+        this.question = question;
+    }
+
     public Cost(String name, String item, String description, Integer quantity, BigDecimal cost,
                 ApplicationFinance applicationFinance, Question question) {
         this.name = name;

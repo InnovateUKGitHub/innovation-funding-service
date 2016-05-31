@@ -34,7 +34,9 @@ public class OtherFundingCostCategory implements CostCategory {
             total = BigDecimal.ZERO;
         } else {
             total = costs.stream()
+
                     .map(c -> c.getTotal())
+                    .filter(c -> c != null)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
         }
     }

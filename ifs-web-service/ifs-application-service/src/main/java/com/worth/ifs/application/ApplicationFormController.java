@@ -345,8 +345,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         setApplicationDetails(application, form.getApplication());
 
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
-        if(userIsLeadApplicant) {
+        if(userIsLeadApplicant(application, user.getId())) {
             applicationService.save(application);
         }
 
