@@ -85,6 +85,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void sendEmailVerificationNotification(String email) {
+        userRestService.sendEmailVerificationNotification(email).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public RestResult<UserResource> retrieveUserById(Long id) {
         return userRestService.retrieveUserById(id);
     }

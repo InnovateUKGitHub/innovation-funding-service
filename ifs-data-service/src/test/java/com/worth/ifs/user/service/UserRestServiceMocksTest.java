@@ -105,4 +105,13 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         assertEquals(userResource, receivedResource);
     }
+
+    @Test
+    public void sendEmailVerificationNotification() {
+        final String emailAddress = "sample@me.com";
+
+        setupPutWithRestResultAnonymousExpectations(usersUrl + "/sendEmailVerificationNotification/" + emailAddress + "/", null, OK);
+        final RestResult<Void> result = service.sendEmailVerificationNotification(emailAddress);
+        assertTrue(result.isSuccess());
+    }
 }

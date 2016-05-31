@@ -21,6 +21,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
+import static java.lang.String.format;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -79,7 +80,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(badRequestError("Missing the hash to reset the password with"));
 
         LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+" body: "+password);
-        return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash), password,  Void.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash), password,  Void.class);
     }
 
     @Override
@@ -151,7 +152,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> verifyEmail(String hash){
-        return getWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, UserController.URL_VERIFY_EMAIL, hash), Void.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", userRestURL, UserController.URL_VERIFY_EMAIL, hash), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> sendEmailVerificationNotification(String email) {
+        return putWithRestResultAnonymous(format("%s/%s/%s/", userRestURL, UserController.URL_SEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
     }
 
     @Override

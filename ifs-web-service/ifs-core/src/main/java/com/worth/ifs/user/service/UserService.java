@@ -2,7 +2,6 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 
@@ -18,6 +17,7 @@ public interface UserService {
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     RestResult<Void> verifyEmail(String hash);
+    void sendEmailVerificationNotification(String email);
 
     RestResult<UserResource> retrieveUserById(Long id);
 
