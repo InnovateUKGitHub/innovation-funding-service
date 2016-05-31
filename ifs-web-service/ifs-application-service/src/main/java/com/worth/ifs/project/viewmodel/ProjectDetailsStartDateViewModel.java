@@ -12,13 +12,13 @@ public class ProjectDetailsStartDateViewModel {
     private String projectNumber;
     private String projectName;
     private long projectDurationInMonths;
-    private LocalDate projectStartDate;
+
+    private ProjectDetailsStartDateViewModelForm form;
 
     public ProjectDetailsStartDateViewModel(ApplicationResource project) {
         this.projectNumber = project.getFormattedId();
         this.projectName = project.getApplicationDisplayName();
         this.projectDurationInMonths = project.getDurationInMonths();
-        this.projectStartDate = LocalDate.of(project.getStartDate().getYear(), project.getStartDate().getMonth(), 1);
     }
 
     public String getProjectNumber() {
@@ -33,11 +33,28 @@ public class ProjectDetailsStartDateViewModel {
         return projectDurationInMonths;
     }
 
-    public LocalDate getProjectStartDate() {
-        return projectStartDate;
+    public ProjectDetailsStartDateViewModelForm getForm() {
+        return form;
     }
 
-    public void setProjectStartDate(LocalDate projectStartDate) {
-        this.projectStartDate = projectStartDate;
+    public static class ProjectDetailsStartDateViewModelForm {
+
+        private LocalDate projectStartDate;
+
+        // for spring form binding
+        public ProjectDetailsStartDateViewModelForm() {
+        }
+
+        public ProjectDetailsStartDateViewModelForm(LocalDate projectStartDate) {
+            this.projectStartDate = projectStartDate;
+        }
+
+        public LocalDate getProjectStartDate() {
+            return projectStartDate;
+        }
+
+        public void setProjectStartDate(LocalDate projectStartDate) {
+            this.projectStartDate = projectStartDate;
+        }
     }
 }
