@@ -39,7 +39,10 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(
                 () -> service.getProjectById(projectId),
-                () -> verify(projectPermissionRules, times(1)).usersConnectedToTheProjectCanView(isA(ProjectResource.class), isA(UserResource.class))
+                () -> {
+                    verify(projectPermissionRules, times(1)).usersConnectedToTheProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1)).compAdminsCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                }
         );
     }
 
