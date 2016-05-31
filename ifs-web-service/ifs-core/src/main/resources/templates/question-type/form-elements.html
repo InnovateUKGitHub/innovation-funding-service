@@ -99,6 +99,7 @@
 </div>
 
 <!-- ========================= date field =========================== -->
+<!-- dayReadonly is an optional parameter that will make the day portion readonly -->
 
 <div th:fragment="form-dateinput (id, field)">
     <div class="date-group js-future-date">
@@ -108,10 +109,10 @@
 	        <div class="day">
 	            <div th:include="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)" th:remove="tag"/>
 	            <div th:if="${dateFieldPresent}" th:remove="tag">
-	            	<div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD')"	 th:remove="tag"/>
+	            	<div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${dayReadonly})" th:remove="tag"/>
 	             </div>
 	             <div th:unless="${dateFieldPresent}" th:remove="tag">
-	            	<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD')"	 th:remove="tag"/>
+	            	<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${dayReadonly})" th:remove="tag"/>
 	             </div>
 	        </div>
 	        <div class="month">

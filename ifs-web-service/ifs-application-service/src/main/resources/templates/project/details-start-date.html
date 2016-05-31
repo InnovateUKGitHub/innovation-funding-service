@@ -14,7 +14,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${project.getApplicationDisplayName()} "/>
+        <p class="subtitle" th:text="${model.projectNumber} + ': ' + ${model.projectName} "/>
         <h1 class="heading-xlarge no-margin">Project details</h1>
     </div>
 
@@ -34,34 +34,18 @@
 
     <p>If required the start date can be changed later.</p>
 
-    <div class="date-group extra-margin">
-        <div class="day">
-            <label class="form-label" for="start-day">
-                <div>Day</div>
-            </label>
-            <input class="form-control width-extra-small" type="number" placeholder="DD" id="start-day" name="start-day" value="01" readonly="true" />
+    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${model}">
+
+        <div th:include="question-type/form-elements :: form-dateinput (id=${'projectStartDate'}, field=${'projectStartDate'}, dayReadonly=true)" th:remove="tag">
         </div>
 
-        <div class="month">
-            <label class="form-label" for="start-month">
-                <div>Month</div>
-            </label>
-            <input class="form-control width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
-        </div>
+        <h3 class="heading-medium">Project duration</h3>
 
-        <div class="year">
-            <label class="form-label" for="start-year">
-                <div>Year</div>
-            </label>
-            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
-        </div>
-    </div>
+        <p>Project duration stated in your application: <br /><strong><span th:text="${model.projectDurationInMonths}">9</span> months</strong></p>
 
-    <h3 class="heading-medium">Project duration</h3>
+        <button class="button button-large" formaction="/prototypes/1575-project-details">Save</button>
 
-    <p>Project duration stated in your application: <br /><strong>9 months</strong></p>
-
-    <button class="button button-large" formaction="/prototypes/1575-project-details">Save</button>
+    </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

@@ -2,6 +2,7 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +23,8 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/startdate", method = RequestMethod.GET)
     public String projectDetails(Model model, @PathVariable("projectId") final Long projectId) {
     	
-    	ApplicationResource application = applicationService.getById(projectId);
-    	model.addAttribute("project", application);
-    	
+    	ApplicationResource project = applicationService.getById(projectId);
+    	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
         return "project/details-start-date";
     }
 }
