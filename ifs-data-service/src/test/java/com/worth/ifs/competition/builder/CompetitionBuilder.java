@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
@@ -23,7 +24,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public static CompetitionBuilder newCompetition() {
-        return new CompetitionBuilder(emptyList()).with(uniqueIds());
+        return new CompetitionBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Competition "));
     }
 
     public CompetitionBuilder withSections(List<Section> sections) {

@@ -147,5 +147,10 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 		public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
 			return null;
 		}
+
+        @Override
+        public ServiceResult<Void> notifyLeadApplicantsOfAssessorFeedback(long competitionId) {
+            return null;
+        }
     }
 }

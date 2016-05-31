@@ -14,6 +14,9 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +42,7 @@ import static java.util.Comparator.comparing;
  */
 @Service
 public class QuestionServiceImpl extends BaseTransactionalService implements QuestionService {
-
+    private static final Log LOG = LogFactory.getLog(QuestionServiceImpl.class);
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
@@ -273,8 +276,20 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
         return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
+            QuestionStatus questionStatus = null;
 
-            QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
+            if (question.hasMultipleStatuses()) {
+                //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
+                List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
+                Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
+                        .map(m -> getQuestionStatusByMarkedAsCompleteId(question, applicationId, m.getId()))
+                        .filter(m -> m != null)
+                        .findFirst();
+                questionStatus = optionalQuestionStatus.orElse(null);
+            } else {
+                questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
+            }
+
             if (questionStatus == null) {
                 questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
             } else if (markAsComplete) {

@@ -259,9 +259,8 @@ Other funding server side
     And the user should see an error    This field should be 1 or higher
 
 Select NO and mark as complete should be possible
-    [Documentation]    INFUND-2214
+    [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
     ...
-    ...    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
     [Tags]
     Given the users selects no in the other fundings section
     And the user marks the finances as complete
@@ -288,6 +287,9 @@ the field with the wrong input should be saved
     Should Be Equal As Strings    ${input_value}    -1
 
 the user reloads the page with validation errors
+    Mouse Out    css=input
+    Focus    jQuery=button:contains("Mark all as complete")
+    sleep    300ms
     Reload Page
     Run Keyword And Ignore Error    Confirm Action
 

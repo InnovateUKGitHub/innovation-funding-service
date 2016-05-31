@@ -310,14 +310,39 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${CONTACT_LEAD}=    Get From List    ${LINK}    1
-    Should Contain    ${CONTACT_LEAD}    mailto:
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    2
+    #${CONTACT_LEAD}=    Get From List    ${LINK}    1
+    #Should Contain    ${CONTACT_LEAD}    mailto:
+    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
     log    ${ACCEPT_INVITE}
     go to    ${ACCEPT_INVITE}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+the user downloads the file from the link
+    [Arguments]    ${filename}    ${download_link}
+    ${ALL_COOKIES} =    Get Cookies
+    Log    ${ALL_COOKIES}
+    Download File    ${ALL_COOKIES}    ${download_link}
+    sleep    2s
+
+the file should be downloaded
+    [Arguments]    ${filename}
+    File Should Exist    ${filename}
+    File Should Not Be Empty    ${filename}
+
+the file has been scanned for viruses
+    Sleep    5s
+
+the user can see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    Page Should Contain    Upload
+
+the user cannot see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    the user should not see the text in the page    Upload
 
 Delete the emails from the test mailbox
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
