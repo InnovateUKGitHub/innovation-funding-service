@@ -3,7 +3,6 @@ package com.worth.ifs.registration;
 import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -13,6 +12,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
+import com.worth.ifs.registration.form.ResendEmailVerificationForm;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
@@ -226,6 +226,24 @@ public class RegistrationController {
         }
 
         return destination;
+    }
+
+    @RequestMapping(value = "/resend-email-verification", method = RequestMethod.GET)
+    public String resendEmailVerification(final ResendEmailVerificationForm resendEmailVerificationForm, final Model model) {
+        model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
+        return "registration/resend-email-verification";
+    }
+
+    @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
+    public String resendEmailVerification(@Valid final ResendEmailVerificationForm resendEmailVerificationForm, final BindingResult bindingResult, final Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
+            return "registration/resend-email-verification";
+        }
+
+        userService.sendEmailVerificationNotification(resendEmailVerificationForm.getEmail());
+        return "registration/resend-email-verification-send";
     }
 
     private void removeCompetitionIdCookie(HttpServletResponse response) {

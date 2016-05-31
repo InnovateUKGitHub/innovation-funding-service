@@ -2,6 +2,7 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -31,6 +32,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -82,7 +84,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
         usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
         organisationCookie = new Cookie("organisationId", "1");
-
     }
 
     @Test
@@ -500,5 +501,44 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                         .param("termsAndConditions", "1")
         )
                 .andExpect(model().hasErrors());
+    }
+
+    @Test
+    public void resendEmailVerification() throws Exception {
+        mockMvc.perform(get("/registration/resend-email-verification"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/resend-email-verification"));
+    }
+
+    @Test
+    public void validResendEmailVerificationForm() throws Exception {
+        mockMvc.perform(post("/registration/resend-email-verification")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", "a.b@test.test"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/resend-email-verification-send"));
+    }
+
+    @Test
+    public void invalidResendEmailVerificationFormShouldReturnError() throws Exception {
+        mockMvc.perform(post("/registration/resend-email-verification")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", "{a|b}@test.test"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/resend-email-verification"))
+                .andExpect(model().attributeHasFieldErrors("resendEmailVerificationForm", "email"));
+    }
+
+    @Test
+    public void validResendEmailVerificationFormWithOtherExceptionShouldByHandled() throws Exception {
+        final String emailAddress = "a.b@test.test";
+
+        doThrow(new GeneralUnexpectedErrorException("Other error occurred", asList())).when(userService).sendEmailVerificationNotification(emailAddress);
+
+        mockMvc.perform(post("/registration/resend-email-verification")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", emailAddress))
+                .andExpect(status().isInternalServerError())
+                .andExpect(view().name("error"));
     }
 }
