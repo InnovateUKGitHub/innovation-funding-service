@@ -31,7 +31,6 @@ public class LabourCost implements CostItem {
     private BigDecimal grossAnnualSalary;
 
     @NotNull
-
     @Min.List({
             @Min(value=1, groups = Default.class),
             @Min(value=1, groups = LabourCost.YearlyWorkingDays.class)

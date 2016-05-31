@@ -56,7 +56,8 @@
                                class="form-control width-full"
                                id="incurred-staff"
                                th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
-                               th:value="${academicFinance.incurredStaff?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.incurredStaff?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'field-error'" />
                     </div>
@@ -74,7 +75,8 @@
                                id="travel"
                                th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
                                type="text"
-                               th:value="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'field-error'"/>
                     </div>
@@ -91,7 +93,8 @@
                                id="other"
                                th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
                                type="text"
-                               th:value="${academicFinance.incurredOtherCosts?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.incurredOtherCosts?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
@@ -129,7 +132,8 @@
                         <input class="form-control width-full"
                                id="investigators"
                                th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
-                               th:value="${academicFinance.allocatedInvestigators?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'field-error'"/>
                     </div>
@@ -145,7 +149,8 @@
                         <input class="form-control width-full"
                                id="estates"
                                th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
-                               th:value="${academicFinance.allocatedEstatesCosts?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'field-error'"/>
                     </div>
@@ -161,7 +166,8 @@
                         <input class="form-control width-full"
                                id="other-direct"
                                th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
-                               th:value="${academicFinance.allocatedOtherCosts?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'field-error'"/>
                     </div>
@@ -195,7 +201,8 @@
                                id="indirect"
                                th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
                                type="text"
-                               th:value="${academicFinance.indirectCosts?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.indirectCosts?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
@@ -219,7 +226,8 @@
                         <input class="form-control width-full"
                                id="exceptions-staff"
                                th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
-                               th:value="${academicFinance.exceptionsStaff?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'field-error'" />
                     </div>
@@ -236,7 +244,8 @@
                                id="exceptions-other-direct"
                                th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
                                type="text"
-                               th:value="${academicFinance.exceptionsOtherCosts?.numberValue}"
+                               ifs:nonZeroValue="${academicFinance.exceptionsOtherCosts?.numberValue}"
+                               placeholder="0"
                                th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>

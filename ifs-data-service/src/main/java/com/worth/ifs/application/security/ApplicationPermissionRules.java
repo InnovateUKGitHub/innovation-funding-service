@@ -103,7 +103,7 @@ public class ApplicationPermissionRules {
                           "the Application's Competition is in Funders' Panel or Assessor Feedback state",
             particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
     public boolean compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
-        return isCompAdmin(user) && application.isInEditableAssessorFeedbackState();
+        return isCompAdmin(user) && application.isInEditableAssessorFeedbackCompetitionState();
     }
 
     @PermissionRule(
@@ -111,7 +111,7 @@ public class ApplicationPermissionRules {
             description = "A Comp Admin user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
             particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
     public boolean compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
-        return isCompAdmin(user) && !application.isInPublishedAssessorFeedbackState();
+        return isCompAdmin(user) && !application.isInPublishedAssessorFeedbackCompetitionState();
     }
 
     @PermissionRule(
@@ -126,7 +126,7 @@ public class ApplicationPermissionRules {
             description = "A member of the Application Team can see and download Assessor Feedback attached to their Application when it has been published",
             particularBusinessState = "Application's Competition Status = 'Project Setup' or beyond")
     public boolean applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(ApplicationResource application, UserResource user) {
-        return application.isInPublishedAssessorFeedbackState() && isMemberOfProjectTeam(application, user);
+        return application.isInPublishedAssessorFeedbackCompetitionState() && isMemberOfProjectTeam(application, user);
     }
 
     @PermissionRule(
