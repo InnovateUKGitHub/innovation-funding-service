@@ -1,3 +1,9 @@
+*** Settings ***
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/User_credentials.robot
+Resource          ../../resources/keywords/Login_actions.robot
+
 *** Keywords ***
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
@@ -279,16 +285,6 @@ The element should be disabled
     [Arguments]    ${ELEMENT}
     Element Should Be Disabled    ${ELEMENT}
 
-the user clicks the link from the appropriate email sender
-    Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
-    Run keyword if    '${RUNNING_ON_DEV}' != ''    the user opens the mailbox and verifies the official innovate email
-
-the user opens the mailbox and verifies the email sent from a developer machine
-    the user opens the mailbox and verifies the email from    dev-dwatson-liferay-portal@hiveit.co.uk
-
-the user opens the mailbox and verfies the official innovate email
-    the user opens the mailbox and verifies the email from    noresponse@innovateuk.gov.uk
-
 the user opens the mailbox and verifies the email from
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
@@ -310,8 +306,6 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    #${CONTACT_LEAD}=    Get From List    ${LINK}    1
-    #Should Contain    ${CONTACT_LEAD}    mailto:
     ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
     log    ${ACCEPT_INVITE}
     go to    ${ACCEPT_INVITE}
