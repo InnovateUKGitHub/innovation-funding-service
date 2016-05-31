@@ -8,6 +8,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -115,7 +116,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 	@Override
 	public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
 		return getCompetition(competitionId).andOnSuccessReturnVoid(competition -> {
-			competition.setAssessorFeedbackDate(LocalDateTime.now());
+			competition.setAssessorFeedbackDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 		});
 	}
 

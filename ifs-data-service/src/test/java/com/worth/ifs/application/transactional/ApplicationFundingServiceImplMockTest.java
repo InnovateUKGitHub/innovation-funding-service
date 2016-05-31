@@ -35,6 +35,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +198,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	assertEquals(approvedStatus, application1.getApplicationStatus());
     	assertEquals(rejectedStatus, application2.getApplicationStatus());
     	assertNotNull(competition.getFundersPanelEndDate());
+    	assertEquals("funders panel end date is set to the start of the current second", 0, competition.getFundersPanelEndDate().get(ChronoField.MILLI_OF_SECOND));
     }
 
 	@Test

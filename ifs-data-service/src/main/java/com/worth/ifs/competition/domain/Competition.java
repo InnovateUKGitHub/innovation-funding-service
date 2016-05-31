@@ -1,18 +1,27 @@
 package com.worth.ifs.competition.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Transient;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -20,9 +29,11 @@ import java.util.List;
 @Entity
 public class Competition {
 
-
+	@Transient
+	private DateProvider dateProvider = new DateProvider();
+	
     public CompetitionResource.Status getCompetitionStatus() {
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = dateProvider.provideDate();
         if(getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
         }else if(getEndDate().isAfter(today)){
@@ -251,6 +262,16 @@ public class Competition {
     public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
 		this.fundersPanelEndDate = fundersPanelEndDate;
 	}
+
+	protected void setDateProvider(DateProvider dateProvider) {
+		this.dateProvider = dateProvider;
+	}
+	
+    protected static class DateProvider {
+    	public LocalDateTime provideDate() {
+    		return LocalDateTime.now();
+    	}
+    }
 
 }
 

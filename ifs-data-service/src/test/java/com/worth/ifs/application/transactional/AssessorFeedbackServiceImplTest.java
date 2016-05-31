@@ -7,14 +7,17 @@ import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -24,6 +27,7 @@ import org.junit.Test;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 
@@ -220,6 +224,19 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     	
     	assertTrue(result.isSuccess());
     	assertTrue(result.getSuccessObject());
+    }
+    
+    @Test
+    public void testSubmitAssessorFeedback() {
+    	
+    	Competition competition = newCompetition().withId(123L).build();
+    	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
+    	
+    	ServiceResult<Void> result = service.submitAssessorFeedback(123L);
+    	
+    	assertTrue(result.isSuccess());
+    	assertNotNull(competition.getAssessorFeedbackDate());
+    	assertEquals("assessor feedback date is set to the start of the current second", 0, competition.getAssessorFeedbackDate().get(ChronoField.MILLI_OF_SECOND));
     }
 
     @Override

@@ -23,6 +23,7 @@ import static com.worth.ifs.util.MapFunctions.toListOfPairs;
 import static java.util.Arrays.asList;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +115,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 				app.setApplicationStatus(status);
 			});
 
-			competition.setFundersPanelEndDate(LocalDateTime.now());
+			competition.setFundersPanelEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 			
 			return serviceSuccess();
 		});
