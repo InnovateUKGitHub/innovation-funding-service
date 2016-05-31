@@ -1,5 +1,6 @@
 package com.worth.ifs.project.resource;
 
+import javax.validation.constraints.Digits;
 import java.time.LocalDate;
 
 public class ProjectResource {
@@ -8,7 +9,10 @@ public class ProjectResource {
     private Long id;
     private LocalDate targetStartDate;
     private Long address;
+
+    @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
+    
     private Long projectManager;
 
     public Long getId() {
