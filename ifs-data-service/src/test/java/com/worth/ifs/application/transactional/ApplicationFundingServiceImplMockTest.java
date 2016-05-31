@@ -262,8 +262,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
         );
 
-		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
-		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
+		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
 		ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
 		assertTrue(result.isSuccess());
@@ -317,8 +317,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
 
-        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
-        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
+        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
         assertTrue(result.isSuccess());
@@ -348,7 +348,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	assertNull(competition.getFundersPanelEndDate());
     }
     
-	private Notification createFullNotificationExpectations(Notification expectedNotification) {
+	public static Notification createFullNotificationExpectations(Notification expectedNotification) {
 
         return createLambdaMatcher(notification -> {
             assertEquals(expectedNotification.getFrom(), notification.getFrom());
@@ -371,11 +371,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             });
 
             assertEquals(expectedTargetSpecifics, actualTargetSpecifics);
-            return true;
         });
     }
 
-	private Notification createSimpleNotificationExpectations(Notification expectedNotification) {
+    public static Notification createSimpleNotificationExpectations(Notification expectedNotification) {
 
 		return createLambdaMatcher(notification -> {
 			assertEquals(expectedNotification.getFrom(), notification.getFrom());
@@ -385,7 +384,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 			assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
 
 			assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
-			return true;
 		});
 	}
 	

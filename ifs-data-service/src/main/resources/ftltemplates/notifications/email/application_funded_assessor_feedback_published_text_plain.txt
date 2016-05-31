@@ -1,0 +1,15 @@
+Dear User 2,
+
+Application number: ${applicationNumber}
+Application name: ${applicationName}
+
+Following the success of your application ${applicationName} to achieve funding in the competition ${competitionName}, we are happy to inform you that feedback is now available.
+
+The feedback provided by the independent assessors has been reviewed by Innovate UK.
+
+You can now view this feedback by logging onto your Innovation Funding Service dashboard at ${dashboardUrl}.
+
+Yours sincerely,
+
+Competitions Team
+Innovate UK

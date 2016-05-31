@@ -471,6 +471,25 @@ public final class CollectionFunctions {
     }
 
     /**
+     * Partitions a list based upon a given predicate, and returns the two lists in a Pair, with the "true" list being the
+     * key (left) and the "false" list being the value (right)
+     *
+     * @param list
+     * @param test
+     * @param <T>
+     * @return
+     */
+    public static <T> Pair<List<T>, List<T>> simplePartition(List<T> list, Predicate<T> test) {
+
+        if (list == null || list.isEmpty()) {
+            return Pair.of(emptyList(), emptyList());
+        }
+
+        Map<Boolean, List<T>> partitioned = list.stream().collect(partitioningBy(test));
+        return Pair.of(partitioned.get(true), partitioned.get(false));
+    }
+
+    /**
      * Wrap a {@link BinaryOperator} with null checks
      * @param notNullSafe
      * @param <T>
