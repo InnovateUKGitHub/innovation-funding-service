@@ -29,9 +29,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void setUp() {
         super.setUp();
 
-        when(userRestService.sendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
-        when(userRestService.sendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError("Other error occurred")));
-        when(userRestService.sendEmailVerificationNotification(not(or(eq(EMAIL_THAT_EXISTS_FOR_USER), eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))))).thenReturn(restFailure(notFoundError(UserResource.class)));
+        when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
+        when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError("Other error occurred")));
+        when(userRestService.resendEmailVerificationNotification(not(or(eq(EMAIL_THAT_EXISTS_FOR_USER), eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))))).thenReturn(restFailure(notFoundError(UserResource.class)));
     }
 
     @Override
@@ -40,25 +40,25 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void sendEmailVerificationNotification() throws Exception {
-        service.sendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
-        verify(userRestService, only()).sendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
+    public void resendEmailVerificationNotification() throws Exception {
+        service.resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
+        verify(userRestService, only()).resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
     }
 
     @Test(expected = Test.None.class /* No exception expected here even though the mock returns an ObjectNotFoundException. We don't want to reveal that an email address was not recognised. */)
-    public void sendEmailVerificationNotification_notExists() throws Exception {
+    public void resendEmailVerificationNotification_notExists() throws Exception {
         // Try sending the verification link to an email address which doesn't exist for a user
         final String email = "i-dont-exist@me.com";
 
-        service.sendEmailVerificationNotification(email);
-        verify(userRestService, only()).sendEmailVerificationNotification(email);
+        service.resendEmailVerificationNotification(email);
+        verify(userRestService, only()).resendEmailVerificationNotification(email);
     }
 
     @Test(expected = GeneralUnexpectedErrorException.class)
-    public void sendEmailVerificationNotification_otherError() throws Exception {
+    public void resendEmailVerificationNotification_otherError() throws Exception {
         // Try sending the verification link to an email address that exists but cause another error to occur
 
-        service.sendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
-        verify(userRestService, only()).sendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
+        service.resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
+        verify(userRestService, only()).resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
     }
 }

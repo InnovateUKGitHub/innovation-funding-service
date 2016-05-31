@@ -1,1 +1,2 @@
 ALTER TABLE `token` ADD COLUMN `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `token` ADD COLUMN `updated` datetime DEFAULT NULL;

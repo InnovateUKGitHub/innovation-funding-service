@@ -41,7 +41,7 @@ public class UserController {
     public static final String URL_PASSWORD_RESET = "passwordReset";
     public static final String URL_SEND_PASSWORD_RESET_NOTIFICATION = "sendPasswordResetNotification";
     public static final String URL_VERIFY_EMAIL = "verifyEmail";
-    public static final String URL_SEND_EMAIL_VERIFICATION_NOTIFICATION = "sendEmailVerificationNotification";
+    public static final String URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION = "resendEmailVerificationNotification";
 
     @Autowired
     private UserService userService;
@@ -118,10 +118,10 @@ public class UserController {
                 });
     }
 
-    @RequestMapping(value = "/" + URL_SEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/", method = PUT)
-    public RestResult<Void> sendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
+    @RequestMapping(value = "/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/", method = PUT)
+    public RestResult<Void> resendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
         return userService.findInactiveByEmail(emailAddress)
-                .andOnSuccessReturn(user -> registrationService.sendUserVerificationEmail(user, empty()))
+                .andOnSuccessReturn(user -> registrationService.resendUserVerificationEmail(user))
                 .toPutResponse();
     }
 

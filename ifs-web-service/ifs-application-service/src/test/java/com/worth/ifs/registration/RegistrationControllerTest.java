@@ -533,7 +533,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void validResendEmailVerificationFormWithOtherExceptionShouldByHandled() throws Exception {
         final String emailAddress = "a.b@test.test";
 
-        doThrow(new GeneralUnexpectedErrorException("Other error occurred", asList())).when(userService).sendEmailVerificationNotification(emailAddress);
+        doThrow(new GeneralUnexpectedErrorException("Other error occurred", asList())).when(userService).resendEmailVerificationNotification(emailAddress);
 
         mockMvc.perform(post("/registration/resend-email-verification")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

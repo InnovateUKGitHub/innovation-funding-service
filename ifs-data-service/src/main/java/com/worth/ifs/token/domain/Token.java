@@ -6,6 +6,8 @@ import com.worth.ifs.token.JpaConverterJson;
 import com.worth.ifs.token.resource.TokenType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -25,9 +27,16 @@ public class Token {
     private Long classPk;
     @Column(unique=true)
     private String hash;
+
     @NotNull
+    @CreatedDate
     @DateTimeFormat
+    @Column(updatable = false)
     private LocalDateTime created;
+
+    @LastModifiedDate
+    @DateTimeFormat
+    private LocalDateTime updated;
 
     @Convert(converter = JpaConverterJson.class)
     @Column( length = 5000 )
@@ -94,6 +103,14 @@ public class Token {
         this.created = created;
     }
 
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(LocalDateTime updated) {
+        this.updated = updated;
+    }
+
     public JsonNode getExtraInfo() {
         return extraInfo;
     }
@@ -121,6 +138,7 @@ public class Token {
                 .append(classPk, token.classPk)
                 .append(hash, token.hash)
                 .append(created, token.created)
+                .append(updated, token.updated)
                 .append(extraInfo, token.extraInfo)
                 .isEquals();
     }
@@ -134,6 +152,7 @@ public class Token {
                 .append(classPk)
                 .append(hash)
                 .append(created)
+                .append(updated)
                 .append(extraInfo)
                 .toHashCode();
     }

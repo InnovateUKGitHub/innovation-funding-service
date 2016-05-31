@@ -10,6 +10,7 @@ public class TokenResource {
     private Long classPk;
     private String hash;
     private LocalDateTime created;
+    private LocalDateTime updated;
     private JsonNode extraInfo;
     private TokenType type;
 
@@ -59,6 +60,14 @@ public class TokenResource {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(LocalDateTime updated) {
+        this.updated = updated;
     }
 
     public TokenType getType() {

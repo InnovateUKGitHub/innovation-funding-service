@@ -21,6 +21,9 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
     ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId);
 
+    @PreAuthorize("hasPermission(#user, 'VERIFY')")
+    ServiceResult<Void> resendUserVerificationEmail(@P("user") final UserResource user);
+
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'ACTIVATE')")
     ServiceResult<Void> activateUser(Long userId);
 }

@@ -75,6 +75,18 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
                 });
     }
 
+    @Test
+    public void testResendUserVerificationEmail() throws Exception {
+        final UserResource userToSendVerificationEmail = newUserResource().build();
+
+        assertAccessDenied(
+                () -> service.resendUserVerificationEmail(userToSendVerificationEmail),
+                () -> {
+                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verifyNoMoreInteractions(rules);
+                });
+    }
+
     @Override
     protected Class<? extends RegistrationService> getServiceClass() {
         return TestRegistrationService.class;
@@ -99,6 +111,11 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         @Override
         public ServiceResult<Void> sendUserVerificationEmail(UserResource user, Optional<Long> competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> resendUserVerificationEmail(UserResource user) {
             return null;
         }
     }

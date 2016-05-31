@@ -87,13 +87,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendEmailVerificationNotification(String email) {
+    public void resendEmailVerificationNotification(String email) {
         try {
-            userRestService.sendEmailVerificationNotification(email).getSuccessObjectOrThrowException();
+            userRestService.resendEmailVerificationNotification(email).getSuccessObjectOrThrowException();
         }
         catch (ObjectNotFoundException e) {
             // Do nothing. We don't want to reveal that the address was not recognised
-            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when sending email verification notification.", email));
+            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email));
         }
     }
 

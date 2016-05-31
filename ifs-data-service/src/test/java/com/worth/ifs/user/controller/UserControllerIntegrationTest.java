@@ -179,9 +179,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     @Test
-    public void testSendEmailVerificationNotification() {
+    public void testResendEmailVerificationNotification() {
         loginSystemRegistrationUser();
-        final RestResult<Void> restResult = controller.sendEmailVerificationNotification("ewan+1@hiveit.co.uk");
+        final RestResult<Void> restResult = controller.resendEmailVerificationNotification("ewan+1@hiveit.co.uk");
         assertTrue(restResult.isSuccess());
     }
 }

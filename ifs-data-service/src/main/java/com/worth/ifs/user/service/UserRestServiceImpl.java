@@ -156,8 +156,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<Void> sendEmailVerificationNotification(String email) {
-        return putWithRestResultAnonymous(format("%s/%s/%s/", userRestURL, UserController.URL_SEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
+    public RestResult<Void> resendEmailVerificationNotification(String email) {
+        return putWithRestResultAnonymous(format("%s/%s/%s/", userRestURL, UserController.URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
     }
 
     @Override

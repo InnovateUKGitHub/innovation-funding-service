@@ -242,7 +242,7 @@ public class RegistrationController {
             return "registration/resend-email-verification";
         }
 
-        userService.sendEmailVerificationNotification(resendEmailVerificationForm.getEmail());
+        userService.resendEmailVerificationNotification(resendEmailVerificationForm.getEmail());
         return "registration/resend-email-verification-send";
     }
 

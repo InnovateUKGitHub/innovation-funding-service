@@ -44,6 +44,7 @@ import static java.time.LocalDateTime.now;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -372,6 +373,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Test
     public void testSendUserVerificationEmail() {
         final UserResource userResource = newUserResource()
+                .withId(1L)
                 .withFirstName("Sample")
                 .withLastName("User")
                 .withEmail("sample@me.com")
@@ -400,6 +402,43 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
         final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty());
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testResendUserVerificationEmail() {
+        final UserResource userResource = newUserResource()
+                .withId(1L)
+                .withFirstName("Sample")
+                .withLastName("User")
+                .withEmail("sample@me.com")
+                .build();
+
+        // mock the random number that will be used to create the hash
+        final double random = 0.6996293870272714;
+        PowerMockito.mockStatic(Math.class);
+        when(Math.random()).thenReturn(random);
+        when(Math.ceil(random * 1000)).thenReturn(700d);
+
+        final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
+        ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
+        when(standardPasswordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
+
+        final Token existingToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), "existing-token", now(), JsonNodeFactory.instance.objectNode());
+        final Token newToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());
+        final String verificationLink = String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
+
+        final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
+
+        final NotificationSource from = systemNotificationSourceMock;
+        final NotificationTarget to = new ExternalUserNotificationTarget(userResource.getName(), userResource.getEmail());
+
+        final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
+        when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(of(existingToken));
+        when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
+        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        final ServiceResult<Void> result = service.resendUserVerificationEmail(userResource);
         assertTrue(result.isSuccess());
     }
 }

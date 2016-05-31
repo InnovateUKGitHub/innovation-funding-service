@@ -12,4 +12,6 @@ public interface TokenRepository extends PagingAndSortingRepository<Token, Long>
 
     Optional<Token> findByHashAndTypeAndClassName(final String hash, final TokenType type, final String className);
 
+    Optional<Token> findByTypeAndClassNameAndClassPk(final TokenType type, final String className, final Long classPk);
+
 }

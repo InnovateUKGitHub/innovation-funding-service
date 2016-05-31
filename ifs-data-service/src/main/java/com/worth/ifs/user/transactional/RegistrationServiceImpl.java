@@ -35,6 +35,7 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 
 /**
  * A service around Registration and general user-creation operations
@@ -86,7 +87,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource) {
-        return createApplicantUser(organisationId, Optional.empty(), userResource);
+        return createApplicantUser(organisationId, empty(), userResource);
     }
 
     private boolean isUserCompAdmin(final String email) {
@@ -193,7 +194,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
-        final Token token = getEmailVerificationToken(user, competitionId);
+        final Token token = createEmailVerificationToken(user, competitionId);
+        final Notification notification = getEmailVerificationNotification(user, token);
+        return notificationService.sendNotification(notification, EMAIL);
+    }
+
+    @Override
+    public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
+        final Token token = refreshEmailVerificationToken(user);
         final Notification notification = getEmailVerificationNotification(user, token);
         return notificationService.sendNotification(notification, EMAIL);
     }
@@ -203,7 +211,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
-    private Token getEmailVerificationToken(final UserResource user, final Optional<Long> competitionId) {
+    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId) {
         final String emailVerificationHash = getEmailVerificationHash(user);
 
         final ObjectNode extraInfo = factory.objectNode();
@@ -211,6 +219,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             extraInfo.put("competitionId", competitionId.get());
         }
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
+        return tokenRepository.save(token);
+    }
+
+    private Token refreshEmailVerificationToken(final UserResource user) {
+        final String emailVerificationHash = getEmailVerificationHash(user);
+        final Token token = tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId()).get();
+        token.setHash(emailVerificationHash);
+        token.setUpdated(now());
         return tokenRepository.save(token);
     }
 

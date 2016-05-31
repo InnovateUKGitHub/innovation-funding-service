@@ -42,27 +42,27 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void sendEmailVerificationNotification() throws Exception {
+    public void resendEmailVerificationNotification() throws Exception {
         final String emailAddress = "sample@me.com";
 
         final UserResource userResource = newUserResource().build();
 
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.resendUserVerificationEmail(userResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
+        mockMvc.perform(put("/user/resendEmailVerificationNotification/{emailAddress}/", emailAddress))
                 .andExpect(status().isOk());
 
-        verify(registrationServiceMock, only()).sendUserVerificationEmail(userResource, empty());
+        verify(registrationServiceMock, only()).resendUserVerificationEmail(userResource);
     }
 
     @Test
-    public void sendEmailVerificationNotification_notFound() throws Exception {
+    public void resendEmailVerificationNotification_notFound() throws Exception {
         final String emailAddress = "sample@me.com";
 
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceFailure(notFoundError(User.class, emailAddress, INACTIVE)));
 
-        mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
+        mockMvc.perform(put("/user/resendEmailVerificationNotification/{emailAddress}/", emailAddress))
                 .andExpect(status().isNotFound());
     }
 

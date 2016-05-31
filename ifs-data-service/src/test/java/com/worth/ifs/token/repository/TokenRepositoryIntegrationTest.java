@@ -34,21 +34,21 @@ public class TokenRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
     }
 
     @Test
-    public void test_findByHash() throws Exception {
-        final String hash = "5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0";
+    public void testFindByHash() throws Exception {
+        final String hash = "8223991f065abb7ed909c8c7c772fbdd24c966d246abd63c2ff7eeba9add3bafe42b067b602f761b";
 
         final Token token = repository.findByHash(hash).get();
         assertEquals(hash, token.getHash());
         assertEquals(User.class.getName(), token.getClassName());
-        assertEquals(Long.valueOf(11L), token.getClassPk());
+        assertEquals(Long.valueOf(10L), token.getClassPk());
         assertEquals(VERIFY_EMAIL_ADDRESS, token.getType());
-        assertEquals(JsonNodeFactory.instance.objectNode().put("competitionId", 1), token.getExtraInfo());
+        assertEquals(JsonNodeFactory.instance.objectNode(), token.getExtraInfo());
 
     }
 
     @Rollback
     @Test
-    public void test_findByHashAndTypeAndClassName() throws Exception {
+    public void testFindByHashAndTypeAndClassName() throws Exception {
         final String hash1 = hash(1L, "firstname.lastname@innovateuk.org");
         final String hash2 = hash(1L, "firstname.lastname@innovateuk.org");
 
@@ -61,6 +61,23 @@ public class TokenRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
         final Optional<Token> found = repository.findByHashAndTypeAndClassName(hash1, VERIFY_EMAIL_ADDRESS, User.class.getName());
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
+    }
+
+    @Rollback
+    @Test
+    public void testFindByTypeAndClassNameAndClassPk() throws Exception {
+        final String hash1 = hash(1L, "user.one@innovateuk.org");
+        final String hash2 = hash(2L, "user.two@innovateuk.org");
+
+        final Token token1 = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash1, now(), JsonNodeFactory.instance.objectNode());
+        final Token token2 = new Token(RESET_PASSWORD, User.class.getName(), 2L, hash2, now(), JsonNodeFactory.instance.objectNode());
+
+        final Token expected = repository.save(token1);
+        repository.save(token2);
+
+        Optional<Token> found = repository.findByTypeAndClassNameAndClassPk(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L);
+        assertTrue(found.isPresent());
+        assertEquals(token1, found.get());
     }
 
     private String hash(final Long userId, final String email) {
