@@ -1,5 +1,6 @@
 package com.worth.ifs.user.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
@@ -19,12 +20,15 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
 import static java.time.LocalDateTime.now;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -34,6 +38,58 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Override
     protected UserController supplyControllerUnderTest() {
         return new UserController();
+    }
+
+    @Test
+    public void sendEmailVerificationNotification() throws Exception {
+        final String emailAddress = "sample@me.com";
+
+        final UserResource userResource = newUserResource().build();
+
+        when(userServiceMock.findByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
+                .andExpect(status().isOk());
+
+        verify(registrationServiceMock, only()).sendUserVerificationEmail(userResource, empty());
+    }
+
+    @Test
+    public void createUser() throws Exception {
+        final Long organisationId = 9999L;
+
+        final UserResource userResource = newUserResource().build();
+        when(registrationServiceMock.createApplicantUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}",organisationId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userResource)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(userResource)));
+
+        verify(registrationServiceMock, times(1)).createApplicantUser(organisationId, userResource);
+        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, empty());
+        verifyNoMoreInteractions(registrationServiceMock);
+    }
+
+    @Test
+    public void createUserWithCompetitionId() throws Exception {
+        final Long organisationId = 9999L;
+        final Long competitionId = 8888L;
+
+        final UserResource userResource = newUserResource().build();
+        when(registrationServiceMock.createApplicantUser(organisationId, of(competitionId), userResource)).thenReturn(serviceSuccess(userResource));
+
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}",organisationId, competitionId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userResource)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(userResource)));
+
+        verify(registrationServiceMock, times(1)).createApplicantUser(organisationId, of(competitionId), userResource);
+        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, of(competitionId));
+        verifyNoMoreInteractions(registrationServiceMock);
     }
 
     @Test

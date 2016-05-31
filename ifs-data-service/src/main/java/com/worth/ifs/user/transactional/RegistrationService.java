@@ -18,6 +18,9 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, @P("user") UserResource userResource);
 
+    @PreAuthorize("hasPermission(#user, 'VERIFY')")
+    ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId);
+
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'ACTIVATE')")
     ServiceResult<Void> activateUser(Long userId);
 }

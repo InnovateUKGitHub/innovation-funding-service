@@ -21,8 +21,10 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -39,6 +41,7 @@ public class UserController {
     public static final String URL_PASSWORD_RESET = "passwordReset";
     public static final String URL_SEND_PASSWORD_RESET_NOTIFICATION = "sendPasswordResetNotification";
     public static final String URL_VERIFY_EMAIL = "verifyEmail";
+    public static final String URL_SEND_EMAIL_VERIFICATION_NOTIFICATION = "sendEmailVerificationNotification";
 
     @Autowired
     private UserService userService;
@@ -115,14 +118,25 @@ public class UserController {
                 });
     }
 
-    @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
+    @RequestMapping(value = "/" + URL_SEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/", method = PUT)
+    public RestResult<Void> sendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
+        return userService.findByEmail(emailAddress)
+                .andOnSuccessReturn(user -> registrationService.sendUserVerificationEmail(user, empty()))
+                .toPutResponse();
     }
 
-    @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
+    @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}", method = POST)
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+        final ServiceResult<UserResource> user  = registrationService.createApplicantUser(organisationId, userResource);
+        registrationService.sendUserVerificationEmail(userResource, empty());
+        return user.toPostCreateResponse();
+    }
+
+    @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", method = POST)
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
+        final ServiceResult<UserResource> user  = registrationService.createApplicantUser(organisationId, of(competitionId), userResource);
+        registrationService.sendUserVerificationEmail(userResource, of(competitionId));
+        return user.toPostCreateResponse();
     }
 
     @RequestMapping(value = "/updateDetails", method = POST)

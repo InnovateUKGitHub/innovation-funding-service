@@ -177,4 +177,11 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals("email@Nope.com", user.getEmail());
         assertEquals(UserStatus.INACTIVE, user.getStatus());
     }
+
+    @Test
+    public void testSendEmailVerificationNotification() {
+        loginSystemRegistrationUser();
+        final RestResult<Void> restResult = controller.sendEmailVerificationNotification("ewan+1@hiveit.co.uk");
+        assertTrue(restResult.isSuccess());
+    }
 }

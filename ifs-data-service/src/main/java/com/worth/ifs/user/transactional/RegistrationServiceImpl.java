@@ -55,7 +55,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
 
     final JsonNodeFactory factory = JsonNodeFactory.instance;
+
     private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
+
+    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_USER
@@ -129,9 +132,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
-                addRoleToUser(user, roleName)).andOnSuccess(() ->
-                createUserWithUid(newUser, userResource.getPassword(), competitionId))).
-                andOnSuccessReturn(userMapper::mapToResource);
+                addRoleToUser(user, roleName))).andOnSuccess(() ->
+                createUserWithUid(newUser, userResource.getPassword(), competitionId));
     }
 
 	private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
@@ -147,7 +149,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<User> createUserWithUid(User user, String password, Optional<Long> competitionId) {
+    private ServiceResult<UserResource> createUserWithUid(User user, String password, Optional<Long> competitionId) {
 
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
@@ -155,8 +157,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
             User savedUser = userRepository.save(user);
-            sendUserVerificationEmail(savedUser, competitionId);
-            return savedUser;
+            final UserResource userResource = userMapper.mapToResource(savedUser);
+            return userResource;
         });
     }
 
@@ -200,9 +202,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return newUser;
     }
 
-    private ServiceResult<Notification> sendUserVerificationEmail(User user, Optional<Long> competitionId) {
+    @Override
+    public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
         String verificationLink = getVerificationLink(user, competitionId);
-
 
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
@@ -211,20 +213,18 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         notificationArguments.put("verificationLink", verificationLink);
 
         Notification notification = new Notification(from, singletonList(to), Notifications.VERIFY_EMAIL_ADDRESS, notificationArguments);
-        return notificationService.sendNotification(notification, EMAIL);
+        return notificationService.sendNotification(notification, EMAIL).andOnSuccessReturnVoid();
     }
 
-    private String getVerificationLink(User user, Optional<Long> competitionId) {
+    private String getVerificationLink(UserResource user, Optional<Long> competitionId) {
         String hash = generateAndSaveVerificationHash(user, competitionId);
         return String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
     }
 
-    private String generateAndSaveVerificationHash(User user, Optional<Long> competitionId) {
-        StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
+    private String generateAndSaveVerificationHash(UserResource user, Optional<Long> competitionId) {
         int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
         String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
         hash = encoder.encode(hash);
-
 
         ObjectNode extraInfo = factory.objectNode();
         if(competitionId.isPresent()){
