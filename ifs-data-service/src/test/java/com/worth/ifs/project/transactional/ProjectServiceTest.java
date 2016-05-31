@@ -10,5 +10,5 @@ public class ProjectServiceTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ProjectService projectService = new ProjectServiceImpl();
-    
+
 }
