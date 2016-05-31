@@ -1,4 +1,4 @@
-package com.worth.ifs.application;
+package com.worth.ifs.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

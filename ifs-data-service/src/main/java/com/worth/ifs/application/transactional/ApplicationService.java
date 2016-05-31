@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -92,4 +93,7 @@ public interface ApplicationService {
     
     @PreAuthorize("hasAuthority('comp_admin')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
+
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 }

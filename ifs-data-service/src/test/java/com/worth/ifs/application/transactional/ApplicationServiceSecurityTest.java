@@ -24,6 +24,7 @@ import org.springframework.security.access.method.P;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -395,6 +396,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         @Override
         public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId,
                                                                                         Collection<Long> applicationStatusId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
             return null;
         }
     }

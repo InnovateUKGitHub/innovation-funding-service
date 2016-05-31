@@ -10,6 +10,7 @@ import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -95,5 +96,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
     }
 
-
+    @Override
+    public RestResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate) {
+        return postWithRestResult(applicationRestURL + "/" + projectId + "/startdate?projectStartDate=" + projectStartDate, Void.class);
+    }
 }

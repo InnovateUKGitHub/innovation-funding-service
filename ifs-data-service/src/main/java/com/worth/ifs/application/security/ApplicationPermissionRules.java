@@ -40,8 +40,8 @@ public class ApplicationPermissionRules {
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationResource.getId(), COLLABORATOR, processRoleRepository);
+        final boolean isLeadApplicant = isLeadApplicant(applicationResource, user);
+        final boolean isCollaborator = isCollaborator(applicationResource, user);
         return isLeadApplicant || isCollaborator;
     }
 
@@ -60,15 +60,15 @@ public class ApplicationPermissionRules {
             description = "The consortium can see the application finance totals",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean consortiumCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationResource.getId(), COLLABORATOR, processRoleRepository);
+        final boolean isLeadApplicant = isLeadApplicant(applicationResource, user);
+        final boolean isCollaborator = isCollaborator(applicationResource, user);
         return isLeadApplicant || isCollaborator;
     }
 
 
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
     public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT, processRoleRepository);
+        final boolean isLeadApplicant = isLeadApplicant(applicationResource, user);
         return isLeadApplicant;
     }
 
@@ -129,15 +129,23 @@ public class ApplicationPermissionRules {
         return application.isInPublishedAssessorFeedbackState() && isMemberOfProjectTeam(application, user);
     }
 
+    @PermissionRule(
+            value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
+            description = "The lead partner can update the basic project details like start date")
+    public boolean updateBasicProjectSetupDetails(ApplicationResource application, UserResource user) {
+        return isLeadApplicant(application, user);
+    }
+
     private boolean isMemberOfProjectTeam(ApplicationResource application, UserResource user) {
+        return isLeadApplicant(application, user) || isCollaborator(application, user);
+    }
 
-        boolean isLeadApplicantForApplication = checkRole(user, application.getId(), LEADAPPLICANT, processRoleRepository);
-
-        if (isLeadApplicantForApplication) {
-            return true;
-        }
-
+    private boolean isCollaborator(ApplicationResource application, UserResource user) {
         return checkRole(user, application.getId(), COLLABORATOR, processRoleRepository);
+    }
+
+    private boolean isLeadApplicant(ApplicationResource application, UserResource user) {
+        return checkRole(user, application.getId(), LEADAPPLICANT, processRoleRepository);
     }
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
