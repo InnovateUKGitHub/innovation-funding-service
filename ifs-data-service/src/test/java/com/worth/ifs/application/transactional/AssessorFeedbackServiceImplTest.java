@@ -1,29 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.UserNotificationTarget;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
@@ -47,9 +23,41 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.UserNotificationTarget;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 
 public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<AssessorFeedbackServiceImpl> {
 
@@ -246,6 +254,19 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     	
     	assertTrue(result.isSuccess());
     	assertTrue(result.getSuccessObject());
+    }
+    
+    @Test
+    public void testSubmitAssessorFeedback() {
+    	
+    	Competition competition = newCompetition().withId(123L).build();
+    	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
+    	
+    	ServiceResult<Void> result = service.submitAssessorFeedback(123L);
+    	
+    	assertTrue(result.isSuccess());
+    	assertNotNull(competition.getAssessorFeedbackDate());
+    	assertEquals("assessor feedback date is set to the start of the current second", 0, competition.getAssessorFeedbackDate().get(ChronoField.MILLI_OF_SECOND));
     }
 
     @Test
