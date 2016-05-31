@@ -23,6 +23,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite?newApplication
 ${APPLICATION_TEAM_PAGE}    ${SERVER}/application/1/contributors
+${STATUS}        ${EMPTY}
 
 *** Test Cases ***
 Lead applicant can access the Application team page
@@ -49,7 +50,7 @@ Pending partners are visible in the Application details page
     [Documentation]    INFUND-2966
     ...
     ...    INFUND-2738
-    [Tags]  Pending
+    [Tags]
     # Pending as still in progress by Pradha Muniraj
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     Then pending partners should be visible in the page
@@ -157,13 +158,14 @@ The Lead applicant invites a non registered user in the same organisation
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
     [Teardown]    User closes the browser
 
-the status of the invitees is correct on the overview page
-    [Documentation]    INFUND-2738
-    [Tags]    Collaboration    Pending
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+# Commented the following as it is covered in other test case "Pending partners are visible in the Application details page"
+#the status of the invitees is correct on the overview page
+ #   [Documentation]    INFUND-2738
+ #   [Tags]    Collaboration    Pending
+ #   [Setup]    Guest user log-in    &{lead_applicant_credentials}
     # Pending completion of INFUND-2050
-    When the user navigates to the page    ${application_details_url}
-    Then the user should see the text in the page    foobar
+ #   When the user navigates to the page    ${application_details_url}
+ #   Then the user should see the text in the page    foobar
 
 The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
@@ -251,9 +253,4 @@ the user cannot invite another person to a different organisation
     the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
 
 pending partners should be visible in the page
-    the user should see the element    css=ul.list-bullet li:nth-child(5) span
-    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) span
-    Should Be Equal As Strings    ${input_value}    Fannie May
-    the user should see the element    css=ul.list-bullet li:nth-child(5) small
-    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) small
-    Should Be Equal As Strings    ${input_value}    (pending)
+    the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small
