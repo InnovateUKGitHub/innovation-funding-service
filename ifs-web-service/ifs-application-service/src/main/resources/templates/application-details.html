@@ -71,19 +71,28 @@
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <!-- todo hardcoded childSection.getId() -->
-                            <div th:if="${childSection.getId() == 7}">
+                            <!-- todo refactor Your Finances condition -->
+                            <!-- todo display icon if condition -->
+                            <div th:if="${childSection.getName().equals('Your finances')}"  >
                                 <img class="section-status complete"
                                      src="/images/field/field-done-right.png"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
                                      width="30"
                                      height="30"
-                                th:if
-
-                                <!-- th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"-->
-                                />
-
+                                     th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
+                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'" />
+                                <!-- th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" /> -->
+                                <img class="section-status assigned"
+                                     src="/images/field/field-assigned-right.png"
+                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
+                                     width="30"
+                                     height="30"
+                                     th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
+                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'" />
+                                <!-- th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id))
+                                and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}" /> -->
                             </div>
+
 
                         </li>
                     </div>
