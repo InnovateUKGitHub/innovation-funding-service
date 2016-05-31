@@ -5,12 +5,15 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +70,23 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             fail("Should not have been able to create project from application as applicant");
         } catch(AccessDeniedException ade){
             //expected behaviour
+        }
+    }
+
+    @Test
+    public void test_CreateProjectFromFundingDecisionsAllowedIfGlobalCompAdminRole() {
+        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+    }
+
+    @Test
+    public void test_CreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
+        try {
+            service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+            Assert.fail("Should not have been able to make funding decision without the global comp admin role");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
         }
     }
 
