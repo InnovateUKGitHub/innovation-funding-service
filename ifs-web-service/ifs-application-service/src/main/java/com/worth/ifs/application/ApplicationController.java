@@ -71,9 +71,8 @@ public class ApplicationController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
     public String applicationDetails(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        assignQuestion(request, applicationId);
 
+        assignQuestion(request, applicationId);
         return "redirect:/application/"+applicationId;
     }
 
@@ -90,7 +89,12 @@ public class ApplicationController extends AbstractApplicationController {
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
         return "application-details";
+    }
+
+    private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
+        return userIsLeadApplicant(application, user.getId()) && application.isSubmitable();
     }
 
     @ProfileExecution

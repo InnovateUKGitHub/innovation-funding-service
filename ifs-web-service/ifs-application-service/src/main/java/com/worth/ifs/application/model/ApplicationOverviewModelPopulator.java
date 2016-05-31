@@ -82,7 +82,6 @@ public class ApplicationOverviewModelPopulator {
 
         FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
-
     }
     
     private void addSections(Model model, CompetitionResource competition) {
@@ -142,6 +141,7 @@ public class ApplicationOverviewModelPopulator {
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);
+        model.addAttribute("ableToSubmitApplication", userIsLeadApplicant && application.isSubmitable());
     }
 
     private void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
