@@ -65,7 +65,21 @@
 
 
 	    var sectionId = $_GET('sectionId'),
-			status = $_GET('status');
+			status = $_GET('status'),
+			compType = $_GET('compType');
+
+
+		if(compType == 'Programme' || compType == 'Managed services'){
+			jQuery('#stateAid').show();
+			jQuery('#stateAid .yes').show();
+			jQuery('#stateAid .no').hide();
+		}else if(compType == 'SBRI' || compType == 'Special'){
+			jQuery('#stateAid').show();
+			jQuery('#stateAid .no').show();
+			jQuery('#stateAid .yes').hide();
+		}else{
+			jQuery('#stateAid').hide();
+		}
 
 
 		//Of the available tabs check which section has been 'done'
@@ -74,11 +88,25 @@
 		for(i = 1; i < jQuery(".inline-nav li").length+1; i++) {
 			
 			if(sectionId == i && status == 'done'){
-				localStorage.setItem('section'+i, 'section-'+i+'-complete')				
+				localStorage.setItem('section'+i, 'section-'+i+'-complete');		
+			}else if (sectionId == i && status == 'edit'){
+				localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
 			}
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
 				jQuery('#section-'+i).addClass('marked-as-complete');
+
+				/*var querystring = "status=done";
+
+				jQuery('#section-'+i+' a').each(function(){
+					var href = jQuery(this).attr('href');
+					alert(href);
+					 href += (href.match(/\?/) ? '&' : '?') + querystring; // change last '?' to '#' if need
+					 jQuery(this).attr('href', href);
+				});*/
+
+			}else{
+				jQuery('#section-'+i).removeClass('marked-as-complete');
 			}
 		} 
 			
