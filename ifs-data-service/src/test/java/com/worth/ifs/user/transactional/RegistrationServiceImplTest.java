@@ -1,52 +1,46 @@
 package com.worth.ifs.user.transactional;
 
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.authentication.service.RestIdentityProviderService;
-import com.worth.ifs.commons.error.CommonErrors;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationSource;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.resource.TokenType;
-import com.worth.ifs.user.domain.*;
-import com.worth.ifs.user.resource.UserResource;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.Map;
-
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.*;
-import static com.worth.ifs.user.transactional.RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS;
-import static com.worth.ifs.util.MapFunctions.asMap;
+import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
+import org.junit.Test;
+
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.authentication.service.RestIdentityProviderService;
+import com.worth.ifs.commons.error.CommonErrors;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.resource.TokenType;
+import com.worth.ifs.user.domain.CompAdminEmail;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProjectFinanceEmail;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 
 /**
  * Tests around Registration Service
@@ -125,6 +119,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isSuccess());
         assertEquals(userToCreate, result.getSuccessObject());
+
+        verify(tokenRepositoryMock).save(isA(Token.class));
     }
 
     @Test
@@ -279,6 +275,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isSuccess());
         assertEquals(userToCreate, result.getSuccessObject());
+
+        verify(tokenRepositoryMock).save(isA(Token.class));
     }
 
     @Test

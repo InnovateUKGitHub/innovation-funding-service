@@ -7,7 +7,6 @@ import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 
 import java.util.ArrayList;
@@ -26,26 +25,32 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationSource;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.CompAdminEmail;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProjectFinanceEmail;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.repository.ProjectFinanceEmailRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.*;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
 
 /**
  * A service around Registration and general user-creation operations
@@ -206,6 +211,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
         String verificationLink = getVerificationLink(user, competitionId);
 
+
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
 
@@ -226,11 +232,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
         hash = encoder.encode(hash);
 
+
         ObjectNode extraInfo = factory.objectNode();
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
         }
-        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, now(), extraInfo);
+        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
         tokenRepository.save(token);
         return hash;
     }

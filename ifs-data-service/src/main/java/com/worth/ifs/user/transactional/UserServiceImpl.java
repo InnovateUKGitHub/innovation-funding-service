@@ -129,8 +129,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
-            ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
-            return result.andOnSuccessReturnVoid();
+            return notificationService.sendNotification(notification, EMAIL);
         }else{
             return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));
         }
