@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
+</head>
+<body class="project-detail-project-manager">
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${project.id})}"  th:remove="tag"></div>
+
+    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
+        <h1 class="heading-xlarge no-margin">Project manager</h1>
+    </div>
+    
+    <p class="form-hint">Who will be the project manager for your project?</p>
+    
+    <p>As lead partner you must choose a project manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the project manager.</p>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

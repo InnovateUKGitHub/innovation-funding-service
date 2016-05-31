@@ -57,4 +57,25 @@ public class ProjectDetailsController {
         model.addAttribute("competition", competitionResource);
         return "project/detail";
     }
+    
+    @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
+    public String projectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
+    	ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectId);
+
+        model.addAttribute("project", projectResource);
+        model.addAttribute("app", applicationResource);
+
+    	//TODO get it
+    	
+        return "project/project-manager";
+    }
+    
+    @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
+    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
+        
+    	//TODO save it.  do validation and if fails render the page.  need a form involved here.
+    	
+        return "redirect:/project/" + projectId + "/details";
+    }
 }
