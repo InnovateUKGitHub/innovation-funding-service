@@ -28,6 +28,9 @@ public interface UserService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findByEmail(final String email);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserResource> findInactiveByEmail(final String email);
+
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId);
 

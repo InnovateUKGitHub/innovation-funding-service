@@ -120,7 +120,7 @@ public class UserController {
 
     @RequestMapping(value = "/" + URL_SEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/", method = PUT)
     public RestResult<Void> sendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
-        return userService.findByEmail(emailAddress)
+        return userService.findInactiveByEmail(emailAddress)
                 .andOnSuccessReturn(user -> registrationService.sendUserVerificationEmail(user, empty()))
                 .toPutResponse();
     }

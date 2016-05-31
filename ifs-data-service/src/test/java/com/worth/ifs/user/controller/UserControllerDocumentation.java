@@ -45,7 +45,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         final UserResource userResource = newUserResource().build();
 
-        when(userServiceMock.findByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
+        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
         when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))

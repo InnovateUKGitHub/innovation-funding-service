@@ -1,5 +1,6 @@
 package com.worth.ifs.user.transactional;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.authentication.service.RestIdentityProviderService;
 import com.worth.ifs.commons.error.CommonErrors;
@@ -38,8 +39,8 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
-import static com.worth.ifs.user.transactional.RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
@@ -386,6 +387,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
         when(standardPasswordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
 
+        final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());
         final String verificationLink = String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
 
         final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
@@ -393,7 +395,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         final NotificationSource from = systemNotificationSourceMock;
         final NotificationTarget to = new ExternalUserNotificationTarget(userResource.getName(), userResource.getEmail());
 
-        final Notification notification = new Notification(from, singletonList(to), VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
+        final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
+        when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(token);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
         final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty());

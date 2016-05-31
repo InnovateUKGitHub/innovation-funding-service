@@ -154,6 +154,11 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         }
 
         @Override
+        public ServiceResult<UserResource> findInactiveByEmail(String email) {
+            return serviceSuccess(newUserResource().build());
+        }
+
+        @Override
         public ServiceResult<Set<UserResource>> findAssignableUsers(Long applicationId) {
             return serviceSuccess(newUserResource().buildSet(2));
         }

@@ -26,6 +26,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
@@ -89,6 +90,11 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
         return find(repository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<UserResource> findInactiveByEmail(String email) {
+        return find(repository.findByEmailAndStatus(email, INACTIVE), notFoundError(User.class, email, INACTIVE)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override

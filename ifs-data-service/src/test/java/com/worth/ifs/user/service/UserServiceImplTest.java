@@ -15,6 +15,9 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.RESET_PASSWORD;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
+import static java.util.Optional.of;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -57,6 +60,21 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(badRequestError("bad password")));
         verify(tokenRepositoryMock, never()).delete(token);
+    }
+
+    @Test
+    public void testFindInactiveByEmail() {
+        final User user = newUser().build();
+        final UserResource userResource = newUserResource().build();
+        final String email = "sample@me.com";
+
+        when(userRepositoryMock.findByEmailAndStatus(email, INACTIVE)).thenReturn(of(user));
+        when(userMapperMock.mapToResource(user)).thenReturn(userResource);
+
+        final ServiceResult<UserResource> result = service.findInactiveByEmail(email);
+        assertTrue(result.isSuccess());
+        assertSame(userResource, result.getSuccessObject());
+        verify(userRepositoryMock, only()).findByEmailAndStatus(email, INACTIVE);
     }
 
     @Override

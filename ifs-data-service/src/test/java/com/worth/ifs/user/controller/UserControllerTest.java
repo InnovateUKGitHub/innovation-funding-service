@@ -19,6 +19,7 @@ import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
+import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static java.time.LocalDateTime.now;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -46,13 +47,23 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         final UserResource userResource = newUserResource().build();
 
-        when(userServiceMock.findByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
+        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
         when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
                 .andExpect(status().isOk());
 
         verify(registrationServiceMock, only()).sendUserVerificationEmail(userResource, empty());
+    }
+
+    @Test
+    public void sendEmailVerificationNotification_notFound() throws Exception {
+        final String emailAddress = "sample@me.com";
+
+        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceFailure(notFoundError(User.class, emailAddress, INACTIVE)));
+
+        mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
+                .andExpect(status().isNotFound());
     }
 
     @Test

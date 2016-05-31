@@ -32,6 +32,7 @@ import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 
@@ -192,37 +193,30 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
-        final Notification notification = getEmailVerificationNotification(user, competitionId);
-        return notificationService.sendNotification(notification, EMAIL).andOnSuccessReturnVoid();
+        final Token token = getEmailVerificationToken(user, competitionId);
+        final Notification notification = getEmailVerificationNotification(user, token);
+        return notificationService.sendNotification(notification, EMAIL);
     }
 
-    private Notification getEmailVerificationNotification(final UserResource user, final Optional<Long> competitionId) {
-        final String emailVerificationHash = getEmailVerificationHash(user);
-        final String emailVerificationLink = getEmailVerificationLink(emailVerificationHash);
-        saveEmailVerificationToken(user, emailVerificationHash, competitionId);
-
-        final NotificationSource from = systemNotificationSource;
+    private Notification getEmailVerificationNotification(final UserResource user, final Token token) {
         final List<NotificationTarget> to = singletonList(new ExternalUserNotificationTarget(user.getName(), user.getEmail()));
-
-        return new Notification(from, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", emailVerificationLink));
+        return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
-    private String getEmailVerificationHash(final UserResource user) {
-        final int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
-        final String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
-        return encoder.encode(hash);
-    }
+    private Token getEmailVerificationToken(final UserResource user, final Optional<Long> competitionId) {
+        final String emailVerificationHash = getEmailVerificationHash(user);
 
-    private String getEmailVerificationLink(final String emailVerificationHash) {
-        return String.format("%s/registration/verify-email/%s", webBaseUrl, emailVerificationHash);
-    }
-
-    private void saveEmailVerificationToken(final UserResource user, final String emailVerificationHash, final Optional<Long> competitionId) {
         final ObjectNode extraInfo = factory.objectNode();
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
         }
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
-        tokenRepository.save(token);
+        return tokenRepository.save(token);
+    }
+
+    private String getEmailVerificationHash(final UserResource user) {
+        final int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
+        final String hash = format("%s==%s==%s", user.getId(), user.getEmail(), random);
+        return encoder.encode(hash);
     }
 }
