@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
+import com.worth.ifs.util.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,7 +31,7 @@ public class OtherFundingHandler extends CostHandler {
                         otherPublicFunding = fieldValue;
                         break;
                     case "fundingAmount":
-                        fundingAmount = getBigDecimalValue(fieldValue, 0d);
+                        fundingAmount = NumberUtils.getBigDecimalValue(fieldValue, 0d);
                         break;
                     case "fundingSource":
                         fundingSource = fieldValue;
