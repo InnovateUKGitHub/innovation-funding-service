@@ -22,14 +22,16 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 
@@ -190,35 +192,37 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
-        String verificationLink = getVerificationLink(user, competitionId);
-
-        NotificationSource from = systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
-
-        Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("verificationLink", verificationLink);
-
-        Notification notification = new Notification(from, singletonList(to), Notifications.VERIFY_EMAIL_ADDRESS, notificationArguments);
+        final Notification notification = getEmailVerificationNotification(user, competitionId);
         return notificationService.sendNotification(notification, EMAIL).andOnSuccessReturnVoid();
     }
 
-    private String getVerificationLink(UserResource user, Optional<Long> competitionId) {
-        String hash = generateAndSaveVerificationHash(user, competitionId);
-        return String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
+    private Notification getEmailVerificationNotification(final UserResource user, final Optional<Long> competitionId) {
+        final String emailVerificationHash = getEmailVerificationHash(user);
+        final String emailVerificationLink = getEmailVerificationLink(emailVerificationHash);
+        saveEmailVerificationToken(user, emailVerificationHash, competitionId);
+
+        final NotificationSource from = systemNotificationSource;
+        final List<NotificationTarget> to = singletonList(new ExternalUserNotificationTarget(user.getName(), user.getEmail()));
+
+        return new Notification(from, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", emailVerificationLink));
     }
 
-    private String generateAndSaveVerificationHash(UserResource user, Optional<Long> competitionId) {
-        int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
-        String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
-        hash = encoder.encode(hash);
+    private String getEmailVerificationHash(final UserResource user) {
+        final int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
+        final String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
+        return encoder.encode(hash);
+    }
 
-        ObjectNode extraInfo = factory.objectNode();
+    private String getEmailVerificationLink(final String emailVerificationHash) {
+        return String.format("%s/registration/verify-email/%s", webBaseUrl, emailVerificationHash);
+    }
+
+    private void saveEmailVerificationToken(final UserResource user, final String emailVerificationHash, final Optional<Long> competitionId) {
+        final ObjectNode extraInfo = factory.objectNode();
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
         }
-        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, now(), extraInfo);
+        final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
         tokenRepository.save(token);
-        return hash;
     }
-
 }
