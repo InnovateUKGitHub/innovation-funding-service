@@ -1,11 +1,9 @@
 package com.worth.ifs.project.service;
 
 import com.worth.ifs.BasePermissionRulesTest;
-import com.worth.ifs.application.builder.ApplicationStatusResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.security.ProjectPermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -39,8 +37,6 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     protected ProjectPermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectPermissionRules();
     }
-
-    private ApplicationStatusResource applicationStatusOpen;
 
     private ApplicationResource applicationResource1;
     private ApplicationResource applicationResource2;
@@ -77,7 +73,6 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
         assessorProcessRole = newProcessRole().withRole(assessorRole).build();
-        applicationStatusOpen = ApplicationStatusResourceBuilder.newApplicationStatusResource().withName(ApplicationStatusConstants.OPEN).build();
         applicationResource1 = newApplicationResource().withProcessRoles(asList(processRole1.getId())).withApplicationStatus(ApplicationStatusConstants.OPEN).build();
         applicationResource2 = newApplicationResource().withProcessRoles(asList(processRole2.getId())).build();
         projectResource1 = newProjectResource().withId(applicationResource1.getId()).withDuration(applicationResource1.getDurationInMonths()).withTargetStartDate(applicationResource1.getStartDate()).build();
@@ -124,8 +119,13 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
     @Test
     public void testCompAdminsCanViewProjects() {
-        assertTrue(rules.compAdminsCanViewProjects(projectResource1, compAdmin));
-        assertFalse(rules.compAdminsCanViewProjects(projectResource2, leadOnApplication1));
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
+                assertTrue(rules.compAdminsCanViewProjects(projectResource1, user));
+            } else {
+                assertFalse(rules.compAdminsCanViewProjects(projectResource1, user));
+            }
+        });
     }
 
     @Test

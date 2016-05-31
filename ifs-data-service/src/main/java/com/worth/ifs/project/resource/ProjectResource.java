@@ -12,7 +12,7 @@ public class ProjectResource {
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
-    
+
     private Long projectManager;
 
     public Long getId() {
