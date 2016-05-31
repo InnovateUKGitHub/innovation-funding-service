@@ -32,7 +32,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
-        return serviceSuccess(projectMapper.mapToResource(projectRepository.findById(projectId)));
+        return serviceSuccess(projectMapper.mapToResource(projectRepository.findOne(projectId)));
     }
 
     @Override
