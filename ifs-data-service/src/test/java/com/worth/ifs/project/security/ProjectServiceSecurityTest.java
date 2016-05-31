@@ -7,6 +7,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,9 @@ import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -84,10 +87,29 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void test_CreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
         try {
             service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
-            Assert.fail("Should not have been able to make funding decision without the global comp admin role");
+            Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
+    }
+
+    @Test
+    public void test_CreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
+
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+                .collect(toList());
+
+        nonCompAdminRoles.forEach(role -> {
+
+            setLoggedInUser(
+                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+                Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
     }
 
     @Override
