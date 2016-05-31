@@ -1,0 +1,22 @@
+=== Get project by id
+==== Request
+include::{snippets}/project/get-project-by-id/http-request.adoc[]
+include::{snippets}/project/get-project-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-project-by-id/http-response.adoc[]
+include::{snippets}/project/get-project-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-project-by-id/curl-request.adoc[]
+
+=== Find all projects
+==== Request
+include::{snippets}/project/project-find-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/project-find-all/http-response.adoc[]
+include::{snippets}/project/project-find-all/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/project-find-all/curl-request.adoc[]

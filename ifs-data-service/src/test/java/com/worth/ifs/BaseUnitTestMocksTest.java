@@ -27,6 +27,7 @@ import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.UserMapper;
@@ -189,6 +190,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessorFeedbackService assessorFeedbackServiceMock;
+
+    @Mock
+    protected ProjectService projectServiceMock;
 
     @Before
     public void setupMockInjection() {
