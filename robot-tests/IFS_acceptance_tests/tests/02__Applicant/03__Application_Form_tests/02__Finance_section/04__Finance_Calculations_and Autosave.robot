@@ -291,10 +291,6 @@ auto-save should work for the "Grant" field
     Clear Element Text    id=cost-financegrantclaim
     focus    jQuery= button:contains('complete')
     Sleep    500ms
-    #Reload Page
-    #${input_value} =    Get Value    id=cost-financegrantclaim
-    #Should Be Equal As Strings    ${input_value}    0
-    #Clear Element Text    id=cost-financegrantclaim
     Input Text    id=cost-financegrantclaim    25
     focus    jQuery= button:contains('complete')
     Sleep    300ms
