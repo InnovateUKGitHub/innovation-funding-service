@@ -1,26 +1,5 @@
 package com.worth.ifs.user.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Collections.singletonList;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.authentication.service.IdentityProviderService;
@@ -43,6 +22,7 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -50,6 +30,7 @@ import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 
 /**
@@ -211,7 +192,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
         String verificationLink = getVerificationLink(user, competitionId);
 
-
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
 
@@ -232,12 +212,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
         hash = encoder.encode(hash);
 
-
         ObjectNode extraInfo = factory.objectNode();
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
         }
-        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
+        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, now(), extraInfo);
         tokenRepository.save(token);
         return hash;
     }
