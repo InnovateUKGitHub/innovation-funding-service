@@ -14,14 +14,14 @@ ${successful_application_overview}    ${server}/management/competition/3/applica
 ${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
 
 *** Test Cases ***
-Large pdf uploads not allowed
+Invalid Large pdf
     [Documentation]    INFUND-2602
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     When the user uploads the file    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
 
-Non pdf uploads not allowed
+Invalid Non pdf
     [Documentation]    INFUND-2602
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
@@ -34,7 +34,7 @@ Valid upload to a successful application
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     And the user uploads the file    ${valid_pdf}
 
-Comp admin can view the file
+Open and view the file
     [Documentation]    INFUND-2602
     [Tags]
     Given the user should see the text in the page    ${valid_pdf}
@@ -43,13 +43,13 @@ Comp admin can view the file
     Then the user should see the text in the page    ${valid_pdf_excerpt}
     [Teardown]    The user navigates to the page    ${successful_application_overview}
 
-Comp admin cannot upload more than one file
+Upload more than one file is impossible
     [Documentation]    INFUND-2602
     [Tags]
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the element    jQuery=.button:contains("Upload")
 
-Comp admin can remove the file
+Remove the file
     [Documentation]    INFUND-2602
     [Tags]
     Given the user should see the text in the page    ${valid_pdf}
@@ -58,21 +58,21 @@ Comp admin can remove the file
     Then the user should not see the text in the page    ${valid_pdf}
     And the user should see the text in the page    Upload
 
-Comp admin can re-upload after removing
+Re-upload after removing
     [Documentation]    INFUND-2602
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     And the user uploads the file    ${valid_pdf}
     [Teardown]    the user clicks the button/link    name=removeAssessorFeedback
 
-Comp admin can upload a file to an unsuccessful application
+Upload a file to an unsuccessful application
     [Documentation]    INFUND-2602
     [Tags]
     Given the user can see the option to upload a file on the page    ${unsuccessful_application_overview}
     And the user uploads the file    ${valid_pdf}
     [Teardown]    the user clicks the button/link    name=removeAssessorFeedback
 
-Comp admin can download the file
+Download the file
     [Documentation]    INFUND-2602
     [Tags]    Pending
     # Pending until download functionality has been plugged in
