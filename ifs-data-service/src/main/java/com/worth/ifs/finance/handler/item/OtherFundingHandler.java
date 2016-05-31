@@ -4,7 +4,11 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
+import com.worth.ifs.validator.OtherFundingValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +20,15 @@ import java.util.List;
 public class OtherFundingHandler extends CostHandler {
     public static final String COST_KEY = "other-funding";
 
+    @Autowired
+    OtherFundingValidator validator;
+
     @Override
+    public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
+        super.validate(costItem, bindingResult);
+        validator.validate(costItem, bindingResult);
+    }
+
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
         if (costItem instanceof OtherFunding) {

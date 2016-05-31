@@ -7,13 +7,15 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
+import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.CompAdminEmailRepository;
+import com.worth.ifs.user.repository.ProjectFinanceEmailRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -24,8 +26,7 @@ import java.util.*;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
@@ -56,6 +57,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private CompAdminEmailRepository compAdminEmailRepository;
+    
+    @Autowired
+    private ProjectFinanceEmailRepository projectFinanceEmailRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -86,12 +90,24 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         return false;
     }
+    
+    private boolean isUserProjectFinance(String email) {
+    	if(StringUtils.hasText(email)) {
+            ProjectFinanceEmail existingUserSearch = projectFinanceEmailRepository.findOneByEmail(email);
+            if(existingUserSearch != null) {
+                return true;
+            }
+        }
+        return false;
+	}
 
     @Override
     public ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
         String roleName;
         if(isUserCompAdmin(userResource.getEmail())){
             roleName = COMP_ADMIN.getName();
+        } else if(isUserProjectFinance(userResource.getEmail())){
+            roleName = PROJECT_FINANCE.getName();
         } else {
             roleName = APPLICANT.getName();
         }
@@ -102,7 +118,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 andOnSuccessReturn(userMapper::mapToResource);
     }
 
-    private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
+	private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
         return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturn(() -> userResource);
     }
 
@@ -168,7 +184,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return newUser;
     }
 
-    private ServiceResult<Notification> sendUserVerificationEmail(User user, Optional<Long> competitionId) {
+    private ServiceResult<Void> sendUserVerificationEmail(User user, Optional<Long> competitionId) {
         String verificationLink = getVerificationLink(user, competitionId);
 
 

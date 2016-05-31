@@ -5,7 +5,6 @@ import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -19,10 +18,10 @@ import java.util.Set;
 public interface InviteService {
 
     @PreFilter(filterTarget = "invites", value = "hasPermission(filterObject, 'SEND')")
-    List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, @P("invites") List<Invite> invites);
+    List<ServiceResult<Void>> inviteCollaborators(String baseUrl, @P("invites") List<Invite> invites);
 
     @PreAuthorize("hasPermission(#invite, 'SEND')")
-    ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, @P("invite") Invite invite);
+    ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, @P("invite") Invite invite);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Invite> findOne(Long id);

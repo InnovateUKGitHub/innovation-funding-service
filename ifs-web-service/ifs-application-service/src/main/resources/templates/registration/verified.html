@@ -15,7 +15,7 @@
       <h1 class="heading-xlarge no-margin">Account verified</h1>
     </div>
     <p>Your account has been successfully verified. You can now log in using the email and password you registered with.</p>
-    <a th:href="@{/}" class="button">Log in</a>
+    <a th:href="${userDashboardLink}" class="button">Sign in</a>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>

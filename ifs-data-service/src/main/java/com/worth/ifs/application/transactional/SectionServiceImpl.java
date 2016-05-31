@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
@@ -37,7 +37,7 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.validator.util.ValidationUtil;
 
 /**

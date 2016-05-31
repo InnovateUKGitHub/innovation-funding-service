@@ -1,13 +1,20 @@
 package com.worth.ifs.application;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashSet;
+
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.model.OpenSectionModelPopulator;
+import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorControllerAdvice;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.Materials;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
+
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -26,22 +34,21 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashSet;
-
-import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,6 +60,14 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Spy
+    @InjectMocks
+    private QuestionModelPopulator questionModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private OpenSectionModelPopulator openSectionModel;
 
     @Mock
     private Model model;
@@ -110,6 +125,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         mockMvc.perform(get("/application/1/form/section/"+currentSectionId))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
@@ -118,7 +134,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("userIsLeadApplicant", true))
-                .andExpect(model().attribute("leadApplicant", processRoles.get(0)))
+                .andExpect(model().attribute("leadApplicant", users.get(0)))
                 .andExpect(model().attribute("currentSectionId", currentSectionId));
 
     }
@@ -127,6 +143,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testQuestionPage() throws Exception {
         ApplicationResource application = applications.get(0);
 
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -407,7 +424,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -426,7 +443,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -465,7 +482,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 

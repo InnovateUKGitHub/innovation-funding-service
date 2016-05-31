@@ -9,6 +9,8 @@ IFS.modal = (function(){
         },
         init : function(){
             s = this.settings;
+            IFS.modal.initButtonRole();
+
             jQuery('body').on('click',s.element,function(e){
               IFS.modal.openModal(e);
             });
@@ -20,6 +22,12 @@ IFS.modal = (function(){
                 IFS.modal.closeModal();
               }
             });
+        },
+        initButtonRole : function(){
+          //for a11y
+          if(jQuery(s.element).is('a')){
+            jQuery(s.element).attr({'role':'button','tabindex':'0'});
+          }
         },
         openModal : function(event){
             var target = jQuery(event.target).attr('data-js-modal');

@@ -1,36 +1,5 @@
 package com.worth.ifs.application.documentation;
 
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ALL_SECTION_COMPLETE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.PROGRESS;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.READY_FOR_SUBMIT;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.RESEARCH_PARTICIPATION;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.RESEARCH_PARTICIPATION_VALID;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
-import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceFields;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
@@ -38,7 +7,27 @@ import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
+import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceFields;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 public class ApplicationControllerDocumentation extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -60,7 +49,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long application1Id = 1L;
         ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
-        when(applicationService.getApplicationById(application1Id)).thenReturn(serviceSuccess(testApplicationResource1));
+        when(applicationServiceMock.getApplicationById(application1Id)).thenReturn(serviceSuccess(testApplicationResource1));
 
         mockMvc.perform(get("/application/{id}", application1Id))
                 .andDo(this.document.snippets(
@@ -75,7 +64,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void documentFindAll() throws Exception {
         int applicationNumber = 3;
         List<ApplicationResource> applications = applicationResourceBuilder.build(applicationNumber);
-        when(applicationService.findAll()).thenReturn(serviceSuccess(applications));
+        when(applicationServiceMock.findAll()).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andDo(
@@ -93,7 +82,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         List<ApplicationResource> applications = applicationResourceBuilder.build(2);
 
-        when(applicationService.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(applications));
+        when(applicationServiceMock.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/findByUser/{id}", userId))
                 .andDo(this.document.snippets(
@@ -112,7 +101,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
-        when(applicationService.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(null));
+        when(applicationServiceMock.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(null));
 
         mockMvc.perform(post("/application/saveApplicationDetails/{id}", applicationId)
                     .contentType(APPLICATION_JSON)
@@ -133,7 +122,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         CompletedPercentageResource resource = new CompletedPercentageResource();
         resource.setCompletedPercentage(new BigDecimal("10"));
 
-        when(applicationService.getProgressPercentageByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
+        when(applicationServiceMock.getProgressPercentageByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application/getProgressPercentageByApplicationId/{applicationId}", applicationId))
                 .andDo(this.document.snippets(
@@ -153,7 +142,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         ApplicationResource applicationResource = applicationResourceBuilder.build();
 
-        when(applicationService.updateApplicationStatus(applicationId, statusId)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.updateApplicationStatus(applicationId, statusId)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(put("/application/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}", applicationId, statusId))
                 .andDo(this.document.snippets(
@@ -176,7 +165,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         node.put(RESEARCH_PARTICIPATION_VALID, true);
         node.put(ALL_SECTION_COMPLETE, true);
 
-        when(applicationService.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(node));
+        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(node));
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
                 .andDo(this.document.snippets(
@@ -201,7 +190,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         List<ApplicationResource> applicationResources = applicationResourceBuilder.build(2);
 
-        when(applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
+        when(applicationServiceMock.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
 
         mockMvc.perform(get("/application/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}", competitionId, userId, role))
                 .andDo(this.document.snippets(
@@ -227,7 +216,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
 
-        when(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
                 .contentType(APPLICATION_JSON)

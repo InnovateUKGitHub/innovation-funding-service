@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:remove="tag" th:with="pageTitle=${title != null ? title : 'Internal Server Error'}"  />
+
 </head>
 <body class="error">
 
@@ -32,7 +33,7 @@
 
     <div>
 		<span>
-            We are unable to complete your request. This could be because something went wrong at our end, or you are trying to perform an action that does not exist.  You can either go back to the page you were previously on or click <a th:href="@{/}">here</a> to get back to the IFS application.
+            We are unable to complete your request. This could be because something went wrong at our end, or you are trying to perform an action that does not exist.  You can either go back to the page you were previously on or click <a th:href="${userDashboardLink}">here</a> to get back to the IFS application.
         </span>
     </div>
 

@@ -2,11 +2,13 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -17,9 +19,12 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,8 +34,12 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -47,6 +56,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
+
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -62,26 +75,29 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
+        when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.ofNullable(organisations.get(0)));
     }
 
     @Test
      public void testApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
-
+        Set<Long> sections = newHashSet(1L,2L);
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
 
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+                .andExpect(model().attribute("completedSections", sections))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
-                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)));
     }
 
     @Test
@@ -101,7 +117,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
        ApplicationResource app = applications.get(0);
-
+        Set<Long> sections = newHashSet(1L, 2L);
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        when(applicationService.getById(app.getId())).thenReturn(app);
        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -124,22 +143,21 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+               .andExpect(model().attribute("completedSections", sections))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(3)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv4)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(2)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamA")))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamB")));
+               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv4)));
    }
     
     @Test
     public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
        ApplicationResource app = applications.get(0);
-
+        Set<Long> sections = newHashSet(1L, 2L);
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        when(applicationService.getById(app.getId())).thenReturn(app);
        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -160,22 +178,23 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+               .andExpect(model().attribute("completedSections", sections))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(1)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamA")));
+               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
    }
     
     @Test
     public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
        ApplicationResource app = applications.get(0);
-
+        Set<Long> sections = newHashSet(1L, 2L);
+        Map<Long, Set<Long>> mappedSections = new HashMap();
+        mappedSections.put(organisations.get(0).getId(), sections);
+        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
        when(applicationService.getById(app.getId())).thenReturn(app);
        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
 
        InviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
        
@@ -188,7 +207,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
        
        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
-       
+
        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
        
        LOG.debug("Show dashboard for application: " + app.getId());
@@ -196,14 +215,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", Arrays.asList(1L, 2L)))
+               .andExpect(model().attribute("completedSections", sections))
                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(1)))
-               .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasItem("teamA")));
+               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
    }
 
     private InviteOrganisationResource inviteOrganisationResource(InviteResource... invs) {
@@ -427,5 +443,24 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationCreateConfirmCompetitionView() throws Exception {
         mockMvc.perform(get("/application/create-confirm-competition"))
                 .andExpect(view().name("application-create-confirm-competition"));
+    }
+
+    @Test
+    public void testDownloadAssessorFeedback() throws Exception {
+
+        ByteArrayResource fileContents = new ByteArrayResource("File contents".getBytes());
+        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/special").build();
+
+        when(assessorFeedbackRestService.getAssessorFeedbackFile(123L)).thenReturn(restSuccess(fileContents));
+        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(123L)).thenReturn(restSuccess(fileEntry));
+
+        mockMvc.perform(get("/application/123/assessorFeedback"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("File contents"))
+            .andExpect(header().string("Content-Type", "text/special"))
+            .andExpect(header().longValue("Content-Length", "File contents".length()));
+
+        verify(assessorFeedbackRestService).getAssessorFeedbackFile(123L);
+        verify(assessorFeedbackRestService).getAssessorFeedbackFileDetails(123L);
     }
 }

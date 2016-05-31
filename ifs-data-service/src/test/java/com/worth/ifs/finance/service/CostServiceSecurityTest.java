@@ -3,10 +3,12 @@ package com.worth.ifs.finance.service;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
-import com.worth.ifs.application.security.ApplicationRules;
+import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -15,11 +17,15 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.method.P;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -33,14 +39,14 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing how the secured methods in CostService interact with Spring Security
+ * Testing how the secured methods in {@link CostService} interact with Spring Security
  */
 public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService> {
 
     private CostFieldPermissionsRules costFieldPermissionsRules;
     private CostPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
-    private ApplicationRules applicationRules;
+    private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CostLookupStrategy costLookupStrategy;
     private CostFieldLookupStrategy costFieldLookupStrategy;
@@ -51,7 +57,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         costFieldPermissionsRules = getMockPermissionRulesBean(CostFieldPermissionsRules.class);
         costPermissionsRules = getMockPermissionRulesBean(CostPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
-        applicationRules = getMockPermissionRulesBean(ApplicationRules.class);
+        applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
         costFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostFieldLookupStrategy.class);
@@ -208,9 +214,56 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         assertAccessDenied(
                 () -> service.getCostItem(costId),
                 () -> {
-                    verify(costPermissionsRules).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+                    verify(costPermissionsRules).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
                 });
     }
+
+    @Test
+    public void testDeleteFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.deleteFinanceFileEntry(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testCreateFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.createFinanceFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testUpdateFinanceFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.updateFinanceFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testGetFileContents() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.getFileContents(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
 
     @Test
     public void testGetCosts() {
@@ -229,7 +282,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long questionId = 2L;
 
         service.getCostItems(costId, costTypeName, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
     }
 
     @Test
@@ -237,7 +290,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long applicationFinanceId = 1L;
         final Long questionId = 2L;
         service.getCostItems(applicationFinanceId, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
     }
 
     private void verifyApplicationFinanceResourceReadRulesCalled() {
@@ -351,6 +404,31 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         @Override
         public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
             return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public CostHandler getCostHandler(Long costItemId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinance) {
+            return null;
         }
     }
 }

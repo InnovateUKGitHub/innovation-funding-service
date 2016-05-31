@@ -1,0 +1,69 @@
+=== Find all visible alerts
+==== Request
+include::{snippets}/alert/find-all-visible/http-request.adoc[]
+include::{snippets}/alert/find-all-visible/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/alert/find-all-visible/http-response.adoc[]
+include::{snippets}/alert/find-all-visible/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/alert/find-all-visible/curl-request.adoc[]
+
+=== Find all visible alerts by type
+==== Request
+include::{snippets}/alert/find-all-visible-by-type/http-request.adoc[]
+include::{snippets}/alert/find-all-visible-by-type/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/alert/find-all-visible-by-type/http-response.adoc[]
+include::{snippets}/alert/find-all-visible-by-type/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/alert/find-all-visible-by-type/curl-request.adoc[]
+
+=== Retrieve an alert by id
+==== Request
+include::{snippets}/alert/find-by-id/http-request.adoc[]
+include::{snippets}/alert/find-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/alert/find-by-id/http-response.adoc[]
+include::{snippets}/alert/find-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/alert/find-by-id/curl-request.adoc[]
+
+=== Create an alert
+==== Request
+include::{snippets}/alert/create/http-request.adoc[]
+include::{snippets}/alert/create/request-fields.adoc[]
+
+==== Response
+include::{snippets}/alert/create/http-response.adoc[]
+include::{snippets}/alert/create/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/alert/create/curl-request.adoc[]
+
+=== Delete an alert
+==== Request
+include::{snippets}/alert/delete/http-request.adoc[]
+include::{snippets}/alert/delete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/alert/delete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/alert/delete/curl-request.adoc[]
+
+=== Delete all alerts by type
+==== Request
+include::{snippets}/alert/delete-all-by-type/http-request.adoc[]
+include::{snippets}/alert/delete-all-by-type/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/alert/delete-all-by-type/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/alert/delete-all-by-type/curl-request.adoc[]

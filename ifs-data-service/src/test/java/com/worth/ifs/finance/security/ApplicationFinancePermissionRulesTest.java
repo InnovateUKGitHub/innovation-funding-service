@@ -4,7 +4,7 @@ import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -16,7 +16,7 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -110,8 +110,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void compAdminCanSeeApplicationFinancesForOrganisations() {
-        allRoleUsers.forEach(user -> {
-            allRoleUsers.forEach(otherUser -> {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(compAdminUser())) {
                     assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
                 } else {
@@ -153,4 +153,26 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
         assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
     }
+
+    @Test
+    public void testConsortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
+    @Test
+    public void testConsortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
+    @Test
+    public void testConsortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(){
+        assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
+    }
+
 }

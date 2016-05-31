@@ -4,17 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentListType;
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -40,10 +40,10 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
         long assessorId = 123L;
         long competitionId = 456L;
 
-        List<Assessment> assessments = newAssessment().build(3);
-        setupGetWithRestResultExpectations(assessmentRestURL + "/findAssessmentsByCompetition/123/456", assessmentListType(), assessments);
+        List<AssessmentResource> assessments = newAssessmentResource().build(3);
+        setupGetWithRestResultExpectations(assessmentRestURL + "/findAssessmentsByCompetition/123/456", assessmentResourceListType(), assessments);
 
-        List<Assessment> results = service.getAllByAssessorAndCompetition(assessorId, competitionId).getSuccessObject();
+        List<AssessmentResource> results = service.getAllByAssessorAndCompetition(assessorId, competitionId).getSuccessObject();
         assertEquals(3, results.size());
         forEachWithIndex(results, (i, result) -> assertEquals(assessments.get(i), result));
     }
@@ -51,7 +51,7 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
     @Test
     public void test_acceptAssessmentInvitation() {
 
-        Assessment assessment = newAssessment().build();
+        AssessmentResource assessment = newAssessmentResource().build();
         setupPostWithRestResultExpectations(assessmentRestURL + "/acceptAssessmentInvitation/123", assessment, OK);
 
         assertTrue(service.acceptAssessmentInvitation(123L, assessment).isSuccess());
@@ -61,10 +61,10 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
     @Test
     public void test_getOneByProcessRole() {
 
-        Assessment assessment = newAssessment().build();
-        setupGetWithRestResultExpectations(assessmentRestURL + "/findAssessmentByProcessRole/123", Assessment.class, assessment);
+        AssessmentResource assessment = newAssessmentResource().build();
+        setupGetWithRestResultExpectations(assessmentRestURL + "/findAssessmentByProcessRole/123", AssessmentResource.class, assessment);
 
-        Assessment response = service.getOneByProcessRole(123L).getSuccessObject();
+        AssessmentResource response = service.getOneByProcessRole(123L).getSuccessObject();
         assertEquals(assessment, response);
     }
 
@@ -80,7 +80,7 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
     @Test
     public void test_rejectAssessmentInvitation() {
 
-        ProcessOutcome processOutcomeToUpdate = newProcessOutcome().build();
+        ProcessOutcomeResource processOutcomeToUpdate = newProcessOutcomeResource().build();
         setupPostWithRestResultExpectations(assessmentRestURL + "/rejectAssessmentInvitation/123", processOutcomeToUpdate, OK);
 
         service.rejectAssessmentInvitation(123L, processOutcomeToUpdate);

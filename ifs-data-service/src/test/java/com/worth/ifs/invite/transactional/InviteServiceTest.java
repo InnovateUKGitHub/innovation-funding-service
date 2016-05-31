@@ -11,7 +11,6 @@ import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.user.domain.Organisation;
@@ -48,7 +47,7 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -77,7 +76,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Before
     public void setup() {
         when(inviteRepositoryMock.save(any(Invite.class))).thenReturn(new Invite());
-        ServiceResult<Notification> result = serviceSuccess(new Notification());
+        ServiceResult<Void> result = serviceSuccess();
         when(notificationService.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
 
         localValidatorFactory = new LocalValidatorFactoryBean();
@@ -138,7 +137,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         InviteOrganisation inviteOrganisation = new InviteOrganisation("SomeOrg", null, Arrays.asList(invite));
         invite.setInviteOrganisation(inviteOrganisation);
 
-        List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
+        List<ServiceResult<Void>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
         assertTrue(results.get(0).isSuccess());
     }
@@ -156,7 +155,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         invite.setName("Nico");
         invite.setEmail("nicotest.nl");
 
-        List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
+        List<ServiceResult<Void>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
         assertTrue(results.get(0).isFailure());
     }
@@ -266,13 +265,16 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         Invite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+        InviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
+
 
         when(inviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
 
         ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
         assertTrue(organisationInvite.isSuccess());
 
-        List<InviteResource> expectedInvites = singletonList(new InviteResource(invite));
+
+        List<InviteResource> expectedInvites = singletonList(inviteResource);
 
         InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
                 withId(inviteOrganisation.getId()).

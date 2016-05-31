@@ -1,8 +1,6 @@
 package com.worth.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.domain.UserStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;

@@ -1,38 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-
-import java.io.File;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -58,18 +25,40 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.mapper.FormInputMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationSource;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -369,8 +358,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Notification> sendNotificationApplicationSubmitted(Long id){
-        return getApplication(id).andOnSuccess(application -> {
+    public ServiceResult<Void> sendNotificationApplicationSubmitted(Long applicationId){
+        return getApplication(applicationId).andOnSuccess(application -> {
             NotificationSource from = systemNotificationSource;
             NotificationTarget to = new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
 

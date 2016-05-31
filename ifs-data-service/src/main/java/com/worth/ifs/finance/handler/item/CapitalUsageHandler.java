@@ -17,6 +17,7 @@ public class CapitalUsageHandler extends CostHandler {
     public static final String COST_FIELD_UTILISATION = "utilisation";
     public static final String COST_KEY = "capital-usage";
 
+
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;

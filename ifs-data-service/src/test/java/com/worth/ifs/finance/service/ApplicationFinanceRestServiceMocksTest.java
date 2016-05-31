@@ -1,12 +1,14 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationFinanceResourceListType;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -63,6 +65,17 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
         ApplicationFinanceResource finance = service.addApplicationFinanceForOrganisation(123L, 456L).getSuccessObject();
         assertEquals(returnedResponse, finance);
+    }
+
+    @Test
+    public void test_getFileDetails() {
+
+        FileEntryResource returnedResponse = newFileEntryResource().build();
+
+        setupGetWithRestResultExpectations(applicationFinanceRestURL + "/financeDocument/fileentry?applicationFinanceId=123", FileEntryResource.class, returnedResponse);
+
+        FileEntryResource fileDetails = service.getFileDetails(123L).getSuccessObject();
+        assertEquals(returnedResponse, fileDetails);
     }
 
     @Test

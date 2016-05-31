@@ -24,19 +24,19 @@ public class CapitalUsageHandler extends CostHandler {
         for(FinanceFormField financeFormField : financeFormFields) {
             final String costFormValue = financeFormField.getValue();
             switch (financeFormField.getCostName()) {
-                case "item":
+                case "description":
                     description = costFormValue;
                     break;
                 case "existing":
                     existing = costFormValue;
                     break;
-                case "deprecation_period":
+                case "deprecation":
                     deprecation = getIntegerValue(costFormValue, 0);
                     break;
                 case "npv":
                     npv = getBigDecimalValue(costFormValue, 0d);
                     break;
-                case "residual_value":
+                case "residualValue":
                     residualValue = getBigDecimalValue(costFormValue, 0d);
                     break;
                 case "utilisation":

@@ -21,7 +21,7 @@
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
         <h2 class="heading-medium">Academic partner breakdown</h2>
-        <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the below documents.</p>
+        <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs please see the documents below.</p>
         <div th:include="finance/finance-summary :: academic_partner_breakdown" th:remove="tag"/>
     </div>
 
@@ -146,6 +146,12 @@
                             <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
                                 <small>Partner</small>
                             </div>
+
+                            <a th:if="${form.isAdminMode()}"
+                               th:href="@{'/competition/'+${currentCompetition.id}+'/application/'+${currentApplication.id}+'/finances/'+${applicationOrganisation.id}}">
+                                Organisation Finance Details
+                            </a>
+
                             <div th:remove="tag" th:if="${currentApplication.isOpen()}">
                               <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
                                    th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has marked the Finances as complete"/>

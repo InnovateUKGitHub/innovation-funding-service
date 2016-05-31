@@ -1,11 +1,16 @@
 package com.worth.ifs.application.mapper;
 
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,14 +20,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.FundingDecisionStatus;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ApplicationSummarisationService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,17 +46,26 @@ public class ApplicationSummaryMapperTest {
 	@Mock
 	private ApplicationSummarisationService applicationSummarisationService;
 	
-	@Test
-	public void testMap() {
+	@Mock
+	private FundingDecisionMapper fundingDecisionMapper;
+	
+	private Application source;
+	
+	@Before
+	public void setUp() {
+		when(fundingDecisionMapper.mapToResource(FundingDecisionStatus.FUNDED)).thenReturn(FundingDecision.FUNDED);
 		
-		Application source = new Application();
-		source.setId(APPLICATION_ID);
-		source.setName("appname");
-		source.setApplicationStatus(new ApplicationStatus(ApplicationStatusConstants.OPEN.getId(), ApplicationStatusConstants.OPEN.getName()));
-		source.setDurationInMonths(7L);
+		ApplicationStatus openStatus = new ApplicationStatus(ApplicationStatusConstants.OPEN.getId(), ApplicationStatusConstants.OPEN.getName());
+		source = newApplication()
+				.withId(APPLICATION_ID)
+				.withName("appname")
+				.withApplicationStatus(openStatus)
+				.withDurationInMonths(7L)
+				.withFundingDecision(FundingDecisionStatus.FUNDED)
+				.build();
 		
-		Organisation org1 = new Organisation(1L, "leadorg");
-		Organisation org2 = new Organisation(2L, "otherorg1");
+		Organisation org1 = newOrganisation().withId(1L).withName("leadorg").build();
+		Organisation org2 = newOrganisation().withId(2L).withName("otherorg1").build();
 		
 		ProcessRole leadProcessRole = leadProcessRole(org1);
 		source.addUserApplicationRole(leadProcessRole);
@@ -67,6 +83,10 @@ public class ApplicationSummaryMapperTest {
 		
 		when(applicationSummarisationService.getFundingSought(source)).thenReturn(serviceSuccess(new BigDecimal("1.23")));
 		when(applicationSummarisationService.getTotalProjectCost(source)).thenReturn(serviceSuccess(new BigDecimal("9.87")));
+	}
+	
+	@Test
+	public void testMap() {
 		
 		ApplicationSummaryResource result = mapper.mapToResource(source);
 		
@@ -79,6 +99,34 @@ public class ApplicationSummaryMapperTest {
 		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
 		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
 		assertEquals(Long.valueOf(7L), result.getDuration());
+		assertTrue(result.isFunded());
+		assertEquals(FundingDecision.FUNDED, result.getFundingDecision());
+		
+		verify(fundingDecisionMapper).mapToResource(FundingDecisionStatus.FUNDED);
+	}
+	
+	@Test
+	public void testMapFundedBecauseOfStatus() {
+		ApplicationStatus approvedStatus = new ApplicationStatus(ApplicationStatusConstants.APPROVED.getId(), ApplicationStatusConstants.APPROVED.getName());
+		source.setApplicationStatus(approvedStatus);
+		source.setFundingDecision(null);
+		
+		ApplicationSummaryResource result = mapper.mapToResource(source);
+		
+		assertTrue(result.isFunded());
+		assertEquals(FundingDecision.FUNDED, result.getFundingDecision());
+	}
+	
+	@Test
+	public void testMapFundedBecauseOfFundingDecision() {
+		ApplicationStatus openStatus = new ApplicationStatus(ApplicationStatusConstants.OPEN.getId(), ApplicationStatusConstants.OPEN.getName());
+		source.setApplicationStatus(openStatus);
+		source.setFundingDecision(FundingDecisionStatus.FUNDED);
+		
+		ApplicationSummaryResource result = mapper.mapToResource(source);
+		
+		assertTrue(result.isFunded());
+		assertEquals(FundingDecision.FUNDED, result.getFundingDecision());
 	}
 
 	private ProcessRole leadProcessRole(Organisation organisation) {

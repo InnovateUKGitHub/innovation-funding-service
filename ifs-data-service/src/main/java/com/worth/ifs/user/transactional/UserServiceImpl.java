@@ -6,12 +6,12 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserStatus;
+import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -124,8 +124,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
-            ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
-            return result.andOnSuccessReturnVoid();
+            return notificationService.sendNotification(notification, EMAIL);
         }else{
             return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));
         }

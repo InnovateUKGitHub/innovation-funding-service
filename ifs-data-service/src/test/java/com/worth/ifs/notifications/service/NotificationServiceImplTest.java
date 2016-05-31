@@ -4,6 +4,7 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.service.senders.NotificationSender;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -54,7 +55,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
-        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
+        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isSuccess());
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
@@ -69,7 +70,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
         when(mockLoggingNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
-        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, LOGGING);
+        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL, LOGGING);
         assertTrue(result.isSuccess());
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
@@ -83,7 +84,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
-        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, EMAIL);
+        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL, EMAIL);
         assertTrue(result.isSuccess());
 
         verify(mockEmailNotificationSender, times(1)).sendNotification(notificationToSend);
@@ -99,7 +100,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         service.constructServicesByMediaMap();
 
         Notification notificationToSend = newNotification().build();
-        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
+        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
     }
@@ -111,7 +112,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
 
-        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
+        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
     }

@@ -9,18 +9,25 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.model.OpenSectionModelPopulator;
+import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.exception.AutosaveElementException;
+import com.worth.ifs.exception.BigDecimalNumberFormatException;
+import com.worth.ifs.exception.IntegerNumberFormatException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -31,9 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +62,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.resource.SectionType.FINANCE;
+import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -81,6 +89,18 @@ public class ApplicationFormController extends AbstractApplicationController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private QuestionModelPopulator questionModelPopulator;
+
+    @Autowired
+    private OpenSectionModelPopulator openSectionModel;
+
+    @Autowired
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(LocalDate.class, APPLICATION_START_DATE, new LocalDatePropertyEditor(webRequest));
@@ -95,25 +115,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        QuestionResource question = questionService.getById(questionId);
-        List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
-        SectionResource section = sectionService.getSectionByQuestionId(questionId);
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
-        this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
-                Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
-        this.addUserDetails(model, application, user.getId());
-        form.setBindingResult(bindingResult);
-        form.setObjectErrors(bindingResult.getAllErrors());
-
+        questionModelPopulator.populateModel(questionId, applicationId, user, model, form, bindingResult);
+        organisationDetailsModelPopulator.populateModel(model, applicationId);
         return APPLICATION_FORM;
     }
 
     @ProfileExecution
     @RequestMapping(value = QUESTION_URL + "{"+QUESTION_ID+"}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
                                 @PathVariable(APPLICATION_ID) final Long applicationId,
                                 @PathVariable(QUESTION_ID) final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
@@ -121,22 +130,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        return getPdfFile(resource);
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
     @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
-            @PathVariable(APPLICATION_ID) final Long applicationId,
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
-        return getPdfFile(resource);
-    }
 
-    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentLength(resource.contentLength());
-        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
-        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
+        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
+        final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails);
     }
 
     @ProfileExecution
@@ -146,18 +150,15 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        SectionResource section = sectionService.getById(sectionId);
-
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        addNavigation(section, applicationId, model);
-
-        form.setBindingResult(bindingResult);
-        form.setObjectErrors(bindingResult.getAllErrors());
-        model.addAttribute("form", form);
+        if (FINANCE.equals(section.getType())) {
+            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        } else {
+            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        }
 
         return APPLICATION_FORM;
     }
@@ -170,6 +171,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRoleResource> userApplicationRoles){
         addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
@@ -233,6 +235,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 model.addAttribute("currentUser", user);
                 addUserDetails(model, application, user.getId());
+                addNavigation(question, applicationId, model);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -276,67 +279,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
             return "redirect:"+APPLICATION_BASE_URL + applicationId;
-        }
-    }
-
-    private void addNavigation(SectionResource section, Long applicationId, Model model) {
-        if (section == null) {
-            return;
-        }
-        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<QuestionResource> nextQuestion = questionService.getNextQuestionBySection(section.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
-    }
-
-    private void addNavigation(QuestionResource question, Long applicationId, Model model) {
-        if (question == null) {
-            return;
-        }
-
-        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
-    }
-
-    private void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, Model model) {
-        String previousUrl;
-        String previousText;
-
-        if (previousQuestionOptional.isPresent()) {
-            QuestionResource previousQuestion = previousQuestionOptional.get();
-            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
-            if (previousSection.isQuestionGroup()) {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
-                previousText = previousSection.getName();
-            } else {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
-                previousText = previousQuestion.getShortName();
-            }
-            model.addAttribute("previousUrl", previousUrl);
-            model.addAttribute("previousText", previousText);
-        }
-    }
-
-    private void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, Model model) {
-        String nextUrl;
-        String nextText;
-
-        if (nextQuestionOptional.isPresent()) {
-            QuestionResource nextQuestion = nextQuestionOptional.get();
-            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
-
-            if (nextSection.isQuestionGroup()) {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
-                nextText = nextSection.getName();
-            } else {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
-                nextText = nextQuestion.getShortName();
-            }
-
-            model.addAttribute("nextUrl", nextUrl);
-            model.addAttribute("nextText", nextText);
         }
     }
 
@@ -400,7 +342,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
         new ApplicationStartDateValidator().validate(request, bindingResult);
-        
+
         setApplicationDetails(application, form.getApplication());
 
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
@@ -408,52 +350,63 @@ public class ApplicationFormController extends AbstractApplicationController {
             applicationService.save(application);
         }
 
+        if(!isMarkSectionAsIncompleteRequest(params)) {
+            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+            Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+            financeErrors.forEach((k, errorsList) ->
+            errorsList.forEach(e -> addNonDuplicateFieldError(bindingResult, k, e)));
+        }
+
         if(isMarkQuestionRequest(params)) {
             markApplicationQuestions(application, processRole.getId(), request, response, errors);
         } else if(isMarkSectionRequest(params)){
-            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
-            List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request, response, errors);
-
-            if(financeErrorsMark != null && !financeErrorsMark.isEmpty()){
-                bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
-                financeErrorsMark.forEach((validationMessage) ->
-                    validationMessage.getErrors().parallelStream()
-                    .filter(e -> StringUtils.hasText(e.getErrorMessage()))
-                    .forEach(e -> {
-                        LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
-                        if(StringUtils.hasText(e.getErrorKey())){
-                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage());
-                        }else {
-                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage());
-                        }
-                        })
-                );
-            }
+            handleMarkSectionRequest(application, competition, sectionId, request, response, bindingResult, processRole, errors);
         }
-
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
-        financeErrors.forEach((k, errorsList) ->
-            errorsList.forEach(e -> {
-                addNonDuplicateFieldError(bindingResult, k, e);
-            }));
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
     }
 
+    private void handleMarkSectionRequest(ApplicationResource application, CompetitionResource competition, Long sectionId, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+        } else {
+            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request, response, errors);
+
+            if (financeErrorsMark != null && !financeErrorsMark.isEmpty()) {
+                bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+                handleMarkSectionValidationMessages(bindingResult, financeErrorsMark);
+            }
+        }
+    }
+
+    private void handleMarkSectionValidationMessages(BindingResult bindingResult, List<ValidationMessages> financeErrorsMark) {
+        financeErrorsMark.forEach((validationMessage) -> {
+            validationMessage.getErrors().stream()
+                .filter(Objects::nonNull)
+                .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                .forEach(e -> {
+                    if (validationMessage.getObjectName().equals("costItem")) {
+                        if (StringUtils.hasText(e.getErrorKey())) {
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
+                        } else {
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage());
+                        }
+                    } else {
+                        addNonDuplicateFieldError(bindingResult, "formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage());
+                    }
+                });
+        });
+    }
+
     private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
-        if(bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0){
-            bindingResult.getFieldErrors(k)
-                    .stream()
-                    .filter(fieldError -> !fieldError.getDefaultMessage().equals(e))
-                        .forEach(fieldError -> {
-                            String defaultMessage = messageSource.getMessage(e, null, Locale.getDefault());
-                            if(defaultMessage == null){
-                                defaultMessage = e;
-                            }
-                            bindingResult.rejectValue(k, e, defaultMessage);
-                        });
-        }else{
+        if (bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0) {
+            boolean foundMessage = bindingResult.getFieldErrors(k).stream().anyMatch(fieldError -> fieldError.getDefaultMessage().equals(e));
+            if(!foundMessage){
+                bindingResult.rejectValue(k, e, e);
+            }
+        } else {
+            LOG.debug(String.format("add reject value 2 %s => %s ", k, e));
             bindingResult.rejectValue(k, e, e);
         }
     }
@@ -487,6 +440,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private boolean isMarkSectionRequest(@NotNull Map<String, String[]> params){
         return params.containsKey(MARK_SECTION_AS_COMPLETE) || params.containsKey(MARK_SECTION_AS_INCOMPLETE);
+    }
+
+    private boolean isMarkSectionAsIncompleteRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(MARK_SECTION_AS_INCOMPLETE);
     }
 
     private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
@@ -560,8 +517,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         if(bindingResult.hasErrors()){
             SectionResource section = sectionService.getById(sectionId);
-            addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+            addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
             addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
+            addNavigation(section, applicationId, model);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);
@@ -635,23 +593,23 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                HttpServletRequest request,
                                                                Long userId,
                                                                Long applicationId,
-                                                               boolean ignoreEmpty){
+                                                               boolean ignoreEmpty) {
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
-                                .stream()
-                                .filter(formInput1 -> !"fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()))
-                                .forEach(formInput -> {
-                                            if (params.containsKey("formInput[" + formInput + "]")) {
-                                                String value = request.getParameter("formInput[" + formInput + "]");
-                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
-                                                if (!errors.isEmpty()) {
-                                                    LOG.info("save failed. " + question.getId());
-                                                    errorMap.put(question.getId(), new ArrayList<>(errors));
-                                                }
-                                            }
+                        .stream()
+                        .filter(formInput1 -> !"fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()))
+                        .forEach(formInput -> {
+                                    if (params.containsKey("formInput[" + formInput + "]")) {
+                                        String value = request.getParameter("formInput[" + formInput + "]");
+                                        List<String> errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
+                                        if (!errors.isEmpty()) {
+                                            LOG.info("save failed. " + question.getId());
+                                            errorMap.put(question.getId(), new ArrayList<>(errors));
                                         }
-                                )
+                                    }
+                                }
+                        )
                 );
         return errorMap;
     }
@@ -669,7 +627,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                         .forEach(formInput -> processFormInput(formInput, params, applicationId, processRoleId, request, errorMap)));
         return errorMap;
     }
-    
+
     private void processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errorMap){
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
             formInputResponseService.removeFile(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
@@ -700,19 +658,19 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     /**
      * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
-     * @param application 
-     * @param updatedApplication 
+     * @param application
+     * @param updatedApplication
      */
     private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
             return;
         }
-        
+
         if (updatedApplication.getName() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
-        
+
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
             if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
@@ -754,13 +712,21 @@ public class ApplicationFormController extends AbstractApplicationController {
                 return this.createJsonObjectNode(true, null);
             }
         } catch (Exception e) {
-            LOG.error("Got a exception: "+ e.getMessage());
-            if(LOG.isDebugEnabled()){
-                e.printStackTrace();
-            }
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-            errors.add(ex.getErrorMessage());
+            handleAutosaveException(errors, e, ex);
             return this.createJsonObjectNode(false, errors);
+        }
+    }
+
+    private void handleAutosaveException(List<String> errors, Exception e, AutosaveElementException ex) {
+        List<Object> args = new ArrayList<>();
+        args.add(ex.getErrorMessage());
+        if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
+            errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
+        }else{
+            LOG.error("Got a exception on autosave : "+ e.getMessage());
+            LOG.debug("Autosave exception: ", e);
+            errors.add(ex.getErrorMessage());
         }
     }
 
@@ -777,9 +743,12 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
             }else{
+                String[] fieldNameParts = fieldName.split("-");
+                // fieldname = other_costs-description-34-219
                 errors = validationMessages.getErrors()
                         .stream()
-                        .filter(e -> fieldName.toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
+                        .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getErrorKey().toLowerCase())))
+                        .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
                         .map(e -> e.getErrorMessage())
                         .collect(Collectors.toList());
             }
@@ -808,7 +777,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if ("application.name".equals(fieldName)) {
             String trimmedValue = value.trim();
             if (StringUtils.isEmpty(trimmedValue)) {
-                errors.add("Please enter the full title of the project.");
+                errors.add("Please enter the full title of the project");
             } else {
 
                 application.setName(trimmedValue);
@@ -817,7 +786,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
             if (durationInMonth == null || durationInMonth < 1L) {
-                errors.add("Please enter a valid duration.");
+                errors.add("Please enter a valid duration");
             } else {
                 application.setDurationInMonths(durationInMonth);
                 applicationService.save(application);
@@ -842,7 +811,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                 startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
             }
             if (startDate.isBefore(LocalDate.now())) {
-                errors.add("Please enter a future date.");
+                errors.add("Please enter a future date");
                 startDate = null;
             }else{
                 LOG.debug("Save startdate: "+ startDate.toString());
@@ -853,8 +822,13 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
 
-    public void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
+    private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
                                HttpServletRequest request) {
         assignQuestion(request, applicationId);
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, final Model model, final ApplicationForm form) {
+        organisationDetailsModelPopulator.populateModel(model, application.getId());
+        addApplicationAndSections(application, competition, userId, section, Optional.empty(), model, form);
     }
 }

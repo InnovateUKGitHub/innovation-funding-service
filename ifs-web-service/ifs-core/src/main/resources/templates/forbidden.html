@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag"></div>
+  <div th:include="fragments/layout :: head" th:remove="tag" th:with="pageTitle='You do not have the necessary permissions for your request'"  />
 </head>
 <body class="error forbidden">
 
@@ -27,7 +27,7 @@
 
     <div class="boxed">
 		<span>
-            You can return to <a th:href="@{/}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            You can return to the <a th:href="${userDashboardLink}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
         </span>
     </div>
 

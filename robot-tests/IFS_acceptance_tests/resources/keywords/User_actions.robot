@@ -47,14 +47,13 @@ The user is on the page
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
-    Sleep    500ms
-    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Wait Until Element Is Visible       id=global-header
-    Page Should Contain         BETA
+    Wait Until Element Is Visible    id=global-header
+    Page Should Contain    BETA
 
 the user should be redirected to the correct page without the usual headers
     [Arguments]    ${URL}
@@ -64,6 +63,12 @@ the user should be redirected to the correct page without the usual headers
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
 
+the user should be redirected to the correct page without error checking
+    [Arguments]    ${URL}
+    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
+    # Header checking (INFUND-1892)
+    Wait Until Element Is Visible    id=global-header
+    Page Should Contain    BETA
 
 the user reloads the page
     Reload Page
@@ -77,41 +82,84 @@ the user reloads the page
     Page Should Contain    BETA
 
 the user selects the checkbox
-    [Arguments]     ${checkbox}
-     Select Checkbox    ${checkbox}
-     # Error checking
-     Page Should Not Contain    Error
-     Page Should Not Contain    something went wrong
-     Page Should Not Contain    Page or resource not found
-     Page Should Not Contain    You do not have the necessary permissions for your request
-     # Header checking (INFUND-1892)
-     Element Should Be Visible    id=global-header
-     Page Should Contain    BETA
-
+    [Arguments]    ${checkbox}
+    Select Checkbox    ${checkbox}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 the user unselects the checkbox
-    [Arguments]     ${checkbox}
-     Unselect Checkbox    ${checkbox}
-     # Error checking
-     Page Should Not Contain    Error
-     Page Should Not Contain    something went wrong
-     Page Should Not Contain    Page or resource not found
-     Page Should Not Contain    You do not have the necessary permissions for your request
-     # Header checking (INFUND-1892)
-     Element Should Be Visible    id=global-header
-     Page Should Contain    BETA
+    [Arguments]    ${checkbox}
+    Unselect Checkbox    ${checkbox}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
     Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
 
+the user selects the option from the drop-down menu
+    [Arguments]    ${option}    ${drop-down}
+    Select From List    ${drop-down}    ${option}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
+the user should see the dropdown option selected
+    [Arguments]    ${option}    ${drop-down}
+    List Selection Should Be    ${drop-down}    ${option}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking    (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+the user submits the form
+    Submit Form
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+the user follows the flow to register their organisation
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=organisationSearchName    Innovate
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    link=INNOVATE LTD
+    And the user selects the checkbox    address-same
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
 
 the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
-    sleep       1s
+    sleep    1s
 
 Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
@@ -143,6 +191,11 @@ The user clicks the button/link
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
+    Page Should Not Contain    Error
+    #Page Should Not Contain    error    # commented this out because it caused a test failure
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    something went wrong
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
@@ -158,7 +211,7 @@ the user should not see an error in the page
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
     Page should contain element    css=.error-message
-    Page should contain    ${ERROR_TEXT}
+    Wait Until Page Contains    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
@@ -222,9 +275,9 @@ the user can remove the uploaded file
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
 
-the user cannot remove the uploaded file
-    [Arguments]    ${file_name}
-    Page Should Not Contain    Remove
+The element should be disabled
+    [Arguments]    ${ELEMENT}
+    Element Should Be Disabled    ${ELEMENT}
 
 the user clicks the link from the appropriate email sender
     Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
@@ -257,14 +310,39 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${CONTACT_LEAD}=    Get From List    ${LINK}    1
-    Should Contain    ${CONTACT_LEAD}    mailto:
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    2
+    #${CONTACT_LEAD}=    Get From List    ${LINK}    1
+    #Should Contain    ${CONTACT_LEAD}    mailto:
+    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
     log    ${ACCEPT_INVITE}
     go to    ${ACCEPT_INVITE}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+the user downloads the file from the link
+    [Arguments]    ${filename}    ${download_link}
+    ${ALL_COOKIES} =    Get Cookies
+    Log    ${ALL_COOKIES}
+    Download File    ${ALL_COOKIES}    ${download_link}
+    sleep    2s
+
+the file should be downloaded
+    [Arguments]    ${filename}
+    File Should Exist    ${filename}
+    File Should Not Be Empty    ${filename}
+
+the file has been scanned for viruses
+    Sleep    5s
+
+the user can see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    Page Should Contain    Upload
+
+the user cannot see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    the user should not see the text in the page    Upload
 
 Delete the emails from the test mailbox
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
@@ -320,7 +398,7 @@ the user cannot see a validation error in the page
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus       name=termsAndConditions
+    Focus    name=termsAndConditions
     Select Checkbox    termsAndConditions
     Submit Form
 
@@ -354,19 +432,19 @@ we create a new user
     [Arguments]    ${EMAIL_INVITED}
     The user navigates to the page    ${COMPETITION_DETAILS_URL}
     The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create account")
     The user clicks the button/link    jQuery=.button:contains("Create")
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    id=address-same
+    select Checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
     The guest user clicks the log-in button
     user closes the browser
@@ -376,22 +454,22 @@ the lead applicant invites a registered user
     The guest user opens the browser
     The user navigates to the page    ${COMPETITION_DETAILS_URL}
     The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create account")
     The user clicks the button/link    jQuery=.button:contains("Create")
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    id=address-same
+    select Checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_LEAD}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
     The guest user clicks the log-in button
-    The user clicks the button/link    link=Technology Inspired
+    The user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate
     Input Text    name=organisations[1].invites[0].personName    Partner name

@@ -1,18 +1,13 @@
 package com.worth.ifs.application.transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.springframework.data.domain.Sort.Direction.ASC;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
@@ -22,14 +17,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 
-import com.google.common.collect.Lists;
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.commons.service.ServiceResult;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
@@ -53,7 +52,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 6, null);
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, null, 6, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(resource, result.getSuccessObject());
@@ -69,7 +68,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 6, "id");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "id", 6, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(resource, result.getSuccessObject());
@@ -85,7 +84,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 6, "name");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "name", 6, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(resource, result.getSuccessObject());
@@ -105,7 +104,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "lead");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());
@@ -131,7 +130,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "lead");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());
@@ -158,7 +157,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 1, "lead");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 1, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(1, result.getSuccessObject().getNumber());
@@ -184,7 +183,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "lead");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20);
 		
 		assertEquals(2, result.getSuccessObject().getContent().size());
 		assertEquals(sum1, result.getSuccessObject().getContent().get(0));
@@ -208,7 +207,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "lead");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20);
 		
 		assertEquals(3, result.getSuccessObject().getContent().size());
 		assertEquals(sum1, result.getSuccessObject().getContent().get(0));
@@ -230,7 +229,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "percentageComplete");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "percentageComplete", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());
@@ -256,7 +255,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "percentageComplete");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "percentageComplete", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());
@@ -283,7 +282,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 1, "percentageComplete");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "percentageComplete", 1, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(1, result.getSuccessObject().getNumber());
@@ -309,7 +308,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "percentageComplete");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "percentageComplete", 0, 20);
 		
 		assertEquals(2, result.getSuccessObject().getContent().size());
 		assertEquals(sum1, result.getSuccessObject().getContent().get(0));
@@ -333,7 +332,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "percentageComplete");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "percentageComplete", 0, 20);
 		
 		assertEquals(3, result.getSuccessObject().getContent().size());
 		assertEquals(sum2, result.getSuccessObject().getContent().get(0));
@@ -355,7 +354,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdNotIn(COMP_ID, Arrays.asList(3L,4L,2L))).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMP_ID, 0, "percentageComplete");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMP_ID, "percentageComplete", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());
@@ -378,7 +377,25 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMP_ID, 0, "id");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(resource, result.getSuccessObject());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void findByCompetitionFeedbackRequiredApplications() throws Exception {
+
+		Page<Application> page = mock(Page.class);
+
+		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
+		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+		
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(Arrays.asList(3L,4L)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());

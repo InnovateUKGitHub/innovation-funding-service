@@ -1,21 +1,25 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.domain.Organisation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<ApplicationFinanceController> {
@@ -23,10 +27,9 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private CostService costServiceMock;
 
-    private ApplicationFinance applicationFinance;
     private ApplicationFinanceResource applicationFinanceResource;
     private Organisation organisation;
-    private Application application;
+    private ApplicationResource application;
 
     @Override
     protected ApplicationFinanceController supplyControllerUnderTest() {
@@ -35,11 +38,10 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
     @Before
     public void setUp() {
-        application = new Application();
+        application = new ApplicationResource();
         application.setId(1L);
         organisation = new Organisation(1L, "Worth Internet Systems");
-        applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
-        applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
+        applicationFinanceResource = newApplicationFinanceResource().withApplication(application.getId()).withOrganisation(organisation.getId()).build();
     }
 
     @Test
@@ -133,4 +135,15 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void getFileDetails() throws Exception {
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+
+        when(costServiceMock.getFileContents(123)).thenReturn(serviceSuccess(Pair.of(fileEntry, () -> null)));
+
+        mockMvc.perform(get("/applicationfinance/financeDocument/fileentry?applicationFinanceId=123"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(fileEntry)));
+    }
 }

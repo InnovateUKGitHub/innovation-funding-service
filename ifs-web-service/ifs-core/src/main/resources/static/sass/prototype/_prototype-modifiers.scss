@@ -14,6 +14,17 @@
 	text-align: left;
 }
 
+/*--- Extra margins ---*/
+
+.extra-margin-bottom{
+	margin-bottom: 30px;
+}
+
+.collapsible{
+	.question.extra-margin{
+		margin-top: 30px;
+	}
+}
 
 /*--- Inline lists ---*/
 

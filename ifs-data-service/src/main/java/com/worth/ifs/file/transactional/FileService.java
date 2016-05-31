@@ -1,9 +1,9 @@
 package com.worth.ifs.file.transactional;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
@@ -16,15 +16,15 @@ import java.util.function.Supplier;
  */
 public interface FileService {
 
-    @NotSecured("This Service is to be used within other secured services")
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource file, Supplier<InputStream> inputStreamSupplier);
 
-    @NotSecured("This Service is to be used within other secured services")
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId);
 
-    @NotSecured("This Service is to be used within other secured services")
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier);
 
-    @NotSecured("This Service is to be used within other secured services")
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<FileEntry> deleteFile(long fileEntryId);
 }

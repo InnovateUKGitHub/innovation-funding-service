@@ -19,52 +19,25 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" th:remove="tag" />
 
-	<p>In order for Innovate UK to fund your project we require your bank account details. We will then verify the bank account to the lead organisation.</p>
+	<p>We will need your organisation's bank account details. This is so we can pay your grant. We will confirm your details and verify that the bank account belongs to your organisation.</p>
 
-	<p>The bank account details entered must belong to:</p>
+	<h3 class="heading-medium">Organisation information</h3>
+	<p class="form-hint">This information provided during the application process cannot be changed.</p>
 	
 	<div th:if="${param.status == null}">
-		<h2 class="heading-medium no-margin-bottom">Aptrans Ltd</h2>
-		<p>Company no. 04214477</p>
+		<p class="extra-margin">
+			Aptrans Ltd <br />
+			Company no. 04214477
+		</p>
 	</div>
 	
 	<div th:if="${param.status != null and param.status[0] == 'nonBusiness'}">
-		<h2 class="heading-medium no-margin-bottom">University of Cardiff</h2>
+		<p class="extra-margin">University of Cardiff</p>
 	</div>
 	
 	<form action="#">
 
-		<fieldset>
-			
-			<h2 class="heading-medium no-margin-bottom">Account details</h2>
-
-			<legend class="visuallyhidden">Account details</legend>
-
-			<p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
-
-			<div class="form-group extra-margin">
-				<label class="form-label" for="bank-sort-code">
-					<span class="form-label-bold">Account number</span>
-				</label>
-				<p class="form-hint">For example: 1548965</p>
-				<input class="form-control" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
-			</div>
-
-			<div class="form-group ">
-				<label class="form-label" for="bank-sort-code">
-					<span class="form-label-bold">Sort code</span>
-				</label>
-				<p class="form-hint">For example: 311212</p>
-				<input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
-			</div>
-
-			<h2 class="heading-large">Organisation address</h2>
-
-			<p class="form-hint">Please select your organisation's address.</p>
-
-			<div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" />
-
-		</fieldset>
+		<div th:include="prototypes/fragments/project-setup :: prototype-bank-details" th:remove="tag" />
 
 		<div class="extra-margin">
 			<a href="#" class="button" data-js-modal="modal-bank">Submit bank account details</a>
@@ -74,14 +47,19 @@
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 				
-				<h2 class="heading-medium no-margin">Bank details submitted</h2>
+				<h2 class="heading-medium no-margin">Submit Bank Details</h2>
 
-				<p>The bank details provided have been successfully submitted to Innovate UK for review. If required Innovate will contact you to clarify any issues, before performing finance checks.</p>
+				<p>Are you sure you wish to submit your bank details?</p>
+
+				<p>After Submission the bank details will be reviewed by Innovate UK. If required Innovate UK will contact you to clarify any issues, before performing finance checks.</p>
 
 				<hr />
 	            
             	<div class="alignright-button">
-            		<a href="/prototypes/1588-project-status?stage=level3" class="button">OK</a>
+					
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+            		<a href="/prototypes/1588-project-status?stage=level3" class="button">Submit</a>
+
             	</div>
 
 	        </div>

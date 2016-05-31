@@ -3,15 +3,11 @@ package com.worth.ifs.application.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Future;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
@@ -21,12 +17,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.stream.Collectors.toList;
 
 /**
- * This class contains methods to retrieve and store {@link Section} related data,
+ * This class contains methods to retrieve and store {@link SectionResource} related data,
  * through the RestService {@link SectionRestService}.
  */
 // TODO DW - INFUND-1555 - return RestResults
@@ -155,22 +150,6 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public Future<SectionResource> getPreviousSection(Optional<SectionResource> section) {
-        if(section!=null && section.isPresent()) {
-            return adapt(sectionRestService.getPreviousSection(section.get().getId()), RestResult::getSuccessObjectOrNull);
-        }
-        return null;
-    }
-
-    @Override
-    public Future<SectionResource> getNextSection(Optional<SectionResource> section) {
-        if(section!=null && section.isPresent()) {
-            return adapt(sectionRestService.getNextSection(section.get().getId()), RestResult::getSuccessObjectOrThrowException);
-        }
-        return null;
-    }
-
-    @Override
     public SectionResource getSectionByQuestionId(Long questionId) {
         return sectionRestService.getSectionByQuestionId(questionId).getSuccessObjectOrThrowException();
     }
@@ -178,11 +157,6 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public Set<Long> getQuestionsForSectionAndSubsections(Long sectionId) {
         return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccessObjectOrThrowException();
-    }
-
-    @Override public SectionResource getFinanceSectionForCompetition(final Long competitionId) {
-        return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
-
     }
 
     @Override

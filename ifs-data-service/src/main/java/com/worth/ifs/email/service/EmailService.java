@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface EmailService {
 
-    @NotSecured("TODO")
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<List<EmailAddress>> sendEmail(EmailAddress from, List<EmailAddress> to, String subject, String plainTextBody, String htmlBody);
 }

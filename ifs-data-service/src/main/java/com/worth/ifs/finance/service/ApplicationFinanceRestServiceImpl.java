@@ -110,6 +110,14 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
         return getWithRestResult(url, ByteArrayResource.class);
     }
 
+    @Override
+    public RestResult<FileEntryResource> getFileDetails(Long applicationFinanceId) {
+        String url = applicationFinanceRestURL + "/financeDocument/fileentry" +
+                "?applicationFinanceId=" + applicationFinanceId;
+
+        return getWithRestResult(url, FileEntryResource.class);
+    }
+
     private HttpHeaders createHeader(String contentType, long contentLength){
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));

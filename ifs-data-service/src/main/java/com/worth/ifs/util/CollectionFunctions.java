@@ -334,7 +334,18 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {
+    public static <R, T> Map<R, T> pairsToMap(List<Pair<R, T>> pairs) {
+        return simpleToMap(pairs, Pair::getKey, Pair::getValue);
+    }
+
+    /**
+     * A collector that maps a collection of pairs into a andOnSuccess.
+     *
+     * @param <R>
+     * @param <T>
+     * @return
+     */
+    public static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMapCollector() {
         return toMap(Pair::getLeft, Pair::getRight);
     }
 
@@ -457,6 +468,25 @@ public final class CollectionFunctions {
     public static <T> List<T> removeDuplicates(List<T> list) {
         Set<T> set = new LinkedHashSet<>(list);
         return new ArrayList<>(set);
+    }
+
+    /**
+     * Partitions a list based upon a given predicate, and returns the two lists in a Pair, with the "true" list being the
+     * key (left) and the "false" list being the value (right)
+     *
+     * @param list
+     * @param test
+     * @param <T>
+     * @return
+     */
+    public static <T> Pair<List<T>, List<T>> simplePartition(List<T> list, Predicate<T> test) {
+
+        if (list == null || list.isEmpty()) {
+            return Pair.of(emptyList(), emptyList());
+        }
+
+        Map<Boolean, List<T>> partitioned = list.stream().collect(partitioningBy(test));
+        return Pair.of(partitioned.get(true), partitioned.get(false));
     }
 
     /**

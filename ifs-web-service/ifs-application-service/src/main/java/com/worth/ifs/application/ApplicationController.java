@@ -2,18 +2,25 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -36,6 +45,15 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class ApplicationController extends AbstractApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
 
+    @Autowired
+    private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
+
+    @Autowired
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private AssessorFeedbackRestService assessorFeedbackRestService;
+
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
     }
@@ -44,17 +62,15 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+
+        Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
+        applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
         return "application-details";
     }
 
     @ProfileExecution
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
-    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletResponse response, HttpServletRequest request) {
+    public String applicationDetails(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         assignQuestion(request, applicationId);
 
@@ -72,7 +88,7 @@ public class ApplicationController extends AbstractApplicationController {
         SectionResource section = sectionService.getById(sectionId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         return "application-details";
     }
@@ -88,7 +104,7 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
@@ -119,7 +135,7 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-confirm-submit";
     }
 
@@ -134,7 +150,7 @@ public class ApplicationController extends AbstractApplicationController {
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-submitted";
     }
 
@@ -145,7 +161,7 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-track";
     }
     @ProfileExecution
@@ -212,6 +228,15 @@ public class ApplicationController extends AbstractApplicationController {
         return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
     }
 
+    @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
+            @PathVariable("applicationId") final Long applicationId) {
+
+        final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
+        FileEntryResource fileDetails = assessorFeedbackRestService.getAssessorFeedbackFileDetails(applicationId).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileDetails);
+    }
+
     private String doAssignQuestionAndReturnSectionFragment(Model model,
                                                             @PathVariable("applicationId") Long applicationId,
                                                             @RequestParam("sectionId") Optional<Long> sectionId,
@@ -230,7 +255,7 @@ public class ApplicationController extends AbstractApplicationController {
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<QuestionResource> question = getQuestion(currentSection, questionId);
 
-        super.addApplicationAndSections(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
         super.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
 
         model.addAttribute("currentUser", user);
@@ -303,8 +328,9 @@ public class ApplicationController extends AbstractApplicationController {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
-        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
         addQuestionsDetails(model, application, null);
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);
@@ -312,5 +338,14 @@ public class ApplicationController extends AbstractApplicationController {
         financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
 
         return "/application/print";
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, final Model model, final ApplicationForm form) {
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, userId, Optional.empty(), Optional.empty(), model, form);
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
+        organisationDetailsModelPopulator.populateModel(model, application.getId());
+        addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
     }
 }

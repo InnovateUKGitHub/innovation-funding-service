@@ -124,12 +124,12 @@ table{
 
 /*----- Marking yes /no with tick / cross used in assessor invite tables ----*/
 
-td .yes{
+span.yes{
 	@extend %icon-tick;
 	padding-left: 28px;
 }
 
-td .no{
+span.no{
 	@extend %icon-cross;
 	padding-left: 28px; 
 }

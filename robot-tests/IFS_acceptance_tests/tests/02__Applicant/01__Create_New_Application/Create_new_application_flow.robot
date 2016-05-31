@@ -29,11 +29,11 @@ Non registered users CH route
     ...    INFUND-1920
     ...
     ...    INFUND-1785
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
@@ -43,28 +43,39 @@ Non registered users CH route
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    worth.email.test+1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
+
+Non registered users CH route (email step)
+    [Documentation]    INFUND-669
+    ...
+    ...    INFUND-1904
+    ...
+    ...    INFUND-1920
+    ...
+    ...    INFUND-1785
+    [Tags]    HappyPath    Email
+    [Setup]    The guest user opens the browser
+    Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
+    When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=Technology Inspired
+    And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
-    [Tags]    Email
+    [Tags]
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox     id=address-same
+    And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    worth.email.test+1@gmail.com
@@ -75,22 +86,31 @@ Non registered users non CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    worth.email.test+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
-    The guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
+
+Non registered users non CH route (email step)
+    [Documentation]    INFUND-669
+    ...
+    ...    INFUND-1904
+    ...
+    ...    INFUND-1920
+    [Tags]    HappyPath    Email
+    [Setup]    The guest user opens the browser
+    Given the user opens the mailbox and verifies the email from
+    When the user clicks the button/link    jQuery=.button:contains("Sign in")
+    And the guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=Technology Inspired
+    And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
 
@@ -111,30 +131,53 @@ Verify the name of the new application
     And the user clicks the button/link    link=test title
     And the user should see the text in the page    test title
 
+Special Projecct Finance role
+    [Documentation]    INFUND-2609
+    [Tags]
+    [Setup]    The guest user opens the browser
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the Not on company house link
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user enters the details and clicks the create account    worth.email.test+project.finance1@gmail.com
+    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+
+Special Project Finance role (email step)
+    [Documentation]    INFUND-2609
+    [Tags]    Email
+    [Setup]    The guest user opens the browser
+    Given the user opens the mailbox and verifies the email from
+    When the user clicks the button/link    jQuery=.button:contains("Sign in")
+    And the guest user inserts user email & password    worth.email.test+project.finance1@gmail.com    Passw0rd123
+    And the guest user clicks the log-in button
+    Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
+    [Teardown]    Logout as user
+
 *** Keywords ***
 the new application should be visible in the dashboard page
-    Click Link    link= My dashboard
+    the user clicks the button/link    link= My dashboard
     sleep    500ms
-    Wait Until Page Contains    test title
-    Page Should Contain    Application number: 0000
+    the user should see the text in the page    test title
+    the user should see the text in the page    Application number: 0000
 
 the user clicks the Not on company house link
-    Click Element    name=not-in-company-house
-    Click Element    name=manual-address
+    the user clicks the button/link    name=not-in-company-house
+    the user clicks the button/link    name=manual-address
     Input Text    id=addressForm.selectedPostcode.addressLine1    street
     Input Text    id=addressForm.selectedPostcode.town    town
     Input Text    id=addressForm.selectedPostcode.county    country
     Input Text    id=addressForm.selectedPostcode.postcode    post code
-    #Input Text    id=org-name    org1
     Input Text    name=organisationName    org2
-    Click Element    jQuery=.button:contains("Continue")
+    the user clicks the button/link    jQuery=.button:contains("Continue")
 
 the user edits the competition title
-    click link    Technology Inspired
-    Wait Until Element Is Visible    link=Application details
-    click link    Application details
+    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user should see the element    link=Application details
+    the user clicks the button/link    link=Application details
     Input Text    id=application_details-title    test title
-    Click Element    jQuery=button:contains("Save and return")
+    the user clicks the button/link    jQuery=button:contains("Save and return")
 
 the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0
