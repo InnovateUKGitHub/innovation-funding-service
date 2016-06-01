@@ -23,6 +23,10 @@
       </div>
   </div>
 
+    <div th:if="${feedbackNotUploadedForAllApplications}" class="event-alert">
+        <p><span>A funding decision is required for all applications to the competition.</span></p>
+    </div>
+    
   <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
 
 <div th:unless="${activeTab == 'overview'}" th:remove="tag">
@@ -77,7 +81,7 @@
 				<div class="grid-row">
 					<div class="column-two-thirds">
 						<p>
-						<span th:unless="${assessmentEndDate == null}" th:text="${#temporals.format(assessmentEndDate, 'HH:mm')}" th:remove="tag">
+						<span th:unless="${assessmentEndDate == null}" th:text="${#temporals.format(assessmentEndDate, 'HH:mm')}" th:remove="tag"></span>
 						<br />
 						<span th:unless="${assessmentEndDate == null}" th:text="${#temporals.format(assessmentEndDate, 'd MMMM yyyy')}" th:remove="tag"></span>
 						</p>

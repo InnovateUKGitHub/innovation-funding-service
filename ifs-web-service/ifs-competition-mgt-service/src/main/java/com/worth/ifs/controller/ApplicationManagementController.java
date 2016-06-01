@@ -2,9 +2,8 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.resource.AppendixResource;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
@@ -33,10 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -84,6 +80,9 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private OpenFinanceSectionSectionModelPopulator openFinanceSectionSectionModelPopulator;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
@@ -161,6 +160,51 @@ public class ApplicationManagementController extends AbstractApplicationControll
             return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
         }
         return redirectToApplicationOverview(competitionId, applicationId);
+    }
+
+    @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
+    public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
+                                                                @PathVariable("applicationId") final String applicationIdString,
+                                                                @PathVariable("organisationId") final String organisationId,
+                                                                @ModelAttribute("form") ApplicationForm form,
+                                                                Model model,
+                                                                BindingResult bindingResult
+    ) throws ExecutionException, InterruptedException {
+        Long applicationId = Long.valueOf(applicationIdString);
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        SectionResource financeSection = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE).get(0);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        UserResource impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
+
+        // so the mode is viewonly
+        form.setAdminMode(true);
+        application.enableViewMode();
+        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+        model.addAttribute("applicationReadyForSubmit", false);
+
+
+        openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
+
+        return "comp-mgt-application-finances";
+    }
+
+    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") String organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
+        UserResource user;
+        form.setImpersonateOrganisationId(Long.valueOf(organisationId));
+        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        Optional<Long> userId = processRoles.stream()
+                .filter(p -> p.getOrganisation().equals(Long.valueOf(organisationId)))
+                .map(p -> p.getUser())
+                .findAny();
+
+        if (!userId.isPresent()) {
+            LOG.error("Found no user to impersonate.");
+            return null;
+        }
+        user = userService.retrieveUserById(userId.get()).getSuccessObject();
+        return user;
     }
 
     @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = GET)

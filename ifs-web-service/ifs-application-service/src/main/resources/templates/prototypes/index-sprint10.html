@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint10'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 10</h1>
+
+			<section>
+				
+				<h2 class="heading-medium">User testing feedback</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<h3 class="heading-small">INFUND-2439</h3> 
+						<p>Analysis and feedback changes from applicant testing sessions</p>
+						
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/1578-bank-details">INFUND-3017</a> Content Change on Bank Details
+							</li>
+							<li>
+								<a href="/prototypes/2472-spend-lead-overview">INFUND-3018</a> Mark as complete link needs updating
+							</li>
+							<li>
+								<a href="/prototypes/2472-spend-lead-overview">INFUND-3020</a> Consistency of messaging for completed applicants
+							</li>
+							<li>
+								<a href="/prototypes/1592-spend?spend=high">INFUND-3021</a> Primary CTA should be disabled if CTA is too high
+							</li>
+							<li>
+								<a href="/prototypes/1592-spend">INFUND-3022</a> Removal of View Finance Link From Spend profile Pages
+							</li>
+							<li>
+								<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead&#38;task=reviewPartner">INFUND-3023</a> Relabelling of Allow Edits CTA
+							</li>
+							<li>
+								<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead&#38;task=reviewPartner">INFUND-3024</a> Submitted bannertext should be removed from this page
+							</li>
+							<li>
+								<a href="#">INFUND-3028</a> Move link to view progress of partners on Status overview
+							</li>
+							<li>
+								<a href="#">INFUND-3030</a> Add more detail to the forecast page
+							</li>
+							
+						</ul>
+					</li>
+				</ul>
+			</section>
+
+
+			<section>
+				<h2 class="heading-medium">
+					Partner view during project setup
+				</h2>
+				
+				<ul class="list-bullet">
+					<li>
+						<a href="/prototypes/1589-team-status">INFUND-1589</a> As a partner I want to have a view of how much all of the partners within my consortium have completed and what is outstanding so that I can chase them to complete
+					</li>
+				</ul>
+
+			</section>
+
+
+			<section>
+					
+				<h2 class="heading-medium">Competition setup</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<a href="/prototypes/1345-comp-dashboard-MVP">INFUND-2868</a> As a Competition Executive I want to be able to create a competition from the Competitions Dashboard so I can set up my new competition
+					</li>
+					<li>
+						<h3 class="heading-small">INFUND-2469</h3>
+						<p>As a Competition Executive I want to be able to add competition details so that I can create a competition that will appear on the dashboard.</p>
+						
+						<ul class="list-bullet">
+							<li><a href="/prototypes/1345-comp-dashboard-MVP">INFUND-2467</a> As a Competition Executive I want to be able to view the Competitions Dashboard so I can administer my competitions</li>
+
+							<li><a href="/prototypes/2469-comp-setup?section=essential">INFUND-2671</a> Create a Competition: Step 1: Essential Information</li>
+							<li><a href="/prototypes/2469-comp-setup?section=additional">INFUND-2812</a> Create a Competition: Step 2: Additional Information</li>
+							<li><a href="/prototypes/2469-comp-setup?section=eligibility">INFUND-2813</a> Create a Competition: Step 3: Eligibility</li>
+							<li><a href="/prototypes/2469-comp-setup?section=milestones">INFUND-2814</a> Create a Competition: Step 4: Milestones</li>
+							<li><a href="/prototypes/2469-comp-setup?section=milestones">INFUND-2816</a> Create a Competition: Step 6: Application form</li>
+						</ul>
+					</li>
+					<li>
+						<a href="#">INFUND-2821</a> Competition setup: Competition code
+					</li>
+					<li>
+						<a href="#">INFUND-2835</a> Application form: Programme
+					</li>
+					
+
+
+				</ul>
+
+			</section>
+
+			
+
+			
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

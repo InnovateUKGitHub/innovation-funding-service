@@ -73,3 +73,8 @@ ${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/2
 ${DOWNLOAD_FOLDER}    ../download_files
 ${empty_field_warning_message}    This field cannot be left blank
 ${OPEN_COMPETITION_LINK}    Connected digital additive manufacturing
+${valid_pdf}      testing.pdf
+${too_large_pdf}    large.pdf
+${text_file}      testing.txt
+${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
+

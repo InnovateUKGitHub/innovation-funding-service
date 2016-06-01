@@ -39,19 +39,14 @@
         <form action="#"  method="post" th:object="${form}" enctype="multipart/form-data"
                 th:with="appIsClosed=${!currentApplication.isOpen()}, readonly=${!currentApplication.isOpen()}">
 
-            <div class="question" th:each="formInput, status : ${currentQuestion?.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
-                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
-                <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
-            </div>
-
-            <div th:if="${currentSection}" th:remove="tag">
-                <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
-                <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
-                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
+            <div th:if="${financeSection}" th:remove="tag">
+                <p class="subtitle" th:if="${financeSection.getDescription()}" th:text="${financeSection.getDescription()}" />
+                <div th:each="question, status1 : ${sectionQuestions.get(financeSectionId)}" th:remove="tag">
+                    <div class="question" th:each="formInput, status : ${questionFormInputs.get(question.id)}" th:id="'form-input-'+${formInput.getId()}"
                          th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
-                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
-                        <div th:replace="'finance/'+${financeView} :: ${formInput.getFormInputType().getTitle()}" />
-                        <div th:replace="finance/finance-summary :: ${formInput.getFormInputType().getTitle()}" />
+                        <div th:replace="question-type/types :: ${formInput.getFormInputTypeTitle()}" />
+                        <div th:replace="'finance/'+${financeView} :: ${formInput.getFormInputTypeTitle()}" />
+                        <div th:replace="finance/finance-summary :: ${formInput.getFormInputTypeTitle()}" />
                     </div>
                 </div>
             </div>

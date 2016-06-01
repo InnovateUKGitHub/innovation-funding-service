@@ -16,6 +16,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -230,6 +231,32 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         }
 
         return serviceSuccess(value);
+    }
+
+    /**
+     * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
+     * all ServiceResults are successful.  In the event of a failure, all encountered failing ServiceResults' Errors will
+     * be combined into a single failing ServiceResult
+     */
+    public static <T> ServiceResult<Void> processAnyFailuresOrSucceed(ServiceResult<T>... results) {
+        return processAnyFailuresOrSucceed(asList(results));
+    }
+
+    /**
+     * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
+     * all ServiceResults are successful.  In the event of a failure, all encountered failing ServiceResults' Errors will
+     * be combined into a single failing ServiceResult
+     */
+    public static <T> ServiceResult<Void> processAnyFailuresOrSucceed(List<ServiceResult<T>> results) {
+        List<ServiceResult<T>> failures = simpleFilter(results, ServiceResult::isFailure);
+
+        if (failures.isEmpty()) {
+            return serviceSuccess();
+        }
+
+        List<List<Error>> errorLists = simpleMap(failures, failure -> failure.getFailure().getErrors());
+        List<Error> combinedErrors = flattenLists(errorLists);
+        return serviceFailure(combinedErrors);
     }
 
     /**

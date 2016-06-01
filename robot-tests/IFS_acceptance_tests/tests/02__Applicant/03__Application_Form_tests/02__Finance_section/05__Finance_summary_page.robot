@@ -59,15 +59,13 @@ Red warning should show when the finances are incomplete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
-    # Pending due to INFUND-808 finance validation
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=button:contains("Edit")
     Then the red warnng should be visible
     And the user should see the element    css=.warning-alert
     And the user should see the text in the page    The following organisations have not marked their finances as complete:
-    [Teardown]
 
 Green check should show when the finances are complete
     [Documentation]    INFUND-927
@@ -75,8 +73,7 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath    Pending
-    # Pending due to INFUND-808
+    [Tags]    HappyPath
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${OVERVIEW_MARK_AS_COMPLETE}

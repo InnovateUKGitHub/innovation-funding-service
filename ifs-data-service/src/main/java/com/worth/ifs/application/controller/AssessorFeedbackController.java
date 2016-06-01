@@ -141,7 +141,8 @@ public class AssessorFeedbackController {
     public RestResult<Void> submitAssessorFeedback(
             @PathVariable("competitionId") long competitionId) {
 
-        ServiceResult<Void> uploadedResult = assessorFeedbackService.submitAssessorFeedback(competitionId);
-        return uploadedResult.toPostResponse();
+        return assessorFeedbackService.submitAssessorFeedback(competitionId).andOnSuccess(() ->
+               assessorFeedbackService.notifyLeadApplicantsOfAssessorFeedback(competitionId)).
+               toPostResponse();
     }
 }

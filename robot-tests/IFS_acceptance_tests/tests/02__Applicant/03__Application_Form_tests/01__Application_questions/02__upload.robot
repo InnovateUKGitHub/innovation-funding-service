@@ -11,10 +11,6 @@ Force Tags
 
 
 *** Variables ***
-${valid_pdf}      testing.pdf
-${too_large_pdf}    large.pdf
-${text_file}      testing.txt
-${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 ${download_link}        ${SERVER}/application/1/form/question/8/forminput/18/download
 ${virus_scanning_warning}   This file is awaiting virus scanning
 
@@ -168,34 +164,12 @@ the user uploads the file to the 'technical approach' question
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
     Sleep    500ms
 
-the user can see the option to upload a file on the page
-    [Arguments]    ${url}
-    The user navigates to the page    ${url}
-    Page Should Contain    Upload
-
-the user cannot see the option to upload a file on the page
-    [Arguments]    ${url}
-    The user navigates to the page    ${url}
-    the user should not see the text in the page        Upload
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
     the user clicks the button/link    name=assign_question
     the user reloads the page
 
-the user downloads the file from the link
-    [Arguments]     ${filename}     ${download_link}
-    ${ALL_COOKIES} =    Get Cookies
-    Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${download_link}
-    sleep    2s
 
-the file should be downloaded
-    [Arguments]     ${filename}
-    File Should Exist   ${filename}
-    File Should Not Be Empty    ${filename}
-
-the file has been scanned for viruses
-    Sleep   5s
 
 

@@ -1,39 +1,40 @@
 *** Settings ***
 Documentation     INFUND-187: As an applicant in the application form, I should be able to format my text in a basic way (bold, underline and bullets), so I can style my text properly
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
+Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 Bold text format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    HappyPath
-    Given the user navigates to the page    ${BUSINESS_OPPORTUNITY_URL}
+    [Tags]    HappyPath
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=1. Business opportunity
     When the Applicant clicks on the Bold button in the "business opportunity" field
     Then all text entered should be Bold and stay the same after page refresh
 
 Italic text format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    HappyPath
-    Given the user navigates to the page    ${BUSINESS_OPPORTUNITY_URL}
+    [Tags]    HappyPath
     When the Applicant clicks on the Italic button in the "business opportunity" field
     Then all text entered should be Italic and stay the same after page refresh
 
 Numbering bullet format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    HappyPath
-    Given the user navigates to the page    ${BUSINESS_OPPORTUNITY_URL}
+    [Tags]    HappyPath
     When the Applicant clicks on the Numbering bullet button in the "business opportunity" field
     Then all text entered should be in Numbering bullets and stay the same after page refresh
 
 Bullet format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    HappyPath
-    Given the user navigates to the page    ${BUSINESS_OPPORTUNITY_URL}
+    [Tags]    HappyPath
     When the Applicant clicks on the Bullet format button in the "business opportunity" field
     Then all text entered should be in Bullet format and stay the same after page refresh
 
@@ -83,7 +84,7 @@ all text entered should be in Numbering bullets and stay the same after page ref
     Focus    css=.app-submit-btn
     Reload Page
     Run Keyword And Ignore Error    Confirm Action
-    Focus    css=.app-submit-btn
+    #Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Page Contains Element    css=#form-input-1 .editor ol
 
