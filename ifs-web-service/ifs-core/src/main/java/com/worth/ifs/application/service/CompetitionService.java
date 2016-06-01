@@ -11,5 +11,8 @@ import java.util.List;
 @Service
 public interface CompetitionService {
     CompetitionResource getById(Long id);
+
+    CompetitionResource create();
+
     List<CompetitionResource> getAllCompetitions();
 }

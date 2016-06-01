@@ -1,27 +1,18 @@
 package com.worth.ifs.competition.domain;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -34,11 +25,13 @@ public class Competition {
 	
     public CompetitionResource.Status getCompetitionStatus() {
         LocalDateTime today = dateProvider.provideDate();
-        if(getStartDate().isAfter(today)){
+        if(getStartDate() == null){
+            return CompetitionResource.Status.PROJECT_SETUP;
+        }else if(getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
-        }else if(getEndDate().isAfter(today)){
+        }else if(getEndDate() != null && getEndDate().isAfter(today)){
             return CompetitionResource.Status.OPEN;
-        }else if(getAssessmentEndDate().isAfter(today)){
+        }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
             return CompetitionResource.Status.IN_ASSESSMENT;
         }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
         	return CompetitionResource.Status.FUNDERS_PANEL;

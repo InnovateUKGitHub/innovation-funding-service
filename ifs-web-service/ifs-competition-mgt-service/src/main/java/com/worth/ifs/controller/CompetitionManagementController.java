@@ -1,12 +1,13 @@
 package com.worth.ifs.controller;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.AssessorFeedbackService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.controller.form.ApplicationSummaryQueryForm;
+import com.worth.ifs.service.ApplicationSummarySortFieldService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -17,14 +18,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.AssessorFeedbackService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.form.ApplicationSummaryQueryForm;
-import com.worth.ifs.service.ApplicationSummarySortFieldService;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/competition")
@@ -40,10 +38,17 @@ public class CompetitionManagementController {
 
     @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
-    
+
     @Autowired
     private AssessorFeedbackService assessorFeedbackService;
-    
+
+	@RequestMapping("/create")
+	public String create(){
+		CompetitionResource competition = competitionService.create();
+		return String.format("redirect:/competition/setup/%s", competition.getId());
+	}
+
+
     @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
 

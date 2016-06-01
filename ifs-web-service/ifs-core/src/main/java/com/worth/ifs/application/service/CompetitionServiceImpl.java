@@ -24,6 +24,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public CompetitionResource create(){
+        return competitionsRestService.create().getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public List<CompetitionResource> getAllCompetitions() {
         return competitionsRestService.getAll().getSuccessObjectOrThrowException();
    }

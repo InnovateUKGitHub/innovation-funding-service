@@ -1,14 +1,14 @@
 package com.worth.ifs.competition.transactional;
 
-import java.util.List;
-
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -24,6 +24,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         return serviceSuccess(competitionMapper.mapToResource(competitionRepository.findById(id)));
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> create() {
+        Competition competition = new Competition();
+        return serviceSuccess(competitionMapper.mapToResource(competitionRepository.save(competition)));
     }
 
     @Override
