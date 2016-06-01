@@ -33,17 +33,17 @@ public class TokenRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
         this.repository = repository;
     }
 
+    @Rollback
     @Test
     public void testFindByHash() throws Exception {
-        final String hash = "8223991f065abb7ed909c8c7c772fbdd24c966d246abd63c2ff7eeba9add3bafe42b067b602f761b";
+        final String hash = hash(1L, "firstname.lastname@innovateuk.org");
 
-        final Token token = repository.findByHash(hash).get();
-        assertEquals(hash, token.getHash());
-        assertEquals(User.class.getName(), token.getClassName());
-        assertEquals(Long.valueOf(10L), token.getClassPk());
-        assertEquals(VERIFY_EMAIL_ADDRESS, token.getType());
-        assertEquals(JsonNodeFactory.instance.objectNode(), token.getExtraInfo());
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, now(), JsonNodeFactory.instance.objectNode());
 
+        final Token expected = repository.save(token);
+
+        final Token found = repository.findByHash(hash).get();
+        assertEquals(expected, found);
     }
 
     @Rollback

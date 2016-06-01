@@ -176,4 +176,104 @@
 </div>
 
 
+<!-- ===========================Spend profile rows readonly=========================== --> 
+
+<div th:fragment="prototype-spend-row">
+    <tr>
+        <th scope="row" th:text="${header}">Labour</th>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+
+        <td th:text="${total}" class="total">450,000</td>
+        <td th:text="${total}" class="total eligible">450,000</td>
+    </tr>
+</div>
+
+<!-- ===========================Spend profile rows inputs=========================== --> 
+
+<div th:fragment="prototype-spend-row-edit">
+    <tr>
+        <th scope="row" th:text="${header}">Labour</th>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" /></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" /></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" /></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+        <td><input type="text" th:value="${value}" class="form-control" /></td>
+
+        <td th:text="${total}" class="total">450,000</td>
+        <td th:text="${total}" class="total eligible">450,000</td>
+    </tr>
+</div>
+
 </html>
