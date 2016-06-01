@@ -1,21 +1,21 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.Futures;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.application.UserApplicationRole;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.Futures.call;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.lang.String.format;
 
 /**
  * This class contains methods to retrieve and store {@link UserResource} related data,
@@ -29,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ProcessRoleService processRoleService;
+
+    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     @Override
     public UserResource findById(Long userId) {
@@ -82,6 +84,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public RestResult<Void> verifyEmail(String hash) {
         return userRestService.verifyEmail(hash);
+    }
+
+    @Override
+    public void resendEmailVerificationNotification(String email) {
+        try {
+            userRestService.resendEmailVerificationNotification(email).getSuccessObjectOrThrowException();
+        }
+        catch (ObjectNotFoundException e) {
+            // Do nothing. We don't want to reveal that the address was not recognised
+            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email));
+        }
     }
 
     @Override

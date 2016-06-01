@@ -28,6 +28,9 @@ public interface UserService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findByEmail(final String email);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserResource> findInactiveByEmail(final String email);
+
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId);
 
@@ -36,9 +39,6 @@ public interface UserService {
 
     @PreAuthorize("hasPermission(#user, 'CHANGE_PASSWORD')")
     ServiceResult<Void> sendPasswordResetNotification(@P("user") UserResource user);
-
-    @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'READ')")
-    ServiceResult<Void> checkPasswordResetHashValidity(@P("hash") String hash);
 
     @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
     ServiceResult<Void> changePassword(@P("hash") String hash, String password);
