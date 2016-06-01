@@ -1,6 +1,6 @@
 package com.worth.ifs.project.viewmodel;
 
-import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
 
@@ -15,9 +15,9 @@ public class ProjectDetailsStartDateViewModel {
 
     private ProjectDetailsStartDateViewModelForm form;
 
-    public ProjectDetailsStartDateViewModel(ApplicationResource project) {
+    public ProjectDetailsStartDateViewModel(ProjectResource project) {
         this.projectNumber = project.getFormattedId();
-        this.projectName = project.getApplicationDisplayName();
+        this.projectName = project.getName();
         this.projectDurationInMonths = project.getDurationInMonths();
     }
 

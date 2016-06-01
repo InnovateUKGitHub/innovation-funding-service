@@ -1,8 +1,8 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ProjectService;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,17 +22,17 @@ import java.time.LocalDate;
 public class ProjectDetailsController {
 
 	@Autowired
-	private ApplicationService applicationService;
+	private ProjectService projectService;
 
     @Autowired
-    private ApplicationRestService applicationRestService;
+    private ProjectRestService applicationRestService;
 
     @RequestMapping(value = "/{projectId}/startdate", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form) {
     	
-    	ApplicationResource project = applicationService.getById(projectId);
+    	ProjectResource project = projectService.getById(projectId);
     	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
-        LocalDate defaultStartDate = LocalDate.of(project.getStartDate().getYear(), project.getStartDate().getMonth(), 1);
+        LocalDate defaultStartDate = LocalDate.of(project.getTargetStartDate().getYear(), project.getTargetStartDate().getMonth(), 1);
         form.setProjectStartDate(defaultStartDate);
         return "project/details-start-date";
     }

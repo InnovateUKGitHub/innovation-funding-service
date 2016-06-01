@@ -482,11 +482,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 		return serviceSuccess(applicationResults);
 	}
 
-    @Override
-    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return getApplication(projectId).andOnSuccessReturnVoid(application -> application.setStartDate(projectStartDate));
-    }
-
     // TODO DW - INFUND-1555 - deal with rest results
     private ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);

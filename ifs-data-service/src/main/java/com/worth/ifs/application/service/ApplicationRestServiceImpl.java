@@ -95,9 +95,4 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
     }
-
-    @Override
-    public RestResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate) {
-        return postWithRestResult(applicationRestURL + "/" + projectId + "/startdate?projectStartDate=" + projectStartDate, Void.class);
-    }
 }

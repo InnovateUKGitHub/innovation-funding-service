@@ -5,7 +5,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.UserRoleType;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -23,5 +22,4 @@ public interface ApplicationRestService {
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
-    RestResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate);
 }

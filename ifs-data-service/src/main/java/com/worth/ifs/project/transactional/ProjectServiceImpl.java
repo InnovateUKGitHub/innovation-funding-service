@@ -8,18 +8,23 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
-public class ProjectServiceImpl implements ProjectService {
+public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -32,7 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
-        return serviceSuccess(projectMapper.mapToResource(projectRepository.findOne(projectId)));
+        return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
     }
 
     @Override
@@ -45,6 +50,17 @@ public class ProjectServiceImpl implements ProjectService {
         return serviceSuccess(createProjectFromApplicationId(applicationId));
     }
 
+    @Override
+    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+        return getProject(projectId).andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+    }
+
+    @Override
+    public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
+        applicationFundingDecisions.keySet().stream().forEach(this::createProjectFromApplicationId);
+        return serviceSuccess();
+    }
+
     private ProjectResource createProjectFromApplicationId(final Long applicationId){
         Application application = applicationRepository.findOne(applicationId);
         Project project = new Project();
@@ -54,13 +70,11 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.mapToResource(createdProject);
     }
 
-    @Override
-    public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        applicationFundingDecisions.keySet().stream().forEach(this::createProjectFromApplicationId);
-        return serviceSuccess();
-    }
-
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
+    }
+
+    private ServiceResult<Project> getProject(long projectId) {
+        return find(projectRepository.findOne(projectId), notFoundError(Project.class, id));
     }
 }

@@ -2,11 +2,12 @@ package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+
+import static org.junit.Assert.assertEquals;
 
 public class ProjectTest {
     Long id;
@@ -15,6 +16,7 @@ public class ProjectTest {
     Address address;
     Long durationInMonths;
     ProcessRole projectManager;
+    String name;
 
     @Before
     public void setUp() throws Exception {
@@ -23,15 +25,17 @@ public class ProjectTest {
         address = new Address();
         durationInMonths = 12L;
         projectManager = new ProcessRole();
-        project = new Project(id, startDate, address, durationInMonths, projectManager);
+        name = "My Project";
+        project = new Project(id, startDate, address, durationInMonths, projectManager, name);
     }
 
     @Test
     public void applicationShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(project.getId(), id);
-        Assert.assertEquals(project.getTargetStartDate(), startDate);
-        Assert.assertEquals(project.getAddress(), address);
-        Assert.assertEquals(project.getDurationInMonths(), durationInMonths);
-        Assert.assertEquals(project.getProjectManager(), projectManager);
+        assertEquals(project.getId(), id);
+        assertEquals(project.getTargetStartDate(), startDate);
+        assertEquals(project.getAddress(), address);
+        assertEquals(project.getDurationInMonths(), durationInMonths);
+        assertEquals(project.getProjectManager(), projectManager);
+        assertEquals(project.getName(), name);
     }
 }
