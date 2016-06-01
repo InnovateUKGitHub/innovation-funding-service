@@ -36,6 +36,6 @@ public class CompetitionController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public RestResult<CompetitionResource> create() {
-        return competitionService.create().toGetResponse();
+        return competitionService.create().toPostCreateResponse();
     }
 }
