@@ -25,9 +25,9 @@ public class Competition {
 	
     public CompetitionResource.Status getCompetitionStatus() {
         LocalDateTime today = dateProvider.provideDate();
-        if(getStartDate() == null){
-            return CompetitionResource.Status.PROJECT_SETUP;
-        }else if(getStartDate().isAfter(today)){
+        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)){
+            return status;
+        }else if(getStartDate() == null || getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
         }else if(getEndDate() != null && getEndDate().isAfter(today)){
             return CompetitionResource.Status.OPEN;
@@ -73,11 +73,15 @@ public class Competition {
 	@DateTimeFormat
     private LocalDateTime assessorFeedbackDate;
 
+    @Enumerated(EnumType.STRING)
+    private CompetitionResource.Status status;
+
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 
     public Competition() {
     	// no-arg constructor
+        status = CompetitionResource.Status.COMPETITION_SETUP;
     }
     public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -88,6 +92,7 @@ public class Competition {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        status = CompetitionResource.Status.NOT_STARTED;
     }
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -95,6 +100,7 @@ public class Competition {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        status = CompetitionResource.Status.NOT_STARTED;
     }
 
 
@@ -259,7 +265,15 @@ public class Competition {
 	protected void setDateProvider(DateProvider dateProvider) {
 		this.dateProvider = dateProvider;
 	}
-	
+
+    public CompetitionResource.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(CompetitionResource.Status status) {
+        this.status = status;
+    }
+
     protected static class DateProvider {
     	public LocalDateTime provideDate() {
     		return LocalDateTime.now();
