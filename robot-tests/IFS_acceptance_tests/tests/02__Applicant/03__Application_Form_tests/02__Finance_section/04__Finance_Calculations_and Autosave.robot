@@ -250,6 +250,7 @@ The applicant selects 'No' for other funding
 
 The applicant selects 'Yes' and fills two rows
     Select Radio button    other_funding-otherPublicFunding-35-54    Yes
+    Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
     Click Element    jQuery=button:contains('Add another source of funding')
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Element Should Be Visible    id=other-funding-table
@@ -291,10 +292,6 @@ auto-save should work for the "Grant" field
     Clear Element Text    id=cost-financegrantclaim
     focus    jQuery= button:contains('complete')
     Sleep    500ms
-    Reload Page
-    ${input_value} =    Get Value    id=cost-financegrantclaim
-    Should Be Equal As Strings    ${input_value}    0
-    Clear Element Text    id=cost-financegrantclaim
     Input Text    id=cost-financegrantclaim    25
     focus    jQuery= button:contains('complete')
     Sleep    300ms

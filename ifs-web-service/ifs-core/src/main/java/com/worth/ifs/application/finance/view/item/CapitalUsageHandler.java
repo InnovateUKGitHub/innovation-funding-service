@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.util.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,16 +32,16 @@ public class CapitalUsageHandler extends CostHandler {
                     existing = costFormValue;
                     break;
                 case "deprecation":
-                    deprecation = getIntegerValue(costFormValue, 0);
+                    deprecation = NumberUtils.getIntegerValue(costFormValue, 0);
                     break;
                 case "npv":
-                    npv = getBigDecimalValue(costFormValue, 0d);
+                    npv = NumberUtils.getBigDecimalValue(costFormValue, 0d);
                     break;
                 case "residualValue":
-                    residualValue = getBigDecimalValue(costFormValue, 0d);
+                    residualValue = NumberUtils.getBigDecimalValue(costFormValue, 0d);
                     break;
                 case "utilisation":
-                    utilisation = getIntegerValue(costFormValue, 0);
+                    utilisation = NumberUtils.getIntegerValue(costFormValue, 0);
                     break;
                 default:
                     LOG.info("Unused costField: " + financeFormField.getCostName());

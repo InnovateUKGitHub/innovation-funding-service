@@ -19,7 +19,9 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project setup status'})" th:remove="tag" />
 
-	<p class="form-hint">You need to complete the following steps before this project can begin.</p>
+	<p class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
+
+	<strong><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
 
 	<div class="warning-alert" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
         <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
@@ -164,12 +166,6 @@
 		</li>
 
 	</ul>
-	
-	<hr />
-	
-	<strong><a href="/prototypes/1589-team-status">What's the status of each of my partners</a></strong>
-
-
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

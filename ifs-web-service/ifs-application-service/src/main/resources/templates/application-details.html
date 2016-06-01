@@ -104,7 +104,7 @@
 
     <div class="alignright-button">
         <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
-        <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${userIsLeadApplicant ? 'Review &amp; submit' : 'Review'}" />
+        <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review &amp; submit' : 'Review'}" />
     </div>
 
 
