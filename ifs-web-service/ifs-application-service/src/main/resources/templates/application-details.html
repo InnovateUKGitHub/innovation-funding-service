@@ -81,7 +81,7 @@
                                      th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
                                      th:title="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'" />
                               <!--  th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" />
-                                <!--  th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}" /> -->
+                                  th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}" /> -->
                                 <img class="section-status assigned"
                                      src="/images/field/field-assigned-right.png"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
@@ -90,7 +90,7 @@
                                      th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
                                      th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'" />
                                 <!-- th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"/>
-                                       th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}"/>
+                                       th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}"/> -->
 
                             </div>
 
