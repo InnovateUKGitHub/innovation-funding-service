@@ -28,7 +28,7 @@ public class ProjectPermissionRules {
         return isCompAdmin(user);
     }
 
-    boolean userIsConnectedToProjectResource(ProjectResource project, UserResource user) {
+    public boolean userIsConnectedToProjectResource(ProjectResource project, UserResource user) {
         ProcessRole processRole =  processRoleRepository.findByUserIdAndApplicationId(user.getId(), project.getId());
         return processRole != null;
     }

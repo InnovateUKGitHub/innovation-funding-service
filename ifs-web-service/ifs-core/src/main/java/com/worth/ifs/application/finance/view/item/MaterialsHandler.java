@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.Materials;
+import com.worth.ifs.util.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,10 +26,10 @@ public class MaterialsHandler extends CostHandler {
                         item = fieldValue;
                         break;
                     case "cost":
-                        cost = getBigDecimalValue(fieldValue, 0D);
+                        cost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
                         break;
                     case "quantity":
-                        quantity = getIntegerValue(fieldValue, 0);
+                        quantity = NumberUtils.getIntegerValue(fieldValue, 0);
                         break;
                     default:
                         LOG.info("Unused costField: " + financeFormField.getCostName());

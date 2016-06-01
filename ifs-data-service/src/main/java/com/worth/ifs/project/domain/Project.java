@@ -31,6 +31,16 @@ public class Project {
     @JoinColumn(name="projectManager", referencedColumnName="id")
     private ProcessRole projectManager;
 
+    public Project() {}
+
+    public Project(Long id, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager) {
+        this.id = id;
+        this.targetStartDate = targetStartDate;
+        this.address = address;
+        this.durationInMonths = durationInMonths;
+        this.projectManager = projectManager;
+    }
+
     public Long getId() {
         return id;
     }
