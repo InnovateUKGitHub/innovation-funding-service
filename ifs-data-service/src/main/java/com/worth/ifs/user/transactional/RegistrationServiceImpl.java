@@ -22,14 +22,20 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 
 /**
  * A service around Registration and general user-creation operations
@@ -39,7 +45,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
 
     final JsonNodeFactory factory = JsonNodeFactory.instance;
+
     private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
+
+    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_USER
@@ -78,7 +87,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource) {
-        return createApplicantUser(organisationId, Optional.empty(), userResource);
+        return createApplicantUser(organisationId, empty(), userResource);
     }
 
     private boolean isUserCompAdmin(final String email) {
@@ -113,9 +122,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
-                addRoleToUser(user, roleName)).andOnSuccess(() ->
-                createUserWithUid(newUser, userResource.getPassword(), competitionId))).
-                andOnSuccessReturn(userMapper::mapToResource);
+                addRoleToUser(user, roleName))).andOnSuccess(() ->
+                createUserWithUid(newUser, userResource.getPassword(), competitionId));
     }
 
 	private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
@@ -131,7 +139,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<User> createUserWithUid(User user, String password, Optional<Long> competitionId) {
+    private ServiceResult<UserResource> createUserWithUid(User user, String password, Optional<Long> competitionId) {
 
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
@@ -139,8 +147,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
             User savedUser = userRepository.save(user);
-            sendUserVerificationEmail(savedUser, competitionId);
-            return savedUser;
+            final UserResource userResource = userMapper.mapToResource(savedUser);
+            return userResource;
         });
     }
 
@@ -184,39 +192,47 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return newUser;
     }
 
-    private ServiceResult<Void> sendUserVerificationEmail(User user, Optional<Long> competitionId) {
-        String verificationLink = getVerificationLink(user, competitionId);
-
-
-        NotificationSource from = systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
-
-        Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("verificationLink", verificationLink);
-
-        Notification notification = new Notification(from, singletonList(to), Notifications.VERIFY_EMAIL_ADDRESS, notificationArguments);
+    @Override
+    public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
+        final Token token = createEmailVerificationToken(user, competitionId);
+        final Notification notification = getEmailVerificationNotification(user, token);
         return notificationService.sendNotification(notification, EMAIL);
     }
 
-    private String getVerificationLink(User user, Optional<Long> competitionId) {
-        String hash = generateAndSaveVerificationHash(user, competitionId);
-        return String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
+    @Override
+    public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
+        final Token token = refreshEmailVerificationToken(user);
+        final Notification notification = getEmailVerificationNotification(user, token);
+        return notificationService.sendNotification(notification, EMAIL);
     }
 
-    private String generateAndSaveVerificationHash(User user, Optional<Long> competitionId) {
-        StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
-        int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
-        String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
-        hash = encoder.encode(hash);
+    private Notification getEmailVerificationNotification(final UserResource user, final Token token) {
+        final List<NotificationTarget> to = singletonList(new ExternalUserNotificationTarget(user.getName(), user.getEmail()));
+        return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
+    }
 
+    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId) {
+        final String emailVerificationHash = getEmailVerificationHash(user);
 
-        ObjectNode extraInfo = factory.objectNode();
+        final ObjectNode extraInfo = factory.objectNode();
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
         }
-        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
-        tokenRepository.save(token);
-        return hash;
+        final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
+        return tokenRepository.save(token);
     }
 
+    private Token refreshEmailVerificationToken(final UserResource user) {
+        final String emailVerificationHash = getEmailVerificationHash(user);
+        final Token token = tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId()).get();
+        token.setHash(emailVerificationHash);
+        token.setUpdated(now());
+        return tokenRepository.save(token);
+    }
+
+    private String getEmailVerificationHash(final UserResource user) {
+        final int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
+        final String hash = format("%s==%s==%s", user.getId(), user.getEmail(), random);
+        return encoder.encode(hash);
+    }
 }

@@ -4,9 +4,10 @@ Documentation     INFUND-1987
 ...               INFUND-2307 Acceptance test: List of applications which are in assessment
 ...
 ...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
+...
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
-Force Tags
+Force Tags        Comp admin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -20,7 +21,7 @@ Competition status should be correct
     Then the user should see the text in the page    In assessment
     Then the user should not see the text in the page    Competition open
 
-The correct columns show for the submitted applications
+Columns show of the submitted applications
     [Documentation]    INFUND-2307
     Then the user should see the text in the page    Application no
     And the user should see the text in the page    Project title
@@ -30,7 +31,7 @@ The correct columns show for the submitted applications
     And the user should see the text in the page    Total project cost (£)
     And the user should see the text in the page    Duration (months)
 
-Summary of the applications submitted
+Summary of the submitted applications
     [Documentation]    INFUND-2307
     Then the calculations should be correct    css=.info-area p:nth-child(2) span
     And both calculations in the page should show the same    css=.info-area p:nth-child(2) span
@@ -59,11 +60,11 @@ Excel download button should be visible
     [Documentation]    INFUND-2307
     Then the user should see the element    link=Export application data (.xls)
 
-Submitted applications from a different competition should not be visible
+Only applications from this competition should be visible
     [Documentation]    INFUND-2311
     Then the user should not see the element    link=00000005
 
-The correct columns show for not submitted applications
+Columns for not submitted applications
     [Documentation]    INFUND-2307
     When the user clicks the button/link    link=Applications not submitted
     Then the user should see the text in the page    Application no
@@ -71,19 +72,28 @@ The correct columns show for not submitted applications
     And the user should see the text in the page    Lead
     And the user should see the text in the page    Percentage complete
 
-Summary of the applications not submitted
+Summary of the not submitted applications
     [Documentation]    INFUND-2307
     Then the calculations should be correct    css=.info-area p:nth-child(3) span
     And both calculations in the page should show the same    css=.info-area p:nth-child(3) span
 
-The applications can be sorted by percentage
+Sorted by percentage
     [Documentation]    INFUND-2307
     When the application list is sorted by    Project title
     Then the applications should be sorted by column    2
 
-Not submitted applications from different competitions should not be visible
+Only non submitted applications from this competition should be visible
     [Documentation]    INFUND-2311
     Then the user should not see the element    link=00000001
+
+Excel export
+    [Documentation]    INFUND-1987
+    [Tags]    HappyPath    Pending
+    # we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
+    Given the user navigates to the page    ${COMP_ADMINISTRATOR_OPEN}
+    When the admin downloads the excel
+    And user opens the excel and checks the content
+    [Teardown]    Empty the download directory
 
 *** Keywords ***
 The application list is sorted by
@@ -114,3 +124,42 @@ Both calculations in the page should show the same
     ${APPLICATIONS_NUMBER_SUMMARY}=    get text    ${SUMMARY_LOCATOR}
     ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-two-thirds span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
+
+Empty the download directory
+    Empty Directory    ${DOWNLOAD_FOLDER}
+
+Download File
+    [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
+    log    ${COOKIE_VALUE}
+    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${/}${FILENAME}
+
+the admin downloads the excel
+    ${ALL_COOKIES} =    Get Cookies
+    Log    ${ALL_COOKIES}
+    Download File    ${ALL_COOKIES}    https://ifs-local-dev/management/competition/1/download    submitted_applications.xlsx
+    sleep    2s
+
+User opens the excel and checks the content
+    ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
+    Should Be Equal    ${APPLICATION_ID_1}    00000005
+    ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
+    should be equal    ${APPLICATION_TITLE_1}    A new innovative solution
+    ${LEAD_ORRGANISATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    C4
+    should be equal    ${LEAD_ORRGANISATION_1}    Empire Ltd
+    ${FIRST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    D4
+    should be equal    ${FIRST_NAME_1}    Steve
+    ${LAST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    E4
+    should be equal    ${LAST_NAME_1}    Smith
+    ${EMAIL_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F4
+    should be equal    ${EMAIL_1}    steve.smith@empire.com
+    ${DURATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    G4
+    Should Be Equal As Numbers    ${DURATION_1}    20.0
+    ${NUMBER_OF_PARTNERS_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    H4
+    Should Be Equal As Numbers    ${NUMBER_OF_PARTNERS_1}    4.0
+    ${SUMMARY_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    I4
+    Should contain    ${SUMMARY_1}    The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years.
+    ${TOTAL_COST_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    J4
+    Should Be Equal    ${TOTAL_COST_1}    £398,324.29
+    ${FUNDING_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    K4
+    Should Be Equal    ${FUNDING_1}    £8,000.00
