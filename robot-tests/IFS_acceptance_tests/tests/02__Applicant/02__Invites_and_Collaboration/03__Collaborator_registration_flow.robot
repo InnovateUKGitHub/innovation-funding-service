@@ -102,7 +102,7 @@ The type of the sub organisation navigates to the correct page
 
 Catapult search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult    Failing
+    [Tags]    Invite    Catapult
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    2
@@ -123,7 +123,7 @@ Catapult search (empty, invalid & valid inputs)
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult    Failing
+    [Tags]    Invite    Catapult
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
@@ -132,7 +132,7 @@ Catapult search (accept invitation flow)
 
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult    Email    Failing
+    [Tags]    Invite    Catapult    Email
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
