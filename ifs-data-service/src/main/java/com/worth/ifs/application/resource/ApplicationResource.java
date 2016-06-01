@@ -14,9 +14,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
@@ -25,8 +24,11 @@ public class ApplicationResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
 
-    private static final List<CompetitionResource.Status> PUBLISHED_ASSESSOR_FEEDBACK_STATES = singletonList(PROJECT_SETUP);
-    private static final List<CompetitionResource.Status> EDITABLE_ASSESSOR_FEEDBACK_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
+    private static final List<CompetitionResource.Status> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
+    private static final List<CompetitionResource.Status> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
+    private static final List<CompetitionResource.Status> SUBMITABLE_COMPETITION_STATES = asList(OPEN);
+    private static final List<Long> SUBMITTED_APPLICATION_STATES =
+            simpleMap(asList(ApplicationStatusConstants.SUBMITTED, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED), ApplicationStatusConstants::getId);
 
     private Long id;
     private String name;
@@ -227,16 +229,30 @@ public class ApplicationResource {
     }
 
     public boolean hasPublishedAssessorFeedback() {
-        return isInPublishedAssessorFeedbackState() && getAssessorFeedbackFileEntry() != null;
+        return isInPublishedAssessorFeedbackCompetitionState() && getAssessorFeedbackFileEntry() != null;
     }
 
     @JsonIgnore
-    public boolean isInPublishedAssessorFeedbackState() {
-        return PUBLISHED_ASSESSOR_FEEDBACK_STATES.contains(competitionStatus);
+    public boolean isInPublishedAssessorFeedbackCompetitionState() {
+        return PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES.contains(competitionStatus);
     }
 
     @JsonIgnore
-    public boolean isInEditableAssessorFeedbackState() {
-        return EDITABLE_ASSESSOR_FEEDBACK_STATES.contains(competitionStatus);
+    public boolean isInEditableAssessorFeedbackCompetitionState() {
+        return EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES.contains(competitionStatus);
+    }
+
+    @JsonIgnore
+    public boolean isSubmitable() {
+        return isInSubmitableCompetitionState() && !hasBeenSubmitted();
+    }
+
+    @JsonIgnore
+    public boolean hasBeenSubmitted() {
+        return SUBMITTED_APPLICATION_STATES.contains(applicationStatus);
+    }
+
+    private boolean isInSubmitableCompetitionState() {
+        return SUBMITABLE_COMPETITION_STATES.contains(competitionStatus);
     }
 }

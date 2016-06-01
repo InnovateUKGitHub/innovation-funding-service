@@ -239,12 +239,16 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
     protected void addUserDetails(Model model, ApplicationResource application, Long userId) {
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        Boolean userIsLeadApplicant = userIsLeadApplicant(application, userId);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);
+    }
+
+    protected boolean userIsLeadApplicant(ApplicationResource application, Long userId) {
+        return userService.isLeadApplicant(userId, application);
     }
 
     protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
