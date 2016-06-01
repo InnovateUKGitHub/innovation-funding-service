@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +18,7 @@ import com.worth.ifs.application.service.ProjectService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
+import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.UserResource;
 
@@ -59,22 +62,37 @@ public class ProjectDetailsController {
     }
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
-    public String projectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
+    public String projectManager(Model model, @PathVariable("projectId") final Long projectId) {
     	ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectId);
 
+        ProjectManagerForm form = new ProjectManagerForm();
+        form.setProjectManager(projectResource.getProjectManager());
+        
         model.addAttribute("project", projectResource);
         model.addAttribute("app", applicationResource);
-
-    	//TODO get it
+        model.addAttribute("form", form);
     	
         return "project/project-manager";
     }
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
-    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
+    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form, BindingResult bindingResult) {
         
-    	//TODO save it.  do validation and if fails render the page.  need a form involved here.
+    	ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectId);
+        
+        //TODO check if the entered id is one of the people in the team
+        
+        if(bindingResult.hasErrors()) {
+        	 model.addAttribute("project", projectResource);
+             model.addAttribute("app", applicationResource);
+             model.addAttribute("form", form);
+             return "project/project-manager";
+        }
+        
+        
+    	//TODO save it.
     	
         return "redirect:/project/" + projectId + "/details";
     }
