@@ -36,4 +36,9 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }
+
+    @Override
+    public RestResult<CompetitionResource> create() {
+        return postWithRestResult(competitionsRestURL + "", CompetitionResource.class);
+    }
 }

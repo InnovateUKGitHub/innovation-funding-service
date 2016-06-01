@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+</head>
+<body class="competition-management application-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content" class="full-width">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div class="grid-row">
+        <div class="column-half">
+            <div class="page-title">
+                <h1 class="heading-xlarge">Competitions</h1>
+            </div>
+        </div>
+        <div class="column-half">
+            <div class="alignright extra-margin">
+                <a href="competition/create" class="button button-large" th:text="#{ifs.competition.create_competition}">Create Competition</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="grid-row competitions-list">
+        <ul class="comp-list">
+            <li class="status comp-status-closed" th:each="competition: ${competitions}">
+                <div class="comp-details">
+                    <h3 class="heading-small">
+                        <a th:href="@{'competition/'+${competition.id}}" >
+                            <span th:text="${competition.name}"></span>
+                            <span th:if="${competition.name == null}" th:text="#{ifs.competition.no_title}">No Title</span>
+                        </a>
+                    </h3>
+                    <a th:href="@{'competition/setup/'+${competition.id}}" >
+                        Edit Competition
+                    </a>
+                    <p>Ref number: <span th:text="${competition.id}"></span></p>
+                </div>
+                <p class="status">
+                    <span th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"></span>
+                </p>
+            </li>
+        </ul>
+    </div>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

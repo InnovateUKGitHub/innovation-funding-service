@@ -73,6 +73,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
+        public ServiceResult<CompetitionResource> create() {
+            return serviceSuccess(newCompetitionResource().build());
+        }
+
+        @Override
         public ServiceResult<List<CompetitionResource>> findAll() {
             return serviceSuccess(newCompetitionResource().build(2));
         }
