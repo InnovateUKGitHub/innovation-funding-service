@@ -1,5 +1,6 @@
 package com.worth.ifs.application.form;
 
+import com.worth.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -15,7 +16,7 @@ import static org.apache.commons.lang3.math.NumberUtils.isNumber;
  * This class is used to setup and submit the form input values. On submit the values are converted into an Form object.
  * http://stackoverflow.com/a/4511716
  */
-public class Form {
+public class Form implements BindingResultTarget {
     private Map<String, String> formInput;
     private List<ObjectError> objectErrors;
     private BindingResult bindingResult;
@@ -60,15 +61,22 @@ public class Form {
         return null;
     }
 
+    @Override
     public List<ObjectError> getObjectErrors() {
 		return objectErrors;
 	}
+
+    @Override
     public void setObjectErrors(List<ObjectError> objectErrors) {
 		this.objectErrors = objectErrors;
 	}
+
+    @Override
     public BindingResult getBindingResult() {
 		return bindingResult;
 	}
+
+    @Override
     public void setBindingResult(BindingResult bindingResult) {
 		this.bindingResult = bindingResult;
 	}

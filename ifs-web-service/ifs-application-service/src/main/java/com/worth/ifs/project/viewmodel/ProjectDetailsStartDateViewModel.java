@@ -1,8 +1,12 @@
 package com.worth.ifs.project.viewmodel;
 
+import com.worth.ifs.controller.BindingResultTarget;
 import com.worth.ifs.project.resource.ProjectResource;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * View model that backs the Project Details - Start Date page
@@ -37,9 +41,11 @@ public class ProjectDetailsStartDateViewModel {
         return form;
     }
 
-    public static class ProjectDetailsStartDateViewModelForm {
+    public static class ProjectDetailsStartDateViewModelForm implements BindingResultTarget {
 
         private LocalDate projectStartDate;
+        private List<ObjectError> objectErrors;
+        private BindingResult bindingResult;
 
         // for spring form binding
         public ProjectDetailsStartDateViewModelForm() {
@@ -55,6 +61,26 @@ public class ProjectDetailsStartDateViewModel {
 
         public void setProjectStartDate(LocalDate projectStartDate) {
             this.projectStartDate = projectStartDate;
+        }
+
+        @Override
+        public List<ObjectError> getObjectErrors() {
+            return objectErrors;
+        }
+
+        @Override
+        public void setObjectErrors(List<ObjectError> objectErrors) {
+            this.objectErrors = objectErrors;
+        }
+
+        @Override
+        public BindingResult getBindingResult() {
+            return bindingResult;
+        }
+
+        @Override
+        public void setBindingResult(BindingResult bindingResult) {
+            this.bindingResult = bindingResult;
         }
     }
 }

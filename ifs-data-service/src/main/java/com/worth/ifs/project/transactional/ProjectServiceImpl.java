@@ -3,6 +3,7 @@ package com.worth.ifs.project.transactional;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.mapper.ProjectMapper;
@@ -18,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -52,12 +56,27 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return getProject(projectId).andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+        return getProject(projectId).
+                andOnSuccess(project -> validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> project.setTargetStartDate(projectStartDate)));
     }
 
     @Override
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
         applicationFundingDecisions.keySet().stream().forEach(this::createProjectFromApplicationId);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
+
+        if (date.getDayOfMonth() != 1) {
+            return serviceFailure(new Error(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
+        }
+
+        if (date.isBefore(LocalDate.now())) {
+            return serviceFailure(new Error(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE));
+        }
+
         return serviceSuccess();
     }
 
@@ -77,6 +96,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<Project> getProject(long projectId) {
-        return find(projectRepository.findOne(projectId), notFoundError(Project.class, id));
+        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 }
