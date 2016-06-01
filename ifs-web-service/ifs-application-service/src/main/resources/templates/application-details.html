@@ -71,7 +71,6 @@
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <!-- todo refactor Your Finances condition -->
                             <!-- todo display icon if condition -->
                             <div th:if="${childSection.getName().equals('Your finances')}"  >
                                 <img class="section-status complete"
@@ -81,7 +80,8 @@
                                      height="30"
                                      th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
                                      th:title="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'" />
-                                <!-- th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" /> -->
+                              <!--  th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" />
+                                <!--  th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}" /> -->
                                 <img class="section-status assigned"
                                      src="/images/field/field-assigned-right.png"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
@@ -89,8 +89,9 @@
                                      height="30"
                                      th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
                                      th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'" />
-                                <!-- th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id))
-                                and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}" /> -->
+                                <!-- th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"/>
+                                       th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}"/>
+
                             </div>
 
 

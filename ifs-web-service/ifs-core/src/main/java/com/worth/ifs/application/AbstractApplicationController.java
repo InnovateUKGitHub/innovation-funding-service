@@ -185,6 +185,12 @@ public abstract class AbstractApplicationController extends BaseController {
         return application;
     }
 
+    protected ApplicationResource addCompleteApplicationDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+        addCompletedDetails(model, application, userOrganisation);
+        return application;
+    }
+
+
     protected  void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());

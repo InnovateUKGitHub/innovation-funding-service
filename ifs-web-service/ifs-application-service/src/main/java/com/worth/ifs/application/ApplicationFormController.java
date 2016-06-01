@@ -29,6 +29,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
@@ -492,6 +493,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
 
         Map<String, String[]> params = request.getParameterMap();
 
@@ -499,6 +502,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             bindingResult.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
+        addCompleteApplicationDetails(model, application, userOrganisation);
 
         if(LOG.isDebugEnabled()){
             bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
