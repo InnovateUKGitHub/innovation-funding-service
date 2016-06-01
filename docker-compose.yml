@@ -52,7 +52,7 @@ services:
 
   mysql:
     container_name: ifs-database
-    image: mysql
+    image: mysql:5.5.49
     ports:
       - "3306:3306"
     environment:
