@@ -2,8 +2,10 @@
 Documentation     INFUND-1147: Further acceptance tests for the create account page
 ...
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing so I know that I have to fix this before submitting my form
-Suite Setup       The guest user opens the browser
+Suite Setup       Run keywords    The guest user opens the browser
+...               AND    The user follows the flow to register their organisation
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -13,29 +15,27 @@ Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
 
 *** Test Cases ***
-Invalid password (from the blacklist)
+Password from the blacklist
     [Documentation]    INFUND-1147
     [Tags]
-    Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${blacklisted_password}
     And the user enters text to a text field    id=retypedPassword    ${blacklisted_password}
     And the user submits their information
-    #due to INFUND-2567    Then the user should see an error    Password is too weak
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password is too weak
 
-Invalid password (all lower case)
+Password all lower case
     [Documentation]    INFUND-1147
-    [Tags]    Pending
-    #due to INFUND-2568
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    [Tags]
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${lower_case_password}
     And the user enters text to a text field    id=retypedPassword    ${lower_case_password}
@@ -44,14 +44,13 @@ Invalid password (all lower case)
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password must contain at least one upper case letter
 
-Invalid password (all upper case)
+Password all upper case
     [Documentation]    INFUND-1147
     [Tags]    Pending
-    #due to INFUND-2568
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${upper_case_password}
     And the user enters text to a text field    id=retypedPassword    ${upper_case_password}
@@ -60,13 +59,13 @@ Invalid password (all upper case)
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password must contain at least one lower case letter
 
-Invalid password (no numbers)
+Password without numbers
     [Documentation]    INFUND-1147
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${no_numbers_password}
     And the user enters text to a text field    id=retypedPassword    ${no_numbers_password}
@@ -74,18 +73,17 @@ Invalid password (no numbers)
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password must contain at least one number
 
-Invalid password (personal information)
+Password with personal information
     [Documentation]    INFUND-1147
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${personal_info_password}
     And the user enters text to a text field    id=retypedPassword    ${personal_info_password}
     And the user submits their information
-    #due to INFUND-2567    Then the user should see an error    Password should not contain your last name
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password should not contain your last name
 
@@ -94,11 +92,11 @@ Password is too long
     ...
     ...    INFUND-2497
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     And browser validations have been disabled
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${long_password}
     And the user enters text to a text field    id=retypedPassword    ${long_password}
@@ -111,10 +109,10 @@ Password is too short
     ...
     ...    INFUND-2497
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    0114123456778
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${short_password}
     And the user enters text to a text field    id=retypedPassword    ${short_password}
@@ -125,10 +123,10 @@ Password is too short
 Password and re-typed password do not match
     [Documentation]    INFUND-885
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${incorrect_password}
@@ -139,10 +137,10 @@ Password and re-typed password do not match
 Re-type password left blank
     [Documentation]    INFUND-885
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${EMPTY}
@@ -154,10 +152,10 @@ Re-type password left blank
 Password left blank
     [Documentation]    INFUND-885
     [Tags]
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${EMPTY}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
@@ -181,3 +179,6 @@ the user cannot login with the invalid password
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Your login was unsuccessful because of the following issue(s)
     Page Should Contain    Your username/password combination doesn't seem to work
+
+the user accepts the terms and conditions
+    Run Keyword And Ignore Error    Select Checkbox    termsAndConditions

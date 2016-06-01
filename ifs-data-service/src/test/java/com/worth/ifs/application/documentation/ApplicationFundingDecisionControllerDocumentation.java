@@ -1,5 +1,17 @@
 package com.worth.ifs.application.documentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.controller.ApplicationFundingDecisionController;
+import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.util.MapFunctions;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+
+import java.util.Map;
+
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -7,19 +19,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.controller.ApplicationFundingDecisionController;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.util.MapFunctions;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
@@ -43,6 +42,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceSuccess());
+        when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/1/submit")
 	        		.contentType(MediaType.APPLICATION_JSON)

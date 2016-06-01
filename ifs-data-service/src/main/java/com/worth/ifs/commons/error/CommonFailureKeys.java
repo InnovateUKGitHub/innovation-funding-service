@@ -54,6 +54,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Users
      */
     USERS_DUPLICATE_EMAIL_ADDRESS("This email address is already taken", CONFLICT),
+    USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND("E-mail verification token not found", NOT_FOUND),
+    USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED("E-mail verification token has expired", BAD_REQUEST),
 
     /**
      * Funding Panel

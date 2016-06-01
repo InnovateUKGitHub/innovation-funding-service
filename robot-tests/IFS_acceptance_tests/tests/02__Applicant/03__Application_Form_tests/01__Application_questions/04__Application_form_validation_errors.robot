@@ -1,28 +1,28 @@
 *** Settings ***
 Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
+Suite Setup       Run keywords    log in and create new application if there is not one already
+...               AND    Applicant goe to the application details page of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Pending
+Force Tags        Pending    Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 Empty project title field
     [Documentation]    -INFUND-43
-    [Tags]    Applicant
+    [Tags]
     # pending INFUND-2707
-    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     When the applicant clears the application title field
     Then The applicant should get a validation error message    Please enter the full title of the project.
 
 Invalid date (Year)
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    HappyPath
+    [Tags]    HappyPath
     # pending INFUND-2707
-    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error message    Please enter a future date
     And the field is empty    id=application_details-startdate_year
@@ -32,9 +32,8 @@ Invalid date (Year)
 
 Invalid date (day)
     [Documentation]    -INFUND-43
-    [Tags]    Applicant
+    [Tags]
     # pending INFUND-2707
-    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_day    32
     And the applicant should get a validation error message    Please enter a valid date
     And the applicant inserts an input    id=application_details-startdate_day    0
@@ -48,9 +47,8 @@ Invalid date (day)
 
 Invalid date (month)
     [Documentation]    -INFUND-43
-    [Tags]    Applicant
+    [Tags]
     # pending INFUND-2707
-    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_month    0
     And the applicant should get a validation error message    Please enter a valid date
     When the applicant inserts an input    id=application_details-startdate_month    13
@@ -64,9 +62,8 @@ Invalid date (month)
 
 Invalid duration field
     [Documentation]    -INFUND-43
-    [Tags]    Applicant
+    [Tags]
     # pending INFUND-2707
-    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-duration    0
     And the applicant should get a validation error message    Please enter a valid duration
     When the applicant inserts an input    id=application_details-duration    -1
@@ -78,9 +75,8 @@ Invalid duration field
 
 Empty text area
     [Documentation]    -INFUND-43
-    [Tags]    Applicant
+    [Tags]
     # pending INFUND-2707
-    Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error message    Please enter some text
 
@@ -128,3 +124,8 @@ The applicant should get a validation error message
     sleep    5s
     Run Keyword and ignore error    Wait Until Page Contains    ${validation_error}
     #Element Should Be Visible    css=.error-message
+
+Applicant goe to the application details page of the Robot application
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Application details

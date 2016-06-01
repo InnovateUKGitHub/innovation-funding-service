@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Account verification'" th:remove="tag"></div>
+</head>
+<body class="create-application-eligibility">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+    <div class="page-title">
+            <h1 class="heading-xlarge no-margin-bottom">Account verification</h1>
+      </div>
+    <p>
+      Has your verification link expired? If you have an Innovation Funding Service account, please enter the email address you used to create the account.
+      We will send a new link to this email address which will allow you to verify your account.
+      Please note that verification links are only valid for 24 hours.
+    </p>
+    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${resendEmailVerificationForm}" method="POST">
+        <fieldset>
+            <legend class="visuallyhidden">Enter your email address</legend>
+            <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
+                <label class="form-label" for="id_email">
+                    <span class="form-label-bold">Enter Email Address</span>
+                            <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+                            </span>
+                </label>
+                <input class="form-control form-control-3-4" th:classappend="${#fields.hasErrors('email') ? 'field-error': ''}" type="email" th:field="*{email}" id="id_email" required="required" data-required-errormessage="Please enter your email address" data-email-errormessage="Please enter a valid email address" />
+            </div>
+            <!-- .form-group -->
+
+        </fieldset>
+        <input class="button" value="Resend verification link email" type="submit"/>
+    </form>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>
