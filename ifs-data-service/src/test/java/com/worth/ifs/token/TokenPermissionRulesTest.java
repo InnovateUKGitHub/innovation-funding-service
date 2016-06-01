@@ -27,12 +27,12 @@ public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermi
     }
 
     @Test
-    public void testSystemRegistrationUserCanReadTokensOptional() {
+    public void testSystemRegistrationUserCanUseTokensToResetPaswords() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
-                assertTrue(rules.systemRegistrationUserCanReadTokensOptional(Optional.of(new Token()), user));
+                assertTrue(rules.systemRegistrationUserCanUseTokensToResetPaswords(new Token(), user));
             } else {
-                assertFalse(rules.systemRegistrationUserCanReadTokensOptional(Optional.of(new Token()), user));
+                assertFalse(rules.systemRegistrationUserCanUseTokensToResetPaswords(new Token(), user));
             }
         });
     }

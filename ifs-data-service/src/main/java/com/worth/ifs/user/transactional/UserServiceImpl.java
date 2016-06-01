@@ -6,8 +6,9 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
+import com.worth.ifs.token.resource.TokenType;
+import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -25,7 +26,9 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -50,6 +53,9 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -84,6 +90,11 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
         return find(repository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<UserResource> findInactiveByEmail(String email) {
+        return find(repository.findByEmailAndStatus(email, INACTIVE), notFoundError(User.class, email, INACTIVE)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
@@ -130,39 +141,27 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         }
     }
 
-    @Override
-    public ServiceResult<Void> checkPasswordResetHashValidity(String hash) {
-        Optional<Token> token = tokenRepository.findByHash(hash);
-        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
-            return serviceSuccess();
-        }
-        return serviceFailure(notFoundError(Token.class, hash));
-    }
-
     private String getAndSavePasswordResetToken(UserResource user) {
         String hash = getRandomHash();
-        Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
+        Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, now(), factory.objectNode());
         tokenRepository.save(token);
         return hash;
     }
 
     @Override
-    public ServiceResult<Void> changePassword(String hash, String password){
-        Optional<Token> token = tokenRepository.findByHash(hash);
-        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
-
-            return find(user(token.get().getClassPk())).andOnSuccess(user -> {
+    public ServiceResult<Void> changePassword(String hash, String password) {
+        return tokenService.getPasswordResetToken(hash).andOnSuccess(token -> {
+            return find(user(token.getClassPk())).andOnSuccess(user -> {
 
                 UserResource userResource = userMapper.mapToResource(user);
 
                 return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturnVoid(() ->
-                    identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccess(() -> {
-                        tokenRepository.delete(token.get());
-                    })
+                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccess(() -> {
+                            tokenRepository.delete(token);
+                        })
                 );
             });
-        }
-        return serviceFailure(notFoundError(Token.class, hash));
+        });
     }
 
 
