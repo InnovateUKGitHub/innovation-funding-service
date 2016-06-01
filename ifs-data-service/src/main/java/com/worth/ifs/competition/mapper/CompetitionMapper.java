@@ -27,11 +27,15 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
 
+    @Mappings({
+            @Mapping(target = "status", ignore=true)
+    })
+    public abstract Competition mapToDomain(CompetitionResource domain);
+
     public Long mapCompetitionToId(Competition object) {
         if (object == null) {
             return null;
         }
         return object.getId();
     }
-
 }
