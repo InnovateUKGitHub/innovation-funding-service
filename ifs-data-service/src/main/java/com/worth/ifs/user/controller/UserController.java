@@ -1,9 +1,8 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -19,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -40,6 +41,7 @@ public class UserController {
     public static final String URL_PASSWORD_RESET = "passwordReset";
     public static final String URL_SEND_PASSWORD_RESET_NOTIFICATION = "sendPasswordResetNotification";
     public static final String URL_VERIFY_EMAIL = "verifyEmail";
+    public static final String URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION = "resendEmailVerificationNotification";
 
     @Autowired
     private UserService userService;
@@ -92,8 +94,7 @@ public class UserController {
 
     @RequestMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
     public RestResult<Void> checkPasswordReset(@PathVariable("hash") final String hash) {
-        return userService.checkPasswordResetHashValidity(hash)
-                .toPutResponse();
+        return tokenService.getPasswordResetToken(hash).andOnSuccessReturnVoid().toPutResponse();
     }
 
     @RequestMapping(value = "/" + URL_PASSWORD_RESET + "/{hash}", method = POST)
@@ -104,34 +105,38 @@ public class UserController {
 
     @RequestMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
-        Optional<Token> optionalToken = tokenService.getTokenByHash(hash);
-
-        if(optionalToken.isPresent()){
-            Token token = optionalToken.get();
-            if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) &&
-                    User.class.getName().equals(token.getClassName())
-            ){
-                registrationService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
-                    tokenService.handleExtraAttributes(token);
-                    tokenService.removeToken(token);
+        final ServiceResult<Token> result = tokenService.getEmailToken(hash);
+        LOG.debug(String.format("UserController verifyHash: %s", hash));
+        return result.handleSuccessOrFailure(
+                failure -> restFailure(failure.getErrors()),
+                token -> {
+                    registrationService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                        tokenService.handleExtraAttributes(token);
+                        tokenService.removeToken(token);
+                    });
+                    return RestResult.restSuccess();
                 });
-            }
-        }else{
-            return RestResult.restFailure(CommonErrors.notFoundError(Token.class, hash));
-        }
-
-        LOG.warn(String.format("UserController verifyHash: %s", hash));
-        return RestResult.restSuccess();
     }
 
-    @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
+    @RequestMapping(value = "/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/", method = PUT)
+    public RestResult<Void> resendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
+        return userService.findInactiveByEmail(emailAddress)
+                .andOnSuccessReturn(user -> registrationService.resendUserVerificationEmail(user))
+                .toPutResponse();
+    }
+
+    @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}", method = POST)
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
+        final ServiceResult<UserResource> user  = registrationService.createApplicantUser(organisationId, userResource);
+        registrationService.sendUserVerificationEmail(userResource, empty());
+        return user.toPostCreateResponse();
     }
 
-    @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
+    @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", method = POST)
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
+        final ServiceResult<UserResource> user  = registrationService.createApplicantUser(organisationId, of(competitionId), userResource);
+        registrationService.sendUserVerificationEmail(userResource, of(competitionId));
+        return user.toPostCreateResponse();
     }
 
     @RequestMapping(value = "/updateDetails", method = POST)

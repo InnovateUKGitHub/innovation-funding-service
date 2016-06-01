@@ -180,7 +180,13 @@
           </section>
           <section class="column-half">
 
-          #parse("applicant.vm")
+#set ($serviceName = $rpUIContext.serviceName)
+#set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
+#if($serviceName && $rpContext.getRelyingPartyId().contains("assessor"))
+#parse("assessor.vm")
+#else
+#parse("applicant.vm")
+#end
 
           </section>
         </div>

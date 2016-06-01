@@ -2,13 +2,17 @@ package com.worth.ifs.token.resource;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.time.LocalDateTime;
+
 public class TokenResource {
-    Long id;
-    String className;
-    Long classPk;
-    String hash;
-    JsonNode extraInfo;
-    TokenType type;
+    private Long id;
+    private String className;
+    private Long classPk;
+    private String hash;
+    private LocalDateTime created;
+    private LocalDateTime updated;
+    private JsonNode extraInfo;
+    private TokenType type;
 
     public Long getId() {
         return id;
@@ -48,6 +52,22 @@ public class TokenResource {
 
     public void setExtraInfo(JsonNode extraInfo) {
         this.extraInfo = extraInfo;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(LocalDateTime updated) {
+        this.updated = updated;
     }
 
     public TokenType getType() {

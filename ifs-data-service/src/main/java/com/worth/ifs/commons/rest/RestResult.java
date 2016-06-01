@@ -131,6 +131,14 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new FileQuarantinedException(error.getErrorMessage(), error.getArguments());
         }
 
+        if (restFailure.has(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)) {
+            throw new InvalidURLException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if (restFailure.has(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED)) {
+            throw new RegistrationTokenExpiredException(error.getErrorMessage(), error.getArguments());
+        }
+
         throw new RuntimeException();
     }
 

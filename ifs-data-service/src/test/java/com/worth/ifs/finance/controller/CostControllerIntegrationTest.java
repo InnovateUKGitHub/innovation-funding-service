@@ -408,7 +408,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertNotNull(subContractingCost.getName());
         assertNotNull(subContractingCost.getCountry());
         assertNotNull(subContractingCost.getRole());
-        assertNull(subContractingCost.getCost());
+        assertNotNull(subContractingCost.getCost());
 
         subContractingCost.setName("Tom Bloggs");
         subContractingCost.setCountry("UK");
