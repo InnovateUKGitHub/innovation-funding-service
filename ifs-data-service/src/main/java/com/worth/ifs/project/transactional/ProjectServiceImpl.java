@@ -66,6 +66,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         Project project = new Project();
         project.setId(applicationId);
         project.setDurationInMonths(application.getDurationInMonths());
+        project.setName(application.getName());
         Project createdProject = projectRepository.save(project);
         return projectMapper.mapToResource(createdProject);
     }

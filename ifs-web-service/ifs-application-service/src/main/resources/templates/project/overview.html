@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Project Status'" th:remove="tag" />
 </head>
-<body class="assessment-review">
+<body class="project-overview">
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -41,10 +41,7 @@
 			<div class="progress-status" />
 			<div class="progress-info">
 				<h2 class="heading-medium">
-					<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1575-project-details?user=nonLead' : '/prototypes/1575-project-details')}" th:unless="${param.stage != null and param.stage[0] == 'level2' or param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">Project details</a>
-
-					<a href="/prototypes/1575-project-details-submitted" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Project details</a>
-
+					<a th:href="@{/project/{id}/details(id=${app.getId()})}" >Project details</a>
 				</h2>
 
 				<p>Confirm the contact details, proposed start date and location of the project.</p>
