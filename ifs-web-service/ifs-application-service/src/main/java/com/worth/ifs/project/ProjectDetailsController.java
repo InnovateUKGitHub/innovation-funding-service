@@ -45,7 +45,7 @@ public class ProjectDetailsController {
     private UserAuthenticationService userAuthenticationService;
 	
     @Autowired
-    private ProjectRestService applicationRestService;
+    private ProjectRestService projectRestService;
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
@@ -64,7 +64,7 @@ public class ProjectDetailsController {
         return "project/detail";
     }
 
-    @RequestMapping(value = "/{projectId}/startdate", method = RequestMethod.GET)
+    @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form) {
     	
     	ProjectResource project = projectService.getById(projectId);
@@ -74,11 +74,11 @@ public class ProjectDetailsController {
         return "project/details-start-date";
     }
 
-    @RequestMapping(value = "/{projectId}/startdate", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form) {
 
-        applicationRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return "redirect:/project/" + projectId + "/startdate";
+        projectRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
+        return "redirect:/project/" + projectId + "/details/start-date";
     }
 }
