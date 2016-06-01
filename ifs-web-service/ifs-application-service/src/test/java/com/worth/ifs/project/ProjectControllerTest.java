@@ -37,6 +37,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(model().attribute("project", projectResource))
                 .andExpect(model().attribute("app", applicationResource))
                 .andExpect(model().attribute("competition", competitionResource))
-                .andExpect(view().name("project/details"));
+                .andExpect(view().name("project/overview"));
     }
 }

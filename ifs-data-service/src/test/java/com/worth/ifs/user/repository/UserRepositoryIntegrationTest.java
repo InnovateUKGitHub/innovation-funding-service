@@ -1,6 +1,7 @@
 package com.worth.ifs.user.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
+import com.worth.ifs.user.builder.UserBuilder;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,10 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static com.worth.ifs.user.resource.UserStatus.ACTIVE;
+import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
@@ -30,6 +34,24 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         List<String> expectedUsers = ALL_USERS_EMAIL;
         assertTrue(emailAddresses.containsAll(expectedUsers));
+    }
+
+    @Test
+    @Rollback
+    public void test_findByEmailAndStatus() {
+        final User user = UserBuilder.newUser()
+                .withUid("my-uid")
+                .withUserStatus(INACTIVE)
+                .build();
+
+        final User expected = repository.save(user);
+
+        final Optional<User> found = repository.findByEmailAndStatus(expected.getEmail(), INACTIVE);
+        assertTrue(found.isPresent());
+        assertEquals(expected, found.get());
+
+        final Optional<User> shouldNotBeFound = repository.findByEmailAndStatus(expected.getEmail(), ACTIVE);
+        assertFalse(shouldNotBeFound.isPresent());
     }
 
     @Test

@@ -89,10 +89,3 @@ the user submits their information
     Select Checkbox    termsAndConditions
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Submit Form
-
-the user can login with their new details
-    The user navigates to the page    ${LOGIN_URL}
-    Input Text    id=username    ${email_already_in_db}
-    Input Password    id=password    ${correct_password}
-    Click Button    css=button[name="_eventId_proceed"]
-    Page Should Not Contain    something has gone wrong

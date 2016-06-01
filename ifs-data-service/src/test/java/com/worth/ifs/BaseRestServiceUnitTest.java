@@ -187,6 +187,12 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return response;
     }
 
+    protected ResponseEntity<Void> setupPutWithRestResultAnonymousExpectations(String nonBaseUrl, Object requestBody, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCallAnonymous(requestBody), Void.class)).thenReturn(response);
+        return response;
+    }
+
     protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody) {
         return setupPutWithRestResultExpectations(nonBaseUrl, responseType, requestBody, responseBody, OK);
     }

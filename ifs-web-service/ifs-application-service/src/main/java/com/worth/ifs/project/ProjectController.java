@@ -31,13 +31,14 @@ public class ProjectController {
     private CompetitionService competitionService;
 	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
-    public String projectDetails(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
+    public String projectOverview(Model model, @PathVariable("projectId") final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         model.addAttribute("project", projectResource);
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
-        return "project/details";
+        return "project/overview";
     }
+    
 }
