@@ -38,7 +38,7 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     @ExceptionHandler(value = InvalidURLException.class)
     public ModelAndView invalidUrlErrorHandler(HttpServletRequest req, InvalidURLException e) {
         LOG.debug("ErrorController invalidUrlErrorHandler", e);
-        return createExceptionModelAndView(e, "url-hash-invalid", req, e.getArguments(), HttpStatus.ALREADY_REPORTED);
+        return createExceptionModelAndView(e, URL_HASH_INVALID_TEMPLATE, req, e.getArguments(), HttpStatus.ALREADY_REPORTED);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)     // 400
@@ -154,5 +154,12 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     public ModelAndView fileQuarantined(HttpServletRequest req, FileQuarantinedException e) {
         LOG.debug("ErrorController  fileQuarantined", e);
         return createExceptionModelAndViewWithTitleAndMessage(e, "error.title.file.quarantined", "error.message.file.quarantined", req, e.getArguments(), HttpStatus.FORBIDDEN);
+    }
+
+    @ResponseStatus(value= HttpStatus.FORBIDDEN) // 403
+    @ExceptionHandler(value = RegistrationTokenExpiredException.class)
+    public ModelAndView registrationTokenExpired(HttpServletRequest req, RegistrationTokenExpiredException e) {
+        LOG.debug("ErrorController registrationTokenExpired", e);
+        return createExceptionModelAndViewWithTitleAndMessage(e, "error.title.registration.token.expired", "error.message.registration.token.expired", req, e.getArguments(), HttpStatus.FORBIDDEN);
     }
 }

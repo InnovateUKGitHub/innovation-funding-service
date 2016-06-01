@@ -158,6 +158,8 @@ public class BaseUnitTest {
     public FinanceFormHandler financeFormHandler;
     @Mock
     public AssessorFeedbackRestService assessorFeedbackRestService;
+    @Mock
+    public ProjectService projectService;
 
     @Spy
     @InjectMocks

@@ -30,6 +30,9 @@ function stopServers {
     cd ${dataTomcatBinPath}
     ./shutdown.sh
     wait
+    echo "*********KILLING ALL IFS TOMCAT PROCESSES*********"
+    ps -ef | grep ${dataTomcatBinPath} | grep 'Bootstrap start' | awk '{print $2}' | xargs -i kill -9 {}
+    ps -ef | grep ${webTomcatBinPath} | grep 'Bootstrap start' | awk '{print $2}' | xargs -i kill -9 {}
     echo "********UNDEPLOYING THE APPLICATION********"
     cd ${dataWebappsPath}
     rm -rf ROOT ROOT.war

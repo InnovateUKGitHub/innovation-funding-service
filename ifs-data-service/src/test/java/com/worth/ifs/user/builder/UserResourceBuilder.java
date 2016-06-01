@@ -51,10 +51,6 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((lastName, user) -> setField("lastName", lastName, user), lastNames);
     }
 
-    public UserResourceBuilder withName(String... names) {
-        return withArray((name, user) -> setField("name", name, user), names);
-    }
-
     public UserResourceBuilder withPhoneNumber(String... phoneNumbers) {
         return withArray((phoneNumber, user) -> setField("phoneNumber", phoneNumber, user), phoneNumbers);
     }

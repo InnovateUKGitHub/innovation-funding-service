@@ -5,6 +5,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static org.mockito.Matchers.argThat;
@@ -58,6 +59,22 @@ public class LambdaMatcher<T> extends BaseMatcher<T> {
     public static <T> T createLambdaMatcher(Predicate<T> predicate) {
         return argThat(lambdaMatches(predicate));
     }
+
+    /**
+     * Creates a new matcher that takes a lambda consumer and can throw an assertion error in the consumer if it
+     * doesn't pass the test.  A null check is also performed as per all standard Mockito matchers.
+     *
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> T createLambdaMatcher(Consumer<T> consumer) {
+        return argThat(lambdaMatches(argument -> {
+            consumer.accept(argument);
+            return true;
+        }));
+    }
+
 
     private static <T> Predicate<T> wrapPredicateWithNullCheck(Predicate<T> predicate) {
         return value -> {

@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.TravelCost;
+import com.worth.ifs.util.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,10 +27,10 @@ public class TravelCostHandler extends CostHandler {
                         item = fieldValue;
                         break;
                     case "quantity":
-                        quantity = getIntegerValue(fieldValue, 0);
+                        quantity = NumberUtils.getIntegerValue(fieldValue, 0);
                         break;
                     case "cost":
-                        costPerItem = getBigDecimalValue(fieldValue, 0d);
+                        costPerItem = NumberUtils.getBigDecimalValue(fieldValue, 0d);
                         break;
                     default:
                         LOG.info("Unused costField: " + financeFormField.getCostName());

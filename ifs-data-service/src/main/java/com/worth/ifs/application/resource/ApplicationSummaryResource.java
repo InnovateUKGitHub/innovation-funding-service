@@ -75,6 +75,9 @@ public class ApplicationSummaryResource {
 	public void setDuration(Long duration) {
 		this.duration = duration;
 	}
+	public boolean isFunded() {
+		return FundingDecision.FUNDED.equals(fundingDecision);
+	}
 	public FundingDecision getFundingDecision() {
 		return fundingDecision;
 	}

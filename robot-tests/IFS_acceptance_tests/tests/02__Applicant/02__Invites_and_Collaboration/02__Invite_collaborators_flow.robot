@@ -45,16 +45,15 @@ Valid invitation submit
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    Invites sent
 
-Pending partners are visible in the Application details page
+Pending partners visible in the Application details
     [Documentation]    INFUND-2966
     ...
     ...    INFUND-2738
     [Tags]
-    # Pending as still in progress by Pradha Muniraj
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     Then pending partners should be visible in the page
 
-Pending users are visible in the assign list but not clickable
+Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
     ...    INFUND-1962
@@ -86,7 +85,7 @@ Business organisation (accept invitation)
 
 User who accepted the invite should be able to log-in and see the new company name throughout the application
     [Documentation]    INFUND-2083
-    [Tags]    Email     Failing
+    [Tags]    Email
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -113,11 +112,11 @@ The collaborator who accepted the invite should be visible in the assign list
     When the user navigates to the page    ${PROJECT_SUMMARY_URL}
     And the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
-    [Teardown]   Logout as user
+    [Teardown]    Logout as user
 
 Status of the invited people (Application team page)
     [Documentation]    INFUND-929
-    [Tags]    HappyPath     Failing
+    [Tags]    HappyPath    Failing
     [Setup]    Run keywords    User closes the browser
     ...    AND    Log in as user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${APPLICATION_TEAM_PAGE}
@@ -126,7 +125,7 @@ Status of the invited people (Application team page)
 Status of the invited people (Manage contributors page)
     [Documentation]    INFUND-928
     [Tags]    HappyPath
-    [Setup]     Log in as user      &{lead_applicant_credentials}
+    [Setup]    Log in as user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
@@ -156,14 +155,6 @@ The Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
     [Teardown]    User closes the browser
-
-the status of the invitees is correct on the overview page
-    [Documentation]    INFUND-2738
-    [Tags]    Collaboration    Pending
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    # Pending completion of INFUND-2050
-    When the user navigates to the page    ${application_details_url}
-    Then the user should see the text in the page    foobar
 
 The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
@@ -251,9 +242,5 @@ the user cannot invite another person to a different organisation
     the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
 
 pending partners should be visible in the page
-    the user should see the element    css=ul.list-bullet li:nth-child(5) span
-    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) span
-    Should Be Equal As Strings    ${input_value}    Fannie May
-    the user should see the element    css=ul.list-bullet li:nth-child(5) small
-    ${input_value} =    get text    css=ul.list-bullet li:nth-child(5) small
-    Should Be Equal As Strings    ${input_value}    (pending)
+    the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small
+    Element Should Contain    xpath=//span[contains(text(),"Fannie May")]//following::small    (pending)

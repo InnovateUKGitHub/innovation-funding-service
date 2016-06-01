@@ -1,3 +1,9 @@
+*** Settings ***
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/User_credentials.robot
+Resource          ../../resources/keywords/Login_actions.robot
+
 *** Keywords ***
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
@@ -279,16 +285,6 @@ The element should be disabled
     [Arguments]    ${ELEMENT}
     Element Should Be Disabled    ${ELEMENT}
 
-the user clicks the link from the appropriate email sender
-    Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
-    Run keyword if    '${RUNNING_ON_DEV}' != ''    the user opens the mailbox and verifies the official innovate email
-
-the user opens the mailbox and verifies the email sent from a developer machine
-    the user opens the mailbox and verifies the email from    dev-dwatson-liferay-portal@hiveit.co.uk
-
-the user opens the mailbox and verfies the official innovate email
-    the user opens the mailbox and verifies the email from    noresponse@innovateuk.gov.uk
-
 the user opens the mailbox and verifies the email from
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
@@ -310,14 +306,37 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${CONTACT_LEAD}=    Get From List    ${LINK}    1
-    Should Contain    ${CONTACT_LEAD}    mailto:
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    2
+    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
     log    ${ACCEPT_INVITE}
     go to    ${ACCEPT_INVITE}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+the user downloads the file from the link
+    [Arguments]    ${filename}    ${download_link}
+    ${ALL_COOKIES} =    Get Cookies
+    Log    ${ALL_COOKIES}
+    Download File    ${ALL_COOKIES}    ${download_link}
+    sleep    2s
+
+the file should be downloaded
+    [Arguments]    ${filename}
+    File Should Exist    ${filename}
+    File Should Not Be Empty    ${filename}
+
+the file has been scanned for viruses
+    Sleep    5s
+
+the user can see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    Page Should Contain    Upload
+
+the user cannot see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    the user should not see the text in the page    Upload
 
 Delete the emails from the test mailbox
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1

@@ -126,7 +126,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
                 Cost newCost = addCostItem(applicationFinance, question, newCostItem);
                 return serviceSuccess(organisationFinanceHandler.costToCostItem(newCost));
             } else {
-                Cost cost = new Cost("", "", "", 0, BigDecimal.ZERO, applicationFinance, question);
+                Cost cost = new Cost(applicationFinance, question);
                 costRepository.save(cost);
                 return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
             }
