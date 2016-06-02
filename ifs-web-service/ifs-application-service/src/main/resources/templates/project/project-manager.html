@@ -16,12 +16,24 @@
         <h1 class="heading-xlarge no-margin">Project manager</h1>
     </div>
     
-    <p class="form-hint">Who will be the project manager for your project?</p>
-    
-    <p>As lead partner you must choose a project manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the project manager.</p>
 
-    <form method="POST">
-        <input type="radio" name="projectManager" value=""></input>
+    <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}">
+        <fieldset>
+            <h2 class="heading-medium">Project manager</h2>
+            <legend class="visuallyhidden">Project manager</legend>
+            <p class="form-hint">Who will be the project manager for your project?</p>
+            <p>As lead partner you must choose a project manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the project manager.</p>
+            <div class="form-group extra-margin">
+            
+		        <div th:each="user : ${allUsers}" th:remove="tag">
+		            <label th:for="${#ids.next('projectManager')}" class="block-label">
+		                <input type="radio" th:field="*{projectManager}" th:value="${user.user}" />
+		                <span th:text="${user.userName}" th:remove="tag"></span>
+		            </label>
+		        </div>
+	        </div>
+        </fieldset>
+        <button class="button button-large extra-margin">Save</button>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

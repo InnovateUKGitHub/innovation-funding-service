@@ -31,4 +31,7 @@ public interface ProjectService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin is able to create a projects (by making decisions)" )
     ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions);
+
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+	ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId);
 }

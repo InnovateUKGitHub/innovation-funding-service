@@ -1,7 +1,15 @@
 package com.worth.ifs.project;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +28,12 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.user.service.UserService;
+
+import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -28,6 +41,8 @@ import com.worth.ifs.user.resource.UserResource;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController {
+
+    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
 	@Autowired
     private ProjectService projectService;
@@ -43,7 +58,13 @@ public class ProjectDetailsController {
     
     @Autowired
     private UserAuthenticationService userAuthenticationService;
-	
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private ProcessRoleService processRoleService;
+    
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
@@ -63,37 +84,82 @@ public class ProjectDetailsController {
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String projectManager(Model model, @PathVariable("projectId") final Long projectId) {
-    	ProjectResource projectResource = projectService.getById(projectId);
+    	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
+        
         ApplicationResource applicationResource = applicationService.getById(projectId);
 
-        ProjectManagerForm form = new ProjectManagerForm();
-        form.setProjectManager(projectResource.getProjectManager());
-        
-        model.addAttribute("project", projectResource);
-        model.addAttribute("app", applicationResource);
-        model.addAttribute("form", form);
+        populateProjectManagerModel(model, projectId, form, applicationResource);
     	
         return "project/project-manager";
     }
-    
+
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
     public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form, BindingResult bindingResult) {
         
-    	ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectId);
         
-        //TODO check if the entered id is one of the people in the team
-        
         if(bindingResult.hasErrors()) {
-        	 model.addAttribute("project", projectResource);
-             model.addAttribute("app", applicationResource);
-             model.addAttribute("form", form);
-             return "project/project-manager";
+        	populateProjectManagerModel(model, projectId, form, applicationResource);
+            return "project/project-manager";
         }
         
+        if(!userIsInLeadPartnerOrganisation(applicationResource, form.getProjectManager())) {
+        	populateProjectManagerModel(model, projectId, form, applicationResource);
+            return "project/project-manager";
+        }
         
-    	//TODO save it.
+        projectService.updateProjectManager(projectId, form.getProjectManager());
     	
         return "redirect:/project/" + projectId + "/details";
     }
+
+	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {
+		ProjectResource projectResource = projectService.getById(projectId);
+    	Future<ProcessRoleResource> processRoleResource;
+    	if(projectResource.getProjectManager() != null) {
+    		processRoleResource = processRoleService.getById(projectResource.getProjectManager());
+    	} else {
+    		processRoleResource = null;
+    	}
+    	
+        ProjectManagerForm form = new ProjectManagerForm();
+        if(processRoleResource != null) {
+        	try {
+				form.setProjectManager(processRoleResource.get().getUser());
+			} catch (InterruptedException | ExecutionException e) {
+				LOG.error("unable to get process role", e);
+			}
+        }
+		return form;
+	}
+    
+	private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
+			ApplicationResource applicationResource) {
+		ProjectResource projectResource = projectService.getById(projectId);
+		
+		ProcessRoleResource lead = userService.getLeadApplicantProcessRoleOrNull(applicationResource);
+		List<ProcessRoleResource> leadPartnerUsers = userService.getLeadPartnerOrganisationProcessRoles(applicationResource);
+		List<ProcessRoleResource> leadPartnerUsersExcludingLead = leadPartnerUsers.stream()
+				.filter(prr -> !lead.getUser().equals(prr.getUser()))
+				.collect(Collectors.toList());
+		
+		List<ProcessRoleResource> allUsers = Stream.of(asList(lead), leadPartnerUsersExcludingLead)
+				.flatMap(x -> x.stream())
+				.collect(Collectors.toList());
+
+		model.addAttribute("allUsers", allUsers);
+		model.addAttribute("project", projectResource);
+		model.addAttribute("app", applicationResource);
+		model.addAttribute("form", form);
+	}
+
+	private boolean userIsInLeadPartnerOrganisation(ApplicationResource applicationResource, Long projectManager) {
+		
+		if(projectManager == null) {
+			return false;
+		}
+        List<ProcessRoleResource> leadPartnerUsers = userService.getLeadPartnerOrganisationProcessRoles(applicationResource);
+
+        return leadPartnerUsers.stream().anyMatch(prr -> projectManager.equals(prr.getUser()));
+	}
 }

@@ -140,6 +140,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
             return null;
         }
+
+		@Override
+		public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 }
 

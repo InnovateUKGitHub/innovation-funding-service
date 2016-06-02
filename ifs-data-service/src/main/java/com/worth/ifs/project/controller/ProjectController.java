@@ -6,6 +6,7 @@ import com.worth.ifs.project.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,5 +29,10 @@ public class ProjectController {
     @RequestMapping("/")
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
+    }
+    
+    @RequestMapping(method=RequestMethod.POST, value="/{id}/project-manager/{projectManagerId}")
+    public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
+        return projectService.setProjectManager(id, projectManagerId).toPostResponse();
     }
 }

@@ -1,21 +1,24 @@
 package com.worth.ifs.user.service;
 
+import static java.lang.String.format;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static java.lang.String.format;
 
 /**
  * This class contains methods to retrieve and store {@link UserResource} related data,
@@ -61,6 +64,17 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+    
+	@Override
+	public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
+		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application);
+		if(leadProcessRole == null) {
+			return new ArrayList<>();
+		}
+		return processRoleService.getByIds(application.getProcessRoles()).stream()
+				.filter(pr -> leadProcessRole.getOrganisation().equals(pr.getOrganisation()))
+				.collect(Collectors.toList());
+	}
 
     @Override
     public Set<UserResource> getAssignableUsers(ApplicationResource application) {
@@ -126,4 +140,5 @@ public class UserServiceImpl implements UserService {
     public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
         return userRestService.findUserByEmail(email);
     }
+
 }

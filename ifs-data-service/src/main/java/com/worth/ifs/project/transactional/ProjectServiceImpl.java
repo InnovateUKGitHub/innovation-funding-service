@@ -1,5 +1,18 @@
 package com.worth.ifs.project.transactional;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -8,15 +21,6 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -29,7 +33,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
+    
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
         return serviceSuccess(projectMapper.mapToResource(projectRepository.findOne(projectId)));
@@ -44,6 +48,19 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
         return serviceSuccess(createProjectFromApplicationId(applicationId));
     }
+    
+	@Override
+	public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+		 return getProject(projectId).andOnSuccessReturnVoid(project -> {
+			 // TODO process role?!
+			 // User user = userRepository.findOne(projectManagerId);
+			 // List<Role> roles = roleRepository.findByName(UserRoleType.PROJECT_MANAGER.getName());
+		     // Role role = roles.get(0);
+			 // Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+			 // ProcessRole processRole = new ProcessRole(user, null, role, userOrganisation);
+			 // project.setProjectManager(processRole);
+		 });
+	}
 
     private ProjectResource createProjectFromApplicationId(final Long applicationId){
         Application application = applicationRepository.findOne(applicationId);
@@ -63,4 +80,9 @@ public class ProjectServiceImpl implements ProjectService {
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
+    
+    private ServiceResult<Project> getProject(long projectId) {
+        return find(projectRepository.findOne(projectId), notFoundError(Project.class, id));
+    }
+
 }

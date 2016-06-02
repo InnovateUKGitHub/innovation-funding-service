@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
-    private ProjectRestService projectRestRestService;
+    private ProjectRestService projectRestService;
 
     @Override
     public ProjectResource getById(Long projectId) {
@@ -22,6 +22,11 @@ public class ProjectServiceImpl implements ProjectService {
             return null;
         }
 
-        return projectRestRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+        return projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
     }
+
+	@Override
+	public void updateProjectManager(Long projectId, Long projectManagerUserId) {
+		projectRestService.updateProjectManager(projectId, projectManagerUserId).getSuccessObjectOrThrowException();
+	}
 }
