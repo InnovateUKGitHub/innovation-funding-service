@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -48,7 +49,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         mockMvc.perform(get("/project/{id}", project1Id))
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("id").description("Id of the application that is being requested")
+                                parameterWithName("id").description("Id of the project that is being requested")
                         ),
                         responseFields(projectResourceFields)
                 ));
@@ -64,7 +65,23 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andDo(
                         this.document.snippets(
                         responseFields(
-                                fieldWithPath("[]").description("List of applications the user is allowed to see")
+                                fieldWithPath("[]").description("List of projects the user is allowed to see")
+                        )
+                ));
+    }
+    
+    @Test
+    public void setProjectManager() throws Exception {
+        Long project1Id = 1L;
+        Long projectManagerId = 8L;
+
+        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of the project"),
+                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
                         )
                 ));
     }

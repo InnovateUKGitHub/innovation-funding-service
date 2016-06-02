@@ -12,8 +12,6 @@ import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,8 +44,6 @@ import com.worth.ifs.user.service.UserService;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController {
-
-    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
 	@Autowired
     private ProjectService projectService;
@@ -91,7 +87,7 @@ public class ProjectDetailsController {
     }
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
-    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId) {
+    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId) throws InterruptedException, ExecutionException {
     	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
         
         ApplicationResource applicationResource = applicationService.getById(projectId);
@@ -121,7 +117,7 @@ public class ProjectDetailsController {
         return "redirect:/project/" + projectId + "/details";
     }
 
-	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {
+	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
 		ProjectResource projectResource = projectService.getById(projectId);
     	Future<ProcessRoleResource> processRoleResource;
     	if(projectResource.getProjectManager() != null) {
@@ -132,11 +128,7 @@ public class ProjectDetailsController {
     	
         ProjectManagerForm form = new ProjectManagerForm();
         if(processRoleResource != null) {
-        	try {
-				form.setProjectManager(processRoleResource.get().getUser());
-			} catch (InterruptedException | ExecutionException e) {
-				LOG.error("unable to get process role", e);
-			}
+			form.setProjectManager(processRoleResource.get().getUser());
         }
 		return form;
 	}

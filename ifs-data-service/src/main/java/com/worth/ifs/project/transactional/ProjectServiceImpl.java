@@ -26,6 +26,11 @@ import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserRoleType;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -58,12 +63,13 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 	public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
 		 return getProject(projectId).andOnSuccessReturnVoid(project -> {
 			 // TODO process role?!
-			 // User user = userRepository.findOne(projectManagerId);
-			 // List<Role> roles = roleRepository.findByName(UserRoleType.PROJECT_MANAGER.getName());
-		     // Role role = roles.get(0);
-			 // Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
-			 // ProcessRole processRole = new ProcessRole(user, null, role, userOrganisation);
-			 // project.setProjectManager(processRole);
+			 User user = userRepository.findOne(projectManagerId);
+			// List<Role> roles = roleRepository.findByName(UserRoleType.PROJECT_MANAGER.getName());
+		    // Role role = roles.get(0);
+			 Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+			// ProcessRole processRole = new ProcessRole(user, null, role, userOrganisation);
+			 ProcessRole processRole = new ProcessRole(user, null, null, userOrganisation);
+			 project.setProjectManager(processRole);
 		 });
 	}
 
