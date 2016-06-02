@@ -3,6 +3,7 @@ package com.worth.ifs.project.transactional;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -11,6 +12,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -26,6 +28,8 @@ import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -56,14 +60,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     
 	@Override
 	public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
-		 return getProject(projectId).andOnSuccessReturnVoid(project -> {
-			 // TODO process role linked to project not application?!
-			// ProcessRole processRole = new ProjectProcessRole(user, project, role, userOrganisation);
-			// project.setProjectManager(processRole);
-		 });
+		 return getProject(projectId).
+				  andOnSuccess(project -> validateProjectManager(project, projectManagerId).
+				  andOnSuccess(() -> {
+					  //TODO set something on the project here
+					  project.setProjectManager(null);
+				  }));
 	}
 
-    @Override
+	@Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return getProject(projectId).
                 andOnSuccess(project -> validateProjectStartDate(projectStartDate).
@@ -88,6 +93,18 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         return serviceSuccess();
     }
+    
+    private ServiceResult<Void> validateProjectManager(Project project, Long projectManagerId) {
+		Application application = applicationRepository.findOne(project.getId());
+		Organisation leadPartner = application.getLeadOrganisation();
+		List<ProcessRole> leadPartnerProcessRoles = application.getProcessRoles().stream().filter(pr -> leadPartner.equals(pr.getOrganisation())).collect(Collectors.toList());
+		boolean match = leadPartnerProcessRoles.stream().anyMatch(lppr -> projectManagerId.equals(lppr.getUser().getId()));
+		if(match) {
+			return serviceSuccess();
+		} else {
+			return serviceFailure(new Error(PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+		}
+	}
 
     private ProjectResource createProjectFromApplicationId(final Long applicationId){
         Application application = applicationRepository.findOne(applicationId);
