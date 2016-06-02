@@ -1,41 +1,108 @@
 package com.worth.ifs.user.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
+import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
+import static java.time.LocalDateTime.now;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
 
     @Override
     protected UserController supplyControllerUnderTest() {
         return new UserController();
+    }
+
+    @Test
+    public void resendEmailVerificationNotification() throws Exception {
+        final String emailAddress = "sample@me.com";
+
+        final UserResource userResource = newUserResource().build();
+
+        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.resendUserVerificationEmail(userResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/resendEmailVerificationNotification/{emailAddress}/", emailAddress))
+                .andExpect(status().isOk());
+
+        verify(registrationServiceMock, only()).resendUserVerificationEmail(userResource);
+    }
+
+    @Test
+    public void resendEmailVerificationNotification_notFound() throws Exception {
+        final String emailAddress = "sample@me.com";
+
+        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceFailure(notFoundError(User.class, emailAddress, INACTIVE)));
+
+        mockMvc.perform(put("/user/resendEmailVerificationNotification/{emailAddress}/", emailAddress))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void createUser() throws Exception {
+        final Long organisationId = 9999L;
+
+        final UserResource userResource = newUserResource().build();
+        when(registrationServiceMock.createApplicantUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}",organisationId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userResource)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(userResource)));
+
+        verify(registrationServiceMock, times(1)).createApplicantUser(organisationId, userResource);
+        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, empty());
+        verifyNoMoreInteractions(registrationServiceMock);
+    }
+
+    @Test
+    public void createUserWithCompetitionId() throws Exception {
+        final Long organisationId = 9999L;
+        final Long competitionId = 8888L;
+
+        final UserResource userResource = newUserResource().build();
+        when(registrationServiceMock.createApplicantUser(organisationId, of(competitionId), userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}",organisationId, competitionId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userResource)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(userResource)));
+
+        verify(registrationServiceMock, times(1)).createApplicantUser(organisationId, of(competitionId), userResource);
+        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, of(competitionId));
+        verifyNoMoreInteractions(registrationServiceMock);
     }
 
     @Test
@@ -105,8 +172,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void verifyEmail() throws Exception {
         final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
         final Long userId = 1L;
-        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, null);
-        when(tokenServiceMock.getTokenByHash(hash)).thenReturn(of(token));
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
+        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
         when(registrationServiceMock.activateUser(1L)).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
                 .andExpect(status().isOk())
@@ -116,6 +183,26 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                                         parameterWithName("hash").description("The hash to validate the legitimacy of the request")
                                 ))
                 );
+    }
+
+    @Test
+    public void verifyEmailNotFound() throws Exception {
+        final String hash = "5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0";
+        final Error error = notFoundError(Token.class, hash);
+        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceFailure(error));
+        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
+                .andExpect(status().isNotFound())
+                .andExpect(contentError(error));
+    }
+
+    @Test
+    public void verifyEmailExpired() throws Exception {
+        final String hash = "5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0";
+        final Error error = new Error(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED);
+        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceFailure(error));
+        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
+                .andExpect(status().isBadRequest())
+                .andExpect(contentError(error));
     }
 
     @Test

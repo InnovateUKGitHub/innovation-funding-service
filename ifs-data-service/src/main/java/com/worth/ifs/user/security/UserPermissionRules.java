@@ -39,6 +39,11 @@ public class UserPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
+    @PermissionRule(value = "VERIFY", description = "A System Registration User can send a new User a verification link by e-mail")
+    public boolean systemRegistrationUserCanSendUserVerificationEmail(UserResource userToSendVerificationEmail, UserResource user) {
+        return isSystemRegistrationUser(user);
+    }
+
     @PermissionRule(value = "READ", description = "Any user can view themselves")
     public boolean anyUserCanViewThemselves(UserResource userToView, UserResource user) {
         return userToView.getId().equals(user.getId());

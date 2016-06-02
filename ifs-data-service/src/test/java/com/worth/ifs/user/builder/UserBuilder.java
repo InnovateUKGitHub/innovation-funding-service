@@ -78,7 +78,7 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
     }
 
     public UserBuilder withUserStatus(UserStatus... userStatuss) {
-        return withArray((userStatus, object) -> setField("userStatus", userStatus, object), userStatuss);
+        return withArray((userStatus, object) -> setField("status", userStatus, object), userStatuss);
     }
 
     public UserBuilder withProcessRole(ProcessRole... processRoles) {

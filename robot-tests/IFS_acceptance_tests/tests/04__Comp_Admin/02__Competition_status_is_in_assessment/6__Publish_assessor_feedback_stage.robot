@@ -18,14 +18,14 @@ ${feedback_success_email}    Pending
 ${feedback_failure_email}    Pending
 
 *** Test Cases ***
-Comp admin can visit a competition page at "Assessor feedback" stage and the option to publish feedback is disabled
+The publish feedback should be disabled
     [Documentation]    INFUND-2672
     When the user navigates to the page    ${assessor_feedback_competition_url}
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the element    css=h2.bold-small.blue-block
     And the option to publish feedback is disabled
 
-If feedback is uploaded for each application then the option to publish feedback is enabled
+The publish feedback should be enabled
     [Documentation]    INFUND-2672
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
@@ -34,7 +34,7 @@ If feedback is uploaded for each application then the option to publish feedback
     When the user uploads the file    ${valid_pdf}
     Then the option to publish feedback is enabled
 
-Comp admin can remove feedback and the option to publish feedback becomes disabled
+Remove the upload then feedback button becomes disabled
     [Documentation]    INFUND-2672
     [Tags]
     Given the user navigates to the page    ${successful_application_overview}
@@ -42,7 +42,7 @@ Comp admin can remove feedback and the option to publish feedback becomes disabl
     When the user clicks the button/link    name=removeAssessorFeedback
     Then the option to publish feedback is disabled
 
-Pushing the publish feedback button brings up a warning dialogue
+Pushing the publish feedback brings up a warning
     [Documentation]    INFUND-2672
     [Tags]
     [Setup]    Run Keywords    the user navigates to the page    ${successful_application_overview}
@@ -53,7 +53,7 @@ Pushing the publish feedback button brings up a warning dialogue
     And the user should see the element    jQuery=.button:contains("Cancel")
     And the user should see the element    jQuery=.button:contains("Publish assessor feedback")
 
-Choosing cancel on the dialogue goes back to the Assessor feedback page
+Choosing cancel on the dialogue
     [Documentation]    INFUND-2672
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
@@ -61,28 +61,26 @@ Choosing cancel on the dialogue goes back to the Assessor feedback page
     And the user should see the text in the page    Assessor Feedback
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
 
-Choosing Publish assessor feedback on the dialogue redirects to the Project setup page
+Choosing to Notify the applicants in the dialogue
     [Documentation]    INFUND-2672
     [Tags]
     When the user clicks the button/link    name=publish
     Then the user should be redirected to the correct page    ${assessor_feedback_competition_url}
-    # The test above is required to trigger the state changes, but the step below is commented out as it is
-    # Pending due to INFUND-3156
-    # And the user should see the text in the page    Project setup
+    And the user should see the text in the page    Project setup
 
 Successful applicants are notified of the feedback
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
     # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_one}    ${feedback_success_email}
+    Then open mailbox and verify the content    ${test_mailbox_one}    Assessor feedback is now available for your successfully funded application    ${feedback_success_email}
 
 Unsuccessful applicants are notified of the feedback
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
     # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_two}    ${feedback_failure_email}
+    Then open mailbox and verify the content    ${test_mailbox_two}    ${feedback_failure_email}    Assessor feedback is now available for your unsuccessfully funded application
 
-Once applicants are notified, the whole state of the competition changes to Project setup
+The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646
     [Tags]    Pending
     # Pending due to INFUND-3156

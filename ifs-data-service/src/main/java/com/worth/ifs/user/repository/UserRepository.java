@@ -1,6 +1,7 @@
 package com.worth.ifs.user.repository;
 
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserStatus;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -14,6 +15,9 @@ import java.util.Optional;
  */
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
         Optional<User> findByEmail(@Param("email") String email);
+
+        Optional<User> findByEmailAndStatus(@Param("email") String email, @Param("status") final UserStatus status);
+
         @Override
         List<User> findAll();
         User findOneByUid(@Param("uid") String uid);

@@ -250,6 +250,7 @@ The applicant selects 'No' for other funding
 
 The applicant selects 'Yes' and fills two rows
     Select Radio button    other_funding-otherPublicFunding-35-54    Yes
+    Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
     Click Element    jQuery=button:contains('Add another source of funding')
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Element Should Be Visible    id=other-funding-table

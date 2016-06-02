@@ -154,6 +154,13 @@ User should not be able to edit or upload the form
     Then the user should not see the element    jQuery=button:contains("Remove")
     And the user should see the element    css=#incurred-staff[readonly]
 
+File upload/delete should not be allowed when marked as complete
+    [Documentation]    INFUND-2437
+    [Tags]    Pending
+    # Pending due to 2202
+    Then the user cannot see the option to upload a file on the page    ${YOUR_FINANCES_URL}
+    And the user cannot remove the uploaded file
+
 Academic finance overview
     [Documentation]    INFUND-917
     ...
