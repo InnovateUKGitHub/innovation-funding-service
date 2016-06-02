@@ -95,13 +95,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateStartDate() throws Exception {
 
-        ProjectResource project = newProjectResource().
-                with(name("My Project")).
-                withDuration(4L).
-                withTargetStartDate(LocalDate.now().withDayOfMonth(5)).
-                withDuration(4L).
-                build();
-
         when(projectRestService.updateProjectStartDate(123L, LocalDate.of(2017, 6, 3))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/project/{id}/details/start-date", 123L).
