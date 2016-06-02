@@ -64,7 +64,9 @@ public class ApplicationController extends AbstractApplicationController {
                                      HttpServletRequest request) {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
+        ApplicationResource application = applicationService.getById(applicationId);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model, allSections);
         return "application-details";
     }
 
