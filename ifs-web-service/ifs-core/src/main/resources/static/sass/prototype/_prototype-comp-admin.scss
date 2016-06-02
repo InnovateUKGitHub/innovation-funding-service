@@ -126,31 +126,26 @@ table{
 		&.ok{
 			color: $green;
 			font-weight: bold;
-			text-indent: 100%;
+			//text-indent: 100%;
 			white-space: nowrap;
 			overflow: hidden;
 			@extend %icon-tick;
 			background-position: 50% 50%;
-
-			a{
-				color: $green;
-				font-weight: bold;
-			}
 		}
 		&.action{
 			//background: $red;
 			@extend  %icon-assigned-to-me;
 			background-position: 50% 50%;
-
-			a{
-				color: white;
-				font-weight: bold;
-			}
 		}
 		&.waiting{
 			@extend  %icon-timer;
 			background-position: 50% 50%;
 			background-size: 33px 30px;
+		}
+
+		a{
+			display: block;
+			height: 20px;
 		}
 	}
 	
@@ -170,7 +165,7 @@ table{
 	input{
 		width: 100%;
 		text-align: right;
-		min-width: 6em; 
+		min-width: 4em; 
 	}
 
 	tbody{
