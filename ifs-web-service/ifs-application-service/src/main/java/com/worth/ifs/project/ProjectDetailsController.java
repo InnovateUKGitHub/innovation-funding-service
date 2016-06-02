@@ -18,6 +18,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.UserService;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -40,6 +41,9 @@ public class ProjectDetailsController {
     
     @Autowired
     private UserAuthenticationService userAuthenticationService;
+    
+    @Autowired
+    private UserService userService;
 	
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
@@ -47,11 +51,14 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), applicationResource);
         
         organisationDetailsModelPopulator.populateModel(model, projectId);
         
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", user);
+        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
+        
         model.addAttribute("currentOrganisation", user.getOrganisations().get(0));
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
