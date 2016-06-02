@@ -68,6 +68,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
 
+        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
     	when(applicationService.getById(projectId)).thenReturn(applicationResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
@@ -88,6 +89,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
 
+        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
     	when(applicationService.getById(projectId)).thenReturn(applicationResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);

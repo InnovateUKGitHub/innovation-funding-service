@@ -87,7 +87,10 @@ public class ProjectDetailsController {
     }
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
-    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId) throws InterruptedException, ExecutionException {
+    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) throws InterruptedException, ExecutionException {
+		if(!userIsLeadApplicant(projectId, request)) {
+			return redirectToProjectDetails(projectId);
+		}
     	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
         
         ApplicationResource applicationResource = applicationService.getById(projectId);
@@ -98,8 +101,10 @@ public class ProjectDetailsController {
     }
 
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
-    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form, BindingResult bindingResult) {
-        
+    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form, BindingResult bindingResult, HttpServletRequest request) {
+    	if(!userIsLeadApplicant(projectId, request)) {
+			return redirectToProjectDetails(projectId);
+		}
         ApplicationResource applicationResource = applicationService.getById(projectId);
         
         if(bindingResult.hasErrors()) {
@@ -114,9 +119,16 @@ public class ProjectDetailsController {
         
         projectService.updateProjectManager(projectId, form.getProjectManager());
     	
-        return "redirect:/project/" + projectId + "/details";
+        return redirectToProjectDetails(projectId);
     }
 
+    private boolean userIsLeadApplicant(Long projectId, HttpServletRequest request) {
+    	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    	ApplicationResource applicationResource = applicationService.getById(projectId);
+    	
+    	return userService.isLeadApplicant(user.getId(), applicationResource);
+    }
+    
 	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
 		ProjectResource projectResource = projectService.getById(projectId);
     	Future<ProcessRoleResource> processRoleResource;
@@ -164,8 +176,10 @@ public class ProjectDetailsController {
 	}
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
-    public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form) {
-    	
+    public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form, HttpServletRequest request) {
+    	if(!userIsLeadApplicant(projectId, request)) {
+			return redirectToProjectDetails(projectId);
+		}
     	ProjectResource project = projectService.getById(projectId);
     	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
         LocalDate defaultStartDate = LocalDate.of(project.getTargetStartDate().getYear(), project.getTargetStartDate().getMonth(), 1);
@@ -177,21 +191,23 @@ public class ProjectDetailsController {
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form,
                                   Model model,
-                                  BindingResult bindingResult) {
-
+                                  BindingResult bindingResult, HttpServletRequest request) {
+    	if(!userIsLeadApplicant(projectId, request)) {
+			return redirectToProjectDetails(projectId);
+		}
         RestResult<Void> updateResult = projectRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult);
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, request);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(
-            String fieldName, long projectId, Model model,
+            String fieldName, Long projectId, Model model,
             ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form, BindingResult bindingResult,
-            RestResult<?> result) {
+            RestResult<?> result, HttpServletRequest request) {
 
         if (result.isFailure()) {
             bindAnyErrorsToField(result, fieldName, bindingResult, form);
             model.addAttribute("form", form);
-            return viewStartDate(model, projectId, form);
+            return viewStartDate(model, projectId, form, request);
         }
 
         return redirectToProjectDetails(projectId);
