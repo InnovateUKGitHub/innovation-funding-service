@@ -83,6 +83,12 @@ case "$1" in
         resetUsers)
             resetUsers
             ;;
+        clean)
+            docker rmi -f $(docker images -q innovation*)
+            docker rmi mysql:5.5.49
+            docker rmi $(docker images -f "dangling=true" -q)
+            docker volume ls -qf "dangling=true" | xargs docker volume rm
+            ;;
         *)
             echo $"that will not work, please check the script to find out how to use it :D"
             exit 1
