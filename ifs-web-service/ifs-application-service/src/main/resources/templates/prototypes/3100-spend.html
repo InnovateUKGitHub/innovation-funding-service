@@ -147,194 +147,128 @@
 
 	<form>
 
-		<style>
-			.flex{
-				display: flex; 
-				position: relative;
-			}
-			.flex1, .flex2, .flex3{
-				flex: 1 100%;
-				border: 1 100%;
-			}
-			.flex1{
-				flex: 0 0 225px;
-				border-right: 1px solid #bfc1c3;
-				margin-right: 5px;
-			}
-			.flex2{ 
-				overflow: auto;
-			}
-			.flex3{
-				flex: 0 0 300px;
-			}
+		<div class="flex-table">
+			<div class="flex-left"></div>
+			<div class="flex-middle">
+				<table id="table-forecast">
+					<thead>
+						<tr>
+							<th class="alignleft fix-left">Month</th>
+							<th>Jun 16</th>
+							<th>Jul 16</th>
+							<th>Aug 16</th>
+							<th>Sep 16</th>
+							<th>Oct 16</th>
+							<th>Nov 16</th>
+							<th>Dec 16</th>
+							<th>Jan 17</th>
+							<th>Feb 17</th>
+							<th class="separate-cell year">Mar 17</th>
 
-			#table-forecast .total{
-				border: none;
-			}
+							<th>Apr 17</th>
+							<th>May 17</th>
+							<th>Jun 17</th>
+							<th>Jul 17</th>
+							<th>Aug 17</th>
+							<th>Sep 17</th>
+							<th>Oct 17</th>
+							<th>Nov 17</th>
+							<th>Dec 17</th>
+							<th>Jan 18</th>
+							<th>Feb 18</th>
+							<th class="separate-cell year">Mar 18</th>
 
-			#table-forecast tfoot .total{
-				border-top: 3px solid black;
-			}
+							<th>Apr 18</th>
+							<th>May 18</th>
+							<th>Jun 18</th>
+							<th>Jul 18</th>
+							<th>Aug 18</th>
+							<th>Sep 18</th>
+							<th>Oct 18</th>
+							<th>Nov 18</th>
+							<th>Dec 18</th>
+							<th>Jan 19</th>
+							<th>Feb 19</th>
+							<th class="separate-cell year">Mar 19</th>
 
-			tfoot .fix-left,
-			tfoot .fix-right,
-			tfoot .fix-right2{
-				border-top: 3px solid black;
-				margin-top: -2px;
-			}
+							<th>Apr 19</th>
+							<th>May 19</th>
 
-			.fix-left{
-				position: absolute;
-				width: 225px;
-				left: 0;
-			}
+							<th scope="col" class="total fix-right2" id="grand-total">Total</th>
+							<th scope="col" class="total eligible fix-right" id="eligible-project-cost">Eligible project cost</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
+							<th scope="row" id="total" class="fix-left">Total</th>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td class="separate-cell year">26,000</td>
 
-			.fix-right2{
-				position: absolute;
-				width: 150px;
-				right: 150px;
-			}
-			
-			.fix-right{
-				position: absolute;
-				width: 150px;
-				right: 0;
-			}
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td class="separate-cell year">26,000</td>
 
-			#table-forecast th,
-			#table-forecast td{
-				box-sizing: border-box;
-				height: 60px;
-			}
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td>26,000</td>
+							<td class="separate-cell year">26,000</td>
 
-		</style>
+							<td>26,000</td>
+							<td>26,000</td>
 
-		<div class="flex">
-			<div class="flex1"></div>
-			<div class="flex2">
-				
+							<td class="total fix-right2">936,000</td>
+							<td class="total eligible fix-right">936,000</td>
+						</tr>
+					</tfoot>
+					<tbody>
+						<div th:if="${param.status == null or param.status[0] != 'edit'}" th:remove="tag">
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Sub-contracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Travel &#38; subsistance'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+						</div>
 
-					<table id="table-forecast">
-						<thead>
-							<tr>
-								<th class="alignleft fix-left">Month</th>
-								<th>Jun 16</th>
-								<th>Jul 16</th>
-								<th>Aug 16</th>
-								<th>Sep 16</th>
-								<th>Oct 16</th>
-								<th>Nov 16</th>
-								<th>Dec 16</th>
-								<th>Jan 17</th>
-								<th>Feb 17</th>
-								<th class="separate-cell year">Mar 17</th>
-
-								<th>Apr 17</th>
-								<th>May 17</th>
-								<th>Jun 17</th>
-								<th>Jul 17</th>
-								<th>Aug 17</th>
-								<th>Sep 17</th>
-								<th>Oct 17</th>
-								<th>Nov 17</th>
-								<th>Dec 17</th>
-								<th>Jan 18</th>
-								<th>Feb 18</th>
-								<th class="separate-cell year">Mar 18</th>
-
-								<th>Apr 18</th>
-								<th>May 18</th>
-								<th>Jun 18</th>
-								<th>Jul 18</th>
-								<th>Aug 18</th>
-								<th>Sep 18</th>
-								<th>Oct 18</th>
-								<th>Nov 18</th>
-								<th>Dec 18</th>
-								<th>Jan 19</th>
-								<th>Feb 19</th>
-								<th class="separate-cell year">Mar 19</th>
-
-								<th>Apr 19</th>
-								<th>May 19</th>
-
-								<th scope="col" class="total fix-right2" id="grand-total">Total</th>
-								<th scope="col" class="total eligible fix-right" id="eligible-project-cost">Eligible project cost</th>
-							</tr>
-						</thead>
-						<tfoot>
-							<tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
-								<th scope="row" id="total" class="fix-left">Total</th>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td class="separate-cell year">26,000</td>
-
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td class="separate-cell year">26,000</td>
-
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td>26,000</td>
-								<td class="separate-cell year">26,000</td>
-
-								<td>26,000</td>
-								<td>26,000</td>
-
-								<td class="total fix-right2">936,000</td>
-								<td class="total eligible fix-right">936,000</td>
-							</tr>
-						</tfoot>
-						<tbody>
-							<div th:if="${param.status == null or param.status[0] != 'edit'}" th:remove="tag">
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Sub-contracting costs'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Travel &#38; subsistance'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-							</div>
-
-							<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Admin support costs (20%)'}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Sub-contracting costs'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel &#38; subsistance'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-								<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-							</div>
-						</tbody>
-					</table>
-			
-
+						<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Admin support costs (20%)'}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Sub-contracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel &#38; subsistance'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+						</div>
+					</tbody>
+				</table>
 			</div>
-			<div class="flex3"></div>
+			<div class="flex-right"></div>
 		</div>
 
 		
