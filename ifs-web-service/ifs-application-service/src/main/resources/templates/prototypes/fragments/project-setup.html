@@ -179,7 +179,7 @@
 <!-- ===========================Spend profile rows readonly=========================== --> 
 
 <div th:fragment="prototype-spend-row">
-    <tr>
+    <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
         <th scope="row" th:text="${header}" class="fix-left">Labour</th>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
@@ -229,7 +229,7 @@
 <!-- ===========================Spend profile rows inputs=========================== --> 
 
 <div th:fragment="prototype-spend-row-edit">
-    <tr>
+    <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
         <th scope="row" th:text="${header}" class="fix-left">Labour</th>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
