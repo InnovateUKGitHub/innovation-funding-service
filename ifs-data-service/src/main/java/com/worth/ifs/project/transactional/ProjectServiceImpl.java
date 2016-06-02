@@ -25,7 +25,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -56,9 +55,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return getProject(projectId).
-                andOnSuccess(project -> validateProjectStartDate(projectStartDate).
-                andOnSuccess(() -> project.setTargetStartDate(projectStartDate)));
+        return validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> getProject(projectId).
+                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate)));
     }
 
     @Override
