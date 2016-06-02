@@ -70,8 +70,6 @@ public class QuestionModelPopulator {
     private FormInputService formInputService;
     @Autowired
     private FormInputResponseService formInputResponseService;
-    @Autowired
-    private QuestionStatusRestService questionStatusRestService;
 
     public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form, final BindingResult bindingResult) {
         QuestionResource question = questionService.getById(questionId);
@@ -293,7 +291,7 @@ public class QuestionModelPopulator {
     }
 
     private List<QuestionStatusResource> getQuestionStatuses(Long questionId, Long applicationId) {
-        return questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccessObjectOrThrowException();
+        return questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
     }
 
 

@@ -85,10 +85,7 @@ public class FormInputResponsePermissionRules {
     }
 
     @PermissionRule(value = "SAVE",
-            description = "A consortium member can update the response.",
-            additionalComments = "TODO these permissions are not correct - but are the best we can do with the code in its current state. To fix this we need to " +
-                    "1) Split the service methods into create and update " +
-                    "2) Have the web layer only call the update when it is meant to, i.e. not when it is in read only mode as it currently does")
+            description = "A consortium member can update the response.")
     public boolean aConsortiumMemberCanUpdateAFormInputResponse(final FormInputResponseCommand response, final UserResource user) {
         final long applicationId = response.getApplicationId();
         final boolean isLead = checkRole(user, applicationId, UserRoleType.LEADAPPLICANT, processRoleRepository);
@@ -96,7 +93,9 @@ public class FormInputResponsePermissionRules {
 
         List<QuestionStatus> questionStatuses = getQuestionStatuses(response);
 
-        return isLead || (isCollaborator && checkIfAssignedToQuestion(questionStatuses, user));
+        return (isLead || isCollaborator)
+                && checkIfAssignedToQuestion(questionStatuses, user)
+                && !checkIfQuestionIsMarked(questionStatuses);
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
@@ -114,6 +113,13 @@ public class FormInputResponsePermissionRules {
                                 || questionStatus.getAssignee().getUser().getId() == user.getId());
 
         return isAssigned;
+    }
+
+    private boolean checkIfQuestionIsMarked(List<QuestionStatus> questionStatuses) {
+        boolean isMarked = questionStatuses.stream()
+                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete() == true);
+
+        return isMarked;
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
