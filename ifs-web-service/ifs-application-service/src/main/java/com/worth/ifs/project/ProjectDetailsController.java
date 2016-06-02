@@ -1,5 +1,9 @@
 package com.worth.ifs.project;
 
+import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static java.util.Arrays.asList;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -23,17 +27,18 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.ProjectService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
-import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -65,6 +70,9 @@ public class ProjectDetailsController {
     @Autowired
     private ProcessRoleService processRoleService;
     
+    @Autowired
+    private ProjectRestService projectRestService;
+
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
@@ -83,7 +91,7 @@ public class ProjectDetailsController {
     }
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
-    public String projectManager(Model model, @PathVariable("projectId") final Long projectId) {
+    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId) {
     	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
         
         ApplicationResource applicationResource = applicationService.getById(projectId);
@@ -162,4 +170,42 @@ public class ProjectDetailsController {
 
         return leadPartnerUsers.stream().anyMatch(prr -> projectManager.equals(prr.getUser()));
 	}
+
+    @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
+    public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form) {
+    	
+    	ProjectResource project = projectService.getById(projectId);
+    	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
+        LocalDate defaultStartDate = LocalDate.of(project.getTargetStartDate().getYear(), project.getTargetStartDate().getMonth(), 1);
+        form.setProjectStartDate(defaultStartDate);
+        return "project/details-start-date";
+    }
+
+    @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
+    public String updateStartDate(@PathVariable("projectId") final Long projectId,
+                                  @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form,
+                                  Model model,
+                                  BindingResult bindingResult) {
+
+        RestResult<Void> updateResult = projectRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult);
+    }
+
+    private String handleErrorsOrRedirectToProjectOverview(
+            String fieldName, long projectId, Model model,
+            ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form, BindingResult bindingResult,
+            RestResult<?> result) {
+
+        if (result.isFailure()) {
+            bindAnyErrorsToField(result, fieldName, bindingResult, form);
+            model.addAttribute("form", form);
+            return viewStartDate(model, projectId, form);
+        }
+
+        return redirectToProjectDetails(projectId);
+    }
+
+    private String redirectToProjectDetails(long projectId) {
+        return "redirect:/project/" + projectId + "/details";
+    }
 }

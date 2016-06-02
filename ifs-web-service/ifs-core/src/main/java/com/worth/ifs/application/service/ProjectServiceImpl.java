@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
  * This class contains methods to retrieve and store {@link ProjectResource} related data,
  * through the RestService {@link ProjectRestService}.
  */
-// TODO DW - INFUND-1555 - get service calls to return rest responses
 @Service
 public class ProjectServiceImpl implements ProjectService {
 

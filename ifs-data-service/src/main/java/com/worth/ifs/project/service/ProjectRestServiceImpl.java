@@ -6,6 +6,8 @@ import com.worth.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class ProjectRestServiceImpl extends BaseRestService implements ProjectRestService {
 
@@ -21,4 +23,8 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 	public RestResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId) {
 		return postWithRestResult(projectRestURL + "/" + projectId + "/project-manager/" + projectManagerUserId, Void.class);
 	}
+    @Override
+    public RestResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/startdate?projectStartDate=" + projectStartDate, Void.class);
+    }
 }
