@@ -90,10 +90,10 @@ case "$1" in
             resetUsers
             ;;
         clean)
-            docker rmi -f $(docker images -q innovation*)
-            docker rmi mysql:5.5.49
-            docker rmi $(docker images -f "dangling=true" -q)
-            docker volume ls -qf "dangling=true" | xargs docker volume rm
+            docker-compose rm -fva
+            docker rmi -f davidcaste/alpine-tomcat:jdk8tomcat8
+            docker rmi -f mysql:5.5.49
+            echo "all traces of ifs have been removed from docker"
             ;;
         *)
             echo $"that will not work, please check the script to find out how to use it :D"
