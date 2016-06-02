@@ -11,6 +11,7 @@ import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -69,18 +70,19 @@ public class ProjectDetailsController {
     }
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
-    public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form) {
+    public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("form") ProjectDetailsStartDateForm form) {
     	
     	ProjectResource project = projectService.getById(projectId);
     	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
-        LocalDate defaultStartDate = LocalDate.of(project.getTargetStartDate().getYear(), project.getTargetStartDate().getMonth(), 1);
+        LocalDate defaultStartDate = project.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
         return "project/details-start-date";
     }
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form,
+                                  @ModelAttribute("form") ProjectDetailsStartDateForm form,
                                   Model model,
                                   BindingResult bindingResult) {
 
@@ -90,7 +92,7 @@ public class ProjectDetailsController {
 
     private String handleErrorsOrRedirectToProjectOverview(
             String fieldName, long projectId, Model model,
-            ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form, BindingResult bindingResult,
+            ProjectDetailsStartDateForm form, BindingResult bindingResult,
             RestResult<?> result) {
 
         if (result.isFailure()) {
