@@ -2,7 +2,13 @@
 
 startingDir= pwd
 
-eval $(docker-machine env default)
+if [[ $OSTYPE == darwin* ]]; then
+  eval $(docker-machine env default)
+else
+  echo "Unable to determine a supported operating system for this script.  Currently only supported on Linux and Macs"
+  exit 1
+fi
+
 
 cd ../../../
 
