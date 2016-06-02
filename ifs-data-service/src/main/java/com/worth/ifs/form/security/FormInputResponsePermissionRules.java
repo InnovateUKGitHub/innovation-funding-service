@@ -1,7 +1,10 @@
 package com.worth.ifs.form.security;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -11,6 +14,7 @@ import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -21,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
@@ -39,6 +44,12 @@ public class FormInputResponsePermissionRules {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuestionStatusRepository questionStatusRepository;
 
     @Autowired
     private FormInputRepository formInputRepository;
@@ -80,15 +91,32 @@ public class FormInputResponsePermissionRules {
                     "2) Have the web layer only call the update when it is meant to, i.e. not when it is in read only mode as it currently does")
     public boolean aConsortiumMemberCanUpdateAFormInputResponse(final FormInputResponseCommand response, final UserResource user) {
         final long applicationId = response.getApplicationId();
-        final ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
         final boolean isLead = checkRole(user, applicationId, UserRoleType.LEADAPPLICANT, processRoleRepository);
         final boolean isCollaborator = checkRole(user, applicationId, UserRoleType.COLLABORATOR, processRoleRepository);
-        return isLead || isCollaborator;
+
+        List<QuestionStatus> questionStatuses = getQuestionStatuses(response);
+
+        return isLead || (isCollaborator && checkIfAssignedToQuestion(questionStatuses, user));
+    }
+
+    private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
+        FormInput formInput = formInputRepository.findOne(responseCommand.getFormInputId());
+        List<QuestionStatus> questionStatuses = formInput.getQuestion().getQuestionStatuses();
+
+        return questionStatuses.stream()
+                .filter(questionStatus -> questionStatus.getApplication().getId() == responseCommand.getApplicationId()).collect(Collectors.toList());
+    }
+
+
+    private boolean checkIfAssignedToQuestion(List<QuestionStatus> questionStatuses, final UserResource user) {
+        boolean isAssigned = questionStatuses.stream()
+                .anyMatch(questionStatus -> questionStatus.getAssignee() == null
+                                || questionStatus.getAssignee().getUser().getId() == user.getId());
+
+        return isAssigned;
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
-        final List<Role> roles = roleRepository.findByName(userRoleType.getName());
-        final Role role = roles.get(0);
         final Long organisationId = processRoleRepository.findOne(response.getUpdatedBy()).getOrganisation().getId();
         final Long applicationId = response.getApplication();
         return checkRole(user, applicationId, organisationId, userRoleType, roleRepository, processRoleRepository);
