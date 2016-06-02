@@ -77,4 +77,5 @@ ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-
+${test_mailbox_one}    worth.email.test@gmail.com
+${test_mailbox_one}    worth.email.test.two@gmail.com

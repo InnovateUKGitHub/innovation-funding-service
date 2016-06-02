@@ -473,3 +473,15 @@ the lead applicant invites a registered user
     And the user should see the text in the page    Application overview
     User closes the browser
     The guest user opens the browser
+
+Open mailbox and verify the content
+    [Arguments]    ${EMAIL}    ${EMAIL_SUBJECT}    ${CONTENT}
+    Open Mailbox    server=imap.googlemail.com    user=${EMAIL}    password=testtest1
+    #${LATEST} =    wait for email
+    ${subject}=    Get Multipart Field    Subject
+    Should Contain    ${subject}    ${EMAIL_SUBJECT}
+    ${BODY}=    get email body    ${subject}
+    log    ${BODY}
+    Should Contain    ${BODY}    ${CONTENT}
+    Delete All Emails
+    close mailbox

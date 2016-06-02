@@ -72,13 +72,13 @@ Successful applicants are notified of the feedback
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
     # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_one}    ${feedback_success_email}
+    Then open mailbox and verify the content    ${test_mailbox_one}    Assessor feedback is now available for your successfully funded application    ${feedback_success_email}
 
 Unsuccessful applicants are notified of the feedback
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
     # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_two}    ${feedback_failure_email}
+    Then open mailbox and verify the content    ${test_mailbox_two}    ${feedback_failure_email}    Assessor feedback is now available for your unsuccessfully funded application
 
 The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646
