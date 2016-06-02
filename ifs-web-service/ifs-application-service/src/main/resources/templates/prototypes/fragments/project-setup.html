@@ -180,7 +180,7 @@
 
 <div th:fragment="prototype-spend-row">
     <tr>
-        <th scope="row" th:text="${header}">Labour</th>
+        <th scope="row" th:text="${header}" class="fix-left">Labour</th>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
@@ -221,8 +221,8 @@
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
 
-        <td th:text="${total}" class="total">450,000</td>
-        <td th:text="${total}" class="total eligible">450,000</td>
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
     </tr>
 </div>
 
@@ -230,7 +230,7 @@
 
 <div th:fragment="prototype-spend-row-edit">
     <tr>
-        <th scope="row" th:text="${header}">Labour</th>
+        <th scope="row" th:text="${header}" class="fix-left">Labour</th>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
@@ -271,8 +271,8 @@
         <td><input type="text" th:value="${value}" class="form-control" /></td>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
 
-        <td th:text="${total}" class="total">450,000</td>
-        <td th:text="${total}" class="total eligible">450,000</td>
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
     </tr>
 </div>
 
