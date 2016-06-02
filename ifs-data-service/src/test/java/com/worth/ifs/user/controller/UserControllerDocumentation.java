@@ -62,6 +62,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createApplicantUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -82,6 +83,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createApplicantUser(organisationId, of(competitionId), userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
