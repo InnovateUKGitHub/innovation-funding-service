@@ -69,9 +69,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testUpdateProjectStartDateButProjectDoesntExist() {
 
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
         when(projectRepositoryMock.findOne(123L)).thenReturn(null);
 
-        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, LocalDate.now());
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
     }

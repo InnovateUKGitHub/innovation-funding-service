@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
@@ -17,12 +18,14 @@ import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -87,5 +90,29 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get("form");
         assertEquals(project.getTargetStartDate().withDayOfMonth(1), form.getProjectStartDate());
+    }
+
+    @Test
+    public void testUpdateStartDate() throws Exception {
+
+        ProjectResource project = newProjectResource().
+                with(name("My Project")).
+                withDuration(4L).
+                withTargetStartDate(LocalDate.now().withDayOfMonth(5)).
+                withDuration(4L).
+                build();
+
+        when(projectRestService.updateProjectStartDate(123L, LocalDate.of(2017, 6, 3))).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/project/{id}/details/start-date", 123L).
+                    contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                    param("projectStartDate", "projectStartDate").
+                    param("projectStartDate.dayOfMonth", "3").
+                    param("projectStartDate.monthValue", "6").
+                    param("projectStartDate.year", "2017"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/123/details"))
+                .andReturn();
+
     }
 }
