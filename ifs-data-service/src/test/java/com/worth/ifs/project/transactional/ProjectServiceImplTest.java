@@ -14,6 +14,7 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
@@ -41,6 +42,24 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(123L);
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
+    }
+
+    @Test
+    public void testUpdateProjectStartDate() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        Project existingProject = newProject().build();
+        assertNull(existingProject.getTargetStartDate());
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isSuccess());
+
+        verify(projectRepositoryMock).findOne(123L);
+        assertEquals(validDate, existingProject.getTargetStartDate());
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {
