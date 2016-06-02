@@ -8,6 +8,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
     Go To    ${TARGET_URL}
+    Run Keyword And Ignore Error    Confirm Action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
