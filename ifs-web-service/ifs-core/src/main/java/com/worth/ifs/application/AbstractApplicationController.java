@@ -185,10 +185,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return application;
     }
 
-    protected ApplicationResource addCompleteApplicationDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        addCompletedDetails(model, application, userOrganisation);
-        return application;
-    }
+
 
 
     protected  void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
@@ -392,7 +389,7 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    protected void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 

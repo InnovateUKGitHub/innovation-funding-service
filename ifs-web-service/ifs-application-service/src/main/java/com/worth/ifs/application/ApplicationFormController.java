@@ -502,7 +502,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             bindingResult.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
-        addCompleteApplicationDetails(model, application, userOrganisation);
 
         if(LOG.isDebugEnabled()){
             bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
@@ -523,6 +522,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
             addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
             addNavigation(section, applicationId, model);
+            addCompletedDetails(model, application, userOrganisation);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);
