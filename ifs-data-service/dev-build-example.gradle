@@ -1,42 +1,22 @@
-ext.activeProfile="example"
-
 ext.ifsDatasourceUrl="jdbc:mysql://localhost:3306/ifs"
-ext.ifsDatasourceUsername=""
-ext.ifsDatasourcePassword=""
-ext.ifsDatasourceDriverClassName="com.mysql.jdbc.Driver"
+ext.ifsDatasourceUsername="root"
+ext.ifsDatasourcePassword="password"
 ext.ifsFlywayLocations="db/migration,db/setup,db/webtest"
 
-ext.serverPort="8090"
-ext.ifsDataServiceRestBaseURL="http://localhost:8090"
-ext.ifsWebBaseURL="https://ifs-local-dev"
-ext.silRestBaseURL="http://localhost:8090/silstub"
-ext.idpRestBaseURL="https://iuk-auth-localdev/regapi"
-ext.idpRestKey=1234567890
-ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
-ext.shibbolethDir="/home/dwatson/development/projects/ifs/environment/shibboleth"
+ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
+ext.testIfsDatasourceUsername="root"
+ext.testIfsDatasourcePassword="password"
+ext.testIfsFlywayLocations="db/migration,db/setup,db/integration"
 
-project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
+project.ext['flyway.url']='jdbc:mysql://localhost:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'
-project.ext['flyway.user']=''
-project.ext['flyway.password']=''
+project.ext['flyway.user']='root'
+project.ext['flyway.password']='password'
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 project.ext['flyway.locations']="db/migration,db/setup,db/webtest"
 
-ext.testIfsDatasourceUrl="jdbc:mysql://localhost:3306/ifs_test"
-ext.testIfsDatasourceUsername=""
-ext.testIfsDatasourcePassword=""
-
-// Choose an appropriate location for a location to store uploaded files.
-// It is an OS-specific path, so choose the appropriate format depending on
-// whether you're on a *nix OS or a Windows OS.
-//
-// Note the 4 backslashes in Windows paths (this is to preserve the backslashes
-// so they are retained in application.properties during the processResource task)
-ext.ifsFileStorageLocation="/tmp or c:\\\\temp"
-
-ext.cookieSecure=false
-ext.cookieHTTPOnly=false
+ext.silRestBaseURL="http://localhost:8090/silstub"
 
 //
 // The production application will use the SIL to send emails out.  For non-production environments, the IFS application
@@ -53,9 +33,22 @@ ext.ifsSmtpPassword="example-password"
 ext.ifsSmtpTlsEnabled=true
 ext.ifsMailTimeoutMillis=10000
 
-ext.postcodeLookupURL="http://ws.postcoder.com/pcw"
+ext.idpRestBaseURL="https://iuk-auth-localdev/regapi"
+
+ext.ifsDataServiceRestBaseURL="http://localhost:8090"
+
 ext.postcodeLookupKey=""
 
-ext.ifsVirusScanningEnabled=false
+// Choose an appropriate location for a location to store uploaded files.
+// It is an OS-specific path, so choose the appropriate format depending on
+// whether you're on a *nix OS or a Windows OS.
+//
+// Note the 4 backslashes in Windows paths (this is to preserve the backslashes
+// so they are retained in application.properties during the processResource task)
+ext.ifsFileStorageLocation="/tmp or c:\\\\temp"
 
-ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout/"
+ext.ifsWebBaseURL="https://ifs-local-dev"
+
+ext.serverPort=8090
+ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
+ext.shibbolethDir="/home/dwatson/development/projects/ifs/environment/shibboleth"

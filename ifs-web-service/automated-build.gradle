@@ -1,12 +1,7 @@
-ext.activeProfile="automated"
-ext.serverPort=""
 ext.tomcatWebAppsDir=""
-ext.ifsDataServiceRestBaseURL=""
-ext.thymeleafCacheEnabled="false"
-ext.cookieSecure=true
-ext.cookieHTTPOnly=false
-ext.ifsRestConnectionsMaxTotal=100
-ext.ifsRestConnectionsMaxPerRoute=5
-ext.ifsRestConnectionsTimeoutMillis=60000
+
+ext.ifsDataServiceRestBaseURL="http://localhost:8090"
 
 ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout/"
+
+ext.serverPort=""
