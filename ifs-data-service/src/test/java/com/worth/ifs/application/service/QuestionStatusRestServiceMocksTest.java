@@ -16,7 +16,6 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
     @Override
     protected QuestionStatusRestServiceImpl registerRestServiceUnderTest() {
         QuestionStatusRestServiceImpl questionStatusRestService = new QuestionStatusRestServiceImpl();
-        questionStatusRestService.questionStatusRestURL = questionStatusRestURL;
         return questionStatusRestService;
     }
 

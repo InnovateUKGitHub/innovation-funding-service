@@ -17,7 +17,6 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
     @Override
     protected FormInputRestServiceImpl registerRestServiceUnderTest() {
         FormInputRestServiceImpl formInputService = new FormInputRestServiceImpl();
-        formInputService.formInputRestURL = formInputRestURL;
         return formInputService;
     }
 

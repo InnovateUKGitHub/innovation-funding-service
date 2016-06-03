@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 /**
  * Integration test of the Prototype Controller but without the "prototypes" profile to check that requests are not found.
  */
-@Ignore("Ignored since fetching these pages invokes com.worth.ifs.interceptors.AlertMessageHandlerInterceptor.addAlertMessages and the data controllers are not deployed to the embedded Tomcat")
+@Ignore("Ignored since fetching these pages invokes com.worth.ifs.interceptors.AlertMessageHandlerInterceptor.addAlertMessages. Needs running ifs-data-service which is not deployed to the embedded Tomcat")
 @ActiveProfiles("example")
 public class PrototypeControllerNotFoundIntegrationTest extends BaseWebIntegrationTest {
 

@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,15 +13,12 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 
-
 @Service
 public class ApplicationSummaryRestServiceImpl extends BaseRestService implements ApplicationSummaryRestService {
 
-    @Value("${ifs.data.service.rest.applicationSummary}")
-    private String applicationSummaryRestUrl;
+    private String applicationSummaryRestUrl = "/applicationSummary";
 
-	@Value("${ifs.data.service.rest.application}")
-	private String applicationRestUrl;
+	private String applicationRestUrl = "/application";
 
 	@Override
 	public RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {

@@ -24,7 +24,6 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     @Override
     protected SectionRestServiceImpl registerRestServiceUnderTest() {
         SectionRestServiceImpl sectionRestService = new SectionRestServiceImpl();
-        sectionRestService.sectionRestURL = sectionRestUrl;
         return sectionRestService;
     }
 

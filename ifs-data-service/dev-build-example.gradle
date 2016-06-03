@@ -1,14 +1,11 @@
-ext.activeProfile="example"
-
 ext.ifsDatasourceHost = "ifs-local-dev"
 ext.ifsDatasourceUrl="jdbc:mysql://database:3306/ifs"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
-ext.ifsDatasourceDriverClassName="com.mysql.jdbc.Driver"
 
-ext.serverPort="8090"
-ext.ifsDataServiceRestBaseURL="http://ifs-data-service:8080"
-ext.tomcatWebAppsDir="/opt/tomcat/webapps"
+ext.testIfsDatasourceUrl="jdbc:mysql://database:3306/ifs_test"
+ext.testIfsDatasourceUsername="root"
+ext.testIfsDatasourcePassword="password"
 
 project.ext['flyway.url']='jdbc:mysql://database:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'
@@ -17,17 +14,10 @@ project.ext['flyway.password']="password"
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 
-ext.testIfsDatasourceUrl="jdbc:mysql://database:3306/ifs_test"
-ext.testIfsDatasourceUsername="root"
-ext.testIfsDatasourcePassword="password"
-
-ext.ifsFileStorageLocation="/tmp"
-
-ext.cookieSecure=false
-ext.cookieHTTPOnly=false
-
-ext.ifsFlywayLocations="db/migration,db/setup,db/webtest"
 project.ext['flyway.locations']="db/migration,db/setup,db/webtest"
+ext.ifsFlywayLocations="db/migration,db/setup,db/webtest"
+
+ext.silRestBaseURL="http://ifs-data-service:8080/silstub"
 
 //
 // The production application will use the SIL to send emails out.  For non-production environments, the IFS application
@@ -44,19 +34,17 @@ ext.ifsSmtpPassword="example-password"
 ext.ifsSmtpTlsEnabled=true
 ext.ifsMailTimeoutMillis=10000
 
-ext.silRestBaseURL="http://ifs-data-service:8080/silstub"
-ext.ifsWebBaseURL="https://ifs-local-dev"
+ext.idpRestBaseURL="https://ifs-local-dev/regapi"
 
-ext.ifsRestConnectionsMaxTotal=100
-ext.ifsRestConnectionsMaxPerRoute=5
-ext.ifsRestConnectionsTimeoutMillis=60000
+ext.ifsDataServiceRestBaseURL="http://ifs-data-service:8080"
 
-ext.postcodeLookupURL="http://ws.postcoder.com/pcw"
 ext.postcodeLookupKey=""
 
-ext.idpRestBaseURL="https://ifs-local-dev/regapi"
-ext.idpRestKey=1234567890
-ext.shibbolethDir="/Users/worthsystems/servers/ifs/shib-docker"
+ext.ifsFileStorageLocation="/tmp"
 
-ext.ifsVirusScanningEnabled=false
-ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout/"
+ext.ifsWebBaseURL="https://ifs-local-dev"
+
+ext.serverPort="8090"
+ext.activeProfile="local"
+ext.tomcatWebAppsDir="/opt/tomcat/webapps"
+ext.shibbolethDir="/Users/worthsystems/servers/ifs/shib-docker"

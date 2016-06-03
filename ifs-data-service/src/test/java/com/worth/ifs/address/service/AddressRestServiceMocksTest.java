@@ -17,7 +17,6 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
     @Override
     protected AddressRestServiceImpl registerRestServiceUnderTest() {
         AddressRestServiceImpl addressRestService = new AddressRestServiceImpl();
-        addressRestService.addressRestUrl = addressRestURL;
         return addressRestService;
     }
 

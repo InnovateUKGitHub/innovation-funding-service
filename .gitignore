@@ -29,7 +29,8 @@ ifs-web-service/idea-support/
 # ignore properties
 **/*-build.gradle
 **/application-*.properties
-!**/application-automated.properties
+!**/application-local.properties
+!**/application-integration-test.properties
 
 # Created with help from https://www.gitignore.io
 
