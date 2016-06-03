@@ -13,7 +13,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 Academic organisations search
     [Documentation]    INFUND-1231
     [Tags]    HappyPath    Email
-    [Setup]    Delete the emails from the test mailbox
+    [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    worth.email.test+invitedacademics@gmail.com
     Given the lead applicant invites a registered user    worth.email.test+invite3@gmail.com    worth.email.test+inviteacademics@gmail.com
     When the user opens the mailbox and accepts the invitation to collaborate
@@ -40,7 +40,7 @@ Accept invitation flow as academic
     ...
     ...    INFUND-2256
     [Tags]    HappyPath    Email
-    [Setup]    Delete the emails from the test mailbox
+    [Setup]    Delete the emails from both test mailboxes
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool

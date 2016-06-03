@@ -57,13 +57,13 @@ Pushing the notify applicants button brings up a warning dialogue
     [Setup]    The user selects the option from the drop-down menu    Yes    id=fund16
     When the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     Then the user should see the text in the page    ${dialogue_warning_message}
-    And the user should see the element    jQuery=.button:contains("Cancel")
+    And the user should see the element    jQuery=button:contains("Cancel")
     And the user should see the element    jQuery=.button:contains("Notify applicants")
 
 Choosing cancel on the dialogue goes back to the Funder's Panel page
     [Documentation]    INFUND-2646
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Cancel")
+    When the user clicks the button/link    jQuery=button:contains("Cancel")
     Then the user should be redirected to the correct page    ${funders_panel_competition_url}
     And the user should see the text in the page    Funders Panel
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Notify applicants")
