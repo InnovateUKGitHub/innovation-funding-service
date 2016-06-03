@@ -1,5 +1,7 @@
 package com.worth.ifs.application.security;
 
+import java.util.List;
+
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -11,15 +13,16 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
