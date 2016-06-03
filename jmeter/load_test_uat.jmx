@@ -11,7 +11,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Explore Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Explore Group" enabled="false">
         <stringProp name="TestPlan.comments">These users are exploring the site. e.g. no registration / application actions</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -2160,6 +2160,8 @@ hello world</stringProp>
           </GaussianRandomTimer>
           <hashTree/>
         </hashTree>
+        <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Recording Controller" enabled="true"/>
+        <hashTree/>
       </hashTree>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
@@ -6529,6 +6531,11 @@ Inside 2 years it is estimated that a very large sum of money can be recouped by
           </hashTree>
         </hashTree>
       </hashTree>
+      <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
+        <stringProp name="ConstantTimer.delay">1000</stringProp>
+        <stringProp name="RandomTimer.range">100</stringProp>
+      </UniformRandomTimer>
+      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>

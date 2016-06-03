@@ -143,15 +143,41 @@
 <!-- ===========================Bank account details=========================== --> 
 
 <div th:fragment="prototype-bank-details">
+
+    <fieldset th:unless="${user == null}">
+        
+        <h2 class="heading-medium no-margin-bottom">Company details</h2>
+
+        <legend class="visuallyhidden">Company details</legend>
+
+        <div class="form-group extra-margin">
+            <label class="form-label" for="company-name">
+                <span class="form-label-bold">Company name</span>
+            </label>
+            <input class="form-control" id="company-name" name="company-name" value="Aptrans Ltd" type="text" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="companies-house-number">
+                <span class="form-label-bold">Account number</span>
+            </label>
+            <p class="form-hint">For example: 1548965</p>
+            <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
+        </div>
+
+    </fieldset>
+
     <fieldset>
         <h2 class="heading-medium no-margin-bottom">Account details</h2>
 
         <legend class="visuallyhidden">Account details</legend>
 
-        <p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
+        <p class="form-hint" th:unless="${user == 'internal'}">Please enter the bank account that you wish to use during the project.</p>
+
+        <p class="form-hint" th:unless="${user == null}">This is the bank account that the applicant will use for the duration of the project</p>
 
         <div class="form-group extra-margin">
-            <label class="form-label" for="bank-sort-code">
+            <label class="form-label" for="bank-acc-number">
                 <span class="form-label-bold">Account number</span>
             </label>
             <p class="form-hint">For example: 1548965</p>
@@ -168,7 +194,7 @@
 
         <h2 class="heading-medium no-margin-bottom">Billing address</h2>
 
-        <p class="form-hint">Please provide the billing address of your bank account. This is not the address of the bank.</p>
+        <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
 
         <div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" th:unless="${user == 'internal'}"/>
 
@@ -179,8 +205,8 @@
 <!-- ===========================Spend profile rows readonly=========================== --> 
 
 <div th:fragment="prototype-spend-row">
-    <tr>
-        <th scope="row" th:text="${header}">Labour</th>
+    <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
+        <th scope="row" th:text="${header}" class="fix-left">Labour</th>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
@@ -221,16 +247,16 @@
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
 
-        <td th:text="${total}" class="total">450,000</td>
-        <td th:text="${total}" class="total eligible">450,000</td>
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
     </tr>
 </div>
 
 <!-- ===========================Spend profile rows inputs=========================== --> 
 
 <div th:fragment="prototype-spend-row-edit">
-    <tr>
-        <th scope="row" th:text="${header}">Labour</th>
+    <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
+        <th scope="row" th:text="${header}" class="fix-left">Labour</th>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
@@ -271,8 +297,8 @@
         <td><input type="text" th:value="${value}" class="form-control" /></td>
         <td><input type="text" th:value="${value}" class="form-control" /></td>
 
-        <td th:text="${total}" class="total">450,000</td>
-        <td th:text="${total}" class="total eligible">450,000</td>
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
     </tr>
 </div>
 
