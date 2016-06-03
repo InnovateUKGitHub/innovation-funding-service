@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -61,6 +62,14 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+    
+	@Override
+	public List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation) {
+		List<ProcessRoleResource> userApplicationRoles = processRoleService.getByIds(application.getProcessRoles());
+		return userApplicationRoles.stream()
+				.filter(prr -> organisation.equals(prr.getOrganisation()))
+				.collect(Collectors.toList());
+	}
 
     @Override
     public Set<UserResource> getAssignableUsers(ApplicationResource application) {
@@ -126,4 +135,5 @@ public class UserServiceImpl implements UserService {
     public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
         return userRestService.findUserByEmail(email);
     }
+
 }
