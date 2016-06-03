@@ -50,6 +50,6 @@ ext.ifsFileStorageLocation="/tmp or c:\\\\temp"
 ext.ifsWebBaseURL="https://ifs-local-dev"
 
 ext.serverPort=8090
-ext.springProfiles="local"
+ext.activeProfile="local"
 ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
 ext.shibbolethDir="/home/dwatson/development/projects/ifs/environment/shibboleth"

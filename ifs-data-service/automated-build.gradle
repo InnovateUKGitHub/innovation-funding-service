@@ -49,6 +49,6 @@ ext.ifsFileStorageLocation="/tmp"
 ext.ifsWebBaseURL="http://localhost:8080"
 
 ext.serverPort=""
-ext.springProfiles="environment"
+ext.activeProfile="environment"
 ext.tomcatWebAppsDir=""
 ext.shibbolethDir=""
