@@ -19,14 +19,27 @@ esac
 cd ../../../
 
 data() {
-    ifs-data-service/gradlew cleanDeploy "$@"
-    docker cp ifs-data-service/build/war/* ifs-data-service:/opt/tomcat/webapps/
+    cd ifs-data-service
+    ./gradlew cleanDeploy "$@"
+    echo "copying data service war to container"
+    docker cp build/war/* ifs-data-service:/opt/tomcat/webapps/
+    echo "copying complete"
+    echo
+    echo
+    cd ..
 }
 
 web() {
-    ifs-web-service/gradlew cleanDeploy "$@"
-    docker cp ifs-web-service/ifs-competition-mgt-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
-    docker cp ifs-web-service/ifs-application-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
+    cd ifs-web-service
+    ./gradlew cleanDeploy "$@"
+    echo "copying competition management service war to container"
+    docker cp ifs-competition-mgt-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
+    echo "copying application service war to container"
+    docker cp ifs-application-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
+    echo "copying complete"
+    echo
+    echo
+    cd ..
 }
 
 target=$1
