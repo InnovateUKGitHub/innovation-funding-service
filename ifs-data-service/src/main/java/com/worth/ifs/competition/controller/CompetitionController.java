@@ -34,9 +34,9 @@ public class CompetitionController {
         return competitionService.findAll().toGetResponse();
     }
 
-    @RequestMapping("/sectionStatus/getAll")
-    public RestResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses() {
-        return competitionService.findAllCompetitionSectionStatusses().toGetResponse();
+    @RequestMapping("/sectionStatus/getAll/{id}")
+    public RestResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses(@PathVariable("id") final Long id) {
+        return competitionService.findAllCompetitionSectionStatusses(id).toGetResponse();
     }
 
     /**

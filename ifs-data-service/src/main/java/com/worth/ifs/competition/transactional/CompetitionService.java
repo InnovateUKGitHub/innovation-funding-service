@@ -25,5 +25,6 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
 
-    ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses();
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses(Long competitionId);
 }

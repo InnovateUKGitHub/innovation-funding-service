@@ -3,6 +3,7 @@ package com.worth.ifs.competition.controller;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +127,18 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         CompetitionResource savedCompetition = saveResult.getSuccessObject();
         checkUpdatedCompetitionCategories(savedCompetition);
+    }
+
+    @Rollback
+    @Test
+    public void testCompetitionSetupSectionStatus() throws Exception {
+        getAllCompetitions(1);
+
+        // Create new competition
+        CompetitionResource competition = createNewCompetition();
+
+        RestResult<List<CompetitionSetupSectionStatusResource>> statusses = controller.findAllCompetitionSectionStatusses(competition.getId());
+        assertTrue(statusses.isSuccess());
     }
 
     private CompetitionResource createNewCompetition() {
