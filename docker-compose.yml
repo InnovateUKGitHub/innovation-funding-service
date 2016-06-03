@@ -9,8 +9,6 @@ services:
     ports:
       - "443:443"
       - "389:389"
-    environment:
-      GRADLE_USER_HOME: .gradle/cache
     links:
       - web
       - data
@@ -19,14 +17,11 @@ services:
 
   web:
     container_name: ifs-web-service
-    build: .
+    build:
+      context: .
+      dockerfile: web-dockerfile
     ports:
       - "8080:8080"
-    volumes:
-      - .:/code
-    working_dir: /code/ifs-web-service
-    environment:
-      GRADLE_USER_HOME: .gradle/cache
     links:
       - data
     networks:
@@ -34,12 +29,11 @@ services:
 
   data:
     container_name: ifs-data-service
-    build: .
+    build:
+      context: .
+      dockerfile: data-dockerfile
     ports:
       - "8090:8080"
-    volumes:
-      - .:/code
-    working_dir: /code/ifs-data-service
     depends_on:
       - mysql
     networks:

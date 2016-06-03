@@ -1,5 +1,5 @@
 ext.serverPort="8080"
-ext.tomcatWebAppsDir="/opt/tomcat/webapps"
+ext.tomcatWebAppsDir="build/war"
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 ext.activeProfile="dev,prototypes"
 ext.thymeleafCacheEnabled="true"
