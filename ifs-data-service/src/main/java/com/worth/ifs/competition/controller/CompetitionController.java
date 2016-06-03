@@ -4,9 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,9 +18,14 @@ public class CompetitionController {
     @Autowired
     private CompetitionService competitionService;
 
-    @RequestMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
+        return competitionService.update(id, competitionResource).toGetResponse();
     }
 
     @RequestMapping("/findAll")

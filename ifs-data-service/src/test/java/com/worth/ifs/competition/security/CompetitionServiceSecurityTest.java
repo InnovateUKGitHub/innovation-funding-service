@@ -73,6 +73,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
+        public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
+            return serviceSuccess(competitionResource);
+        }
+
+        @Override
         public ServiceResult<CompetitionResource> create() {
             return serviceSuccess(newCompetitionResource().build());
         }

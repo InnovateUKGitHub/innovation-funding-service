@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.user.domain.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -76,8 +78,32 @@ public class Competition {
     @Enumerated(EnumType.STRING)
     private CompetitionResource.Status status;
 
+    @ManyToOne
+    @JoinColumn(name="competitionTypeId", referencedColumnName="id")
+    private CompetitionType competitionType;
+
+    @OneToMany(mappedBy = "competition")
+    private List<Milestone> milestones;
+
+    @ManyToOne
+    @JoinColumn(name="executiveUserId", referencedColumnName="id")
+    private User executive;
+
+    @ManyToOne
+    @JoinColumn(name="leadTechnologistUserId", referencedColumnName="id")
+    private User leadTechnologist;
+
+    private String pafCode;
+    private String budgetCode;
+    private String code;
+
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
+
+    @Transient
+    private Category innovationSector;
+    @Transient
+    private Category innovationArea;
 
     public Competition() {
     	// no-arg constructor
@@ -92,7 +118,7 @@ public class Competition {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        status = CompetitionResource.Status.NOT_STARTED;
+        status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -100,7 +126,7 @@ public class Competition {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        status = CompetitionResource.Status.NOT_STARTED;
+        status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
 
 
@@ -280,5 +306,76 @@ public class Competition {
     	}
     }
 
+    public User getExecutive() {
+        return executive;
+    }
+
+    public void setExecutive(User executive) {
+        this.executive = executive;
+    }
+
+    public User getLeadTechnologist() {
+        return leadTechnologist;
+    }
+
+    public void setLeadTechnologist(User leadTechnologist) {
+        this.leadTechnologist = leadTechnologist;
+    }
+
+    public String getPafCode() {
+        return pafCode;
+    }
+
+    public void setPafCode(String pafCode) {
+        this.pafCode = pafCode;
+    }
+
+    public String getBudgetCode() {
+        return budgetCode;
+    }
+
+    public void setBudgetCode(String budgetCode) {
+        this.budgetCode = budgetCode;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public CompetitionType getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(CompetitionType competitionType) {
+        this.competitionType = competitionType;
+    }
+
+    public Category getInnovationSector() {
+        return innovationSector;
+    }
+
+    public void setInnovationSector(Category innovationSector) {
+        this.innovationSector = innovationSector;
+    }
+
+    public Category getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(Category innovationArea) {
+        this.innovationArea = innovationArea;
+    }
+
+    public List<Milestone> getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(List<Milestone> milestones) {
+        this.milestones = milestones;
+    }
 }
 

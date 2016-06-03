@@ -12,9 +12,11 @@ import java.util.List;
  * Service for operations around the usage and processing of Competitions
  */
 public interface CompetitionService {
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<CompetitionResource> create();
