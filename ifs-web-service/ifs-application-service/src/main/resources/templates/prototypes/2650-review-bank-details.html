@@ -37,7 +37,7 @@
 	<p>
 		Dave Normen<br />
 		<a href="mailto:d.norman@aptrans.co.uk">d.norman@aptrans.co.uk</a><br />
-		028 58429458
+		0114 2664569
 	</p>
 
 	<h2 class="heading-medium">Aptrans Ltd - Account details</h2>
@@ -65,7 +65,8 @@
 					Aptrans Ltd
 				</td>
 				<td>
-					<span class="yes">9 / 9</span>
+					<span class="yes" th:unless="${param.status != null and param.status[0] == 'error'}">9 / 9</span>
+					<span class="no" th:unless="${param.status == null or param.status[0] != 'error'}">4 / 9</span>
 				</td>
 			</tr>
 			<tr>
