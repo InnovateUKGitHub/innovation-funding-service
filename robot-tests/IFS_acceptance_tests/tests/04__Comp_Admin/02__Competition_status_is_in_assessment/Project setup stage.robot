@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2607 As an applicant I want to have a link to the feedback for my application from the Application Overview page when it becomes available so I can review the assessor feedback for my application
-Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
+...
+...               INFUND-2612 As a partner I want to have a overview of where I am in the process and what outstanding tasks I have to complete so that I can understand our project setup steps
 Suite Teardown    User closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -12,12 +13,12 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
+${SUCCESFUL_PROJECT_PAGE}    ${server}/project/16
 
 *** Test Cases ***
-Partner can view the file
+Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
-    [Setup]    Run Keywords    Logout as user
     Given guest user log-in    worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user navigates to the page    ${successful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
@@ -25,14 +26,14 @@ Partner can view the file
     Then the user should see the text in the page    ${valid_pdf_excerpt}
     [Teardown]    the user navigates to the page    ${successful_application_overview}
 
-Partner cannot remove the file
+Partner cannot remove the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the text in the page    Remove
     And the user should not see the element    link=Remove
 
-Partner can download the file
+Partner can download the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    Pending
     # Pending until download functionality has been plugged in
@@ -41,7 +42,20 @@ Partner can download the file
     Then the file should be downloaded    ${valid_pdf}
     [Teardown]    Remove File    ${valid_pdf}
 
-Comp admin can view partner's feedback
+Partner can see the project setup page
+    [Documentation]    INFUND-2612
+    When the user navigates to the page    ${SUCCESFUL_PROJECT_PAGE}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    And the user should see the text in the page    The application Cheese is good has been successful within the La Fromage competition
+    And the user should see the element    link=View application and feedback
+    And the user should see the element    link=View terms and conditions of grant offer
+    And the user should see the text in the page    Project details
+    And the user should see the text in the page    Monitoring Officer
+    And the user should see the text in the page    Bank details
+    And the user should see the text in the page    Other documents
+
+Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
     [Setup]    Run Keywords    Logout as user
@@ -51,7 +65,7 @@ Comp admin can view partner's feedback
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should see the text in the page    ${valid_pdf_excerpt}
 
-Comp admin can view unsuccessful applicant's feedback
+Comp admin can view unsuccessful uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
     Given the user navigates to the page    ${unsuccessful_application_overview}
@@ -61,7 +75,7 @@ Comp admin can view unsuccessful applicant's feedback
     And the user navigates to the page    ${unsuccessful_application_overview}
     [Teardown]    Logout as user
 
-Unsuccessful applicant can view the file
+Unsuccessful applicant can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
     [Setup]    guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
@@ -71,14 +85,14 @@ Unsuccessful applicant can view the file
     Then the user should see the text in the page    ${valid_pdf_excerpt}
     [Teardown]    the user navigates to the page    ${unsuccessful_application_overview}
 
-Unsuccessful applicant cannot remove the file
+Unsuccessful applicant cannot remove the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the text in the page    Remove
     And the user should not see the element    link=Remove
 
-Unsuccessful applicant can download the file
+Unsuccessful applicant can download the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    Pending
     # Pending until download functionality has been plugged in
