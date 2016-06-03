@@ -8,6 +8,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
     Go To    ${TARGET_URL}
+    Run Keyword And Ignore Error    Confirm Action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -338,8 +339,11 @@ the user cannot see the option to upload a file on the page
     The user navigates to the page    ${url}
     the user should not see the text in the page    Upload
 
-Delete the emails from the test mailbox
+Delete the emails from both test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
 
@@ -472,3 +476,15 @@ the lead applicant invites a registered user
     And the user should see the text in the page    Application overview
     User closes the browser
     The guest user opens the browser
+
+Open mailbox and verify the content
+    [Arguments]    ${USER}    ${EMAIL_SUBJECT}    ${CONTENT}
+    [Documentation]    This Keyword checks the subject and the content of the 1st email
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    ${MAIL_TO_OPEN}=    Walk Multipart Email    1
+    ${Subject}=    Get Multipart Field    Subject
+    Should contain    ${Subject}    ${EMAIL_SUBJECT}
+    ${BODY}=    get email body    ${MAIL_TO_OPEN}
+    Should Contain    ${BODY}    ${CONTENT}
+    Delete All Emails
+    close mailbox

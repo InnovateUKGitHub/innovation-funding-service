@@ -1,5 +1,7 @@
 *** Settings ***
-Documentation     INFUND-2672
+Documentation     INFUND-2672 As a competition administrator I want to be able to publish the assessor feedback when ready for distribution so that all applicants can review further information to support the funding decision
+...
+...               INFUND-2608 As a lead applicant I want to receive an email to inform me when the application feedback is accessible so that I can review the assessment
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
 Force Tags        Comp admin    Upload
@@ -14,18 +16,16 @@ ${assessor_feedback_competition_url}    ${server}/management/competition/3
 ${successful_application_overview}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.    # note that this will change!
-${feedback_success_email}    Pending
-${feedback_failure_email}    Pending
 
 *** Test Cases ***
-Comp admin can visit a competition page at "Assessor feedback" stage and the option to publish feedback is disabled
+The publish feedback should be disabled
     [Documentation]    INFUND-2672
     When the user navigates to the page    ${assessor_feedback_competition_url}
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the element    css=h2.bold-small.blue-block
     And the option to publish feedback is disabled
 
-If feedback is uploaded for each application then the option to publish feedback is enabled
+The publish feedback should be enabled
     [Documentation]    INFUND-2672
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
@@ -34,7 +34,7 @@ If feedback is uploaded for each application then the option to publish feedback
     When the user uploads the file    ${valid_pdf}
     Then the option to publish feedback is enabled
 
-Comp admin can remove feedback and the option to publish feedback becomes disabled
+Remove the upload then feedback button becomes disabled
     [Documentation]    INFUND-2672
     [Tags]
     Given the user navigates to the page    ${successful_application_overview}
@@ -42,7 +42,7 @@ Comp admin can remove feedback and the option to publish feedback becomes disabl
     When the user clicks the button/link    name=removeAssessorFeedback
     Then the option to publish feedback is disabled
 
-Pushing the publish feedback button brings up a warning dialogue
+Pushing the publish feedback brings up a warning
     [Documentation]    INFUND-2672
     [Tags]
     [Setup]    Run Keywords    the user navigates to the page    ${successful_application_overview}
@@ -53,7 +53,7 @@ Pushing the publish feedback button brings up a warning dialogue
     And the user should see the element    jQuery=.button:contains("Cancel")
     And the user should see the element    jQuery=.button:contains("Publish assessor feedback")
 
-Choosing cancel on the dialogue goes back to the Assessor feedback page
+Choosing cancel on the dialogue
     [Documentation]    INFUND-2672
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
@@ -61,28 +61,26 @@ Choosing cancel on the dialogue goes back to the Assessor feedback page
     And the user should see the text in the page    Assessor Feedback
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
 
-Choosing Publish assessor feedback on the dialogue redirects to the Project setup page
+Choosing to Notify the applicants in the dialogue
     [Documentation]    INFUND-2672
-    [Tags]
+    [Tags]    Email
+    [Setup]    Delete the emails from both test mailboxes
     When the user clicks the button/link    name=publish
     Then the user should be redirected to the correct page    ${assessor_feedback_competition_url}
-    # The test above is required to trigger the state changes, but the step below is commented out as it is
-    # Pending due to INFUND-3156
-    # And the user should see the text in the page    Project setup
+    And the user should see the text in the page    Project setup
 
-Successful applicants are notified of the feedback
+Successful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
-    # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_one}    ${feedback_success_email}
+    [Tags]    Email
+    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}    Assessor feedback is now available for your successfully funded    Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
 
-Unsuccessful applicants are notified of the feedback
+Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
-    # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_two}    ${feedback_failure_email}
+    [Tags]    Email
+    Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}    Assessor feedback is now available for your unsuccessfully funded    Following the submission of your application
+    [Teardown]    Delete the emails from both test mailboxes
 
-Once applicants are notified, the whole state of the competition changes to Project setup
+The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646
     [Tags]    Pending
     # Pending due to INFUND-3156

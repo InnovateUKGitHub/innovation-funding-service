@@ -127,16 +127,22 @@ public class UserController {
 
     @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}", method = POST)
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        final ServiceResult<UserResource> user  = registrationService.createApplicantUser(organisationId, userResource);
-        registrationService.sendUserVerificationEmail(userResource, empty());
-        return user.toPostCreateResponse();
+        return registrationService.createApplicantUser(organisationId, userResource).andOnSuccessReturn(created ->
+                {
+                    registrationService.sendUserVerificationEmail(created, empty()).getSuccessObjectOrThrowException();
+                    return created;
+                }
+        ).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", method = POST)
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        final ServiceResult<UserResource> user  = registrationService.createApplicantUser(organisationId, of(competitionId), userResource);
-        registrationService.sendUserVerificationEmail(userResource, of(competitionId));
-        return user.toPostCreateResponse();
+        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).andOnSuccessReturn(created ->
+                {
+                    registrationService.sendUserVerificationEmail(created, of(competitionId)).getSuccessObjectOrThrowException();
+                    return created;
+                }
+        ).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/updateDetails", method = POST)
