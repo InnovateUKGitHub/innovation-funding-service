@@ -29,6 +29,8 @@ import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -71,7 +73,9 @@ public class POJOTest {
             Competition.class,
             CreateUserResource.class,
             UpdateUserResource.class,
-            CompetitionSummaryResource.class
+            CompetitionSummaryResource.class,
+            Project.class,
+            ProjectResource.class
     );
 
     @Before

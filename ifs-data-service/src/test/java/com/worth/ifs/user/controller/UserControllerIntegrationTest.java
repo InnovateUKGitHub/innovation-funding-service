@@ -1,15 +1,23 @@
 package com.worth.ifs.user.controller;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.resource.UserStatus;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.repository.TokenRepository;
+import com.worth.ifs.token.resource.TokenType;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserStatus;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,6 +37,12 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     protected void setControllerUnderTest(UserController controller) {
         this.controller = controller;
     }
+
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    @Value("${ifs.data.service.token.email.validity.mins}")
+    private int emailTokenValidityMins;
 
     @Test
     public void test_findByEmailAddress() {
@@ -100,6 +114,18 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isFailure());
     }
 
+    @Test
+    public void testVerifyEmailExpired() {
+        // save a token with a created date such that the token should have expired by now
+        final String hash = "3514d94130e7959ad39e521554cd53eca4c4f6877740016af3e869c02869af16d4ccd85a53a62a3a";
+        tokenRepository.save(new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, LocalDateTime.now().minusMinutes(emailTokenValidityMins), JsonNodeFactory.instance.objectNode()));
+
+        loginSystemRegistrationUser();
+        RestResult<Void> restResult = controller.verifyEmail(hash);
+        assertTrue(restResult.isFailure());
+        assertTrue(restResult.getFailure().is(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED));
+    }
+
     @Ignore("TODO DW - INFUND-936 - Not valid test after passwords moved out to Shib")
     @Test
     public void testPasswordReset() {
@@ -150,5 +176,12 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         UserResource user = restResult.getSuccessObject();
         assertEquals("email@Nope.com", user.getEmail());
         assertEquals(UserStatus.INACTIVE, user.getStatus());
+    }
+
+    @Test
+    public void testResendEmailVerificationNotification() {
+        loginSystemRegistrationUser();
+        final RestResult<Void> restResult = controller.resendEmailVerificationNotification("ewan+1@hiveit.co.uk");
+        assertTrue(restResult.isSuccess());
     }
 }

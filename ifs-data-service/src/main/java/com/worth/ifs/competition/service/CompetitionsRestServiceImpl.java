@@ -39,6 +39,6 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
     @Override
     public RestResult<CompetitionResource> create() {
-        return getWithRestResult(competitionsRestURL + "/create", CompetitionResource.class);
+        return postWithRestResult(competitionsRestURL + "", CompetitionResource.class);
     }
 }

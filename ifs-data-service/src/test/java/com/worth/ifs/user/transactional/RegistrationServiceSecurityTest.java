@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Optional.of;
 import static org.mockito.Mockito.*;
 
 /**
@@ -43,7 +44,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         UserResource userToCreate = newUserResource().build();
 
-        assertAccessDenied(() -> service.createApplicantUser(123L, Optional.of(456L), userToCreate), () -> {
+        assertAccessDenied(() -> service.createApplicantUser(123L, of(456L), userToCreate), () -> {
             verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -60,6 +61,30 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
             verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
+    }
+
+    @Test
+    public void testSendUserVerificationEmail() throws Exception {
+        final UserResource userToSendVerificationEmail = newUserResource().build();
+
+        assertAccessDenied(
+                () -> service.sendUserVerificationEmail(userToSendVerificationEmail, of(123L)),
+                () -> {
+                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verifyNoMoreInteractions(rules);
+                });
+    }
+
+    @Test
+    public void testResendUserVerificationEmail() throws Exception {
+        final UserResource userToSendVerificationEmail = newUserResource().build();
+
+        assertAccessDenied(
+                () -> service.resendUserVerificationEmail(userToSendVerificationEmail),
+                () -> {
+                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verifyNoMoreInteractions(rules);
+                });
     }
 
     @Override
@@ -81,6 +106,16 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         @Override
         public ServiceResult<Void> activateUser(Long userId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> sendUserVerificationEmail(UserResource user, Optional<Long> competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> resendUserVerificationEmail(UserResource user) {
             return null;
         }
     }
