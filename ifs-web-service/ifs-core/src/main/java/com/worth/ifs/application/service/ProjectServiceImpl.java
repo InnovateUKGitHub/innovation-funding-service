@@ -1,9 +1,12 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 /**
  * This class contains methods to retrieve and store {@link ProjectResource} related data,
@@ -22,5 +25,15 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRestRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+        return projectRestRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> updateAddress(Long projectId, Long addressId) {
+        return projectRestRestService.updateProjectAddress(projectId, addressId).toServiceResult();
     }
 }

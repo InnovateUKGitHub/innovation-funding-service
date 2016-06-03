@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!-- ===========================Project setup select address=========================== -->
+
+<div th:fragment="select-address">
+    <fieldset>
+        <legend class="visuallyhidden">Operating address</legend>
+        <div class="form-block">
+            <label class="block-label" for="address-use-org">
+                <input id="address-use-org" type="radio" name="project-address-group" value="address-use-org" />
+                Use organisation address (<strong>BS1 4NT</strong>)
+            </label>
+        </div>
+        <div class="form-block">
+            <label class="block-label" for="address-use-operating">
+                <input id="address-use-operating" type="radio" name="project-address-group" value="address-use-operating" />
+                Use operating address (<strong>SN1 2UE</strong>)
+            </label>
+        </div>
+        <div class="form-block">
+            <label class="block-label" for="address-add-project">
+                <input id="address-add-project" type="radio" name="project-address-group" value="address-add-project" />
+                Enter an alternative project address
+            </label>
+        </div>
+    </fieldset> 
+
+
+    <div id="selected-address" class="boxed extra-margin" style="display: none;">
+        <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
+        <p><span class="street">Street</span> <br />
+            <span class="street2"></span> <br />
+            <span class="street3"></span> <br />
+            <span class="town">Town</span><br />
+            <span class="county">County</span><br />
+            <span class="postcode">Postcode</span>
+        </p>
+    </div>
+
+
+    <div class="form-group extra-margin" id="postcode-block" style="display: none;">
+        <label class="form-label" for="postcode-check">
+            <span class="form-label-bold">Postcode</span>
+        </label>
+        <input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
+        <button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+        <div>
+            <a href="#" id="enter-address-manually">Enter address manually</a>
+        </div>
+    </div>
+
+
+    <div class="form-group" id="select-address-block" style="display: none">
+        <label class="form-label" for="select-address">
+            <span class="form-label-bold">Select your address</span>
+        </label>
+        <select class="form-control" id="select-address" name="select-address">
+            <option value="">SN1 2BD, 1, Station Road, Swindon </option>
+            <option value="">SN1 2BD, 1A, Station Road, Swindon  </option>
+            <option value="">SN1 2BD, 2, Station Road, Swindon </option>
+            <option value="">SN1 2BD, 3, Station Road, Swindon </option>
+            <option value="">SN1 2BD, 4, Station Road, Swindon </option>
+            <option value="">SN1 2BD, 5, Station Road, Swindon </option>
+        </select>
+    </div>
+
+    <div th:include="prototypes/fragments/project-setup :: prototype-manual-address" th:remove="tag" />
+  
+</div>
+
+</html>

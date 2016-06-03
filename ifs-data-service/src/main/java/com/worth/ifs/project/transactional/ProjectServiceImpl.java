@@ -1,5 +1,7 @@
 package com.worth.ifs.project.transactional;
 
+import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -25,7 +27,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -38,6 +39,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
@@ -59,6 +63,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(project -> validateProjectStartDate(projectStartDate).
                 andOnSuccess(() -> project.setTargetStartDate(projectStartDate)));
+    }
+
+    @Override
+    public ServiceResult<Void> updateProjectAddress(Long projectId, Long addressId) {
+        ServiceResult<Project> project = getProject(projectId);
+        if(project.isSuccess()){
+            ServiceResult<Address> address = getAddress(addressId);
+            if(address.isSuccess()){
+                project.getSuccessObject().setAddress(address.getSuccessObject());
+                return serviceSuccess();
+            } else {
+                return serviceFailure(address.getFailure().getErrors());
+            }
+        } else {
+            return serviceFailure(project.getFailure().getErrors());
+        }
     }
 
     @Override
@@ -97,5 +117,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
+    }
+
+    private ServiceResult<Address> getAddress(long addressId) {
+        return find(addressRepository.findOne(addressId), notFoundError(Address.class, addressId));
     }
 }

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" th:remove="tag" />
+	<form action="#">
+
+		<fieldset>
+			
+			<h2 class="heading-medium">Project location</h2>
+
+			<legend class="visuallyhidden">Project location</legend>
+
+			<p class="form-hint">Please select the address where the majority of work will be carried out.</p>
+
+			<p>We will assign a Monitoring Officer who will visit your project at this address.</p>
+
+			<div th:include="project/fragments :: select-address" th:with="form=${form}" th:remove="tag"/>
+
+		</fieldset>
+
+		<button class="button button-large extra-margin" formaction="/prototypes/1575-project-details">Save</button>
+
+	</form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		function updateFields(addressType){
+
+			var street = (addressType == 'org') ? 'Aptrans Ltd' : 'Aptrans Ltd';
+			var street2 = (addressType == 'org') ? '13 Queens Square' : 'North Star House';
+			var street3 = (addressType == 'org') ? '' : 'North Star Avenue';
+			var county = (addressType == 'org') ? 'Avon' : 'Wiltshire';
+			var town = (addressType == 'org') ? 'Bristol' : 'Swindon';
+			var postcode = (addressType == 'org') ? 'BS1 4NT' : 'SN2 1UE';
+
+			jQuery(".street").val(street);
+			jQuery(".street2").val(street2);
+			jQuery(".street3").val(street3);
+			jQuery(".county").val(county);
+			jQuery(".town").val(town);
+			jQuery(".postcode").val(postcode);
+
+			jQuery(".street").text(street);
+			jQuery(".street2").text(street2);
+			jQuery(".street3").text(street3);
+			jQuery(".county").text(county);
+			jQuery(".town").text(town);
+			jQuery(".postcode").text(postcode);
+		}
+
+		function hideAddressFields(){
+			jQuery("#postcode-block").hide();
+			jQuery("#address-details").hide();
+			jQuery("#select-address-block").hide();
+		}
+
+
+		jQuery('input#address-use-org').on('click',function(e){
+			//e.preventDefault();
+			if ( jQuery(this).is(':checked') ) {
+				jQuery("#selected-address").show();
+				hideAddressFields();
+				updateFields('org');
+			}else{
+				jQuery("#selected-address").hide();
+			}
+		});
+
+		jQuery('input#address-use-operating').on('click',function(e){
+			//e.preventDefault();
+			if ( jQuery(this).is(':checked') ) {
+				jQuery("#selected-address").show();
+				hideAddressFields();
+				updateFields('operating');
+			}else{
+				jQuery("#selected-address").hide();
+			}
+		});
+
+
+		jQuery('input#address-add-project').on('click',function(e){
+			//e.preventDefault();
+			if ( jQuery(this).is(':checked') ) {
+				jQuery("#postcode-block").show();
+				jQuery("#selected-address").hide();
+			}else{
+				jQuery("#postcode-block").hide();
+			}
+		});
+
+
+		jQuery('#postcode-lookup').on('click',function(e){ 
+			e.preventDefault();
+			jQuery("#select-address-block").show();
+		});
+
+		jQuery('#select-address').on('change',function(e){
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery(".street").val("4 Station Road");
+			jQuery(".county").val("Wiltshire");
+			jQuery(".town").val("Swindon");
+			jQuery(".postcode").val("SN1 2BD");
+
+		});
+
+		jQuery('#enter-address-manually').on('click',function(e){
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery("#select-address-block").hide();
+		});
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

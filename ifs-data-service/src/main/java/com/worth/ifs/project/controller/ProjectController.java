@@ -40,4 +40,10 @@ public class ProjectController {
                                                    @RequestParam("projectStartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate projectStartDate) {
         return projectService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
     }
+
+    @RequestMapping(value = "/{projectId}/address", method = POST)
+    public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
+                                                   @RequestParam("projectAddress") Long addressId) {
+        return projectService.updateProjectAddress(projectId, addressId).toPostResponse();
+    }
 }
