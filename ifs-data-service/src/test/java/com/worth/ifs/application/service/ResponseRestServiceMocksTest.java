@@ -34,7 +34,6 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
     @Override
     protected ResponseRestServiceImpl registerRestServiceUnderTest() {
         ResponseRestServiceImpl responseRestService = new ResponseRestServiceImpl();
-        responseRestService.responseRestURL = responseRestURL;
         return responseRestService;
     }
 

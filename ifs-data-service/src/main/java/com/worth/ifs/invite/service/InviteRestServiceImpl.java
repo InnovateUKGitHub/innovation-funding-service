@@ -5,9 +5,6 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,14 +17,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOr
 
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
-    private static final Log LOG = LogFactory.getLog(InviteRestServiceImpl.class);
 
-    private String inviteRestUrl;
-
-    @Value("${ifs.data.service.rest.invite}")
-    void setInviteRestUrl(String inviteRestUrl) {
-        this.inviteRestUrl = inviteRestUrl;
-    }
+    private String inviteRestUrl = "/invite";
 
     @Override
     public RestResult<InviteResultsResource> createInvitesByInviteOrganisation(String organisationName, List<InviteResource> invites) {
