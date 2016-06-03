@@ -13,6 +13,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -81,7 +82,6 @@ public class ApplicationOverviewModelPopulator {
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
         addCompletedDetails(model, application, userOrganisation, allSections);
         addSections(model, competition);
-        addOrganisationDetails(model, userApplicationRoles);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
@@ -194,35 +194,34 @@ public class ApplicationOverviewModelPopulator {
     }
 
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<SectionResource> allSections) {
-        final Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
 
-        final Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        final Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
+        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
+
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
         completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
 
         List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
+
         Long eachCollaboratorFinanceSectionId;
+
         if(eachOrganisationFinanceSections.isEmpty()) {
             eachCollaboratorFinanceSectionId = null;
         } else {
             eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
         }
 
+        Boolean userFinanceSectionCompleted = completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
+
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         model.addAttribute("markedAsComplete", markedAsComplete);
-        model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
-        model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
+        model.addAttribute("userFinanceSectionCompleted", userFinanceSectionCompleted);
     }
 
     private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
         return simpleFilter(list, s -> type.equals(s.getType()));
-    }
-
-    private void addOrganisationDetails(Model model,  List<ProcessRoleResource> userApplicationRoles) {
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        model.addAttribute("applicationOrganisations", organisations);
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
@@ -251,15 +250,4 @@ public class ApplicationOverviewModelPopulator {
         return new FileDetailsViewModel(fileEntry);
     }
 
-    private SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRoleResource> userApplicationRoles) {
-        Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                        || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
-                .collect(Collectors.toCollection(supplier));
-    }
 }

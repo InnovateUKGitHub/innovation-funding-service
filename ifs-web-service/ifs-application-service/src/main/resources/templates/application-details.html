@@ -71,37 +71,32 @@
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <!-- todo display icon if condition -->
-                            <div th:if="${childSection.getName().equals('Your finances')}"  >
+                            <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                                <div th:if="${childSection.getName().equals('Your finances')}">
                                 <img class="section-status complete"
                                      src="/images/field/field-done-right.png"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
                                      width="30"
                                      height="30"
                                      th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
-                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'" />
-                              <!--  th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" />
-                                  th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}" /> -->
+                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
+                                     th:if="${userFinanceSectionCompleted}"/>
                                 <img class="section-status assigned"
                                      src="/images/field/field-assigned-right.png"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
                                      width="30"
                                      height="30"
                                      th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
-                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'" />
-                                <!-- th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"/>
-                                       th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}"/> -->
-
+                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
+                                     th:unless="${userFinanceSectionCompleted}"/>
+                                </div>
                             </div>
-
-
                         </li>
                     </div>
                 </ul>
             </section>
         </div>
     </form>
-
 
     <div class="alignright-button">
         <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
@@ -114,5 +109,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag"></div>
 <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+
 </body>
 </html>
