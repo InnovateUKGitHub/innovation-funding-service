@@ -20,7 +20,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Other documents'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Other documents'})" th:remove="tag" />
 
 	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
