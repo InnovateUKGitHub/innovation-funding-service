@@ -72,7 +72,8 @@ Successful applicants are notified of the feedback
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
     # Pending completion of the INFUND-2608 story
-    Then open mailbox and verify the content    ${test_mailbox_one}    Assessor feedback is now available for your successfully funded application    ${feedback_success_email}
+    #Then open mailbox and verify the content    ${test_mailbox_one}    Assessor feedback is now available for your successfully funded application    ${feedback_success_email}
+    Then open mailbox and verify the content    ${test_mailbox_one}    Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
 
 Unsuccessful applicants are notified of the feedback
     [Documentation]    INFUND-2608
