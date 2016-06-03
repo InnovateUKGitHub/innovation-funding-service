@@ -11,11 +11,10 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
-        <h1 class="heading-xlarge no-margin">Project setup status</h1>
+    <div class="page-title">
+        <div th:include="fragments/elements :: application-title (application=${app}, competition=${currentCompetition})" th:remove="tag" />
+        <h1 class="heading-xlarge">Project setup status</h1>
     </div>
-
     <p class="form-hint">You need to complete the following steps before this project can begin.</p>
 
     <div class="warning-alert" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
