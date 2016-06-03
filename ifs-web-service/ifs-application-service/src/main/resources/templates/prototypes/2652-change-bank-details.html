@@ -6,7 +6,7 @@
 
 </head>
 
-<body class="full-width">
+<body>
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -25,35 +25,58 @@
 	
 	<hr />
 
-	<div class="grid-row constrain-width">
 
-		<p>Bank account details have been submitted to Innovate UK for use during the project Technology Inspired</p>
+	<p>Bank account details have been submitted to Innovate UK for use during the project <strong>Machine Learning In Robots (10294856)</strong></p>
 
-		<h2 class="heading-medium">Finance contact</h2>
+	<h2 class="heading-medium">Finance contact</h2>
 
-		<p>
-			Dave Normen<br />
-			<a href="mailto:d.norman@aptrans.co.uk">d.norman@aptrans.co.uk</a>
-		</p>
+	<p>
+		Dave Normen<br />
+		<a href="mailto:d.norman@aptrans.co.uk">d.norman@aptrans.co.uk</a><br />
+		0114 26645697
+	</p>
 
+	
+	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+	<form action="#">
+		<div th:include="prototypes/fragments/project-setup :: prototype-bank-details" th:with="user='internal'" th:remove="tag" />
 		
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-		<form action="#">
-			<div th:include="prototypes/fragments/project-setup :: prototype-bank-details" th:with="user='internal'" th:remove="tag" />
-			
-			<div th:include="prototypes/fragments/project-setup :: prototype-manual-address" th:with="user='internal'" th:remove="tag" />
+		<div th:include="prototypes/fragments/project-setup :: prototype-manual-address" th:with="user='internal'" th:remove="tag" />
 
-		</form>
+	</form>
 
-	</div>
 
-	<div class="grid-row constrain-width extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
+
+	<div class="grid-row extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
 		<div class="column-half">
 			<a href="/prototypes/2650-review-bank-details" class="button-link">Cancel bank account changes</a>
 		</div>
 		<div class="column-half alignright">
-			<a href="/prototypes/2650-review-bank-details" class="button">Update bank account details</a>
+			<a href="/prototypes/2650-review-bank-details" data-js-modal="modal-change-bank-details" class="button">Update bank account details</a>
 		</div>
+
+		<div class="modal-change-bank-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Update bank account details</h2>
+
+				<p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
+
+				<p>Experian checks will also be run on the new information provided.</p>
+
+				<hr />
+
+            	<div class="alignright-button">
+					
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+            		<a href="/prototypes/2650-review-bank-details" class="button">Update bank account details</a>
+            	</div>
+
+	        </div>
+	    </div>
+
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

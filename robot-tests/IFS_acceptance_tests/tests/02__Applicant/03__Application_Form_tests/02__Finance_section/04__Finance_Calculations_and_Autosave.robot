@@ -108,7 +108,7 @@ Other costs
     [Teardown]    Click Element    jQuery=button:contains("Other Costs")
 
 Other Funding
-    [Documentation]    INFUND-438, INFUND-2257
+    [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
     [Tags]    Finances
     Given the applicant selects 'No' for other funding
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
@@ -118,6 +118,9 @@ Other Funding
     And the applicant selects 'No' for other funding
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant cannot see the 'other funding' details
+    Then the user reloads the page
+    And the applicant selects 'Yes' for other funding
+    Then the total of the other funding should be correct
 
 Funding level
     [Tags]    Finance
@@ -183,6 +186,7 @@ the applicant fills the 'capital usage' field
     Click Element    jQuery=button:contains('Add another asset')
     Wait Until Element Is Visible    css=#capital_usage [name="remove_cost"]
     Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
+    Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     input text    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    900
     input text    css=.form-finances-capital-usage-utilisation    100
     input text    css=.form-finances-capital-usage-depreciation    11
@@ -247,6 +251,9 @@ The applicant can leave the 'Your finances' page but the details are still saved
 
 The applicant selects 'No' for other funding
     Select Radio button    other_funding-otherPublicFunding-35-54    No
+
+The applicant selects 'Yes' for other funding
+    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
 
 The applicant selects 'Yes' and fills two rows
     Select Radio button    other_funding-otherPublicFunding-35-54    Yes
