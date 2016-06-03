@@ -103,7 +103,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
-        dataBinder.registerCustomEditor(LocalDate.class, APPLICATION_START_DATE, new LocalDatePropertyEditor(webRequest));
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
