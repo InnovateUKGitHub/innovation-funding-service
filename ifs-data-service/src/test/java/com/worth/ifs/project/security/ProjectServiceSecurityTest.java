@@ -146,6 +146,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
             return null;
         }
+
+		@Override
+		public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+			return null;
+		}
     }
 }
 

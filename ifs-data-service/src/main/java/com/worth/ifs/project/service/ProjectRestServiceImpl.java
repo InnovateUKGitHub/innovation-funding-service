@@ -20,7 +20,12 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate) {
+    public RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/startdate?projectStartDate=" + projectStartDate, Void.class);
     }
+
+	@Override
+	public RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+		return postWithRestResult(projectRestURL + "/" + projectId + "/finance-contact/" + organisationId + "?financeContact=" + financeContactUserId, Void.class);
+	}
 }

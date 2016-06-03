@@ -32,6 +32,7 @@ import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 
 /**
@@ -61,6 +62,9 @@ public class ProjectDetailsController {
 	
     @Autowired
     private ProjectRestService projectRestService;
+    
+    @Autowired
+    private ProcessRoleService processRoleService;
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
@@ -101,25 +105,61 @@ public class ProjectDetailsController {
     }
     
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.GET)
-    public String finance(Model model, @PathVariable("projectId") final Long projectId, @RequestParam("organisation") Long organisation, HttpServletRequest request) {
-        ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectId);
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        
-        if(!organisation.equals(user.getOrganisations().get(0))){
-        	return redirectToProjectDetails(projectId);
+    public String viewFinanceContact(Model model, @PathVariable("projectId") final Long projectId, @RequestParam(value="organisation",required=false) Long organisation, HttpServletRequest request) {
+        if(organisation == null) {
+    		return redirectToProjectDetails(projectId);
         }
         
-		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, organisation);
+    	if(!userIsInOrganisation(organisation, request)){
+    		return redirectToProjectDetails(projectId);
+    	}
+    	
+    	if(!anyUsersInGivenOrganisationForProject(projectId, organisation)){
+    		return redirectToProjectDetails(projectId);
+    	}
 		
-		if(thisOrganisationUsers.isEmpty()) {
-			return redirectToProjectDetails(projectId);
-		}
-		
-        FinanceContactForm form = populateOriginalFinanceContactForm(projectId);
-		
-        model.addAttribute("allUsers", thisOrganisationUsers);
+        return modelForFinanceContact(model, projectId, organisation, request);
+    }
+    
+	@RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.POST)
+    public String updateFinanceContact(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute FinanceContactForm form, BindingResult bindingResult, HttpServletRequest request) {
+        
+		if(!userIsInOrganisation(form.getOrganisation(), request)){
+    		return redirectToProjectDetails(projectId);
+    	}
+    	
+    	if(!anyUsersInGivenOrganisationForProject(projectId, form.getOrganisation())){
+    		return redirectToProjectDetails(projectId);
+    	}
+
+        if(bindingResult.hasErrors()) {
+        	return modelForFinanceContact(model, projectId, request, form);
+        }
+        
+        if(!userIsInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
+        	return modelForFinanceContact(model, projectId, request, form);
+        }
+        
+        projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
+    	
+        return redirectToProjectDetails(projectId);
+    }
+
+	private String modelForFinanceContact(Model model, Long projectId, Long organisation, HttpServletRequest request) {
+		FinanceContactForm form = new FinanceContactForm();
+		form.setOrganisation(organisation);
+		//TODO set current finance contact on the form
+		return modelForFinanceContact(model, projectId, request, form);
+	}
+
+	private String modelForFinanceContact(Model model, Long projectId, HttpServletRequest request, FinanceContactForm form) {
+		ApplicationResource applicationResource = applicationService.getById(projectId);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
+		ProjectResource projectResource = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+        
+        model.addAttribute("organisationUsers", thisOrganisationUsers);
         model.addAttribute("form", form);
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", user);
@@ -127,14 +167,30 @@ public class ProjectDetailsController {
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
         return "project/finance-contact";
+	}
+    
+    private boolean userIsInOrganisation(Long organisation, HttpServletRequest request) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        
+        return organisation.equals(user.getOrganisations().get(0));
     }
-
-	private FinanceContactForm populateOriginalFinanceContactForm(Long projectId) {
-		ProjectResource projectResource = projectService.getById(projectId);
-    	
-    	FinanceContactForm form = new FinanceContactForm();
-    	// TODO set finance contact from what is on the project resource
-		return form;
+    
+    private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisation) {
+        ApplicationResource applicationResource = applicationService.getById(projectId);
+		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, organisation);
+		
+		return !thisOrganisationUsers.isEmpty();
+	}
+    
+	private boolean userIsInOrganisationForProject(Long projectId, Long organisation, Long userId) {
+		if(userId == null) {
+			return false;
+		}
+		ProcessRoleResource processRoleForUserOnApplication = processRoleService.findProcessRole(userId, projectId);
+		if(processRoleForUserOnApplication == null) {
+			return false;
+		}
+		return organisation.equals(processRoleForUserOnApplication.getOrganisation());
 	}
 
     private String handleErrorsOrRedirectToProjectOverview(

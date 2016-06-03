@@ -7,5 +7,6 @@ import java.time.LocalDate;
 
 public interface ProjectRestService {
     RestResult<ProjectResource> getProjectById(Long projectId);
-    RestResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate);
+    RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
+    RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 }

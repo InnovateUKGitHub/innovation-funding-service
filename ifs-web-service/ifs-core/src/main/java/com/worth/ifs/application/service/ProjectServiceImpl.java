@@ -23,4 +23,9 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectRestRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
     }
+
+	@Override
+	public void updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+		projectRestRestService.updateFinanceContact(projectId, organisationId, financeContactUserId).getSuccessObjectOrThrowException();
+	}
 }

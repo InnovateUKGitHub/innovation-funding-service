@@ -18,7 +18,7 @@
     </div>
     
 
-    <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}">
+    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${project.id})}" th:object="${form}">
         <fieldset>
             <h2 class="heading-medium">Finance contact</h2>
             <legend class="visuallyhidden">Finance contact</legend>
@@ -32,7 +32,8 @@
 
             <div class="form-group extra-margin">
             
-                <div th:each="user : ${allUsers}" th:remove="tag">
+                <div th:each="user : ${organisationUsers}" th:remove="tag">
+                    <input type="hidden" th:field="*{organisation}"></input>
                     <label th:for="${#ids.next('financeContact')}" class="block-label">
                         <input type="radio" th:field="*{financeContact}" th:value="${user.user}" />
                         <span th:text="${user.userName}" th:remove="tag"></span>

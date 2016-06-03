@@ -1,14 +1,5 @@
 package com.worth.ifs.project.transactional;
 
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.resource.ProjectResource;
-import org.junit.Test;
-
-import java.time.LocalDate;
-
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -16,10 +7,28 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_M
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.junit.Assert.*;
+import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+
+import org.junit.Test;
+
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
@@ -115,6 +124,29 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         verify(projectRepositoryMock, never()).findOne(123L);
         assertNull(existingProject.getTargetStartDate());
+    }
+    
+    @Test
+    public void testUpdateFinanceContactWhenNotPresentOnTheApplication() {
+
+        Project existingProject = newProject().withId(123L).build();
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        
+        Organisation organisation = newOrganisation().withId(5L).build();
+        User user = newUser().withid(7L).build();
+        ProcessRole processRole = newProcessRole().withOrganisation(organisation).withUser(user).build();
+        
+        Application application = newApplication().
+                withId(123L).
+                withProcessRoles(processRole).
+                build();
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 6L);
+        
+        assertTrue(updateResult.isFailure());
+        assertEquals(1, updateResult.getFailure().getErrors().size());
+        assertEquals("The organisation finance contact must be present on the application for the specified organisation", updateResult.getFailure().getErrors().get(0).getErrorMessage());
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {
