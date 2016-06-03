@@ -339,8 +339,11 @@ the user cannot see the option to upload a file on the page
     The user navigates to the page    ${url}
     the user should not see the text in the page    Upload
 
-Delete the emails from the test mailbox
+Delete the emails from both test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
 
@@ -480,7 +483,7 @@ Open mailbox and verify the content
     #${LATEST} =    wait for email
     #${subject}=    Get Multipart Field    Subject
     #Should Contain    ${subject}    ${EMAIL_SUBJECT}
-    ${BODY}=    get email body    2
+    ${BODY}=    get email body    1
     log    ${BODY}
     Should Contain    ${BODY}    ${CONTENT}
     Delete All Emails
