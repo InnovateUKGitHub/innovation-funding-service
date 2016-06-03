@@ -31,7 +31,6 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Override
     protected ApplicationRestServiceImpl registerRestServiceUnderTest() {
         ApplicationRestServiceImpl applicationRestService = new ApplicationRestServiceImpl();
-        applicationRestService.applicationRestURL = applicationRestURL;
         return applicationRestService;
     }
 
