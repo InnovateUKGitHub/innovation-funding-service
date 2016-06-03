@@ -109,11 +109,13 @@ public class OrganisationCreationController {
         return TEMPLATE_PATH + "/" + CREATE_ORGANISATION_TYPE;
     }
 
-    @RequestMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/" + FIND_ORGANISATION}, method = RequestMethod.GET)
     public String createOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request,
-                                     HttpServletResponse response) {
+                                     HttpServletResponse response,
+                                     String orgSearchName
+                                        ) {
         if(isOrganisationAlreadyCreated(request))
             return getRegistrationRedirectURL(request);
 
@@ -247,7 +249,7 @@ public class OrganisationCreationController {
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "?orgSearchName=" + escapePathVariable(organisationForm.getOrganisationSearchName());
     }
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
@@ -578,6 +580,6 @@ public class OrganisationCreationController {
     }
 
     private String escapePathVariable(final String input){
-        return UrlEscapers.urlPathSegmentEscaper().escape(input);
+         return UrlEscapers.urlFormParameterEscaper().escape(input);
     }
 }

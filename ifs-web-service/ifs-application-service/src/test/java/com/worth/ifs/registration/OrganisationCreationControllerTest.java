@@ -1,5 +1,6 @@
 package com.worth.ifs.registration;
 
+import com.google.common.net.UrlEscapers;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
@@ -212,7 +213,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
 
     @Test
     public void testFindBusinessSearchCompanyHouse() throws Exception {
-        String companyName = "BusinessName";
+        String companyName = "a & b";
         Cookie cookie = mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/find-organisation")
                 .cookie(organisationTypeBusiness)
                 .param("organisationSearchName", companyName)
@@ -220,11 +221,11 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .header("referer", "/organisation/create/find-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation/" + companyName))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation?orgSearchName=" + UrlEscapers.urlFormParameterEscaper().escape(companyName)))
                 .andExpect(cookie().exists("organisationForm"))
                 .andReturn().getResponse().getCookie("organisationForm");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/find-organisation/" + companyName)
+        mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/find-organisation?orgSearchName=" + UrlEscapers.urlFormParameterEscaper().escape(companyName))
                 .cookie(organisationTypeBusiness)
                 .cookie(cookie)
         )
