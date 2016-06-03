@@ -1,5 +1,7 @@
 *** Settings ***
-Documentation     INFUND-2672
+Documentation     INFUND-2672 As a competition administrator I want to be able to publish the assessor feedback when ready for distribution so that all applicants can review further information to support the funding decision
+...
+...               INFUND-2608 As a lead applicant I want to receive an email to inform me when the application feedback is accessible so that I can review the assessment
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
 Force Tags        Comp admin    Upload
@@ -14,8 +16,6 @@ ${assessor_feedback_competition_url}    ${server}/management/competition/3
 ${successful_application_overview}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.    # note that this will change!
-${feedback_success_email}    Pending
-${feedback_failure_email}    Pending
 
 *** Test Cases ***
 The publish feedback should be disabled
@@ -63,23 +63,22 @@ Choosing cancel on the dialogue
 
 Choosing to Notify the applicants in the dialogue
     [Documentation]    INFUND-2672
-    [Tags]
+    [Tags]    Email
+    [Setup]    Delete the emails from both test mailboxes
     When the user clicks the button/link    name=publish
     Then the user should be redirected to the correct page    ${assessor_feedback_competition_url}
     And the user should see the text in the page    Project setup
 
-Successful applicants are notified of the feedback
+Successful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
-    # Pending completion of the INFUND-2608 story
-    #Then open mailbox and verify the content    ${test_mailbox_one}    Assessor feedback is now available for your successfully funded application    ${feedback_success_email}
-    Then open mailbox and verify the content    ${test_mailbox_one}    Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
+    [Tags]    Email
+    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}    Assessor feedback is now available for your successfully funded    Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
 
-Unsuccessful applicants are notified of the feedback
+Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
-    # Pending completion of the INFUND-2608 story
-    Then open mailbox and verify the content    ${test_mailbox_two}    ${feedback_failure_email}    Assessor feedback is now available for your unsuccessfully funded application
+    [Tags]    Email
+    Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}    Assessor feedback is now available for your unsuccessfully funded    Following the submission of your application
+    [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646

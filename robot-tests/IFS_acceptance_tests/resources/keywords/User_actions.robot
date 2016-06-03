@@ -478,13 +478,13 @@ the lead applicant invites a registered user
     The guest user opens the browser
 
 Open mailbox and verify the content
-    [Arguments]    ${EMAIL}    ${CONTENT}
-    Open Mailbox    server=imap.googlemail.com    user=${EMAIL}    password=testtest1
-    #${LATEST} =    wait for email
-    #${subject}=    Get Multipart Field    Subject
-    #Should Contain    ${subject}    ${EMAIL_SUBJECT}
-    ${BODY}=    get email body    1
-    log    ${BODY}
+    [Arguments]    ${USER}    ${EMAIL_SUBJECT}    ${CONTENT}
+    [Documentation]    This Keyword checks the subject and the content of the 1st email
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    ${MAIL_TO_OPEN}=    Walk Multipart Email    1
+    ${Subject}=    Get Multipart Field    Subject
+    Should contain    ${Subject}    ${EMAIL_SUBJECT}
+    ${BODY}=    get email body    ${MAIL_TO_OPEN}
     Should Contain    ${BODY}    ${CONTENT}
     Delete All Emails
     close mailbox
