@@ -59,7 +59,7 @@ public class ProjectDetailsController {
     private static final String ADDRESS_USE_OP = "address-use-operating";
     private static final String ADDRESS_USE_ADD = "address-add-project";
 
-    private static final String PROJECT_LOCATION_FORM = "projectLocationForm";
+    public static final String PROJECT_LOCATION_FORM = "projectLocationForm";
 
     private static final String SELECTED_POSTCODE = "selectedPostcode";
 
@@ -247,7 +247,7 @@ public class ProjectDetailsController {
             Supplier<String> viewSupplier) {
         if (result.isFailure()) {
             bindAnyErrorsToField(result, fieldName, bindingResult, form);
-            model.addAttribute("form", form);
+            model.addAttribute(PROJECT_LOCATION_FORM, form);
             return viewSupplier.get();
         }
 
@@ -310,7 +310,7 @@ public class ProjectDetailsController {
             form = JsonUtil.getObjectFromJson(organisationFormJson, ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm.class);
             bindingResult = new BeanPropertyBindingResult(form, PROJECT_LOCATION_FORM);
             validator.validate(form, bindingResult);
-            model.addAttribute(BINDING_RESULT_PROJECT_LOCATION_FORM, bindingResult);
+            model.addAttribute(PROJECT_LOCATION_FORM, bindingResult);
             BindingResult addressBindingResult = new BeanPropertyBindingResult(form.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
             addressFormValidate(form, bindingResult, addressBindingResult);
         }

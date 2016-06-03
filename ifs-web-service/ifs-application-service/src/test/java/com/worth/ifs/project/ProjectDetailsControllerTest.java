@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static java.util.Arrays.asList;
@@ -88,14 +88,14 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getFormattedId(), viewModel.getProjectNumber());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
 
-        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get("form");
+        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(ProjectDetailsController.PROJECT_LOCATION_FORM);
         assertEquals(project.getTargetStartDate().withDayOfMonth(1), form.getProjectStartDate());
     }
 
     @Test
     public void testUpdateStartDate() throws Exception {
 
-        when(projectRestService.updateProjectStartDate(123L, LocalDate.of(2017, 6, 3))).thenReturn(restSuccess());
+        when(projectService.updateProjectStartDate(123L, LocalDate.of(2017, 6, 3))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/details/start-date", 123L).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).
