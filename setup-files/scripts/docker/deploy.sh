@@ -19,23 +19,29 @@ esac
 cd ../../../
 
 data() {
+    ifs-data-service/gradlew cleanDeploy "$@"
     docker cp ifs-data-service/build/war/* ifs-data-service:/opt/tomcat/webapps/
 }
 
 web() {
+    ifs-web-service/gradlew cleanDeploy "$@"
     docker cp ifs-web-service/ifs-competition-mgt-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
     docker cp ifs-web-service/ifs-application-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
 }
-case "$1" in
+
+target=$1
+shift
+
+case "$target" in
     all)
-        data
-        web
+        data "$@"
+        web "$@"
     ;;
     data)
-        data
+        data "$@"
     ;;
     web)
-        web
+        web "$@"
     ;;
     *)
         echo $"Usage: $0 {all|data|web}"
