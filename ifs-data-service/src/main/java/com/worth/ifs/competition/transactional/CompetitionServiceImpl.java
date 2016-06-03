@@ -8,7 +8,10 @@ import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
+import com.worth.ifs.competition.mapper.CompetitionSetupSectionStatusMapper;
+import com.worth.ifs.competition.repository.CompetitionSetupSectionStatusRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,11 +32,15 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     CategoryLinkRepository categoryLinkRepository;
     @Autowired
+    CompetitionSetupSectionStatusRepository competitionSetupSectionStatusRepository;
+    @Autowired
     CategoryRepository categoryRepository;
     @Autowired
     CategoryLinkService categoryLinkService;
     @Autowired
     private CompetitionMapper competitionMapper;
+    @Autowired
+    private CompetitionSetupSectionStatusMapper competitionSetupSectionStatusMapper;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -94,5 +101,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<CompetitionResource>> findAll() {
         return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findAll()));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses() {
+        return serviceSuccess((List) competitionSetupSectionStatusMapper.mapToResource(competitionSetupSectionStatusRepository.findAll()));
     }
 }

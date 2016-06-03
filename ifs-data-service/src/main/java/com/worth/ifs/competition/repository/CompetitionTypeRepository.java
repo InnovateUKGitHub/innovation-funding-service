@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.repository;
 
 import com.worth.ifs.competition.domain.CompetitionType;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -11,12 +11,8 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionTypeRepository extends PagingAndSortingRepository<CompetitionType, Long> {
+public interface CompetitionTypeRepository extends CrudRepository<CompetitionType, Long> {
 
     List<CompetitionType> findByName(@Param("name") String name);
-    CompetitionType findById(@Param("id") Long id);
-
-    @Override
-    List<CompetitionType> findAll();
 
 }

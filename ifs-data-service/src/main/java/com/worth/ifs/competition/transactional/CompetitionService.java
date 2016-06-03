@@ -2,6 +2,7 @@ package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,4 +24,6 @@ public interface CompetitionService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
+
+    ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses();
 }

@@ -2,6 +2,7 @@ package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,11 @@ public class CompetitionController {
     @RequestMapping("/findAll")
     public RestResult<List<CompetitionResource>> findAll() {
         return competitionService.findAll().toGetResponse();
+    }
+
+    @RequestMapping("/sectionStatus/getAll")
+    public RestResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses() {
+        return competitionService.findAllCompetitionSectionStatusses().toGetResponse();
     }
 
     /**
