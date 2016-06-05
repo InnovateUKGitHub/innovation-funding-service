@@ -7,6 +7,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import javax.validation.Valid;
 import java.util.List;
 
 public class ProjectDetailsAddressViewModel {
@@ -73,7 +74,8 @@ public class ProjectDetailsAddressViewModel {
 
     public static class ProjectDetailsAddressViewModelForm implements BindingResultTarget {
         private String projectAddressGroup;
-        private AddressForm addressForm;
+        @Valid
+        private AddressForm addressForm = new AddressForm();
         private List<ObjectError> objectErrors;
         private BindingResult bindingResult;
 
