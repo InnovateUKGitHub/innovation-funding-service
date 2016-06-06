@@ -17,6 +17,9 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
 ${SUCCESFUL_PROJECT_PAGE}    ${server}/project/16
+${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
+${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
+
 
 *** Test Cases ***
 Partner can view the uploaded feedback
@@ -72,7 +75,7 @@ Comp admin can view uploaded feedback
     [Tags]
     [Setup]    Run Keywords    Logout as user
     Given guest user log-in    john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page    ${unsuccessful_application_overview}
+    When the user navigates to the page    ${successful_application_comp_admin_view}
     And the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should see the text in the page    ${valid_pdf_excerpt}
@@ -80,7 +83,7 @@ Comp admin can view uploaded feedback
 Comp admin can view unsuccessful uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
-    Given the user navigates to the page    ${unsuccessful_application_overview}
+    Given the user navigates to the page    ${unsuccessful_application_comp_admin_view}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should see the text in the page    ${valid_pdf_excerpt}
