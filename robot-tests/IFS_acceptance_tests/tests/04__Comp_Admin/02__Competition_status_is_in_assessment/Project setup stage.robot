@@ -2,6 +2,9 @@
 Documentation     INFUND-2607 As an applicant I want to have a link to the feedback for my application from the Application Overview page when it becomes available so I can review the assessor feedback for my application
 ...
 ...               INFUND-2612 As a partner I want to have a overview of where I am in the process and what outstanding tasks I have to complete so that I can understand our project setup steps
+...
+...
+...               INFUND-2613 As a lead partner I need to see an overview of project details for my project so that I can edit the project details in order for Innovate UK to be able to assign an appropriate Monitoring Officer
 Suite Teardown    User closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -54,6 +57,15 @@ Partner can see the project setup page
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
+
+Partner can see the overview of the project details
+    [Documentation]    INFUND-2613
+    When the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Please supply the following details for your project and the team
+    And the user should see the element    link=Start date
+    And the user should see the element    link=Project address
+    And the user should see the element    link=Project manager
+    And the user should see the text in the page    Finance contacts
 
 Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
