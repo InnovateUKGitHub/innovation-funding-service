@@ -2,8 +2,8 @@
 Documentation     INFUND-2672 As a competition administrator I want to be able to publish the assessor feedback when ready for distribution so that all applicants can review further information to support the funding decision
 ...
 ...               INFUND-2608 As a lead applicant I want to receive an email to inform me when the application feedback is accessible so that I can review the assessment
-Suite Setup       Run Keywords      Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
-...               AND          Run Keyword And Ignore Error      Delete the emails from both test mailboxes
+Suite Setup       Run Keywords    Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
+...               AND    Run Keyword And Ignore Error    Delete the emails from both test mailboxes
 Suite Teardown    User closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -71,12 +71,14 @@ Choosing to Notify the applicants in the dialogue
 
 Successful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email
+    [Tags]    Email    Pending
+    # pending the INFUND-2818
     Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}    Assessor feedback is now available for your successfully funded    Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email
+    [Tags]    Email    Pending
+    # pending the INFUND-2818
     Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}    Assessor feedback is now available for your unsuccessfully funded    Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
