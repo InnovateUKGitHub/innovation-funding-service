@@ -2,6 +2,7 @@ package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -26,5 +27,8 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionResource>> findAll();
 
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses(Long competitionId);
+    ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionsStatuses(Long competitionId);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections();
 }

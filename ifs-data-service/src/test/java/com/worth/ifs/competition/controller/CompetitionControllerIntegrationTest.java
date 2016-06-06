@@ -3,6 +3,7 @@ package com.worth.ifs.competition.controller;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -137,8 +138,24 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         // Create new competition
         CompetitionResource competition = createNewCompetition();
 
-        RestResult<List<CompetitionSetupSectionStatusResource>> statusses = controller.findAllCompetitionSectionStatusses(competition.getId());
+        RestResult<List<CompetitionSetupSectionStatusResource>> statusses = controller.findAllCompetitionSection(competition.getId());
         assertTrue(statusses.isSuccess());
+        assertTrue(statusses.getSuccessObject().isEmpty());
+    }
+
+    @Rollback
+    @Test
+    public void testCompetitionSetupSections() throws Exception {
+        RestResult<List<CompetitionSetupSectionResource>> sectionsResult = controller.findAllCompetitionSections();
+        assertTrue(sectionsResult.isSuccess());
+        List<CompetitionSetupSectionResource> sections = sectionsResult.getSuccessObject();
+
+        // Check if all the sections are here.
+        assertEquals(7L, (long) sections.size());
+
+        // Test ordering.
+        assertEquals("Initial details", sections.get(0).getName());
+        assertEquals("Finance", sections.get(6).getName());
     }
 
     private CompetitionResource createNewCompetition() {
