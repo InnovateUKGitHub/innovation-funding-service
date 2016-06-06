@@ -4,6 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionResourceListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -34,6 +36,13 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }
+
+    @Override
+    public RestResult<List<CompetitionSetupSectionResource>> getSetupSections() {
+        return getWithRestResult(competitionsRestURL + "/sectionStatus/getAll" , competitionSetupSectionResourceListType());
+    }
+
+
 
     @Override
     public RestResult<CompetitionResource> create() {
