@@ -1,5 +1,6 @@
 package com.worth.ifs.application.domain;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Entity;
@@ -44,6 +45,9 @@ public class ApplicationStatus {
         this.name = name;
     }
 
+    public boolean isApproved() {
+        return ApplicationStatusConstants.APPROVED.getId().equals(getId());
+    }
 
     @Override
     public String toString() {

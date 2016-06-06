@@ -1,14 +1,18 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.file.resource.FileEntryResource;
-import org.junit.Test;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.test.util.ReflectionTestUtils;
-
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
+
+import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 
 public class AssessorFeedbackRestServiceImplTest extends BaseRestServiceUnitTest<AssessorFeedbackRestServiceImpl> {
 
@@ -69,6 +73,33 @@ public class AssessorFeedbackRestServiceImplTest extends BaseRestServiceUnitTest
         service.removeAssessorFeedbackDocument(123L);
 
         setupDeleteWithRestResultVerifications(expectedUrl);
+    }
+    
+    @Test
+    public void testFeedbackUploaded() {
+
+        String expectedUrl = assessorFeedbackRestURL + "/assessorFeedbackUploaded?competitionId=123";
+
+        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, true);
+
+        // now run the method under test
+        RestResult<Boolean> result = service.feedbackUploaded(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+    }
+    
+    @Test
+    public void testSubmitAssessorFeedback() {
+
+        String expectedUrl = assessorFeedbackRestURL + "/submitAssessorFeedback/123";
+
+        setupPostWithRestResultExpectations(expectedUrl, null, HttpStatus.OK);
+
+        // now run the method under test
+        RestResult<Void> result = service.submitAssessorFeedback(123L);
+
+        assertTrue(result.isSuccess());
     }
 
     @Override

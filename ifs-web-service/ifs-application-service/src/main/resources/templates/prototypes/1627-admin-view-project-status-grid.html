@@ -28,7 +28,7 @@
 
 </head>
 
-<body class="comp-assessors full-width show-applications">
+<body class="full-width">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -47,7 +47,7 @@
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 
-	<div class="grid-row">
+	<div class="constrain-width">
 		
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 		
@@ -67,7 +67,6 @@
 			</section>
 		</div> -->
 
-		<div class="column-one">
 
 			<h2 class="heading-large">Projects in setup</h2>
 
@@ -94,10 +93,25 @@
 						<tr>
 							<th rowspan="5" scope="row"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194731</a></th>
 							<td><a href="#">Company A</a></td>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details">OK</a></td>
-							<td id="assignMo" class="status action"><a href="/prototypes/1576-assign-mo" title="Assign monitoring officer">Action</a></td>
-							<td class="status action"><a href="/prototypes/2650-review-bank-details">Action</a></td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
+							
+							<div th:if="${param.stage == null}" th:unless="${param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+								<td id="assignMo" class="status action"><a href="/prototypes/1576-assign-mo" title="Assign monitoring officer"><span class="visuallyhidden">Action</span></a></td>
+							</div>
+
+							<div th:if="${param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+								<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
+							</div>
+
+							<div th:if="${param.stage == null or param.stage[0] == 'level1'}" th:unless="${param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+								<td class="status action"><a href="/prototypes/2650-review-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
+							</div>
+
+							<div th:if="${param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+								<td class="status ok"><a href="/prototypes/2650-review-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
+							</div>
+							
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status with-partner">-</td>
 							<td class="status with-partner">-</td>
 							<td class="status with-partner">-</td>
@@ -105,7 +119,7 @@
 						</tr>
 						<tr>
 							<td><a href="#">Company B</a></td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
@@ -116,7 +130,7 @@
 						</tr>
 						<tr>
 							<td><a href="#">Company C</a></td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
@@ -127,21 +141,21 @@
 						</tr>
 						<tr>
 							<td><a href="#">Company D</a></td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
-							<td class="status action"><a href="#">Action</a></td>
+							<td class="status action"><a href="#"><span class="visuallyhidden">Action</span></a></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
 						<tr class="project-divide">
 							<td><a href="#">Company E</a></td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
-							<td class="status action"><a href="#">Action</a></td>
+							<td class="status action"><a href="#"><span class="visuallyhidden">Action</span></a></td>
 							<td class="status">-</td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
@@ -150,10 +164,10 @@
 						<tr>
 							<th rowspan="2" scope="row"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194732</a></th>
 							<td><a href="#">Company 1</a></td>
-							<td class="status ok">OK</td>
-							<td class="status ok">OK</td>
-							<td class="status ok">OK</td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
@@ -161,9 +175,9 @@
 						</tr>
 						<tr>
 							<td><a href="#">Company 2</a></td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
-							<td class="status ok">OK</td>
+							<td class="status ok"><span class="visuallyhidden">OK</span></td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 							<td class="status na">&nbsp;</td>
@@ -190,7 +204,7 @@
 		</div>
 
 
-	</div>
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

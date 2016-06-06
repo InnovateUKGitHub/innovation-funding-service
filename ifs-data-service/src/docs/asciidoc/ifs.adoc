@@ -152,3 +152,7 @@ include::formInputResponse.adoc[]
 [[silstub]]
 == SIL stubbing endpoints
 include::silstub.adoc[]
+
+[[project]]
+== Project
+include::project.adoc[]

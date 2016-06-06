@@ -8,7 +8,6 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +20,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
+import static java.lang.String.format;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -31,18 +31,10 @@ import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
 
     private static final Log LOG = LogFactory.getLog(UserRestServiceImpl.class);
-    private String userRestURL;
-    private String processRoleRestURL;
 
-    @Value("${ifs.data.service.rest.user}")
-    void setUserRestUrl(String userRestURL) {
-        this.userRestURL = userRestURL;
-    }
+    private String userRestURL = "/user";
 
-    @Value("${ifs.data.service.rest.processrole}")
-    void setProcessRoleRestUrl(String processRoleRestURL) {
-        this.processRoleRestURL = processRoleRestURL;
-    }
+    private String processRoleRestURL = "/processrole";
 
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
@@ -79,7 +71,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(badRequestError("Missing the hash to reset the password with"));
 
         LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+" body: "+password);
-        return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash), password,  Void.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash), password,  Void.class);
     }
 
     @Override
@@ -151,7 +143,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> verifyEmail(String hash){
-        return getWithRestResultAnonymous(userRestURL + "/verifyEmail/"+hash, Void.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", userRestURL, UserController.URL_VERIFY_EMAIL, hash), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resendEmailVerificationNotification(String email) {
+        return putWithRestResultAnonymous(format("%s/%s/%s/", userRestURL, UserController.URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
     }
 
     @Override

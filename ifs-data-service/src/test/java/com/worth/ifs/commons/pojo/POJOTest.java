@@ -29,6 +29,8 @@ import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -42,7 +44,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 33;
+    private static final int EXPECTED_RESOURCES = 32;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -71,7 +73,9 @@ public class POJOTest {
             Competition.class,
             CreateUserResource.class,
             UpdateUserResource.class,
-            CompetitionSummaryResource.class
+            CompetitionSummaryResource.class,
+            Project.class,
+            ProjectResource.class
     );
 
     @Before
@@ -119,6 +123,7 @@ public class POJOTest {
                     && !pojoClass.getClazz().equals(Token.class)
                     && !pojoClass.getClazz().equals(TokenResource.class)
                     && !pojoClass.getClazz().equals(PageResource.class)
+                    && !pojoClass.getClazz().equals(Competition.class)
                     && (classes.stream().anyMatch(pojoClass.getClazz()::equals)|| pojoClass.getClazz().getName().endsWith("Resource"));
         }
     }

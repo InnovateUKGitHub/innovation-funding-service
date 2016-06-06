@@ -15,29 +15,45 @@
     </ul>
 </div>
 
+<!-- =================Section: Done / edit buttons=========================== -->
+<div th:fragment="prototype-section-cta">
+    <input type="hidden" id="section" name="section" th:value="${section}" />
+    <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
+    <input type="hidden" id="status" name="status" th:value="${(param.status != null and param.status[0] == 'done' ? 'edit' : 'done')}" />
+    <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status != null and param.status[0] == 'done'}">Done</button>
+    <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit'}">Edit</button>
+</div>
+
 
 <!-- =================Section: Essential information=========================== -->
 
 <div th:fragment="prototype-section-essential">
     <h2 class="heading-medium no-margin-top">Step 1: Initial competition details</h2>
+
+     <div class="warning-alert extra-margin-bottom" th:unless="${param.compPaf != null and param.compPaf[0] != ''}">
+        <h2 class="heading-small">Invalid input provided</h2>
+        <p>PAF No is a mandatory field. <br />
+        Please enter a PAF (Project Authorisation Form) number - It looks like this: <i>XX12345ZZ_6</i></p>
+    </div>
     
     <div class="panel-indent">
         This will create a new Competition - you will be able to specify more details as you proceed
     </div>
 
-    <form>
-        <fieldset>
+    <form id="form-essential">
+        <fieldset th:if="${param.status == null or param.status[0] == 'edit'}" id="section-1-edit">
+
             <legend class="visuallyhidden">Initial details</legend>
             
             <div class="form-group">
                 <label class="form-label" for="comp-executive">
                     <span class="form-label-bold">Competition executive</span>
                 </label>
-                <select class="form-control width-x-large" id="comp-executive" name="comp-executive">
-                    <option value="">Please select &hellip;</option>
-                    <option value="">Name 1</option>
-                    <option value="">Name 2</option>
-                    <option value="">Name 3</option>
+                <select class="form-control width-x-large" id="compExecutive" name="compExecutive" th:readonly="${param.status != null and param.status[0] == 'done'}">
+                    <option th:text="${(param.compExecutive != null ? param.compExecutive[0] : 'Please select &hellip;')}">Please select &hellip;</option>
+                    <option value="Name 1">Name 1</option>
+                    <option value="Name 2">Name 2</option>
+                    <option value="Name 3">Name 3</option>
                 </select>
             </div>
 
@@ -46,40 +62,40 @@
                 <legend class="visuallyhidden">Opening date</legend>
                 <div class="date-group">
                     <div class="day">
-                        <label class="form-label" for="start-day">
+                        <label class="form-label" for="startDay">
                                 <div>Day</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="start-day" name="start-day" value="01" /> 
+                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/> 
                     </div>
 
                     <div class="month">
-                        <label class="form-label" for="start-month">
+                        <label class="form-label" for="startMonth">
                                 <div>Month</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
+                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
                     </div>
 
                     <div class="year">
-                        <label class="form-label" for="start-year">
+                        <label class="form-label" for="startYear">
                                 <div>Year</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
+                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
                     </div>
                 </div>
             </fieldset>
 
             <div class="form-group">
-                <label class="form-label" for="comp-title">
+                <label class="form-label" for="compTitle">
                     <span class="form-label-bold">Competition title</span>
                 </label>
-                <input class="form-control width-x-large" id="comp-title" name="comp-title" />
+                <input class="form-control width-x-large" id="compTitle" name="compTitle" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.compTitle != null ? param.compTitle[0] : '')}"/>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="comp-innovation-sector">
+                <label class="form-label" for="compInnovationSector">
                     <span class="form-label-bold">Innovation sector</span>
                 </label>
-                <select class="form-control width-x-large" id="comp-innovation-sector" name="comp-innovation-sector">
+                <select class="form-control width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
                     <option value="health">Health and life sciences</option>
                     <option value="materials">Materials and manufacturing</option>
@@ -90,10 +106,10 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="comp-innovation-area">
+                <label class="form-label" for="compInnovationArea">
                     <span class="form-label-bold">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="comp-innovation-area" name="comp-innovation-area">
+                <select class="form-control width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -119,10 +135,10 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="comp-type">
+                <label class="form-label" for="compType">
                     <span class="form-label-bold">Competition type</span>
                 </label>
-                <select class="form-control width-x-large" id="comp-type" name="comp-type">
+                <select class="form-control width-x-large" id="compType" name="compType" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
                     <option value="Programme">Programme</option>
                     <option value="Managed services">Managed services</option>
@@ -131,7 +147,7 @@
                 </select>
             </div>
 
-            <div class="form-group" id="state-aid" style="display: none">
+            <div class="form-group" id="stateAid" style="display: none">
                 <h3 class="heading-small">State aid</h3>
                 <p>
                     <span class="yes">Yes</span>
@@ -140,10 +156,10 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="comp-lead-technologist">
+                <label class="form-label" for="compLeadTechnologist">
                     <span class="form-label-bold">Competition Lead technologist</span>
                 </label>
-                <select class="form-control width-x-large" id="comp-lead-technologist" name="comp-lead-technologist">
+                <select class="form-control width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
                     <option value="">Lead technologist 1</option>
                     <option value="">Lead technologist 2</option>
@@ -151,28 +167,88 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="comp-paf">
+            <div th:class="${(param.compPaf == null or param.compPaf[0] == '' and param.status != null ? 'error form-group' : 'form-group')}">
+                <label class="form-label" for="compPaf">
                     <span class="form-label-bold">PAF number</span>
+                    <span class="error-message" th:unless="${param.compPaf != null and param.compPaf[0] != ''}">Please enter a PAF number</span>
                 </label>
-                <input class="form-control width-large" id="comp-paf" name="comp-paf" />
+                <input class="form-control width-large field-error" th:class="${(param.compPaf == null or param.compPaf[0] == '' and param.status != null ? 'form-control width-large field-error' : 'form-control width-large')}" id="compPaf" name="compPaf" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.compPaf != null ? param.compPaf[0] : '')}"/>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="comp-budget-code">
+                <label class="form-label" for="compBudgetCode">
                     <span class="form-label-bold">Budget code</span>
                 </label>
-                <input class="form-control width-large" id="comp-budget-code" name="comp-budget-code" />
+                <input class="form-control width-large" id="compBudgetCode" name="compBudgetCode" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.compBudgetCode != null ? param.compBudgetCode[0] : '')}"/>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="comp-code">
+                <label class="form-label" for="compCode">
                     <span class="form-label-bold">Competition code</span>
                 </label>
-                <input class="form-control width-large" id="comp-code" name="comp-code" />
+                <input class="form-control width-large" id="compCode" name="compCode" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.compCode != null ? param.compCode[0] : '')}"/>
             </div>
         </fieldset>
-        <a th:href="@{'?section=essential&#38;sectionId=1&#38;status=done'}" class="button">Done</a>
+        
+        <fieldset th:if="${param.status != null and param.status[0] == 'done'}" id="section-1-">
+
+            <dl class="standard-definition-list">
+                <dt>Competition executive</dt>
+                <dd th:text="${param.compExecutive[0]}"></dd>
+
+                <dt>Opening date</dt>
+                <dd th:text="${param.startDay[0]+'/'+param.startMonth[0]+'/'+param.startYear[0]}"></dd>
+
+                <dt>Competition title</dt>
+                <dd th:text="${param.compTitle[0]}"></dd>
+
+                <dt>Innovation sector</dt>
+                <dd th:text="${param.compInnovationSector[0]}"></dd>
+
+                <dt>Innovation area</dt>
+                <dd th:text="${param.compInnovationArea[0]}"></dd>
+
+                <dt>Competition type</dt>
+                <dd th:text="${param.compType[0]}"></dd>
+
+                <dt>State aid</dt>
+                <dd id="stateAid">
+                    <span class="yes">Yes</span>
+                    <span class="no">No</span>
+                </dd>
+                
+                <dt>PAF number</dt>
+                <dd th:text="${param.compPaf[0]}"></dd>
+
+                <dt>Budget code</dt>
+                <dd th:text="${param.compBudgetCode[0]}"></dd>
+
+                <dt>Competition code</dt>
+                <dd th:text="${param.compCode[0]}"></dd>
+
+
+            </dl>
+            
+            
+            <input type="hidden" name="compExecutive" th:value="${param.compExecutive[0]}" />
+            <input type="hidden" name="startDay" th:value="${param.startDay[0]}" /> 
+            <input type="hidden" name="startMonth" th:value="${param.startMonth[0]}" /> 
+            <input type="hidden" name="startYear" th:value="${param.startYear[0]}" />
+            <input type="hidden" name="compTitle" th:value="${param.compTitle[0]}" /> 
+            <input type="hidden" name="compInnovationSector" th:value="${param.compInnovationSector[0]}" />
+            <input type="hidden" name="compInnovationArea" th:value="${param.compInnovationArea[0]}" />
+            <input type="hidden" name="compType" th:value="${param.compType[0]}" />
+            <input type="hidden" name="compPaf" th:value="${param.compPaf[0]}" />
+            <input type="hidden" name="compBudgetCode" th:value="${param.compBudgetCode[0]}" />
+            <input type="hidden" name="compCode" th:value="${param.compCode[0]}" /> 
+
+        </fieldset>
+
+
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=essential, sectionId=1" th:remove="tag" />
+        </div>
+
     </form>
     <ul class="pagination">
         <li class="next">
@@ -223,7 +299,9 @@
                 <input class="form-control width-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
             </div>
         </fieldset>
-        <a th:href="@{'?section=additional&#38;sectionId=2&#38;status=done'}" class="button">Done</a>
+
+        <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=additional, sectionId=2" th:remove="tag" />
+
     </form>
     <ul class="pagination">
         <li class="prev">
@@ -279,7 +357,7 @@
 
         <div class="grid-row">
             <div class="column-half">
-                 <a th:href="@{'?section=eligibility&#38;sectionId=3&#38;status=done'}" class="button">Done</a>
+                 <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
             </div>
             <div class="column-half alignright">
                 <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
@@ -308,7 +386,7 @@
 <!-- =================Section: Eligibility stream data=========================== -->
 
 <div th:fragment="prototype-section-eligibility-stream">
-
+  
     <fieldset class="comp-stream-group extra-margin" style="display: none;">
         <div class="form-group">
             <label class="form-label" th:for="${'stream-'+streamNo+'-comp-stream'}">
@@ -463,32 +541,40 @@
         Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th scope="col" style="width: 40%" id="milestone">Milestone</th>
-                <th scope="col" style="width: 10%" class="aligncentre" id="weekday">Weekday</th>
-                <th scope="col" style="width: 10%" class="aligncentre" id="day">Day</th>
-                <th scope="col" style="width: 10%" class="aligncentre" id="month">Month</th>
-                <th scope="col" style="width: 10%" class="aligncentre" id="year">Year</th>
-                <th scope="col" style="width: 15%" class="aligncentre" id="date-picker">Calendar view</th>
-            </tr>
-        </thead>
-        <tbody>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
-        </tbody>
-    </table>
+    <form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 40%" id="milestone">Milestone</th>
+                    <th scope="col" style="width: 10%" class="aligncentre" id="weekday">Weekday</th>
+                    <th scope="col" style="width: 10%" class="aligncentre" id="day">Day</th>
+                    <th scope="col" style="width: 10%" class="aligncentre" id="month">Month</th>
+                    <th scope="col" style="width: 10%" class="aligncentre" id="year">Year</th>
+                    <th scope="col" style="width: 15%" class="aligncentre" id="date-picker">Calendar view</th>
+                </tr>
+            </thead>
+            <tbody>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
+            </tbody>
+        </table>
+
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4" th:remove="tag" />
+        </div>
+
+    </form>
 
     <ul class="pagination">
         <li class="prev">
@@ -525,7 +611,16 @@
 <!-- =================Section: Assessors=========================== -->
 
 <div th:fragment="prototype-section-assessors">
-    Assessors
+    
+    <h2 class="heading-medium no-margin-top">Step 5: Assessors</h2>
+
+    <form>
+
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=assessors, sectionId=5" th:remove="tag" />
+        </div>
+
+    </form>
     
     <ul class="pagination">
         <li class="prev">
@@ -554,34 +649,38 @@
     <div class="panel-indent">
         These match the template for the competition type you chose - to change questions you can change the competition type in step 1
     </div>
+    
+    <form>
 
+        <div class="collapsible section-overview">
+            
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
 
-    <div class="collapsible section-overview">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Potential market'}, question=${'What is the size of the potential market for your project?'}, questionNo=2" th:remove="tag"/>
+
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project exploitation'}, question=${'How will you exploit and market your project?'}, questionNo=3" th:remove="tag"/>
+
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Economic benefit'}, question=${'What economic, social and environmental benefits do you expect your project to deliver and when?'}, questionNo=4" th:remove="tag"/>
+
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Technical approach'}, question=${'Required'}, questionNo=5" th:remove="tag"/>
+
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Innovation'}, question=${'Required'}, questionNo=6" th:remove="tag"/>
+
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Risks'}, question=${'Required'}, questionNo=7" th:remove="tag"/>
+
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project team'}, question=${'Required'}, questionNo=8" th:remove="tag"/>
+
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Funding'}, question=${'Required'}, questionNo=9" th:remove="tag"/>
+            
+            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
+
+        </div>
         
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
+         <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6" th:remove="tag" />
+        </div>
 
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Potential market'}, question=${'What is the size of the potential market for your project?'}, questionNo=2" th:remove="tag"/>
-
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project exploitation'}, question=${'How will you exploit and market your project?'}, questionNo=3" th:remove="tag"/>
-
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Economic benefit'}, question=${'What economic, social and environmental benefits do you expect your project to deliver and when?'}, questionNo=4" th:remove="tag"/>
-
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Technical approach'}, question=${'Required'}, questionNo=5" th:remove="tag"/>
-
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Innovation'}, question=${'Required'}, questionNo=6" th:remove="tag"/>
-
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Risks'}, question=${'Required'}, questionNo=7" th:remove="tag"/>
-
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project team'}, question=${'Required'}, questionNo=8" th:remove="tag"/>
-
-        <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Funding'}, question=${'Required'}, questionNo=9" th:remove="tag"/>
-        
-         <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
-
-
-    </div>
-
-
+    </form>
 
     <ul class="pagination">
         <li class="prev">
@@ -603,7 +702,16 @@
 <!-- =================Section: Essential information=========================== -->
 
 <div th:fragment="prototype-section-finance">
-    Finance
+
+    <h2 class="heading-medium no-margin-top">Finance</h2>
+
+    <form>
+
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=finance, sectionId=7" th:remove="tag" />
+        </div>
+
+    </form>
 
     <ul class="pagination">
         <li class="prev">

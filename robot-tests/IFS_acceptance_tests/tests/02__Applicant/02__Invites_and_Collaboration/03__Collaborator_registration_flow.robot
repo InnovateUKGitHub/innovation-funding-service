@@ -21,7 +21,7 @@ Lead applicant details should show in the invite page
     When the user clicks the button/link    jQuery=.button:contains("Create")
     Then the user should see the text in the page    Lead organisation: Empire Ltd
     And the user should see the text in the page    Lead applicant: Steve Smith
-    And the user should see the element    link=Connected digital additive manufacturing
+    And the user should see the element    link=${OPEN_COMPETITION_LINK}
     And the user should see the text in the page    Worth Internet Systems
 
 User cannot continue if an organisation type is not selected
@@ -131,8 +131,8 @@ Catapult search (accept invitation flow)
     And the user fills the create account form    Thierry    Henry
 
 Catapult search (accept invitation flow with email step)
-    [Documentation]     INFUND-1230
-    [Tags]  Invite  Catapult    Email
+    [Documentation]    INFUND-1230
+    [Tags]    Invite    Catapult    Email
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")

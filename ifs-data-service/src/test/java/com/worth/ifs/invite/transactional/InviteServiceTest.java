@@ -11,7 +11,6 @@ import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.user.domain.Organisation;
@@ -77,7 +76,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Before
     public void setup() {
         when(inviteRepositoryMock.save(any(Invite.class))).thenReturn(new Invite());
-        ServiceResult<Notification> result = serviceSuccess(new Notification());
+        ServiceResult<Void> result = serviceSuccess();
         when(notificationService.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
 
         localValidatorFactory = new LocalValidatorFactoryBean();
@@ -138,7 +137,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         InviteOrganisation inviteOrganisation = new InviteOrganisation("SomeOrg", null, Arrays.asList(invite));
         invite.setInviteOrganisation(inviteOrganisation);
 
-        List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
+        List<ServiceResult<Void>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
         assertTrue(results.get(0).isSuccess());
     }
@@ -156,7 +155,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         invite.setName("Nico");
         invite.setEmail("nicotest.nl");
 
-        List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
+        List<ServiceResult<Void>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
         assertTrue(results.get(0).isFailure());
     }

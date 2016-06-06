@@ -23,10 +23,24 @@
 .textarea-footer{
 	button{
 		vertical-align: top;
+		
+		&[name='mark_as_complete']{
+			float: right;
+			margin: 0;
+
+			@include media-down(mobile) {
+				margin-top: 1.5em;
+			}
+		}
+
 	}
 	.assign-button{
 		padding-top: 6px;
 	}
+
+	border-bottom: 1px solid $border-colour;
+	padding-bottom: 3em;
+	margin-bottom: 1.2em;
 }
 
 /*----- Setting widths of inputs ----*/

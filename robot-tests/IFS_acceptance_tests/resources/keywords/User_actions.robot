@@ -1,7 +1,14 @@
+*** Settings ***
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/User_credentials.robot
+Resource          ../../resources/keywords/Login_actions.robot
+
 *** Keywords ***
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
     Go To    ${TARGET_URL}
+    Run Keyword And Ignore Error    Confirm Action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -70,8 +77,6 @@ the user should be redirected to the correct page without error checking
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
 
-
-
 the user reloads the page
     Reload Page
     # Error checking
@@ -124,19 +129,16 @@ the user selects the option from the drop-down menu
     Page Should Contain    BETA
 
 the user should see the dropdown option selected
-    [Arguments]     ${option}   ${drop-down}
+    [Arguments]    ${option}    ${drop-down}
     List Selection Should Be    ${drop-down}    ${option}
     # Error checking
-    Page Should Not Contain     Error
-    Page Should Not Contain     something went wrong
-    Page Should Not Contain     Page or resource not found
-    Page Should Not Contain     You do not have the necessary permissions for your request
-    # Header checking   (INFUND-1892)
-    Element Should Be Visible   id=global-header
-    Page Should Contain     BETA
-
-
-
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking    (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 the user submits the form
     Submit Form
@@ -284,16 +286,6 @@ The element should be disabled
     [Arguments]    ${ELEMENT}
     Element Should Be Disabled    ${ELEMENT}
 
-the user clicks the link from the appropriate email sender
-    Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
-    Run keyword if    '${RUNNING_ON_DEV}' != ''    the user opens the mailbox and verifies the official innovate email
-
-the user opens the mailbox and verifies the email sent from a developer machine
-    the user opens the mailbox and verifies the email from    dev-dwatson-liferay-portal@hiveit.co.uk
-
-the user opens the mailbox and verfies the official innovate email
-    the user opens the mailbox and verifies the email from    noresponse@innovateuk.gov.uk
-
 the user opens the mailbox and verifies the email from
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
@@ -315,17 +307,43 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${CONTACT_LEAD}=    Get From List    ${LINK}    1
-    Should Contain    ${CONTACT_LEAD}    mailto:
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    2
+    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
     log    ${ACCEPT_INVITE}
     go to    ${ACCEPT_INVITE}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
 
-Delete the emails from the test mailbox
+the user downloads the file from the link
+    [Arguments]    ${filename}    ${download_link}
+    ${ALL_COOKIES} =    Get Cookies
+    Log    ${ALL_COOKIES}
+    Download File    ${ALL_COOKIES}    ${download_link}
+    sleep    2s
+
+the file should be downloaded
+    [Arguments]    ${filename}
+    File Should Exist    ${filename}
+    File Should Not Be Empty    ${filename}
+
+the file has been scanned for viruses
+    Sleep    5s
+
+the user can see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    Page Should Contain    Upload
+
+the user cannot see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    the user should not see the text in the page    Upload
+
+Delete the emails from both test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
 
@@ -449,7 +467,7 @@ the lead applicant invites a registered user
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
     The guest user clicks the log-in button
-    The user clicks the button/link    link=Connected digital additive manufacturing
+    The user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate
     Input Text    name=organisations[1].invites[0].personName    Partner name
@@ -458,3 +476,15 @@ the lead applicant invites a registered user
     And the user should see the text in the page    Application overview
     User closes the browser
     The guest user opens the browser
+
+Open mailbox and verify the content
+    [Arguments]    ${USER}    ${EMAIL_SUBJECT}    ${CONTENT}
+    [Documentation]    This Keyword checks the subject and the content of the 1st email
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    ${MAIL_TO_OPEN}=    Walk Multipart Email    1
+    ${Subject}=    Get Multipart Field    Subject
+    Should contain    ${Subject}    ${EMAIL_SUBJECT}
+    ${BODY}=    get email body    ${MAIL_TO_OPEN}
+    Should Contain    ${BODY}    ${CONTENT}
+    Delete All Emails
+    close mailbox

@@ -33,14 +33,20 @@
   padding-bottom:0;
 }
 
-#publish-funding-decision {
-	display: none;
+.js-enabled #save-funding-decision {
+  display:none;
 }
 
 .funding-decision-save-info {
     font-size: 11px;
 }
 
+@media (min-width: 1200px){
+    .info-area .button,
+    .info-area .button-secondary {
+        display:block;
+    }
+}
 @media(max-width: 1200px){
   .competition-data .column-fifth,
   .competition-data .column-four-fifth {
@@ -61,4 +67,21 @@
         word-wrap:break-word;
       }
   }
+}
+
+.button-dashboard{
+    background: $grey-4;
+    padding: 20px 20px 15px 20px;
+    display: block;
+    min-height: 110px;
+    text-decoration: none;
+
+    &:hover{
+        background: $highlight-colour;
+    }
+
+    &.highlight{
+        background: $button-colour;
+        color: white;
+    }
 }

@@ -12,6 +12,8 @@ IFS.competition_management = (function(){
           container : '.competition-data form',
           breakpoint : 1200, //px
           fundingDecisionSelects: '.funding-decision',
+          assessorFeedbackButton: '#publish-assessor-feedback',
+          noJsAssessorFeedbackButton: '#publish-assessor-feedback-no-js',
           submitFundingDecisionButton: '#publish-funding-decision',
           noJsSubmitFundingDecisionButton: '#no-js-notify-applicants',
           noJsSaveFundingDecisionButton: '#no-js-save-funding-decision',
@@ -26,7 +28,6 @@ IFS.competition_management = (function(){
             jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
 
             IFS.competition_management.handleFundingDecisionEnableOrDisable();
-            IFS.competition_management.handleFundingDecisionButtons();
             IFS.competition_management.alterSubmitDecisionFormAction();
 
             if(IFS.competition_management.stickyEnabled()){
@@ -97,14 +98,6 @@ IFS.competition_management = (function(){
             s.menu.removeClass('sticky bottom').removeAttr('style');
           }
         },
-        handleFundingDecisionButtons: function(){
-        	var button = jQuery(s.submitFundingDecisionButton);
-        	var noJsButton = jQuery(s.noJsSubmitFundingDecisionButton);
-        	var noJsSaveButton = jQuery(s.noJsSaveFundingDecisionButton);
-        	noJsButton.hide();
-        	noJsSaveButton.hide();
-        	button.show();
-        },
         disableFundingDecisonButton : function(){
             var button = jQuery(s.submitFundingDecisionButton);
             var modal = button.attr('data-js-modal');
@@ -140,14 +133,14 @@ IFS.competition_management = (function(){
         	 return allDecided;
          },
         handleFundingDecisionSelectChange: function(){
-        	
+
         	IFS.competition_management.handleFundingDecisionEnableOrDisable();
-        	
+
         	var element = jQuery(this);
         	var applicationId = element.attr('name');
         	var competitionId = element.attr('competition');
         	var value = element.val();
-        	
+
         	IFS.competition_management.saveFundingDecision(competitionId, applicationId, value);
         },
         handleFundingDecisionEnableOrDisable: function() {
@@ -158,9 +151,9 @@ IFS.competition_management = (function(){
         	}
         },
         saveFundingDecision: function(competitionId, applicationId, value) {
-        	
+
         	var saveInfo = jQuery('#funding-decision-save-info-' + applicationId);
-        	
+
         	jQuery.ajaxProtected({
                  type: 'POST',
                  url: '/management/funding/' + competitionId,

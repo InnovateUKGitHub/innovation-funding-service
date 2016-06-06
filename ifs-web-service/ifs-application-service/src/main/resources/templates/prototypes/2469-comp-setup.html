@@ -65,17 +65,48 @@
 
 
 	    var sectionId = $_GET('sectionId'),
-			status = $_GET('status');
+			status = $_GET('status'),
+			compType = $_GET('compType');
+
+
+		if(compType == 'Programme' || compType == 'Managed services'){
+			jQuery('#stateAid').show();
+			jQuery('#stateAid .yes').show();
+			jQuery('#stateAid .no').hide();
+		}else if(compType == 'SBRI' || compType == 'Special'){
+			jQuery('#stateAid').show();
+			jQuery('#stateAid .no').show();
+			jQuery('#stateAid .yes').hide();
+		}else{
+			jQuery('#stateAid').hide();
+		}
+
+
+		//Of the available tabs check which section has been 'done'
 
 		
 		for(i = 1; i < jQuery(".inline-nav li").length+1; i++) {
 			
 			if(sectionId == i && status == 'done'){
-				localStorage.setItem('section'+i, 'section-'+i+'-complete')				
+				localStorage.setItem('section'+i, 'section-'+i+'-complete');		
+			}else if (sectionId == i && status == 'edit'){
+				localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
 			}
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
 				jQuery('#section-'+i).addClass('marked-as-complete');
+
+				/*var querystring = "status=done";
+
+				jQuery('#section-'+i+' a').each(function(){
+					var href = jQuery(this).attr('href');
+					alert(href);
+					 href += (href.match(/\?/) ? '&' : '?') + querystring; // change last '?' to '#' if need
+					 jQuery(this).attr('href', href);
+				});*/
+
+			}else{
+				jQuery('#section-'+i).removeClass('marked-as-complete');
 			}
 		} 
 			
@@ -101,65 +132,65 @@
 			}
 		});
 
-		jQuery('#comp-type').on('change',function(e){ 
+		jQuery('#compType').on('change',function(e){ 
 
 			var compType = jQuery(this).val();
 
 			if(compType == 'Programme' || compType == 'Managed services'){
-				jQuery('#state-aid').show();
-				jQuery('#state-aid .yes').show();
-				jQuery('#state-aid .no').hide();
+				jQuery('#stateAid').show();
+				jQuery('#stateAid .yes').show();
+				jQuery('#stateAid .no').hide();
 			}else if(compType == 'SBRI' || compType == 'Special'){
-				jQuery('#state-aid').show();
-				jQuery('#state-aid .no').show();
-				jQuery('#state-aid .yes').hide();
+				jQuery('#stateAid').show();
+				jQuery('#stateAid .no').show();
+				jQuery('#stateAid .yes').hide();
 			}else{
-				jQuery('#state-aid').hide();
+				jQuery('#stateAid').hide();
 			}
 
 		});
 
-		jQuery('#comp-innovation-sector').on('change',function(e){ 
+		jQuery('#compInnovationSector').on('change',function(e){ 
 
-			jQuery('#comp-innovation-area').val('');
+			jQuery('#compInnovationArea').val('');
 
 			var compSector = jQuery(this).val();
 
 			if(compSector == 'health'){
-				jQuery('#comp-innovation-area .health').show();
-				jQuery('#comp-innovation-area .materials').hide();
-				jQuery('#comp-innovation-area .emerging').hide();
-				jQuery('#comp-innovation-area .infrastructure').hide();
+				jQuery('#compInnovationArea .health').show();
+				jQuery('#compInnovationArea .materials').hide();
+				jQuery('#compInnovationArea .emerging').hide();
+				jQuery('#compInnovationArea .infrastructure').hide();
 			}
 
 			if(compSector == 'materials'){
-				jQuery('#comp-innovation-area .health').hide();
-				jQuery('#comp-innovation-area .materials').show();
-				jQuery('#comp-innovation-area .emerging').hide();
-				jQuery('#comp-innovation-area .infrastructure').hide();
+				jQuery('#compInnovationArea .health').hide();
+				jQuery('#compInnovationArea .materials').show();
+				jQuery('#compInnovationArea .emerging').hide();
+				jQuery('#compInnovationArea .infrastructure').hide();
 			}
 
 			if(compSector == 'emerging'){
-				jQuery('#comp-innovation-area .health').hide();
-				jQuery('#comp-innovation-area .materials').hide();
-				jQuery('#comp-innovation-area .emerging').show();
-				jQuery('#comp-innovation-area .infrastructure').hide();
+				jQuery('#compInnovationArea .health').hide();
+				jQuery('#compInnovationArea .materials').hide();
+				jQuery('#compInnovationArea .emerging').show();
+				jQuery('#compInnovationArea .infrastructure').hide();
 			}
 
 			if(compSector == 'emerging'){
-				jQuery('#comp-innovation-area .health').hide();
-				jQuery('#comp-innovation-area .materials').hide();
-				jQuery('#comp-innovation-area .emerging').hide();
-				jQuery('#comp-innovation-area .infrastructure').show();
+				jQuery('#compInnovationArea .health').hide();
+				jQuery('#compInnovationArea .materials').hide();
+				jQuery('#compInnovationArea .emerging').hide();
+				jQuery('#compInnovationArea .infrastructure').show();
 			}
 
 		});
 
-		jQuery('#comp-innovation-area').on('change',function(e){ 
+		jQuery('#compInnovationArea').on('change',function(e){ 
 
 			var compInnovationArea = jQuery(this).find('option:selected').attr('class');
 
-			jQuery('#comp-innovation-sector').val(compInnovationArea);
+			jQuery('#compInnovationSector').val(compInnovationArea);
 
 		});
 

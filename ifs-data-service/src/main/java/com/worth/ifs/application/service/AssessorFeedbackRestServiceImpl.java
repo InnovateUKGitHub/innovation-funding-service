@@ -4,7 +4,6 @@ import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,8 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AssessorFeedbackRestServiceImpl extends BaseRestService implements AssessorFeedbackRestService {
 
-    @Value("${ifs.data.service.rest.assessorfeedback}")
-    private String restUrl;
+    private String restUrl = "/assessorfeedback";
 
     @Override
     public RestResult<AssessorFeedbackResource> findOne(Long id) {
@@ -50,10 +48,23 @@ public class AssessorFeedbackRestServiceImpl extends BaseRestService implements 
         return getWithRestResult(url, FileEntryResource.class);
     }
 
+	@Override
+	public RestResult<Boolean> feedbackUploaded(Long competitionId) {
+		String url = restUrl + "/assessorFeedbackUploaded?competitionId=" + competitionId;
+        return getWithRestResult(url, Boolean.class);
+	}
+
+	@Override
+	public RestResult<Void> submitAssessorFeedback(Long competitionId) {
+		String url = restUrl + "/submitAssessorFeedback/" + competitionId;
+        return postWithRestResult(url, Void.class);
+	}
+	
     private HttpHeaders createHeader(String contentType, long contentLength){
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
         headers.setContentLength(contentLength);
         return headers;
     }
+
 }

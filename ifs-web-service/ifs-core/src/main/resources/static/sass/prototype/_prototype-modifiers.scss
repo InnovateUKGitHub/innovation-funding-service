@@ -64,6 +64,26 @@ table{
 	}
 }
 
+/*--- Table overflows for wide tables with fixed columns ---*/
+
+.table-overflow-fixed-cols{
+	border: 1px solid red;
+	overflow-x:scroll;
+    overflow-y:visible;
+    width:100%;
+    margin-left: 240px;
+
+	.fixed{
+		position: fixed;
+	    left: 5px;
+	    background: red;
+	}
+
+
+}
+
+
+
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
@@ -74,6 +94,27 @@ table{
 		@include media-down(tablet){
 			min-width: 90%;
 		}
+
+		.phase-banner,
+		.sub-header,
+		.hgroup,
+		.centralise,
+		.user-feedback,
+		.inline-nav{
+			@extend %site-width-container;
+  			@extend %contain-floats;
+  			box-sizing: border-box;
+		}
+
+		.inline-nav{
+			margin-bottom: 30px;
+		}
+
+		.user-feedback{
+			margin-top: 30px;
+		}
+
+
 	}
 }
 

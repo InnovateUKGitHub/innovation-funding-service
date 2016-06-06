@@ -1,18 +1,13 @@
 package com.worth.ifs.application.transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.springframework.data.domain.Sort.Direction.ASC;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
@@ -22,14 +17,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 
-import com.google.common.collect.Lists;
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.commons.service.ServiceResult;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
@@ -379,6 +378,24 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 		
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(resource, result.getSuccessObject());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void findByCompetitionFeedbackRequiredApplications() throws Exception {
+
+		Page<Application> page = mock(Page.class);
+
+		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
+		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+		
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(Arrays.asList(3L,4L)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());

@@ -90,17 +90,17 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, List<Invite> invites) {
+    public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<Invite> invites) {
         return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(Collectors.toList());
     }
 
-    private ServiceResult<Notification> processCollaboratorInvite(String baseUrl, Invite invite) {
+    private ServiceResult<Void> processCollaboratorInvite(String baseUrl, Invite invite) {
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
         validator.validate(invite, errors);
 
         if(errors.hasErrors()){
             errors.getFieldErrors().stream().peek(e -> LOG.debug(String.format("Field error: %s ", e.getField())));
-            ServiceResult<Notification> inviteResult = serviceFailure(internalServerErrorError("Validation errors"));
+            ServiceResult<Void> inviteResult = serviceFailure(internalServerErrorError("Validation errors"));
 
             inviteResult.handleSuccessOrFailure(
                     failure -> handleInviteError(invite, failure),
@@ -115,7 +115,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             invite.generateHash();
             inviteRepository.save(invite);
 
-            ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
+            ServiceResult<Void> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
 
             inviteResult.handleSuccessOrFailure(
                     failure -> handleInviteError(invite, failure),
@@ -142,7 +142,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
+    public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
@@ -277,7 +277,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private InviteResultsResource sendInvites(List<Invite> invites) {
-        List<ServiceResult<Notification>> results = inviteCollaborators(webBaseUrl, invites);
+        List<ServiceResult<Void>> results = inviteCollaborators(webBaseUrl, invites);
 
         long failures = results.stream().filter(BaseEitherBackedResult::isFailure).count();
         long successes = results.stream().filter(BaseEitherBackedResult::isSuccess).count();

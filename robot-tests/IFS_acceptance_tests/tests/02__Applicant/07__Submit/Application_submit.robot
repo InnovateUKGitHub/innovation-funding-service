@@ -14,6 +14,8 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...
 ...               INFUND-1887 As the Service Delivery Manager, I want to send an email notification to an applicant once they have successfully submitted a completed application so they have confidence their application has been received by Innovate UK
 ...
+...               INFUND-3107 When clicking the "X", the form submits and doesn't cancel the action when using a modal popup
+...
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
@@ -47,7 +49,7 @@ Submit button disabled when the application is incomplete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Summary   Pending
+    [Tags]    Summary    Pending
     # Pending due to INFUND-808 finance validation
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the user clicks the button/link    jQuery=button:contains("Edit")
@@ -59,13 +61,16 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    INFUND-1887
+    ...
+    ...    INFUND-3107
     [Tags]    Summary    HappyPath
-    [Setup]    Delete the emails from the test mailbox
+    [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
     Then the applicant accepts the terms and conditions
     And the applicant clicks the submit button and the clicks cancel in the submit modal
+    And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page    ${SUBMITTED_PAGE_APPLICATION_7}
     And the user should see the text in the page    Application submitted
@@ -93,7 +98,7 @@ Status of the submitted application
     And the user should see the element    Link=View application
     And the user should see the element    Link=Print Application
     When the user clicks the button/link    Link=Print Application
-    Then the user should be redirected to the correct page without the usual headers   ${SERVER}/application/7/print
+    Then the user should be redirected to the correct page without the usual headers    ${SERVER}/application/7/print
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
@@ -105,9 +110,9 @@ the applicant marks the first question as incomplete
     The user clicks the button/link    name=mark_as_incomplete
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
-    Wait Until Element Is Enabled     jQuery=.button:contains("Submit application")
-    the user clicks the button/link   jQuery=.button:contains("Submit application")
-    the user clicks the button/link   jquery=button:contains("Cancel")
+    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    the user clicks the button/link    jQuery=.button:contains("Submit application")
+    the user clicks the button/link    jquery=button:contains("Cancel")
 
 The user can check that the sections are read only
     the user navigates to the page    ${PUBLIC_DESCRIPTION_APPLICATION_7}
@@ -148,3 +153,8 @@ the applicant marks the first question as complete
     focus    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    Inputting text...
     The user clicks the button/link    jQuery=button:contains("Mark as complete")
+
+the applicant clicks the submit and then clicks the "close button" in the modal
+    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    the user clicks the button/link    jQuery=.button:contains("Submit application")
+    the user clicks the button/link    jQuery=button:contains("X")

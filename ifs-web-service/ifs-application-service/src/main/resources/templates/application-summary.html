@@ -36,7 +36,7 @@
       <div th:include="fragments/application :: application-summary" th:remove="tag"/>
     </form>
 
-    <div th:unless="${currentCompetition.isOpen()}">
+    <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">
         <div class="warning-alert">
             This competition has already closed, you are no longer able to submit your application.
         </div>

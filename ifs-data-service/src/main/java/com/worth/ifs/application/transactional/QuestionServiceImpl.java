@@ -10,17 +10,21 @@ import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.validator.util.ValidationUtil;
+import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -32,14 +36,13 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
-import static org.hibernate.jpa.internal.QueryImpl.LOG;
 
 /**
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
 public class QuestionServiceImpl extends BaseTransactionalService implements QuestionService {
-
+    private static final Log LOG = LogFactory.getLog(QuestionServiceImpl.class);
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
@@ -58,22 +61,19 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Autowired
     private QuestionMapper questionMapper;
 
-    @Autowired
-    private ValidationUtil validationUtil;
-
     @Override
     public ServiceResult<QuestionResource> getQuestionById(final Long id) {
         return getQuestionResource(id);
     }
 
     @Override
-    public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
+    public ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
                                               final Long markedAsCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
     }
 
     @Override
-    public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
+    public ServiceResult<Void> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                 final Long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false);
     }
@@ -273,29 +273,32 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
 
-    private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
+    private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
         return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
-            //validationUtil.isQuestionValid(question, application, processRoleId); or somethin like
-           //   List<ValidationMessages> questionIsValid = validationUtil.isSectionValid(markedAsCompleteBy.getId(), question.getSection (), application);
-            List<ValidationMessages> questionIsValid2 = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
+            QuestionStatus questionStatus = null;
 
-            QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
+            if (question.hasMultipleStatuses()) {
+                //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
+                List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
+                Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
+                        .map(m -> getQuestionStatusByMarkedAsCompleteId(question, applicationId, m.getId()))
+                        .filter(m -> m != null)
+                        .findFirst();
+                questionStatus = optionalQuestionStatus.orElse(null);
+            } else {
+                questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
+            }
+
             if (questionStatus == null) {
                 questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
             } else if (markAsComplete) {
-                if (questionIsValid2.isEmpty()){
-                    questionStatus.markAsComplete();
-                }
-                else {
-                    LOG.debug("Question is invalid  " + questionIsValid2.size());
-                }
-
+                questionStatus.markAsComplete();
             } else {
                 questionStatus.markAsInComplete();
             }
             questionStatusRepository.save(questionStatus);
-            return serviceSuccess(questionIsValid2);
+            return serviceSuccess();
         });
     }
 

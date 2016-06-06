@@ -20,13 +20,10 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/user";
-    private static final String processRolesUrl = "/processroles";
 
     @Override
     protected UserRestServiceImpl registerRestServiceUnderTest() {
         UserRestServiceImpl userRestService = new UserRestServiceImpl();
-        userRestService.setUserRestUrl(usersUrl);
-        userRestService.setProcessRoleRestUrl(processRolesUrl);
         return userRestService;
     }
 
@@ -104,5 +101,14 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         ).getSuccessObject();
 
         assertEquals(userResource, receivedResource);
+    }
+
+    @Test
+    public void resendEmailVerificationNotification() {
+        final String emailAddress = "sample@me.com";
+
+        setupPutWithRestResultAnonymousExpectations(usersUrl + "/resendEmailVerificationNotification/" + emailAddress + "/", null, OK);
+        final RestResult<Void> result = service.resendEmailVerificationNotification(emailAddress);
+        assertTrue(result.isSuccess());
     }
 }
