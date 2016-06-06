@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class CompetitionSetupSectionStatus {
+public class CompetitionSetupCompletedSection {
     @Id
     @GeneratedValue
     private Long id;
@@ -15,7 +15,6 @@ public class CompetitionSetupSectionStatus {
     CompetitionSetupSection competitionSetupSection;
     @ManyToOne
     Competition competition;
-    Boolean finished = Boolean.FALSE;
 
     public Long getId() {
         return id;
@@ -41,12 +40,5 @@ public class CompetitionSetupSectionStatus {
         this.competition = competition;
     }
 
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
 }
 

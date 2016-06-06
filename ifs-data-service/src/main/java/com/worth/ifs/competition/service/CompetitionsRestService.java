@@ -2,6 +2,7 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 
 import java.util.List;
@@ -13,8 +14,7 @@ import java.util.List;
 public interface CompetitionsRestService {
     RestResult<List<CompetitionResource>> getAll();
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);
-
     RestResult<List<CompetitionSetupSectionResource>> getSetupSections();
-
+    RestResult<List<CompetitionSetupCompletedSectionResource>> getCompletedSetupSections(Long competitionId);
     RestResult<CompetitionResource> create();
 }

@@ -3,8 +3,8 @@ package com.worth.ifs.competition.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -90,7 +90,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionsStatuses(Long competitionId) {
+        public ServiceResult<List<CompetitionSetupCompletedSectionResource>> findAllCompetitionSectionsStatuses(Long competitionId) {
             return null;
         }
 

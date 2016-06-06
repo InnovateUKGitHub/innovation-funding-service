@@ -1,6 +1,6 @@
 package com.worth.ifs.competition.repository;
 
-import com.worth.ifs.competition.domain.CompetitionSetupSectionStatus;
+import com.worth.ifs.competition.domain.CompetitionSetupCompletedSection;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionSetupSectionStatusRepository extends CrudRepository<CompetitionSetupSectionStatus, Long> {
-    List<CompetitionSetupSectionStatus> findByCompetitionId(Long id);
+public interface CompetitionSetupCompletedSectionRepository extends CrudRepository<CompetitionSetupCompletedSection, Long> {
+    List<CompetitionSetupCompletedSection> findByCompetitionId(Long id);
 
 }

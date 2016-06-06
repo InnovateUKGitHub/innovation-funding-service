@@ -4,6 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,8 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -22,10 +22,9 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competit
 @Service
 public class CompetitionsRestServiceImpl extends BaseRestService implements CompetitionsRestService {
 
-    private String competitionsRestURL = "/competition";
-
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(CompetitionsRestServiceImpl.class);
+    private String competitionsRestURL = "/competition";
 
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
@@ -39,10 +38,13 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
     @Override
     public RestResult<List<CompetitionSetupSectionResource>> getSetupSections() {
-        return getWithRestResult(competitionsRestURL + "/sectionStatus/getAll" , competitionSetupSectionResourceListType());
+        return getWithRestResult(competitionsRestURL + "/sections/getAll", competitionSetupSectionResourceListType());
     }
 
-
+    @Override
+    public RestResult<List<CompetitionSetupCompletedSectionResource>> getCompletedSetupSections(Long competitionId) {
+        return getWithRestResult(String.format("%s/sectionStatus/find/%d", competitionsRestURL, competitionId), competitionSetupCompletedSectionResourceListType());
+    }
 
     @Override
     public RestResult<CompetitionResource> create() {

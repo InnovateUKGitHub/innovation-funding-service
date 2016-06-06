@@ -3,8 +3,8 @@ package com.worth.ifs.competition.controller;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ import static org.junit.Assert.assertTrue;
 public class CompetitionControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionController> {
 
 
-    private static final Long COMPETITION_ID = 1L;
     public static final String COMPETITION_NAME_UPDATED = "Competition name updated";
     public static final int INNOVATION_SECTOR_ID = 1;
     public static final String INNOVATION_SECTOR_NAME = "Health and life sciences";
     public static final int INNOVATION_AREA_ID = 9;
     public static final String INNOVATION_AREA_NAME = "Agriculture and food";
     public static final String EXISTING_COMPETITION_NAME = "Connected digital additive manufacturing";
+    private static final Long COMPETITION_ID = 1L;
 
     @Override
     @Autowired
@@ -48,7 +48,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testGetAllCompetitions() throws Exception {
-        List<CompetitionResource> competitions = getAllCompetitions(1);
+        List<CompetitionResource> competitions = getAllCompetitions(2);
         checkExistingCompetition(competitions.get(0));
     }
 
@@ -66,10 +66,10 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testCreateCompetition() throws Exception {
-        getAllCompetitions(1);
+        getAllCompetitions(2);
         createNewCompetition();
 
-        int expectedCompetitionCount = 2;
+        int expectedCompetitionCount = 3;
         List<CompetitionResource> competitions = getAllCompetitions(expectedCompetitionCount);
 
         checkExistingCompetition(competitions.get(0));
@@ -87,19 +87,19 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testUpdateCompetition() throws Exception {
-        getAllCompetitions(1);
+        getAllCompetitions(2);
 
         // Create new competition
         CompetitionResource competition = createNewCompetition();
 
-        getAllCompetitions(2);
+        getAllCompetitions(3);
 
         // Update competition
         competition.setName(COMPETITION_NAME_UPDATED);
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
 
-        getAllCompetitions(2);
+        getAllCompetitions(3);
 
         CompetitionResource savedCompetition = saveResult.getSuccessObject();
         assertEquals(COMPETITION_NAME_UPDATED, savedCompetition.getName());
@@ -108,12 +108,12 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testUpdateCompetitionCategories() throws Exception {
-        getAllCompetitions(1);
+        getAllCompetitions(2);
 
         // Create new competition
         CompetitionResource competition = createNewCompetition();
 
-        getAllCompetitions(2);
+        getAllCompetitions(3);
 
         // Update competition
         competition.setName(COMPETITION_NAME_UPDATED);
@@ -124,7 +124,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
 
-        getAllCompetitions(2);
+        getAllCompetitions(3);
 
         CompetitionResource savedCompetition = saveResult.getSuccessObject();
         checkUpdatedCompetitionCategories(savedCompetition);
@@ -133,12 +133,12 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testCompetitionSetupSectionStatus() throws Exception {
-        getAllCompetitions(1);
+        getAllCompetitions(2);
 
         // Create new competition
         CompetitionResource competition = createNewCompetition();
 
-        RestResult<List<CompetitionSetupSectionStatusResource>> statusses = controller.findAllCompetitionSection(competition.getId());
+        RestResult<List<CompetitionSetupCompletedSectionResource>> statusses = controller.findAllCompetitionSection(competition.getId());
         assertTrue(statusses.isSuccess());
         assertTrue(statusses.getSuccessObject().isEmpty());
     }
@@ -157,6 +157,23 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals("Initial details", sections.get(0).getName());
         assertEquals("Finance", sections.get(6).getName());
     }
+
+    @Rollback
+    @Test
+    public void testCompetitionCompletedSections() throws Exception {
+        Long competitionId = 7L;
+        RestResult<List<CompetitionSetupCompletedSectionResource>> sectionsResult = controller.findAllCompetitionSection(competitionId);
+        assertTrue(sectionsResult.isSuccess());
+        List<CompetitionSetupCompletedSectionResource> sections = sectionsResult.getSuccessObject();
+
+        // Check if all the sections are here.
+        assertEquals(2L, (long) sections.size());
+
+        // Test ordering.
+        assertEquals(2, (long) sections.get(0).getCompetitionSetupSection());
+        assertEquals(3, (long) sections.get(1).getCompetitionSetupSection());
+    }
+
 
     private CompetitionResource createNewCompetition() {
         RestResult<CompetitionResource> competitionsResult = controller.create();

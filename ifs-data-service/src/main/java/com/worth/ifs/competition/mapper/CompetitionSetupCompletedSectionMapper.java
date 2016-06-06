@@ -2,8 +2,8 @@ package com.worth.ifs.competition.mapper;
 
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
-import com.worth.ifs.competition.domain.CompetitionSetupSectionStatus;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
+import com.worth.ifs.competition.domain.CompetitionSetupCompletedSection;
+import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
@@ -13,9 +13,9 @@ import org.mapstruct.Mapper;
             CompetitionSetupSectionMapper.class
     }
 )
-public abstract class CompetitionSetupSectionStatusMapper extends BaseMapper<CompetitionSetupSectionStatus, CompetitionSetupSectionStatusResource, Long> {
+public abstract class CompetitionSetupCompletedSectionMapper extends BaseMapper<CompetitionSetupCompletedSection, CompetitionSetupCompletedSectionResource, Long> {
 
-    public Long mapCompetitionSetupSectionStatusToId(CompetitionSetupSectionStatus object) {
+    public Long mapCompetitionSetupCompletedSectionToId(CompetitionSetupCompletedSection object) {
         if (object == null) {
             return null;
         }
