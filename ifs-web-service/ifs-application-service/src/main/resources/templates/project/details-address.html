@@ -14,7 +14,7 @@
 	<!-- <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" th:remove="tag" /> -->
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
-	<form action="#" th:object="${projectLocationForm}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+	<form action="#" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
 
 		<fieldset>
 
@@ -26,7 +26,7 @@
 
 			<p>We will assign a Monitoring Officer who will visit your project at this address.</p>
 
-			<div th:include="project/fragments :: select-address" th:with="form=${projectLocationForm}" th:remove="tag"/>
+			<div th:include="project/fragments :: select-address" th:with="form=${form}" th:remove="tag"/>
 
 		</fieldset>
 
