@@ -22,12 +22,11 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTest<FormInputResponseRestServiceImpl> {
 
-    private static final String formInputResponseRestURL = "/forminputresponses";
+    private static final String formInputResponseRestURL = "/forminputresponse";
 
     @Override
     protected FormInputResponseRestServiceImpl registerRestServiceUnderTest() {
         FormInputResponseRestServiceImpl formInputResponseService = new FormInputResponseRestServiceImpl();
-        formInputResponseService.formInputResponseRestURL = formInputResponseRestURL;
         return formInputResponseService;
     }
 

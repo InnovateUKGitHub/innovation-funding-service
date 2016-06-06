@@ -3,7 +3,6 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +16,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 @Service
 public class QuestionStatusRestServiceImpl extends BaseRestService implements QuestionStatusRestService {
 
-    @Value("${ifs.data.service.rest.questionStatus}")
-    String questionStatusRestURL;
+    private String questionStatusRestURL = "/questionStatus";
 
     @Override
     public RestResult<List<QuestionStatusResource>> findQuestionStatusesByQuestionAndApplicationId(final Long questionId, final Long applicationId) {

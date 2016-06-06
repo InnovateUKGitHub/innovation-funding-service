@@ -15,8 +15,7 @@ import com.worth.ifs.commons.service.BaseRestService;
 @Service
 public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService implements ApplicationFundingDecisionRestService {
 
-	@Value("${ifs.data.service.rest.applicationFundingDecision}")
-    private String applicationFundingDecisionRestURL;
+    private String applicationFundingDecisionRestURL = "/applicationfunding";
 
 	@Override
 	public RestResult<Void> makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {

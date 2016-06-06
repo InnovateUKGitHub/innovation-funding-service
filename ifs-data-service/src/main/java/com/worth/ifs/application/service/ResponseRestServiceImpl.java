@@ -4,7 +4,6 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +19,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.response
 @Service
 public class ResponseRestServiceImpl extends BaseRestService implements ResponseRestService {
 
-    @Value("${ifs.data.service.rest.response}")
-    String responseRestURL;
+    private String responseRestURL = "/response";
 
     @Override
     public RestResult<List<ResponseResource>> getResponsesByApplicationId(Long applicationId) {
