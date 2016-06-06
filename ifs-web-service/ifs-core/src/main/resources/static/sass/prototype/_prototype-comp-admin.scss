@@ -155,6 +155,73 @@ table{
 
 }
 
+/*----- Flex table container to allow static columns on wide tables ----*/
+
+.flex-table{
+	display: flex; 
+	position: relative;
+		
+	.flex-left{
+		flex: 0 0 270px;
+		border-right: 1px solid #bfc1c3;
+		margin-right: 5px;
+	}
+	.flex-middle{ 
+		overflow: auto;
+		flex: 1 100%;
+	}
+	.flex-right{
+		flex: 0 0 300px;
+	}
+
+	/* add to table cells to fix */
+
+	.fix-left{
+		position: absolute;
+		width: 270px;
+		left: 0;
+		padding: 1.3em 0;
+	}
+
+	.fix-right2{
+		position: absolute;
+		width: 150px;
+		right: 150px;
+		padding: 1.3em 0;
+	}
+	
+	.fix-right{
+		position: absolute;
+		width: 150px;
+		right: 0;
+		padding: 1.3em 0;
+	}
+
+	@include media-down(tablet) {
+		display: block;
+		position: static;
+		width: 90%;
+		overflow: auto;
+		padding: 0;
+		margin: 0 auto;
+
+		.flex-left,
+		.flex-middle,
+		.flex-right{
+			flex: none;
+		}
+
+		.fix-left,
+		.fix-middle,
+		.fix-right,
+		.fix-right2{
+			position: static;
+			width: auto;
+		}
+	}
+
+}
+
 
 /*----- Forecast table ----*/
 
@@ -162,10 +229,15 @@ table{
 	
 	margin-bottom: 2em;
 
+	th, td{
+		box-sizing: border-box;
+		height: 60px;
+	}
+
 	input{
 		width: 100%;
 		text-align: right;
-		min-width: 6em; 
+		min-width: 4em; 
 	}
 
 	tbody{
@@ -183,6 +255,11 @@ table{
 		}
 	}
 	tfoot{
+		
+		.total{
+			border-top: 3px solid black;
+		}
+
 		td{
 			text-align: right;
 
@@ -194,6 +271,13 @@ table{
 				text-align: left;
 			}
 		}
+		.fix-left,
+		.fix-right,
+		.fix-right2{
+			border-top: 3px solid black;
+			margin-top: -2px;
+		}
+
 	}
 	thead{
 		th{
@@ -241,8 +325,6 @@ table{
 		padding-left: 0.625em;
 		padding-right: 0.625em;
 		font-weight: bold;
-		border-right: 12px solid $white;
-
 		&.eligible{
 			background: $grey-4;
 		}
@@ -250,11 +332,14 @@ table{
 
 	tr{
 		&.error-in-row{
-			@extend .warning-alert;
+
 			background-position: 4px 50%;
 
 			th{
-				padding-left: 28px;
+				@extend .warning-alert;
+				background-position: 10px 50%;
+				padding-left: 40px;
+				margin-top: 0;
 			}
 
 			td{
@@ -270,6 +355,14 @@ table{
 					}
 				}
 
+			}
+		}
+	}
+
+	tfoot{
+		tr.error-in-row{
+			th{
+				margin-top: -2px; 
 			}
 		}
 	}

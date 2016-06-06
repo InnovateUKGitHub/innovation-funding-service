@@ -29,6 +29,7 @@ IFS.financeSpecifics = (function(){
           s = this.settings;
           IFS.financeSpecifics.initFunderOrgSizeFeedback();
           IFS.financeSpecifics.initAdministrationCostTotal();
+          IFS.financeSpecifics.initOtherFunding();
       },
       initAdministrationCostTotal : function(){
         //if the radio button % labour changes,
@@ -92,6 +93,14 @@ IFS.financeSpecifics = (function(){
                   }, 1000);
 
             }
+        });
+      },
+      initOtherFunding : function(){
+        //make sure that the total gets updated on pressing yes, for more info INFUND-3196
+        jQuery("#otherFundingShowHideToggle").on('change','[data-target] input[type="radio"]',function(){
+            setTimeout(function(){
+              jQuery('[id*=fundingAmount]').trigger('updateFinances');              
+            },0);
         });
       }
     };

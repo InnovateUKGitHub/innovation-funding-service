@@ -20,13 +20,10 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/user";
-    private static final String processRolesUrl = "/processroles";
 
     @Override
     protected UserRestServiceImpl registerRestServiceUnderTest() {
         UserRestServiceImpl userRestService = new UserRestServiceImpl();
-        userRestService.setUserRestUrl(usersUrl);
-        userRestService.setProcessRoleRestUrl(processRolesUrl);
         return userRestService;
     }
 
