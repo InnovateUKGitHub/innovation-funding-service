@@ -10,9 +10,8 @@
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<!-- <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" th:remove="tag" /> -->
-  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectNumber})}"  th:remove="tag"></div>
 
 	<form action="#" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
 
