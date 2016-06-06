@@ -125,8 +125,8 @@ public class QuestionModelPopulator {
 
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
         Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
-        Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, application.getId(), questionStatuses, userId);
-        boolean allReadOnly = completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId());
+        Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
+        boolean allReadOnly = questionStatuses.size() > 0  && (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
 
         model.addAttribute("markedAsComplete", completedDetails);
         model.addAttribute("allReadOnly", allReadOnly);
@@ -295,7 +295,7 @@ public class QuestionModelPopulator {
     }
 
 
-    private Set<Long> getAssigneeQuestions(QuestionResource question, Long applicationId, List<QuestionStatusResource> questionStatuses, Long userId) {
+    private Set<Long> getAssigneeQuestions(QuestionResource question, List<QuestionStatusResource> questionStatuses, Long userId) {
         Set<Long> assigned = new HashSet<Long>();
 
         if(!question.getMultipleStatuses()) {
