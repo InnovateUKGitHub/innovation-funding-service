@@ -59,6 +59,7 @@ public class ProjectDetailsController {
     private static final String ADDRESS_USE_ADD = "address-add-project";
 
     public static final String PROJECT_LOCATION_FORM = "projectLocationForm";
+    public static final String PROJECT_START_DATE_FORM = "form";
 
     private static final String SELECTED_POSTCODE = "selectedPostcode";
 
@@ -119,7 +120,7 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsStartDateForm form) {
+                                @ModelAttribute(PROJECT_START_DATE_FORM) ProjectDetailsStartDateForm form) {
     	
     	ProjectResource project = projectService.getById(projectId);
     	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
@@ -130,7 +131,7 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsStartDateForm form,
+                                  @ModelAttribute(PROJECT_START_DATE_FORM) ProjectDetailsStartDateForm form,
                                   Model model,
                                   BindingResult bindingResult) {
 
@@ -182,7 +183,7 @@ public class ProjectDetailsController {
         return "project/details-address";
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
     public String updateAddress(@PathVariable("projectId") final Long projectId,
                                 @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
                                 Model model,
@@ -215,7 +216,7 @@ public class ProjectDetailsController {
         return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewAddress(model, projectId, request, form));
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
                                 HttpServletResponse response) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
@@ -224,7 +225,7 @@ public class ProjectDetailsController {
         return "project/details-address";
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", params = SELECT_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = RequestMethod.POST)
     public String selectAddress(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
                                 HttpServletResponse response) {
         form.getAddressForm().setSelectedPostcode(null);
@@ -232,7 +233,7 @@ public class ProjectDetailsController {
         return "project/details-address";
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddress(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, HttpServletResponse response) {
         form.setAddressForm(new AddressForm());
         form.getAddressForm().setManualAddress(true);

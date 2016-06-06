@@ -4,7 +4,6 @@ import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,8 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AssessorFeedbackRestServiceImpl extends BaseRestService implements AssessorFeedbackRestService {
 
-    @Value("${ifs.data.service.rest.assessorfeedback}")
-    private String restUrl;
+    private String restUrl = "/assessorfeedback";
 
     @Override
     public RestResult<AssessorFeedbackResource> findOne(Long id) {

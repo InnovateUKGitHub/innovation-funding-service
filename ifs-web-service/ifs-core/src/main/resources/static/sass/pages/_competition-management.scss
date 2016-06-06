@@ -33,20 +33,20 @@
   padding-bottom:0;
 }
 
-#publish-funding-decision {
-	display: none;
-	white-space: nowrap;
-}
-
-#publish-assessor-feedback {
-    display: none;
-    white-space: nowrap;
+.js-enabled #save-funding-decision {
+  display:none;
 }
 
 .funding-decision-save-info {
     font-size: 11px;
 }
 
+@media (min-width: 1200px){
+    .info-area .button,
+    .info-area .button-secondary {
+        display:block;
+    }
+}
 @media(max-width: 1200px){
   .competition-data .column-fifth,
   .competition-data .column-four-fifth {

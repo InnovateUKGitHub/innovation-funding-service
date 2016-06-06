@@ -204,12 +204,16 @@ p.subtitle {
 	margin: 0 $gutter-half $gutter-half 0;
 	padding: em(10) em(15) em(5) em(15);
 	vertical-align: top;
+
+}
+
+.button,
+.button-secondary{
 	@include media (mobile) {
 		width: 100%;
 		text-align: center;
 	}
 }
-
 
 .questions-dl {
 	 padding-left: 20px;

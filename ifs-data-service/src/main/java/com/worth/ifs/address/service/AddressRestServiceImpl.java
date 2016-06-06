@@ -6,7 +6,6 @@ import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import com.worth.ifs.address.resource.AddressResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +14,7 @@ import java.util.List;
 public class AddressRestServiceImpl extends BaseRestService implements AddressRestService {
     private static final Log LOG = LogFactory.getLog(AddressRestServiceImpl.class);
 
-    @Value("${ifs.data.service.rest.address}")
-    String addressRestUrl;
+    private String addressRestUrl = "/address";
 
     @Override
     public RestResult<List<AddressResource>> doLookup(String lookup) {

@@ -21,7 +21,6 @@ public class CostFieldRestServiceMocksTest extends BaseRestServiceUnitTest<CostF
     @Override
     protected CostFieldRestServiceImpl registerRestServiceUnderTest() {
         CostFieldRestServiceImpl costFieldService = new CostFieldRestServiceImpl();
-        costFieldService.costFieldRestURL = costFieldRestURL;
         return costFieldService;
     }
 

@@ -12,7 +12,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +26,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsSet
 @Service
 public class SectionRestServiceImpl extends BaseRestService implements SectionRestService {
 
-    @Value("${ifs.data.service.rest.section}")
-    String sectionRestURL;
+    private String sectionRestURL = "/section";
 
     @Override
     public RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
