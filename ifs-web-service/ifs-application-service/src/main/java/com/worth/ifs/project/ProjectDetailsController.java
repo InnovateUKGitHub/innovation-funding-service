@@ -31,7 +31,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -142,43 +145,7 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
     public String viewAddress(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request,
                               @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form) {
-        form = getFormDataFromCookie(form, model, request);
-
-        ProjectResource project = projectService.getById(projectId);
-        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
-        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
-        List<Long> existingAddresses = new ArrayList<>();
-        Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, AddressType.REGISTERED);
-        if(registeredAddress.isPresent()){
-            AddressResource addressResource = registeredAddress.get().getAddress();
-            projectDetailsAddressViewModel.setRegisteredAddress(addressResource);
-            existingAddresses.add(addressResource.getId());
-            if(addressResource.getId().equals(project.getAddress())){
-                form.setProjectAddressGroup(ADDRESS_USE_ORG);
-            }
-        }
-
-        Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, AddressType.OPERATING);
-        if(operatingAddress.isPresent()){
-            AddressResource addressResource = operatingAddress.get().getAddress();
-            projectDetailsAddressViewModel.setOperatingAddress(operatingAddress.get().getAddress());
-            existingAddresses.add(addressResource.getId());
-            if(addressResource.getId().equals(project.getAddress())){
-                form.setProjectAddressGroup(ADDRESS_USE_OP);
-            }
-        }
-
-        if(project.getAddress() != null && !existingAddresses.contains(project.getAddress())){
-            AddressResource addressResource = addressService.getById(project.getAddress()).getSuccessObjectOrThrowException();
-            projectDetailsAddressViewModel.setProjectAddress(addressResource);
-            if(addressResource.getId().equals(project.getAddress())){
-                form.setProjectAddressGroup(ADDRESS_USE_ADD);
-            }
-        }
-
-        addAddressOptions(form);
-        addSelectedAddress(form);
-
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = updateModel(form, model, request, projectId);
         model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
     }
@@ -234,10 +201,15 @@ public class ProjectDetailsController {
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
-    public String manualAddress(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, HttpServletResponse response) {
-        form.setAddressForm(new AddressForm());
-        form.getAddressForm().setManualAddress(true);
+    public String manualAddress(Model model, HttpServletRequest request, HttpServletResponse response,
+                                @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
+                                @PathVariable("projectId") Long projectId) {
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = updateModel(form, model, request, projectId);
+        AddressForm addressForm = form.getAddressForm();
+        addressForm.setManualAddress(true);
+        //form.setAddressForm(addressForm);
         CookieUtil.saveToCookie(response, PROJECT_LOCATION_FORM, JsonUtil.getSerializedObject(form));
+        model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
     }
 
@@ -301,6 +273,46 @@ public class ProjectDetailsController {
 
     private String escapePathVariable(final String input){
         return UrlEscapers.urlPathSegmentEscaper().escape(input);
+    }
+
+    private ProjectDetailsAddressViewModel updateModel(ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, Model model, HttpServletRequest request, Long projectId){
+        form = getFormDataFromCookie(form, model, request);
+        ProjectResource project = projectService.getById(projectId);
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
+        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
+        List<Long> existingAddresses = new ArrayList<>();
+        Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, AddressType.REGISTERED);
+        if(registeredAddress.isPresent()){
+            AddressResource addressResource = registeredAddress.get().getAddress();
+            projectDetailsAddressViewModel.setRegisteredAddress(addressResource);
+            existingAddresses.add(addressResource.getId());
+            if(addressResource.getId().equals(project.getAddress())){
+                form.setProjectAddressGroup(ADDRESS_USE_ORG);
+            }
+        }
+
+        Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, AddressType.OPERATING);
+        if(operatingAddress.isPresent()){
+            AddressResource addressResource = operatingAddress.get().getAddress();
+            projectDetailsAddressViewModel.setOperatingAddress(operatingAddress.get().getAddress());
+            existingAddresses.add(addressResource.getId());
+            if(addressResource.getId().equals(project.getAddress())){
+                form.setProjectAddressGroup(ADDRESS_USE_OP);
+            }
+        }
+
+        if(project.getAddress() != null && !existingAddresses.contains(project.getAddress())){
+            AddressResource addressResource = addressService.getById(project.getAddress()).getSuccessObjectOrThrowException();
+            projectDetailsAddressViewModel.setProjectAddress(addressResource);
+            if(addressResource.getId().equals(project.getAddress())){
+                form.setProjectAddressGroup(ADDRESS_USE_ADD);
+            }
+        }
+
+        addAddressOptions(form);
+        addSelectedAddress(form);
+
+        return projectDetailsAddressViewModel;
     }
 
     private ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm getFormDataFromCookie(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, Model model, HttpServletRequest request) {
