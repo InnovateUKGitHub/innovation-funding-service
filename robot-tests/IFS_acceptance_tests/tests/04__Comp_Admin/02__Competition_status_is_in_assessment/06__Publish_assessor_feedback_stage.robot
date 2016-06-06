@@ -73,13 +73,12 @@ Successful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
     # pending the INFUND-2818
-    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}    Assessor feedback is now available for your successfully funded    Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
+    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}       Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
-    # pending the INFUND-2818
-    Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}    Assessor feedback is now available for your unsuccessfully funded    Following the submission of your application
+    [Tags]    Email
+    Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}      Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup
