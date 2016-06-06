@@ -84,8 +84,7 @@ Unsuccessful applicant gets feedback email
 
 The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646
-    [Tags]    Pending
-    # Pending due to INFUND-3156
+    [Tags]
     When the user should see the text in the page    Project setup
 
 *** Keywords ***
