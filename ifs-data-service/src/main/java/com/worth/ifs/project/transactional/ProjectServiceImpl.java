@@ -1,23 +1,5 @@
 package com.worth.ifs.project.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_ORGANISATION_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION;
-
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -29,6 +11,22 @@ import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -68,9 +66,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 	public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
 		 return getProject(projectId).
 				  andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-				  andOnSuccess(() -> {
-					  //TODO set something on the project here
-				  }));
+				  andOnSuccessReturnVoid(processRole -> {int i = 0;}));
 	}
 
     @Override
@@ -92,15 +88,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+    private ServiceResult<ProcessRole> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
     	Application application = applicationRepository.findOne(project.getId());
     	List<ProcessRole> applicationProcessRoles = application.getProcessRoles();
+
+        List<ProcessRole> financeProcessRoles = simpleFilter(applicationProcessRoles,
+                pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
     	
-    	boolean present = applicationProcessRoles.stream()
-    			.anyMatch(pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
-    	
-    	if(present) {
-    		return serviceSuccess();
+    	if (!financeProcessRoles.isEmpty()) {
+    		return getOnlyElementOrFail(financeProcessRoles);
     	} else {
     		return serviceFailure(new Error(PROJECT_ORGANISATION_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
     	}

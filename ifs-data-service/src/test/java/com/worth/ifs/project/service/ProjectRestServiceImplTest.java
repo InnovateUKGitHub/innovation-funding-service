@@ -1,15 +1,15 @@
 package com.worth.ifs.project.service;
 
-import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.springframework.http.HttpStatus;
-
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.resource.ProjectResource;
+import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectRestServiceImpl> {
     private static final String projectRestURL = "/project";
@@ -17,7 +17,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Override
     protected ProjectRestServiceImpl registerRestServiceUnderTest() {
     	ProjectRestServiceImpl projectService = new ProjectRestServiceImpl();
-    	projectService.projectRestURL = projectRestURL;
+    	ReflectionTestUtils.setField(projectService, "projectRestURL", projectRestURL);
         return projectService;
     }
 
