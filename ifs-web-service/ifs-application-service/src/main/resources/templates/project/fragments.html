@@ -6,38 +6,80 @@
     <fieldset>
         <legend class="visuallyhidden">Operating address</legend>
         <div class="form-block" th:if="${model.registeredAddress}">
-            <label class="block-label" for="address-use-org">
+            <label class="block-label" for="address-use-org" data-target="registeredAddress">
                 <input id="address-use-org" type="radio" name="project-address-group" value="address-use-org" th:field="*{projectAddressGroup}"/>
                 Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
             </label>
         </div>
-        <div class="form-block" th:if="${model.operatingAddress}">
+
+        <div class="form-block" th:if="${model.operatingAddress}" data-target="operatingAddress">
             <label class="block-label" for="address-use-operating">
                 <input id="address-use-operating" type="radio" name="project-address-group" value="address-use-operating" th:field="*{projectAddressGroup}"/>
                 Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
             </label>
         </div>
+
+
         <div class="form-block">
-            <label class="block-label" for="address-add-project">
+            <label class="block-label" for="address-add-project" data-target="custom-postcode">
                 <input id="address-add-project" type="radio" name="project-address-group" value="address-add-project" th:field="*{projectAddressGroup}"/>
                 Enter an alternative project address
             </label>
         </div>
-    </fieldset> 
+    </fieldset>
 
-
-    <div id="selected-address" class="boxed extra-margin" style="display: none;">
+    <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
+        <h3 class="heading-medium no-margin-top">Confirm project location</h3>
+        <p>
+          <span th:unless="${#strings.isEmpty(model.registeredAddress?.addressLine1)}" th:remove="tag">
+            <span th:text="${model.registeredAddress?.addressLine1}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.registeredAddress?.addressLine2)}" th:remove="tag">
+            <span th:text="${model.registeredAddress?.addressLine2}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.registeredAddress?.addressLine3)}" th:remove="tag">
+            <span th:text="${model.registeredAddress?.addressLine3}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.registeredAddress?.town)}" th:remove="tag">
+            <span th:text="${model.registeredAddress?.town}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.registeredAddress?.county)}" th:remove="tag">
+            <span th:text="${model.registeredAddress?.county}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.registeredAddress?.postcode)}" th:remove="tag">
+            <span th:text="${model.registeredAddress?.postcode}" /><br/>
+          </span>
+        </p>
+    </div>
+    <div id="operatingAddress" class="boxed extra-margin" th:if="${model.operatingAddress}">
         <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
-        <p><span class="street">Street</span> <br />
-            <span class="street2"></span> <br />
-            <span class="street3"></span> <br />
-            <span class="town">Town</span><br />
-            <span class="county">County</span><br />
-            <span class="postcode">Postcode</span>
+        <p>
+          <span th:unless="${#strings.isEmpty(model.operatingAddress?.addressLine1)}" th:remove="tag">
+            <span th:text="${model.operatingAddress?.addressLine1}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.operatingAddress?.addressLine2)}" th:remove="tag">
+            <span th:text="${model.operatingAddress?.addressLine2}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.operatingAddress?.addressLine3)}" th:remove="tag">
+            <span th:text="${model.operatingAddress?.addressLine3}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.operatingAddress?.town)}" th:remove="tag">
+            <span th:text="${model.operatingAddress?.town}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.operatingAddress?.county)}" th:remove="tag">
+            <span th:text="${model.operatingAddress?.county}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.operatingAddress?.postcode)}" th:remove="tag">
+            <span th:text="${model.operatingAddress?.postcode}" /><br/>
+          </span>
         </p>
     </div>
 
-    <div th:class="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'form-group error' : 'form-group'">
+
+
+
+    <div id="custom-postcode">
+    <div class="extra-margin form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'error'">
         <label class="form-label" for="postcode-check">
             <span class="form-label-bold">Postcode</span>
                     <span th:if="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch}"  th:remove="tag">
@@ -49,7 +91,7 @@
         <div th:if='${form.addressForm.postcodeInput != ""} and ${form.addressForm.postcodeOptions.size()}==0'>No results were found</div>
     </div>
 
-    <div class="form-group" id="select-address-block" th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">
+    <div class="form-group"  th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">
         <label class="form-label" for="select-address">
             <span class="form-label-bold">Select your address</span>
         </label>
@@ -60,7 +102,7 @@
     </div>
     <button type="submit" class="buttonlink" name="manual-address">Enter address manually</button>
 
-    <fieldset id="address-details" class="extra-margin" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
+    <fieldset class="extra-margin" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
         <input type="hidden" th:field="*{addressForm.manualAddress}" />
         <legend class="visuallyhidden">Address details</legend>
         <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
@@ -118,6 +160,7 @@
             <input class="form-control" th:field="*{addressForm.selectedPostcode.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave} ? 'field-error' : ''" type="text" />
         </div>
     </fieldset>
+  </div>
 </div>
 
 </html>
