@@ -1,26 +1,5 @@
 package com.worth.ifs.project;
 
-import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
-import static java.util.Arrays.asList;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
@@ -37,6 +16,25 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -71,6 +69,7 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
+
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
@@ -83,6 +82,7 @@ public class ProjectDetailsController {
         model.addAttribute("currentOrganisation", user.getOrganisations().get(0));
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
+        model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
         return "project/detail";
     }
     
@@ -130,13 +130,8 @@ public class ProjectDetailsController {
     }
     
 	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
-		ProjectResource projectResource = projectService.getById(projectId);
-    	Future<ProcessRoleResource> processRoleResource;
-    	if(projectResource.getProjectManager() != null) {
-    		processRoleResource = processRoleService.getById(projectResource.getProjectManager());
-    	} else {
-    		processRoleResource = null;
-    	}
+
+        Future<ProcessRoleResource> processRoleResource = getProjectManagerProcessRole(projectId);
     	
         ProjectManagerForm form = new ProjectManagerForm();
         if(processRoleResource != null) {
@@ -144,8 +139,19 @@ public class ProjectDetailsController {
         }
 		return form;
 	}
-    
-	private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
+
+    private Future<ProcessRoleResource> getProjectManagerProcessRole(Long projectId) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        Future<ProcessRoleResource> processRoleResource;
+        if(projectResource.getProjectManager() != null) {
+            processRoleResource = processRoleService.getById(projectResource.getProjectManager());
+        } else {
+            processRoleResource = null;
+        }
+        return processRoleResource;
+    }
+
+    private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
 			ApplicationResource applicationResource) {
 		ProjectResource projectResource = projectService.getById(projectId);
 		

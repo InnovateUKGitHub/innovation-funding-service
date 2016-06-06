@@ -1,24 +1,5 @@
 package com.worth.ifs.project.transactional;
 
-import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
-import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -29,6 +10,22 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
+
+import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION;
+import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
+import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
@@ -89,18 +86,18 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     
     @Test
     public void testInvalidProjectManagerProvided() {
-        ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
 
+        ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
         assertFalse(result.isSuccess());
-        assertEquals(1, result.getFailure().getErrors().size());
-        assertEquals("The Project Manager must be a member of the lead partner organisation", result.getFailure().getErrors().get(0).getErrorMessage());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
     }
     
     @Test
     public void testValidProjectManagerProvided() {
-        ServiceResult<Void> result = service.setProjectManager(projectId, userId);
 
+        ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isSuccess());
+        assertEquals(processRole, project.getProjectManager());
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

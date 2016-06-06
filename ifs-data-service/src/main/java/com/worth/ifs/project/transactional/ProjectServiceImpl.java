@@ -100,7 +100,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         if(!matchingProcessRoles.isEmpty()) {
 			return getOnlyElementOrFail(matchingProcessRoles).andOnSuccess(processRole -> serviceSuccess(processRole));
 		} else {
-			return serviceFailure(new Error(PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+			return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
 		}
 	}
 

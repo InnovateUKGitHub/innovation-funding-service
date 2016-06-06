@@ -54,10 +54,10 @@
                 <td>
                     <a th:href="@{/project/{id}/details/project-manager(id=${app.getId()})}">Project manager</a>
                 </td>
-                <td id="project-manager">-</td>
+                <td id="project-manager" th:text="${projectManager?.userName}">-</td>
                 <td>
-                    <span th:if="${project.projectManager == null}" id="project-manager-status" class="no">No</span>
-                    <span th:unless="${project.projectManager == null}" id="project-manager-status" class="yes">Yes</span>
+                    <span th:if="${projectManager == null}" id="project-manager-status" class="no">No</span>
+                    <span th:unless="${projectManager == null}" id="project-manager-status" class="yes">Yes</span>
                 </td>
             </tr>
             
