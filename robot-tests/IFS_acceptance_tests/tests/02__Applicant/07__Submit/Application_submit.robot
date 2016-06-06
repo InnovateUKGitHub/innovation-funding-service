@@ -64,7 +64,7 @@ Submit flow (complete application)
     ...
     ...    INFUND-3107
     [Tags]    Summary    HappyPath
-    [Setup]    Delete the emails from the test mailbox
+    [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}

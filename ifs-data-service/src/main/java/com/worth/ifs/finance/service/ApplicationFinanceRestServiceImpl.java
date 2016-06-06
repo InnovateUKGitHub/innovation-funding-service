@@ -7,7 +7,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.controller.ApplicationFinanceController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,8 +25,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicat
 @Service
 public class ApplicationFinanceRestServiceImpl extends BaseRestService implements ApplicationFinanceRestService {
 
-    @Value("${ifs.data.service.rest.applicationfinance}")
-    String applicationFinanceRestURL;
+    private String applicationFinanceRestURL = "/applicationfinance";
 
     @Override
     public RestResult<ApplicationFinanceResource> getApplicationFinance(Long applicationId, Long organisationId) {

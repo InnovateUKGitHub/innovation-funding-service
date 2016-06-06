@@ -6,7 +6,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +20,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisa
 @Service
 public class OrganisationRestServiceImpl extends BaseRestService implements OrganisationRestService {
 
-    @Value("${ifs.data.service.rest.organisation}")
-    String organisationRestURL;
+    private String organisationRestURL = "/organisation";
 
     @Override
     public RestResult<List<OrganisationResource>> getOrganisationsByApplicationId(Long applicationId) {
