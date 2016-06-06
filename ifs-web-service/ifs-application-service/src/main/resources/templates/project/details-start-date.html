@@ -11,16 +11,17 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectNumber})}"  th:remove="tag" />
 
     <div class="page-title">
       <p class="subtitle" th:text="${model.projectNumber} + ': ' + ${model.projectName} "/>
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 
-    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+    <form  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
 
     <fieldset>
+      <h2 class="heading-medium">Target project start date</h2>
       <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate') ? 'error' : ''}">
         <legend>
           <span class="visuallyhidden">Target project start date</span>
