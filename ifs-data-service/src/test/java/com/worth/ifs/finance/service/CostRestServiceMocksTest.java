@@ -25,7 +25,6 @@ public class CostRestServiceMocksTest extends BaseRestServiceUnitTest<CostRestSe
     @Override
     protected CostRestServiceImpl registerRestServiceUnderTest() {
         CostRestServiceImpl costService = new CostRestServiceImpl();
-        costService.costRestURL = costRestURL;
         return costService;
     }
 

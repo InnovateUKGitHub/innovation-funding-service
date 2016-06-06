@@ -339,8 +339,11 @@ the user cannot see the option to upload a file on the page
     The user navigates to the page    ${url}
     the user should not see the text in the page    Upload
 
-Delete the emails from the test mailbox
+Delete the emails from both test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
 
@@ -473,3 +476,12 @@ the lead applicant invites a registered user
     And the user should see the text in the page    Application overview
     User closes the browser
     The guest user opens the browser
+
+Open mailbox and verify the content
+    [Arguments]    ${USER}        ${CONTENT}
+    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    ${EMAIL_MATCH}=         Get Matches From Email    1       ${CONTENT}
+    Should Not Be Empty     ${EMAIL_MATCH}
+    Delete All Emails
+    close mailbox

@@ -7,6 +7,8 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-2219 As a collaborator I do not want to be able to submit an application so that only the lead applicant has authority to do so
 ...
 ...               INFUND-2417 As a collaborator I want to be able to review the grant Terms and Conditions so that the lead applicant can agree to them on my behalf
+...
+...               INFUND-3016 As a collaborator I want to mark my finances as complete so the lead can progress with submitting the application.
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags
@@ -145,6 +147,19 @@ Appendices are assigned along with the question
     And the user should see the text in the page    Upload
     And the user assigns the question to the lead applicant
     And the user should not see the text in the page    Upload
+    [Teardown]    User closes the browser
+
+Lead marks finances as complete and collaborator should be able to edit them
+    [Documentation]    INFUND-3016
+    ...
+    ...    This test depends on the "Invite collaborators flow" test suite to run first
+    [Tags]    Pending
+    [Setup]    Log in as user    &{lead_applicant_credentials}
+    Given user navigates to the finances of the collaboration application
+    And the user enters the funding level
+    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+    And the user should see the text in the page    Project details
+    Then Collaborator should be able to edit finances again
 
 *** Keywords ***
 the collaborator edits the 'public description' question
@@ -167,3 +182,21 @@ the user assigns the question to the lead applicant
     the user reloads the page
     the user clicks the button/link    name=assign_question
     the user reloads the page
+
+user navigates to the finances of the collaboration application
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Invite robot test application
+    And the user clicks the button/link    link=Your finances
+
+Collaborator should be able to edit finances again
+    close browser
+    Guest user log-in    worth.email.test+inviteorg2@gmail.com    Passw0rd123
+    And user navigates to the finances of the collaboration application
+    Element should be visible    css=#cost-financegrantclaim[readonly]
+    the user clicks the button/link    jQuery=button:contains("Edit")
+    Element Should Not Be Visible    css=#cost-financegrantclaim[readonly]
+
+the user enters the funding level
+    Select Radio Button    financePosition-organisationSize    MEDIUM
+    When the user enters text to a text field    id=cost-financegrantclaim    20
+    focus    jQuery=.button:contains("Mark all as complete")

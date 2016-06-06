@@ -35,7 +35,7 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if(env.acceptsProfiles("uat", "prod")) {
+        if(isCacheResources()) {
             VersionResourceResolver versionResourceResolver = new VersionResourceResolver()
                     .addVersionStrategy(new ContentVersionStrategy(), "/**");
 
@@ -58,6 +58,15 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
                     .resourceChain(true);
         }
         super.addResourceHandlers(registry);
+    }
+
+    /**
+     * Resources are cached in every environment other than when running locally during development.
+     * @return true if resources should be cached, otherwise false.
+     */
+    private boolean isCacheResources() {
+        // All environments except for local development have an active Spring profile of "environment".
+        return env.acceptsProfiles("environment");
     }
 
     @Bean

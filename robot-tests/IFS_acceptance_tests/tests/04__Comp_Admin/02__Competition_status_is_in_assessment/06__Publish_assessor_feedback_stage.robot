@@ -1,6 +1,9 @@
 *** Settings ***
-Documentation     INFUND-2672
-Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
+Documentation     INFUND-2672 As a competition administrator I want to be able to publish the assessor feedback when ready for distribution so that all applicants can review further information to support the funding decision
+...
+...               INFUND-2608 As a lead applicant I want to receive an email to inform me when the application feedback is accessible so that I can review the assessment
+Suite Setup       Run Keywords    Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
+...               AND    Run Keyword And Ignore Error    Delete the emails from both test mailboxes
 Suite Teardown    User closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -14,8 +17,6 @@ ${assessor_feedback_competition_url}    ${server}/management/competition/3
 ${successful_application_overview}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.    # note that this will change!
-${feedback_success_email}    Pending
-${feedback_failure_email}    Pending
 
 *** Test Cases ***
 The publish feedback should be disabled
@@ -68,28 +69,27 @@ Choosing to Notify the applicants in the dialogue
     Then the user should be redirected to the correct page    ${assessor_feedback_competition_url}
     And the user should see the text in the page    Project setup
 
-Successful applicants are notified of the feedback
+Successful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
-    # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_one}    ${feedback_success_email}
+    # pending the INFUND-2818
+    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}       Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
 
-Unsuccessful applicants are notified of the feedback
+Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
-    # Pending completion of the INFUND-2608 story
-    Then the user should get a confirmation email    ${test_mailbox_two}    ${feedback_failure_email}
+    [Tags]    Email
+    Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}      Following the submission of your application
+    [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646
-    [Tags]    Pending
-    # Pending due to INFUND-3156
+    [Tags]
     When the user should see the text in the page    Project setup
 
 *** Keywords ***
 The option to publish feedback is enabled
     the user navigates to the page    ${assessor_feedback_competition_url}
-    the user should see the element    id=publish-assessor-feedback
+    the user should see the element    jQuery=.button:contains("Publish assessor feedback")
     the user should not see the element    xpath=//button[@disabled = 'disabled']
 
 The option to publish feedback is disabled
