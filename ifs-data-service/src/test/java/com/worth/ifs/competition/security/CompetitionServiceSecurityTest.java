@@ -89,7 +89,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses(Long competitionId) {
+        public ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatuses(Long competitionId) {
             return null;
         }
     }

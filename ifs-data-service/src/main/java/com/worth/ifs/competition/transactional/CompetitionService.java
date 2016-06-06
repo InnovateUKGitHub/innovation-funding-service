@@ -26,5 +26,5 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionResource>> findAll();
 
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses(Long competitionId);
+    ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatuses(Long competitionId);
 }

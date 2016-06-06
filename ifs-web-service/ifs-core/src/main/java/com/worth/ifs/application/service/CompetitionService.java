@@ -1,6 +1,8 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,4 +17,8 @@ public interface CompetitionService {
     CompetitionResource create();
 
     List<CompetitionResource> getAllCompetitions();
+
+    List<CompetitionSetupSectionResource> getCompetitionSetupSectionsByCompetitionId(long competitionId);
+
+    List<Long> getCompletedCompetitionSetupSectionStatusesByCompetitionId(long competitionId);
 }

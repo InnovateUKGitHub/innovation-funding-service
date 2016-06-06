@@ -36,7 +36,7 @@ public class CompetitionController {
 
     @RequestMapping("/sectionStatus/getAll/{id}")
     public RestResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses(@PathVariable("id") final Long id) {
-        return competitionService.findAllCompetitionSectionStatusses(id).toGetResponse();
+        return competitionService.findAllCompetitionSectionStatuses(id).toGetResponse();
     }
 
     /**

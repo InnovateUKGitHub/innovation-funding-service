@@ -1,10 +1,13 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +20,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Autowired
     CompetitionsRestService competitionsRestService;
+
 
     @Override
     public CompetitionResource getById(Long competitionId){
@@ -31,5 +35,43 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public List<CompetitionResource> getAllCompetitions() {
         return competitionsRestService.getAll().getSuccessObjectOrThrowException();
-   }
+    }
+
+    @Override
+    public List<CompetitionSetupSectionResource> getCompetitionSetupSectionsByCompetitionId(long competitionId) {
+        // TODO : Make use of RestService
+
+        List<CompetitionSetupSectionResource> competitionSetupSectionResources = new ArrayList();
+
+        CompetitionSetupSectionResource competitionSetupSection = new CompetitionSetupSectionResource();
+        competitionSetupSection.setId(1L);
+        competitionSetupSection.setName("Initial Details");
+        competitionSetupSection.setPriority(1);
+        competitionSetupSectionResources.add(competitionSetupSection);
+
+        competitionSetupSection = new CompetitionSetupSectionResource();
+        competitionSetupSection.setId(2L);
+        competitionSetupSection.setName("Additional info");
+        competitionSetupSection.setPriority(2);
+        competitionSetupSectionResources.add(competitionSetupSection);
+
+        competitionSetupSection = new CompetitionSetupSectionResource();
+        competitionSetupSection.setId(3L);
+        competitionSetupSection.setName("Eligibility");
+        competitionSetupSection.setPriority(3);
+        competitionSetupSectionResources.add(competitionSetupSection);
+
+        return competitionSetupSectionResources;
+    }
+
+    @Override
+    public List<Long> getCompletedCompetitionSetupSectionStatusesByCompetitionId(long competitionId) {
+        // TODO : Make use of RestService
+        List<Long> completedCompetitionSetupSectionStatuses = new ArrayList();
+
+        completedCompetitionSetupSectionStatuses.add(2L);
+        completedCompetitionSetupSectionStatuses.add(3L);
+
+        return completedCompetitionSetupSectionStatuses;
+    }
 }

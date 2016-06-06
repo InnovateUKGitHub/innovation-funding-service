@@ -45,7 +45,7 @@ public class CompetitionManagementController {
 	@RequestMapping("/create")
 	public String create(){
 		CompetitionResource competition = competitionService.create();
-		return String.format("redirect:/competition/setup/%s", competition.getId());
+		return String.format("redirect:/competition/setup/%s/step1", competition.getId());
 	}
 
 

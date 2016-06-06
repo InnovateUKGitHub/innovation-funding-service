@@ -104,7 +104,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatusses(Long competitionId) {
+    public ServiceResult<List<CompetitionSetupSectionStatusResource>> findAllCompetitionSectionStatuses(Long competitionId) {
         return serviceSuccess((List) competitionSetupSectionStatusMapper.mapToResource(competitionSetupSectionStatusRepository.findByCompetitionId(competitionId)));
     }
 }
