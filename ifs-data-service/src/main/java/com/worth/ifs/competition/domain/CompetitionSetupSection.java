@@ -10,6 +10,7 @@ public class CompetitionSetupSection {
     @GeneratedValue
     private Long id;
     private String name;
+    private String path;
     private Integer priority;
 
 
@@ -36,6 +37,14 @@ public class CompetitionSetupSection {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
 

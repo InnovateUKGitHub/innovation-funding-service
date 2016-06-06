@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface CompetitionSetupSectionStatusRepository extends CrudRepository<CompetitionSetupSectionStatus, Long> {
     List<CompetitionSetupSectionStatus> findByCompetitionId(Long id);
+
 }
