@@ -9,7 +9,6 @@ import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
@@ -26,8 +25,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessme
 @Service
 public class AssessmentRestServiceImpl extends BaseRestService implements AssessmentRestService {
 
-    @Value("${ifs.data.service.rest.assessment}")
-    String assessmentRestURL;
+    private String assessmentRestURL = "/assessment";
 
     @Override
     public RestResult<List<AssessmentResource>> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {

@@ -17,12 +17,11 @@ import static org.junit.Assert.assertNotNull;
  */
 public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionsRestServiceImpl> {
 
-    private static final String competitionsRestURL = "/competitions";
+    private static final String competitionsRestURL = "/competition";
 
     @Override
     protected CompetitionsRestServiceImpl registerRestServiceUnderTest() {
         CompetitionsRestServiceImpl competitionService = new CompetitionsRestServiceImpl();
-        competitionService.competitionsRestURL = competitionsRestURL;
         return competitionService;
     }
 
