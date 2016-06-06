@@ -74,11 +74,13 @@ processResources {
     filesMatching("*.properties") {
         expand project.properties
     }
-    if (project.hasProperty("profile") && project.profile == "automated") {
-        exclude '**/application.properties'
-    }
 }
 
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
 
 task cleanDeploy() {
     inputs.dir 'src/main/java'

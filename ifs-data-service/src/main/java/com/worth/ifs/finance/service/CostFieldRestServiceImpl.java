@@ -4,7 +4,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.CostFieldResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +18,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costFiel
 @Service
 public class CostFieldRestServiceImpl extends BaseRestService implements CostFieldRestService {
 
-    @Value("${ifs.data.service.rest.costfield}")
-    String costFieldRestURL;
+    private String costFieldRestURL = "/costfield";
 
     @Override
     public RestResult<List<CostFieldResource>> getCostFields() {

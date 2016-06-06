@@ -5,7 +5,6 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +19,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costItem
 @Service
 public class CostRestServiceImpl extends BaseRestService implements CostRestService {
 
-    @Value("${ifs.data.service.rest.cost}")
-    String costRestURL;
+    private String costRestURL = "/cost";
 
     @Override
     public RestResult<CostItem> add(Long applicationFinanceId, Long questionId, CostItem costItem) {

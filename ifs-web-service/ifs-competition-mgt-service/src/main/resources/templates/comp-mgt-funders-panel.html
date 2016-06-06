@@ -26,7 +26,7 @@
     <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
-    
+
   <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
 
     <div class="grid-row competition-data">
@@ -53,14 +53,16 @@
 			    </div>
 
 			</form>
- 
+
     <form method="post" action="#" id="submit-funding-decision-form" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
       <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
       <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
-      <button id="no-js-save-funding-decision" type="submit" class="button no-margin" name="action" value="save">Save</button>
-      <button id="no-js-notify-applicants" type="submit" class="button no-margin" name="action" value="notify">Notify Applicants</button>
+      <p class="alignright-button">
+        <button id="notify-applicants" type="submit" class="visuallyhidden" name="action" value="notify">Notify applicants</button>
+        <button id="save-funding-decision" type="submit" class="button button-secondary no-margin" name="action" value="save">Save</button>
+      </p>
     </form>
-    
+
   </div>
 </div>
 
