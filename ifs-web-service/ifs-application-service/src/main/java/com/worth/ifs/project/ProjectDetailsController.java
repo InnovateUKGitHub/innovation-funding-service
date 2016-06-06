@@ -183,7 +183,7 @@ public class ProjectDetailsController {
         return "project/details-address";
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
     public String updateAddress(@PathVariable("projectId") final Long projectId,
                                 @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
                                 Model model,
@@ -216,7 +216,7 @@ public class ProjectDetailsController {
         return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewAddress(model, projectId, request, form));
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
                                 HttpServletResponse response) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
@@ -225,7 +225,7 @@ public class ProjectDetailsController {
         return "project/details-address";
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", params = SELECT_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = RequestMethod.POST)
     public String selectAddress(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
                                 HttpServletResponse response) {
         form.getAddressForm().setSelectedPostcode(null);
@@ -233,7 +233,7 @@ public class ProjectDetailsController {
         return "project/details-address";
     }
 
-    @RequestMapping(value = "/{projectId}/details/address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddress(@ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, HttpServletResponse response) {
         form.setAddressForm(new AddressForm());
         form.getAddressForm().setManualAddress(true);
