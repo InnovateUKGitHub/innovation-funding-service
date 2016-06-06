@@ -7,7 +7,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.resource.UserRoleType;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,14 +24,11 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicat
 @Service
 public class ApplicationRestServiceImpl extends BaseRestService implements ApplicationRestService {
 
-    @Value("${ifs.data.service.rest.application}")
-    String applicationRestURL;
+    private String applicationRestURL = "/application";
 
-    @Value("${ifs.data.service.rest.processrole}")
-    String processRoleRestURL;
+    private String processRoleRestURL = "/processrole";
 
-    @Value("${ifs.data.service.rest.questionStatus}")
-    String questionStatusRestURL;
+    private String questionStatusRestURL = "/questionStatus";
 
     @Override
     public RestResult<ApplicationResource> getApplicationById(Long applicationId) {

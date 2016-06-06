@@ -99,9 +99,15 @@ table{
 		.sub-header,
 		.hgroup,
 		.centralise,
-		.user-feedback{
+		.user-feedback,
+		.inline-nav{
 			@extend %site-width-container;
   			@extend %contain-floats;
+  			box-sizing: border-box;
+		}
+
+		.inline-nav{
+			margin-bottom: 30px;
 		}
 
 		.user-feedback{

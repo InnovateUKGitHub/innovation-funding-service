@@ -8,7 +8,6 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -32,18 +31,10 @@ import static java.lang.String.format;
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
 
     private static final Log LOG = LogFactory.getLog(UserRestServiceImpl.class);
-    private String userRestURL;
-    private String processRoleRestURL;
 
-    @Value("${ifs.data.service.rest.user}")
-    void setUserRestUrl(String userRestURL) {
-        this.userRestURL = userRestURL;
-    }
+    private String userRestURL = "/user";
 
-    @Value("${ifs.data.service.rest.processrole}")
-    void setProcessRoleRestUrl(String processRoleRestURL) {
-        this.processRoleRestURL = processRoleRestURL;
-    }
+    private String processRoleRestURL = "/processrole";
 
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
