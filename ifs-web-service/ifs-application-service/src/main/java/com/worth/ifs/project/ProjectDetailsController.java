@@ -59,6 +59,7 @@ public class ProjectDetailsController {
     private static final String ADDRESS_USE_ADD = "address-add-project";
 
     public static final String PROJECT_LOCATION_FORM = "projectLocationForm";
+    public static final String PROJECT_START_DATE_FORM = "form";
 
     private static final String SELECTED_POSTCODE = "selectedPostcode";
 
@@ -119,7 +120,7 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsStartDateForm form) {
+                                @ModelAttribute(PROJECT_START_DATE_FORM) ProjectDetailsStartDateForm form) {
     	
     	ProjectResource project = projectService.getById(projectId);
     	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
@@ -130,7 +131,7 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute(PROJECT_LOCATION_FORM) ProjectDetailsStartDateForm form,
+                                  @ModelAttribute(PROJECT_START_DATE_FORM) ProjectDetailsStartDateForm form,
                                   Model model,
                                   BindingResult bindingResult) {
 
