@@ -24,7 +24,7 @@
       <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate') ? 'error' : ''}">
         <legend>
           <span class="visuallyhidden">Target project start date</span>
-          <div th:if="${#fields.hasErrors('projectStartDate')}">
+          <div th:if="${#fields.hasErrors('projectStartDate')}" th:remove="tag">
               <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
           </div>
         </legend>
