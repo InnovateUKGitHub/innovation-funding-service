@@ -114,12 +114,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<List<ValidationMessages>> markAsComplete(QuestionApplicationCompositeId ids, Long markedAsCompleteById) {
+        public ServiceResult<Void> markAsComplete(QuestionApplicationCompositeId ids, Long markedAsCompleteById) {
             return null;
         }
 
         @Override
-        public ServiceResult<List<ValidationMessages>> markAsInComplete(QuestionApplicationCompositeId ids, Long markedAsInCompleteById) {
+        public ServiceResult<Void> markAsInComplete(QuestionApplicationCompositeId ids, Long markedAsInCompleteById) {
             return null;
         }
 
