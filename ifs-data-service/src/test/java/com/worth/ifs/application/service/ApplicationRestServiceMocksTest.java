@@ -26,12 +26,11 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationRestServiceImpl> {
 
-    private static final String applicationRestURL = "/applications";
+    private static final String applicationRestURL = "/application";
 
     @Override
     protected ApplicationRestServiceImpl registerRestServiceUnderTest() {
         ApplicationRestServiceImpl applicationRestService = new ApplicationRestServiceImpl();
-        applicationRestService.applicationRestURL = applicationRestURL;
         return applicationRestService;
     }
 

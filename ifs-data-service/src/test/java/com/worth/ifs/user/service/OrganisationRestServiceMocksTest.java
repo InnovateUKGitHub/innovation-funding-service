@@ -22,7 +22,6 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     @Override
     protected OrganisationRestServiceImpl registerRestServiceUnderTest() {
         OrganisationRestServiceImpl userRestService = new OrganisationRestServiceImpl();
-        userRestService.organisationRestURL = organisationsUrl;
         return userRestService;
     }
 

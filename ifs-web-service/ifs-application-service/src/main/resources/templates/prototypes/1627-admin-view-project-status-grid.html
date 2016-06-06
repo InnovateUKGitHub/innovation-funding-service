@@ -103,11 +103,11 @@
 								<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
 							</div>
 
-							<div th:if="${param.stage == null}" th:unless="${param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+							<div th:if="${param.stage == null or param.stage[0] == 'level1'}" th:unless="${param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
 								<td class="status action"><a href="/prototypes/2650-review-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
 							</div>
 
-							<div th:if="${param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+							<div th:if="${param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
 								<td class="status ok"><a href="/prototypes/2650-review-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
 							</div>
 							
