@@ -9,6 +9,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
@@ -23,6 +25,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<ProjectController> {
 
@@ -78,6 +81,24 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of the project"),
+                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
+                        )
+                ));
+    }
+
+    @Test
+    public void setProjectManagerButInvalidProjectManager() throws Exception {
+        Long project1Id = 1L;
+        Long projectManagerId = 8L;
+
+        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+
+        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
+                .andExpect(status().isBadRequest())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Id of the project"),

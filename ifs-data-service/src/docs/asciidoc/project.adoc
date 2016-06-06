@@ -22,12 +22,18 @@ include::{snippets}/project/project-find-all/response-fields.adoc[]
 include::{snippets}/project/project-find-all/curl-request.adoc[]
 
 === Set project manager
-==== Request
+==== Success case
+
+===== Request
 include::{snippets}/project/set-project-manager/http-request.adoc[]
 include::{snippets}/project/set-project-manager/path-parameters.adoc[]
 
-==== Response
+===== Response
 include::{snippets}/project/set-project-manager/http-response.adoc[]
 
-==== Curl Example
+===== Curl Example
 include::{snippets}/project/set-project-manager/curl-request.adoc[]
+
+==== Failure cases
+===== Invalid project manager specified
+include::{snippets}/project/set-project-manager-but-invalid-project-manager/http-request.adoc[]
