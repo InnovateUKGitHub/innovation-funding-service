@@ -2,9 +2,8 @@ package com.worth.ifs.competition.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -53,6 +52,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         verifyNoMoreInteractions(rules);
     }
 
+    @Test
     public void testGetCompetitionById() {
 
         setLoggedInUser(null);
@@ -75,28 +75,12 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
-            return serviceSuccess(competitionResource);
-        }
-
-        @Override
-        public ServiceResult<CompetitionResource> create() {
-            return serviceSuccess(newCompetitionResource().build());
+        public void addCategories(Competition competition) {
         }
 
         @Override
         public ServiceResult<List<CompetitionResource>> findAll() {
             return serviceSuccess(newCompetitionResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSetupCompletedSectionResource>> findAllCompetitionSectionsStatuses(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections() {
-            return null;
         }
     }
 }

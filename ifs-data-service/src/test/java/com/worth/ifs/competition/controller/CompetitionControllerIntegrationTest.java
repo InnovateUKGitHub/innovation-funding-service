@@ -138,9 +138,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         // Create new competition
         CompetitionResource competition = createNewCompetition();
 
-        RestResult<List<CompetitionSetupCompletedSectionResource>> statusses = controller.findAllCompetitionSection(competition.getId());
-        assertTrue(statusses.isSuccess());
-        assertTrue(statusses.getSuccessObject().isEmpty());
+        RestResult<List<CompetitionSetupCompletedSectionResource>> statuses = controller.findAllCompetitionSection(competition.getId());
+        assertTrue(statuses.isSuccess());
+        assertTrue(statuses.getSuccessObject().isEmpty());
     }
 
     @Rollback
@@ -162,16 +162,58 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     public void testCompetitionCompletedSections() throws Exception {
         Long competitionId = 7L;
+        checkCompletedSections(competitionId);
+    }
+
+    @Rollback
+    @Test
+    public void testCompetitionCompleteSection() throws Exception {
+        Long competitionId = 7L;
+        checkCompletedSections(competitionId);
+        controller.markSectionComplete(competitionId, 4L);
+        checkCompletedSectionsAfterCompletingSection(competitionId);
+    }
+
+    @Rollback
+    @Test
+    public void testCompetitionInCompleteSection() throws Exception {
+        Long competitionId = 7L;
+        checkCompletedSections(competitionId);
+        controller.markSectionInComplete(competitionId, 3L);
+        checkCompletedSectionsAfterIncompletingSection(competitionId);
+    }
+
+    private void checkCompletedSections(Long competitionId) {
         RestResult<List<CompetitionSetupCompletedSectionResource>> sectionsResult = controller.findAllCompetitionSection(competitionId);
         assertTrue(sectionsResult.isSuccess());
         List<CompetitionSetupCompletedSectionResource> sections = sectionsResult.getSuccessObject();
-
         // Check if all the sections are here.
         assertEquals(2L, (long) sections.size());
-
         // Test ordering.
         assertEquals(2, (long) sections.get(0).getCompetitionSetupSection());
         assertEquals(3, (long) sections.get(1).getCompetitionSetupSection());
+    }
+
+    private void checkCompletedSectionsAfterCompletingSection(Long competitionId) {
+        RestResult<List<CompetitionSetupCompletedSectionResource>> sectionsResult = controller.findAllCompetitionSection(competitionId);
+        assertTrue(sectionsResult.isSuccess());
+        List<CompetitionSetupCompletedSectionResource> sections = sectionsResult.getSuccessObject();
+        // Check if all the sections are here.
+        assertEquals(3L, (long) sections.size());
+        // Test ordering.
+        assertEquals(2, (long) sections.get(0).getCompetitionSetupSection());
+        assertEquals(3, (long) sections.get(1).getCompetitionSetupSection());
+        assertEquals(4, (long) sections.get(2).getCompetitionSetupSection());
+    }
+
+    private void checkCompletedSectionsAfterIncompletingSection(Long competitionId) {
+        RestResult<List<CompetitionSetupCompletedSectionResource>> sectionsResult = controller.findAllCompetitionSection(competitionId);
+        assertTrue(sectionsResult.isSuccess());
+        List<CompetitionSetupCompletedSectionResource> sections = sectionsResult.getSuccessObject();
+        // Check if all the sections are here.
+        assertEquals(1L, (long) sections.size());
+        // Test ordering.
+        assertEquals(2, (long) sections.get(0).getCompetitionSetupSection());
     }
 
 

@@ -17,4 +17,8 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionSetupSectionResource>> getSetupSections();
     RestResult<List<CompetitionSetupCompletedSectionResource>> getCompletedSetupSections(Long competitionId);
     RestResult<CompetitionResource> create();
+
+    RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionComplete(Long competitionId, Long sectionId);
+
+    RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionInComplete(Long competitionId, Long sectionId);
 }
