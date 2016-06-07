@@ -1,6 +1,0 @@
-FROM g2g3/ifs-local-dev
-MAINTAINER David Soff <dsoff@worth.systems>
-
-COPY ifs-auth-service/shibboleth-apache-config.conf /etc/apache2/sites-enabled/shibvhost.conf
-
-EXPOSE 443
