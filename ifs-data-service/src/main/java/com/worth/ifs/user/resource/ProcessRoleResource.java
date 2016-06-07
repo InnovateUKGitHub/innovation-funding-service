@@ -1,9 +1,12 @@
 package com.worth.ifs.user.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.resource.ApplicationResource;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.worth.ifs.application.resource.ApplicationResource;
+import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 
 public class ProcessRoleResource {
     private Long id;
@@ -89,5 +92,10 @@ public class ProcessRoleResource {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @JsonIgnore
+    public boolean isFinanceContact() {
+        return FINANCE_CONTACT.getName().equals(getRoleName());
     }
 }

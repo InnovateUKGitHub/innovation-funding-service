@@ -71,9 +71,10 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(applicationResource);
+        List<ProcessRoleResource> projectRoles = processRoleService.findProcessRolesByApplicationId(projectResource.getId());
+        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectRoles);
 
-        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, user, user.getOrganisations().get(0), partnerOrganisations, applicationResource, competitionResource));
+        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, user, user.getOrganisations().get(0), partnerOrganisations, applicationResource, projectRoles, competitionResource));
         return "project/detail";
     }
     
@@ -205,9 +206,7 @@ public class ProjectDetailsController {
         return "redirect:/project/" + projectId + "/details";
     }
 
-    private List<OrganisationResource> getPartnerOrganisations(final ApplicationResource project) {
-
-        List<ProcessRoleResource> projectRoles = processRoleService.findProcessRolesByApplicationId(project.getId());
+    private List<OrganisationResource> getPartnerOrganisations(final List<ProcessRoleResource> projectRoles) {
 
         final Comparator<OrganisationResource> compareById =
                 Comparator.comparingLong(OrganisationResource::getId);
