@@ -2,7 +2,6 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionStatusResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
