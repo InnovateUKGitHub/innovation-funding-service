@@ -200,7 +200,7 @@
 					</thead>
 					<tfoot>
 						<tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
-							<th scope="row" id="total" class="fix-left">Total</th>
+							<th scope="row" id="total" class="fix-left" >Total</th>
 							<td>26,000</td>
 							<td>26,000</td>
 							<td>26,000</td>
@@ -290,7 +290,7 @@
 					<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/3100-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/3100-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 				</div>
 
-				<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">When you are satisfied with the profile spend and it matches the Eligible project costs you will be able to submit your spend profile to the lead partner, before they are submitted to Innovate UK.</p>
+				<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit, make sure you are satisfied with your profile spend and that it matches the eligible project costs. You can submit your spend profile to the lead partner. They will then submit to Innovate UK.</p>
 
 				<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the profile spend mark the section as complete, this will allow you to submit the Project profile spend to innovate UK. If you wish you return to allow edits to this page.</p>
 
@@ -311,7 +311,7 @@
 
 							<h2 class="heading-medium no-margin">Send to lead partner</h2>
 
-							<p>Are you sure you want to send your Spend Profile to the lead partner?</p>
+							<p>Are you sure you want to submit your spend profile to the lead partner?</p>
 
 							<hr />
 
