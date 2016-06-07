@@ -12,17 +12,23 @@
             </label>
         </div>
 
-        <div class="form-block" th:if="${model.operatingAddress}" data-target="operatingAddress">
-            <label class="block-label" for="address-use-operating">
+        <div class="form-block" th:if="${model.operatingAddress}">
+            <label class="block-label" for="address-use-operating" data-target="operatingAddress">
                 <input id="address-use-operating" type="radio" name="project-address-group" value="OPERATING" th:field="*{addressType}"/>
                 Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
             </label>
         </div>
 
+        <div class="form-block" th:if="${model.projectAddress}">
+            <label class="block-label" for="address-use-project" data-target="projectAddress">
+                <input id="address-use-project" type="radio" name="project-address-group" value="PROJECT" th:field="*{addressType}"/>
+                Use project address (<strong th:text="${model.projectAddress?.postcode}">SN1 2EE</strong>)
+            </label>
+        </div>
 
         <div class="form-block">
             <label class="block-label" for="address-add-project" data-target="custom-postcode">
-                <input id="address-add-project" type="radio" name="project-address-group" value="PROJECT" th:field="*{addressType}"/>
+                <input id="address-add-project" type="radio" name="project-address-group" value="ADD_NEW" th:field="*{addressType}"/>
                 Enter an alternative project address
             </label>
         </div>
@@ -71,6 +77,29 @@
           </span>
           <span th:unless="${#strings.isEmpty(model.operatingAddress?.postcode)}" th:remove="tag">
             <span th:text="${model.operatingAddress?.postcode}" /><br/>
+          </span>
+        </p>
+    </div>
+    <div id="projectAddress" class="boxed extra-margin" th:if="${model.projectAddress}">
+        <h3 class="heading-medium no-margin-top">Confirm project location</h3>
+        <p>
+          <span th:unless="${#strings.isEmpty(model.projectAddress?.addressLine1)}" th:remove="tag">
+            <span th:text="${model.projectAddress?.addressLine1}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.projectAddress?.addressLine2)}" th:remove="tag">
+            <span th:text="${model.projectAddress?.addressLine2}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.projectAddress?.addressLine3)}" th:remove="tag">
+            <span th:text="${model.projectAddress?.addressLine3}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.projectAddress?.town)}" th:remove="tag">
+            <span th:text="${model.projectAddress?.town}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.projectAddress?.county)}" th:remove="tag">
+            <span th:text="${model.projectAddress?.county}" /><br/>
+          </span>
+          <span th:unless="${#strings.isEmpty(model.projectAddress?.postcode)}" th:remove="tag">
+            <span th:text="${model.projectAddress?.postcode}" /><br/>
           </span>
         </p>
     </div>

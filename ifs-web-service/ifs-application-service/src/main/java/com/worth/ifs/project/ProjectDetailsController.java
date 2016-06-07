@@ -59,7 +59,7 @@ import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils
 @RequestMapping("/project")
 public class ProjectDetailsController {
     static final String FORM_ATTR_NAME = "form";
-    static final String ADD_TYPE_ATTR_NAME = "addressType";
+    private static final String ADD_TYPE_ATTR_NAME = "addressType";
     private static final String MANUAL_ADDRESS = "manual-address";
     private static final String SEARCH_ADDRESS = "search-address";
     private static final String SELECT_ADDRESS = "select-address";
@@ -166,14 +166,15 @@ public class ProjectDetailsController {
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
         AddressResource newAddressResource = null;
         switch (form.getAddressType()) {
-            case OPERATING:
             case REGISTERED:
+            case OPERATING:
+            case PROJECT:
                 Optional<OrganisationAddressResource> organisationAddressResource = getAddress(leadOrganisation, form.getAddressType());
                 if (organisationAddressResource.isPresent()) {
                     newAddressResource = organisationAddressResource.get().getAddress();
                 }
                 break;
-            case PROJECT:
+            case ADD_NEW:
                 newAddressResource = form.getAddressForm().getSelectedPostcode();
                 break;
             default:
