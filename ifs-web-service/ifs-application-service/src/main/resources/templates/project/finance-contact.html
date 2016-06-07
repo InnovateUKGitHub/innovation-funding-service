@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Finance Contact'" th:remove="tag" />
 </head>
-<body class="project-detail-finance-contact">
+<body class="project-detail finance-contact">
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -12,16 +12,17 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${project.id})}"  th:remove="tag"></div>
 
-    <div class="hgroup no-margin-top">
+    <div class="page-title">
         <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
-        <h1 class="heading-xlarge no-margin">Finance contact</h1>
+        <h1 class="heading-xlarge">Finance contact</h1>
     </div>
-    
 
     <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${project.id})}" th:object="${form}">
         <fieldset>
             <h2 class="heading-medium">Finance contact</h2>
-            <legend class="visuallyhidden">Finance contact</legend>
+            <legend>
+                <span class="visuallyhidden">Finance contact</span>
+            </legend>
             <p class="form-hint">Who will be responsible for project finances in your organisation?</p>
             <p>We will ask this person to</p>
             <ul class="list-bullet">
@@ -29,9 +30,7 @@
                 <li>confirm any queries we have with your project costs</li>
                 <li>review the spend profile of your project costs</li>
             </ul>
-
             <div class="form-group extra-margin">
-            
                 <div th:each="user : ${organisationUsers}" th:remove="tag">
                     <input type="hidden" th:field="*{organisation}"></input>
                     <label th:for="${#ids.next('financeContact')}" class="block-label">
@@ -41,7 +40,7 @@
                 </div>
             </div>
         </fieldset>
-        <button class="button button-large extra-margin">Save</button>
+        <button class="button extra-margin">Save</button>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
