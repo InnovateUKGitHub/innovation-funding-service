@@ -39,3 +39,8 @@ Create new invite application with the same user
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Invite robot test application
     And the user clicks the button/link    jQuery=button:contains("Save and return")
+
+Applicant navigates to the finances of the Robot application
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Your finances

@@ -250,7 +250,7 @@ The applicant can leave the 'Your finances' page but the details are still saved
     Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
 
 The applicant selects 'No' for other funding
-    Select Radio button    other_funding-otherPublicFunding-35-54    No
+    Select Radio button    other_funding-otherPublicFunding-35-286    No
 
 The applicant selects 'Yes' for other funding
     Select Radio button    other_funding-otherPublicFunding-35-54    Yes
