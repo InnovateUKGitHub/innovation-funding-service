@@ -31,6 +31,7 @@ ifs-web-service/idea-support/
 **/application-*.properties
 !**/application-local.properties
 !**/application-integration-test.properties
+!**/docker-build.gradle
 
 # Created with help from https://www.gitignore.io
 
