@@ -1,4 +1,4 @@
-ext.ifsDatasourceHost = "ifs-local-dev"
+ext.ifsDatasourceHost = "ifs-database"
 ext.ifsDatasourceUrl="jdbc:mysql://database:3306/ifs"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
