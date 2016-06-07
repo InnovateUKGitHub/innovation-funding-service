@@ -48,9 +48,9 @@ IFS.autoSave = (function(){
               var datefield = field.attr('data-date');
               if(typeof datefield !== typeof undefined && datefield !== false){
                 fieldValue = field.attr('data-date');
-                var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
-                name = fieldInfo.attr('name');
-                fieldId = fieldInfo.attr('id');
+                var fieldInfo = field.closest('.date-group');
+                name = fieldInfo.attr('data-field-group-name');
+                fieldId = fieldInfo.attr('data-field-group-id');
               }
 
               var jsonObj = {
