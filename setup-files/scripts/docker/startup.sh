@@ -57,6 +57,6 @@ docker-compose up -d
 sleep 2
 docker-compose exec mysql mysql -uroot -ppassword -e 'create database ifs_test'
 setHostFile
-./gradlew flywayClean flywayMigrate
+./gradlew -Pprofile=docker flywayClean flywayMigrate
 cd setup-files/scripts/docker
 ./syncShib.sh

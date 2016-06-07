@@ -20,7 +20,7 @@ cd ../../../
 
 data() {
     cd ifs-data-service
-    ./gradlew cleanDeploy "$@"
+    ./gradlew -Pprofile=docker cleanDeploy "$@"
     echo "copying data service war to container"
     docker cp build/war/* ifs-data-service:/opt/tomcat/webapps/
     echo "copying complete"
@@ -31,7 +31,7 @@ data() {
 
 web() {
     cd ifs-web-service
-    ./gradlew cleanDeploy "$@"
+    ./gradlew -Pprofile=docker cleanDeploy "$@"
     echo "copying competition management service war to container"
     docker cp ifs-competition-mgt-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
     echo "copying application service war to container"
