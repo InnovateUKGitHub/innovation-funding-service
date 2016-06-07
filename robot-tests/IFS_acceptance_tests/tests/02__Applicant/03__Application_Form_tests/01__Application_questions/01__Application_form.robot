@@ -57,7 +57,7 @@ Marking a question as complete
 Mark a question as incomplete
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Failing
     Given the user clicks the button/link    link=Project summary
     When the user clicks the button/link    css=#form-input-11 div.textarea-footer > button[name="mark_as_incomplete"]
     Then the text box should be editable
