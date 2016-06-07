@@ -69,7 +69,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH("The Project Start Date must start on the first day of the month", BAD_REQUEST),
     PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE("The Project Start Date must start in the future", BAD_REQUEST),
-    PROJECT_ORGANISATION_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION("The organisation finance contact must be present on the application for the specified organisation", BAD_REQUEST),
+    PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION("The organisation finance contact must be present on the application for the specified organisation", BAD_REQUEST),
+    PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_LEAD_APPLICANT_OR_COLLABORATOR_ON_THE_APPLICATION_FOR_THE_ORGANISATION("The organisation finance contact must be a collaborator on the application for the specified organisation", BAD_REQUEST),
     ;
 
     private ErrorTemplate errorTemplate;

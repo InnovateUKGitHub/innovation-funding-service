@@ -23,11 +23,14 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static java.util.Arrays.asList;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -98,17 +101,27 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProcessRole> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
-    	Application application = applicationRepository.findOne(project.getId());
-    	List<ProcessRole> applicationProcessRoles = application.getProcessRoles();
 
-        List<ProcessRole> financeProcessRoles = simpleFilter(applicationProcessRoles,
-                pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
-    	
-    	if (!financeProcessRoles.isEmpty()) {
-    		return getOnlyElementOrFail(financeProcessRoles);
-    	} else {
-    		return serviceFailure(new Error(PROJECT_ORGANISATION_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
-    	}
+        return getApplication(project.getId()).andOnSuccess(application -> {
+
+            List<ProcessRole> applicationProcessRoles = application.getProcessRoles();
+
+            List<ProcessRole> matchingUserOrganisationProcessRoles = simpleFilter(applicationProcessRoles,
+                    pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
+
+            List<ProcessRole> collaborativeProcessRoles = simpleFilter(matchingUserOrganisationProcessRoles,
+                    pr -> asList(COLLABORATOR.getName(), LEADAPPLICANT.getName()).contains(pr.getRole().getName()));
+
+            if (matchingUserOrganisationProcessRoles.isEmpty()) {
+                return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
+            }
+
+            if (collaborativeProcessRoles.isEmpty()) {
+                return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_LEAD_APPLICANT_OR_COLLABORATOR_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
+            }
+
+            return getOnlyElementOrFail(collaborativeProcessRoles);
+        });
     }
     
     private ProjectResource createProjectFromApplicationId(final Long applicationId){
