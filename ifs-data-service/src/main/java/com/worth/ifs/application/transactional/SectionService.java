@@ -48,13 +48,6 @@ public interface SectionService {
 
     @PostAuthorize("hasPermission(filterObject, 'READ')")
 	ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type);
-    
-    /**
-     * get questions for the sections and filter out the ones that have marked as completed turned on
-     */
-    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')"
-            + " && hasPermission(#organisationId, 'com.worth.ifs.user.resource.OrganisationResource', 'READ')")
-    ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection);
