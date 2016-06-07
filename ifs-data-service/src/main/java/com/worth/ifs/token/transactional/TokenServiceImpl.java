@@ -67,6 +67,8 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private boolean isTokenValid(final Token token) {
-        return ChronoUnit.MINUTES.between(token.getCreated(), LocalDateTime.now()) < emailTokenValidityMins;
+        // Prefer the updated time over the created time in case the token has been refreshed
+        final LocalDateTime tokenDateTime = token.getUpdated() == null ? token.getCreated() : token.getUpdated();
+        return ChronoUnit.MINUTES.between(tokenDateTime, LocalDateTime.now()) < emailTokenValidityMins;
     }
 }
