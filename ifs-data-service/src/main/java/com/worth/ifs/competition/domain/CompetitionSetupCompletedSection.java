@@ -16,6 +16,15 @@ public class CompetitionSetupCompletedSection {
     @ManyToOne
     Competition competition;
 
+
+    public CompetitionSetupCompletedSection() {
+    }
+
+    public CompetitionSetupCompletedSection(CompetitionSetupSection competitionSetupSection, Competition competition) {
+        this.competitionSetupSection = competitionSetupSection;
+        this.competition = competition;
+    }
+
     public Long getId() {
         return id;
     }

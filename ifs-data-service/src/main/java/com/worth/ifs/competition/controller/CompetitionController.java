@@ -5,6 +5,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
+import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +20,16 @@ public class CompetitionController {
 
     @Autowired
     private CompetitionService competitionService;
+    @Autowired
+    private CompetitionSetupService competitionSetupService;
+
+    /****
+     * General Competition methods
+     ****/
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
-        return competitionService.update(id, competitionResource).toGetResponse();
     }
 
     @RequestMapping("/findAll")
@@ -36,14 +38,33 @@ public class CompetitionController {
     }
 
 
+    /****
+     * Competition Setup methods
+     ****/
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
+        return competitionSetupService.update(id, competitionResource).toGetResponse();
+    }
+
     @RequestMapping("/sectionStatus/find/{competitionId}")
     public RestResult<List<CompetitionSetupCompletedSectionResource>> findAllCompetitionSection(@PathVariable("competitionId") final Long competitionId) {
-        return competitionService.findAllCompetitionSectionsStatuses(competitionId).toGetResponse();
+        return competitionSetupService.findAllCompetitionSectionsStatuses(competitionId).toGetResponse();
+    }
+
+    @RequestMapping("/sectionStatus/complete/{competitionId}/{sectionId}")
+    public RestResult<Void> markSectionComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("sectionId") final Long sectionId) {
+        return competitionSetupService.markSectionComplete(competitionId, sectionId).toGetResponse();
+    }
+
+    @RequestMapping("/sectionStatus/incomplete/{competitionId}/{sectionId}")
+    public RestResult<Void> markSectionInComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("sectionId") final Long sectionId) {
+        return competitionSetupService.markSectionInComplete(competitionId, sectionId).toGetResponse();
     }
 
     @RequestMapping("/sections/getAll")
     public RestResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections() {
-        return competitionService.findAllCompetitionSections().toGetResponse();
+        return competitionSetupService.findAllCompetitionSections().toGetResponse();
     }
 
     /**
@@ -51,6 +72,6 @@ public class CompetitionController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public RestResult<CompetitionResource> create() {
-        return competitionService.create().toPostCreateResponse();
+        return competitionSetupService.create().toPostCreateResponse();
     }
 }
