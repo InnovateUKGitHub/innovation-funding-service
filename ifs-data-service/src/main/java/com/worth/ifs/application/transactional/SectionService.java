@@ -1,7 +1,6 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.ApplicationOrganisationResourceId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -26,8 +25,8 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Map<Long, Set<Long>>> getCompletedSections(Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationOrganisationResourceId, 'READ_SECTION_COMPLETE')")
-    ServiceResult<Set<Long>> getCompletedSections(final ApplicationOrganisationResourceId applicationOrganisationResourceId);
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<Set<Long>> getCompletedSections(final long applicationId, final long organisationId);
 
     @PreAuthorize("hasPermission(#sectionId, 'com.worth.ifs.application.resource.SectionResource', 'READ')")
     ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId);

@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.resource.ApplicationOrganisationResourceId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.transactional.SectionService;
@@ -39,7 +38,7 @@ public class SectionController {
     public RestResult<Set<Long>> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("organisationId") final Long organisationId) {
 
-        return sectionService.getCompletedSections(new ApplicationOrganisationResourceId(applicationId, organisationId)).toGetResponse();
+        return sectionService.getCompletedSections(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
