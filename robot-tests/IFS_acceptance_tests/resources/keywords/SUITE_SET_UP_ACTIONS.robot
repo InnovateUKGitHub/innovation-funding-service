@@ -44,3 +44,23 @@ Applicant navigates to the finances of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Your finances
+
+The user redirects to the page
+    [Arguments]    ${TEXT1}    ${TEXT2}
+    Wait Until Keyword Succeeds    10    500ms    Page Should Contain    ${TEXT1}
+    Page Should Contain    ${TEXT2}
+    Page Should Not Contain    error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Wait Until Element Is Visible    id=global-header
+    Page Should Contain    BETA
+
+The user navigates to the summary page of the Robot test application
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Review & submit
+
+The user navigates to the overview page of the Robot test application
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
