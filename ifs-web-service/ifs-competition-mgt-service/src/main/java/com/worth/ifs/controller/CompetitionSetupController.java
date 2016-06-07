@@ -23,9 +23,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/competition/setup/{competitionId}")
 public class CompetitionSetupController {
-    
+
 	private static final String SECTION_ONE = "Initial details";
-	
+
     @Autowired
     private CompetitionService competitionService;
 
@@ -68,7 +68,7 @@ public class CompetitionSetupController {
         }
 
 		model.addAttribute("competition", competition);
-        model.addAttribute("currentSection", competitionSetupSection.get());
+        model.addAttribute("currentSection", competitionSetupSection.get().getId());
         model.addAttribute("currentSectionFragment", "section-" + competitionSetupSection.get().getName().replaceAll(" ", "-").toLowerCase());
         model.addAttribute("editable", !completedSections.contains(sectionId));
         model.addAttribute("allSections", sections);

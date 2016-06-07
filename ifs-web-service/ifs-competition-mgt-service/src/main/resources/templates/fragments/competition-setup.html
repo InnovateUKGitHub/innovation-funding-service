@@ -1,9 +1,11 @@
 <!-- =================Tabbed navigation competion setup=========================== -->
 
+
 <div th:fragment="comp-setup-navigation(sections, completedStatuses, currentSection, competition)">
-    <ul>
-        <li th:each="(section: ${sections})" th:classappend="${section.id == currentSection ? 'selected' : ''} + ' ' + ${completedStatuses.contains(section.id) ? 'marked-as-complete' : ''}">
-            <a th:href="@{'/competition/setup/' + ${competition.id} + '/' + ${section.id}}"
+    <ul class="inline-nav">
+        <!-- /* Select the first section if currentSection is not defined */ -->
+        <li th:each="(section, iteration : ${sections})" th:classappend="${(section.id == currentSection) || (currentSection == null and iteration.index==0) ? 'selected' : ''} + ' ' + ${completedStatuses.contains(section.id) ? 'marked-as-complete' : ''}">
+            <a th:href="@{/competition/setup/{competitionId}/section/{sectionId}(competitionId=${competition.id},sectionId=${section.id})}"
                th:text="${section.name}">Section Name</a>
         </li>
     </ul>
