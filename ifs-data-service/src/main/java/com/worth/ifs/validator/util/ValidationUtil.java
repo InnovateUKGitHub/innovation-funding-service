@@ -10,6 +10,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.validator.ApplicationMarkAsCompleteValidator;
 import com.worth.ifs.validator.MinRowCountValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.transactional.ValidatorService;
@@ -111,7 +112,12 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
-
+    public BindingResult validationApplicationDetails(Application application){
+        DataBinder binder = new DataBinder(application);
+        binder.addValidators(new ApplicationMarkAsCompleteValidator());
+        binder.validate();
+        return binder.getBindingResult();
+    }
 
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         LOG.debug("VALIDATE SECTION " + section.getName());

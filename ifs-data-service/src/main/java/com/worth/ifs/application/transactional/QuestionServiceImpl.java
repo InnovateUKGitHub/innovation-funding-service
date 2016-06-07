@@ -283,8 +283,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
             QuestionStatus questionStatus = null;
 
-            List<ValidationMessages> applicationIsValid = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
-
             if (question.hasMultipleStatuses()) {
                 //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
                 List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
@@ -296,11 +294,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             } else {
                 questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
             }
-           // application.getDurationInMonths();
+
+            List<ValidationMessages> applicationIsValid = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
+
             if (questionStatus == null) {
                 questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-            } else if (markAsComplete) {
-
+            } else if (applicationIsValid.isEmpty() && markAsComplete) {
                 questionStatus.markAsComplete();
             } else {
                 questionStatus.markAsInComplete();
