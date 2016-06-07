@@ -32,4 +32,6 @@ INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUE
 INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (7, 'Finance', 'finance', '7');
 
 
+INSERT INTO `role` (`id`, `name`) VALUES (9, 'competition_executive');
+INSERT INTO `role` (`id`, `name`) VALUES (10, 'competition_technologist');
 

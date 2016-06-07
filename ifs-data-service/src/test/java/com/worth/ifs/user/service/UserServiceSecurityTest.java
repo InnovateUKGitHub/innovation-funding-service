@@ -6,6 +6,7 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.security.TokenLookupStrategies;
 import com.worth.ifs.token.security.TokenPermissionRules;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.security.UserPermissionRules;
 import com.worth.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -145,6 +146,11 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         @Override
         public ServiceResult<List<UserResource>> findAll() {
+            return serviceSuccess(newUserResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
             return serviceSuccess(newUserResource().build(2));
         }
 
