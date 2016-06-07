@@ -1,6 +1,6 @@
 package com.worth.ifs.category.transactional;
 
-import com.worth.ifs.category.domain.CategoryType;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 

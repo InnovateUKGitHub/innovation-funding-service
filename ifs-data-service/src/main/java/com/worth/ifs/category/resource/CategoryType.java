@@ -1,4 +1,4 @@
-package com.worth.ifs.category.domain;
+package com.worth.ifs.category.resource;
 
 
 public enum CategoryType {

@@ -1,0 +1,238 @@
+<!-- =================== Comp setup section - Initial Details (1) ============================== -->
+<div th:fragment="section-initial-details">
+    <h2>Step 1: Initial competition details</h2>
+
+    <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+        <h1 class="heading-medium error-summary-heading">
+            We were unable to save your changes
+        </h1>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <div class="panel-indent">
+        This will create a new Competition - you will be able to specify more details as you proceed
+    </div>
+
+    <form th:action="${sectionFormData.getActionUrl()}" method="post" th:object="${sectionFormData}">
+
+        <fieldset th:if="${editable}" id="section-1-edit">
+
+            <legend class="visuallyhidden">Initial details</legend>
+            <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group error':'form-group'">
+                <label class="form-label" for="executiveUserId">
+                    <span class="form-label-bold">Competition executive</span>
+                    <span th:if="${#fields.hasErrors('executiveUserId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
+                    </span>
+                </label>
+                <select class="form-control width-medium" th:field="${sectionFormData.executiveUserId}">
+                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}">User</option>
+                </select>
+            </div>
+
+            <fieldset class="form-group">
+                <h3 class="heading-small no-margin">Opening date</h3>
+                <legend class="visuallyhidden">Opening date</legend>
+                <div class="date-group">
+                    <div class="day">
+                        <label class="form-label" for="openingDateDay">
+                            <div>Day</div>
+                        </label>
+                        <input th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               type="number"
+                               placeholder="DD"
+                               th:field="${sectionFormData.openingDateDay}" />
+                    </div>
+
+                    <div class="month">
+                        <label class="form-label" for="openingDateMonth">
+                            <div>Month</div>
+                        </label>
+                        <input th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               type="number"
+                               placeholder="MM"
+                               th:field="${sectionFormData.openingDateMonth}" />
+                    </div>
+
+                    <div class="year">
+                        <label class="form-label" for="openingDateYear">
+                            <div>Year</div>
+                        </label>
+                        <input th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               type="number"
+                               placeholder="YYYY"
+                               th:field="${sectionFormData.openingDateYear}" />
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
+                <label class="form-label" for="title">
+                    <span class="form-label-bold">Competition title</span>
+                    <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       th:field="${sectionFormData.title}" />
+            </div>
+
+            <div th:class="${#fields.hasErrors('innovationSectorCategoryId')}? 'form-group error':'form-group'">
+                <label class="form-label" for="innovationSectorCategoryId">
+                    <span class="form-label-bold">Innovation sector</span>
+                    <span th:if="${#fields.hasErrors('innovationSectorCategoryId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}" />
+                    </span>
+                </label>
+                <select class="form-control width-x-large" th:field="${sectionFormData.innovationSectorCategoryId}">
+                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}">Innovation Sector</option>
+                </select>
+            </div>
+
+            <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
+                <label class="form-label" for="innovationAreaCategoryId">
+                    <span class="form-label-bold">Innovation area</span>
+                    <span th:if="${#fields.hasErrors('innovationAreaCategoryId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
+                    </span>
+                </label>
+                <select class="form-control width-x-large" th:field="${sectionFormData.innovationAreaCategoryId}">
+                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}">Innovation Area</option>
+                </select>
+            </div>
+
+            <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
+                <label class="form-label" for="competitionTypeId">
+                    <span class="form-label-bold">Competition type</span>
+                    <span th:if="${#fields.hasErrors('competitionTypeId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
+                    </span>
+                </label>
+                <select class="form-control width-x-large" th:field="${sectionFormData.competitionTypeId}">
+                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(competitionType : ${competitionTypes})" th:text="${competitionType.name}" th:value="${competitionType.id}">Competition Type</option>
+                </select>
+            </div>
+
+
+            <!-- needs to work dynamic with competition type -->
+            <div class="form-group" id="stateAid" style="display: none">
+                <h3 class="heading-small">State aid</h3>
+                <p>
+                    <span class="yes">Yes</span>
+                    <span class="no">No</span>
+                </p>
+            </div>
+
+            <div th:class="${#fields.hasErrors('LeadTechnologistUserId')}? 'form-group error':'form-group'">
+                <label class="form-label" for="LeadTechnologistUserId">
+                    <span class="form-label-bold">Competition Lead technologist</span>
+                    <span th:if="${#fields.hasErrors('LeadTechnologistUserId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('LeadTechnologistUserId')}" th:text="${err}" />
+                    </span>
+                </label>
+                <select class="form-control width-x-large" th:field="${sectionFormData.LeadTechnologistUserId}">
+                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}">Lead technologist</option>
+                </select>
+            </div>
+
+            <div th:class="${#fields.hasErrors('pafNumber')}? 'form-group error':'form-group'">
+                <label class="form-label" for="pafNumber">
+                    <span class="form-label-bold">PAF number</span>
+                    <span th:if="${#fields.hasErrors('pafNumber')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('pafNumber') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                       type="text"
+                       th:field="${sectionFormData.pafNumber}" />
+            </div>
+
+            <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
+                <label class="form-label" for="budgetCode">
+                    <span class="form-label-bold">Budget code</span>
+                    <span th:if="${#fields.hasErrors('budgetCode')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('budgetCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                       type="text"
+                       th:field="${sectionFormData.budgetCode}" />
+            </div>
+
+            <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
+                <label class="form-label" for="competitionCode">
+                    <span class="form-label-bold">Competition code</span>
+                    <span th:if="${#fields.hasErrors('competitionCode')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                       type="text"
+                       th:field="${sectionFormData.competitionCode}" />
+            </div>
+        </fieldset>
+
+        <fieldset th:if="${!editable}" id="section-1-">
+
+            <dl class="standard-definition-list">
+                <dt>Competition executive</dt>
+                <dd th:text="${sectionFormData.executiveUserId}"></dd>
+
+                <dt>Opening date</dt>
+                <dd th:text="${sectionFormData.openingDateDay+'/'+sectionFormData.openingDateMonth+'/'+sectionFormData.openingDateYear}"></dd>
+
+                <dt>Competition title</dt>
+                <dd th:text="${sectionFormData.title}"></dd>
+
+                <dt>Innovation sector</dt>
+                <dd th:text="${sectionFormData.innovationSectorCategoryId}"></dd>
+
+                <dt>Innovation area</dt>
+                <dd th:text="${sectionFormData.innovationAreaCategoryId}"></dd>
+
+                <dt>Competition type</dt>
+                <dd th:text="${sectionFormData.competitionTypeId}"></dd>
+
+                <dt>State aid</dt>
+                <dd id="stateAid">
+                    <span class="yes">Yes</span>
+                    <span class="no">No</span>
+                </dd>
+
+                <dt>PAF number</dt>
+                <dd th:text="${sectionFormData.pafNumber}"></dd>
+
+                <dt>Budget code</dt>
+                <dd th:text="${sectionFormData.budgetCode}"></dd>
+
+                <dt>Competition code</dt>
+                <dd th:text="${sectionFormData.competitionCode}"></dd>
+
+
+            </dl>
+        </fieldset>
+
+<!--
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=essential, sectionId=1" th:remove="tag" />
+        </div>
+-->
+    </form>
+    <ul class="pagination">
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=additional'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Additional information</span>
+            </a>
+        </li>
+    </ul>
+</div>

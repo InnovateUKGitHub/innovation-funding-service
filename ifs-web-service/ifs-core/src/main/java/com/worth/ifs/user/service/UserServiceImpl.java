@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,6 +80,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
         return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber);
+    }
+
+    @Override
+    public List<UserResource> findUserByType(String type) {
+        //TODO use restservice;
+        List<UserResource> userList = new ArrayList();
+
+        UserResource user = new UserResource();
+        user.setFirstName("Test");
+        user.setLastName("User");
+        user.setId(1L);
+        user.setEmail("test@user.com");
+
+        userList.add(user);
+
+        user = new UserResource();
+        user.setFirstName("Test");
+        user.setLastName("User Two");
+        user.setId(2L);
+        userList.add(user);
+
+        return userList;
     }
 
     @Override
