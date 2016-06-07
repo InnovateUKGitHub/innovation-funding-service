@@ -159,7 +159,7 @@ the Applicant edits Project summary and marks it as complete
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
-    The user should see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/tick-icon"]
+    The user should see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 the text box should be editable
     Element Should Be Enabled    css=#form-input-11 textarea
