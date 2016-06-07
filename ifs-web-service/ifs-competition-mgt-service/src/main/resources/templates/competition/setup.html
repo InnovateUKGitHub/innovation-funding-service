@@ -27,7 +27,7 @@
             </ul>
         </div>
 
-        <div th:if="${currentSection.id == 1}" th:include="fragments/competition-setup-section :: section-inital-details" th:remove="tag" />
+        <div th:replace="fragments/competition-setup-section :: ${currentSectionFragment}" th:remove="tag" />
     </form>
 
 
