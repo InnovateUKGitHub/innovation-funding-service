@@ -1,12 +1,14 @@
 package com.worth.ifs.project;
 
-import com.google.common.net.UrlEscapers;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.ProjectService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -16,6 +18,7 @@ import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -45,6 +48,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.address.resource.AddressType.OPERATING;
+import static com.worth.ifs.address.resource.AddressType.REGISTERED;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 
 /**
@@ -53,21 +58,13 @@ import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController {
+    static final String FORM_ATTR_NAME = "form";
+    static final String ADD_TYPE_ATTR_NAME = "addressType";
     private static final String MANUAL_ADDRESS = "manual-address";
     private static final String SEARCH_ADDRESS = "search-address";
     private static final String SELECT_ADDRESS = "select-address";
-
-    private static final String ADDRESS_USE_ORG = "address-use-org";
-    private static final String ADDRESS_USE_OP = "address-use-operating";
-    private static final String ADDRESS_USE_ADD = "address-add-project";
-
-    public static final String FORM_ATTR_NAME = "form";
-
     private static final String SELECTED_POSTCODE = "selectedPostcode";
-
-    private static final String BINDING_RESULT_PROJECT_LOCATION_FORM = "org.springframework.validation.BindingResult.projectLocationForm";
-
-    public static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
+    private static final String BINDING_RESULT_PROJECT_LOCATION_FORM = "org.springframework.validation.BindingResult.form";
 
 	@Autowired
     private ProjectService projectService;
@@ -89,9 +86,6 @@ public class ProjectDetailsController {
     
     @Autowired
     private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private AddressService addressService;
 
     @Autowired
     private AddressRestService addressRestService;
@@ -135,81 +129,102 @@ public class ProjectDetailsController {
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   Model model,
-                                  BindingResult bindingResult) {
+                                  BindingResult bindingResult,
+                                  HttpServletResponse response) {
 
         ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form));
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, response, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
-    public String viewAddress(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request,
-                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form) {
-        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = updateModel(form, model, request, projectId);
+    public String viewAddress(Model model,
+                              HttpServletRequest request,
+                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                              @PathVariable("projectId") final Long projectId) {
+        ProjectResource project = projectService.getById(projectId);
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
+        form.setAddressType(project.getAddressType());
+        model.addAttribute("model", projectDetailsAddressViewModel);
+        return "project/details-address";
+    }
+
+    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressViewModelForm form, ProjectResource project){
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
+        processAddressLookupFields(form);
         model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
-    public String updateAddress(@PathVariable("projectId") final Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
-                                Model model,
+    public String updateAddress(Model model,
                                 HttpServletRequest request,
-                                BindingResult bindingResult) {
+                                HttpServletResponse response,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                BindingResult bindingResult,
+                                @PathVariable("projectId") final Long projectId) {
+        ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
-        Long selectedAddressId = null;
-        switch (form.getProjectAddressGroup()) {
-            case ADDRESS_USE_OP:
-                Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, AddressType.OPERATING);
-                if (operatingAddress.isPresent()) {
-                    selectedAddressId = operatingAddress.get().getAddress().getId();
+        AddressResource newAddressResource = null;
+        switch (form.getAddressType()) {
+            case OPERATING:
+            case REGISTERED:
+                Optional<OrganisationAddressResource> organisationAddressResource = getAddress(leadOrganisation, form.getAddressType());
+                if (organisationAddressResource.isPresent()) {
+                    newAddressResource = organisationAddressResource.get().getAddress();
                 }
                 break;
-            case ADDRESS_USE_ORG:
-                Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, AddressType.REGISTERED);
-                if (registeredAddress.isPresent()) {
-                    selectedAddressId = registeredAddress.get().getAddress().getId();
-                }
+            case PROJECT:
+                newAddressResource = form.getAddressForm().getSelectedPostcode();
                 break;
             default:
-                // Save new project address and assign id
+                newAddressResource = null;
                 break;
         }
-        ServiceResult<Void> updateResult = projectService.updateAddress(projectId, selectedAddressId);
-        return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> viewAddress(model, projectId, request, form));
+        projectResource.setAddressType(form.getAddressType());
+        projectResource.setAddress(newAddressResource);
+        ServiceResult<Void> updateResult = projectService.updateAddress(projectId, form.getAddressType(), newAddressResource);
+        return handleErrorsOrRedirectToProjectOverview("", projectId, model, response, form, bindingResult, updateResult, () -> viewAddress(model, request, form, projectId));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
-    public String searchAddress(@ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
-                                HttpServletResponse response) {
+    public String searchAddress(Model model,
+                                HttpServletRequest request,
+                                HttpServletResponse response,
+                                @PathVariable("projectId") Long projectId,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
-        CookieUtil.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(form));
-        return "project/details-address";
+        form.setAddressType(AddressType.valueOf(form.getAddressType().name()));
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = RequestMethod.POST)
-    public String selectAddress(@ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
+    public String selectAddress(Model model, HttpServletRequest request,
+                                @PathVariable("projectId") Long projectId,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
                                 HttpServletResponse response) {
         form.getAddressForm().setSelectedPostcode(null);
         CookieUtil.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(form));
-        return "project/details-address";
+        CookieUtil.saveToCookie(response, ADD_TYPE_ATTR_NAME, form.getAddressType().name());
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddress(Model model, HttpServletRequest request, HttpServletResponse response,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
                                 @PathVariable("projectId") Long projectId) {
-        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = updateModel(form, model, request, projectId);
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(true);
-        //form.setAddressForm(addressForm);
-        CookieUtil.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(form));
-        model.addAttribute("model", projectDetailsAddressViewModel);
-        return "project/details-address";
+        CookieUtil.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(addressForm));
+        CookieUtil.saveToCookie(response, ADD_TYPE_ATTR_NAME, form.getAddressType().name());
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(
-            String fieldName, long projectId, Model model,
+            String fieldName, long projectId, Model model,HttpServletResponse response,
             BindingResultTarget form, BindingResult bindingResult,
             ServiceResult<?> result,
             Supplier<String> viewSupplier) {
@@ -219,10 +234,12 @@ public class ProjectDetailsController {
             return viewSupplier.get();
         }
 
-        return redirectToProjectDetails(projectId);
+        return redirectToProjectDetails(response, projectId);
     }
 
-    private String redirectToProjectDetails(long projectId) {
+    private String redirectToProjectDetails(HttpServletResponse response, long projectId) {
+        CookieUtil.removeCookie(response, FORM_ATTR_NAME);
+        CookieUtil.removeCookie(response, ADD_TYPE_ATTR_NAME);
         return "redirect:/project/" + projectId + "/details";
     }
 
@@ -239,23 +256,21 @@ public class ProjectDetailsController {
     /**
      * Get the list of postcode options, with the entered postcode. Add those results to the form.
      */
-    private void addAddressOptions(ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+    private void addAddressOptions(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
         if (StringUtils.hasText(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput())) {
             AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
             addressForm.setPostcodeOptions(searchPostcode(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput()));
             addressForm.setPostcodeInput(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput());
-            projectDetailsAddressViewModelForm.setAddressForm(addressForm);
         }
     }
 
     /**
      * if user has selected a address from the dropdown, get it from the list, and set it as selected.
      */
-    private void addSelectedAddress(ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+    private void addSelectedAddress(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
         AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
         if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
             addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
-            projectDetailsAddressViewModelForm.setAddressForm(addressForm);
         }
     }
 
@@ -266,72 +281,55 @@ public class ProjectDetailsController {
                 addresses -> addresses);
     }
 
-    private String escapePathVariable(final String input){
-        return UrlEscapers.urlPathSegmentEscaper().escape(input);
-    }
-
-    private ProjectDetailsAddressViewModel updateModel(ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, Model model, HttpServletRequest request, Long projectId){
-        form = getFormDataFromCookie(form, model, request);
-        ProjectResource project = projectService.getById(projectId);
+    private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
-        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
-        List<Long> existingAddresses = new ArrayList<>();
-        Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, AddressType.REGISTERED);
+        OrganisationResource leadOrganisation = getLeadOrganisation(project.getId());
+
+        Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, REGISTERED);
         if(registeredAddress.isPresent()){
-            AddressResource addressResource = registeredAddress.get().getAddress();
-            projectDetailsAddressViewModel.setRegisteredAddress(addressResource);
-            existingAddresses.add(addressResource.getId());
-            if(addressResource.getId().equals(project.getAddress())){
-                form.setProjectAddressGroup(ADDRESS_USE_ORG);
-            }
+            projectDetailsAddressViewModel.setRegisteredAddress(registeredAddress.get().getAddress());
         }
 
-        Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, AddressType.OPERATING);
+        Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, OPERATING);
         if(operatingAddress.isPresent()){
-            AddressResource addressResource = operatingAddress.get().getAddress();
             projectDetailsAddressViewModel.setOperatingAddress(operatingAddress.get().getAddress());
-            existingAddresses.add(addressResource.getId());
-            if(addressResource.getId().equals(project.getAddress())){
-                form.setProjectAddressGroup(ADDRESS_USE_OP);
-            }
         }
 
-        if(project.getAddress() != null && !existingAddresses.contains(project.getAddress())){
-            AddressResource addressResource = addressService.getById(project.getAddress()).getSuccessObjectOrThrowException();
-            projectDetailsAddressViewModel.setProjectAddress(addressResource);
-            if(addressResource.getId().equals(project.getAddress())){
-                form.setProjectAddressGroup(ADDRESS_USE_ADD);
-            }
+        if(project.getAddress() != null){
+            projectDetailsAddressViewModel.setProjectAddress(project.getAddress());
         }
-
-        addAddressOptions(form);
-        addSelectedAddress(form);
 
         return projectDetailsAddressViewModel;
     }
 
-    private ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm getFormDataFromCookie(@ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, Model model, HttpServletRequest request) {
+    private void addressFormValidate(@Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form, BindingResult bindingResult, BindingResult addressBindingResult) {
+        if (form.getAddressForm().getSelectedPostcode() != null) {
+            validator.validate(form.getAddressForm().getSelectedPostcode(), addressBindingResult);
+        } else if (!form.getAddressForm().isManualAddress()) {
+            bindingResult.rejectValue("", "NotEmpty", "You should either fill in your address, or use the registered or operating address as your project address.");
+        }
+    }
+
+    private void processAddressLookupFields(ProjectDetailsAddressViewModelForm form){
+        addAddressOptions(form);
+        addSelectedAddress(form);
+    }
+
+    private ProjectDetailsAddressViewModelForm getFormDataFromCookie(@ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form, Model model, HttpServletRequest request) {
         BindingResult bindingResult;// Merge information from cookie into ModelAttribute.
         String formJson = CookieUtil.getCookieValue(request, FORM_ATTR_NAME);
-
         if (StringUtils.hasText(formJson)) {
-            form = JsonUtil.getObjectFromJson(formJson, ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm.class);
+            form = JsonUtil.getObjectFromJson(formJson, ProjectDetailsAddressViewModelForm.class);
             bindingResult = new BeanPropertyBindingResult(form, FORM_ATTR_NAME);
             validator.validate(form, bindingResult);
-            model.addAttribute(FORM_ATTR_NAME, bindingResult);
+            model.addAttribute(BINDING_RESULT_PROJECT_LOCATION_FORM, bindingResult);
             BindingResult addressBindingResult = new BeanPropertyBindingResult(form.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
             addressFormValidate(form, bindingResult, addressBindingResult);
         }
-        return form;
-    }
-
-    private void addressFormValidate(@Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModel.ProjectDetailsAddressViewModelForm form, BindingResult bindingResult, BindingResult addressBindingResult) {
-        if (form.getProjectAddressGroup().equals(ADDRESS_USE_ADD)) {
-            if (form.getAddressForm().getSelectedPostcode() != null) {
-                validator.validate(form.getAddressForm().getSelectedPostcode(), addressBindingResult);
-            } else if (!form.getAddressForm().isManualAddress()) {
-                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "You should either fill in your address, or use the registered or operating address as your project address.");
-            }
+        String addressTypeJson = CookieUtil.getCookieValue(request, ADD_TYPE_ATTR_NAME);
+        if(StringUtils.hasText(addressTypeJson)){
+            form.setAddressType(AddressType.valueOf(addressTypeJson));
         }
+        return form;
     }
 }

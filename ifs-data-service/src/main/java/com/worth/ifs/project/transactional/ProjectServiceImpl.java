@@ -1,7 +1,10 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.repository.AddressRepository;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -43,6 +46,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private AddressMapper addressMapper;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -66,18 +72,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> updateProjectAddress(Long projectId, Long addressId) {
-        ServiceResult<Project> project = getProject(projectId);
-        if(project.isSuccess()){
-            ServiceResult<Address> address = getAddress(addressId);
-            if(address.isSuccess()){
-                project.getSuccessObject().setAddress(address.getSuccessObject());
-                return serviceSuccess();
-            } else {
-                return serviceFailure(address.getFailure().getErrors());
-            }
+    public ServiceResult<Void> updateProjectAddress(Long projectId, AddressType addressType, AddressResource address) {
+        ServiceResult<Project> result = getProject(projectId);
+        if(result.isSuccess()){
+            Project project = result.getSuccessObject();
+            project.setAddressType(addressType);
+            project.setAddress(addressMapper.mapToDomain(address));
+            return serviceSuccess();
         } else {
-            return serviceFailure(project.getFailure().getErrors());
+            return serviceFailure(result.getFailure().getErrors());
         }
     }
 

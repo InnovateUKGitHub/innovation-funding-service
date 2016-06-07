@@ -1,12 +1,10 @@
 package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.user.domain.ProcessRole;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
 
@@ -20,7 +18,7 @@ public class Project {
     private Long id;
     private LocalDate targetStartDate;
 
-    @OneToOne
+    @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name="address", referencedColumnName="id")
     private Address address;
 
@@ -32,6 +30,9 @@ public class Project {
     @OneToOne
     @JoinColumn(name="projectManager", referencedColumnName="id")
     private ProcessRole projectManager;
+
+    @Enumerated(EnumType.STRING)
+    private AddressType addressType;
 
     public Project() {}
 
@@ -90,5 +91,13 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public AddressType getAddressType() {
+        return addressType;
+    }
+
+    public void setAddressType(AddressType addressType) {
+        this.addressType = addressType;
     }
 }

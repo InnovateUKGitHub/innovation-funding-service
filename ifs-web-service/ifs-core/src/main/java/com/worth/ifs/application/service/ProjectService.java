@@ -1,5 +1,7 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -12,6 +14,5 @@ import java.time.LocalDate;
 public interface ProjectService {
     ProjectResource getById(Long projectId);
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
-    ServiceResult<Void> updateAddress(Long projectId, Long addressId);
-
+    ServiceResult<Void> updateAddress(Long projectId, AddressType addressType, AddressResource address);
 }

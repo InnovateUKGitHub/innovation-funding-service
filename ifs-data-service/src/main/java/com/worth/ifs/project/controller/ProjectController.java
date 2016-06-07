@@ -1,14 +1,13 @@
 package com.worth.ifs.project.controller;
 
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,7 +42,8 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/address", method = POST)
     public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
-                                                   @RequestParam("projectAddress") Long addressId) {
-        return projectService.updateProjectAddress(projectId, addressId).toPostResponse();
+                                                 @RequestParam("addressType") final String addressType,
+                                                 @RequestBody AddressResource addressResource) {
+        return projectService.updateProjectAddress(projectId, AddressType.valueOf(addressType), addressResource).toPostResponse();
     }
 }

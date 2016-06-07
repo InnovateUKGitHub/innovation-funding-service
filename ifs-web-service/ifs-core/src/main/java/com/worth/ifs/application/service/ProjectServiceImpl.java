@@ -1,5 +1,7 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.service.ProjectRestService;
@@ -33,7 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> updateAddress(Long projectId, Long addressId) {
-        return projectRestRestService.updateProjectAddress(projectId, addressId).toServiceResult();
+    public ServiceResult<Void> updateAddress(Long projectId, AddressType addressType, AddressResource address) {
+        return projectRestRestService.updateProjectAddress(projectId, addressType, address).toServiceResult();
     }
 }

@@ -7,14 +7,14 @@
         <legend class="visuallyhidden">Operating address</legend>
         <div class="form-block" th:if="${model.registeredAddress}">
             <label class="block-label" for="address-use-org" data-target="registeredAddress">
-                <input id="address-use-org" type="radio" name="project-address-group" value="address-use-org" th:field="*{projectAddressGroup}"/>
+                <input id="address-use-org" type="radio" name="project-address-group" value="REGISTERED" th:field="*{addressType}"/>
                 Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
             </label>
         </div>
 
         <div class="form-block" th:if="${model.operatingAddress}" data-target="operatingAddress">
             <label class="block-label" for="address-use-operating">
-                <input id="address-use-operating" type="radio" name="project-address-group" value="address-use-operating" th:field="*{projectAddressGroup}"/>
+                <input id="address-use-operating" type="radio" name="project-address-group" value="OPERATING" th:field="*{addressType}"/>
                 Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
             </label>
         </div>
@@ -22,7 +22,7 @@
 
         <div class="form-block">
             <label class="block-label" for="address-add-project" data-target="custom-postcode">
-                <input id="address-add-project" type="radio" name="project-address-group" value="address-add-project" th:field="*{projectAddressGroup}"/>
+                <input id="address-add-project" type="radio" name="project-address-group" value="PROJECT" th:field="*{addressType}"/>
                 Enter an alternative project address
             </label>
         </div>
@@ -88,7 +88,7 @@
         </label>
         <input class="form-control" th:field="*{addressForm.postcodeInput}" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'field-error' : ''" type="text" />
         <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
-        <div th:if='${form.addressForm.postcodeInput != ""} and ${form.addressForm.postcodeOptions.size()}==0'>No results were found</div>
+        <div th:if='${form.addressForm.postcodeInput != "" and form.addressForm.postcodeOptions.size() == 0}'>No results were found</div>
     </div>
 
     <div class="form-group"  th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">

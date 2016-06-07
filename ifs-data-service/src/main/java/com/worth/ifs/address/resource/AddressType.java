@@ -1,7 +1,7 @@
 package com.worth.ifs.address.resource;
 
 public enum AddressType {
-    REGISTERED("registered", 2), OPERATING("operating", 1);
+    REGISTERED("registered", 2), OPERATING("operating", 1), PROJECT("project", 3);
 
     private final String name;
     private final int ordinal;

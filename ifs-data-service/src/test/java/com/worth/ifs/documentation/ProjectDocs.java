@@ -1,5 +1,6 @@
 package com.worth.ifs.documentation;
 
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -16,14 +17,15 @@ public class ProjectDocs {
             fieldWithPath("address").description("Address where the project is expected to be executed from"),
             fieldWithPath("durationInMonths").description("Duration that the project is expeceted to last"),
             fieldWithPath("projectManager").description("Project manager designated for the project"),
-            fieldWithPath("name").description("The Project's name")
+            fieldWithPath("name").description("The Project's name"),
+            fieldWithPath("addressType").description("Address Type")
     };
 
     public static final ProjectResourceBuilder projectResourceBuilder = newProjectResource()
             .withId(1L)
             .with(name("Sample Project"))
             .withTargetStartDate(LocalDate.now())
-            .withAddress(1L)
+            .withAddress(new AddressResource())
             .withDuration(1L)
             .withProjectManager(1L);
 }
