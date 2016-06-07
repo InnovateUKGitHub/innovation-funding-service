@@ -6,6 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,12 +57,15 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 
-        mockMvc.perform(get("/project/{id}/details", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("project", projectResource))
-                .andExpect(model().attribute("app", applicationResource))
-                .andExpect(model().attribute("competition", competitionResource))
-                .andExpect(view().name("project/detail"));
+                .andExpect(view().name("project/detail"))
+                .andReturn();
+
+        ProjectDetailsViewModel viewModel = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(projectResource, viewModel.getProject());
+        assertEquals(applicationResource, viewModel.getApp());
+        assertEquals(competitionResource, viewModel.getCompetition());
     }
 
     @Test

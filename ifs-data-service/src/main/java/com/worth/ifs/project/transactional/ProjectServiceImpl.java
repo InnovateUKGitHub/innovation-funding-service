@@ -23,6 +23,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -66,8 +67,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 	public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
 		 return getProject(projectId).
 				  andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-				  andOnSuccessReturnVoid(processRole -> {int i = 0;}));
+				  andOnSuccessReturnVoid(processRole -> createFinanceContactProcessRole(processRole)));
 	}
+
+    private ServiceResult<ProcessRole> createFinanceContactProcessRole(ProcessRole originalProcessRole) {
+        return getRole(FINANCE_CONTACT).andOnSuccessReturn(role -> {
+            ProcessRole financeContact = new ProcessRole(originalProcessRole.getUser(), originalProcessRole.getApplication(), role, originalProcessRole.getOrganisation());
+            processRoleRepository.save(financeContact);
+            return financeContact;
+        });
+    }
 
     @Override
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {

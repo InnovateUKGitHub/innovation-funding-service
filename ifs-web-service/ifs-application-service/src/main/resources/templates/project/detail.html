@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
+        <p class="subtitle" th:text="${#numbers.formatInteger(model.project.id,8)} + ': ' + ${model.app.getApplicationDisplayName()} "/>
         <h1 class="heading-xlarge no-margin">Project details</h1>
     </div>
 
@@ -29,35 +29,35 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:href="@{/project/{id}/details/start-date(id=${app.getId()})}">Start date</a>
+                    <a th:href="@{/project/{id}/details/start-date(id=${model.app.getId()})}">Start date</a>
                 </td>
                 <td id="start-date">
-                    <span th:if="${project.targetStartDate == null}" th:remove="tag">-</span>
-                    <span th:unless="${project.targetStartDate == null}" th:text="${#temporals.format(project.targetStartDate, 'd MMM yyyy')}" th:remove="tag"></span>
+                    <span th:if="${model.project.targetStartDate == null}" th:remove="tag">-</span>
+                    <span th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}" th:remove="tag"></span>
                 </td>
                 <td>
-                    <span th:if="${project.targetStartDate == null}" id="start-date-status" class="no">No</span>
-                    <span th:unless="${project.targetStartDate == null}" id="start-date-status" class="yes">Yes</span>
+                    <span th:if="${model.project.targetStartDate == null}" id="start-date-status" class="no">No</span>
+                    <span th:unless="${model.project.targetStartDate == null}" id="start-date-status" class="yes">Yes</span>
                 </td>
             </tr>
             <tr>
                 <td>                    
-                    <a th:href="@{/project/{id}/details/project-address(id=${app.getId()})}">Project address</a>
+                    <a th:href="@{/project/{id}/details/project-address(id=${model.app.getId()})}">Project address</a>
                 </td>
                 <td id="project-address">-</td>
                 <td>
-                    <span th:if="${project.address == null}" id="project-address-status" class="no">No</span>
-                    <span th:unless="${project.address == null}" id="project-address-status" class="yes">Yes</span>
+                    <span th:if="${model.project.address == null}" id="project-address-status" class="no">No</span>
+                    <span th:unless="${model.project.address == null}" id="project-address-status" class="yes">Yes</span>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a th:href="@{/project/{id}/details/project-manager(id=${app.getId()})}">Project manager</a>
+                    <a th:href="@{/project/{id}/details/project-manager(id=${model.app.getId()})}">Project manager</a>
                 </td>
                 <td id="project-manager">-</td>
                 <td>
-                    <span th:if="${project.projectManager == null}" id="project-manager-status" class="no">No</span>
-                    <span th:unless="${project.projectManager == null}" id="project-manager-status" class="yes">Yes</span>
+                    <span th:if="${model.project.projectManager == null}" id="project-manager-status" class="no">No</span>
+                    <span th:unless="${model.project.projectManager == null}" id="project-manager-status" class="yes">Yes</span>
                 </td>
             </tr>
             
@@ -77,10 +77,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="organisation: ${applicationOrganisations}">
+            <tr th:each="organisation: ${model.partnerOrganisations}">
                 <td>
-                    <a th:if="${organisation.id == currentOrganisation}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${app.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                    <span th:unless="${organisation.id == currentOrganisation}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
+                    <a th:if="${organisation.id == model.currentOrganisation}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.app.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                    <span th:unless="${organisation.id == model.currentOrganisation}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
                 </td>
                 <td>
                     <span id="finance-contact">John Smith</span>
