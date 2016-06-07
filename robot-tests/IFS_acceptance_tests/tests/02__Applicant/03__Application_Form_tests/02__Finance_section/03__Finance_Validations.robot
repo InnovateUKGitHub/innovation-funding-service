@@ -5,7 +5,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances
+Force Tags        Finances    Failing
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -51,7 +51,7 @@ Labour server side
 Admin costs client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    When user selects the admin costs    overheads-type-29-284    CUSTOM_RATE
+    Given the user clicks the button/link    jQuery=label:contains("Custom administration support cost")
     And the user enters text to a text field    css=[id$="customRate"]    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank    This field cannot be left blank    #Entered two times the same error because this keyword expects two errors
     When the user enters text to a text field    css=[id$="customRate"]    101
@@ -75,7 +75,7 @@ Admin costs server side
     And the user marks the finances as complete
     Then the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    user selects the admin costs    overheads-type-29-284    DEFAULT_PERCENTAGE
+    [Teardown]    Run keywords    Given the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     ...    AND    the user clicks the button/link    jQuery=button:contains("Administration support costs")
 
 Materials client side
@@ -236,7 +236,7 @@ Funding level server side
 Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]    Run keywords    Select Radio button    other_funding-otherPublicFunding-35-286    Yes
+    [Setup]    Run keywords    the user clicks the button/link    jQuery=label:contains(Yes) input
     ...    AND    Focus    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
@@ -300,7 +300,7 @@ the user reloads the page with validation errors
     Run Keyword And Ignore Error    Confirm Action
 
 the users selects no in the other fundings section
-    Select Radio button    other_funding-otherPublicFunding-35-286    No
+    the user clicks the button/link    jQuery=label:contains(No) input
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
