@@ -3,12 +3,11 @@ package com.worth.ifs.project.domain;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.user.domain.ProcessRole;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *  A project represents an application that has been accepted (and is now in project setup phase).
@@ -32,6 +31,9 @@ public class Project {
     @OneToOne
     @JoinColumn(name="projectManager", referencedColumnName="id")
     private ProcessRole projectManager;
+
+    @OneToMany(mappedBy="project")
+    private List<ProjectUser> projectUsers = new ArrayList<>();
 
     public Project() {}
 
@@ -90,5 +92,13 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<ProjectUser> getProjectUsers() {
+        return projectUsers;
+    }
+
+    public void setProjectUsers(List<ProjectUser> projectUsers) {
+        this.projectUsers = projectUsers;
     }
 }
