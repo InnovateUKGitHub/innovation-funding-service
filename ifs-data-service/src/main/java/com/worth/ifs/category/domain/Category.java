@@ -1,5 +1,7 @@
 package com.worth.ifs.category.domain;
 
+import com.worth.ifs.category.resource.CategoryType;
+
 import javax.persistence.*;
 import java.util.List;
 

@@ -1,10 +1,13 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.controller.form.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,12 @@ public class CompetitionSetupController {
 	
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
 
@@ -60,24 +69,25 @@ public class CompetitionSetupController {
 
 		model.addAttribute("competition", competition);
         model.addAttribute("currentSection", competitionSetupSection.get());
+        model.addAttribute("currentSectionFragment", "section-" + competitionSetupSection.get().getName().replaceAll(" ", "-").toLowerCase());
         model.addAttribute("editable", !completedSections.contains(sectionId));
         model.addAttribute("allSections", sections);
         model.addAttribute("allCompletedSections", completedSections);
-        model.addAttribute("sectionFormData", getSectionFormData(competition, competitionSetupSection.get()));
+        model.addAttribute("sectionFormData", getSectionFormData(model, competition, competitionSetupSection.get()));
         model.addAttribute("subTitle", (competition.getCode() != null ? competition.getCode() : "Unknown") + ": " + (competition.getName() != null ? competition.getName() : "Unknown"));
 
 		return "competition/setup";
     }
 
-    private CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource, CompetitionSetupSectionResource competitionSetupSectionResource) {
+    private CompetitionSetupForm getSectionFormData(Model model, CompetitionResource competitionResource, CompetitionSetupSectionResource competitionSetupSectionResource) {
         CompetitionSetupForm competitionSetupForm;
 
         switch (competitionSetupSectionResource.getName()) {
             case SECTION_ONE:
-                competitionSetupForm = fillFirstSectionFormSection(competitionResource);
+                competitionSetupForm = fillFirstSectionFormSection(model, competitionResource);
                 break;
             default:
-                competitionSetupForm = fillFirstSectionFormSection(competitionResource);
+                competitionSetupForm = fillFirstSectionFormSection(model, competitionResource);
                 break;
         }
 
@@ -85,7 +95,7 @@ public class CompetitionSetupController {
         return competitionSetupForm;
     }
 
-    private CompetitionSetupForm fillFirstSectionFormSection(CompetitionResource competitionResource) {
+    private CompetitionSetupForm fillFirstSectionFormSection(Model model, CompetitionResource competitionResource) {
         CompetitionSetupInitialDetailsForm competitionSetupForm = new CompetitionSetupInitialDetailsForm();
 
         competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());
@@ -107,12 +117,20 @@ public class CompetitionSetupController {
         competitionSetupForm.setTitle(competitionResource.getName());
         competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
 
+        model.addAttribute("competitionExecutiveUsers", userService.findUserByType("Type"));
+        model.addAttribute("innovationSectors", categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR));
+        model.addAttribute("innovationAreas", categoryService.getCategoryByType(CategoryType.INNOVATION_AREA));
+        model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
+        model.addAttribute("competitionLeadTechUsers", userService.findUserByType("Type"));
+
         return competitionSetupForm;
     }
 
 
     @RequestMapping(value = "/section/{section}", method = RequestMethod.POST)
     public String saveCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId, @PathVariable("section") Long sectionId){
+
+        //TODO implement this
 
         CompetitionResource competition = competitionService.getById(competitionId);
         List<Long> completedSections = competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competitionId);

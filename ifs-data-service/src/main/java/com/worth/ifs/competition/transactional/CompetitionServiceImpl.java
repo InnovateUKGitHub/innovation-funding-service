@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.category.domain.Category;
-import com.worth.ifs.category.domain.CategoryType;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.commons.service.ServiceResult;

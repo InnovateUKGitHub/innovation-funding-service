@@ -1,7 +1,5 @@
 package com.worth.ifs.category.resource;
 
-import com.worth.ifs.category.domain.CategoryType;
-
 import java.util.Set;
 
 public class CategoryResource {

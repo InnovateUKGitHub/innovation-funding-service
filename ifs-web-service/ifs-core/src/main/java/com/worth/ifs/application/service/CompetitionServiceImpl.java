@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,5 +73,25 @@ public class CompetitionServiceImpl implements CompetitionService {
         completedCompetitionSetupSectionStatuses.add(3L);
 
         return completedCompetitionSetupSectionStatuses;
+    }
+
+    @Override
+    public List<CompetitionTypeResource> getAllCompetitionTypes() {
+        // TODO : Make use of RestService
+        List<CompetitionTypeResource> competitionTypeResources = new ArrayList();
+
+        CompetitionTypeResource competitionTypeResource = new CompetitionTypeResource();
+        competitionTypeResource.setId(1L);
+        competitionTypeResource.setName("Competition Type 1");
+
+        competitionTypeResources.add(competitionTypeResource);
+
+        competitionTypeResource = new CompetitionTypeResource();
+        competitionTypeResource.setId(2L);
+        competitionTypeResource.setName("Competition Type 2");
+
+        competitionTypeResources.add(competitionTypeResource);
+
+        return competitionTypeResources;
     }
 }

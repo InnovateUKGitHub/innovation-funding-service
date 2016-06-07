@@ -1,7 +1,7 @@
 package com.worth.ifs.category.repository;
 
 import com.worth.ifs.category.domain.Category;
-import com.worth.ifs.category.domain.CategoryType;
+import com.worth.ifs.category.resource.CategoryType;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
