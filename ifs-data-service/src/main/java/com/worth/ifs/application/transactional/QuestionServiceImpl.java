@@ -10,10 +10,12 @@ import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.validator.util.ValidationUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,19 +63,22 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Autowired
     private QuestionMapper questionMapper;
 
+    @Autowired
+    private ValidationUtil validationUtil;
+
     @Override
     public ServiceResult<QuestionResource> getQuestionById(final Long id) {
         return getQuestionResource(id);
     }
 
     @Override
-    public ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
+    public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                               final Long markedAsCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
     }
 
     @Override
-    public ServiceResult<Void> markAsInComplete(final QuestionApplicationCompositeId ids,
+    public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                 final Long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false);
     }
@@ -273,10 +278,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
 
-    private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
+    private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
         return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
             QuestionStatus questionStatus = null;
+
+            List<ValidationMessages> applicationIsValid = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
 
             if (question.hasMultipleStatuses()) {
                 //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
@@ -289,16 +296,17 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             } else {
                 questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
             }
-
+           // application.getDurationInMonths();
             if (questionStatus == null) {
                 questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
             } else if (markAsComplete) {
+
                 questionStatus.markAsComplete();
             } else {
                 questionStatus.markAsInComplete();
             }
             questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
+            return serviceSuccess(applicationIsValid);
         });
     }
 

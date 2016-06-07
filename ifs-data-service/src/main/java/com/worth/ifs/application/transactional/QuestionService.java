@@ -24,12 +24,11 @@ public interface QuestionService {
     ServiceResult<QuestionResource> getQuestionById(final Long id);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
-    ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
+    ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                                             final Long markedAsCompleteById);
 
-
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
-    ServiceResult<Void> markAsInComplete(final QuestionApplicationCompositeId ids,
+    ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                           final Long markedAsInCompleteById);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
