@@ -215,52 +215,57 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 .collect(toList());
     }
 
-    // TODO DW - INFUND-1555 - work out the getSuccessObject call
     private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
-        return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(sectionIsComplete -> {
+        return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(
+                mainSectionComplete -> {
+                    // If there are child sections are they complete?
+                    if (mainSectionComplete && section.hasChildSections()) {
+                        for (final Section childSection : section.getChildSections()) {
+                            final ServiceResult<Boolean> sectionComplete = isSectionComplete(childSection, applicationId, organisationId);
+                            if (sectionComplete.isFailure()) {
+                                return sectionComplete;
+                            } else if (!sectionComplete.getSuccessObject()) {
+                                return serviceSuccess(false);
+                            }
 
-            // check if section has subsections, if there are subsections let the outcome depend on those subsections
-            // and the section itself if it contains questions with mark as complete attached
-            if (sectionIsComplete && section.hasChildSections()) {
-                sectionIsComplete = section.getChildSections()
-                        .stream()
-                        .allMatch(s -> isSectionComplete(s, applicationId, organisationId).getSuccessObject());
-            }
-            return serviceSuccess(sectionIsComplete);
-        });
+                        }
+                    }
+                    return serviceSuccess(mainSectionComplete);
+                });
     }
 
-    // TODO DW - INFUND-1555 - work out the getSuccessObject call
     private ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
-        boolean sectionIsComplete = true;
         for (Question question : section.getQuestions()) {
             if (!ignoreOtherOrganisations && question.getName() != null && "FINANCE_SUMMARY_INDICATOR_STRING".equals(question.getName()) && section.getParentSection() != null) {
-                if (!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section).getSuccessObject()) {
-                    sectionIsComplete = false;
+                final ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations = childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section);
+                if (childSectionsAreCompleteForAllOrganisations.isFailure()) {
+                    return childSectionsAreCompleteForAllOrganisations;
+                } else if (!childSectionsAreCompleteForAllOrganisations.getSuccessObject()) {
+                    return serviceSuccess(false);
                 }
-                break;
             }
 
-            if (!question.isMarkAsCompletedEnabled())
-                continue;
-
-            boolean questionMarkedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject();
-            // if one of the questions is incomplete then the whole section is incomplete
-            if (!questionMarkedAsComplete) {
-                sectionIsComplete = false;
-                break;
+            if (question.isMarkAsCompletedEnabled()) {
+                final ServiceResult<Boolean> markedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId);
+                // if one of the questions is incomplete then the whole section is incomplete
+                if (markedAsComplete.isFailure()) {
+                    return markedAsComplete;
+                } else if (!markedAsComplete.getSuccessObject()) {
+                    return serviceSuccess(false);
+                }
             }
         }
-        return serviceSuccess(sectionIsComplete);
+        return serviceSuccess(true);
+    }
+
+
+    @Override
+    public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
+        return getApplication(applicationId).andOnSuccess(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
     }
 
     // TODO DW - INFUND-1555 - work out the getSuccessObject call
-    @Override
-    public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
-        return getApplication(applicationId).andOnSuccessReturn(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
-    }
-
-    private Boolean childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
+    private ServiceResult<Boolean> childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
         boolean allSectionsWithSubsectionsAreComplete = true;
 
         List<Section> sections;
@@ -283,7 +288,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 break;
             }
         }
-        return allSectionsWithSubsectionsAreComplete;
+        return serviceSuccess(allSectionsWithSubsectionsAreComplete);
     }
 
     @Override
