@@ -34,7 +34,7 @@
                             <span th:if="${competition.name == null}" th:text="#{ifs.competition.no_title}">No Title</span>
                         </a>
                     </h3>
-                    <a th:if="${competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP}" th:href="@{'competition/setup/'+${competition.id} + '/e'}" >
+                    <a th:if="${competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP}" th:href="@{'competition/setup/'+${competition.id}}" >
                         Edit Competition
                     </a>
                     <p>Ref number: <span th:text="${competition.id}"></span></p>
