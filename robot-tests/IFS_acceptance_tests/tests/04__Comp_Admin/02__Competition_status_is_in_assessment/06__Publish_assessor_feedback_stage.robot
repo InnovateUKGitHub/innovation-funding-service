@@ -51,13 +51,13 @@ Pushing the publish feedback brings up a warning
     Given the user navigates to the page    ${assessor_feedback_competition_url}
     When the user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
     Then the user should see the text in the page    ${dialogue_warning_message}
-    And the user should see the element    jQuery=.button:contains("Cancel")
+    And the user should see the element    jQuery=button:contains("Cancel")
     And the user should see the element    jQuery=.button:contains("Publish assessor feedback")
 
 Choosing cancel on the dialogue
     [Documentation]    INFUND-2672
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Cancel")
+    When the user clicks the button/link    jQuery=button:contains("Cancel")
     Then the user should be redirected to the correct page    ${assessor_feedback_competition_url}
     And the user should see the text in the page    Assessor Feedback
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
