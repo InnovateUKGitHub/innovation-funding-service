@@ -155,6 +155,7 @@
        <tr>
          <th scope="col">Application no</th>
          <th scope="col">Project title</th>
+         <th scope="col">Lead name</th>
          <th scope="col">Lead</th>
          <th scope="col">Status</th>
          <th scope="col">Percentage complete</th>
@@ -164,6 +165,7 @@
        <tr th:each="result : ${results.content}">
          <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}" th:text="${result.getFormattedId()}" /></td>
          <td th:text="${result.name}"></td>
+         <td th:text="${result.leadApplicant}"></td>
          <td th:text="${result.lead}"></td>
          <td th:text="${result.status}"></td>
          <td th:text="${result.completedPercentage}"></td>
