@@ -271,7 +271,7 @@ Select NO and mark as complete should be possible
     And the user marks the finances as complete
     Then the user should see the text in the page    Application overview
     And the user should see the text in the page    These are the 10 questions which will be marked by assessors
-    [Teardown]    Run keywords    the user navigates to the page    ${YOUR_FINANCES_URL}
+    [Teardown]    Run keywords    Applicant navigates to the finances of the Robot application
     ...    AND    Run Keyword And Ignore Error    Focus    jQuery=button:contains("Edit")
     ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
 

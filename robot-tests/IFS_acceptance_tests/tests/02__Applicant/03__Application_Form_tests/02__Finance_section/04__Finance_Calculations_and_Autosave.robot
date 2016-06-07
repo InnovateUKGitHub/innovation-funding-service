@@ -4,14 +4,16 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 ...
 ...               INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
+Suite Setup       Run keywords    log in and create new application if there is not one already
+...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath
+Force Tags        HappyPath    Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    Alice
@@ -27,8 +29,7 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
+    [Tags]
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -44,12 +45,12 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736
-    [Tags]    Finances
+    [Tags]
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    And user selects the admin costs    overheads-type-29-51    DEFAULT_PERCENTAGE
+    And user selects the admin costs    overheads-type-29-284    DEFAULT_PERCENTAGE
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    And user selects the admin costs    overheads-type-29-51    CUSTOM_RATE
-    And the user enters text to a text field    id=cost-overheads-51-customRate    30
+    And user selects the admin costs    overheads-type-29-284    CUSTOM_RATE
+    And the user enters text to a text field    css=[id$="customRate"]    30
     Then admin costs total should be correct    id=section-total-10-custom    £ 14,400
     [Teardown]    Click Element    jQuery=button:contains("Administration support costs")
 
@@ -57,8 +58,7 @@ Materials
     [Documentation]    INFUND-192
     ...
     ...    INFUND-736
-    [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
+    [Tags]
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
@@ -68,7 +68,7 @@ Materials
 
 Capital usage
     [Documentation]    INFUND-736
-    [Tags]    Finances
+    [Tags]
     When the applicant fills the 'capital usage' field
     Then Totals should be correct    css=#section-total-12    £ 200    css=[data-mirror="#section-total-12"]    £ 200
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
@@ -80,7 +80,7 @@ Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
     ...    INFUND-2303
-    [Tags]    Finances
+    [Tags]
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
     And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
@@ -90,7 +90,7 @@ Subcontracting costs
 
 Travel and subsistence
     [Documentation]    INFUND-736
-    [Tags]    Finances
+    [Tags]
     When the Applicant fills the Travel fields
     Then Totals should be correct    css=#section-total-14    £ 2,000    css=[data-mirror="#section-total-14"]    £ 2,000
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
@@ -100,7 +100,7 @@ Travel and subsistence
 
 Other costs
     [Documentation]    INFUND-736
-    [Tags]    Finances
+    [Tags]
     When the applicant adds one row for the other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
@@ -109,7 +109,7 @@ Other costs
 
 Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
-    [Tags]    Finances
+    [Tags]
     Given the applicant selects 'No' for other funding
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant selects 'Yes' and fills two rows
@@ -123,8 +123,7 @@ Other Funding
     Then the total of the other funding should be correct
 
 Funding level
-    [Tags]    Finance
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
+    [Tags]
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
 
@@ -133,8 +132,8 @@ the Applicant fills in the Labour costs for two rows
     Click Element    jQuery=button:contains("Labour")
     Click Element    jQuery=button:contains('Add another role')
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    Clear Element Text    css=#cost-labour-1-labourDaysYearly
-    Input Text    css=#cost-labour-1-labourDaysYearly    230
+    Clear Element Text    css=[name^="labour-labourDaysYearly"]
+    Input Text    css=[name^="labour-labourDaysYearly"]    230
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
@@ -147,9 +146,9 @@ the Applicant fills in the Labour costs for two rows
 
 the applicant edits the working days field
     #Click Element    css=[aria-controls="collapsible-1"]
-    Wait Until Element Is Visible    css=#cost-labour-1-labourDaysYearly
-    Clear Element Text    css=#cost-labour-1-labourDaysYearly
-    Input Text    css=#cost-labour-1-labourDaysYearly    250
+    Wait Until Element Is Visible    css=[name^="labour-labourDaysYearly"]
+    Clear Element Text    css=[name^="labour-labourDaysYearly"]
+    Input Text    css=[name^="labour-labourDaysYearly"]    250
     Focus    css=.app-submit-btn
     Sleep    200ms
 
@@ -240,7 +239,7 @@ The applicant cannot see the 'other funding' details
     Page Should Not Contain    ${OTHER_FUNDING_SOURCE}
     Page Should Not Contain    ${OTHER_FUNDING_DATE}
     Page Should Not Contain    ${OTHER_FUNDING_AMOUNT}
-    Radio Button Should Be Set To    other_funding-otherPublicFunding-35-54    No
+    Radio Button Should Be Set To    other_funding-otherPublicFunding-35-286    No
 
 The applicant can leave the 'Your finances' page but the details are still saved
     Execute Javascript    jQuery('form').attr('data-test','true');
@@ -253,10 +252,10 @@ The applicant selects 'No' for other funding
     Select Radio button    other_funding-otherPublicFunding-35-286    No
 
 The applicant selects 'Yes' for other funding
-    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
+    Select Radio button    other_funding-otherPublicFunding-35-286    Yes
 
 The applicant selects 'Yes' and fills two rows
-    Select Radio button    other_funding-otherPublicFunding-35-54    Yes
+    Select Radio button    other_funding-otherPublicFunding-35-286    Yes
     Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
     Click Element    jQuery=button:contains('Add another source of funding')
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
@@ -292,7 +291,7 @@ Admin costs total should be correct
     Element Should Contain    jQuery=button:contains("Administration support costs")    ${ADMIN_VALUE}
 
 the grant value should be correct in the finance summary page
-    The user navigates to the page    ${FINANCES_OVERVIEW_URL}
+    The user navigates to the next page
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 auto-save should work for the "Grant" field
@@ -306,3 +305,7 @@ auto-save should work for the "Grant" field
     focus    jQuery= button:contains('complete')
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    25
+
+The user navigates to the next page
+    The user clicks the button/link    css=.next .pagination-label
+    Run Keyword And Ignore Error    confirm action
