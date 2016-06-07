@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.ApplicationOrganisationResourceId;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
@@ -96,8 +97,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
-    public ServiceResult<Set<Long>> getCompletedSections(final Long applicationId,
-                                                         final Long organisationId) {
+    public ServiceResult<Set<Long>> getCompletedSections(final ApplicationOrganisationResourceId applicationOrganisationResourceId) {
+        final long applicationId = applicationOrganisationResourceId.getApplicationId();
+        final long organisationId = applicationOrganisationResourceId.getOrganisationId();
         return find(application(applicationId), () -> getIncompleteSections(applicationId)).
                 andOnSuccess((application, incomplete) -> {
                     final List<ServiceResult<Pair<Long, Boolean>>> unaggregatedSectionsAndStatus = new ArrayList<>();

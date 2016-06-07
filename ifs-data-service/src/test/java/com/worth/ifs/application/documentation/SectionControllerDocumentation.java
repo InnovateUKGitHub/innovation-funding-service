@@ -1,16 +1,16 @@
 package com.worth.ifs.application.documentation;
 
-import java.util.Map;
-import java.util.Set;
-
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.controller.SectionController;
+import com.worth.ifs.application.resource.ApplicationOrganisationResourceId;
 import com.worth.ifs.application.transactional.SectionService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+
+import java.util.Map;
+import java.util.Set;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.SectionResourceDocs.sectionResourceBuilder;
@@ -18,6 +18,7 @@ import static com.worth.ifs.documentation.SectionResourceDocs.sectionResourceFie
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -89,7 +90,7 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
 
         final Set<Long> result = asSet(2L, 3L);
 
-        when (sectionService.getCompletedSections(applicationId, organisationId)).thenReturn(serviceSuccess(result));
+        when(sectionService.getCompletedSections(isA(ApplicationOrganisationResourceId.class))).thenReturn(serviceSuccess(result));
 
         mockMvc.perform(get(baseURI + "/getCompletedSections/{applicationId}/{organisationId}", applicationId, organisationId))
                 .andDo(this.document.snippets(

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationOrganisationResourceId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -29,6 +30,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -67,7 +69,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         Set<Long> completedSectionIds = completedSections.stream().map(s -> s.getId()).collect(toSet());
         Competition competition = newCompetition().withSections(allSections).build();
         Application application = newApplication().withCompetition(newCompetition().withSections(allSections).build()).build();
-        when(sectionService.getCompletedSections(application.getId(), organisationId))
+        when(sectionService.getCompletedSections(isA(ApplicationOrganisationResourceId.class)))
                 .thenReturn(serviceSuccess(completedSectionIds));
 
         mockMvc.perform(post("/section/getCompletedSections/" + application.getId() + "/" + organisationId)
