@@ -33,6 +33,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -142,9 +144,17 @@ public class ProjectDetailsController {
     }
 
 	private String modelForFinanceContact(Model model, Long projectId, Long organisation, HttpServletRequest request) {
+
+        List<ProcessRoleResource> projectRoles = processRoleService.findProcessRolesByApplicationId(projectId);
+        List<ProcessRoleResource> financeContacts = simpleFilter(projectRoles, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
+
 		FinanceContactForm form = new FinanceContactForm();
 		form.setOrganisation(organisation);
-		//TODO set current finance contact on the form
+
+        if (!financeContacts.isEmpty()) {
+            form.setFinanceContact(getOnlyElement(financeContacts).getUser());
+        }
+
 		return modelForFinanceContact(model, projectId, request, form);
 	}
 
