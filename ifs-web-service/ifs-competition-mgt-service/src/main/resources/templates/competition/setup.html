@@ -17,19 +17,7 @@
     <div th:include="fragments/competition-setup :: comp-admin-page-title-subheading(${subTitle}, 'Competition setup', null)" th:remove="tag" />
     <div th:include="fragments/competition-setup :: comp-setup-navigation(${allSections}, ${allCompletedSections}, ${currentSection}, ${competition})" th:remove="tag" />
 
-    <form th:action="${sectionFormData.getActionUrl()}" method="post" th:object="${sectionFormData}">
-        <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-            <h1 class="heading-medium error-summary-heading">
-                We were unable to save your changes
-            </h1>
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-            </ul>
-        </div>
-
-        <div th:replace="fragments/competition-setup-section :: ${currentSectionFragment}" th:remove="tag" />
-    </form>
-
+    <div th:replace="fragments/competition-setup-section :: ${currentSectionFragment}" th:remove="tag" />
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
