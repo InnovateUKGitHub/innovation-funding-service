@@ -1,16 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -20,6 +9,13 @@ import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -86,7 +82,7 @@ public class ApplicationController {
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = POST)
     public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
