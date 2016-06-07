@@ -73,9 +73,12 @@ Choosing Notify applicants on the dialogue redirects to the Assessor feedback pa
     [Tags]
     When the user clicks the button/link    name=publish
     Then the user should be redirected to the correct page    ${funders_panel_competition_url}
-    # The test above is required to trigger the state changes, but the step below is commented out as it is
-    # Pending due to INFUND-3156
-    # And the user should see the text in the page    Assessor Feedback
+
+
+Once applicants are notified, the whole state of the competition changes to Assessor feedback
+    [Documentation]    INFUND-2646
+    [Tags]
+    Then the user should see the text in the page    Assessor Feedback
 
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
@@ -87,12 +90,6 @@ Unsuccessful applicants are notified of the funding decision
     [Tags]    Email
     Then the user should get a confirmation email    ${test_mailbox_two}    ${email_failure_message}
 
-Once applicants are notified, the whole state of the competition changes to Assessor feedback
-    [Documentation]    INFUND-2646
-    [Tags]    Pending
-    # Pending due to INFUND-3169
-    When the user should see the text in the page    Projects in setup
-    Then the user should see the text in the page    Assessor Feedback
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
