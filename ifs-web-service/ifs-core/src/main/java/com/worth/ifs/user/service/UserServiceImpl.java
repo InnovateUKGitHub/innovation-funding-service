@@ -6,6 +6,7 @@ import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,25 +84,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResource> findUserByType(String type) {
-        //TODO use restservice;
-        List<UserResource> userList = new ArrayList();
-
-        UserResource user = new UserResource();
-        user.setFirstName("Test");
-        user.setLastName("User");
-        user.setId(1L);
-        user.setEmail("test@user.com");
-
-        userList.add(user);
-
-        user = new UserResource();
-        user.setFirstName("Test");
-        user.setLastName("User Two");
-        user.setId(2L);
-        userList.add(user);
-
-        return userList;
+    public List<UserResource> findUserByType(UserRoleType type) {
+        return userRestService.findByUserRoleType(type).getSuccessObjectOrThrowException();
     }
 
     @Override

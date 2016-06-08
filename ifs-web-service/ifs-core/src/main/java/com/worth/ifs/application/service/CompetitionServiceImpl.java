@@ -21,7 +21,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Autowired
     CompetitionsRestService competitionsRestService;
 
-
     @Override
     public CompetitionResource getById(Long competitionId){
         return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
@@ -53,28 +52,22 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public List<CompetitionTypeResource> getAllCompetitionTypes() {
-        // TODO : Make use of RestService
-        List<CompetitionTypeResource> competitionTypeResources = new ArrayList();
-
-        CompetitionTypeResource competitionTypeResource = new CompetitionTypeResource();
-        competitionTypeResource.setId(1L);
-        competitionTypeResource.setName("Competition Type 1");
-
-        competitionTypeResources.add(competitionTypeResource);
-
-        competitionTypeResource = new CompetitionTypeResource();
-        competitionTypeResource.setId(2L);
-        competitionTypeResource.setName("Competition Type 2");
-
-        competitionTypeResources.add(competitionTypeResource);
-
-        return competitionTypeResources;
+        return competitionsRestService.getCompetitionTypes().getSuccessObjectOrThrowException();
     }
 
     @Override
-    public CompetitionResource save(CompetitionResource competition) {
-//        competitionsRestService.save(competition);
-        return competition;
+    public void update(CompetitionResource competition) {
+        competitionsRestService.update(competition).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public void setSetupSectionMarkedAsComplete(Long competitionId, Long sectionId) {
+        competitionsRestService.markSectionComplete(competitionId, sectionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public void setSetupSectionMarkedAsIncomplete(Long competitionId, Long sectionId) {
+        competitionsRestService.markSectionInComplete(competitionId, sectionId).getSuccessObjectOrThrowException();
     }
 
 

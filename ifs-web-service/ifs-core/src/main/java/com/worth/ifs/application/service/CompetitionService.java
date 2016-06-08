@@ -24,5 +24,9 @@ public interface CompetitionService {
 
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
-    CompetitionResource save(CompetitionResource competition);
+    void update(CompetitionResource competition);
+
+    void setSetupSectionMarkedAsComplete(Long competitionId, Long sectionId);
+
+    void setSetupSectionMarkedAsIncomplete(Long competitionId, Long sectionId);
 }
