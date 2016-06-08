@@ -7,9 +7,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class ProjectDetailsAddressViewModelForm implements BindingResultTarget {
+    @NotNull(message = "Please select at least one, or enter a new project address.")
     private AddressType addressType;
     private boolean useSearchResultAddress;
     @Valid
