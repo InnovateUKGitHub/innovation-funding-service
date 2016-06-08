@@ -27,18 +27,21 @@ public class Project {
     @Min(0)
     private Long durationInMonths; // in months
 
+    private String name;
+
     @OneToOne
     @JoinColumn(name="projectManager", referencedColumnName="id")
     private ProcessRole projectManager;
 
     public Project() {}
 
-    public Project(Long id, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager) {
+    public Project(Long id, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name) {
         this.id = id;
         this.targetStartDate = targetStartDate;
         this.address = address;
         this.durationInMonths = durationInMonths;
         this.projectManager = projectManager;
+        this.name = name;
     }
 
     public Long getId() {
@@ -79,5 +82,13 @@ public class Project {
 
     public void setProjectManager(ProcessRole projectManager) {
         this.projectManager = projectManager;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

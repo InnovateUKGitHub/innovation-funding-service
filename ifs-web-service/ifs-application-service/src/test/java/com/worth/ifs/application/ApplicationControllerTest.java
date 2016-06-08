@@ -293,7 +293,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testNotExistingApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        when(env.acceptsProfiles("uat", "dev", "test")).thenReturn(true);
+        when(env.acceptsProfiles("debug")).thenReturn(true);
         when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn(
                 testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH));
         when(applicationService.getById(app.getId())).thenReturn(app);
