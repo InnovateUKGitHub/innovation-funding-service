@@ -8,13 +8,23 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content" class="full-width">
+<main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:remove="tag" />
 
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <div class="page-title">
+                  <p class="subtitle" th:text="${subTitle}">Sub title</p>
+                  <h1 class="heading-xlarge">Competition Setup</h1>
+                </div>
+            </div>
+            <div class="column-third extra-margin">
+              <div th:include="fragments/competition-management :: competition-status(competition='setup')" th:remove="tag" />
+            </div>
+        </div>
 
-    <div th:include="fragments/competition-setup :: comp-admin-page-title-subheading(${subTitle}, 'Competition setup', null)" th:remove="tag" />
     <div th:include="fragments/competition-setup :: comp-setup-navigation(${allSections}, ${allCompletedSections}, ${currentSection}, ${competition})" th:remove="tag" />
 
     <div th:replace="fragments/competition-setup-section :: ${currentSectionFragment}" th:remove="tag" />
