@@ -14,48 +14,8 @@
 
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="comp-admin-page-title-subheading(subtitle, heading, subheading)">
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
-                <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
-            </div>
-            <div class="column-third">
-                <h2 class="heading-small comp-status-label">
-
-                    <div th:if="${param.status == null}" th:remove="tag">
-                        <span th:text="${subheading}"></span>
-                    </div>
-
-                    <div th:if="${param.status != null}" th:remove="tag">
-
-                        <div th:if="${param.status[0] == 'closed'}" th:remove="tag">
-                            <span>Closed</span>
-                        </div>
-
-                        <div th:if="${param.status[0] == 'assessment'}" th:remove="tag">
-                            <span>In assessment</span>
-                        </div>
-
-                        <div th:if="${param.status[0] == 'fundingPanel'}" th:remove="tag">
-                            <span>Funders panel</span>
-                        </div>
-
-                        <div th:if="${param.status[0] == 'feedback'}" th:remove="tag">
-                            <span>Feedback to applicants</span>
-                        </div>
-
-                        <div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
-                            <span>Assessor feedback</span>
-                        </div>
-
-                        <div th:if="${param.status[0] == 'setup'}" th:remove="tag">
-                            <span>Projects in setup</span>
-                        </div>
-
-                    </div>
-                </h2>
-            </div>
-        </div>
-    </div>
+  <div class="page-title">
+    <p class="subtitle" th:text="${subtitle}">Sub title</p>
+    <h1 class="heading-xlarge" th:text="${heading}">Title here</h1>
+  </div>
 </div>

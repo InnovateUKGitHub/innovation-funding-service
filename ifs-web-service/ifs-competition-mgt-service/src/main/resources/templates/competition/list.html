@@ -8,7 +8,7 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content" class="full-width">
+<main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div class="grid-row">
@@ -24,8 +24,8 @@
         </div>
     </div>
 
-    <div class="grid-row competitions-list">
-        <ul class="comp-list">
+    <div class="competitions-list">
+        <ul class="comp-list boxed-list">
             <li class="status comp-status-closed" th:each="competition: ${competitions}">
                 <div class="comp-details">
                     <h3 class="heading-small">

@@ -6,15 +6,20 @@
 </div>
 <!-- competition status with blue block -->
 <div th:fragment="competition-status(competition)" th:remove="tag">
-    <h2 th:switch="${competition.competitionStatus.name()}" class="bold-small blue-block">
-        <div th:remove="tag" th:case="'NOT_STARTED'">Competition not yet started</div>
-        <div th:remove="tag" th:case="'OPEN'">Competition open</div>
-        <div th:remove="tag" th:case="'IN_ASSESSMENT'">In assessment</div>
-        <div th:remove="tag" th:case="'FUNDERS_PANEL'">Funders Panel</div>
-        <div th:remove="tag" th:case="'ASSESSOR_FEEDBACK'">Assessor Feedback</div>
-        <div th:remove="tag" th:case="'PROJECT_SETUP'">Project setup</div>
-        <div th:remove="tag" th:case="*">test2</div>
-    </h2>
+    <div th:unless="${competition == 'setup'}" th:remove="tag">
+      <h2 th:switch="${competition.competitionStatus.name()}" class="bold-small blue-block">
+          <div th:remove="tag" th:case="'NOT_STARTED'">Competition not yet started</div>
+          <div th:remove="tag" th:case="'OPEN'">Competition open</div>
+          <div th:remove="tag" th:case="'IN_ASSESSMENT'">In assessment</div>
+          <div th:remove="tag" th:case="'FUNDERS_PANEL'">Funders Panel</div>
+          <div th:remove="tag" th:case="'ASSESSOR_FEEDBACK'">Assessor Feedback</div>
+          <div th:remove="tag" th:case="'PROJECT_SETUP'">Project setup</div>
+          <div th:remove="tag" th:case="*">test2</div>
+      </h2>
+    </div>
+    <div th:if="${competition == 'setup'}" th:remove="tag">
+        <h2 class="bold-small blue-block">Competition Setup</h2>  
+    </div>
 </div>
 
 
@@ -266,5 +271,3 @@
     <button type="submit" class="button button-secondary no-margin">Sort</button>
 </div>
 </html>
-
-
