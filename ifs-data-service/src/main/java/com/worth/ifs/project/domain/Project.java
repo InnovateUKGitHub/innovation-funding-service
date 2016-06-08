@@ -32,7 +32,7 @@ public class Project {
     @JoinColumn(name="projectManager", referencedColumnName="id")
     private ProcessRole projectManager;
 
-    @OneToMany(mappedBy="project")
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
     public Project() {}
