@@ -29,7 +29,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:href="@{/project/{id}/details/start-date(id=${app.getId()})}">Start date</a>
+                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/start-date(id=${project.getId()})}">Start date</a>
+                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Start date</span>
                 </td>
                 <td id="start-date">
                     <span th:if="${project.targetStartDate == null}" th:remove="tag">-</span>
@@ -42,7 +43,8 @@
             </tr>
             <tr>
                 <td>                    
-                    <a th:href="@{/project/{id}/details/project-address(id=${app.getId()})}">Project address</a>
+                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/project-address(id=${project.getId()})}">Project address</a>
+                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Project address</span>
                 </td>
                 <td id="project-address">-</td>
                 <td>
@@ -52,7 +54,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:href="@{/project/{id}/details/project-manager(id=${app.getId()})}">Project manager</a>
+                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/project-manager(id=${project.getId()})}">Project manager</a>
+                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Project manager</span>
                 </td>
                 <td id="project-manager">-</td>
                 <td>
@@ -79,7 +82,7 @@
         <tbody>
             <tr th:each="organisation: ${applicationOrganisations}">
                 <td>
-                    <a th:if="${organisation.id == currentOrganisation}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${app.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                    <a th:if="${organisation.id == currentOrganisation}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
                     <span th:unless="${organisation.id == currentOrganisation}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
                 </td>
                 <td>
