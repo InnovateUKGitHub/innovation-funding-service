@@ -31,17 +31,17 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
         Application application = (Application) target;
 
         if (StringUtils.isEmpty(application.getName())) {
-            LOG.debug("MarkAsComplete validation message for: " + application.getName());
+            LOG.debug("MarkAsComplete application details validation message for name: " + application.getName());
             errors.rejectValue("name", "response.emptyResponse", "Please enter the full title of the project");
         }
 
         if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < 0 || application.getDurationInMonths() > 99) {
-            LOG.debug("MarkAsComplete validation message for: " + application.getDurationInMonths());
+            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
             errors.rejectValue("durationInMonths", "response.emptyResponse", "Please enter a valid duration");
         }
 
         if (StringUtils.isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
-           LOG.debug("MarkAsComplete validation message for: " + application.getStartDate());
+           LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
             errors.rejectValue("startDate", "response.emptyResponse", "Please enter a future date");
         }
     }

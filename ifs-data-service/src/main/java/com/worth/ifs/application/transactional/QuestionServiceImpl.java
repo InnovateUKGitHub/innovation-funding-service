@@ -74,7 +74,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                               final Long markedAsCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
+        ServiceResult<List<ValidationMessages>> messages = setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
+        return messages;
     }
 
     @Override
