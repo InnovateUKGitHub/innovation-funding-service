@@ -160,6 +160,6 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     @ExceptionHandler(value = RegistrationTokenExpiredException.class)
     public ModelAndView registrationTokenExpired(HttpServletRequest req, RegistrationTokenExpiredException e) {
         LOG.debug("ErrorController registrationTokenExpired", e);
-        return createExceptionModelAndViewWithTitleAndMessage(e, "error.title.registration.token.expired", "error.message.registration.token.expired", req, e.getArguments(), HttpStatus.FORBIDDEN);
+        return createExceptionModelAndView(e, "error.title.registration.token.expired", "error.message.registration.token.expired", "registration-token-expired", req, e.getArguments(), HttpStatus.FORBIDDEN);
     }
 }
