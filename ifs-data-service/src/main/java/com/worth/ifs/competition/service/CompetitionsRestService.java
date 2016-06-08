@@ -15,14 +15,11 @@ import java.util.List;
 public interface CompetitionsRestService {
     RestResult<List<CompetitionResource>> getAll();
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);
-
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
-
     RestResult<List<CompetitionSetupSectionResource>> getSetupSections();
     RestResult<List<CompetitionSetupCompletedSectionResource>> getCompletedSetupSections(Long competitionId);
+    RestResult<Void> update(CompetitionResource competition);
     RestResult<CompetitionResource> create();
-
     RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionComplete(Long competitionId, Long sectionId);
-
     RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionInComplete(Long competitionId, Long sectionId);
 }

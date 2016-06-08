@@ -59,6 +59,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
 
     @Override
+    public RestResult<Void> update(CompetitionResource competition) {
+        return putWithRestResult(competitionsRestURL + "/" + competition.getId(), competition, Void.class);
+    }
+
+    @Override
     public RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionComplete(Long competitionId, Long sectionId) {
         return getWithRestResult(String.format("%s/sectionStatus/complete/%s/%s", competitionsRestURL, competitionId, sectionId), competitionSetupCompletedSectionResourceListType());
     }
