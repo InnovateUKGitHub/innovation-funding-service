@@ -1,16 +1,18 @@
 package com.worth.ifs.project.transactional;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,8 @@ import java.util.Map;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -56,7 +55,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        return serviceSuccess(createProjectFromApplicationId(applicationId));
+        return createProjectFromApplicationId(applicationId);
     }
 
     @Override
@@ -124,15 +123,30 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         });
     }
     
-    private ProjectResource createProjectFromApplicationId(final Long applicationId){
-        Application application = applicationRepository.findOne(applicationId);
-        Project project = new Project();
-        project.setId(applicationId);
-        project.setDurationInMonths(application.getDurationInMonths());
-        project.setName(application.getName());
-        project.setTargetStartDate(application.getStartDate());
-        Project createdProject = projectRepository.save(project);
-        return projectMapper.mapToResource(createdProject);
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
+
+        return getApplication(applicationId).andOnSuccess(application -> {
+
+            Project project = new Project();
+            project.setId(applicationId);
+            project.setDurationInMonths(application.getDurationInMonths());
+            project.setName(application.getName());
+            project.setTargetStartDate(application.getStartDate());
+
+            List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
+            List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(collaborativeRoles, role -> createPartnerProjectUser(project, role.getUser(), role.getOrganisation()));
+            ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
+
+            return projectUserCollection.andOnSuccessReturn(projectUsers -> {
+                projectUsers.forEach(project::addProjectUser);
+                Project createdProject = projectRepository.save(project);
+                return projectMapper.mapToResource(createdProject);
+            });
+        });
+    }
+
+    private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
+        return getRole(PARTNER).andOnSuccessReturn(role -> new ProjectUser(user, project, role, organisation));
     }
 
     private List<ProjectResource> projectsToResources(List<Project> filtered) {

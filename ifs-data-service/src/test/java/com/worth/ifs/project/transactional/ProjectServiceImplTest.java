@@ -4,7 +4,9 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.user.builder.ProcessRoleBuilder;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -12,6 +14,7 @@ import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -24,6 +27,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -42,12 +46,49 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ProjectResource newProjectResource = newProjectResource().build();
 
+        User leadApplicant = newUser().build();
+        User collaborator1 = newUser().build();
+        User collaborator2 = newUser().build();
+
+        Organisation leadOrganisation = newOrganisation().build();
+        Organisation collaboratorOrganisation1 = newOrganisation().build();
+        Organisation collaboratorOrganisation2 = newOrganisation().build();
+
+        ProcessRoleBuilder processRoleBuilder = newProcessRole().
+                withApplication(application);
+
+        @SuppressWarnings("unused")
+        ProcessRole leadApplicantProcessRole = processRoleBuilder.
+                withRole(LEADAPPLICANT).
+                withUser(leadApplicant).
+                withOrganisation(collaboratorOrganisation1).
+                build();
+
+        @SuppressWarnings("unused")
+        ProcessRole collaborator1ProcessRole = processRoleBuilder.
+                withRole(COLLABORATOR).
+                withUser(collaborator1).
+                withOrganisation(leadOrganisation).
+                build();
+
+        @SuppressWarnings("unused")
+        ProcessRole collaborator2ProcessRole = processRoleBuilder.
+                withRole(COLLABORATOR).
+                withUser(collaborator2).
+                withOrganisation(collaboratorOrganisation2).
+                build();
+
+        Role partnerRole = newRole().withType(PARTNER).build();
+
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
 
-        Project newProjectExpectations = createProjectExpectationsFromOriginalApplication(application);
         Project savedProject = newProject().build();
 
+        when(roleRepositoryMock.findByName(PARTNER.getName())).thenReturn(singletonList(partnerRole));
+
+        Project newProjectExpectations = createProjectExpectationsFromOriginalApplication(application);
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
+
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(123L);
@@ -208,6 +249,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {
 
+        assertFalse(application.getProcessRoles().isEmpty());
+
         return createLambdaMatcher(project -> {
             assertEquals(application.getId(), project.getId());
             assertEquals(application.getName(), project.getName());
@@ -215,6 +258,21 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             assertEquals(application.getStartDate(), project.getTargetStartDate());
             assertNull(project.getProjectManager());
             assertNull(project.getAddress());
+
+            List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
+
+            assertEquals(collaborativeRoles.size(), project.getProjectUsers().size());
+
+            collaborativeRoles.forEach(processRole -> {
+
+                List<ProjectUser> matchingProjectUser = simpleFilter(project.getProjectUsers(), projectUser ->
+                        projectUser.getOrganisation().equals(processRole.getOrganisation()) &&
+                           projectUser.getUser().equals(processRole.getUser()));
+
+                assertEquals(1, matchingProjectUser.size());
+                assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
+                assertEquals(project, matchingProjectUser.get(0).getProject());
+            });
         });
     }
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -111,5 +112,13 @@ public class Role {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isLeadApplicant() {
+        return UserRoleType.LEADAPPLICANT.getName().equals(name);
+    }
+
+    public boolean isCollaborator() {
+        return UserRoleType.COLLABORATOR.getName().equals(name);
     }
 }

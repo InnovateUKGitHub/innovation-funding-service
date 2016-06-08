@@ -101,4 +101,12 @@ public class Project {
     public void setProjectUsers(List<ProjectUser> projectUsers) {
         this.projectUsers = projectUsers;
     }
+
+    public void addProjectUser(ProjectUser projectUser) {
+        projectUsers.add(projectUser);
+    }
+
+    public boolean removeProjectUser(ProjectUser projectUser) {
+        return projectUsers.remove(projectUser);
+    }
 }
