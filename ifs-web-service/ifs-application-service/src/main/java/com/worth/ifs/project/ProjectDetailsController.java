@@ -16,6 +16,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.BindingResultTarget;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
@@ -31,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,8 +48,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.address.resource.AddressType.OPERATING;
-import static com.worth.ifs.address.resource.AddressType.REGISTERED;
+import static com.worth.ifs.address.resource.AddressType.*;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 
 /**
@@ -89,6 +88,9 @@ public class ProjectDetailsController {
 
     @Autowired
     private AddressRestService addressRestService;
+
+    @Autowired
+    private OrganisationAddressRestService organisationAddressRestService;
 
     private Validator validator;
 
@@ -143,7 +145,12 @@ public class ProjectDetailsController {
                               @PathVariable("projectId") final Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
-        form.setAddressType(project.getAddressType());
+        if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
+            RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
+            if (result.isSuccess()) {
+                form.setAddressType(result.getSuccessObject().getAddressType());
+            }
+        }
         model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
     }
@@ -165,6 +172,7 @@ public class ProjectDetailsController {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
         AddressResource newAddressResource = null;
+        AddressType addressType = null;
         switch (form.getAddressType()) {
             case REGISTERED:
             case OPERATING:
@@ -173,17 +181,18 @@ public class ProjectDetailsController {
                 if (organisationAddressResource.isPresent()) {
                     newAddressResource = organisationAddressResource.get().getAddress();
                 }
+                addressType = form.getAddressType();
                 break;
             case ADD_NEW:
                 newAddressResource = form.getAddressForm().getSelectedPostcode();
+                addressType = PROJECT;
                 break;
             default:
                 newAddressResource = null;
                 break;
         }
-        projectResource.setAddressType(form.getAddressType());
         projectResource.setAddress(newAddressResource);
-        ServiceResult<Void> updateResult = projectService.updateAddress(projectId, form.getAddressType(), newAddressResource);
+        ServiceResult<Void> updateResult = projectService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
         return handleErrorsOrRedirectToProjectOverview("", projectId, model, response, form, bindingResult, updateResult, () -> viewAddress(model, request, form, projectId));
     }
 
@@ -296,8 +305,9 @@ public class ProjectDetailsController {
             projectDetailsAddressViewModel.setOperatingAddress(operatingAddress.get().getAddress());
         }
 
-        if(project.getAddress() != null){
-            projectDetailsAddressViewModel.setProjectAddress(project.getAddress());
+        Optional<OrganisationAddressResource> projectAddress = getAddress(leadOrganisation, PROJECT);
+        if(projectAddress.isPresent()){
+            projectDetailsAddressViewModel.setProjectAddress(projectAddress.get().getAddress());
         }
 
         return projectDetailsAddressViewModel;
@@ -314,23 +324,5 @@ public class ProjectDetailsController {
     private void processAddressLookupFields(ProjectDetailsAddressViewModelForm form){
         addAddressOptions(form);
         addSelectedAddress(form);
-    }
-
-    private ProjectDetailsAddressViewModelForm getFormDataFromCookie(@ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form, Model model, HttpServletRequest request) {
-        BindingResult bindingResult;// Merge information from cookie into ModelAttribute.
-        String formJson = CookieUtil.getCookieValue(request, FORM_ATTR_NAME);
-        if (StringUtils.hasText(formJson)) {
-            form = JsonUtil.getObjectFromJson(formJson, ProjectDetailsAddressViewModelForm.class);
-            bindingResult = new BeanPropertyBindingResult(form, FORM_ATTR_NAME);
-            validator.validate(form, bindingResult);
-            model.addAttribute(BINDING_RESULT_PROJECT_LOCATION_FORM, bindingResult);
-            BindingResult addressBindingResult = new BeanPropertyBindingResult(form.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
-            addressFormValidate(form, bindingResult, addressBindingResult);
-        }
-        String addressTypeJson = CookieUtil.getCookieValue(request, ADD_TYPE_ATTR_NAME);
-        if(StringUtils.hasText(addressTypeJson)){
-            form.setAddressType(AddressType.valueOf(addressTypeJson));
-        }
-        return form;
     }
 }

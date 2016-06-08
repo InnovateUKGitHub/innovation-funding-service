@@ -150,7 +150,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> updateProjectAddress(Long projectId, AddressType addressType, AddressResource projectAddress) {
+        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource projectAddress) {
             return null;
         }
     }

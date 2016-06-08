@@ -38,5 +38,5 @@ public interface ProjectService {
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> updateProjectAddress(Long projectId, AddressType addressType, AddressResource addressResource);
+    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource addressResource);
 }

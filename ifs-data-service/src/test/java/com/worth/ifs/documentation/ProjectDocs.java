@@ -17,8 +17,7 @@ public class ProjectDocs {
             fieldWithPath("address").description("Address where the project is expected to be executed from"),
             fieldWithPath("durationInMonths").description("Duration that the project is expeceted to last"),
             fieldWithPath("projectManager").description("Project manager designated for the project"),
-            fieldWithPath("name").description("The Project's name"),
-            fieldWithPath("addressType").description("Address Type")
+            fieldWithPath("name").description("The Project's name")
     };
 
     public static final ProjectResourceBuilder projectResourceBuilder = newProjectResource()

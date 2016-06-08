@@ -97,7 +97,6 @@ public class AddressResource {
         return id;
     }
 
-    @JsonIgnore
     public List<Long> getOrganisations() {
         return organisations;
     }

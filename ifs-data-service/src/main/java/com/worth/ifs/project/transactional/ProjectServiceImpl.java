@@ -10,11 +10,14 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -49,6 +52,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Autowired
     private AddressMapper addressMapper;
 
+    @Autowired
+    private OrganisationAddressRepository organisationAddressRepository;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -72,12 +78,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> updateProjectAddress(Long projectId, AddressType addressType, AddressResource address) {
+    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, AddressType addressType, AddressResource address) {
         ServiceResult<Project> result = getProject(projectId);
         if(result.isSuccess()){
             Project project = result.getSuccessObject();
-            project.setAddressType(addressType);
-            project.setAddress(addressMapper.mapToDomain(address));
+            Organisation leadOrganisation = organisationRepository.findOne(organisationId);
+            if (address.getId() != null && addressRepository.exists(address.getId())) {
+                Address existingAddress = addressRepository.findOne(address.getId());
+                project.setAddress(existingAddress);
+            } else {
+                Address newAddress = addressMapper.mapToDomain(address);
+                if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
+                    OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
+                    organisationAddressRepository.save(organisationAddress);
+                }
+                project.setAddress(newAddress);
+            }
             return serviceSuccess();
         } else {
             return serviceFailure(result.getFailure().getErrors());

@@ -42,8 +42,9 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/address", method = POST)
     public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
+                                                 @RequestParam("leadOrganisationId") final Long leadOrganisationId,
                                                  @RequestParam("addressType") final String addressType,
                                                  @RequestBody AddressResource addressResource) {
-        return projectService.updateProjectAddress(projectId, AddressType.valueOf(addressType), addressResource).toPostResponse();
+        return projectService.updateProjectAddress(leadOrganisationId, projectId, AddressType.valueOf(addressType), addressResource).toPostResponse();
     }
 }

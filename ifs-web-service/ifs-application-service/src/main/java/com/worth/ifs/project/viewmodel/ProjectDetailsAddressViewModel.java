@@ -13,7 +13,6 @@ public class ProjectDetailsAddressViewModel {
     public ProjectDetailsAddressViewModel(ProjectResource projectResource) {
         this.projectNumber = projectResource.getFormattedId();
         this.projectName = projectResource.getName();
-        this.projectAddress = projectResource.getAddress();
     }
 
     public String getProjectNumber() {

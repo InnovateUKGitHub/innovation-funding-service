@@ -35,7 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> updateAddress(Long projectId, AddressType addressType, AddressResource address) {
-        return projectRestRestService.updateProjectAddress(projectId, addressType, address).toServiceResult();
+    public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource address) {
+        return projectRestRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
     }
 }

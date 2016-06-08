@@ -14,5 +14,5 @@ import java.time.LocalDate;
 public interface ProjectService {
     ProjectResource getById(Long projectId);
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
-    ServiceResult<Void> updateAddress(Long projectId, AddressType addressType, AddressResource address);
+    ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource address);
 }
