@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
+import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
@@ -213,7 +214,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
 
     @Test
     public void testFindBusinessSearchCompanyHouse() throws Exception {
-        String companyName = "a & b";
+        String companyName = "smith ";
         Cookie cookie = mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/find-organisation")
                 .cookie(organisationTypeBusiness)
                 .param("organisationSearchName", companyName)
@@ -232,6 +233,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("organisationSearching", Matchers.equalTo(true))));
+
     }
 
     @Test
@@ -500,5 +502,16 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("selectedOrganisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("selectedOrganisation", Matchers.hasProperty("name", Matchers.equalTo(COMPANY_NAME))))
                 .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-organisation"));
+    }
+
+    @Test
+    public void testUrlParamEncoding() throws Exception {
+        assertEquals("smith+%26+jones",UrlEscapers.urlFormParameterEscaper().escape("smith & jones"));
+        assertEquals("%25",UrlEscapers.urlFormParameterEscaper().escape("%"));
+        assertEquals("%C2%A3",UrlEscapers.urlFormParameterEscaper().escape("£"));
+
+        assertEquals("%26", UriUtils.encodeQueryParam("&","UTF-8"));
+        assertEquals("%25",UriUtils.encodeQueryParam("%","UTF-8"));
+        assertEquals("%C2%A3",UriUtils.encodeQueryParam("£","UTF-8"));
     }
 }

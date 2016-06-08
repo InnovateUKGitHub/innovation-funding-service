@@ -47,7 +47,11 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
-
+        try {
+            LOG.debug("decodedSearchText: " + UriUtils.decode(encodedSearchText, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
 
             // encoded in the web-services.
@@ -57,6 +61,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
             companyItems.forEach(i -> results.add(companySearchMapper(i)));
             return serviceSuccess(results);
         });
+
     }
 
     @Override

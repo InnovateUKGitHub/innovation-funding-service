@@ -33,11 +33,13 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -226,8 +228,10 @@ public class OrganisationCreationController {
     private void searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm) {
         if (organisationForm.isOrganisationSearching()) {
             if (StringUtils.hasText(organisationForm.getOrganisationSearchName())) {
+                LOG.debug("Encoded Org Search name: " + encodeUrlParam(organisationForm.getOrganisationSearchName()));
                 List<OrganisationSearchResult> searchResults;
-                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), organisationForm.getOrganisationSearchName())
+                String encodedSearchString = encodeUrlParam(organisationForm.getOrganisationSearchName());
+                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(),encodedSearchString)
                         .handleSuccessOrFailure(
                                 f -> new ArrayList<>(),
                                 s -> s
@@ -580,6 +584,17 @@ public class OrganisationCreationController {
     }
 
     private String escapePathVariable(final String input){
-         return UrlEscapers.urlFormParameterEscaper().escape(input);
+        return UrlEscapers.urlFormParameterEscaper().escape(input);
+
+    }
+
+    public String encodeUrlParam(final String input) {
+        String encodedParam = "";
+        try {
+            encodedParam = UriUtils.encodeQueryParam(input,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Unable to decode search string " + input, e);
+        }
+        return encodedParam;
     }
 }

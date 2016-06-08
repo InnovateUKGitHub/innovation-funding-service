@@ -61,7 +61,7 @@ public class CompanyHouseApiServiceImplTest {
 		assertEquals("reg", result.getSuccessObject().get(0).getOrganisationAddress().getCounty());
 		assertEquals("ba1", result.getSuccessObject().get(0).getOrganisationAddress().getPostcode());
 	}
-	
+
 	@Test
 	public void searchOrganisationsNullAddressLine() {
 		
