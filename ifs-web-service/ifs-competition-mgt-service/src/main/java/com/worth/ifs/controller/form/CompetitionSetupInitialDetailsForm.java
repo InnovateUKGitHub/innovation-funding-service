@@ -1,27 +1,45 @@
-package com.worth.ifs.controller.form.competitionsetup;
+package com.worth.ifs.controller.form;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
 
-import com.worth.ifs.controller.form.CompetitionSetupForm;
+import javax.validation.constraints.NotNull;
 
 /**
  * Form class to pass and save for the first section.
  */
 public class CompetitionSetupInitialDetailsForm extends CompetitionSetupForm {
+
+    @NotNull(message = "Please select a competition executive")
     private Long executiveUserId;
 
+    @NotNull(message = "Please enter a opening date day")
+    @Range(min=1, max=31, message= "Please enter a opening date day")
     private Integer openingDateDay;
+
+    @NotNull(message = "Please enter a opening date month")
+    @Range(min=1, max=12, message= "Please enter a opening date month")
     private Integer openingDateMonth;
+
+    @NotNull(message = "Please enter a opening date year")
+    @Range(min=1900, max=9000, message= "Please enter a opening date year")
     private Integer openingDateYear;
 
     private String title;
 
+    @NotNull(message = "Please select a innovation sector")
     private Long innovationSectorCategoryId;
+
+    @NotNull(message = "Please select a innovation area")
     private Long innovationAreaCategoryId;
+
+    @NotNull(message = "Please select a competition type")
     private Long competitionTypeId;
 
+    @NotNull(message = "Please select a lead technologist")
     private Long LeadTechnologistUserId;
 
-    private Long pafNumber;
+    private String pafNumber;
     private String competitionCode;
     private String budgetCode;
 
@@ -97,11 +115,11 @@ public class CompetitionSetupInitialDetailsForm extends CompetitionSetupForm {
         LeadTechnologistUserId = leadTechnologistUserId;
     }
 
-    public Long getPafNumber() {
+    public String getPafNumber() {
         return pafNumber;
     }
 
-    public void setPafNumber(Long pafNumber) {
+    public void setPafNumber(String pafNumber) {
         this.pafNumber = pafNumber;
     }
 

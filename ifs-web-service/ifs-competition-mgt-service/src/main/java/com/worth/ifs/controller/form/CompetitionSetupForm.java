@@ -6,7 +6,6 @@ package com.worth.ifs.controller.form;
  */
 public class CompetitionSetupForm {
     private String actionUrl;
-    private Long competitonSetup;
 
     public String getActionUrl() {
         return actionUrl;
@@ -14,13 +13,5 @@ public class CompetitionSetupForm {
 
     public void setActionUrl(String actionUrl) {
         this.actionUrl = actionUrl;
-    }
-
-    public Long getCompetitonSetup() {
-        return competitonSetup;
-    }
-
-    public void setCompetitonSetup(Long competitonSetup) {
-        this.competitonSetup = competitonSetup;
     }
 }
