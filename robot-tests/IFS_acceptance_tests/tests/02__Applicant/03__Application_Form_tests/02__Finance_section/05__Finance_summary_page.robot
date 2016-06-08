@@ -63,7 +63,7 @@ Red warning should show when the finances are incomplete
     [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=button:contains("Edit")
-    Then the red warnng should be visible
+    Then the red warning should be visible
     And the user should see the element    css=.warning-alert
     And the user should see the text in the page    The following organisations have not marked their finances as complete:
 
@@ -139,12 +139,12 @@ the contribution to project and funding sought should be 0 and not a negative nu
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £0
 
 both green checks should be visible
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src="/images/field/tick-icon.png"]
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src="/images/field/tick-icon.png"]
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 
-the red warnng should be visible
+the red warning should be visible
     go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src="/images/warning-icon.png"]
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/warning-icon"]
 
 The first collaborator edits financial details to bring down the research participation level
     the user navigates to the page    ${your_finances_url_application_2}
