@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.controller.CustomFormBindingControllerAdvice;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.UserResource;
@@ -17,7 +18,6 @@ import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
-import com.worth.ifs.BaseUnitTest;
 
 import java.lang.reflect.Method;
 
@@ -48,7 +48,8 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         localeResolver.setCookieDomain("domain");
 
         mockMvc = MockMvcBuilders
-                .standaloneSetup(controller, new ErrorControllerAdvice())
+                .standaloneSetup(controller)
+                .setControllerAdvice(new ErrorControllerAdvice(), new CustomFormBindingControllerAdvice())
                 .addFilter(new CookieFlashMessageFilter())
                 .setLocaleResolver(localeResolver)
                 .setHandlerExceptionResolvers(createExceptionResolver())

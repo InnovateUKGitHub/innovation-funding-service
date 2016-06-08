@@ -37,7 +37,7 @@ Application team page
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath
-    [Setup]    Delete the emails from the test mailbox
+    [Setup]    Delete the emails from both test mailboxes
     Given the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     When the applicant enters valid inputs
     Then the user should see the text in the page    Application team
@@ -155,7 +155,7 @@ The Lead applicant invites a non registered user in the same organisation
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    HappyPath
-    [Setup]    Delete the emails from the test mailbox
+    [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=View team members and add collaborators

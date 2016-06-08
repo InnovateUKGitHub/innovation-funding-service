@@ -25,12 +25,11 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<AssessmentRestServiceImpl> {
 
-    private static String assessmentRestURL = "/assessments";
+    private static String assessmentRestURL = "/assessment";
 
     @Override
     protected AssessmentRestServiceImpl registerRestServiceUnderTest() {
         AssessmentRestServiceImpl assessmentRestService = new AssessmentRestServiceImpl();
-        assessmentRestService.assessmentRestURL = assessmentRestURL;
         return assessmentRestService;
     }
 

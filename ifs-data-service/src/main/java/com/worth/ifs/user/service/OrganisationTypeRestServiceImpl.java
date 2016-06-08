@@ -3,7 +3,6 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +12,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisa
 @Service
 public class OrganisationTypeRestServiceImpl extends BaseRestService implements OrganisationTypeRestService {
 
-    @Value("${ifs.data.service.rest.organisationtype}")
-    private String restUrl;
+    private String restUrl = "/organisationtype";
 
     @Override
     public RestResult<OrganisationTypeResource> findOne(Long id) {
