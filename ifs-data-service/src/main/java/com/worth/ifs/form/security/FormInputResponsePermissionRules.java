@@ -93,6 +93,12 @@ public class FormInputResponsePermissionRules {
 
         List<QuestionStatus> questionStatuses = getQuestionStatuses(response);
 
+
+        // There is no question status yet, so only check for roles
+        if(questionStatuses.isEmpty()) {
+            return isLead || isCollaborator;
+        }
+
         return (isLead || isCollaborator)
                 && checkIfAssignedToQuestion(questionStatuses, user)
                 && !checkIfQuestionIsMarked(questionStatuses);
