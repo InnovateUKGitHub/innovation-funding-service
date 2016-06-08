@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * This controller will handle all requests that are related to a project.
  */
 @Controller
 @RequestMapping("/project")
 public class ProjectController {
+
     @Autowired
     private ProjectService projectService;
 
@@ -40,5 +39,4 @@ public class ProjectController {
         model.addAttribute("competition", competitionResource);
         return "project/overview";
     }
-    
 }
