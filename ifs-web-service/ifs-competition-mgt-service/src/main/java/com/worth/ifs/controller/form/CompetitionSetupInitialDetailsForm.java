@@ -1,52 +1,45 @@
 package com.worth.ifs.controller.form;
 
-
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 /**
  * Form class to pass and save for the first section.
  */
 public class CompetitionSetupInitialDetailsForm extends CompetitionSetupForm {
 
-    @NotEmpty(message = "Please select a competition executive")
+    @NotNull(message = "Please select a competition executive")
     private Long executiveUserId;
 
-    @NotEmpty(message = "Please enter a opening date day")
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a opening date day")
-    @Size(max=2, message="Your opening date day cannot have more than 2 numbers")
+    @NotNull(message = "Please enter a opening date day")
+    @Range(min=1, max=31, message= "Please enter a opening date day")
     private Integer openingDateDay;
 
-    @NotEmpty(message = "Please enter a opening date month")
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a opening date month")
-    @Size(max=2, message="Your opening date month cannot have more than 2 numbers")
+    @NotNull(message = "Please enter a opening date month")
+    @Range(min=1, max=12, message= "Please enter a opening date month")
     private Integer openingDateMonth;
 
-    @NotEmpty(message = "Please enter a opening date year")
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a opening date year")
-    @Size.List ({
-            @Size(min=4, message="Your opening date year should have at least 4 characters"),
-            @Size(max=4, message="Your opening date year cannot have more than 4 characters"),
-    })
+    @NotNull(message = "Please enter a opening date year")
+    @Range(min=1900, max=9000, message= "Please enter a opening date year")
     private Integer openingDateYear;
 
     private String title;
 
-    @NotEmpty(message = "Please select a innovation sector")
+    @NotNull(message = "Please select a innovation sector")
     private Long innovationSectorCategoryId;
 
-    @NotEmpty(message = "Please select a innovation area")
+    @NotNull(message = "Please select a innovation area")
     private Long innovationAreaCategoryId;
 
-    @NotEmpty(message = "Please select a competition type")
+    @NotNull(message = "Please select a competition type")
     private Long competitionTypeId;
 
-    @NotEmpty(message = "Please select a lead technologist")
+    @NotNull(message = "Please select a lead technologist")
     private Long LeadTechnologistUserId;
 
-    private Long pafNumber;
+    private String pafNumber;
     private String competitionCode;
     private String budgetCode;
 
@@ -122,11 +115,11 @@ public class CompetitionSetupInitialDetailsForm extends CompetitionSetupForm {
         LeadTechnologistUserId = leadTechnologistUserId;
     }
 
-    public Long getPafNumber() {
+    public String getPafNumber() {
         return pafNumber;
     }
 
-    public void setPafNumber(Long pafNumber) {
+    public void setPafNumber(String pafNumber) {
         this.pafNumber = pafNumber;
     }
 

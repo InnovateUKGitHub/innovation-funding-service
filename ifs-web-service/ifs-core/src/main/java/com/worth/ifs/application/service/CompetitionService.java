@@ -23,4 +23,6 @@ public interface CompetitionService {
     List<Long> getCompletedCompetitionSetupSectionStatusesByCompetitionId(long competitionId);
 
     List<CompetitionTypeResource> getAllCompetitionTypes();
+
+    CompetitionResource save(CompetitionResource competition);
 }
