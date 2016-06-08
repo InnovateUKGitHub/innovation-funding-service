@@ -49,9 +49,8 @@ User closes the browser
     Close any open browsers
 
 Logout as user
-    Click Element    link=Logout
-    Sleep    1s
-    Location Should contain    ${LOGGED_OUT_URL_FRAGMENT}
+    the user clicks the button/link     link=Logout
+    The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 The user can log out
     logout as user
