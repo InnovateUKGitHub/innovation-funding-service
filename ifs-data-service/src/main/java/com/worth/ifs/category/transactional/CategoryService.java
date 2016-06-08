@@ -1,5 +1,13 @@
 package com.worth.ifs.category.transactional;
 
-public interface CategoryService {
+import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.commons.service.ServiceResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
+public interface CategoryService {
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<List<CategoryResource>> getByType(CategoryType type);
 }
