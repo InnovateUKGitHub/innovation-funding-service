@@ -11,12 +11,15 @@ import com.worth.ifs.competition.domain.CompetitionSetupSection;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionSetupCompletedSectionMapper;
 import com.worth.ifs.competition.mapper.CompetitionSetupSectionMapper;
+import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.CompetitionSetupCompletedSectionRepository;
 import com.worth.ifs.competition.repository.CompetitionSetupSectionRepository;
+import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,9 +58,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionMapper competitionMapper;
     @Autowired
+    private CompetitionTypeMapper competitionTypeMapper;
+    @Autowired
     private CompetitionSetupCompletedSectionMapper competitionSetupSectionStatusMapper;
     @Autowired
     private CompetitionSetupSectionMapper competitionSetupSectionMapper;
+    @Autowired
+    CompetitionTypeRepository competitionTypeRepository;
 
 
     protected Supplier<ServiceResult<CompetitionSetupSection>> competitionSetupSection(final Long id) {
@@ -134,5 +141,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         CompetitionSetupCompletedSection completedSection = new CompetitionSetupCompletedSection(section, competition);
         competitionSetupSectionStatusRepository.save(completedSection);
         return serviceSuccess();
+    }
+
+
+    @Override
+    public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
+        return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAll()));
     }
 }

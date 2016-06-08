@@ -4,6 +4,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -26,4 +27,7 @@ public interface CompetitionSetupService {
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<Void> markSectionInComplete(Long competitionId, Long sectionId);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<List<CompetitionTypeResource>> findAllTypes();
 }

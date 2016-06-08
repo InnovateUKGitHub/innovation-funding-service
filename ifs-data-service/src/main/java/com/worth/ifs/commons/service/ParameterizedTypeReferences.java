@@ -7,9 +7,11 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -71,6 +73,13 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CategoryResource>> categoryResourceListType() {
+        return new ParameterizedTypeReference<List<CategoryResource>>() {};
+    }
+    public static ParameterizedTypeReference<List<CompetitionTypeResource>> competitionTypeResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionTypeResource>>() {};
     }
     public static ParameterizedTypeReference<List<CompetitionSetupSectionResource>> competitionSetupSectionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionSetupSectionResource>>() {};

@@ -6,6 +6,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
+        return getWithRestResult(competitionsRestURL + "/types/findAll", competitionTypeResourceListType());
     }
 
     @Override

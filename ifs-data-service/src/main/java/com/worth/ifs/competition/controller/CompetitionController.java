@@ -4,6 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,12 @@ public class CompetitionController {
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
+
+    @RequestMapping("/types/findAll")
+    public RestResult<List<CompetitionTypeResource>> findAllTypes() {
+        return competitionSetupService.findAllTypes().toGetResponse();
+    }
+
 
     @RequestMapping("/sectionStatus/find/{competitionId}")
     public RestResult<List<CompetitionSetupCompletedSectionResource>> findAllCompetitionSection(@PathVariable("competitionId") final Long competitionId) {
