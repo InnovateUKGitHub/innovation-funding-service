@@ -264,7 +264,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return getApplication(applicationId).andOnSuccess(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
     }
 
-    // TODO DW - INFUND-1555 - work out the getSuccessObject call
     private ServiceResult<Boolean> childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
         boolean allSectionsWithSubsectionsAreComplete = true;
 
