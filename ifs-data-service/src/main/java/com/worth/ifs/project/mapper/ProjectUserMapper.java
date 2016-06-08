@@ -1,14 +1,12 @@
 package com.worth.ifs.project.mapper;
 
-import com.worth.ifs.application.mapper.ApplicationMapper;
-import com.worth.ifs.application.mapper.ResponseMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.mapper.RoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -16,23 +14,22 @@ import org.mapstruct.Mappings;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        ApplicationMapper.class,
+        ProjectMapper.class,
         RoleMapper.class,
         OrganisationMapper.class,
-        UserMapper.class,
-        ResponseMapper.class
+        UserMapper.class
     }
 )
-public abstract class ProjectUserMapper extends BaseMapper<ProcessRole, ProcessRoleResource, Long> {
+public abstract class ProjectUserMapper extends BaseMapper<ProjectUser, ProjectUserResource, Long> {
 
     @Mappings({
         @Mapping(source = "role.name", target = "roleName"),
         @Mapping(source = "user.name", target = "userName")
     })
     @Override
-    public abstract ProcessRoleResource mapToResource(ProcessRole domain);
+    public abstract ProjectUserResource mapToResource(ProjectUser domain);
 
-    public Long mapProcessRoleToId(ProcessRole object) {
+    public Long mapProjectUserToId(ProjectUser object) {
         if (object == null) {
             return null;
         }
