@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle=${title}" th:remove="tag"></div>
+</head>
+<body class="error" th:attrappend="class='${errorMessageClass}'">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+    <h1 class="heading-large" th:text="${title}">Page title</h1>
+
+    <p th:if="${url}">
+        <b>Page:</b> <span th:text="${url}">Page URL</span>
+    </p>
+
+    <div class="boxed">
+		<span>
+            <p th:text="${messageForUser}" th:remove="tag">An unexpected error occurred.</p>
+            You can choose to <a th:href="@{/registration/resend-email-verification}">send a new verification link</a> by e-mail or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+        </span>
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>
