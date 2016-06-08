@@ -6,6 +6,15 @@ public class CompetitionSetupSectionResource {
     private String path;
     private Integer priority;
 
+    public CompetitionSetupSectionResource() {
+    }
+
+    public CompetitionSetupSectionResource(Long id, String name, String path, Integer priority) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.priority = priority;
+    }
 
     public Long getId() {
         return id;

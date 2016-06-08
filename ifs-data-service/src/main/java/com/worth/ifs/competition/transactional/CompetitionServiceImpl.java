@@ -1,9 +1,9 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.category.domain.Category;
-import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
@@ -41,6 +41,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private CompetitionMapper competitionMapper;
 
+
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         Competition competition = competitionRepository.findById(id);
@@ -68,4 +69,5 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionResource>> findAll() {
         return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findAll()));
     }
+
 }

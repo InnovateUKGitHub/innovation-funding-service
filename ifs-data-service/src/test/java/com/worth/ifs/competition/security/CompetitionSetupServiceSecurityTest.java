@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,6 +62,9 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> service.markSectionInComplete(competitionId, sectionId), () -> {
             verifyNoMoreInteractions(rules);
         });
+        assertAccessDenied(() -> service.findAllTypes(), () -> {
+            verifyNoMoreInteractions(rules);
+        });
     }
 
     @Test
@@ -68,6 +72,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
 
         service.findAllCompetitionSections();
+        service.findAllTypes();
         Long competitionId = 2L;
         service.findAllCompetitionSectionsStatuses(competitionId);
         service.create();
@@ -115,6 +120,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Void> markSectionInComplete(Long competitionId, Long sectionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
             return null;
         }
     }

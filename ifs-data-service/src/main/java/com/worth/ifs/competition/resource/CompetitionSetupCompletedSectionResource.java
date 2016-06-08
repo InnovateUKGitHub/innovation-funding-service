@@ -5,6 +5,15 @@ public class CompetitionSetupCompletedSectionResource {
     private Long competitionSetupSection;
     private Long competition;
 
+    public CompetitionSetupCompletedSectionResource() {
+    }
+
+    public CompetitionSetupCompletedSectionResource(Long id, Long competitionSetupSection, Long competition) {
+        this.id = id;
+        this.competitionSetupSection = competitionSetupSection;
+        this.competition = competition;
+    }
+
     public Long getId() {
         return id;
     }
