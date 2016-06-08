@@ -49,5 +49,15 @@ public class CompetitionResourceDocs {
             .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100)
+            .withCompetitionCode("COMP-1")
+            .withCompetitionType(1L)
+            .withExecutive(1L)
+            .withLeadTechnologist(1L)
+            .withInnovationArea(1L)
+            .withInnovationAreaName("Tech")
+            .withInnovationSector(2L)
+            .withInnovationSectorName("IT")
+            .withPafCode("PAF-123")
+            .withBudgetCode("BUDGET-456")
             ;
 }

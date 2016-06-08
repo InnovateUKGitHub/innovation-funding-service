@@ -74,6 +74,41 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     	return withArray((status, object) -> setField("competitionStatus", status, object), statuses);
     }
 
+    public CompetitionResourceBuilder withLeadTechnologist(Long... userIds) {
+        return withArray((id, object) -> setField("leadTechnologist", id, object), userIds);
+    }
+
+    public CompetitionResourceBuilder withExecutive(Long... userIds) {
+        return withArray((id, object) -> setField("executive", id, object), userIds);
+    }
+
+    public CompetitionResourceBuilder withCompetitionType(Long... typeId) {
+        return withArray((id, object) -> setField("competitionType", id, object), typeId);
+    }
+
+    public CompetitionResourceBuilder withInnovationSector(Long... ids) {
+        return withArray((id, object) -> setField("innovationSector", id, object), ids);
+    }
+    public CompetitionResourceBuilder withInnovationSectorName(String... names) {
+        return withArray((name, object) -> setField("innovationSectorName", name, object), names);
+    }
+    public CompetitionResourceBuilder withInnovationArea(Long... ids) {
+        return withArray((id, object) -> setField("innovationArea", id, object), ids);
+    }
+    public CompetitionResourceBuilder withInnovationAreaName(String... names) {
+        return withArray((name, object) -> setField("innovationAreaName", name, object), names);
+    }
+
+    public CompetitionResourceBuilder withPafCode(String... codes) {
+        return withArray((code, object) -> setField("pafCode", code, object), codes);
+    }
+    public CompetitionResourceBuilder withBudgetCode(String... codes) {
+        return withArray((code, object) -> setField("budgetCode", code, object), codes);
+    }
+    public CompetitionResourceBuilder withCompetitionCode(String... codes) {
+        return withArray((code, object) -> setField("code", code, object), codes);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

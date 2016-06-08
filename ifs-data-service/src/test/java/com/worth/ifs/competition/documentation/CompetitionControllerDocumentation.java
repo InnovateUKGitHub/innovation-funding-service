@@ -26,6 +26,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
     @Mock
@@ -52,6 +53,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         when(competitionService.getCompetitionById(competitionId)).thenReturn(ServiceResult.serviceSuccess(competitionResourceBuilder.build()));
 
         mockMvc.perform(get("/competition/{id}", competitionId))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("id of the competition to be retrieved")
@@ -66,6 +68,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         when(competitionService.findAll()).thenReturn(ServiceResult.serviceSuccess(competitionResourceBuilder.build(2)));
 
         mockMvc.perform(get("/competition/findAll"))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         responseFields(
                                 fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
@@ -81,6 +84,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         when(competitionSetupService.findAllCompetitionSections()).thenReturn(ServiceResult.serviceSuccess(sections));
 
         mockMvc.perform(get("/competition/sections/getAll"))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         responseFields(
                                 fieldWithPath("[]").description("list of all Competition Setup Sections"),
@@ -102,6 +106,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         when(competitionSetupService.findAllCompetitionSectionsStatuses(competitionId)).thenReturn(ServiceResult.serviceSuccess(status));
 
         mockMvc.perform(get("/competition/sectionStatus/find/{id}", competitionId))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("id of the competition to get the statuses from")
@@ -121,6 +126,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         when(competitionSetupService.markSectionComplete(competitionId, sectionId)).thenReturn(ServiceResult.serviceSuccess());
 
         mockMvc.perform(get("/competition/sectionStatus/complete/{competitionId}/{sectionId}", competitionId, sectionId))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition on what the section should be marked as complete"),
@@ -133,9 +139,10 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void markAsInComplete() throws Exception {
         Long competitionId = 2L;
         Long sectionId = 2L;
-        when(competitionSetupService.markSectionComplete(competitionId, sectionId)).thenReturn(ServiceResult.serviceSuccess());
+        when(competitionSetupService.markSectionInComplete(competitionId, sectionId)).thenReturn(ServiceResult.serviceSuccess());
 
-        mockMvc.perform(get("/sectionStatus/incomplete/{competitionId}/{sectionId}", competitionId, sectionId))
+        mockMvc.perform(get("/competition/sectionStatus/incomplete/{competitionId}/{sectionId}", competitionId, sectionId))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),

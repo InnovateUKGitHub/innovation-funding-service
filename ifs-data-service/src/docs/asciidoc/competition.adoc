@@ -32,3 +32,29 @@ include::{snippets}/competition/find-setup-sections/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/find-setup-sections/curl-request.adoc[]
+
+=== Retrieve all Competition Setup Sections Statuses
+==== Request
+include::{snippets}/competition/find-setup-sections-statuses/http-request.adoc[]
+include::{snippets}/competition/find-setup-sections-statuses/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/find-setup-sections-statuses/http-response.adoc[]
+include::{snippets}/competition/find-setup-sections-statuses/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/find-setup-sections-statuses/curl-request.adoc[]
+
+
+
+=== Mark Competition Setup Section as Complete
+==== Request
+include::{snippets}/competition/mark-as-complete/http-request.adoc[]
+include::{snippets}/competition/mark-as-complete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/mark-as-complete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/mark-as-complete/curl-request.adoc[]
+
