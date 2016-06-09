@@ -41,10 +41,16 @@ public abstract class ApplicationSummaryMapper {
 
 		result.setStatus(status(source, result.getCompletedPercentage()));
 		result.setId(source.getId());
-		result.setLeadApplicant(source.getLeadApplicant().getName());
-		result.setLead(source.getLeadOrganisation().getName());
-		result.setName(source.getName());
-		result.setDuration(source.getDurationInMonths());
+        result.setName(source.getName());
+        result.setDuration(source.getDurationInMonths());
+
+        if(source.getLeadApplicant()!=null) {
+            result.setLeadApplicant(source.getLeadApplicant().getName());
+        }
+
+        if(source.getLeadOrganisation()!=null) {
+            result.setLead(source.getLeadOrganisation().getName());
+        }
 
 		if(source.getFundingDecision() != null) {
 			result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
