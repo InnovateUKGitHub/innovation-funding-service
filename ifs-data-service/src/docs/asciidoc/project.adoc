@@ -21,7 +21,6 @@ include::{snippets}/project/project-find-all/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/project-find-all/curl-request.adoc[]
 
-
 === Update project start date
 ==== Success
 ===== Request
@@ -39,3 +38,21 @@ include::{snippets}/project/update-start-date-but-date-in-past/http-response.ado
 
 ===== Project start date not on the first day of the month
 include::{snippets}/project/update-start-date-but-date-not-first-of-month/http-response.adoc[]
+
+
+=== Set project manager
+==== Success case
+
+===== Request
+include::{snippets}/project/set-project-manager/http-request.adoc[]
+include::{snippets}/project/set-project-manager/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/set-project-manager/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/set-project-manager/curl-request.adoc[]
+
+==== Failure cases
+===== Invalid project manager specified
+include::{snippets}/project/set-project-manager-but-invalid-project-manager/http-request.adoc[]
