@@ -1,18 +1,21 @@
 package com.worth.ifs.project.transactional;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.mapper.ProjectMapper;
+import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -24,12 +27,12 @@ import java.util.Map;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
-import static java.util.Arrays.asList;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -38,10 +41,13 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ProjectRepository projectRepository;
 
     @Autowired
-    private ProjectMapper projectMapper;
+    private ProjectUserRepository projectUserRepository;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
+    private ProjectUserMapper projectUserMapper;
+
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
@@ -69,21 +75,35 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 	public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
 		 return getProject(projectId).
 				  andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-				  andOnSuccessReturnVoid(processRole -> createFinanceContactProcessRole(processRole)));
+				  andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                  andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
 	}
-
-    private ServiceResult<ProcessRole> createFinanceContactProcessRole(ProcessRole originalProcessRole) {
-        return getRole(FINANCE_CONTACT).andOnSuccessReturn(role -> {
-            ProcessRole financeContact = new ProcessRole(originalProcessRole.getUser(), originalProcessRole.getApplication(), role, originalProcessRole.getOrganisation());
-            processRoleRepository.save(financeContact);
-            return financeContact;
-        });
-    }
 
     @Override
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
         applicationFundingDecisions.keySet().stream().forEach(this::createProjectFromApplicationId);
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
+        List<ProjectUser> projectUsers = projectUserRepository.findByProjectId(projectId);
+        return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
+    }
+
+    private void addFinanceContactToProject(Project project, ProjectUser financeContact) {
+
+        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(FINANCE_CONTACT, financeContact.getOrganisation());
+
+        if (existingUser != null) {
+            project.removeProjectUser(existingUser);
+        }
+        
+        project.addProjectUser(financeContact);
+    }
+
+    private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
+        return createProjectUserForRole(project, user, organisation, FINANCE_CONTACT);
     }
 
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
@@ -99,28 +119,24 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess();
     }
 
-    private ServiceResult<ProcessRole> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+    private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
 
-        return getApplication(project.getId()).andOnSuccess(application -> {
+        List<ProjectUser> projectUsers = project.getProjectUsers();
 
-            List<ProcessRole> applicationProcessRoles = application.getProcessRoles();
+        List<ProjectUser> matchingUserOrganisationProcessRoles = simpleFilter(projectUsers,
+                pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
 
-            List<ProcessRole> matchingUserOrganisationProcessRoles = simpleFilter(applicationProcessRoles,
-                    pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
+        if (matchingUserOrganisationProcessRoles.isEmpty()) {
+            return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+        }
 
-            List<ProcessRole> collaborativeProcessRoles = simpleFilter(matchingUserOrganisationProcessRoles,
-                    pr -> asList(COLLABORATOR.getName(), LEADAPPLICANT.getName()).contains(pr.getRole().getName()));
+        List<ProjectUser> partnerUsers = simpleFilter(matchingUserOrganisationProcessRoles, ProjectUser::isPartner);
 
-            if (matchingUserOrganisationProcessRoles.isEmpty()) {
-                return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
-            }
+        if (partnerUsers.isEmpty()) {
+            return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+        }
 
-            if (collaborativeProcessRoles.isEmpty()) {
-                return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_LEAD_APPLICANT_OR_COLLABORATOR_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
-            }
-
-            return getOnlyElementOrFail(collaborativeProcessRoles);
-        });
+        return getOnlyElementOrFail(partnerUsers);
     }
     
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
@@ -146,7 +162,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
-        return getRole(PARTNER).andOnSuccessReturn(role -> new ProjectUser(user, project, role, organisation));
+        return createProjectUserForRole(project, user, organisation, PARTNER);
+    }
+
+    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, UserRoleType roleType) {
+        return getRole(roleType).andOnSuccessReturn(role -> new ProjectUser(user, project, role, organisation));
     }
 
     private List<ProjectResource> projectsToResources(List<Project> filtered) {

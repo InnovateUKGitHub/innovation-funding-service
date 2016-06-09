@@ -1,15 +1,14 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.ProjectService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.form.FinanceContactForm;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
@@ -33,6 +32,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -74,10 +74,10 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        List<ProcessRoleResource> projectRoles = processRoleService.findProcessRolesByApplicationId(projectResource.getId());
-        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectRoles);
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
 
-        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, user, user.getOrganisations().get(0), partnerOrganisations, applicationResource, projectRoles, competitionResource));
+        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, user, user.getOrganisations().get(0), partnerOrganisations, applicationResource, projectUsers, competitionResource));
         return "project/detail";
     }
     
@@ -145,8 +145,8 @@ public class ProjectDetailsController {
 
 	private String modelForFinanceContact(Model model, Long projectId, Long organisation, HttpServletRequest request) {
 
-        List<ProcessRoleResource> projectRoles = processRoleService.findProcessRolesByApplicationId(projectId);
-        List<ProcessRoleResource> financeContacts = simpleFilter(projectRoles, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        List<ProjectUserResource> financeContacts = simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
 
 		FinanceContactForm form = new FinanceContactForm();
 		form.setOrganisation(organisation);
@@ -217,7 +217,7 @@ public class ProjectDetailsController {
         return "redirect:/project/" + projectId + "/details";
     }
 
-    private List<OrganisationResource> getPartnerOrganisations(final List<ProcessRoleResource> projectRoles) {
+    private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
 
         final Comparator<OrganisationResource> compareById =
                 Comparator.comparingLong(OrganisationResource::getId);
@@ -225,8 +225,7 @@ public class ProjectDetailsController {
         final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
         SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                        || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
+                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .collect(Collectors.toCollection(supplier));
 

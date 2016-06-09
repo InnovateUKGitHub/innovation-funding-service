@@ -89,4 +89,8 @@ public class ProjectUser {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public boolean isPartner() {
+        return getRole().isPartner();
+    }
 }

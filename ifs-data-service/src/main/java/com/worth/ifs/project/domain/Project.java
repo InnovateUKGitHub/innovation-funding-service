@@ -1,13 +1,18 @@
 package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  *  A project represents an application that has been accepted (and is now in project setup phase).
@@ -32,7 +37,7 @@ public class Project {
     @JoinColumn(name="projectManager", referencedColumnName="id")
     private ProcessRole projectManager;
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
     public Project() {}
@@ -44,6 +49,24 @@ public class Project {
         this.durationInMonths = durationInMonths;
         this.projectManager = projectManager;
         this.name = name;
+    }
+
+    public void addProjectUser(ProjectUser projectUser) {
+        projectUsers.add(projectUser);
+    }
+
+    public boolean removeProjectUser(ProjectUser projectUser) {
+        return projectUsers.remove(projectUser);
+    }
+
+    public ProjectUser getExistingProjectUserWithRoleForOrganisation(UserRoleType roleType, Organisation organisation) {
+        List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole().isOfType(roleType) && projectUser.getOrganisation().equals(organisation));
+
+        if (matchingUser.isEmpty()) {
+            return null;
+        }
+
+        return getOnlyElement(matchingUser);
     }
 
     public Long getId() {
@@ -102,11 +125,4 @@ public class Project {
         this.projectUsers = projectUsers;
     }
 
-    public void addProjectUser(ProjectUser projectUser) {
-        projectUsers.add(projectUser);
-    }
-
-    public boolean removeProjectUser(ProjectUser projectUser) {
-        return projectUsers.remove(projectUser);
-    }
 }

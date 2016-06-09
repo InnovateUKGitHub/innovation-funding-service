@@ -22,6 +22,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -167,84 +168,111 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testUpdateFinanceContact() {
-        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
 
-        assertUpdateFinanceSuccessful(leadApplicantRole);
-        assertUpdateFinanceSuccessful(collaboratorRole);
-    }
-
-    @Test
-    public void testUpdateFinanceContactButUserIsNotApplicantOrCollaborator() {
-
-        Role assessorRole = newRole().withType(ASSESSOR).build();
-
-        Application application = newApplication().withId(123L).build();
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withid(7L).build();
-        newProcessRole().withOrganisation(organisation).withUser(user).withApplication(application).withRole(assessorRole).build();
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
+        Role partnerRole = newRole().withType(PARTNER).build();
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(partnerRole).build();
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
-
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_LEAD_APPLICANT_OR_COLLABORATOR_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
-
-        verify(processRoleRepositoryMock, never()).save(isA(ProcessRole.class));
-    }
-
-    @Test
-    public void testUpdateFinanceContactWhenNotPresentOnTheApplication() {
-
-        long userIdForUserNotOnProject = 6L;
-
-        Application application = newApplication().withId(123L).build();
-
-        Project existingProject = newProject().withId(123L).build();
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
-        
-        Organisation organisation = newOrganisation().withId(5L).build();
-        User user = newUser().withid(7L).build();
-        newProcessRole().withOrganisation(organisation).withUser(user).withApplication(application).build();
-        
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
-
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, userIdForUserNotOnProject);
-        
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_APPLICATION_FOR_THE_ORGANISATION));
-    }
-
-    private void assertUpdateFinanceSuccessful(Role usersRoleOnApplication) {
-
-        Application application = newApplication().withId(123L).build();
-        Project project = newProject().withId(123L).build();
-        Organisation organisation = newOrganisation().withId(5L).build();
-        User user = newUser().withid(7L).build();
-        newProcessRole().withOrganisation(organisation).withUser(user).withApplication(application).withRole(usersRoleOnApplication).build();
         Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
 
-        ProcessRole expectedProcessRole = newProcessRole().
-                withOrganisation(organisation).
-                withApplication(application).
-                withUser(user).
-                withRole(financeContactRole).
-                build();
-
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
         when(roleRepositoryMock.findByName(FINANCE_CONTACT.getName())).thenReturn(singletonList(financeContactRole));
-        when(processRoleRepositoryMock.save(createProcessRoleExpectations(expectedProcessRole))).thenReturn(expectedProcessRole);
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
 
         assertTrue(updateResult.isSuccess());
 
-        verify(processRoleRepositoryMock).save(createProcessRoleExpectations(expectedProcessRole));
+        List<ProjectUser> foundFinanceContacts = simpleFilter(project.getProjectUsers(), projectUser ->
+                projectUser.getOrganisation().equals(organisation) &&
+                        projectUser.getUser().equals(user) &&
+                        projectUser.getProject().equals(project) &&
+                        projectUser.getRole().equals(financeContactRole));
+
+        assertEquals(1, foundFinanceContacts.size());
+    }
+
+    @Test
+    public void testUpdateFinanceContactWithExistingFinanceContactChosenForSameOrganisation() {
+
+        Role partnerRole = newRole().withType(PARTNER).build();
+        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
+
+        Project project = newProject().withId(123L).build();
+        Organisation organisation = newOrganisation().withId(5L).build();
+
+        User newFinanceContactUser = newUser().withid(7L).build();
+        newProjectUser().withOrganisation(organisation).withUser(newFinanceContactUser).withProject(project).withRole(partnerRole).build();
+
+        User existingFinanceContactUser = newUser().withid(9999L).build();
+        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(partnerRole).build();
+        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(financeContactRole).build();
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(roleRepositoryMock.findByName(FINANCE_CONTACT.getName())).thenReturn(singletonList(financeContactRole));
+
+        List<ProjectUser> existingFinanceContactForOrganisation = simpleFilter(project.getProjectUsers(), projectUser ->
+                projectUser.getOrganisation().equals(organisation) &&
+                        projectUser.getProject().equals(project) &&
+                        projectUser.getRole().equals(financeContactRole));
+
+        assertEquals(1, existingFinanceContactForOrganisation.size());
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
+
+        assertTrue(updateResult.isSuccess());
+
+        List<ProjectUser> foundFinanceContacts = simpleFilter(project.getProjectUsers(), projectUser ->
+                projectUser.getOrganisation().equals(organisation) &&
+                        projectUser.getUser().equals(newFinanceContactUser) &&
+                        projectUser.getProject().equals(project) &&
+                        projectUser.getRole().equals(financeContactRole));
+
+        assertEquals(1, foundFinanceContacts.size());
+    }
+
+    @Test
+    public void testUpdateFinanceContactButUserIsNotExistingPartner() {
+
+        Role projectManagerRole = newRole().withType(PROJECT_MANAGER).build();
+
+        Project project = newProject().withId(123L).build();
+        Organisation organisation = newOrganisation().withId(5L).build();
+        User user = newUser().withid(7L).build();
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(projectManagerRole).build();
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
+
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+
+        verify(processRoleRepositoryMock, never()).save(isA(ProcessRole.class));
+    }
+
+    @Test
+    public void testUpdateFinanceContactWhenNotPresentOnTheProject() {
+
+        long userIdForUserNotOnProject = 6L;
+
+        Role partnerRole = newRole().withType(PARTNER).build();
+
+        Project existingProject = newProject().withId(123L).build();
+        Project anotherProject = newProject().withId(9999L).build();
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        
+        Organisation organisation = newOrganisation().withId(5L).build();
+        User user = newUser().withid(7L).build();
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(partnerRole).build();
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, userIdForUserNotOnProject);
+        
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

@@ -85,7 +85,7 @@
                 </td>
                 <td>
                   <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" th:remove="tag">
-                        <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id)}" />
+                        <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
                   </span>
                   <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" th:remove="tag">
                         <span>-</span>

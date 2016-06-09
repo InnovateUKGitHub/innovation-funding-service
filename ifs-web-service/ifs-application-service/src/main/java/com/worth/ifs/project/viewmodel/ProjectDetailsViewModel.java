@@ -3,8 +3,8 @@ package com.worth.ifs.project.viewmodel;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -25,17 +25,17 @@ public class ProjectDetailsViewModel {
     private List<OrganisationResource> partnerOrganisations;
     private ApplicationResource app;
     private CompetitionResource competition;
-    private Map<Long, ProcessRoleResource> financeContactsByOrganisationId;
+    private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
 
-    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, Long currentOrganisation, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProcessRoleResource> projectRoles, CompetitionResource competition) {
+    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, Long currentOrganisation, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition) {
         this.project = project;
         this.currentUser = currentUser;
         this.currentOrganisation = currentOrganisation;
         this.partnerOrganisations = partnerOrganisations;
         this.app = app;
         this.competition = competition;
-        List<ProcessRoleResource> financeRoles = simpleFilter(projectRoles, ProcessRoleResource::isFinanceContact);
-        this.financeContactsByOrganisationId = simpleToMap(financeRoles, role -> role.getOrganisation(), Function.identity());
+        List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
+        this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
     }
 
     public ProjectResource getProject() {
@@ -62,7 +62,7 @@ public class ProjectDetailsViewModel {
         return competition;
     }
 
-    public ProcessRoleResource getFinanceContactForPartnerOrganisation(Long organisationId) {
+    public ProjectUserResource getFinanceContactForPartnerOrganisation(Long organisationId) {
         return financeContactsByOrganisationId.get(organisationId);
     }
 }
