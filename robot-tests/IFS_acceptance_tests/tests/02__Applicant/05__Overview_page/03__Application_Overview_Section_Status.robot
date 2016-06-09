@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-539 - As an applicant I want the ‘Application details’ drop down on the ‘Application overview’ page to show a green tick when I’ve marked it as complete, so that I know what I’ve done
 Suite Setup       log in and create new application if there is not one already
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Default Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -35,7 +35,7 @@ Status is updated after marking as incomplete
 
 *** Keywords ***
 none of the sections are marked as complete
-    Element Should Not Be Visible    css=.complete
+    the user should not see the element    css=.complete
 
 the applicant can see that the economics benefit section is marked as complete
-    Element Should Be Visible    jQuery=#section-2 .section:nth-child(4) img[src*="/images/field/field-done-right"]
+    the user should see the element      jQuery=#section-2 .section:nth-child(4) img[src*="/images/field/field-done-right"]

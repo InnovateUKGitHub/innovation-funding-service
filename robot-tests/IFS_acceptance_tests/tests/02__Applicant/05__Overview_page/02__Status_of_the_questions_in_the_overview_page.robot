@@ -38,7 +38,7 @@ the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
-    Sleep    2s
+    Sleep    300ms
 
 the assign assign status should be correct for the Project Summary
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -48,20 +48,19 @@ the assign assign status should be correct for the Project Summary
 
 the applicant assigns the Project Summary question from the overview page
     [Arguments]    ${assignee_name}
-    Click Element    jQuery=#section-1 .section:nth-child(2) .assign-button button
-    Click Element    jQuery=button:contains("${assignee_name}")
+    the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) .assign-button button
+    the user clicks the button/link   jQuery=button:contains("${assignee_name}")
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
-    Click Element    css=#form-input-11 .assign-button button
-    Click Element    jQuery=button:contains("${assignee_name}")
+    the user clicks the button/link    css=#form-input-11 .assign-button button
+    the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
-    #Reload Page
-    Wait Until Page Contains Element    jQuery=#section-1 .section:nth-child(2) .assigned
+    the user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible
-    Element Should Not Be Visible    jQuery=#section-1 .section:nth-child(2) .assigned
+    the user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the assign button should say Assigned to:You
     Element Should Contain    jQuery=#section-1 .section:nth-child(2) .column-third button strong    You

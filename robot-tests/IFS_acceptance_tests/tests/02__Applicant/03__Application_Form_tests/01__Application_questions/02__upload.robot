@@ -189,7 +189,7 @@ the user can see the option to upload a file on the question
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    ${QUESTION}
-    page should contain    Upload
+    the user should see the text in the page    Upload
 
 The applicant opens the uploaded file
     When the user clicks the button/link    link=${valid_pdf}
