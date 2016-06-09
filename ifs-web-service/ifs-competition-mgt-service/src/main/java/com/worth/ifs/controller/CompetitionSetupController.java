@@ -16,23 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/competition/setup/{competitionId}")
+@RequestMapping("/competition/setup")
 public class CompetitionSetupController {
 
-	private static final String SECTION_ONE = "Initial details";
+
+    private static final String SECTION_ONE = "Initial details";
 
     @Autowired
     private CompetitionService competitionService;
@@ -45,7 +42,7 @@ public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId){
 
         List<CompetitionSetupSectionResource> sections = competitionService.getCompetitionSetupSectionsByCompetitionId(competitionId);
@@ -59,7 +56,7 @@ public class CompetitionSetupController {
     }
 
 
-    @RequestMapping(value = "/section/{section}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{competitionId}/section/{section}", method = RequestMethod.GET)
     public String editCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId, @PathVariable("section") Long sectionId){
 
         List<CompetitionSetupSectionResource> sections = competitionService.getCompetitionSetupSectionsByCompetitionId(competitionId);
@@ -110,7 +107,7 @@ public class CompetitionSetupController {
             competitionSetupForm.setOpeningDateYear(competitionResource.getStartDate().getYear());
         }
 
-        competitionSetupForm.setCompetitionCode(competitionResource.getCode()); // TODO : needs to be generated INFUND-2984
+        competitionSetupForm.setCompetitionCode(competitionResource.getCode());
         competitionSetupForm.setPafNumber(competitionResource.getPafCode());
         competitionSetupForm.setTitle(competitionResource.getName());
         competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
@@ -118,8 +115,35 @@ public class CompetitionSetupController {
         return competitionSetupForm;
     }
 
+    @RequestMapping(value = "/{competitionId}/section/{sectionId}/edit", method = RequestMethod.GET)
+    public String submitSectionInitialDetails(@PathVariable("competitionId") Long competitionId,
+                                              @PathVariable("sectionId") Long sectionId){
 
-    @RequestMapping(value = "/section/1", method = RequestMethod.POST)
+        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, sectionId);
+
+        return "redirect:/competition/setup/" + competitionId + "/section/" + sectionId;
+    }
+
+    /* AJAX Function */
+    @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
+    public @ResponseBody List<CategoryResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId){
+
+        return categoryService.getCategoryByParentId(innovationSectorId);
+    }
+
+    /* AJAX Function */
+    @RequestMapping(value = "/{competitionId}/generateCompetitionCode", method = RequestMethod.GET)
+    public @ResponseBody String generateCompetionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request){
+
+        LocalDateTime openingDate = LocalDateTime.of(Integer.parseInt(request.getParameter("year")),
+                Integer.parseInt(request.getParameter("month")),
+                Integer.parseInt(request.getParameter("day")),
+                0, 0, 0);
+        return competitionService.generateCompetitionCode(competitionId, openingDate);
+    }
+
+
+    @RequestMapping(value = "/{competitionId}/section/1", method = RequestMethod.POST)
     public String submitSectionInitialDetails(@Valid @ModelAttribute("competitionSetupForm") CompetitionSetupInitialDetailsForm competitionSetupForm,
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
@@ -138,13 +162,14 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection.get(), sections);
 
         if(!bindingResult.hasErrors()) {
             saveCompetitionSetupSection(competitionSetupForm, competition, competitionSetupSection.get());
         } else {
             LOG.debug("Form errors");
         }
+
+        populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection.get(), sections);
 
         return "competition/setup";
     }
@@ -173,7 +198,7 @@ public class CompetitionSetupController {
         competition.setPafCode(competitionSetupForm.getPafNumber());
 
         competition.setInnovationArea(competitionSetupForm.getInnovationAreaCategoryId());
-        competition.setInnovationSector(competitionSetupForm.getInnovationAreaCategoryId());
+        competition.setInnovationSector(competitionSetupForm.getInnovationSectorCategoryId());
 
         competitionService.update(competition);
     }

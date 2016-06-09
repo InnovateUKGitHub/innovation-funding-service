@@ -13,4 +13,6 @@ import java.util.List;
 @Service
 public interface CategoryService {
     List<CategoryResource> getCategoryByType(CategoryType type);
+
+    List<CategoryResource> getCategoryByParentId(Long categoryParentId);
 }

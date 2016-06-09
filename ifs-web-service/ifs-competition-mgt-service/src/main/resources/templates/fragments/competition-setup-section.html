@@ -111,7 +111,8 @@
                 </label>
                 <select class="form-control width-x-large" th:field="${competitionSetupForm.competitionTypeId}">
                     <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(competitionType : ${competitionTypes})" th:text="${competitionType.name}" th:value="${competitionType.id}">Competition Type</option>
+                    <!-- /* th:attr="data-stateaid='${competitionType.stateAid}'" */ -->
+                    <option th:each="(competitionType : ${competitionTypes})" th:text="${competitionType.name}"  th:value="${competitionType.id}">Competition Type</option>
                 </select>
             </div>
 
@@ -172,6 +173,10 @@
                 <input th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                        type="text"
                        th:field="${competitionSetupForm.competitionCode}" />
+                <!-- /* TODO : send openingdate with it
+                 <a href="/management/competition/setup/7/generateCompetitionCode?year=2016&month=04&day=02">Generate code</a>
+                 */-->
+
             </div>
 
             <button class="button">Done</button>
@@ -213,14 +218,9 @@
                 <dt>Competition code</dt>
                 <dd th:text="${competitionSetupForm.competitionCode}"></dd>
             </dl>
-            <button class="button">Done</button>
+            <a href="1/edit" class="button">Edit</a>
         </fieldset>
 
-<!--
-        <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=essential, sectionId=1" th:remove="tag" />
-        </div>
--->
     </form>
     <ul class="pagination">
         <li class="next">

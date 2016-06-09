@@ -26,4 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
 
         return categoryRestService.getByType(type).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public List<CategoryResource> getCategoryByParentId(Long categoryParentId) {
+        // TODO : make use of restService
+        //return categoryRestService.getCategoryByParentId(categoryParentId);
+        return new ArrayList();
+    }
 }
