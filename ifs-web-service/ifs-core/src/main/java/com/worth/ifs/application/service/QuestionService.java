@@ -3,6 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -12,7 +13,7 @@ import java.util.concurrent.Future;
  */
 public interface QuestionService {
     void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById);
-    void markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);
+    List<ValidationMessages> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);
     void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
     List<QuestionResource> findByCompetition(Long competitionId);
     List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId);
