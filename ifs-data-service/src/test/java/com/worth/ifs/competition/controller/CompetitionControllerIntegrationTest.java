@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -75,6 +76,33 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         checkExistingCompetition(competitions.get(0));
         checkNewCompetition(competitions.get(1));
     }
+
+    @Rollback
+    @Test
+    public void testCompetitionCodeGeneration() throws Exception {
+        getAllCompetitions(2);
+        createNewCompetition();
+        createNewCompetition();
+        createNewCompetition();
+        List<CompetitionResource> competitions = getAllCompetitions(5);
+        competitions.get(0).setCode("1606-1");
+        controller.saveCompetition(competitions.get(0), competitions.get(0).getId());
+
+        flushAndClearSession();
+
+        RestResult<String> generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 00), competitions.get(1).getId());
+        assertTrue(generatedCode.isSuccess());
+        assertEquals("1606-2", generatedCode.getSuccessObject());
+
+        flushAndClearSession();
+
+        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 00), competitions.get(2).getId());
+        assertTrue(generatedCode.isSuccess());
+        assertEquals("1606-3", generatedCode.getSuccessObject());
+
+    }
+
+
 
     private List<CompetitionResource> getAllCompetitions(int expectedCompetitionCount) {
         RestResult<List<CompetitionResource>> allCompetitionsResult = controller.findAll();

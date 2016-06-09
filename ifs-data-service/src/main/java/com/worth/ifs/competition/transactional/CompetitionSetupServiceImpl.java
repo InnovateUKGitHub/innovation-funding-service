@@ -1,8 +1,8 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
@@ -28,9 +28,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -79,15 +81,28 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
+
+
         Competition competition = competitionRepository.findById(id);
-        String datePart = dateTime.getYear()-2000 +""+ dateTime.getMonthValue();
-        List<Competition> openingSameMonth = competitionRepository.findByCodeLike(datePart);
+        String datePart = formatter.format(dateTime);
+        List<Competition> openingSameMonth = competitionRepository.findByCodeLike("%"+datePart+"%");
         if(StringUtils.hasText(competition.getCode())){
             return serviceSuccess(competition.getCode());
         }else if(openingSameMonth.isEmpty()){
             return serviceSuccess(datePart + "-1");
         }else{
-            return serviceSuccess(datePart + "-"+ openingSameMonth.size()+1);
+            List<String> codes = openingSameMonth.stream().map(c -> c.getCode()).sorted().peek(c -> LOG.info("Codes : "+ c)).collect(Collectors.toList());
+            String unusedCode = "";
+            for (int i = 1; i < 10000; i++) {
+                unusedCode = datePart+"-"+i;
+                if(!codes.contains(unusedCode)){
+                    break;
+                }
+            }
+            competition.setCode(unusedCode);
+            competitionRepository.save(competition);
+            return serviceSuccess(unusedCode);
         }
     }
 

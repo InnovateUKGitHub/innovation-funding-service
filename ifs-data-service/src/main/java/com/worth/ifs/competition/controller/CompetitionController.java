@@ -49,6 +49,9 @@ public class CompetitionController {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
 
+    /**
+     * Generate and save the competition code
+     */
     @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
     public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
