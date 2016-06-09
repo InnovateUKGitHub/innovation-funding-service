@@ -218,7 +218,7 @@ the user should not see an error in the page
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error-message
+    wit until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
@@ -237,8 +237,8 @@ The user should not see the element
 
 The user should get an error page
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error
-    Page should contain    ${ERROR_TEXT}
+    wait until page contains element    css=.error
+    wait until page contains    ${ERROR_TEXT}
 
 The user should see the browser notification
     [Arguments]    ${MESSAGE}
