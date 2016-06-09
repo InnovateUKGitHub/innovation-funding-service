@@ -56,18 +56,18 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess(createProjectFromApplicationId(applicationId));
     }
     
-	@Override
-	public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
-		 return getProject(projectId).
-				  andOnSuccess(project -> validateProjectManager(project, projectManagerId).
-				  andOnSuccessReturnVoid(project::setProjectManager));
-	}
-
-	@Override
-    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+    @Override
+    public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateProjectStartDate(projectStartDate).
-                andOnSuccess(() -> project.setTargetStartDate(projectStartDate)));
+                andOnSuccess(project -> validateProjectManager(project, projectManagerId).
+                andOnSuccessReturnVoid(project::setProjectManager));
+    }
+
+    @Override
+    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+        return validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> getProject(projectId).
+                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate)));
     }
 
     @Override

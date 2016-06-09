@@ -100,6 +100,75 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertEquals(processRole, project.getProjectManager());
     }
 
+    @Test
+    public void testUpdateProjectStartDate() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        Project existingProject = newProject().build();
+        assertNull(existingProject.getTargetStartDate());
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isSuccess());
+
+        verify(projectRepositoryMock).findOne(123L);
+        assertEquals(validDate, existingProject.getTargetStartDate());
+    }
+
+    @Test
+    public void testUpdateProjectStartDateButProjectDoesntExist() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+    }
+
+    @Test
+    public void testUpdateProjectStartDateButStartDateDoesntBeginOnFirstDayOfMonth() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate dateNotOnFirstDayOfMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 2).plusMonths(1);
+
+        Project existingProject = newProject().build();
+        assertNull(existingProject.getTargetStartDate());
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, dateNotOnFirstDayOfMonth);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
+
+        verify(projectRepositoryMock, never()).findOne(123L);
+        assertNull(existingProject.getTargetStartDate());
+    }
+
+    @Test
+    public void testUpdateProjectStartDateButStartDateNotInFuture() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate pastDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).minusMonths(1);
+
+        Project existingProject = newProject().build();
+        assertNull(existingProject.getTargetStartDate());
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, pastDate);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE));
+
+        verify(projectRepositoryMock, never()).findOne(123L);
+        assertNull(existingProject.getTargetStartDate());
+    }
+
     private Project createProjectExpectationsFromOriginalApplication(Application application) {
         return createLambdaMatcher(project -> {
             assertEquals(application.getId(), project.getId());

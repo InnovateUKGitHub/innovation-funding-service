@@ -10,10 +10,13 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -71,6 +74,41 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 fieldWithPath("[]").description("List of projects the user is allowed to see")
                         )
                 ));
+    }
+
+    @Test
+    public void updateStartDate() throws Exception {
+
+        when(projectServiceMock.updateProjectStartDate(123L, LocalDate.of(2017, 2, 1))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/startdate", 123L).
+                param("projectStartDate", "2017-02-01"))
+                .andExpect(status().isOk())
+                .andDo(this.document);
+
+        verify(projectServiceMock).updateProjectStartDate(123L, LocalDate.of(2017, 2, 1));
+    }
+
+    @Test
+    public void updateStartDateButDateInPast() throws Exception {
+
+        when(projectServiceMock.updateProjectStartDate(123L, LocalDate.of(2015, 1, 1))).thenReturn(serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE));
+
+        mockMvc.perform(post("/project/{id}/startdate", 123L).
+                param("projectStartDate", "2015-01-01"))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document);
+    }
+
+    @Test
+    public void updateStartDateButDateNotFirstOfMonth() throws Exception {
+
+        when(projectServiceMock.updateProjectStartDate(123L, LocalDate.of(2015, 1, 5))).thenReturn(serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
+
+        mockMvc.perform(post("/project/{id}/startdate", 123L).
+                param("projectStartDate", "2015-01-05"))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document);
     }
     
     @Test

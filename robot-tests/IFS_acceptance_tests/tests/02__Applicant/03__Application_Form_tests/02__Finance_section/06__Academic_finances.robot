@@ -145,7 +145,7 @@ Mark all as complete
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
-    And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png"]
+    And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src*="/images/field/tick-icon"]
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437

@@ -74,11 +74,14 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), applicationResource);
         
         organisationDetailsModelPopulator.populateModel(model, projectId);
         
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", user);
+        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
+        
         model.addAttribute("currentOrganisation", user.getOrganisations().get(0));
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
@@ -182,27 +185,47 @@ public class ProjectDetailsController {
 	}
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
-    public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form, HttpServletRequest request) {
-    	if(!userIsLeadApplicant(projectId, request)) {
-			return redirectToProjectDetails(projectId);
-		}
+    public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("form") ProjectDetailsStartDateForm form, 
+                                HttpServletRequest request) {
+    	
+        if(!userIsLeadApplicant(projectId, request)) {
+	    return redirectToProjectDetails(projectId);
+	}
+
     	ProjectResource project = projectService.getById(projectId);
     	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
-        LocalDate defaultStartDate = LocalDate.of(project.getTargetStartDate().getYear(), project.getTargetStartDate().getMonth(), 1);
+        LocalDate defaultStartDate = project.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
         return "project/details-start-date";
     }
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute("form") ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form,
+                                  @ModelAttribute("form") ProjectDetailsStartDateForm form,
                                   Model model,
-                                  BindingResult bindingResult, HttpServletRequest request) {
-    	if(!userIsLeadApplicant(projectId, request)) {
-			return redirectToProjectDetails(projectId);
-		}
+                                  BindingResult bindingResult) {
+
+	if (!userIsLeadApplicant(projectId, request)) {
+	    return redirectToProjectDetails(projectId);
+	}
+    	
         RestResult<Void> updateResult = projectRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, request);
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult);
+    }
+
+    private String handleErrorsOrRedirectToProjectOverview(
+            String fieldName, long projectId, Model model,
+            ProjectDetailsStartDateForm form, BindingResult bindingResult,
+            RestResult<?> result) {
+
+        if (result.isFailure()) {
+            bindAnyErrorsToField(result, fieldName, bindingResult, form);
+            model.addAttribute("form", form);
+            return viewStartDate(model, projectId, form);
+        }
+
+        return redirectToProjectDetails(projectId);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(

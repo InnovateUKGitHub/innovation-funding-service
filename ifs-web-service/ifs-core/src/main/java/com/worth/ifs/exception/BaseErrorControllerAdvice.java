@@ -52,7 +52,7 @@ public abstract class BaseErrorControllerAdvice {
         mav.addObject("messageForUser", messageForUser);
         mav.addObject("errorMessageClass", status.name().toLowerCase());
 
-        if(env.acceptsProfiles("uat", "dev", "test")) {
+        if(env.acceptsProfiles("debug")) {
             mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
             String msg = MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale());
             mav.addObject("message", msg);
