@@ -21,7 +21,7 @@ Status changes when we assign a question
     And the user clicks the button/link    link=Project summary
     When the Applicant edits the Project summary
     And the applicant assigns the Project Summary    Arsene Wenger
-    Then the assign assign status should be correct for the Project Summary
+    Then the assign status should be correct for the Project Summary
     And the blue flag should not be visible
 
 Re-assign is possible from the overview page
@@ -38,12 +38,12 @@ the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
-    Sleep    300ms
+    Sleep    1s
 
-the assign assign status should be correct for the Project Summary
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    Page Should Contain Element    jQuery=#section-1 .section:nth-child(2) .column-third button strong
+the assign status should be correct for the Project Summary
+    the user navigates to the page    ${DASHBOARD_URL}
+    the user clicks the button/link    link=Academic robot test application
+    the user should see the element    jQuery=#section-1 .section:nth-child(2) .column-third button strong
     Element Should Contain    jQuery=#section-1 .section:nth-child(2) .column-third button strong    Arsene Wenger
 
 the applicant assigns the Project Summary question from the overview page
@@ -60,7 +60,7 @@ a blue flag should be visible for the Project Summary in overview page
     the user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible
-    the user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
+    the user should not see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the assign button should say Assigned to:You
     Element Should Contain    jQuery=#section-1 .section:nth-child(2) .column-third button strong    You

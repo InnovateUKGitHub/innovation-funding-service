@@ -15,7 +15,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Finances
 Default Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
