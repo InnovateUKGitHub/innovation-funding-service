@@ -17,6 +17,6 @@ public interface CompetitionRepository extends CrudRepository<Competition, Long>
     Competition findById(@Param("id") Long id);
     @Override
     List<Competition> findAll();
-    List<Competition> findByCodeLike(@Param("code") String competitionCode);
+    List<Competition> findByCodeLike(@Param("code") String code);
 
 }
