@@ -28,7 +28,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
 	@Override
 	public RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
-		return postWithRestResult(projectRestURL + "/" + projectId + "/finance-contact/" + organisationId + "?financeContact=" + financeContactUserId, Void.class);
+		return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/finance-contact?financeContact=" + financeContactUserId, Void.class);
 	}
 
     @Override

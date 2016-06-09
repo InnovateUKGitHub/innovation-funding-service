@@ -43,7 +43,7 @@ public class ProjectController {
         return projectService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
     }
     
-    @RequestMapping(value = "/{projectId}/finance-contact/{organisation}", method = POST)
+    @RequestMapping(value = "/{projectId}/organisation/{organisation}/finance-contact", method = POST)
     public RestResult<Void> updateFinanceContact(@PathVariable("projectId") final Long projectId,
     		@PathVariable("organisation") final Long organisationId,
                                                    @RequestParam("financeContact") Long financeContactUserId) {

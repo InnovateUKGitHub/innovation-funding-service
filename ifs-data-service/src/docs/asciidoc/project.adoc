@@ -39,3 +39,23 @@ include::{snippets}/project/update-start-date-but-date-in-past/http-response.ado
 
 ===== Project start date not on the first day of the month
 include::{snippets}/project/update-start-date-but-date-not-first-of-month/http-response.adoc[]
+
+
+=== Update Finance Contact for Organisation
+==== Success
+===== Request
+include::{snippets}/project/update-finance-contact/http-request.adoc[]
+include::{snippets}/project/update-finance-contact/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/update-finance-contact/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/update-finance-contact/curl-request.adoc[]
+
+==== Failure cases
+===== User is not on the Project
+include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-for-organisation/http-response.adoc[]
+
+===== User is not a Partner on the Project
+include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
