@@ -10,6 +10,7 @@ import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -100,6 +101,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections() {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
             return null;
         }
 
