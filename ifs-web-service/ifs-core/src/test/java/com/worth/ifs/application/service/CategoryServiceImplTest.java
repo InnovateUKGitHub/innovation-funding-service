@@ -16,6 +16,10 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+
+/**
+ * Test Class for all functionality in {@link CategoryServiceImpl}
+ */
 public class CategoryServiceImplTest extends BaseServiceUnitTest<CategoryService> {
 
     @Mock

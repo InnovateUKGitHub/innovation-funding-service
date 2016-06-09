@@ -24,10 +24,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Controller for showing and handling the different competition setup sections
+ */
 @Controller
 @RequestMapping("/competition/setup")
 public class CompetitionSetupController {
-
 
     private static final String SECTION_ONE = "Initial details";
 

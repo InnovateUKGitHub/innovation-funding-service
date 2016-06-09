@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link CompetitionResource} related data.
+ * Interface for operations on {@link CompetitionResource} related data.
  */
 @Service
 public interface CategoryService {

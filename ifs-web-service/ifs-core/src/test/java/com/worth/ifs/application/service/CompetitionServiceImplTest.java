@@ -1,9 +1,6 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.category.resource.CategoryType;
-import com.worth.ifs.category.service.CategoryRestService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
@@ -22,6 +19,10 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+
+/**
+ * Test Class for all functionality in {@link CompetitionServiceImpl}
+ */
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionService> {
 
     @Mock

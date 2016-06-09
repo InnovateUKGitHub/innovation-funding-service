@@ -2,6 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.finance.model.UserRole;
+import com.worth.ifs.application.service.CategoryServiceImpl;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -24,6 +25,10 @@ import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
+
+/**
+ * Test Class for functionality in {@link UserServiceImpl}
+ */
 public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     private static final String EMAIL_THAT_EXISTS_FOR_USER = "sample@me.com";
