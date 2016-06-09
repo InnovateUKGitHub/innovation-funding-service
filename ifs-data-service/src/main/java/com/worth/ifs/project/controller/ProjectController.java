@@ -47,4 +47,9 @@ public class ProjectController {
                                                  @RequestBody AddressResource addressResource) {
         return projectService.updateProjectAddress(leadOrganisationId, projectId, AddressType.valueOf(addressType), addressResource).toPostResponse();
     }
+
+    @RequestMapping(value = "/user/{userId}")
+    public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId){
+        return projectService.findByUserId(userId).toGetResponse();
+    }
 }

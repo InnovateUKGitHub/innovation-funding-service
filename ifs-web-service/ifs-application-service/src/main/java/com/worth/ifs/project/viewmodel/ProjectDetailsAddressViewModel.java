@@ -4,6 +4,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 
 public class ProjectDetailsAddressViewModel {
+    private Long projectId;
     private String projectNumber;
     private String projectName;
     private AddressResource registeredAddress;
@@ -11,6 +12,7 @@ public class ProjectDetailsAddressViewModel {
     private AddressResource projectAddress;
 
     public ProjectDetailsAddressViewModel(ProjectResource projectResource) {
+        this.projectId = projectResource.getId();
         this.projectNumber = projectResource.getFormattedId();
         this.projectName = projectResource.getName();
     }
@@ -53,5 +55,9 @@ public class ProjectDetailsAddressViewModel {
 
     public void setProjectAddress(AddressResource projectAddress) {
         this.projectAddress = projectAddress;
+    }
+
+    public Long getProjectId() {
+        return projectId;
     }
 }

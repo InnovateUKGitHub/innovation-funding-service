@@ -39,4 +39,7 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource addressResource);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<ProjectResource>> findByUserId(final Long userId);
 }

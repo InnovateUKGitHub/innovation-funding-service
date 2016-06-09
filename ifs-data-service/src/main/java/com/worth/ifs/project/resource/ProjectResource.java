@@ -12,6 +12,7 @@ public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
     private Long id;
+    private Long application;
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
@@ -74,4 +75,11 @@ public class ProjectResource {
         return formatter.format(id);
     }
 
+    public Long getApplication() {
+        return application;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
+    }
 }

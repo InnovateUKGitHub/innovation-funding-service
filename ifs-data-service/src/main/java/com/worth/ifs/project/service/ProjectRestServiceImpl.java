@@ -8,6 +8,9 @@ import com.worth.ifs.project.resource.ProjectResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 
 @Service
 public class ProjectRestServiceImpl extends BaseRestService implements ProjectRestService {
@@ -27,5 +30,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<Void> updateProjectAddress(long leadOrganisationId, long projectId, AddressType addressType, AddressResource address) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/address?addressType=" + addressType.name() + "&leadOrganisationId=" + leadOrganisationId, address, Void.class);
+    }
+
+    @Override
+    public RestResult<List<ProjectResource>> findByUserId(long userId) {
+        return getWithRestResult(projectRestURL + "/user/" + userId, projectResourceListType());
     }
 }

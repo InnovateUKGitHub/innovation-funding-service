@@ -75,8 +75,8 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         assessorProcessRole = newProcessRole().withRole(assessorRole).build();
         applicationResource1 = newApplicationResource().withProcessRoles(asList(processRole1.getId())).withApplicationStatus(ApplicationStatusConstants.OPEN).build();
         applicationResource2 = newApplicationResource().withProcessRoles(asList(processRole2.getId())).build();
-        projectResource1 = newProjectResource().withId(applicationResource1.getId()).withDuration(applicationResource1.getDurationInMonths()).withTargetStartDate(applicationResource1.getStartDate()).build();
-        projectResource2 = newProjectResource().withId(applicationResource2.getId()).withDuration(applicationResource2.getDurationInMonths()).withTargetStartDate(applicationResource2.getStartDate()).build();
+        projectResource1 = newProjectResource().withApplication(applicationResource1).withDuration(applicationResource1.getDurationInMonths()).withTargetStartDate(applicationResource1.getStartDate()).build();
+        projectResource2 = newProjectResource().withApplication(applicationResource2).withDuration(applicationResource2.getDurationInMonths()).withTargetStartDate(applicationResource2.getStartDate()).build();
         application1 = newApplication().withId(applicationResource1.getId()).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
         processRole1.setApplication(application1);

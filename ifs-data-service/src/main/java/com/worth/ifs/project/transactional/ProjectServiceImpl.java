@@ -18,6 +18,7 @@ import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
@@ -108,6 +110,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess();
     }
 
+    @Override
+    public ServiceResult<List<ProjectResource>> findByUserId(final Long userId){
+        return getUser(userId).andOnSuccessReturn(user -> {
+            List<ProcessRole> roles = processRoleRepository.findByUser(user);
+            List<Application> applications = simpleMap(roles, ProcessRole::getApplication);
+            List<Project> projects = applications.stream().map(a -> projectRepository.findOneByApplicationId(a.getId())).collect(Collectors.toList());
+            return projectsToResources(projects);
+        });
+    }
+
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
 
         if (date.getDayOfMonth() != 1) {
@@ -125,6 +137,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         Application application = applicationRepository.findOne(applicationId);
         Project project = new Project();
         project.setId(applicationId);
+        project.setApplication(application);
         project.setDurationInMonths(application.getDurationInMonths());
         project.setName(application.getName());
         project.setTargetStartDate(application.getStartDate());

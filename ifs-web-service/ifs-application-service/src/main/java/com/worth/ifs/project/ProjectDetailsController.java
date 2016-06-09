@@ -57,7 +57,6 @@ public class ProjectDetailsController {
     private static final String MANUAL_ADDRESS = "manual-address";
     private static final String SEARCH_ADDRESS = "search-address";
     private static final String SELECT_ADDRESS = "select-address";
-    private static final String SELECTED_POSTCODE = "selectedPostcode";
 
 	@Autowired
     private ProjectService projectService;
@@ -89,12 +88,12 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), applicationResource);
         
-        organisationDetailsModelPopulator.populateModel(model, projectId);
+        organisationDetailsModelPopulator.populateModel(model, projectResource.getApplication());
         
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", user);
@@ -157,18 +156,16 @@ public class ProjectDetailsController {
                                 BindingResult bindingResult,
                                 @PathVariable("projectId") final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(projectResource.getApplication());
+        if (bindingResult.hasErrors() && form.getAddressForm() == null) {
+            return viewCurrentAddressForm(model, form, projectResource);
+        }
         AddressResource newAddressResource = null;
         AddressType addressType = null;
         switch (form.getAddressType()) {
             case REGISTERED:
             case OPERATING:
             case PROJECT:
-                if(bindingResult.hasErrors()) {
-                    if(bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().startsWith("addressForm"))).count() > 0) {
-                        return viewCurrentAddressForm(model, form, projectResource);
-                    }
-                }
                 Optional<OrganisationAddressResource> organisationAddressResource = getAddress(leadOrganisation, form.getAddressType());
                 if (organisationAddressResource.isPresent()) {
                     newAddressResource = organisationAddressResource.get().getAddress();
@@ -176,9 +173,6 @@ public class ProjectDetailsController {
                 addressType = form.getAddressType();
                 break;
             case ADD_NEW:
-                if(bindingResult.hasErrors()) {
-                    return viewCurrentAddressForm(model, form, projectResource);
-                }
                 newAddressResource = form.getAddressForm().getSelectedPostcode();
                 addressType = PROJECT;
                 break;
@@ -243,8 +237,8 @@ public class ProjectDetailsController {
         return organisation.getAddresses().stream().filter(a -> addressType.equals(a.getAddressType())).findFirst();
     }
 
-    private OrganisationResource getLeadOrganisation(final Long projectId){
-        ApplicationResource application = applicationService.getById(projectId);
+    private OrganisationResource getLeadOrganisation(final Long applicationId){
+        ApplicationResource application = applicationService.getById(applicationId);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
     }
@@ -279,7 +273,7 @@ public class ProjectDetailsController {
 
     private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
-        OrganisationResource leadOrganisation = getLeadOrganisation(project.getId());
+        OrganisationResource leadOrganisation = getLeadOrganisation(project.getApplication());
 
         Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, REGISTERED);
         if(registeredAddress.isPresent()){

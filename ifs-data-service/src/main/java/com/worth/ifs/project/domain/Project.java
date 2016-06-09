@@ -1,6 +1,7 @@
 package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
@@ -14,7 +15,13 @@ import java.time.LocalDate;
 @Entity
 public class Project {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @OneToOne
+    @JoinColumn(name="application", referencedColumnName = "id")
+    private Application application;
+
     private LocalDate targetStartDate;
 
     @OneToOne (cascade = CascadeType.ALL)
@@ -32,8 +39,9 @@ public class Project {
 
     public Project() {}
 
-    public Project(Long id, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name) {
+    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name) {
         this.id = id;
+        this.application = application;
         this.targetStartDate = targetStartDate;
         this.address = address;
         this.durationInMonths = durationInMonths;
@@ -87,5 +95,13 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 }

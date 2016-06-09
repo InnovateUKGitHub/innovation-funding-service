@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * This class contains methods to retrieve and store {@link ProjectResource} related data,
@@ -27,6 +28,11 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRestRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<List<ProjectResource>> findByUser(Long userId) {
+        return projectRestRestService.findByUserId(userId).toServiceResult();
     }
 
     @Override

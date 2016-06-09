@@ -153,6 +153,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource projectAddress) {
             return null;
         }
+
+        @Override
+        public ServiceResult<List<ProjectResource>> findByUserId(Long userId) {
+            return null;
+        }
     }
 }
 

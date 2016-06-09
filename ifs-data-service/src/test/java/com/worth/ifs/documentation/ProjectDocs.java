@@ -13,6 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class ProjectDocs {
     public static final FieldDescriptor[] projectResourceFields = {
             fieldWithPath("id").description("Id of the project (which will be same as id of corresponding application)"),
+            fieldWithPath("application").description("Application that the project was created from"),
             fieldWithPath("targetStartDate").description("Expected target start date for the project"),
             fieldWithPath("address").description("Address where the project is expected to be executed from"),
             fieldWithPath("durationInMonths").description("Duration that the project is expeceted to last"),
