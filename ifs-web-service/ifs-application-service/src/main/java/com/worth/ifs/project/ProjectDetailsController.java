@@ -17,6 +17,7 @@ import com.worth.ifs.controller.BindingResultTarget;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
+import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
@@ -25,6 +26,7 @@ import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,9 +45,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.worth.ifs.address.resource.AddressType.*;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -83,6 +90,9 @@ public class ProjectDetailsController {
     private AddressRestService addressRestService;
 
     @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
@@ -102,16 +112,119 @@ public class ProjectDetailsController {
         model.addAttribute("currentOrganisation", user.getOrganisations().get(0));
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
+        model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
         return "project/detail";
     }
+    
+    @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
+    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) throws InterruptedException, ExecutionException {
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadApplicant(projectResource.getApplication(), request)) {
+			return redirectToProjectDetails(projectId);
+		}
+    	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
+        
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+
+        populateProjectManagerModel(model, projectId, form, applicationResource);
+    	
+        return "project/project-manager";
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
+    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form, BindingResult bindingResult, HttpServletRequest request) {
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadApplicant(projectResource.getApplication(), request)) {
+			return redirectToProjectDetails(projectId);
+		}
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+        
+        if(bindingResult.hasErrors()) {
+        	populateProjectManagerModel(model, projectId, form, applicationResource);
+            return "project/project-manager";
+        }
+        
+        if(!userIsInLeadPartnerOrganisation(applicationResource, form.getProjectManager())) {
+        	populateProjectManagerModel(model, projectId, form, applicationResource);
+            return "project/project-manager";
+        }
+        
+        projectService.updateProjectManager(projectId, form.getProjectManager());
+    	
+        return redirectToProjectDetails(projectId);
+    }
+
+    private boolean userIsLeadApplicant(Long applicationId, HttpServletRequest request) {
+    	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    	ApplicationResource applicationResource = applicationService.getById(applicationId);
+    	return userService.isLeadApplicant(user.getId(), applicationResource);
+    }
+    
+	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
+
+        Future<ProcessRoleResource> processRoleResource = getProjectManagerProcessRole(projectId);
+    	
+        ProjectManagerForm form = new ProjectManagerForm();
+        if(processRoleResource != null) {
+			form.setProjectManager(processRoleResource.get().getUser());
+        }
+		return form;
+	}
+
+    private Future<ProcessRoleResource> getProjectManagerProcessRole(Long projectId) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        Future<ProcessRoleResource> processRoleResource;
+        if(projectResource.getProjectManager() != null) {
+            processRoleResource = processRoleService.getById(projectResource.getProjectManager());
+        } else {
+            processRoleResource = null;
+        }
+        return processRoleResource;
+    }
+
+    private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
+			ApplicationResource applicationResource) {
+		ProjectResource projectResource = projectService.getById(projectId);
+		
+		ProcessRoleResource lead = userService.getLeadApplicantProcessRoleOrNull(applicationResource);
+		List<ProcessRoleResource> leadPartnerUsers = userService.getLeadPartnerOrganisationProcessRoles(applicationResource);
+		List<ProcessRoleResource> leadPartnerUsersExcludingLead = leadPartnerUsers.stream()
+				.filter(prr -> !lead.getUser().equals(prr.getUser()))
+				.collect(Collectors.toList());
+		
+		List<ProcessRoleResource> allUsers = Stream.of(asList(lead), leadPartnerUsersExcludingLead)
+				.flatMap(x -> x.stream())
+				.collect(Collectors.toList());
+
+		model.addAttribute("allUsers", allUsers);
+		model.addAttribute("project", projectResource);
+		model.addAttribute("app", applicationResource);
+		model.addAttribute("form", form);
+	}
+
+	private boolean userIsInLeadPartnerOrganisation(ApplicationResource applicationResource, Long projectManager) {
+		
+		if(projectManager == null) {
+			return false;
+		}
+        List<ProcessRoleResource> leadPartnerUsers = userService.getLeadPartnerOrganisationProcessRoles(applicationResource);
+
+        return leadPartnerUsers.stream().anyMatch(prr -> projectManager.equals(prr.getUser()));
+	}
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form) {
-    	
-    	ProjectResource project = projectService.getById(projectId);
-    	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
-        LocalDate defaultStartDate = project.getTargetStartDate().withDayOfMonth(1);
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
+                                HttpServletRequest request) {
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadApplicant(projectResource.getApplication(), request)) {
+            return redirectToProjectDetails(projectId);
+        }
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
         return "project/details-start-date";
     }
@@ -120,10 +233,10 @@ public class ProjectDetailsController {
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   Model model,
-                                  BindingResult bindingResult) {
-
+                                  BindingResult bindingResult,
+                                  HttpServletRequest request) {
         ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form));
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, request));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)

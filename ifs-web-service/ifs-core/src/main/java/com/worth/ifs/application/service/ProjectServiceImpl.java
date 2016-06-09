@@ -19,7 +19,7 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
-    private ProjectRestService projectRestRestService;
+    private ProjectRestService projectRestService;
 
     @Override
     public ProjectResource getById(Long projectId) {
@@ -27,21 +27,26 @@ public class ProjectServiceImpl implements ProjectService {
             return null;
         }
 
-        return projectRestRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+        return projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public ServiceResult<List<ProjectResource>> findByUser(Long userId) {
-        return projectRestRestService.findByUserId(userId).toServiceResult();
+        return projectRestService.findByUserId(userId).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return projectRestRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
+        return projectRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource address) {
-        return projectRestRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
+        return projectRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
     }
+
+	@Override
+	public void updateProjectManager(Long projectId, Long projectManagerUserId) {
+		projectRestService.updateProjectManager(projectId, projectManagerUserId).getSuccessObjectOrThrowException();
+	}
 }

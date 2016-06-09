@@ -33,7 +33,12 @@ public class ProjectController {
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
     }
-
+    
+    @RequestMapping(method=RequestMethod.POST, value="/{id}/project-manager/{projectManagerId}")
+    public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
+        return projectService.setProjectManager(id, projectManagerId).toPostResponse();
+    }
+    
     @RequestMapping(value = "/{projectId}/startdate", method = POST)
     public RestResult<Void> updateProjectStartDate(@PathVariable("projectId") final Long projectId,
                                                    @RequestParam("projectStartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate projectStartDate) {
