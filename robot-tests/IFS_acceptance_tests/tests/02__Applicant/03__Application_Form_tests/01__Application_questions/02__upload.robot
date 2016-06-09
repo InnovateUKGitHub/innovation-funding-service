@@ -20,7 +20,7 @@ Large pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    #due to INFUND-3274
+    # due to INFUND-3274
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -171,7 +171,6 @@ the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
     Sleep    500ms
-
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
