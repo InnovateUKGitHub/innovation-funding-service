@@ -9,6 +9,7 @@ public class CompetitionType {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private Boolean stateAid;
 
 
     @OneToMany(mappedBy="competitionType")
@@ -37,5 +38,13 @@ public class CompetitionType {
 
     public void setCompetitions(List<Competition> competitions) {
         this.competitions = competitions;
+    }
+
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(Boolean stateAid) {
+        this.stateAid = stateAid;
     }
 }

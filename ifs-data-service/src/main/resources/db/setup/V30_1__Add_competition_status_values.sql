@@ -1,9 +1,8 @@
 UPDATE `competition` SET `status`='COMPETITION_SETUP_FINISHED' WHERE true=true;
 
 -- Add Competition Types
-INSERT INTO `competition_type` (`name`) VALUES ('Technology Inspired');
-INSERT INTO `competition_type` (`name`) VALUES ('Additive Manufacturing');
-
+INSERT INTO `competition_type` (`name`, `state_aid`) VALUES ('Technology Inspired', 1);
+INSERT INTO `competition_type` (`name`, `state_aid`) VALUES ('Additive Manufacturing', 0);
 
 -- ADD INNOVATION_SECTOR
 INSERT INTO `category` (id, `name`, `type`) VALUES (1, 'Health and life sciences', 'INNOVATION_SECTOR');

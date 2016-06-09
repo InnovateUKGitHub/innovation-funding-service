@@ -63,3 +63,4 @@ create table competition_setup_completed_section (id bigint not null auto_increm
 alter table competition_setup_completed_section add constraint FK_gyu0t6uwwtp0054ntnpp329pd foreign key (competition_id) references competition (id);
 alter table competition_setup_completed_section add constraint FK_60s1dqy6e4u6qopvbk759g5nb foreign key (competition_setup_section_id) references competition_setup_section (id);
 
+alter table competition_type add column state_aid bit;
