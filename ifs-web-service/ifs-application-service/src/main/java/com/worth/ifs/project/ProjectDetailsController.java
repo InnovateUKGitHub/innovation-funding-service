@@ -76,7 +76,7 @@ public class ProjectDetailsController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), applicationResource);
         
-	List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
         
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
