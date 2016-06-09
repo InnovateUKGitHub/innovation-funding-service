@@ -7,6 +7,7 @@ import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CompetitionSetupService {
@@ -15,6 +16,9 @@ public interface CompetitionSetupService {
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections();
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource);

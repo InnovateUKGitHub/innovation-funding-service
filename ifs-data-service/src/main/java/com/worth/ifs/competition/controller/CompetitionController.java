@@ -10,6 +10,7 @@ import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -46,6 +47,11 @@ public class CompetitionController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
+    }
+
+    @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
+    public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
+        return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
 
     @RequestMapping("/types/findAll")

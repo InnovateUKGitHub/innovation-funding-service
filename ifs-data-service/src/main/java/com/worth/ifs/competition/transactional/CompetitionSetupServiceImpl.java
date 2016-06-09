@@ -25,7 +25,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -73,6 +75,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     protected ServiceResult<CompetitionSetupSection> getCompetitionSetupSection(final Long id) {
         return find(competitionSetupSectionRepository.findOne(id), notFoundError(CompetitionSetupSection.class, id));
+    }
+
+    @Override
+    public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
+        Competition competition = competitionRepository.findById(id);
+        String datePart = dateTime.getYear()-2000 +""+ dateTime.getMonthValue();
+        List<Competition> openingSameMonth = competitionRepository.findByCompetitionCodeLike(datePart);
+        if(StringUtils.hasText(competition.getCode())){
+            return serviceSuccess(competition.getCode());
+        }else if(openingSameMonth.isEmpty()){
+            return serviceSuccess(datePart + "-1");
+        }else{
+            return serviceSuccess(datePart + "-"+ openingSameMonth.size()+1);
+        }
     }
 
     @Override
