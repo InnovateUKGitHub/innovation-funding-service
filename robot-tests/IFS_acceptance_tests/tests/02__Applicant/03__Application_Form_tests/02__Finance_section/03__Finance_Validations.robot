@@ -5,7 +5,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances    Failing
+Force Tags        Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -267,7 +267,7 @@ Other funding server side
 Select NO and mark as complete should be possible
     [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
     [Tags]
-    Given the users selects no in the other fundings section
+    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     And the user marks the finances as complete
     Then the user should see the text in the page    Application overview
     And the user should see the text in the page    These are the 10 questions which will be marked by assessors
@@ -298,9 +298,6 @@ the user reloads the page with validation errors
     sleep    300ms
     Reload Page
     Run Keyword And Ignore Error    Confirm Action
-
-the users selects no in the other fundings section
-    the user clicks the button/link    jQuery=label:contains(No) input
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}

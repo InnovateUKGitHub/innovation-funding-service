@@ -35,10 +35,7 @@ public interface FormInputService {
     ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId);
 
     // TODO we need to have separate methods for save and update
-    // TODO we need to ensure that the web layer does not try to call this method when it should not.
     @PreAuthorize("hasPermission(#formInputResponseCommand, 'SAVE')")
     ServiceResult<FormInputResponse> saveQuestionResponse(@P("formInputResponseCommand")FormInputResponseCommand formInputResponseCommand);
-
-
 
 }

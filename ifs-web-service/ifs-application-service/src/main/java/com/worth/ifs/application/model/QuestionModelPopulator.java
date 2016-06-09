@@ -1,11 +1,6 @@
 package com.worth.ifs.application.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.worth.ifs.application.UserApplicationRole;
@@ -48,7 +43,6 @@ import static com.worth.ifs.application.AbstractApplicationController.APPLICATIO
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.application.AbstractApplicationController.QUESTION_URL;
 import static com.worth.ifs.application.AbstractApplicationController.SECTION_URL;
-import static java.util.Collections.singletonList;
 
 /**
  * View model for the single question pages
@@ -76,8 +70,6 @@ public class QuestionModelPopulator {
     private FormInputService formInputService;
     @Autowired
     private FormInputResponseService formInputResponseService;
-    @Autowired
-    private QuestionStatusRestService questionStatusRestService;
 
     public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form, final BindingResult bindingResult) {
         QuestionResource question = questionService.getById(questionId);
@@ -130,7 +122,15 @@ public class QuestionModelPopulator {
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
         addAssignableDetails(model, application, userOrganisation, userId, questionResource.getId());
-        addCompletedDetails(model, questionResource, application.getId());
+
+        List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
+        Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
+        Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
+        boolean allReadOnly = questionStatuses.size() > 0  && (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
+
+        model.addAttribute("markedAsComplete", completedDetails);
+        model.addAttribute("allReadOnly", allReadOnly);
+
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
             model.addAttribute("leadOrganisation", org)
@@ -290,18 +290,39 @@ public class QuestionModelPopulator {
         return formInputResponseService.getByApplication(application.getId());
     }
 
-    private void addCompletedDetails(Model model, QuestionResource question, Long applicationId) {
-        List<QuestionResource> questions = singletonList(question);
+    private List<QuestionStatusResource> getQuestionStatuses(Long questionId, Long applicationId) {
+        return questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
+    }
 
-        Set<Long> markedAsComplete = questions
-            .stream()
-            .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(q.getId(), applicationId).getSuccessObjectOrThrowException()
-                .stream()
-                .anyMatch(qs ->
-                    (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
-            .map(QuestionResource::getId).collect(Collectors.toSet());
 
-        model.addAttribute("markedAsComplete", markedAsComplete);
+    private Set<Long> getAssigneeQuestions(QuestionResource question, List<QuestionStatusResource> questionStatuses, Long userId) {
+        Set<Long> assigned = new HashSet<Long>();
+
+        if(!question.getMultipleStatuses()) {
+            if(questionStatuses
+                    .stream()
+                    .anyMatch(qs ->
+                            (qs.getAssigneeUserId() == userId || qs.getAssignee() == null))) {
+                assigned.add(question.getId());
+            }
+        }
+
+        return assigned;
+    }
+
+    private Set<Long> getCompletedDetails(QuestionResource question, Long applicationId, List<QuestionStatusResource> questionStatuses) {
+        Set<Long> markedAsComplete = new HashSet<Long>();
+
+        if(question.getMarkAsCompletedEnabled() && !question.getMultipleStatuses()) {
+            if(questionStatuses
+                    .stream()
+                    .anyMatch(qs ->
+                            (isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE)))) {
+                markedAsComplete.add(question.getId());
+            }
+        }
+
+        return markedAsComplete;
     }
 
     private Optional<Boolean> isMarkedAsCompleteForSingleStatus(QuestionStatusResource questionStatus) {

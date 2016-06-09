@@ -121,6 +121,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("userId", 1);
         jsonObj.put("applicationId", 1);
         jsonObj.put("formInputId", 1);
+        jsonObj.put("markedAsComplete", 1);
         jsonObj.put("value", "Some text value...");
 
         List<String> errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
