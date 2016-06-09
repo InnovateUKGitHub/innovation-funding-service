@@ -6,7 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResour
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -23,5 +23,5 @@ public interface CompetitionsRestService {
     RestResult<CompetitionResource> create();
     RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionComplete(Long competitionId, Long sectionId);
     RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionInComplete(Long competitionId, Long sectionId);
-    RestResult<String> generateCompetitionCode(Long competitionId, LocalDate openingDate);
+    RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
 }
