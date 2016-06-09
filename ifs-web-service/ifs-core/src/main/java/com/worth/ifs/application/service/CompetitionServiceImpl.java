@@ -1,14 +1,18 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class contains methods to retrieve and store {@link CompetitionResource} related data,
@@ -43,10 +47,13 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public List<Long> getCompletedCompetitionSetupSectionStatusesByCompetitionId(long competitionId) {
-        List<Long> completedSectionIds = new ArrayList();
-        competitionsRestService.getCompletedSetupSections(competitionId).getSuccessObjectOrThrowException()
-                .stream()
-                .map(competitionSetupCompletedSectionResource -> completedSectionIds.add(competitionSetupCompletedSectionResource.getCompetitionSetupSection()));
+
+        List<CompetitionSetupCompletedSectionResource> completedSections = competitionsRestService.getCompletedSetupSections(competitionId).getSuccessObjectOrThrowException();
+
+        List<Long> completedSectionIds = completedSections.stream()
+                .map(competitionSetupCompletedSectionResource -> competitionSetupCompletedSectionResource.getCompetitionSetupSection())
+                .collect(Collectors.toList());
+
         return completedSectionIds;
     }
 
@@ -68,6 +75,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public void setSetupSectionMarkedAsIncomplete(Long competitionId, Long sectionId) {
         competitionsRestService.markSectionInComplete(competitionId, sectionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public String generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
+        return competitionsRestService.generateCompetitionCode(competitionId, openingDate).getSuccessObjectOrThrowException();
     }
 
 

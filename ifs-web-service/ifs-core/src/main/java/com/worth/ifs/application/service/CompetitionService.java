@@ -5,6 +5,8 @@ import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,4 +31,6 @@ public interface CompetitionService {
     void setSetupSectionMarkedAsComplete(Long competitionId, Long sectionId);
 
     void setSetupSectionMarkedAsIncomplete(Long competitionId, Long sectionId);
+
+    String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
 }
