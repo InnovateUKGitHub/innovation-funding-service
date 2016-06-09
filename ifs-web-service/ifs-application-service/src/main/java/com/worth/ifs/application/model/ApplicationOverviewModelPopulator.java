@@ -82,6 +82,7 @@ public class ApplicationOverviewModelPopulator {
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
         addCompletedDetails(model, application, userOrganisation);
         addSections(model, competition);
+        addYourFinancesStatus(model, application);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
@@ -91,7 +92,6 @@ public class ApplicationOverviewModelPopulator {
 
         FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
-        showYourFinancesIcon(model, application);
     }
     
     private void addSections(Model model, CompetitionResource competition) {
@@ -226,17 +226,14 @@ public class ApplicationOverviewModelPopulator {
         return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
     }
 
-    private void showYourFinancesIcon(Model model, ApplicationResource application) {
+    private void addYourFinancesStatus(Model model, ApplicationResource application) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
-
         Long financeSectionId=null;
         if (!financeSections.isEmpty()) {
-
             financeSectionId = financeSections.get(0).getId();
         }
-
         model.addAttribute("financeSectionId", financeSectionId);
     }
 

@@ -185,9 +185,6 @@ public abstract class AbstractApplicationController extends BaseController {
         return application;
     }
 
-
-
-
     protected  void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
