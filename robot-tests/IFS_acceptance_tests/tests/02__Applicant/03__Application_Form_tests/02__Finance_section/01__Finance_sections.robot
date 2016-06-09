@@ -84,11 +84,6 @@ the user removes the materials rows
     Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Click Element    jQuery=button:contains("Materials")
 
-Applicant navigates to the finances of the Robot application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Your finances
-
 the Funding levels value should be empty
     ${input_value} =    Get Value    id=cost-financegrantclaim
     log    ${input_value}

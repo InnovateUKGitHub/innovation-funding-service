@@ -176,7 +176,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
         mockMvc.perform(get("/registration/verify-email/" + hash))
                 .andExpect(status().isForbidden())
-                .andExpect(view().name("title-and-message-error"));
+                .andExpect(view().name("registration-token-expired"));
     }
 
     @Test
