@@ -81,7 +81,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
         Competition competition = competitionRepository.findById(id);
         String datePart = dateTime.getYear()-2000 +""+ dateTime.getMonthValue();
-        List<Competition> openingSameMonth = competitionRepository.findByCompetitionCodeLike(datePart);
+        List<Competition> openingSameMonth = competitionRepository.findByCodeLike(datePart);
         if(StringUtils.hasText(competition.getCode())){
             return serviceSuccess(competition.getCode());
         }else if(openingSameMonth.isEmpty()){
