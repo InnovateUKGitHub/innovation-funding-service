@@ -1,25 +1,34 @@
 package com.worth.ifs.project;
 
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.time.LocalDate;
+import java.util.Map;
+
+import static com.worth.ifs.BaseBuilderAmendFunctions.name;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -42,10 +51,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     	Long projectId = 20L;
 
         CompetitionResource competitionResource = newCompetitionResource().build();
-    	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+    	ApplicationResource applicationResource = newApplicationResource().withId(projectId).withCompetition(competitionResource.getId()).build();
         ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
 
     	when(applicationService.getById(projectId)).thenReturn(applicationResource);
+        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 
@@ -112,6 +122,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withDuration(4L).
                 build();
 
+        ApplicationResource applicationResource = newApplicationResource().build();
+        when(applicationService.getById(123L)).thenReturn(applicationResource);
+        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
         when(projectService.getById(123L)).thenReturn(project);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/start-date", 123L))
@@ -133,6 +146,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateStartDate() throws Exception {
 
+        ApplicationResource applicationResource = newApplicationResource().build();
+        when(applicationService.getById(123L)).thenReturn(applicationResource);
+        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
         when(projectRestService.updateProjectStartDate(123L, LocalDate.of(2017, 6, 3))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/project/{id}/details/start-date", 123L).

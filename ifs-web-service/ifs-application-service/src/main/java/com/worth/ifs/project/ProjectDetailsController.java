@@ -11,6 +11,7 @@ import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -186,7 +187,7 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute("form") ProjectDetailsStartDateForm form, 
+                                @ModelAttribute("form") ProjectDetailsStartDateForm form,
                                 HttpServletRequest request) {
     	
         if(!userIsLeadApplicant(projectId, request)) {
@@ -204,33 +205,20 @@ public class ProjectDetailsController {
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute("form") ProjectDetailsStartDateForm form,
                                   Model model,
-                                  BindingResult bindingResult) {
+                                  BindingResult bindingResult,
+                                  HttpServletRequest request) {
 
 	if (!userIsLeadApplicant(projectId, request)) {
 	    return redirectToProjectDetails(projectId);
 	}
     	
         RestResult<Void> updateResult = projectRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult);
-    }
-
-    private String handleErrorsOrRedirectToProjectOverview(
-            String fieldName, long projectId, Model model,
-            ProjectDetailsStartDateForm form, BindingResult bindingResult,
-            RestResult<?> result) {
-
-        if (result.isFailure()) {
-            bindAnyErrorsToField(result, fieldName, bindingResult, form);
-            model.addAttribute("form", form);
-            return viewStartDate(model, projectId, form);
-        }
-
-        return redirectToProjectDetails(projectId);
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, request);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(
             String fieldName, Long projectId, Model model,
-            ProjectDetailsStartDateViewModel.ProjectDetailsStartDateViewModelForm form, BindingResult bindingResult,
+            ProjectDetailsStartDateForm form, BindingResult bindingResult,
             RestResult<?> result, HttpServletRequest request) {
 
         if (result.isFailure()) {
