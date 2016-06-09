@@ -1,5 +1,6 @@
 package com.worth.ifs.category.transactional;
 
+import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryResource;
@@ -23,5 +24,11 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
     @Override
     public ServiceResult<List<CategoryResource>> getByType(CategoryType type){
         return serviceSuccess((List) categoryMapper.mapToResource(categoryRepository.findByType(type)));
+    }
+
+    @Override
+    public ServiceResult<List<CategoryResource>> getByParent(Long parentId){
+        Category parent = categoryRepository.findOne(parentId);
+        return serviceSuccess((List) categoryMapper.mapToResource(parent.getChildren()));
     }
 }

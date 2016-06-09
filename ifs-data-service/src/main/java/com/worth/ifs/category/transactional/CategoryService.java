@@ -10,4 +10,7 @@ import java.util.List;
 public interface CategoryService {
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<List<CategoryResource>> getByType(CategoryType type);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<List<CategoryResource>> getByParent(Long parentId);
 }

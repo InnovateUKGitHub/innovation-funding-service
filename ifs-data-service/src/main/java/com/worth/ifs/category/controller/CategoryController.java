@@ -23,4 +23,9 @@ public class CategoryController {
         return categoryService.getByType(CategoryType.fromString(type)).toGetResponse();
     }
 
+    @RequestMapping("/findByParent/{parentId}")
+    public RestResult<List<CategoryResource>> findByParent(@PathVariable("parentId") final Long parentId){
+        return categoryService.getByParent(parentId).toGetResponse();
+    }
+
 }

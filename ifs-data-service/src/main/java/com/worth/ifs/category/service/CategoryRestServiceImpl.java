@@ -26,4 +26,9 @@ public class CategoryRestServiceImpl extends BaseRestService implements Category
         return getWithRestResult(categoryRestURL + "/findByType/" + type.getName(), categoryResourceListType());
     }
 
+    @Override
+    public RestResult<List<CategoryResource>> getByParent(Long parentId) {
+        return getWithRestResult(categoryRestURL + "/findByParent/" + parentId, categoryResourceListType());
+    }
+
 }

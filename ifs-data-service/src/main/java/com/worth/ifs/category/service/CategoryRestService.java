@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface CategoryRestService {
     RestResult<List<CategoryResource>> getByType(CategoryType type);
+
+    RestResult<List<CategoryResource>> getByParent(Long parentId);
 }

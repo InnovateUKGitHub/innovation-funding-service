@@ -13,9 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasSize;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -51,5 +50,20 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
 
         assertThat(categories, hasSize(4));
         assertThat(categories, everyItem(Matchers.hasProperty("type", equalTo(CategoryType.INNOVATION_SECTOR))));
+    }
+
+    @Test
+    public void testGetCategoriesByParent(){
+        RestResult<List<CategoryResource>> categoriesResult = controller.findByParent(1L);
+        assertTrue(categoriesResult.isSuccess());
+        List<CategoryResource> categories = categoriesResult.getSuccessObject();
+
+        assertThat(categories, hasSize(3));
+        assertThat(categories, everyItem(Matchers.hasProperty("parent", equalTo(1L))));
+        assertThat(categories, containsInAnyOrder(asList(
+                Matchers.hasProperty("name", equalTo("Agriculture and food")),
+                Matchers.hasProperty("name", equalTo("Biosciences")),
+                Matchers.hasProperty("name", equalTo("Health and care"))
+        )));
     }
 }
