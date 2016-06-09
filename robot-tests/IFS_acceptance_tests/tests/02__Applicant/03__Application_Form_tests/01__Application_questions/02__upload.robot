@@ -44,6 +44,7 @@ Lead applicant can upload a pdf file
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
     Then the user uploads the file to the 'technical approach' question    ${valid_pdf}
+    And the user should see the text in the page    ${valid_pdf}
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
@@ -170,6 +171,7 @@ the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
     Sleep    500ms
+
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
