@@ -1,5 +1,8 @@
 package com.worth.ifs.application.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.builder.ApplicationStatusResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -12,16 +15,17 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -29,13 +33,19 @@ import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<ApplicationPermissionRules> {
 
@@ -57,6 +67,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource user3;
     private UserResource assessor;
     private UserResource compAdmin;
+    private Competition openCompetition;
+    private Competition notOpenCompetition;
 
     private Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
     private Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
@@ -83,6 +95,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         processRole1.setApplication(application1);
         processRole2.setApplication(application2);
 
+        notOpenCompetition = newCompetition().withCompetitionStatus(ASSESSOR_FEEDBACK).withEndDate(now().minusSeconds(1)).build();
+        openCompetition = newCompetition().withCompetitionStatus(OPEN).withEndDate(now().plusSeconds(1)).build();
+
         applicantRoles.add(leadApplicantRole);
         applicantRoles.add(collaboratorRole);
 
@@ -108,6 +123,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user2.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user3.getId(), applicantRoles, applicationResource1.getId())).thenReturn(emptyList());
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(assessor.getId(), applicationResource1.getId())).thenReturn(assessorProcessRole);
+
+        when(competitionRepositoryMock.findById(1L)).thenReturn(notOpenCompetition);
+        when(competitionRepositoryMock.findById(2L)).thenReturn(openCompetition);
     }
 
     @Test
@@ -125,10 +143,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void closedCompetitionCannotBeEdited() {
+        applicationResource1.setCompetition(1L);
+        assertFalse(rules.applicantCanUpdateApplicationResourceAndCompetitionIsOpen(applicationResource1, leadOnApplication1));
+        assertFalse(rules.applicantCanUpdateApplicationResourceAndCompetitionIsOpen(applicationResource1, user2));
+        assertFalse(rules.applicantCanUpdateApplicationResourceAndCompetitionIsOpen(applicationResource1, user3));
+    }
+
+    @Test
     public void onlyUsersPartOfTheApplicationCanChangeApplicationResourceTest() {
-        assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
-        assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user2));
-        assertFalse(rules.applicantCanUpdateApplicationResource(applicationResource1, user3));
+        applicationResource1.setCompetition(2L);
+        assertTrue(rules.applicantCanUpdateApplicationResourceAndCompetitionIsOpen(applicationResource1, leadOnApplication1));
+        assertTrue(rules.applicantCanUpdateApplicationResourceAndCompetitionIsOpen(applicationResource1, user2));
+        assertFalse(rules.applicantCanUpdateApplicationResourceAndCompetitionIsOpen(applicationResource1, user3));
     }
 
     @Test

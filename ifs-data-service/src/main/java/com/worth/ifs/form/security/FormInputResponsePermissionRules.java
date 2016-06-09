@@ -1,35 +1,37 @@
 package com.worth.ifs.form.security;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.security.ApplicationPermissionRules;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
 @PermissionRules
 @Component
@@ -99,9 +101,15 @@ public class FormInputResponsePermissionRules {
             return isLead || isCollaborator;
         }
 
-        return (isLead || isCollaborator)
+
+        return competitionIsOpen(applicationId) && (isLead || isCollaborator)
                 && checkIfAssignedToQuestion(questionStatuses, user)
                 && !checkIfQuestionIsMarked(questionStatuses);
+    }
+
+    private boolean competitionIsOpen(final long applicationId) {
+        Application application = applicationRepository.findOne(applicationId);
+        return application.getCompetition().getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
