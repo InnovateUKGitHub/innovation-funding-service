@@ -173,6 +173,10 @@ public class ProjectDetailsController {
                 addressType = form.getAddressType();
                 break;
             case ADD_NEW:
+                form.getAddressForm().setTriedToSave(true);
+                if (bindingResult.hasErrors()) {
+                    return viewCurrentAddressForm(model, form, projectResource);
+                }
                 newAddressResource = form.getAddressForm().getSelectedPostcode();
                 addressType = PROJECT;
                 break;
@@ -188,7 +192,8 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                BindingResult bindingResult) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
         form.setAddressType(AddressType.valueOf(form.getAddressType().name()));
