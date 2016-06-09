@@ -7,7 +7,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath    Finances    Failing
+Force Tags        HappyPath    Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -45,9 +45,9 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736z
-    [Tags]
+    [Tags]      Failing
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    And the user clicks the button/link    jQuery=label:contains("Custom administration support cost")
+    And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
     And user selects the admin costs    overheads-type-29-284    CUSTOM_RATE
     And the user enters text to a text field    css=[id$="customRate"]    30
@@ -110,16 +110,16 @@ Other costs
 Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
     [Tags]
-    Given the applicant selects 'No' for other funding
+    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant selects 'Yes' and fills two rows
     Then the total of the other funding should be correct
     And the applicant can leave the 'Your finances' page but the details are still saved
-    And the applicant selects 'No' for other funding
+    And the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant cannot see the 'other funding' details
     Then the user reloads the page
-    And the applicant selects 'Yes' for other funding
+    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
     Then the total of the other funding should be correct
 
 Funding level
@@ -246,12 +246,6 @@ The applicant can leave the 'Your finances' page but the details are still saved
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
     Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
     Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
-
-The applicant selects 'No' for other funding
-    the user clicks the button/link    jQuery=label:contains(No) input
-
-The applicant selects 'Yes' for other funding
-    the user clicks the button/link    jQuery=label:contains(No) input
 
 The applicant selects 'Yes' and fills two rows
     the user clicks the button/link    jQuery=label:contains(Yes) input

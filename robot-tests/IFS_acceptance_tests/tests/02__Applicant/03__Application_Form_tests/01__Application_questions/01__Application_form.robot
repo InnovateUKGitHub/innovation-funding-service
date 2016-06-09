@@ -171,7 +171,7 @@ the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
     Run Keyword And Ignore Error    confirm action
     Wait Until Element Is Visible    jQuery=#section-1 .section:nth-child(2)
-    Page Should Not Contain Element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/tick-icon"]
+    Page Should Not Contain Element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label

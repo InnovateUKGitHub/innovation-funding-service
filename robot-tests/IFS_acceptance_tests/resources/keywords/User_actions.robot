@@ -192,6 +192,7 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    Focus    ${BUTTON}
     Wait Until Element Is Visible    ${BUTTON}
     click element    ${BUTTON}
 
@@ -478,10 +479,10 @@ the lead applicant invites a registered user
     The guest user opens the browser
 
 Open mailbox and verify the content
-    [Arguments]    ${USER}        ${CONTENT}
+    [Arguments]    ${USER}    ${CONTENT}
     [Documentation]    This Keyword checks the content of the 1st email in a given inbox
     Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
-    ${EMAIL_MATCH}=         Get Matches From Email    1       ${CONTENT}
-    Should Not Be Empty     ${EMAIL_MATCH}
+    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+    Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
     close mailbox

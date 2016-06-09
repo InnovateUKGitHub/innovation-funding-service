@@ -153,7 +153,8 @@ Lead marks finances as complete and collaborator should be able to edit them
     [Documentation]    INFUND-3016
     ...
     ...    This test depends on the "Invite collaborators flow" test suite to run first
-    [Tags]    Pending
+    [Tags]      Email
+    # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     [Setup]    Log in as user    &{lead_applicant_credentials}
     Given user navigates to the finances of the collaboration application
     And the user enters the funding level
@@ -167,8 +168,8 @@ the collaborator edits the 'public description' question
     Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
-    Sleep    1s
-    Reload Page
+    sleep     1s
+    the user reloads the page
 
 the question should contain the correct status/name
     [Arguments]    ${ELEMENT}    ${STATUS}
@@ -192,11 +193,11 @@ Collaborator should be able to edit finances again
     close browser
     Guest user log-in    worth.email.test+inviteorg2@gmail.com    Passw0rd123
     And user navigates to the finances of the collaboration application
-    Element should be visible    css=#cost-financegrantclaim[readonly]
+    the user should see the element    css=#cost-financegrantclaim[readonly]
     the user clicks the button/link    jQuery=button:contains("Edit")
-    Element Should Not Be Visible    css=#cost-financegrantclaim[readonly]
+    the user should not see the element    css=#cost-financegrantclaim[readonly]
 
 the user enters the funding level
-    Select Radio Button    financePosition-organisationSize    MEDIUM
+    the user selects the radio button    financePosition-organisationSize    MEDIUM
     When the user enters text to a text field    id=cost-financegrantclaim    20
     focus    jQuery=.button:contains("Mark all as complete")
