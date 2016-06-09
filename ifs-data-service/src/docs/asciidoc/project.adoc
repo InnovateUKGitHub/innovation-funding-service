@@ -59,3 +59,15 @@ include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-fo
 
 ===== User is not a Partner on the Project
 include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
+
+=== Get Project Users
+==== Request
+include::{snippets}/project/get-project-users/http-request.adoc[]
+include::{snippets}/project/get-project-users/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-project-users/http-response.adoc[]
+include::{snippets}/project/get-project-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-project-users/curl-request.adoc[]
