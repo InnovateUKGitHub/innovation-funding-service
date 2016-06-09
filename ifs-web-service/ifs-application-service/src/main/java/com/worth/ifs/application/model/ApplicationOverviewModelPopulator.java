@@ -67,7 +67,7 @@ public class ApplicationOverviewModelPopulator {
     @Autowired
     OrganisationRestService organisationRestService;
     
-    public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model, final List<SectionResource> allSections){
+    public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
@@ -80,7 +80,7 @@ public class ApplicationOverviewModelPopulator {
         addUserDetails(model, application, userId);
 
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
-        addCompletedDetails(model, application, userOrganisation, allSections);
+        addCompletedDetails(model, application, userOrganisation);
         addSections(model, competition);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
@@ -91,6 +91,7 @@ public class ApplicationOverviewModelPopulator {
 
         FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
+        showYourFinancesIcon(model, application);
     }
     
     private void addSections(Model model, CompetitionResource competition) {
@@ -193,14 +194,26 @@ public class ApplicationOverviewModelPopulator {
                 .collect(Collectors.toList()));
     }
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<SectionResource> allSections) {
+    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
 
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
-        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
 
+        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
+        model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
+        model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
+        model.addAttribute("markedAsComplete", markedAsComplete);
+
+        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
+        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(model, application, userOrganisation, completedSectionsByOrganisation);
+        model.addAttribute("userFinanceSectionCompleted", userFinanceSectionCompleted);
+
+    }
+
+    private Boolean isUserFinanceSectionCompleted(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
 
         Long eachCollaboratorFinanceSectionId;
@@ -210,14 +223,21 @@ public class ApplicationOverviewModelPopulator {
         } else {
             eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
         }
+        return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
+    }
 
-        Boolean userFinanceSectionCompleted = completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
+    private void showYourFinancesIcon(Model model, ApplicationResource application) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
-        model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
-        model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
-        model.addAttribute("markedAsComplete", markedAsComplete);
-        model.addAttribute("userFinanceSectionCompleted", userFinanceSectionCompleted);
+
+        Long financeSectionId=null;
+        if (!financeSections.isEmpty()) {
+
+            financeSectionId = financeSections.get(0).getId();
+        }
+
+        model.addAttribute("financeSectionId", financeSectionId);
     }
 
     private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
@@ -249,5 +269,7 @@ public class ApplicationOverviewModelPopulator {
         FileEntryResource fileEntry = fileEntryResult.getSuccessObject();
         return new FileDetailsViewModel(fileEntry);
     }
+
+
 
 }

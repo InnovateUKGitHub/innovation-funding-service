@@ -71,8 +71,7 @@
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <div th:remove="tag" th:if="${currentApplication.isOpen()}">
-                                <div th:if="${childSection.getName().equals('Your finances')}">
+                            <div th:if="${childSection.getId().equals(financeSectionId)}">
                                 <img class="section-status complete"
                                      src="/images/field/field-done-right.png"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
@@ -89,7 +88,6 @@
                                      th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
                                      th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
                                      th:unless="${userFinanceSectionCompleted}"/>
-                                </div>
                             </div>
                         </li>
                     </div>
