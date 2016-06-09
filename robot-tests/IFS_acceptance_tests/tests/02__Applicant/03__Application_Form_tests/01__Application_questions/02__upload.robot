@@ -3,7 +3,7 @@ Documentation     INFUND-832
 ...               INFUND-409
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Upload    Applicant    Email
+Force Tags        Upload    Applicant    Email    Pending
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -20,6 +20,7 @@ Large pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    # due to INFUND-3274
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -170,7 +171,6 @@ the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
     Sleep    500ms
-
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
