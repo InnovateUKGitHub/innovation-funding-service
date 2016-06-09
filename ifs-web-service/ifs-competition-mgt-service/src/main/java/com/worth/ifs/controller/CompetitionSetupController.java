@@ -8,6 +8,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.controller.form.CompetitionSetupForm;
 import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -141,7 +142,6 @@ public class CompetitionSetupController {
 
         if(!bindingResult.hasErrors()) {
             saveCompetitionSetupSection(competitionSetupForm, competition, competitionSetupSection.get());
-
         } else {
             LOG.debug("Form errors");
         }
@@ -149,21 +149,18 @@ public class CompetitionSetupController {
         return "competition/setup";
     }
 
-    private Boolean saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, CompetitionResource competitionResource, CompetitionSetupSectionResource competitionSetupSectionResource) {
-        boolean result = false;
-
+    private void saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, CompetitionResource competitionResource, CompetitionSetupSectionResource competitionSetupSectionResource) {
         switch (competitionSetupSectionResource.getName()) {
             case SECTION_ONE:
-                result = saveInitialDetailSection((CompetitionSetupInitialDetailsForm) competitionSetupForm, competitionResource);
+                saveInitialDetailSection((CompetitionSetupInitialDetailsForm) competitionSetupForm, competitionResource);
                 break;
         }
 
-        // TODO : set as marked complete
+        competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), competitionSetupSectionResource.getId());
 
-        return result;
     }
 
-    private boolean saveInitialDetailSection(CompetitionSetupInitialDetailsForm competitionSetupForm, CompetitionResource competition) {
+    private void saveInitialDetailSection(CompetitionSetupInitialDetailsForm competitionSetupForm, CompetitionResource competition) {
         competition.setName(competitionSetupForm.getTitle());
         competition.setBudgetCode(competitionSetupForm.getBudgetCode());
         competition.setCode(competitionSetupForm.getCompetitionCode());
@@ -178,9 +175,7 @@ public class CompetitionSetupController {
         competition.setInnovationArea(competitionSetupForm.getInnovationAreaCategoryId());
         competition.setInnovationSector(competitionSetupForm.getInnovationAreaCategoryId());
 
-        competitionService.save(competition);
-
-        return false;
+        competitionService.update(competition);
     }
 
     private Optional<CompetitionSetupSectionResource> findCompetitionSetupSection(List<CompetitionSetupSectionResource> sections, long sectionId) {
@@ -205,11 +200,11 @@ public class CompetitionSetupController {
         model.addAttribute("allCompletedSections", completedSections);
         model.addAttribute("subTitle", (competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": " + (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 
-        model.addAttribute("competitionExecutiveUsers", userService.findUserByType("Type"));
+        model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_EXEC));
         model.addAttribute("innovationSectors", categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR));
         model.addAttribute("innovationAreas", categoryService.getCategoryByType(CategoryType.INNOVATION_AREA));
         model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
-        model.addAttribute("competitionLeadTechUsers", userService.findUserByType("Type"));
+        model.addAttribute("competitionLeadTechUsers", userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST));
     }
 
 }

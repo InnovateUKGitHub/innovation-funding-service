@@ -12,10 +12,8 @@ import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.QuestionStatusRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -103,7 +101,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
-        dataBinder.registerCustomEditor(LocalDate.class, APPLICATION_START_DATE, new LocalDatePropertyEditor(webRequest));
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
@@ -216,8 +213,11 @@ public class ApplicationFormController extends AbstractApplicationController {
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
-            /* Start save action */
-            saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+
+            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+                saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+            }
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
@@ -241,6 +241,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                 return getRedirectUrl(request, applicationId);
             }
         }
+    }
+
+    private Boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {
+        List<QuestionStatusResource> questionStatuses = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
+        return questionStatuses.stream()
+                .anyMatch(questionStatusResource -> (
+                        questionStatusResource.getAssignee() == null || questionStatusResource.getAssigneeUserId() == userId)
+                        && questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete());
     }
 
     private BindingResult removeDuplicateFieldErrors(BindingResult bindingResult) {
@@ -330,19 +338,20 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, String[]> params = request.getParameterMap();
         boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
 
-        Map<Long, List<String>> errors;
-        if(question != null) {
-            errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
-        } else {
-            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
-            List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-            errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
+        Map<Long, List<String>> errors = new HashMap<>();
+        // Prevent saving question when it's a unmark question request (INFUND-2936)
+        if(!isMarkQuestionAsInCompleteRequest(params)) {
+            if (question != null) {
+                errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
+            } else {
+                SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+                List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
+                errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
+            }
         }
 
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
-
         new ApplicationStartDateValidator().validate(request, bindingResult);
-
         setApplicationDetails(application, form.getApplication());
 
         if(userIsLeadApplicant(application, user.getId())) {
@@ -435,6 +444,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private boolean isMarkQuestionRequest(@NotNull Map<String, String[]> params){
         return params.containsKey(MARK_AS_COMPLETE) || params.containsKey(MARK_AS_INCOMPLETE);
+    }
+
+    private boolean isMarkQuestionAsInCompleteRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(MARK_AS_INCOMPLETE);
     }
 
     private boolean isMarkSectionRequest(@NotNull Map<String, String[]> params){

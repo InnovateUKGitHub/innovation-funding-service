@@ -129,19 +129,21 @@ Partner cannot invite others to other organisations
 
 Partner who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    Pending
+    # Pending due to INFUND-3266
     [Setup]    Log in as user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary
     When the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
-    [Teardown]
+    [Teardown]  Logout as user
 
 Partners are not editable
     [Documentation]    INFUND-929
     [Tags]
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given guest user log-in     &{lead_applicant_credentials}
+    And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=View team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")

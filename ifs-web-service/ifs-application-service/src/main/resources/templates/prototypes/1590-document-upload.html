@@ -28,6 +28,15 @@
 			<p><strong>These documents have been submitted to Innovate UK</strong></p>
 		</div>
 
+		<div th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag">
+			<div class="warning-alert extra-margin-bottom">
+				<h3 class="heading-small">These documents have been returned to the project team, the following reason was given;</h3>
+				<ul class="list-bullet">
+					<li>the collaboration agreement only has 2 signatures when there are 3 partners</li>
+				</ul>
+			</div>
+		</div>
+
 
 		<p>As the lead partner in this project you must supply additional documents to support your grant application.</p>
 		
@@ -164,7 +173,7 @@
 
 		</fieldset>
 
-		<div th:if="${param.user == null and param.status == null}">
+		<div th:if="${param.user == null and param.status == null or param.user == null and param.status != null and param.status[0] == 'reject'}">
 
 			<p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
 

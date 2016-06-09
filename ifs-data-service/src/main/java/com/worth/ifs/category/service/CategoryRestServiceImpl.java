@@ -8,11 +8,13 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.service.CompetitionsRestServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.categoryResourceListType;
 
+@Service
 public class CategoryRestServiceImpl extends BaseRestService implements CategoryRestService {
 
     @SuppressWarnings("unused")
