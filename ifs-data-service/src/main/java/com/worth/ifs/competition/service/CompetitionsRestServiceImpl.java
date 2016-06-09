@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
@@ -71,6 +72,12 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionInComplete(Long competitionId, Long sectionId) {
         return getWithRestResult(String.format("%s/sectionStatus/incomplete/%s/%s", competitionsRestURL, competitionId, sectionId), competitionSetupCompletedSectionResourceListType());
+    }
+
+    @Override
+    public RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
+        String url = String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId);
+        return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), openingDate, String.class);
     }
 
 }
