@@ -4,10 +4,14 @@
 
 <div th:fragment="select-address">
     <fieldset>
-        <legend class="visuallyhidden">Operating address</legend>
-        <span th:if="${#fields.hasErrors('*{addressType}')}"  th:remove="tag">
-            <span class="error-message"  th:each="err : ${#fields.errors('addressType')}" th:text="${err}" />
-        </span>
+      <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}') ? 'error' : ''}">
+        <legend>
+            <span class="visuallyhidden">Operating address</span>
+            <span th:if="${#fields.hasErrors('*{addressType}')}"  th:remove="tag">
+                <span class="error-message"  th:each="err : ${#fields.errors('addressType')}" th:text="${err}" />
+            </span>
+        </legend>
+
         <div class="form-block" th:if="${model.registeredAddress}">
             <label class="block-label" for="address-use-org" data-target="registeredAddress">
                 <input id="address-use-org" type="radio" name="project-address-group" value="REGISTERED" th:field="*{addressType}"/>
@@ -35,6 +39,7 @@
                 Enter an alternative project address
             </label>
         </div>
+      </div>
     </fieldset>
 
     <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
