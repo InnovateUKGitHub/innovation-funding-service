@@ -38,7 +38,22 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
     public void test_getEmailToken() throws Exception {
         final String hash = "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb";
 
-        final Token expected = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, recentCreatedDate(), JsonNodeFactory.instance.objectNode());
+        final Token expected = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, recentTokenDate(), JsonNodeFactory.instance.objectNode());
+        when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName())).thenReturn(of(expected));
+
+        final Token token = tokenService.getEmailToken(hash).getSuccessObject();
+        assertEquals(expected, token);
+
+        verify(tokenRepositoryMock, only()).findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName());
+    }
+
+    @Test
+    public void test_getEmailToken_resent() throws Exception {
+        final String hash = "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb";
+
+        // create a token that has expired but give it a recent updated date as though it has been resent
+        final Token expected = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, expiredTokenDate(), JsonNodeFactory.instance.objectNode());
+        expected.setUpdated(recentTokenDate());
         when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName())).thenReturn(of(expected));
 
         final Token token = tokenService.getEmailToken(hash).getSuccessObject();
@@ -51,7 +66,21 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
     public void test_getEmailToken_expired() throws Exception {
         final String hash = "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb";
 
-        final Token expected = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, expiredCreatedDate(), JsonNodeFactory.instance.objectNode());
+        final Token expected = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, expiredTokenDate(), JsonNodeFactory.instance.objectNode());
+        when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName())).thenReturn(of(expected));
+
+        final ServiceResult<Token> result = tokenService.getEmailToken(hash);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED));
+    }
+
+    @Test
+    public void test_getEmailToken_resentExpired() throws Exception {
+        final String hash = "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb";
+
+        // create a token that has expired and give it an updated date as though it has been resent but also since expired
+        final Token expected = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, expiredTokenDate(), JsonNodeFactory.instance.objectNode());
+        expected.setUpdated(expiredTokenDate());
         when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName())).thenReturn(of(expected));
 
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
@@ -63,7 +92,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
     public void test_getPasswordResetToken() throws Exception {
         final String hash = "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb";
 
-        final Token expected = new Token(RESET_PASSWORD, User.class.getName(), 1L, hash, recentCreatedDate(), JsonNodeFactory.instance.objectNode());
+        final Token expected = new Token(RESET_PASSWORD, User.class.getName(), 1L, hash, expiredTokenDate(), JsonNodeFactory.instance.objectNode());
         when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, RESET_PASSWORD, User.class.getName())).thenReturn(of(expected));
 
         final Token token = tokenService.getPasswordResetToken(hash).getSuccessObject();
@@ -106,7 +135,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
      *
      * @return
      */
-    private LocalDateTime expiredCreatedDate() {
+    private LocalDateTime expiredTokenDate() {
         return now().minusMinutes(EMAIL_TOKEN_VALIDITY_MINS);
     }
 
@@ -115,7 +144,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
      *
      * @return
      */
-    private LocalDateTime recentCreatedDate() {
+    private LocalDateTime recentTokenDate() {
         return now().minusMinutes(EMAIL_TOKEN_VALIDITY_MINS - 1);
     }
 }

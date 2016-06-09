@@ -95,23 +95,38 @@
 							<td><a href="#">Company A</a></td>
 							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
 							
-							<div th:if="${param.stage == null}" th:unless="${param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+							<div th:if="${param.stage == null or param.stage != null and param.stage[0]  &lt; '1'}" th:remove="tag">
 								<td id="assignMo" class="status action"><a href="/prototypes/1576-assign-mo" title="Assign monitoring officer"><span class="visuallyhidden">Action</span></a></td>
 							</div>
 
-							<div th:if="${param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+							<div th:if="${param.stage != null and param.stage[0] >= '1'}" th:remove="tag">
 								<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
 							</div>
 
-							<div th:if="${param.stage == null or param.stage[0] == 'level1'}" th:unless="${param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+
+
+							<div th:if="${param.stage == null or param.stage[0] &lt; '2'}"  th:remove="tag">
 								<td class="status action"><a href="/prototypes/2650-review-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
 							</div>
 
-							<div th:if="${param.stage != null and param.stage[0] == 'level2'}" th:remove="tag">
+							<div th:if="${param.stage != null and param.stage[0] >= '2'}" th:remove="tag">
 								<td class="status ok"><a href="/prototypes/2650-review-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
 							</div>
+
+
 							
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+							<div th:if="${param.stage == null or param.stage[0] &lt; '3'}"  th:remove="tag">
+								<td class="status action"><a href="/prototypes/2682-moderate-docs"><span class="visuallyhidden">Action</span></a></td>
+							</div>
+
+							<div th:if="${param.stage != null and param.stage[0] >= '3'}" th:remove="tag">
+								<td class="status ok"><a href="/prototypes/2650-review-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
+							</div>
+
+							<div th:if="${param.stage != null and param.stage[0] == 'level3-reject'}" th:remove="tag">
+								<td class="status reject"><a href="/prototypes/2682-moderate-docs?status=reject"><span class="visuallyhidden">Rejected</span></a></td>
+							</div>
+							
 							<td class="status with-partner">-</td>
 							<td class="status with-partner">-</td>
 							<td class="status with-partner">-</td>

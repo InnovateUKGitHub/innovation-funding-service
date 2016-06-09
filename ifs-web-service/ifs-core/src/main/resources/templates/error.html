@@ -37,27 +37,18 @@
         </span>
     </div>
 
+    <div th:unless="${#strings.isEmpty(stacktrace)}" th:text="${message}" style="display:none">
+        Error message will be displayed here, wrapped in comments to make it only visible in the source...
+    </div>
 
-    <span th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
-        Error message will be displayed here for developers on dev/UAT environments.
-    </span>
-
-    <p th:unless="${exception} or (${message} and ${message.length() != 0})">
+    <p th:unless="${exception} or ${!#strings.isEmpty(stacktrace)}">
         Cause unknown (no exception details available)
     </p>
-   <!--/*
-    <p>
-        You are seeing this error page due to Spring Boot (which returns a
-        view called "error" in response to uncaught exceptions. Since we are
-        using Thymeleaf this corresponds to the template
-        <code>error.html</code>
-        )
-    </p> */-->
 
-    <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
-        Stack trace will be printed here...
-    </pre>
-
+    <div th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging (for developers): ' + stacktrace}" style="display:none">
+        Stack trace will be printed here, wrapped in comments to make it only visible in the source...
+    </div>
+    
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 

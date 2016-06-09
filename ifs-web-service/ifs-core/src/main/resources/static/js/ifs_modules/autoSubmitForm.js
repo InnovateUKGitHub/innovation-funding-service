@@ -8,7 +8,7 @@ IFS.autoSubmitForm = (function(){
         init : function(){
             s = this.settings;
             //hide non-js button
-            jQuery(s.submitElements).next('button').attr('aria-hidden','true');
+            jQuery(s.submitElements).next('button').addClass('visuallyhidden'); //keep available for screenreaders
             jQuery(document).on('change',s.submitElements,function(){
               IFS.autoSubmitForm.submitForm(this);
             });

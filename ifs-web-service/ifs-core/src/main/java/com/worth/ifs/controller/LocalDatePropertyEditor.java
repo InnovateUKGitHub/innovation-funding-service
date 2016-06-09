@@ -1,4 +1,4 @@
-package com.worth.ifs.application;
+package com.worth.ifs.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,13 +25,13 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
     }
 
     @Override
-    public void setAsText(String text) throws IllegalArgumentException {
+    public void setAsText(String dateFieldName) throws IllegalArgumentException {
         Map<String, String[]> parameterMap = webRequest.getParameterMap();
 
         // should validate these...
-        Integer year = returnZeroWhenNotValid(parameterMap, "application.startDate.year", ChronoField.YEAR);
-        Integer month = returnZeroWhenNotValid(parameterMap, "application.startDate.monthValue", ChronoField.MONTH_OF_YEAR);
-        Integer day = returnZeroWhenNotValid(parameterMap, "application.startDate.dayOfMonth", ChronoField.DAY_OF_MONTH);
+        Integer year = returnZeroWhenNotValid(parameterMap, dateFieldName + ".year", ChronoField.YEAR);
+        Integer month = returnZeroWhenNotValid(parameterMap, dateFieldName + ".monthValue", ChronoField.MONTH_OF_YEAR);
+        Integer day = returnZeroWhenNotValid(parameterMap, dateFieldName + ".dayOfMonth", ChronoField.DAY_OF_MONTH);
 
         try {
             setValue(LocalDate.of(year, month, day));

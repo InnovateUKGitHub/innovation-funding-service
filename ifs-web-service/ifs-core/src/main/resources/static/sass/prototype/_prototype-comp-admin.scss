@@ -165,6 +165,7 @@ table{
 		flex: 0 0 270px;
 		border-right: 1px solid #bfc1c3;
 		margin-right: 5px;
+		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 	.flex-middle{ 
 		overflow: auto;
@@ -188,6 +189,7 @@ table{
 		width: 150px;
 		right: 150px;
 		padding: 1.3em 0;
+		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 	
 	.fix-right{
@@ -195,6 +197,7 @@ table{
 		width: 150px;
 		right: 0;
 		padding: 1.3em 0;
+		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 
 	@include media-down(tablet) {

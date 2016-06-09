@@ -192,6 +192,7 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    Focus    ${BUTTON}
     Wait Until Element Is Visible    ${BUTTON}
     click element    ${BUTTON}
 
@@ -478,13 +479,10 @@ the lead applicant invites a registered user
     The guest user opens the browser
 
 Open mailbox and verify the content
-    [Arguments]    ${USER}    ${EMAIL_SUBJECT}    ${CONTENT}
-    [Documentation]    This Keyword checks the subject and the content of the 1st email
+    [Arguments]    ${USER}    ${CONTENT}
+    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
     Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
-    ${MAIL_TO_OPEN}=    Walk Multipart Email    1
-    ${Subject}=    Get Multipart Field    Subject
-    Should contain    ${Subject}    ${EMAIL_SUBJECT}
-    ${BODY}=    get email body    ${MAIL_TO_OPEN}
-    Should Contain    ${BODY}    ${CONTENT}
+    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+    Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
     close mailbox
