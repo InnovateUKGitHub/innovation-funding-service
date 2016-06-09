@@ -24,7 +24,7 @@ IFS.competition_management = (function(){
             IFS.competition_management.getWindowWidth();
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
-
+            IFS.competition_management.handleCompetitionCode();
             jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
 
             IFS.competition_management.handleFundingDecisionEnableOrDisable();
@@ -174,6 +174,30 @@ IFS.competition_management = (function(){
              }).error(function(){
             	 saveInfo.html('Not saved.');
              });
+        },
+        handleCompetitionCode : function(){
+            jQuery(document).on('click','#generate-code',function(){
+                var inst = jQuery(this);
+
+                if(jQuery('#openingDate').hasClass('error') === false){
+                    var day = jQuery('#openingDate .day input').val();
+                    var month = jQuery('#openingDate .month input').val();
+                    var year = jQuery('#openingDate .year input').val();
+
+                    if(day.length && month.length && year.length){
+                      var competitionId = inst.val();
+                      var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/'+competitionId+'/generateCompetitionCode?day='+day+'&month='+month+'&year='+year;
+                      //todo ajax failure
+                      jQuery.ajaxProtected({
+                        type: "GET",
+                        url: url,
+                        success: function(data) {
+                            inst.closest('.form-group').find('input').val(data);
+                        }
+                      });
+                  }
+                }
+            });
         }
     };
 })();

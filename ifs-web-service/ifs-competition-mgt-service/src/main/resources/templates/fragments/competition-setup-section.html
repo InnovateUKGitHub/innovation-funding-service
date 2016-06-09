@@ -24,42 +24,46 @@
                 </select>
             </div>
 
-            <fieldset th:class="${#fields.hasErrors('openingDate*')}? 'form-group error':'form-group'">
-                <h3 class="heading-small no-margin">Opening date</h3>
-                <legend class="visuallyhidden">Opening date</legend>
-                <div class="date-group">
-                    <span th:if="${#fields.hasErrors('openingDate*')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
-                    </span>
-                    <div class="day">
-                        <label class="form-label" for="competitionSetupForm.openingDateDay">
-                            <div>Day</div>
-                        </label>
-                        <input th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
-                               type="number"
-                               placeholder="DD"
-                               th:field="${competitionSetupForm.openingDateDay}" />
-                    </div>
+            <fieldset>
+                <div id="openingDate" th:class="${#fields.hasErrors('openingDate*')}? 'form-group error':'form-group'">
+                  <h3 class="heading-small no-margin">Opening date</h3>
+                  <legend>
+                      <span class="visuallyhidden">Opening date</span>
+                      <span th:if="${#fields.hasErrors('openingDate*')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
+                      </span>
+                  </legend>
+                  <div class="date-group js-future-date">
+                      <div class="day">
+                          <label class="form-label" for="competitionSetupForm.openingDateDay">
+                              <div>Day</div>
+                          </label>
+                          <input th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                                 type="number"
+                                 placeholder="DD"
+                                 th:field="${competitionSetupForm.openingDateDay}" />
+                      </div>
 
-                    <div class="month">
-                        <label class="form-label" for="competitionSetupForm.openingDateMonth">
-                            <span>Month</span>
-                        </label>
-                        <input th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
-                               type="number"
-                               placeholder="MM"
-                               th:field="${competitionSetupForm.openingDateMonth}" />
-                    </div>
+                      <div class="month">
+                          <label class="form-label" for="competitionSetupForm.openingDateMonth">
+                              <span>Month</span>
+                          </label>
+                          <input th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                                 type="number"
+                                 placeholder="MM"
+                                 th:field="${competitionSetupForm.openingDateMonth}" />
+                      </div>
 
-                    <div class="year">
-                        <label class="form-label" for="competitionSetupForm.openingDateYear">
-                            <span>Year</span>
-                        </label>
-                        <input th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
-                               type="number"
-                               placeholder="YYYY"
-                               th:field="${competitionSetupForm.openingDateYear}" />
-                    </div>
+                      <div class="year">
+                          <label class="form-label" for="competitionSetupForm.openingDateYear">
+                              <span>Year</span>
+                          </label>
+                          <input th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                                 type="number"
+                                 placeholder="YYYY"
+                                 th:field="${competitionSetupForm.openingDateYear}" />
+                      </div>
+                  </div>
                 </div>
             </fieldset>
 
@@ -169,13 +173,10 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}" />
                     </span>
                 </label>
-                <input th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                <input disabled="disabled" th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                        type="text"
                        th:field="${competitionSetupForm.competitionCode}" />
-                <!-- /* TODO : send openingdate with it
-                 <a href="/management/competition/setup/7/generateCompetitionCode?year=2016&month=04&day=02">Generate code</a>
-                 */-->
-
+                <button class="button button-secondary" type="button" id="generate-code" th:value="${competition.id}">Generate competition code</button>
             </div>
 
             <button class="button">Done</button>
@@ -201,13 +202,11 @@
 
                 <dt>Competition type</dt>
                 <dd th:text="${competitionSetupForm.competitionTypeId}"></dd>
-
                 <dt>State aid</dt>
                 <dd id="stateAid">
                     <span class="yes">Yes</span>
                     <span class="no">No</span>
                 </dd>
-
                 <dt>PAF number</dt>
                 <dd th:text="${competitionSetupForm.pafNumber}"></dd>
 
