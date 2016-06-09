@@ -74,9 +74,12 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), applicationResource);
+        
+	List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
-
+        
+        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, user, user.getOrganisations().get(0), partnerOrganisations, applicationResource, projectUsers, competitionResource));
         return "project/detail";
     }

@@ -29,7 +29,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:href="@{/project/{id}/details/start-date(id=${model.app.getId()})}">Start date</a>
+                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/start-date(id=${model.app.getId()})}">Start date</a>
+                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Start date</span>
                 </td>
                 <td id="start-date">
                     <span th:if="${model.project.targetStartDate == null}" th:remove="tag">-</span>
@@ -42,7 +43,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:href="@{/project/{id}/details/project-address(id=${model.app.getId()})}">Project address</a>
+                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/project-address(id=${model.app.getId()})}">Project address</a>
+                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Project address</span>
                 </td>
                 <td id="project-address">-</td>
                 <td>
@@ -52,7 +54,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:href="@{/project/{id}/details/project-manager(id=${model.app.getId()})}">Project manager</a>
+                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/project-manager(id=${model.app.getId()})}">Project manager</a>
+                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Project manager</span>
                 </td>
                 <td id="project-manager">-</td>
                 <td>

@@ -15,7 +15,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=level2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3' : '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -24,6 +24,15 @@
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
 	<hr />
+
+	<div th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag">
+		<div class="warning-alert">
+			<h3 class="heading-small">These documents have been returned to the project team, the following reason was given;</h3>
+			<ul class="list-bullet">
+				<li>the collaboration agreement only has 2 signatures when there are 3 partners</li>
+			</ul>
+		</div>
+	</div>
 
 	<h2 class="heading-medium">10294856: Machine learning in robots</h2>
 
@@ -45,39 +54,71 @@
 	<h2 class="heading-medium">Expoitation plan</h2>
 	<a href="#">Exploitation Plan 2016-04-28a.PDF</a>
 
-	<h2 class="heading-medium">Review documents</h2>
-	<p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
+	
+	<div th:if="${param.status == null}" th:remove="tag">
 
-	<div class="grid-row  extra-margin">
-		<div class="column-half">
-			<a href="/prototypes/2652-change-bank-details" class="button-link">Change bank account details</a>
-		</div>
-		<div class="column-half alignright">
-			<a href="#" data-js-modal="modal-accept-docs" class="button">Accept documents</a>
-		</div>
+		<h2 class="heading-medium">Review documents</h2>
+		<p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
 
-		<div class="modal-accept-docs" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-	        <button class="js-close close" aria-label="Close Popup">X</button>
-	        <div>
+		<a href="#" data-js-modal="modal-accept-docs" class="button large">Accept documents</a>
 
-				<h2 class="heading-medium no-margin">Accept documents</h2>
+		<a href="#" data-js-modal="modal-reject-docs" class="button button-warning large">Reject documents</a>
 
-				<p>Once the documents are accepted, the project team can complete any remaining stages of the project set up process.</p>
+	</div>
+
+
+	<div class="modal-accept-docs" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+
+			<h2 class="heading-medium no-margin">Accept documents</h2>
+
+			<p>Once the documents are accepted, the project team can complete any remaining stages of the project set up process.</p>
+
+			<hr />
+
+        	<div class="alignright-button">
+				
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+        		<a href="/prototypes/2682-moderate-docs?status=ok" class="button">Accept documents</a>
+        	</div>
+
+        </div>
+    </div>
+
+
+    <div class="modal-reject-docs" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+
+			<h2 class="heading-medium no-margin">Reject documents</h2>
+
+			<p>If these documents are rejected, the project manager will be informed along with the reason for rejection. They will then need to provide new versions of the documents before the project can begin.</p>
+
+			<form >
+
+				<div class="form-group">
+	                <label for="rejection-observations" class="form-label">Please provide a reason for rejection.</label>
+	                <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
+	            </div>
 
 				<hr />
 
-            	<div class="alignright-button">
+	        	<div class="alignright-button">
 					
 					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
 
-            		<a href="#" class="button">Accept documents</a>
-            	</div>
+	        		<a href="/prototypes/2682-moderate-docs?status=reject" class="button button-warning">Reject documents</a>
+	        	</div>
 
-	        </div>
-	    </div>
+	        </form>
+
+        </div>
+    </div>
 
 
-	</div>
+	
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -90,40 +131,6 @@
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery(document).ready(function(){
-
-		function $_GET(param) {
-	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
-	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-	            function( m, key, value ) { // callback
-	                vars[key] = value !== undefined ? value : '';
-	            }
-	        );
-
-	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
-	        }
-	        return vars;
-	    }
-
-
-		if (localStorage.getItem('moDetails') != null){
-
-			jQuery('#first-name').val(localStorage.getItem('moFirstName'));
-			jQuery('#last-name').val(localStorage.getItem('moLastName'));
-			jQuery('#email').val(localStorage.getItem('moEmail'));
-			jQuery('#phone-number').val(localStorage.getItem('moPhoneNumber'));
-
-		}else if ($_GET('status') == 'edit' && localStorage.getItem('moDetails') == null ){
-
-			jQuery('#first-name').val('David');
-			jQuery('#last-name').val('Jones');
-			jQuery('#email').val('djones@companya.co.uk');
-			jQuery('#phone-number').val('01234 456879');
-		}
-
-	});
 	// ]]>
 </script>
 </body>
