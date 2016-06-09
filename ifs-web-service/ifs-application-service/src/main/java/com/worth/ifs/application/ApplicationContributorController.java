@@ -174,6 +174,7 @@ public class ApplicationContributorController{
 
                     contributorsForm.merge(contributorsFormCookie);
                     validator.validate(contributorsForm, bindingResult);
+                    validateUniqueApplicantNames(contributorsForm, bindingResult, application, leadApplicant);
                     validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
                 } else {
                     contributorsForm.merge(contributorsFormCookie);
@@ -217,6 +218,7 @@ public class ApplicationContributorController{
             contributorsForm.setTriedToSave(true);
             validator.validate(contributorsForm, bindingResult);
             UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+            validateUniqueApplicantNames(contributorsForm, bindingResult, application, leadApplicant);
             validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
             validatePermissionToInvite(contributorsForm, bindingResult, application, leadApplicant, request);
             
@@ -322,6 +324,29 @@ public class ApplicationContributorController{
         savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
         return savedEmails;
     }
+
+    /**
+     * Check if applicant names entered, are unique within this application's invites.
+     */
+    private void validateUniqueApplicantNames(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
+        Set<String> savedNames = getSavedApplicantNames(application);
+        savedNames.add(leadApplicant.getName());
+        contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {
+            if(!savedNames.add(i.getPersonName())){
+                // Could not add the element, so its a duplicate.
+                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].personName", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getPersonName(), false, new String[]{"NotUnique"}, null, "You have already added this applicant name.");
+                bindingResult.addError(fieldError);
+            }
+        }));
+    }
+
+    private Set<String> getSavedApplicantNames(ApplicationResource application) {
+        Set<String> savedNames = new TreeSet<>();
+        List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
+        savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedNames.add(i.getName())));
+        return savedNames;
+    }
+
 
     private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
         contributorsForm.setApplicationId(applicationId);
