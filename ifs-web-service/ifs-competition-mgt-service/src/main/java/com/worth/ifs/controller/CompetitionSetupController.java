@@ -33,24 +33,20 @@ import java.util.Optional;
 public class CompetitionSetupController {
 
     private static final String SECTION_ONE = "Initial details";
-
+    private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
     @Autowired
     private CompetitionService competitionService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CategoryService categoryService;
 
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
-
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
-    public String initCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId){
+    public String initCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId) {
 
         List<CompetitionSetupSectionResource> sections = competitionService.getCompetitionSetupSectionsByCompetitionId(competitionId);
 
-        if(sections.size() > 0) {
+        if (sections.size() > 0) {
             return "redirect:/competition/setup/" + competitionId + "/section/" + sections.get(0).getId();
         } else {
             LOG.error("Competition is not found");
@@ -60,21 +56,21 @@ public class CompetitionSetupController {
 
 
     @RequestMapping(value = "/{competitionId}/section/{section}", method = RequestMethod.GET)
-    public String editCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId, @PathVariable("section") Long sectionId){
+    public String editCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId, @PathVariable("section") Long sectionId) {
 
         List<CompetitionSetupSectionResource> sections = competitionService.getCompetitionSetupSectionsByCompetitionId(competitionId);
         Optional<CompetitionSetupSectionResource> competitionSetupSection = findCompetitionSetupSection(sections, sectionId);
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(!competitionSetupSection.isPresent()) {
+        if (!competitionSetupSection.isPresent()) {
             LOG.error("Competition setup section is not found");
             return "redirect:/dashboard";
         }
 
-		populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection.get(), sections);
+        populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection.get(), sections);
         model.addAttribute("competitionSetupForm", getSectionFormData(competition, competitionSetupSection.get()));
 
-		return "competition/setup";
+        return "competition/setup";
     }
 
     private CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource, CompetitionSetupSectionResource competitionSetupSectionResource) {
@@ -104,7 +100,7 @@ public class CompetitionSetupController {
         competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
 
 
-        if(competitionResource.getStartDate() != null) {
+        if (competitionResource.getStartDate() != null) {
             competitionSetupForm.setOpeningDateDay(competitionResource.getStartDate().getDayOfMonth());
             competitionSetupForm.setOpeningDateMonth(competitionResource.getStartDate().getMonth().getValue());
             competitionSetupForm.setOpeningDateYear(competitionResource.getStartDate().getYear());
@@ -120,7 +116,7 @@ public class CompetitionSetupController {
 
     @RequestMapping(value = "/{competitionId}/section/{sectionId}/edit", method = RequestMethod.GET)
     public String submitSectionInitialDetails(@PathVariable("competitionId") Long competitionId,
-                                              @PathVariable("sectionId") Long sectionId){
+                                              @PathVariable("sectionId") Long sectionId) {
 
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, sectionId);
 
@@ -129,14 +125,18 @@ public class CompetitionSetupController {
 
     /* AJAX Function */
     @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
-    public @ResponseBody List<CategoryResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId){
+    public
+    @ResponseBody
+    List<CategoryResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
         return categoryService.getCategoryByParentId(innovationSectorId);
     }
 
     /* AJAX Function */
     @RequestMapping(value = "/{competitionId}/generateCompetitionCode", method = RequestMethod.GET)
-    public @ResponseBody String generateCompetionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request){
+    public
+    @ResponseBody
+    String generateCompetionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
 
         LocalDateTime openingDate = LocalDateTime.of(Integer.parseInt(request.getParameter("year")),
                 Integer.parseInt(request.getParameter("month")),
@@ -150,7 +150,7 @@ public class CompetitionSetupController {
     public String submitSectionInitialDetails(@Valid @ModelAttribute("competitionSetupForm") CompetitionSetupInitialDetailsForm competitionSetupForm,
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
-                                              Model model, HttpServletRequest request){
+                                              Model model, HttpServletRequest request) {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, 1L, model);
     }
@@ -160,14 +160,14 @@ public class CompetitionSetupController {
         Optional<CompetitionSetupSectionResource> competitionSetupSection = findCompetitionSetupSection(sections, sectionId);
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(!competitionSetupSection.isPresent()) {
+        if (!competitionSetupSection.isPresent()) {
             LOG.error("Competition setup section is not found");
             return "redirect:/dashboard";
         }
 
 
         saveCompetitionSetupSection(competitionSetupForm, competition, competitionSetupSection.get());
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
         } else {
             LOG.debug("Form errors");
         }
@@ -194,8 +194,12 @@ public class CompetitionSetupController {
         competition.setCode(competitionSetupForm.getCompetitionCode());
         competition.setExecutive(competitionSetupForm.getExecutiveUserId());
 
-        LocalDateTime startDate = LocalDateTime.of(competitionSetupForm.getOpeningDateYear(), competitionSetupForm.getOpeningDateMonth(), competitionSetupForm.getOpeningDateDay(), 0, 0);
-        competition.setStartDate(startDate);
+        try {
+            LocalDateTime startDate = LocalDateTime.of(competitionSetupForm.getOpeningDateYear(), competitionSetupForm.getOpeningDateMonth(), competitionSetupForm.getOpeningDateDay(), 0, 0);
+            competition.setStartDate(startDate);
+        } catch (Exception e) {
+            competition.setStartDate(null);
+        }
         competition.setCompetitionType(competitionSetupForm.getCompetitionTypeId());
         competition.setLeadTechnologist(competitionSetupForm.getLeadTechnologistUserId());
         competition.setPafCode(competitionSetupForm.getPafNumber());
@@ -230,6 +234,11 @@ public class CompetitionSetupController {
 
         model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_EXEC));
         model.addAttribute("innovationSectors", categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR));
+        if (competitionResource.getInnovationSector() != null) {
+            model.addAttribute("innovationAreas", categoryService.getCategoryByParentId(competitionResource.getInnovationSector()));
+        } else {
+            model.addAttribute("innovationAreas", categoryService.getCategoryByType(CategoryType.INNOVATION_AREA));
+        }
         model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
         model.addAttribute("competitionLeadTechUsers", userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST));
     }
