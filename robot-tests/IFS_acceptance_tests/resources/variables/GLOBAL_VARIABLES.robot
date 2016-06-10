@@ -68,6 +68,7 @@ ${UPLOAD_FOLDER}    uploaded_files
 ${VIRTUAL_DISPLAY}    ${EMPTY}
 ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${LOCAL_MAIL_SENDING_IMPLEMENTED}    'YES'
+${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${COMP_ADMINISTRATOR_OPEN}    ${SERVER}/management/competition/1
 ${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/2
 ${DOWNLOAD_FOLDER}    ../download_files
