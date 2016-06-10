@@ -29,12 +29,6 @@
 
 <div th:fragment="prototype-section-essential">
     <h2 class="heading-medium no-margin-top">Step 1: Initial competition details</h2>
-
-     <div class="warning-alert extra-margin-bottom" th:unless="${param.compPaf != null and param.compPaf[0] != ''}">
-        <h2 class="heading-small">Invalid input provided</h2>
-        <p>PAF No is a mandatory field. <br />
-        Please enter a PAF (Project Authorisation Form) number - It looks like this: <i>XX12345ZZ_6</i></p>
-    </div>
     
     <div class="panel-indent">
         This will create a new Competition - you will be able to specify more details as you proceed
@@ -42,6 +36,12 @@
 
     <form id="form-essential">
         <fieldset id="section-1-edit">
+
+            <div class="warning-alert extra-margin-bottom" th:unless="${param.compPaf != null and param.compPaf[0] != ''}">
+                <h2 class="heading-small">Invalid input provided</h2>
+                <p>PAF No is a mandatory field. <br />
+                Please enter a PAF (Project Authorisation Form) number - It looks like this: <i>XX12345ZZ_6</i></p>
+            </div>
 
             <legend class="visuallyhidden">Initial details</legend>
             
