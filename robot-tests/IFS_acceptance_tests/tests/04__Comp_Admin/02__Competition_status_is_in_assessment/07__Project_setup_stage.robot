@@ -5,6 +5,8 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...
 ...
 ...               INFUND-2613 As a lead partner I need to see an overview of project details for my project so that I can edit the project details in order for Innovate UK to be able to assign an appropriate Monitoring Officer
+...
+...               INFUND-2614 As a lead partner I need to provide a target start date for the project so that Innovate UK has correct details for my project setup
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -70,14 +72,17 @@ Partner can see the overview of the project details
     And the user should see the text in the page    Finance contacts
 
 Partner can change the Start Date
-    given the user clicks the button/link    link=Start date
-    When the user enters text to a text field    id=projectStartDate_month    10
+    [Documentation]    INFUND-2614
+    Given the user clicks the button/link    link=Start date
+    Then the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
+    And the user enters text to a text field    id=projectStartDate_month    1
     Then the user should see a validation error    Please enter a future date
     When the user enters text to a text field    id=projectStartDate_month    1
     When the user enters text to a text field    id=projectStartDate_year    2018
     When the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see the text in the page    1 Jan 2018
+    Then status of the start date should be Yes
 
 Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
@@ -132,3 +137,9 @@ the user should see a validation error
     Focus    jQuery=button:contains("Save")
     sleep    300ms
     Then the user should see an error    ${ERROR1}
+
+status of the start date should be Yes
+    Element Should Contain    id=start-date-status    Yes
+
+the duration should be visible
+    Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    3 months
