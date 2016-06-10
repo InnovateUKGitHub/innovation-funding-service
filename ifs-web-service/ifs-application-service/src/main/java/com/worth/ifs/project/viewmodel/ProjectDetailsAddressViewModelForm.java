@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class ProjectDetailsAddressViewModelForm implements BindingResultTarget {
-    @NotNull(message = "Please select at least one, or enter a new project address.")
+    @NotNull(message = "You need to select a project address before you can continue.")
     private AddressType addressType;
     private boolean useSearchResultAddress;
     @Valid
