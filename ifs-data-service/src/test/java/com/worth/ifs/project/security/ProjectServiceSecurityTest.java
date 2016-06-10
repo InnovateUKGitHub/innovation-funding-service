@@ -1,9 +1,12 @@
 package com.worth.ifs.project.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -128,6 +131,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
+        public ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<ProjectResource>> findAll() {
             return null;
         }
@@ -142,8 +150,33 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-        @Override
+		@Override
+		public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+			return null;
+		}
+
+		@Override
         public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource projectAddress) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<ProjectResource>> findByUserId(Long userId) {
+            return null;
+        }
+
+		@Override
+		public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+			return null;
+		}
+
+        @Override
+        public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
             return null;
         }
     }

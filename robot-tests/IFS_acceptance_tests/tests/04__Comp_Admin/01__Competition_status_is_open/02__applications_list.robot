@@ -5,7 +5,7 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...
 Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
 ...               AND    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -52,14 +52,14 @@ The applications can be sorted by project lead
     [Documentation]    INFUND-2300: listing of applications for an open competition
     [Tags]    Competition management
     When the application list is sorted by    Lead
-    Then the applications should be sorted by column    3
+    Then the applications should be sorted by column    4
 
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
     [Tags]    Competition management
     # TODO EC
     When the application list is sorted by    Percentage complete
-    Then the applications should be sorted in reverse order by column    5
+    Then the applications should be sorted in reverse order by column    6
 
 Calculations of the open applications
     [Documentation]    INFUND-2259

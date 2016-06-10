@@ -86,6 +86,6 @@ Phone number too short
 
 
 the user submits their information
-    Select Checkbox    termsAndConditions
+    the user selects the checkbox   termsAndConditions
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Submit Form

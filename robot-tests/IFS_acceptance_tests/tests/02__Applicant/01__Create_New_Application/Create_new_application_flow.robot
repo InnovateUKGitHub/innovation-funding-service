@@ -10,7 +10,7 @@ Documentation     INNFUND-669 As an applicant I want to create a new application
 ...
 ...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
 Suite Setup       Delete the emails from both test mailboxes
-Test Teardown     User closes the browser
+Test Teardown     The user closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

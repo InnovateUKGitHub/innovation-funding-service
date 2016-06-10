@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CompetitionResource {
+    public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
+    public static final int CLOSING_SOON_AMOUNT = 3;
+
     private Long id;
     private List<Long> applications = new ArrayList<>();
     private List<Long> questions = new ArrayList<>();
@@ -163,6 +166,11 @@ public class CompetitionResource {
         return getDaysBetween(this.startDate, this.endDate);
     }
 
+    @JsonIgnore
+    public boolean isClosingSoon(){
+        long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(LocalDateTime.now(), this.endDate);
+        return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
+    }
 
 
     /* Keep it D.R.Y */

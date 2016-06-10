@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Funders Panel
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -103,7 +103,7 @@ Successful applicants can see the assessment outcome on the dashboard page
 Successful applicants can see the assessment outcome on the overview page
     [Documentation]    INFUND-2605
     [Tags]
-    When the user clicks the button/link    link=00000016: Cheese is good
+    When the user clicks the button/link    link=00000001: Cheese is good
     Then the user should see the text in the page    Project setup status
     [Teardown]    Logout as user
 

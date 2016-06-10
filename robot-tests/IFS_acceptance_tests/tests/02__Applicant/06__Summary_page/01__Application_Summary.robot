@@ -18,7 +18,7 @@ All sections present
     ...
     ...    INFUND-1075
     [Tags]    HappyPath
-    Given The user navigates to the summary page of the Robot test application
+    Given the user navigates to the summary page of the Robot test application
     Then all the sections should be visible
 
 All questions present
@@ -35,8 +35,8 @@ Clicking the Scope button expands the section
 Edit link navigates to the application form
     [Documentation]    INFUND-193
     [Tags]
-    When the user clicks the button/link    jQuery=button:contains("Project summary")
-    And the user clicks the button/link    css=#form-input-11 .textarea-footer button.button
+    Given the user clicks the button/link    jQuery=button:contains("Project summary")
+    When the user clicks the button/link    css=#form-input-11 .textarea-footer button.button
     Then the user redirects to the page    Please provide a short summary of your project    Project summary
 
 Application overview button
@@ -50,18 +50,18 @@ Application overview button
 
 *** Keywords ***
 all the sections should be visible
-    Page Should Contain Element    css=.section-overview section:nth-of-type(1)
-    Page Should Contain Element    css=.section-overview section:nth-of-type(2)
-    Page Should Contain Element    css=.section-overview section:nth-of-type(3)
+    the user should see the element    css=.section-overview section:nth-of-type(1)
+    the user should see the element    css=.section-overview section:nth-of-type(2)
+    the user should see the element    css=.section-overview section:nth-of-type(3)
 
 all the questions should be visible
     [Documentation]    What this test is doing:
     ...
     ...    Checking if there are 3 main sections (Details, Application Questions and Finances) and then counting if the first section has 4 subsections, the second 10 and the third 1.
-    Page Should Contain Element    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
-    Page Should Contain Element    css=.section-overview section:nth-of-type(2) .collapsible:nth-of-type(10)
-    Page Should Contain Element    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
+    the user should see the element    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
+    the user should see the element    css=.section-overview section:nth-of-type(2) .collapsible:nth-of-type(10)
+    the user should see the element    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
 
 the Scope section should be expanded
-    Page Should Contain Element    css=.section-overview > section:first-child .collapsible:nth-of-type(4) > h3 button[aria-expanded="true"]
-    Page Should Contain Element    css=.section-overview > section:first-child .collapsible:nth-of-type(4) > div[aria-hidden="false"]
+    the user should see the element     css=.section-overview > section:first-child .collapsible:nth-of-type(4) > h3 button[aria-expanded="true"]
+    the user should see the element     css=.section-overview > section:first-child .collapsible:nth-of-type(4) > div[aria-hidden="false"]

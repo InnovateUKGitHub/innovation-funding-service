@@ -92,6 +92,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
             if (built.getCompetition() != null) {
                 built.getCompetition().getApplications().add(built);
             }
+
+            if (built.getProcessRoles() != null && !built.getProcessRoles().isEmpty()) {
+
+            }
         });
 
         return builtList;
