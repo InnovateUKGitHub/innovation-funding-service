@@ -4,7 +4,7 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 ...               INFUND-2304 Read only view mode of applications from the application list page
 Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
 ...               AND    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

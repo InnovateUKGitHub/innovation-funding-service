@@ -7,7 +7,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -220,13 +220,10 @@ Lead applicant marks the finances as incomplete
     And Close Browser
     And Switch to the first browser
 
-the user reloads the page
-    Reload Page
-    Run Keyword And Ignore Error    Confirm Action
 
 the user can see the link for more JeS details
-    Element Should Be Visible    link=Je-S website
-    Page Should Contain Element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+    the user should see the element   link=Je-S website
+    the user should see the element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
 
 the applicant enters invalid inputs
     Input Text    id=incurred-staff    100£
@@ -245,7 +242,7 @@ the field should not contain the currency symbol
 
 Mark academic finances as complete
     Focus    jQuery=.button:contains("Mark all as complete")
-    And the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+    the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
 
 the user waits for the file to be scanned by the anti virus software
     Sleep    5s

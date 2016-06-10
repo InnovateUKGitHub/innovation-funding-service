@@ -1,9 +1,9 @@
 package com.worth.ifs.user.resource;
 
+import com.worth.ifs.application.resource.ApplicationResource;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.worth.ifs.application.resource.ApplicationResource;
 
 public class ProcessRoleResource {
     private Long id;
