@@ -132,6 +132,10 @@ table{
 			@extend %icon-tick;
 			background-position: 50% 50%;
 		}
+		&.rejected{
+			@extend  %icon-cross;
+			background-position: 50% 50%;
+		}
 		&.action{
 			//background: $red;
 			@extend  %icon-assigned-to-me;

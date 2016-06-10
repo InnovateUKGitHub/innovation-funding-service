@@ -1,12 +1,17 @@
 package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 
 /**
  * Role defines database relations and a model to use client side and server side.
@@ -112,4 +117,21 @@ public class Role {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public boolean isOfType(UserRoleType roleType) {
+        return roleType.getName().equals(getName());
+    }
+
+    public boolean isPartner() {
+        return isOfType(PARTNER);
+    }
+
+    public boolean isLeadApplicant() {
+        return isOfType(LEADAPPLICANT);
+    }
+
+    public boolean isCollaborator() {
+        return isOfType(COLLABORATOR);
+    }
+
 }
