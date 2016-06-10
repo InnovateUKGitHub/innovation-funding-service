@@ -1,31 +1,22 @@
 package com.worth.ifs.finance.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static java.time.LocalDateTime.now;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -43,10 +34,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     private ApplicationFinanceResource otherApplicationFinance;
     private UserResource otherLeadApplicant;
     private OrganisationResource otherOrganisation;
-    private Application openCompetitionApplication;
-    private Application notOpenCompetitionApplication;
-    private Competition notOpenCompetition;
-    private Competition openCompetition;
+
+
 
     @Override
     protected ApplicationFinancePermissionRules supplyPermissionRulesUnderTest() {
@@ -69,12 +58,6 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             // Set up users on an organisation and application
             final long applicationId = 1l;
             final long organisationId = 2l;
-
-            openCompetition = newCompetition().withCompetitionStatus(OPEN).withEndDate(now().plusSeconds(1)).build();
-            openCompetitionApplication = newApplication().withId(applicationId).withCompetition(openCompetition).build();
-
-            when(applicationRepositoryMock.findOne(applicationId)).thenReturn(openCompetitionApplication);
-
             organisation = newOrganisationResource().with(id(organisationId)).build();
             applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(applicationId).build();
             leadApplicant = newUserResource().build();

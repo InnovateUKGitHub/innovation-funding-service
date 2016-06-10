@@ -1,7 +1,5 @@
 package com.worth.ifs.finance.security;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.CostRepository;
@@ -38,7 +36,7 @@ public class CostPermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")
     public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
-        return costBelongsToOpenCompetition(cost) && isCollaborator(cost, user);
+        return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "DELETE", description = "The consortium can update the cost for their application and organisation")
@@ -71,8 +69,4 @@ public class CostPermissionRules {
         return isLead || isCollaborator;
     }
 
-    boolean costBelongsToOpenCompetition(final Cost cost){
-        final Application application = cost.getApplicationFinance().getApplication();
-        return application.getCompetition().getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
-    }
 }

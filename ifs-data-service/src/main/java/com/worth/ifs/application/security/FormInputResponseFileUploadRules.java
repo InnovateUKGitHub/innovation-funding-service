@@ -1,12 +1,8 @@
 package com.worth.ifs.application.security;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
@@ -15,15 +11,15 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.worth.ifs.user.resource.UserRoleType.*;
 
 /**
  * Rules defining who is allowed to upload files as part of an Application Form response to a Question
@@ -47,7 +43,7 @@ public class FormInputResponseFileUploadRules {
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         Application application = applicationRepository.findOne(fileEntry.getCompoundId().getApplicationId());
-        return applicationBelongsToOpenCompetition(application) && application.isOpen() && userIsApplicantOnThisApplication(fileEntry, user);
+        return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
     }
 
     @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
@@ -63,9 +59,5 @@ public class FormInputResponseFileUploadRules {
         List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
         return !applicantProcessRoles.isEmpty();
-    }
-
-    boolean applicationBelongsToOpenCompetition(final Application application){
-        return application.getCompetition().getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
     }
 }

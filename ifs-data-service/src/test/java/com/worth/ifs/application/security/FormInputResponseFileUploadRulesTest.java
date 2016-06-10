@@ -1,42 +1,33 @@
 package com.worth.ifs.application.security;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.ApplicationStatusBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static java.time.LocalDateTime.now;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,18 +43,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     private long applicationId = 456L;
     private long processRoleId = 789L;
     private Role applicantRole = newRole().withType(APPLICANT).build();
-    private Competition openCompetition;
-    private Application openCompetitionApplication;
     //TODO: Implement tests for lead applicant and collaborator type users as well and not just applicant.
-
-    @Before
-    public void setup(){
-        openCompetition = newCompetition().withCompetitionStatus(OPEN).withEndDate(now().plusSeconds(1)).build();
-        openCompetitionApplication = newApplication().withId(applicationId).withCompetition(openCompetition).withApplicationStatus(ApplicationStatusConstants.OPEN).build();
-
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(openCompetitionApplication);
-        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openCompetitionApplication);
-    }
 
     @Test
     public void testApplicantCanUploadFilesInResponsesForOwnApplication() {
@@ -83,9 +63,10 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
         List<Role> roles = Collections.singletonList(applicantRole);
 
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(roleRepositoryMock.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()))).thenReturn(Collections.singletonList(applicantRole));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId)).thenReturn(Collections.singletonList(applicantProcessRole));
-
+        
         assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, userResource));
 
         verify(roleRepositoryMock).findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));

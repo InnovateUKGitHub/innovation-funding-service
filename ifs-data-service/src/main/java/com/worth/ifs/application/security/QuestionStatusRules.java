@@ -1,19 +1,16 @@
 package com.worth.ifs.application.security;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,9 +35,6 @@ public class QuestionStatusRules {
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
     @PermissionRule(value = "READ", description = "users can only read statuses of applications thy are connected to")
     public boolean userCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         return userIsConnected(questionStatusResource.getApplication(), user);
@@ -54,12 +48,7 @@ public class QuestionStatusRules {
 
     @PermissionRule(value = "UPDATE", description = "users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatusComposite(QuestionApplicationCompositeId ids, UserResource user) {
-        return applicationBelongsToOpenCompetition(ids.applicationId) && (userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user)));
-    }
-
-    private boolean applicationBelongsToOpenCompetition(final Long applicationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        return application.getCompetition().getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
+        return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user));
     }
 
     private boolean userIsAllowed(final QuestionApplicationCompositeId ids, final UserResource user) {

@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.security;
 
+
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
@@ -10,14 +10,11 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.CostBuilder.newCost;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -26,7 +23,6 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.math.BigDecimal.ZERO;
-import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -62,9 +58,7 @@ public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermiss
             // Set up users on an organisation and application
             final Long applicationId = 1L;
             final Long organisationId = 2L;
-            final Competition openCompetition = newCompetition().withCompetitionStatus(OPEN).withEndDate(now().plusSeconds(1)).build();
-
-            final Application application = newApplication().withId(applicationId).withCompetition(openCompetition).build();
+            final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             cost = newCost().withApplicationFinance(applicationFinance).build();
