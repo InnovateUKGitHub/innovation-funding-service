@@ -49,7 +49,7 @@ the assign status should be correct for the Project Summary
 the applicant assigns the Project Summary question from the overview page
     [Arguments]    ${assignee_name}
     the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) .assign-button button
-    the user clicks the button/link   jQuery=button:contains("${assignee_name}")
+    the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) button:contains("${assignee_name}")
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
