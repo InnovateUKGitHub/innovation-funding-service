@@ -3,12 +3,15 @@ package com.worth.ifs.project.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,5 +66,28 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk());
         
         verify(projectServiceMock).setProjectManager(3L, 5L);
+    }
+
+    @Test
+    public void updateFinanceContact() throws Exception {
+
+        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
+                .andExpect(status().isOk());
+
+        verify(projectServiceMock).updateFinanceContact(123L, 456L, 789L);
+    }
+
+    @Test
+    public void getProjectUsers() throws Exception {
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().build(3);
+
+        when(projectServiceMock.getProjectUsers(123L)).thenReturn(serviceSuccess(projectUsers));
+
+        mockMvc.perform(get("/project/{projectId}/project-users", 123L)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(projectUsers)));
     }
 }
