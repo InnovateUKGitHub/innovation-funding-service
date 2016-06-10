@@ -102,6 +102,7 @@
                 </label>
                 <select class="form-control width-x-large" th:field="${competitionSetupForm.innovationAreaCategoryId}">
                     <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}">Innovation Area</option>
                 </select>
             </div>
 
