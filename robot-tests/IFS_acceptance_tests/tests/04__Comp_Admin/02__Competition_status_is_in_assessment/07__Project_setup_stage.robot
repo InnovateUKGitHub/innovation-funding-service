@@ -17,9 +17,8 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
 ${SUCCESFUL_PROJECT_PAGE}    ${server}/project/16
-${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
-${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
-
+${successful_application_comp_admin_view}    ${server}/management/competition/3/application/16
+${unsuccessful_application_comp_admin_view}    ${server}/management/competition/3/application/17
 
 *** Test Cases ***
 Partner can view the uploaded feedback
@@ -70,6 +69,16 @@ Partner can see the overview of the project details
     And the user should see the element    link=Project manager
     And the user should see the text in the page    Finance contacts
 
+Partner can change the Start Date
+    given the user clicks the button/link    link=Start date
+    When the user enters text to a text field    id=projectStartDate_month    10
+    When the user enters text to a text field    id=projectStartDate_year    2013
+    Then the user should see a validation error    Please enter a future date
+    When the user enters text to a text field    id=projectStartDate_month    1
+    When the user enters text to a text field    id=projectStartDate_year    2018
+    When the user clicks the button/link    jQuery=button:contains("Save")
+    Then the user should see the text in the page    1 Jan 2018
+
 Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
@@ -115,3 +124,11 @@ Unsuccessful applicant can download the uploaded feedback
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
     [Teardown]    Remove File    ${valid_pdf}
+
+*** Keywords ***
+the user should see a validation error
+    [Arguments]    ${ERROR1}
+    Mouse Out    id=projectStartDate_year
+    Focus    jQuery=button:contains("Save")
+    sleep    300ms
+    Then the user should see an error    ${ERROR1}
