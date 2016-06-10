@@ -90,7 +90,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         if(StringUtils.hasText(competition.getCode())){
             return serviceSuccess(competition.getCode());
         }else if(openingSameMonth.isEmpty()){
-            return serviceSuccess(datePart + "-1");
+            String unusedCode = datePart + "-1";
+            competition.setCode(unusedCode);
+            competitionRepository.save(competition);
+            return serviceSuccess(unusedCode);
         }else{
             List<String> codes = openingSameMonth.stream().map(c -> c.getCode()).sorted().peek(c -> LOG.info("Codes : "+ c)).collect(Collectors.toList());
             String unusedCode = "";

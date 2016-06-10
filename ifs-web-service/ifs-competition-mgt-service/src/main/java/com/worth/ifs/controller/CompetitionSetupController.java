@@ -166,8 +166,8 @@ public class CompetitionSetupController {
         }
 
 
+        saveCompetitionSetupSection(competitionSetupForm, competition, competitionSetupSection.get());
         if(!bindingResult.hasErrors()) {
-            saveCompetitionSetupSection(competitionSetupForm, competition, competitionSetupSection.get());
         } else {
             LOG.debug("Form errors");
         }
