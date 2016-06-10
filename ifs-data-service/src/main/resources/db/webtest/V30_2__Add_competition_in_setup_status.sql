@@ -25,7 +25,7 @@ INSERT INTO `user` (`id`, `email`, `first_name`, `last_name`, `title`, `status`,
 INSERT INTO `user` (`id`, `email`, `first_name`, `last_name`, `title`, `status`, `uid`, `system_user`) VALUES (52, 'comp_technologist2@innovateuk.test', 'Competition', 'Technologist Two', 'Mr', 'ACTIVE', '', '0');
 
 -- Add user roles
-INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('49', '9');
-INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('50', '9');
-INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('51', '10');
-INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('52', '10');
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('49', '12');
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('50', '12');
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('51', '13');
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('52', '13');
