@@ -171,22 +171,22 @@ public class ProjectDetailsController {
         return organisation.equals(user.getOrganisations().get(0));
     }
     
-    private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisation) {
-        ApplicationResource applicationResource = applicationService.getById(projectId);
-		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, organisation);
-		
-		return !thisOrganisationUsers.isEmpty();
+    private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
+        List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
+        List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
+        return !projectUsersForOrganisation.isEmpty();
 	}
     
-	private boolean userIsInOrganisationForProject(Long projectId, Long organisation, Long userId) {
+	private boolean userIsInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
 		if(userId == null) {
 			return false;
 		}
-		ProcessRoleResource processRoleForUserOnApplication = processRoleService.findProcessRole(userId, projectId);
-		if(processRoleForUserOnApplication == null) {
-			return false;
-		}
-		return organisation.equals(processRoleForUserOnApplication.getOrganisation());
+
+        List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
+        List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
+        List<ProjectUserResource> projectUsersForUserAndOrganisation = simpleFilter(projectUsersForOrganisation, user -> user.getUser().equals(userId));
+
+		return !projectUsersForUserAndOrganisation.isEmpty();
 	}
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)

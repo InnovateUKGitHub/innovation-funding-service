@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
@@ -23,6 +25,7 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -167,4 +170,21 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     }
 
+    @Test
+    public void testUpdateFinanceContact() throws Exception {
+
+        List<ProjectUserResource> availableUsers = newProjectUserResource().withUser(789L).withOrganisation(8L).build(1);
+
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(availableUsers);
+
+        mockMvc.perform(post("/project/{id}/details/finance-contact", 123L).
+                    contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                    param("organisation", "8").
+                    param("financeContact", "789")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/details")).
+                andReturn();
+
+        verify(projectService).updateFinanceContact(123L, 8L, 789L);
+    }
 }
