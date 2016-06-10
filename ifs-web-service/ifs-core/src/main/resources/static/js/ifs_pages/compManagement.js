@@ -25,6 +25,11 @@ IFS.competition_management = (function(){
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
             IFS.competition_management.handleCompetitionCode();
+
+            jQuery("body.competition-management.setup").on('change','[name="innovationSectorCategoryId"]',function(){
+              IFS.competition_management.handleInnovationSector();
+            });
+
             jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
 
             IFS.competition_management.handleFundingDecisionEnableOrDisable();
@@ -205,6 +210,22 @@ IFS.competition_management = (function(){
                   if(formGroup.find('.error-message').length === 0){
                     formGroup.find("label").append('<span class="error-message">Please fill in a correct date before generating the competition code</span>');
                   }
+                }
+            });
+        },
+        handleInnovationSector : function(){
+              var sector = jQuery('[name="innovationSectorCategoryId"]').val();
+              var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/getInnovationArea/'+sector;
+
+              jQuery.ajaxProtected({
+                type: "GET",
+                url: url,
+                success: function(data) {
+                    var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
+                    innovationCategory.find('option:not([disabled])').remove();
+                    jQuery.each(data,function(){
+                        innovationCategory.append('<option value="'+this.id+'">'+this.name+'</option>');
+                    });
                 }
             });
         }
