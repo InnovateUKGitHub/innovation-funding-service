@@ -25,7 +25,11 @@ IFS.competition_management = (function(){
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
             IFS.competition_management.handleCompetitionCode();
+            IFS.competition_management.handleStateAid();
 
+            jQuery("body.competition-management.setup").on('change','#competitionTypeId',function(){
+              IFS.competition_management.handleStateAid();
+          });
             jQuery("body.competition-management.setup").on('change','[name="innovationSectorCategoryId"]',function(){
               IFS.competition_management.handleInnovationSector();
             });
@@ -228,6 +232,16 @@ IFS.competition_management = (function(){
                     });
                 }
             });
+        },
+        handleStateAid : function(){
+           var stateAid =  jQuery('#competitionTypeId').find('[value="'+jQuery('#competitionTypeId').val()+'"]').attr('data-stateaid');
+           if(stateAid == 'true'){
+             stateAid = 'yes';
+           }
+           else {
+             stateAid = 'no';
+           }
+           jQuery('#stateAid').html('<span class="'+stateAid+'">'+stateAid+'</span>');
         }
     };
 })();

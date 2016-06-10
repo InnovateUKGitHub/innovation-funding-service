@@ -114,18 +114,15 @@
                 </label>
                 <select class="form-control width-x-large" th:field="${competitionSetupForm.competitionTypeId}">
                     <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
-                    <!-- /* th:attr="data-stateaid='${competitionType.stateAid}'" */ -->
-                    <option th:each="(competitionType : ${competitionTypes})" th:text="${competitionType.name}"  th:value="${competitionType.id}">Competition Type</option>
+                    <option th:each="(competitionType : ${competitionTypes})" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}">Competition Type</option>
                 </select>
             </div>
 
 
             <!-- needs to work dynamic with competition type -->
-            <div class="form-group" id="stateAid" style="display: none">
+            <div class="form-group">
                 <h3 class="heading-small">State aid</h3>
-                <p>
-                    <span class="yes">Yes</span>
-                    <span class="no">No</span>
+                <p id="stateAid">
                 </p>
             </div>
 
