@@ -1,5 +1,21 @@
 package com.worth.ifs.application.transactional;
 
+import java.io.File;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -15,6 +31,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
@@ -25,7 +42,11 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.mapper.FormInputMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationSource;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
@@ -33,23 +54,15 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -144,6 +157,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
         long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
 
+        if(!applicationBelongsToOpenCompetition(applicationId)){
+            return serviceFailure(new Error(COMPETITION_NOT_OPEN));
+        }
+
         FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
         // Removing and replacing if file already exists here
@@ -194,7 +211,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
             FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
             FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
-
             return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturn(updatedFile ->
                     Pair.of(updatedFile.getKey(), existingFormInputResource)
             );
@@ -203,6 +219,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
+        if(!applicationBelongsToOpenCompetition(fileEntry.getApplicationId())){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
 
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                 getFormInputResponseFileUpload(fileEntry);
@@ -316,6 +335,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
+        if(!applicationBelongsToOpenCompetition(id)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
 
         return getApplication(id).andOnSuccessReturn(existingApplication -> {
 
@@ -329,6 +351,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, LocalDateTime date) {
+        if(!applicationBelongsToOpenCompetition(id)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         return getApplication(id).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
@@ -534,5 +560,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
         return simpleMap(filtered, application -> applicationMapper.mapToResource(application));
+    }
+
+    private boolean applicationBelongsToOpenCompetition(Long applicationId){
+        Application application = applicationRepository.findOne(applicationId);
+        if(application != null && application.getCompetition() != null){
+            return CompetitionResource.Status.OPEN.equals(application.getCompetition().getCompetitionStatus());
+        }
+        return true;
     }
 }

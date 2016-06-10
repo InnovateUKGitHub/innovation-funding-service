@@ -1,7 +1,12 @@
 package com.worth.ifs.form.transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.function.Supplier;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
@@ -12,19 +17,18 @@ import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputResponseCommand;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.function.Supplier;
-
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -92,8 +96,13 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         String htmlUnescapedValue = formInputResponseCommand.getValue();
         long userId = formInputResponseCommand.getUserId();
         ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(userId, applicationId);
-        return find(user(userId), application(applicationId), formInput(formInputId)).
-                andOnSuccess((user, application, formInput) ->
+
+        Application application = applicationRepository.findOne(applicationId);
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+        return find(user(userId), formInput(formInputId)).
+                andOnSuccess((user, formInput) ->
                                 getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
                                     if (!response.getValue().equals(htmlUnescapedValue)) {
                                         response.setUpdateDate(LocalDateTime.now());
@@ -125,5 +134,9 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private List<FormInputResponseResource> formInputResponsesToResources(List<FormInputResponse> filtered) {
         return simpleMap(filtered, formInputResponse -> formInputResponseMapper.mapToResource(formInputResponse));
+    }
+
+    private boolean applicationBelongsToOpenCompetition(final Application application) {
+        return application.getCompetition().getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
     }
 }

@@ -1,9 +1,17 @@
 package com.worth.ifs.finance.transactional;
 
+import java.io.File;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.repository.FileEntryRepository;
@@ -31,6 +39,7 @@ import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.transactional.BaseTransactionalService;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,14 +47,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -119,6 +123,10 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<CostItem> addCost(final Long applicationFinanceId, final Long questionId, final CostItem newCostItem) {
+        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
 
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) -> {
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
@@ -133,8 +141,15 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         });
     }
 
+
+
     @Override
     public ServiceResult<CostItem> updateCost(final Long id, final CostItem newCostItem) {
+        Application application = costRepository.findOne(id).getApplicationFinance().getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         return doUpdate(id, newCostItem).andOnSuccessReturn(cost -> {
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(cost.getApplicationFinance().getOrganisation().getOrganisationType().getName());
             return organisationFinanceHandler.costToCostItem(cost);
@@ -166,6 +181,11 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private ServiceResult<Cost> doUpdate(Long id, CostItem newCostItem) {
+        Application application = costRepository.findOne(id).getApplicationFinance().getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         return find(costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccessReturn(existingCost -> {
             ApplicationFinance applicationFinance = existingCost.getApplicationFinance();
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
@@ -188,6 +208,11 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<Void> deleteCost(final Long costId) {
+        Application application = costRepository.findOne(costId).getApplicationFinance().getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         costValueRepository.deleteByCostId(costId);
         costRepository.delete(costId);
         return serviceSuccess();
@@ -223,12 +248,18 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     public ServiceResult<ApplicationFinanceResource> addCost(final ApplicationFinanceResourceId applicationFinanceResourceId) {
         final Long applicationId = applicationFinanceResourceId.getApplicationId();
         final Long organisationId = applicationFinanceResourceId.getOrganisationId();
+
+        Application application = applicationRepository.findOne(applicationId);
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         if (existingFinances != null) {
             return serviceSuccess(applicationFinanceMapper.mapToResource(existingFinances));
         }
 
-        return find(application(applicationId), organisation(organisationId)).andOnSuccess((application, organisation) -> {
+        return find(organisation(organisationId)).andOnSuccess( organisation -> {
 
             ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
 
@@ -245,6 +276,10 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<ApplicationFinanceResource> updateCost(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
+        Application application = applicationRepository.findOne(applicationFinance.getApplication());
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
 
         return find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
             dbFinance.merge(applicationFinance);
@@ -280,18 +315,33 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         return fileService.createFile(fileEntryResource, inputStreamSupplier).
                 andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults));
     }
 
     @Override
     public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         return fileService.updateFile(fileEntryResource, inputStreamSupplier).
                 andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults));
     }
 
     @Override
     public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
+        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
+
         return getApplicationFinanceById(applicationFinanceId).
                 andOnSuccess(finance -> fileService.deleteFile(finance.getFinanceFileEntry()).
                         andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
@@ -306,6 +356,10 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private ServiceResult<ApplicationFinanceResource> removeFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
+        Application application = applicationFinanceRepository.findOne(applicationFinanceResource.getId()).getApplication();
+        if(!applicationBelongsToOpenCompetition(application)){
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
         applicationFinanceResource.setFinanceFileEntry(null);
         return updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
     }
@@ -416,5 +470,10 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return costHandler;
     }
 
-
+    private boolean applicationBelongsToOpenCompetition(final Application application) {
+        if(application != null && application.getCompetition() != null){
+            return CompetitionResource.Status.OPEN.equals(application.getCompetition().getCompetitionStatus());
+        }
+        return false;
+    }
 }
