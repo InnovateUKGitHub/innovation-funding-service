@@ -60,29 +60,29 @@ the Applicant should see all the "Your Finance" Sections
     the user should see the element    css=.question section:nth-of-type(7) button
 
 the user adds three material rows
-    Click Element    jQuery=button:contains("Materials")
+    the user clicks the button/link   jQuery=button:contains("Materials")
     Focus    jQuery=button:contains('Add another materials cost')
-    Click Element    jQuery=button:contains('Add another materials cost')
-    Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Focus    jQuery=button:contains('Add another materials cost')
-    Click Element    jQuery=button:contains('Add another materials cost')
-    Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Focus    jQuery=button:contains('Add another materials cost')
-    Click Element    jQuery=button:contains('Add another materials cost')
-    Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    the user clicks the button/link     jQuery=button:contains('Add another materials cost')
+    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Focus    link=Please refer to our guide to project costs for further information.
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
-    click element    jQuery=#material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    the user clicks the button/link     jQuery=#material-costs-table button:contains("Remove")
+    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Focus    jQuery=#material-costs-table button:contains("Remove")
-    click element    jQuery=#material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
+    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Focus    jQuery=#material-costs-table button:contains("Remove")
-    click element    jQuery=#material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    Click Element    jQuery=button:contains("Materials")
+    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
+    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    the user clicks the button/link    jQuery=button:contains("Materials")
 
 the Funding levels value should be empty
     ${input_value} =    Get Value    id=cost-financegrantclaim

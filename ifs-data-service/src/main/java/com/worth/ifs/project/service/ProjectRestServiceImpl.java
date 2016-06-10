@@ -5,12 +5,14 @@ import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 
 @Service
 public class ProjectRestServiceImpl extends BaseRestService implements ProjectRestService {
@@ -27,7 +29,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 		return postWithRestResult(projectRestURL + "/" + projectId + "/project-manager/" + projectManagerUserId, Void.class);
 	}
     @Override
-    public RestResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate) {
+    public RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/startdate?projectStartDate=" + projectStartDate, Void.class);
     }
 
@@ -39,5 +41,15 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<List<ProjectResource>> findByUserId(long userId) {
         return getWithRestResult(projectRestURL + "/user/" + userId, projectResourceListType());
+    }
+
+	@Override
+	public RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+		return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/finance-contact?financeContact=" + financeContactUserId, Void.class);
+	}
+
+    @Override
+    public RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/project-users", projectUserResourceList());
     }
 }

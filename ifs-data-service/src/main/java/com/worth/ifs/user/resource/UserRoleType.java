@@ -12,7 +12,11 @@ public enum UserRoleType {
     COMP_ADMIN("comp_admin"),
     SYSTEM_MAINTAINER("system_maintainer"),
     SYSTEM_REGISTRATION_USER("system_registrar"),
-    PROJECT_FINANCE("project_finance");
+    PROJECT_FINANCE("project_finance"),
+    FINANCE_CONTACT("finance_contact"),
+    PARTNER("partner"),
+    PROJECT_MANAGER("project_manager")
+    ;
 
     private final String name;
 

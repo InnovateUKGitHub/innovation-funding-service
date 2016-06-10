@@ -53,6 +53,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setProjectManager(projectManager));
     }
 
+    public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
+        return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
+    }
+
     public ProjectResourceBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
     }

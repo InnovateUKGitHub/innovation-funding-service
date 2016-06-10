@@ -25,7 +25,7 @@ Log in create a new invite application invite academic collaborators and accept 
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new academic application with the same user
     ...    AND    Delete the emails from both test mailboxes
     ...    AND    Invite and accept the invitation
-    ...    AND    user closes the browser
+    ...    AND    the user closes the browser
 
 Create new application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
@@ -66,14 +66,14 @@ Invite and accept the invitation
     And the user should see the text in the page    View team members and add collaborators
     When the user clicks the button/link    link=View team members and add collaborators
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    And the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Academic Test
     Input Text    name=organisations[1].invites[0].personName    Arsene Wenger
     Input Text    name=organisations[1].invites[0].email    worth.email.test+academictest@gmail.com
     focus    jquery=button:contains("Save Changes")
-    Click Element    jquery=button:contains("Save Changes")
-    user closes the browser
-    The guest user opens the browser
+    And the user clicks the button/link    jquery=button:contains("Save Changes")
+    And the user closes the browser
+    And the guest user opens the browser
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2

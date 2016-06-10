@@ -3,7 +3,6 @@ package com.worth.ifs.project;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.ProjectService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;

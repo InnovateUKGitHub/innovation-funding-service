@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Funders Panel
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

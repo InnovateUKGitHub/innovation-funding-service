@@ -21,6 +21,7 @@ include::{snippets}/project/project-find-all/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/project-find-all/curl-request.adoc[]
 
+
 === Update project start date
 ==== Success
 ===== Request
@@ -56,3 +57,35 @@ include::{snippets}/project/set-project-manager/curl-request.adoc[]
 ==== Failure cases
 ===== Invalid project manager specified
 include::{snippets}/project/set-project-manager-but-invalid-project-manager/http-request.adoc[]
+
+
+=== Update Finance Contact for Organisation
+==== Success
+===== Request
+include::{snippets}/project/update-finance-contact/http-request.adoc[]
+include::{snippets}/project/update-finance-contact/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/update-finance-contact/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/update-finance-contact/curl-request.adoc[]
+
+==== Failure cases
+===== User is not on the Project
+include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-for-organisation/http-response.adoc[]
+
+===== User is not a Partner on the Project
+include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
+
+=== Get Project Users
+==== Request
+include::{snippets}/project/get-project-users/http-request.adoc[]
+include::{snippets}/project/get-project-users/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-project-users/http-response.adoc[]
+include::{snippets}/project/get-project-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-project-users/curl-request.adoc[]

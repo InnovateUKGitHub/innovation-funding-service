@@ -31,7 +31,7 @@ Lead applicant can assign a question
     Then the user should see the notification    Question assigned successfully
     And the user should see the element    css=#form-input-12 .readonly
     And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Jessica Doe
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 The question is disabled for other collaborators
     [Documentation]    INFUND-275
@@ -39,7 +39,7 @@ The question is disabled for other collaborators
     [Setup]    Guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should see the element    css=#form-input-12 .readonly
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 The question is disabled on the summary page for other collaborators
     [Documentation]    INFUND-2302
@@ -49,7 +49,7 @@ The question is disabled on the summary page for other collaborators
     When the user clicks the button/link    jQuery=button:contains("Public description")
     Then the user should see the element    css=#form-input-12 .readonly
     And the user should not see the element    jQuery=button:contains("Ready for review")
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 The question is enabled for the assignee
     [Documentation]    INFUND-275
@@ -120,7 +120,7 @@ Collaborator cannot edit after marking ready for review
     [Tags]
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the user should see the element    css=#form-input-12 .readonly
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 The question can be reassigned to the lead applicant
     [Documentation]    INFUND-275
@@ -132,7 +132,7 @@ The question can be reassigned to the lead applicant
     And the user should not see the element    css=#form-input-12 .readonly
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     And the question should contain the correct status/name    jQuery=#section-1 .section:nth-child(3) .assign-container    You
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 Appendices are assigned along with the question
     [Documentation]    INFUND-409
@@ -147,7 +147,7 @@ Appendices are assigned along with the question
     And the user should see the text in the page    Upload
     And the user assigns the question to the lead applicant
     And the user should not see the text in the page    Upload
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 Lead marks finances as complete and collaborator should be able to edit them
     [Documentation]    INFUND-3016

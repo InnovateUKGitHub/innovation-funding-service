@@ -1,21 +1,30 @@
-package com.worth.ifs.application.service;
+package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.commons.service.ServiceResult;
-
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link ProjectResource} related data.
+ * A service for dealing with ProjectResources via the appropriate Rest services
  */
 public interface ProjectService {
+
+    List<ProjectUserResource> getProjectUsersForProject(Long projectId);
+
     ProjectResource getById(Long projectId);
-    ServiceResult<List<ProjectResource>> findByUser(Long userId);
-    ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
-    ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource address);
+
+    void updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
+
     void updateProjectManager(Long projectId, Long projectManagerUserId);
+
+    ServiceResult<List<ProjectResource>> findByUser(Long userId);
+
+    ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
+
+    ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource address);
 }

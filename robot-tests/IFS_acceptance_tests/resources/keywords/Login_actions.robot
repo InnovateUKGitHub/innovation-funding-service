@@ -44,7 +44,7 @@ TestTeardown User closes the browser
     Run keyword if      '${REMOTE_URL}' != ''        Get Sauce Labs Test Report
     Close any open browsers
 
-User closes the browser
+The user closes the browser
     Run keyword if    '${REMOTE_URL}' != ''          Get Sauce Labs Suite Report
     Close any open browsers
 
