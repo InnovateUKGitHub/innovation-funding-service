@@ -30,7 +30,7 @@
 				<h2 class="heading-medium">Successful application</h2>
 				<p>The application <strong th:text="${project.name}">Machine learning in robots</strong> has been successful within the <strong th:text="${competition.name}">Technology inspired</strong> competition</p>
 				<p class="linkbar">
-					<a th:href="@{/application/{id}/summary(id=${project.getId()})}" class="buttonlink">View application and feedback</a>
+					<a th:href="@{/application/{id}/summary(id=${project.application})}" class="buttonlink">View application and feedback</a>
 					<a href="#" class="buttonlink">View terms and conditions of grant offer</a>
 				</p>
 			</div>
