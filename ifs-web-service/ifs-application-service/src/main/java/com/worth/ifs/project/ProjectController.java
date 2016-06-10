@@ -31,7 +31,7 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String projectOverview(Model model, @PathVariable("projectId") final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         model.addAttribute("project", projectResource);
         model.addAttribute("app", applicationResource);

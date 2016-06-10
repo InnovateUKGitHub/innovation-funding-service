@@ -37,6 +37,7 @@ import static org.mockito.Mockito.*;
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
 	private Long projectId = 123L;
+    private Long applicationId = 456L;
 	private Long userId = 7L;
 	private Long otherUserId = 8L;
 
@@ -62,15 +63,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     			withUser(user).
     			build();
     	application = newApplication().
-				withId(projectId).
+				withId(applicationId).
 	            withProcessRoles(processRole).
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
-    	project = newProject().withId(projectId).build();
+    	project = newProject().withId(projectId).withApplication(application).build();
 
-        when(applicationRepositoryMock.findOne(projectId)).thenReturn(application);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
 	}
 	
@@ -82,7 +83,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ProjectResource newProjectResource = newProjectResource().build();
 
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
         Project savedProject = newProject().build();
 
@@ -93,7 +94,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
-        ServiceResult<ProjectResource> project = service.createProjectFromApplication(123L);
+        ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
     }
@@ -297,7 +298,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertFalse(application.getProcessRoles().isEmpty());
 
         return createLambdaMatcher(project -> {
-            assertEquals(application.getId(), project.getId());
             assertEquals(application.getName(), project.getName());
             assertEquals(application.getDurationInMonths(), project.getDurationInMonths());
             assertEquals(application.getStartDate(), project.getTargetStartDate());

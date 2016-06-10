@@ -1,6 +1,7 @@
 package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -21,10 +22,16 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 @Entity
 public class Project {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private LocalDate targetStartDate;
 
     @OneToOne
+    @JoinColumn(name="application", referencedColumnName = "id")
+    private Application application;
+
+    private LocalDate targetStartDate;
+
+    @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name="address", referencedColumnName="id")
     private Address address;
 
@@ -42,8 +49,9 @@ public class Project {
 
     public Project() {}
 
-    public Project(Long id, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name) {
+    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name) {
         this.id = id;
+        this.application = application;
         this.targetStartDate = targetStartDate;
         this.address = address;
         this.durationInMonths = durationInMonths;
@@ -117,6 +125,14 @@ public class Project {
         this.name = name;
     }
 
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
     public List<ProjectUser> getProjectUsers() {
         return projectUsers;
     }
@@ -124,5 +140,4 @@ public class Project {
     public void setProjectUsers(List<ProjectUser> projectUsers) {
         this.projectUsers = projectUsers;
     }
-
 }

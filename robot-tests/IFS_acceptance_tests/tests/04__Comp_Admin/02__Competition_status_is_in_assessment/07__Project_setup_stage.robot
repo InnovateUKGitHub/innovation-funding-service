@@ -18,9 +18,9 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
-${SUCCESFUL_PROJECT_PAGE}    ${server}/project/16
-${successful_application_comp_admin_view}    ${server}/management/competition/3/application/16
-${unsuccessful_application_comp_admin_view}    ${server}/management/competition/3/application/17
+${SUCCESFUL_PROJECT_PAGE}    ${server}/project/1
+${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
+${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
 
 *** Test Cases ***
 Partner can view the uploaded feedback
