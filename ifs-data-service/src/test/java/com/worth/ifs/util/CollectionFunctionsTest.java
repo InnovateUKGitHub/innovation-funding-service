@@ -1,5 +1,6 @@
 package com.worth.ifs.util;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import java.util.*;
@@ -465,5 +466,18 @@ public class CollectionFunctionsTest {
         assertEquals(emptyList(), CollectionFunctions.sort((List<String>) null, (s1, s2) -> s2.compareTo(s1)));
     }
 
+    @Test
+    public void testSimplePartition() {
+        Pair<List<String>, List<String>> partitioned = CollectionFunctions.simplePartition(asList("a1", "b1", "a2", "c1"), string -> string.startsWith("a"));
+        assertEquals(asList("a1", "a2"), partitioned.getLeft());
+        assertEquals(asList("b1", "c1"), partitioned.getRight());
+    }
+
+    @Test
+    public void testSimplePartition_NullSafe() {
+        Pair<List<String>, List<String>> partitioned = CollectionFunctions.simplePartition(null, string -> string.startsWith("a"));
+        assertEquals(emptyList(), partitioned.getLeft());
+        assertEquals(emptyList(), partitioned.getRight());
+    }
 }
 

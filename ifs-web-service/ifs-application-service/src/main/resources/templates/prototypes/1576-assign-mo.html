@@ -28,7 +28,7 @@
 
 </head>
 
-<body class="full-width">
+<body >
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -47,7 +47,7 @@
 	
 	<hr />
 
-	<div class="grid-row constrain-width">		
+		
 		
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 		
@@ -117,7 +117,8 @@
 				            		<a href="/prototypes/1576-assign-mo">Cancel</a>
 				            	</div>
 				            	<div class="column-half alignright-button">
-				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup" class="button">Assign Monitoring officer</button>
+				            		<input type="hidden" id="stage" name="stage" value="level1" />
+				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring officer</button>
 				            	</div>
 				            </div>
 
@@ -169,7 +170,7 @@
 		</div>
 
 
-	</div>
+	
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

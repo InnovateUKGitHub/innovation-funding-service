@@ -7,7 +7,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -142,11 +142,10 @@ Academic finances JeS link showing
 
 Mark all as complete
     [Documentation]    INFUND-918
-    Given the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
-    And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png"]
+    And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src*="/images/field/tick-icon"]
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
@@ -154,6 +153,13 @@ User should not be able to edit or upload the form
     When the user navigates to the page    ${YOUR_FINANCES_URL}
     Then the user should not see the element    jQuery=button:contains("Remove")
     And the user should see the element    css=#incurred-staff[readonly]
+
+File upload/delete should not be allowed when marked as complete
+    [Documentation]    INFUND-2437
+    [Tags]    Pending
+    # Pending due to 2202
+    Then the user cannot see the option to upload a file on the page    ${YOUR_FINANCES_URL}
+    And the user cannot remove the uploaded file
 
 Academic finance overview
     [Documentation]    INFUND-917
@@ -214,12 +220,10 @@ Lead applicant marks the finances as incomplete
     And Close Browser
     And Switch to the first browser
 
-the user reloads the page
-    Reload Page
 
 the user can see the link for more JeS details
-    Element Should Be Visible    link=Je-S website
-    Page Should Contain Element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+    the user should see the element   link=Je-S website
+    the user should see the element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
 
 the applicant enters invalid inputs
     Input Text    id=incurred-staff    100£
@@ -238,8 +242,8 @@ the field should not contain the currency symbol
 
 Mark academic finances as complete
     Focus    jQuery=.button:contains("Mark all as complete")
-    And the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+    the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
 
 the user waits for the file to be scanned by the anti virus software
-    Sleep       5s
+    Sleep    5s
     # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!

@@ -54,6 +54,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Users
      */
     USERS_DUPLICATE_EMAIL_ADDRESS("This email address is already taken", CONFLICT),
+    USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND("E-mail verification token not found", NOT_FOUND),
+    USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED("E-mail verification token has expired", BAD_REQUEST),
 
     /**
      * Funding Panel
@@ -61,6 +63,13 @@ public enum CommonFailureKeys implements ErrorTemplate {
     FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED("Not all submitted applications are represented in the funding decision", BAD_REQUEST),
     FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET("An Assessor Feedback Date has not yet been set for this competition", BAD_REQUEST),
     FUNDING_PANEL_DECISION_WRONG_STATUS("competition not in correct status", BAD_REQUEST),
+
+    /**
+     * Project Setup
+     */
+    PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH("The Project Start Date must start on the first day of the month", BAD_REQUEST),
+    PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE("The Project Start Date must start in the future", BAD_REQUEST),
+    PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION("The Project Manager must be a member of the lead partner organisation", BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;

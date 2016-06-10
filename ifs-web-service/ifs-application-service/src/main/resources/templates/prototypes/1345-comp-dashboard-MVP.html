@@ -36,6 +36,16 @@
 				display: block;
 			}
 		</style>
+		<style th:if="${param.filterStatus[0] == 'Draft'}">
+			li.status.comp-status-draft{
+				display: block;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'Ready'}">
+			li.status.comp-status-ready{
+				display: block;
+			}
+		</style>
 	</div>
 
 </head>
@@ -59,7 +69,7 @@
 
 		<div class="column-half">
 			<div class="alignright extra-margin">
-				<a href="/prototypes/2469-comp-setup?section=essential" class="button button-large">Create competition</a>
+				<a href="/prototypes/2469-comp-setup?section=essential&#38;compPaf=1234" class="button button-large">Create competition</a>
 			</div>
 		</div>
 	</div>
@@ -88,7 +98,9 @@
 						<option value="Closed">Closed</option>
 						<option value="In assessment">In assessment</option>
 						<option value="Funders panel">Funders panel</option>
-						<option value="Assessor feedback">Assessor feedback</option> 
+						<option value="Assessor feedback">Assessor feedback</option>
+						<option value="Draft">In preparation</option>
+						<option value="Ready">Ready to open</option> 
 						
 						<!-- <option value="project-set-up">Project set-up</option>
 						<option value="complete">Complete</option> -->
@@ -181,6 +193,24 @@
 	</div>
 
 	<ul class="comp-list">
+		<li class="status comp-status-draft">
+			<div class="comp-details">
+				<h3 class="heading-small"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=draft">Solving problems with data</a></h3>
+				<p>Ref number: 14060000</p>
+			</div>
+			<p class="status">
+				In preparation
+			</p>
+		</li>
+		<li class="status comp-status-ready">
+			<div class="comp-details">
+				<h3 class="heading-small"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=ready">Connected digital additive manufacturing</a></h3>
+				<p>Ref number: 14060001</p>
+			</div>
+			<p class="status">
+				Ready to open
+			</p>
+		</li>
 		<li class="status comp-status-closed">
 			<div class="comp-details">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Portable renewable energy generation</a></h3>

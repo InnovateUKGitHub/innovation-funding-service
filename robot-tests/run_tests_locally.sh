@@ -106,7 +106,7 @@ function startServers {
     ./startup-shibboleth.sh
     wait
     cd ../shibboleth/ui
-    ./deploy-ui.sh
+    # ./deploy-ui.sh
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
 

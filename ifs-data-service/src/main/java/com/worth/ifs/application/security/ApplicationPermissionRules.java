@@ -1,14 +1,13 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,38 +16,31 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
-import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 @PermissionRules
 @Component
-public class ApplicationPermissionRules {
+public class ApplicationPermissionRules extends BasePermissionRules {
 
     public static final List<CompetitionResource.Status> ASSESSOR_FEEDBACK_PUBLISHED_STATES = singletonList(PROJECT_SETUP);
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationResource.getId(), COLLABORATOR, processRoleRepository);
+        final boolean isLeadApplicant = isLeadApplicant(applicationResource.getId(), user);
+        final boolean isCollaborator = isCollaborator(applicationResource.getId(), user);
         return isLeadApplicant || isCollaborator;
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
     public boolean assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
-        final boolean isAssessor = checkRole(user, applicationResource.getId(), ASSESSOR, processRoleRepository);
-        return isAssessor;
+        return isAssessor(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
@@ -60,15 +52,15 @@ public class ApplicationPermissionRules {
             description = "The consortium can see the application finance totals",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean consortiumCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationResource.getId(), COLLABORATOR, processRoleRepository);
+        final boolean isLeadApplicant = isLeadApplicant(applicationResource.getId(), user);
+        final boolean isCollaborator = isCollaborator(applicationResource.getId(), user);
         return isLeadApplicant || isCollaborator;
     }
 
 
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
     public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT, processRoleRepository);
+        final boolean isLeadApplicant = isLeadApplicant(applicationResource.getId(), user);
         return isLeadApplicant;
     }
 
@@ -103,7 +95,7 @@ public class ApplicationPermissionRules {
                           "the Application's Competition is in Funders' Panel or Assessor Feedback state",
             particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
     public boolean compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
-        return isCompAdmin(user) && application.isInEditableAssessorFeedbackState();
+        return isCompAdmin(user) && application.isInEditableAssessorFeedbackCompetitionState();
     }
 
     @PermissionRule(
@@ -111,7 +103,7 @@ public class ApplicationPermissionRules {
             description = "A Comp Admin user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
             particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
     public boolean compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
-        return isCompAdmin(user) && !application.isInPublishedAssessorFeedbackState();
+        return isCompAdmin(user) && !application.isInPublishedAssessorFeedbackCompetitionState();
     }
 
     @PermissionRule(
@@ -126,18 +118,7 @@ public class ApplicationPermissionRules {
             description = "A member of the Application Team can see and download Assessor Feedback attached to their Application when it has been published",
             particularBusinessState = "Application's Competition Status = 'Project Setup' or beyond")
     public boolean applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(ApplicationResource application, UserResource user) {
-        return application.isInPublishedAssessorFeedbackState() && isMemberOfProjectTeam(application, user);
-    }
-
-    private boolean isMemberOfProjectTeam(ApplicationResource application, UserResource user) {
-
-        boolean isLeadApplicantForApplication = checkRole(user, application.getId(), LEADAPPLICANT, processRoleRepository);
-
-        if (isLeadApplicantForApplication) {
-            return true;
-        }
-
-        return checkRole(user, application.getId(), COLLABORATOR, processRoleRepository);
+        return application.isInPublishedAssessorFeedbackCompetitionState() && isMemberOfProjectTeam(application.getId(), user);
     }
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {

@@ -35,6 +35,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +198,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	assertEquals(approvedStatus, application1.getApplicationStatus());
     	assertEquals(rejectedStatus, application2.getApplicationStatus());
     	assertNotNull(competition.getFundersPanelEndDate());
+    	assertEquals("funders panel end date is set to the start of the current second", 0, competition.getFundersPanelEndDate().get(ChronoField.MILLI_OF_SECOND));
     }
 
 	@Test
@@ -260,8 +262,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
         );
 
-		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
-		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
+		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
 		ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
 		assertTrue(result.isSuccess());
@@ -315,8 +317,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
 
-        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
-        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
+        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
         assertTrue(result.isSuccess());
@@ -346,7 +348,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	assertNull(competition.getFundersPanelEndDate());
     }
     
-	private Notification createFullNotificationExpectations(Notification expectedNotification) {
+	public static Notification createFullNotificationExpectations(Notification expectedNotification) {
 
         return createLambdaMatcher(notification -> {
             assertEquals(expectedNotification.getFrom(), notification.getFrom());
@@ -369,11 +371,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             });
 
             assertEquals(expectedTargetSpecifics, actualTargetSpecifics);
-            return true;
         });
     }
 
-	private Notification createSimpleNotificationExpectations(Notification expectedNotification) {
+    public static Notification createSimpleNotificationExpectations(Notification expectedNotification) {
 
 		return createLambdaMatcher(notification -> {
 			assertEquals(expectedNotification.getFrom(), notification.getFrom());
@@ -383,7 +384,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 			assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
 
 			assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
-			return true;
 		});
 	}
 	

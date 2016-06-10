@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
+import com.worth.ifs.util.NumberUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public class GrantClaimHandler extends CostHandler {
         Optional<FinanceFormField> grantClaimPercentageField = financeFormFields.stream().findFirst();
         Integer grantClaimPercentage = 0;
         if (grantClaimPercentageField.isPresent()) {
-            grantClaimPercentage = getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
+            grantClaimPercentage = NumberUtils.getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
         }
 
         return new GrantClaim(id, grantClaimPercentage);

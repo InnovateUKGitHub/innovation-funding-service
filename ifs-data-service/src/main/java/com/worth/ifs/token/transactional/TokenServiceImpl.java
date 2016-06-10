@@ -1,48 +1,74 @@
 package com.worth.ifs.token.transactional;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.user.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.token.resource.TokenType.RESET_PASSWORD;
+import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 @Transactional
-public class TokenServiceImpl implements TokenService{
+public class TokenServiceImpl implements TokenService {
 
     @Autowired
-    TokenRepository repository;
+    private TokenRepository repository;
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
+    @Value("${ifs.data.service.token.email.validity.mins}")
+    private int emailTokenValidityMins;
 
     @Override
-    public Optional<Token> getTokenByHash(String hash){
-        return repository.findByHash(hash);
+    public ServiceResult<Token> getEmailToken(final String hash) {
+        return find(repository.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName()), new Error(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)).andOnSuccess(
+                token -> isTokenValid(token) ? serviceSuccess(token) : serviceFailure(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED));
     }
 
     @Override
-    public void removeToken(Token token){
+    public ServiceResult<Token> getPasswordResetToken(final String hash) {
+        return find(repository.findByHashAndTypeAndClassName(hash, RESET_PASSWORD, User.class.getName()), notFoundError(Token.class, hash));
+    }
+
+    @Override
+    public void removeToken(Token token) {
         repository.delete(token);
     }
 
     /**
-     *  if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
+     * if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
      */
     @Override
-    public void handleExtraAttributes(Token token){
+    public void handleExtraAttributes(Token token) {
         JsonNode extraInfo = token.getExtraInfo();
-        if(User.class.getName().equals(token.getClassName()) && extraInfo.has("competitionId")){
+        if (User.class.getName().equals(token.getClassName()) && extraInfo.has("competitionId")) {
             Long competitionId = extraInfo.get("competitionId").asLong();
-            if(competitionId != null && competitionId != 0L){
+            if (competitionId != null && competitionId != 0L) {
                 applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, token.getClassPk(), "");
             }
         }
+    }
+
+    private boolean isTokenValid(final Token token) {
+        // Prefer the updated time over the created time in case the token has been refreshed
+        final LocalDateTime tokenDateTime = token.getUpdated() == null ? token.getCreated() : token.getUpdated();
+        return ChronoUnit.MINUTES.between(tokenDateTime, LocalDateTime.now()) < emailTokenValidityMins;
     }
 }

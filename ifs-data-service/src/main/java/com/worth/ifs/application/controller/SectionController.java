@@ -1,19 +1,18 @@
 package com.worth.ifs.application.controller;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.SectionType;
+import com.worth.ifs.application.transactional.SectionService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.transactional.SectionService;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.ValidationMessages;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * SectionController exposes Application data and operations through a REST API.

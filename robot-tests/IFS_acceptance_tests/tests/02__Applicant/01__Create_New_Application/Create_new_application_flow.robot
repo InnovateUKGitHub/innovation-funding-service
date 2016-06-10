@@ -9,7 +9,8 @@ Documentation     INNFUND-669 As an applicant I want to create a new application
 ...
 ...
 ...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
-Test Teardown     User closes the browser
+Suite Setup       Delete the emails from both test mailboxes
+Test Teardown     The user closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -20,10 +21,6 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 
 *** Test Cases ***
-Setting up emails for receiving
-    [Tags]    HappyPath    Email
-    Delete the emails from the test mailbox
-
 Non registered users CH route
     [Documentation]    INFUND-669
     ...

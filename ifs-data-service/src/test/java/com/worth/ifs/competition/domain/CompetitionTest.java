@@ -17,23 +17,22 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CompetitionTest {
-    Competition competition;
-
+    private Competition competition;
     @Mock
     CompetitionMapper competitionMapper;
 
-    Long id;
-    List<Application> applications;
-    List<Question> questions;
-    List<Section> sections;
-    String name;
-    String description;
-    LocalDateTime startDate;
-    LocalDateTime endDate;
-    Integer maxResearchRatio;
-    Integer academicGrantPercentage;
-    LocalDateTime assemmentStartDate;
-    LocalDateTime assemmentEndDate;
+    private Long id;
+    private List<Application> applications;
+    private List<Question> questions;
+    private List<Section> sections;
+    private String name;
+    private String description;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private Integer maxResearchRatio;
+    private Integer academicGrantPercentage;
+    private LocalDateTime assemmentStartDate;
+    private LocalDateTime assemmentEndDate;
 
     @Before
     public void setUp() throws Exception {
@@ -66,8 +65,6 @@ public class CompetitionTest {
         assertEquals(competition.getId(), id);
         assertEquals(competition.getName(), name);
         assertEquals(competition.getDescription(), description);
-//        Assert.assertEquals(competition.getStartDate(), startDate);
-//        Assert.assertEquals(competition.getEndDate(), endDate);
         assertEquals(competition.getSections(), sections);
         assertEquals(competition.getMaxResearchRatio(), maxResearchRatio);
         assertEquals(competition.getAcademicGrantPercentage(), academicGrantPercentage);

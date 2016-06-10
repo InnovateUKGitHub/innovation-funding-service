@@ -38,13 +38,13 @@ the "Project Summary" question is empty
     Press Key    css=#form-input-11 .editor    \\8
 
 the applicant marks the public description question as complete
-    Click Element    css=#form-input-11 .buttonlink[name="mark_as_complete"]
+    the user clicks the button/link    css=#form-input-11 .buttonlink[name="mark_as_complete"]
 
 the applicant should get an alert with the description of the error
-    Wait Until Element Is Visible    css=.error-summary li
+    the user should see the element    css=.error-summary li
 
 the applicant should get a warning to enter data in the "Project Summary" question
-    Wait Until Element Is Visible    css=#form-input-11 .error-message
+    the user should see the element  css=#form-input-11 .error-message
 
 the applicant inserts some text again in the "Project Summary" question
     Input Text    css=#form-input-11 .editor    test if the applicant can mark the question as complete
@@ -52,15 +52,14 @@ the applicant inserts some text again in the "Project Summary" question
     Sleep    300ms
 
 applicant should be able to mark the question as complete
-    Wait Until Element Is Visible    jQuery=button:contains("Mark as complete")
+    the user should see the element    jQuery=button:contains("Mark as complete")
     focus    jQuery=button:contains("Mark as complete")
-    Click Element    jQuery=button:contains("Mark as complete")
-    Wait Until Element Is Not Visible    css=#form-input-11 .error-message
-    Wait Until Element Is Not Visible    css=.error-summary li
+    the user clicks the button/link     jQuery=button:contains("Mark as complete")
+    the user should not see the element   css=#form-input-11 .error-message
+    the user should not see the element   css=.error-summary li
 
 the applicant can click edit to make the section editable again
-    Sleep    500ms
-    Wait Until Element is Visible    jQuery=button:contains("Edit")
+    the user should see the element     jQuery=button:contains("Edit")
     focus    jQuery=button:contains("Edit")
-    click element    jQuery=button:contains("Edit")
-    Wait Until Element is Visible    jQuery=button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=button:contains("Edit")
+    the user should see the element    jQuery=button:contains("Mark as complete")

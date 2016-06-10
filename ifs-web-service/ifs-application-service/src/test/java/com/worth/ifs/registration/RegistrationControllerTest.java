@@ -1,11 +1,10 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -26,11 +25,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -46,8 +48,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class RegistrationControllerTest extends BaseControllerMockMVCTest<RegistrationController> {
 
-    private static String VERIFY_HASH;
-    private static String INVALID_VERIFY_HASH;
     @InjectMocks
     private RegistrationController registrationController;
 
@@ -70,8 +70,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void setUp() {
         super.setUp();
 
-        VERIFY_HASH = UUID.randomUUID().toString();
-        INVALID_VERIFY_HASH = UUID.randomUUID().toString();
         MockitoAnnotations.initMocks(this);
 
         setupUserRoles();
@@ -83,13 +81,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restSuccess(new UserResource()));
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
 
-        when(userService.verifyEmail(eq(VERIFY_HASH))).thenReturn(restSuccess());
-        when(userService.verifyEmail(eq(INVALID_VERIFY_HASH))).thenReturn(restFailure(CommonErrors.notFoundError(InviteResource.class, INVALID_VERIFY_HASH)));
-
         inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
         usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
         organisationCookie = new Cookie("organisationId", "1");
-
     }
 
     @Test
@@ -157,16 +151,32 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void testVerifyEmail() throws Exception {
-        mockMvc.perform(get("/registration/verify-email/" + VERIFY_HASH))
+        final String hash = UUID.randomUUID().toString();
+        when(userService.verifyEmail(eq(hash))).thenReturn(restSuccess());
+
+        mockMvc.perform(get("/registration/verify-email/" + hash))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/verified"));
     }
 
     @Test
     public void testVerifyEmailInvalid() throws Exception {
-        mockMvc.perform(get("/registration/verify-email/"+INVALID_VERIFY_HASH))
-                .andExpect(status().is2xxSuccessful())
+        final String hash = UUID.randomUUID().toString();
+        when(userService.verifyEmail(eq(hash))).thenReturn(restFailure(new Error(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)));
+
+        mockMvc.perform(get("/registration/verify-email/" + hash))
+                .andExpect(status().isAlreadyReported())
                 .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE));
+    }
+
+    @Test
+    public void testVerifyEmailExpired() throws Exception {
+        final String hash = UUID.randomUUID().toString();
+        when(userService.verifyEmail(eq(hash))).thenReturn(restFailure(new Error(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED)));
+
+        mockMvc.perform(get("/registration/verify-email/" + hash))
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("registration-token-expired"));
     }
 
     @Test
@@ -491,5 +501,44 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                         .param("termsAndConditions", "1")
         )
                 .andExpect(model().hasErrors());
+    }
+
+    @Test
+    public void resendEmailVerification() throws Exception {
+        mockMvc.perform(get("/registration/resend-email-verification"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/resend-email-verification"));
+    }
+
+    @Test
+    public void validResendEmailVerificationForm() throws Exception {
+        mockMvc.perform(post("/registration/resend-email-verification")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", "a.b@test.test"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/resend-email-verification-send"));
+    }
+
+    @Test
+    public void invalidResendEmailVerificationFormShouldReturnError() throws Exception {
+        mockMvc.perform(post("/registration/resend-email-verification")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", "{a|b}@test.test"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/resend-email-verification"))
+                .andExpect(model().attributeHasFieldErrors("resendEmailVerificationForm", "email"));
+    }
+
+    @Test
+    public void validResendEmailVerificationFormWithOtherExceptionShouldByHandled() throws Exception {
+        final String emailAddress = "a.b@test.test";
+
+        doThrow(new GeneralUnexpectedErrorException("Other error occurred", asList())).when(userService).resendEmailVerificationNotification(emailAddress);
+
+        mockMvc.perform(post("/registration/resend-email-verification")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", emailAddress))
+                .andExpect(status().isInternalServerError())
+                .andExpect(view().name("error"));
     }
 }

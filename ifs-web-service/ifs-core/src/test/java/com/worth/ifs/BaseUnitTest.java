@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.builder.QuestionResourceBuilder;
+import com.worth.ifs.application.builder.QuestionStatusResourceBuilder;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.finance.model.UserRole;
@@ -30,6 +31,7 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
+import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -158,6 +160,10 @@ public class BaseUnitTest {
     public FinanceFormHandler financeFormHandler;
     @Mock
     public AssessorFeedbackRestService assessorFeedbackRestService;
+    @Mock
+    public ProjectService projectService;
+    @Mock
+    public ProjectRestService projectRestService;
 
     @Spy
     @InjectMocks
@@ -676,6 +682,17 @@ public class BaseUnitTest {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH_EXISTING_USER)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
+    }
+
+    public void setupQuestionStatus(ApplicationResource application) {
+        List<QuestionStatusResource> questionStatusResources = QuestionStatusResourceBuilder.newQuestionStatusResource()
+                .withApplication(application)
+                .with(questionStatusResource -> {
+                    questionStatusResource.setAssigneeUserId(1L);
+                    questionStatusResource.setMarkedAsComplete(false);
+                }).build(1);
+
+        when(questionService.findQuestionStatusesByQuestionAndApplicationId(1l, application.getId())).thenReturn(questionStatusResources);
     }
 
     @Bean(name = "messageSource")

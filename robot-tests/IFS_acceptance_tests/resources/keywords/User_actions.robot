@@ -1,7 +1,14 @@
+*** Settings ***
+Resource          ../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/User_credentials.robot
+Resource          ../../resources/keywords/Login_actions.robot
+
 *** Keywords ***
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
     Go To    ${TARGET_URL}
+    Run Keyword And Ignore Error    Confirm Action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -72,6 +79,7 @@ the user should be redirected to the correct page without error checking
 
 the user reloads the page
     Reload Page
+    run keyword and ignore error      confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -185,6 +193,7 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    Focus    ${BUTTON}
     Wait Until Element Is Visible    ${BUTTON}
     click element    ${BUTTON}
 
@@ -210,7 +219,7 @@ the user should not see an error in the page
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error-message
+    wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
@@ -229,8 +238,8 @@ The user should not see the element
 
 The user should get an error page
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error
-    Page should contain    ${ERROR_TEXT}
+    wait until page contains element    css=.error
+    wait until page contains    ${ERROR_TEXT}
 
 The user should see the browser notification
     [Arguments]    ${MESSAGE}
@@ -279,16 +288,6 @@ The element should be disabled
     [Arguments]    ${ELEMENT}
     Element Should Be Disabled    ${ELEMENT}
 
-the user clicks the link from the appropriate email sender
-    Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
-    Run keyword if    '${RUNNING_ON_DEV}' != ''    the user opens the mailbox and verifies the official innovate email
-
-the user opens the mailbox and verifies the email sent from a developer machine
-    the user opens the mailbox and verifies the email from    dev-dwatson-liferay-portal@hiveit.co.uk
-
-the user opens the mailbox and verfies the official innovate email
-    the user opens the mailbox and verifies the email from    noresponse@innovateuk.gov.uk
-
 the user opens the mailbox and verifies the email from
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
@@ -310,9 +309,7 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${CONTACT_LEAD}=    Get From List    ${LINK}    1
-    Should Contain    ${CONTACT_LEAD}    mailto:
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    2
+    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
     log    ${ACCEPT_INVITE}
     go to    ${ACCEPT_INVITE}
     Capture Page Screenshot
@@ -320,20 +317,19 @@ the user opens the mailbox and accepts the invitation to collaborate
     close mailbox
 
 the user downloads the file from the link
-    [Arguments]     ${filename}     ${download_link}
+    [Arguments]    ${filename}    ${download_link}
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
     Download File    ${ALL_COOKIES}    ${download_link}
     sleep    2s
 
 the file should be downloaded
-    [Arguments]     ${filename}
-    File Should Exist   ${filename}
+    [Arguments]    ${filename}
+    File Should Exist    ${filename}
     File Should Not Be Empty    ${filename}
 
 the file has been scanned for viruses
-    Sleep   5s
-
+    Sleep    5s
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
@@ -343,11 +339,13 @@ the user can see the option to upload a file on the page
 the user cannot see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
-    the user should not see the text in the page        Upload
+    the user should not see the text in the page    Upload
 
-
-Delete the emails from the test mailbox
+Delete the emails from both test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
 
@@ -449,7 +447,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
     The guest user clicks the log-in button
-    user closes the browser
+    the user closes the browser
 
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -478,5 +476,14 @@ the lead applicant invites a registered user
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
-    User closes the browser
+    the user closes the browser
     The guest user opens the browser
+
+Open mailbox and verify the content
+    [Arguments]    ${USER}    ${CONTENT}
+    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    Delete All Emails
+    close mailbox

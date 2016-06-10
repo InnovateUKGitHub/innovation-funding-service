@@ -4,7 +4,6 @@ import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +18,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.alertRes
 @Service
 public class AlertRestServiceImpl extends BaseRestService implements AlertRestService {
 
-    @Value("${ifs.data.service.rest.alert}")
-    private String alertRestURL;
+    private String alertRestURL = "/alert";
 
     protected void setAlertRestURL(final String alertRestURL) {
         this.alertRestURL = alertRestURL;

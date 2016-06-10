@@ -15,12 +15,11 @@ import static org.junit.Assert.assertNull;
 import static org.springframework.http.HttpStatus.OK;
 
 public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationFinanceRestServiceImpl> {
-    private static final String applicationFinanceRestURL = "/finance";
+    private static final String applicationFinanceRestURL = "/applicationfinance";
 
     @Override
     protected ApplicationFinanceRestServiceImpl registerRestServiceUnderTest() {
         ApplicationFinanceRestServiceImpl financeService = new ApplicationFinanceRestServiceImpl();
-        financeService.applicationFinanceRestURL = applicationFinanceRestURL;
         return financeService;
     }
 

@@ -1,39 +1,41 @@
 *** Settings ***
 Documentation     INFUND-539 - As an applicant I want the ‘Application details’ drop down on the ‘Application overview’ page to show a green tick when I’ve marked it as complete, so that I know what I’ve done
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
-Suite Teardown    User closes the browser
-Default Tags      Applicant    Overview    Application
+Suite Setup       log in and create new application if there is not one already
+Suite Teardown    the user closes the browser
+Force Tags        Applicant
+Default Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/Application_question_edit_actions.robot
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
-Section status is updated on the overview page after marking a section as complete
+Status is updated after marking as complete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
-    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    When The user navigates to the overview page of the Robot test application
     And none of the sections are marked as complete
-    When the user navigates to the page     ${ECONOMIC_BENEFIT_URL}
+    And the user clicks the button/link    link=4. Economic benefit
     And the applicant adds some content and marks this section as complete
-    And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    Then the applicant can see that the 'economics benefit' section is marked as complete
+    And The user navigates to the overview page of the Robot test application
+    Then the applicant can see that the economics benefit section is marked as complete
 
-Section status is updated on the overview page after editing a section so it is no longer complete
+Status is updated after marking as incomplete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
-    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    And the applicant can see that the 'economics benefit' section is marked as complete
-    When the user navigates to the page     ${ECONOMIC_BENEFIT_URL}
+    Given The user navigates to the overview page of the Robot test application
+    And the applicant can see that the economics benefit section is marked as complete
+    And the user clicks the button/link    link=4. Economic benefit
     And the applicant edits the "economic benefit" question
-    And the user navigates to the page      ${APPLICATION_OVERVIEW_URL}
+    And The user navigates to the overview page of the Robot test application
     Then none of the sections are marked as complete
 
 *** Keywords ***
 none of the sections are marked as complete
-    Element Should Not Be Visible    css=.complete
+    the user should not see the element    css=.complete
 
-the applicant can see that the 'economics benefit' section is marked as complete
-    Element Should Be Visible    jQuery=#section-2 .section:nth-child(4) img[src="/images/field/field-done-right.png"]
+the applicant can see that the economics benefit section is marked as complete
+    the user should see the element      jQuery=#section-2 .section:nth-child(4) img[src*="/images/field/field-done-right"]

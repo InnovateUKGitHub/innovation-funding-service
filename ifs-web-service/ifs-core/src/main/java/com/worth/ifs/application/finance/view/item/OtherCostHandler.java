@@ -3,6 +3,7 @@ package com.worth.ifs.application.finance.view.item;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherCost;
+import com.worth.ifs.util.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,7 +25,7 @@ public class OtherCostHandler extends CostHandler {
                         description = fieldValue;
                         break;
                     case "otherCost":
-                        cost = getBigDecimalValue(fieldValue, 0d);
+                        cost = NumberUtils.getBigDecimalValue(fieldValue, 0d);
                         break;
                     default:
                         LOG.info("Unused costField: " + financeFormField.getCostName());

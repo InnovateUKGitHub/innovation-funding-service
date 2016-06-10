@@ -2,13 +2,10 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.resource.AppendixResource;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestFailure;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -33,10 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -50,10 +44,9 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -84,6 +77,9 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private OpenFinanceSectionSectionModelPopulator openFinanceSectionSectionModelPopulator;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
@@ -128,7 +124,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
     }
 
     @RequestMapping(value = "/{applicationId}", params = "uploadAssessorFeedback", method = POST)
-    public  String uploadAssessorFeedbackFile(
+    public String uploadAssessorFeedbackFile(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("applicationId") final Long applicationId,
             @ModelAttribute("form") ApplicationForm applicationForm,
@@ -136,10 +132,11 @@ public class ApplicationManagementController extends AbstractApplicationControll
             BindingResult bindingResult,
             HttpServletRequest request) {
 
-        List<String> validationErrors = saveFileUpload(applicationId, request);
+        RestResult<FileEntryResource> uploadFileResult = uploadFormInput(applicationId, request);
+        bindAnyErrorsToField(uploadFileResult, "assessorFeedback", bindingResult, applicationForm);
 
-        if (!validationErrors.isEmpty()) {
-            addErrorsToForm(applicationForm, model, bindingResult, validationErrors);
+        if (uploadFileResult.isFailure()) {
+            model.addAttribute("form", applicationForm);
             return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
         }
 
@@ -154,13 +151,63 @@ public class ApplicationManagementController extends AbstractApplicationControll
                                              BindingResult bindingResult,
                                              HttpServletRequest request) {
 
-        List<String> validationErrors = removeFileUpload(applicationId, request);
+        RestResult<Void> removeFileResult = assessorFeedbackRestService.removeAssessorFeedbackDocument(applicationId);
+        return handleErrorsOrRedirectToApplicationOverview(competitionId, applicationId, model, applicationForm, bindingResult, request, removeFileResult);
+    }
 
-        if (!validationErrors.isEmpty()) {
-            addErrorsToForm(applicationForm, model, bindingResult, validationErrors);
+    private String handleErrorsOrRedirectToApplicationOverview(Long competitionId, Long applicationId, Model model, ApplicationForm applicationForm, BindingResult bindingResult, HttpServletRequest request, RestResult<Void> result) {
+
+        if (result.isFailure()) {
+            bindAnyErrorsToField(result, "assessorFeedback", bindingResult, applicationForm);
+            model.addAttribute("form", applicationForm);
             return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
         }
+
         return redirectToApplicationOverview(competitionId, applicationId);
+    }
+
+    @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
+    public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
+                                                                @PathVariable("applicationId") final String applicationIdString,
+                                                                @PathVariable("organisationId") final String organisationId,
+                                                                @ModelAttribute("form") ApplicationForm form,
+                                                                Model model,
+                                                                BindingResult bindingResult
+    ) throws ExecutionException, InterruptedException {
+        Long applicationId = Long.valueOf(applicationIdString);
+        ApplicationResource application = applicationService.getById(applicationId);
+        SectionResource financeSection = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE).get(0);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        UserResource impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
+
+        // so the mode is viewonly
+        form.setAdminMode(true);
+        application.enableViewMode();
+        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+        model.addAttribute("applicationReadyForSubmit", false);
+
+
+        openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
+
+        return "comp-mgt-application-finances";
+    }
+
+    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") String organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
+        UserResource user;
+        form.setImpersonateOrganisationId(Long.valueOf(organisationId));
+        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        Optional<Long> userId = processRoles.stream()
+                .filter(p -> p.getOrganisation().equals(Long.valueOf(organisationId)))
+                .map(p -> p.getUser())
+                .findAny();
+
+        if (!userId.isPresent()) {
+            LOG.error("Found no user to impersonate.");
+            return null;
+        }
+        user = userService.retrieveUserById(userId.get()).getSuccessObject();
+        return user;
     }
 
     @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = GET)
@@ -180,13 +227,6 @@ public class ApplicationManagementController extends AbstractApplicationControll
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
-    }
-
-    private void addErrorsToForm(@ModelAttribute ApplicationForm applicationForm, Model model, BindingResult bindingResult, List<String> validationErrors) {
-        registerValidationErrorsWithBindingResult(bindingResult, validationErrors);
-        applicationForm.setBindingResult(bindingResult);
-        applicationForm.setObjectErrors(bindingResult.getAllErrors());
-        model.addAttribute("form", applicationForm);
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
@@ -215,20 +255,6 @@ public class ApplicationManagementController extends AbstractApplicationControll
         }
     }
 
-    private List<String> saveFileUpload(Long applicationId, HttpServletRequest request){
-
-        RestResult<FileEntryResource> uploadResult = uploadFormInput(applicationId, request);
-
-        return uploadResult.handleSuccessOrFailure(
-                failure -> lookupValidationErrorsFromServiceFailures(failure),
-                success -> emptyList()
-        );
-    }
-
-    private List<String> lookupValidationErrorsFromServiceFailures(RestFailure failure) {
-        return simpleMap(failure.getErrors(), Error::getErrorKey);
-    }
-
     private RestResult<FileEntryResource> uploadFormInput(Long applicationId, HttpServletRequest request) {
 
         final Map<String, MultipartFile> fileMap = ((MultipartHttpServletRequest) request).getFileMap();
@@ -251,18 +277,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
         throw new UnableToReadUploadedFile();
     }
 
-    private List<String> removeFileUpload(Long applicationId, HttpServletRequest request) {
-        return assessorFeedbackRestService.removeAssessorFeedbackDocument(applicationId).handleSuccessOrFailure(
-                failure -> lookupValidationErrorsFromServiceFailures(failure),
-                success -> emptyList()
-        );
-    }
-
     private String redirectToApplicationOverview(Long competitionId, Long applicationId) {
         return "redirect:/competition/" + competitionId + "/application/" + applicationId;
-    }
-
-    private void registerValidationErrorsWithBindingResult(BindingResult bindingResult, List<String> validationErrors) {
-        validationErrors.forEach(error -> bindingResult.rejectValue("assessorFeedback", error));
     }
 }

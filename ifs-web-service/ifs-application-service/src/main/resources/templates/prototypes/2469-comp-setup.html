@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'14060010:  A newly created competition'}, ${'Competition setup'}, ${'Create new competition'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'14060010:  A newly created competition'}, ${'Competition setup'}, ${'createComp'})" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/comp-setup :: prototype-comp-setup-navigation" th:remove="tag" />
 
@@ -65,23 +65,67 @@
 
 
 	    var sectionId = $_GET('sectionId'),
-			status = $_GET('status');
+			status = $_GET('status'),
+			compType = $_GET('compType'),
+			compStatus = $_GET('compStatus');
+
+
+		if(compType == 'Programme' || compType == 'Managed services'){
+			jQuery('#stateAid').show();
+			jQuery('#stateAid .yes').show();
+			jQuery('#stateAid .no').hide();
+		}else if(compType == 'SBRI' || compType == 'Special'){
+			jQuery('#stateAid').show();
+			jQuery('#stateAid .no').show();
+			jQuery('#stateAid .yes').hide();
+		}else{
+			jQuery('#stateAid').hide();
+		}
 
 
 		//Of the available tabs check which section has been 'done'
 
-		
-		for(i = 1; i < jQuery(".inline-nav li").length+1; i++) {
+		var sectionCount = 0;
+		var sectionNumber = jQuery(".inline-nav li").length+1; // count number of sections based on tab;e
+
+		for(i = 1; i < sectionNumber; i++) {
 			
 			if(sectionId == i && status == 'done'){
-				localStorage.setItem('section'+i, 'section-'+i+'-complete')				
+
+				localStorage.setItem('section'+i, 'section-'+i+'-complete');
+
+			}else if (sectionId == i && status == 'edit'){
+
+				localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
+
 			}
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
 				jQuery('#section-'+i).addClass('marked-as-complete');
+				
+				jQuery('#section-'+i+'-done').show();
+				jQuery('#section-'+i+'-edit').hide();
+
+				sectionCount ++;
+
+			}else{
+				jQuery('#section-'+i).removeClass('marked-as-complete');
+
+				jQuery('#section-'+i+'-done').hide();
+				jQuery('#section-'+i+'-edit').show();
+
 			}
+
 		} 
-			
+
+		//alert(sectionCount+1 +' test'+sectionNumber);
+
+		if(sectionCount+1 == sectionNumber){ // Check that all tabs are complete, thwn change state of CTA
+			alert('all sections complete');
+		}
+
+
+
 
 
 
