@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryLinkServiceImpl extends BaseTransactionalService implements CategoryLinkService {
     @Autowired
-    CategoryLinkRepository categoryLinkRepository;
+    private CategoryLinkRepository categoryLinkRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     /**
      * This method is for object that only have one categorylink for this CategoryType.
@@ -32,10 +32,14 @@ public class CategoryLinkServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<Void> addOrUpdateOrDeleteLink(String className, Long classPk, CategoryType categoryType, Long categoryId){
         CategoryLink existingCategoryLink = categoryLinkRepository.findByClassNameAndClassPkAndCategory_Type(className, classPk, categoryType);
-        if (existingCategoryLink != null && categoryId == null) {
-            // there is a category link existing, remove it because categoryId == null.
-            categoryLinkRepository.delete(existingCategoryLink);
-        } else if(categoryId != null){
+
+        if (categoryId == null) {
+            // Not category id available, so remove existing categoryLink
+            if(existingCategoryLink != null){
+                categoryLinkRepository.delete(existingCategoryLink);
+            }
+        } else {
+            // Got a Category id, so either add or update the CategoryLink
             Category category = categoryRepository.findOne(categoryId);
             if (existingCategoryLink == null) {
                 categoryLinkRepository.save(new CategoryLink(category, className, classPk));

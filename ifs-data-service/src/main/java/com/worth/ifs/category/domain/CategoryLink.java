@@ -3,7 +3,6 @@ package com.worth.ifs.category.domain;
 import javax.persistence.*;
 
 @Entity
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames={"className", "classPk", "categoryId"}))
 public class CategoryLink {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
