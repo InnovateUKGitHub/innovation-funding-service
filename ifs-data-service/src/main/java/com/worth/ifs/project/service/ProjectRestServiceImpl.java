@@ -52,4 +52,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     public RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/project-users", projectUserResourceList());
     }
+
+    @Override
+    public RestResult<ProjectResource> getByApplicationId(Long applicationId) {
+        return getWithRestResult(projectRestURL + "/application/" + applicationId, ProjectResource.class);
+    }
 }

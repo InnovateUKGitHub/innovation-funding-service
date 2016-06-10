@@ -17,4 +17,5 @@ public interface ProjectRestService {
     RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
     RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
     RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId);
+    RestResult<ProjectResource> getByApplicationId(Long applicationId);
 }

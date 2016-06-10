@@ -131,6 +131,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
+        public ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<ProjectResource>> findAll() {
             return null;
         }

@@ -18,6 +18,8 @@ public interface ProjectService {
 
     ProjectResource getById(Long projectId);
 
+    ProjectResource getByApplicationId(Long applicationId);
+
     void updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
     void updateProjectManager(Long projectId, Long projectManagerUserId);

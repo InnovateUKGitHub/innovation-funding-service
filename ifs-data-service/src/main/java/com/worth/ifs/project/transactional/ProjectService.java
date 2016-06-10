@@ -24,6 +24,9 @@ public interface ProjectService {
     @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<ProjectResource> getProjectById(@P("projectId") final Long projectId);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") final Long applicationId);
+
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findAll();
 

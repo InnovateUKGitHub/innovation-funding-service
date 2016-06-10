@@ -36,6 +36,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectResource getByApplicationId(Long applicationId) {
+        if(applicationId == null) {
+            return null;
+        }
+        return projectRestService.getByApplicationId(applicationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public void updateProjectManager(Long projectId, Long projectManagerUserId) {
         projectRestService.updateProjectManager(projectId, projectManagerUserId).getSuccessObjectOrThrowException();
     }

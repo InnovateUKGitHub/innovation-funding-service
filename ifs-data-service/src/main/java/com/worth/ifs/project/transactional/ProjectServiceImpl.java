@@ -77,6 +77,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
+    public ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId) {
+        return getProjectByApplication(applicationId).andOnSuccessReturn(projectMapper::mapToResource);
+    }
+
+    @Override
     public ServiceResult<List<ProjectResource>> findAll() {
         return serviceSuccess(projectsToResources(projectRepository.findAll()));
     }
@@ -254,5 +259,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Address> getAddress(long addressId) {
         return find(addressRepository.findOne(addressId), notFoundError(Address.class, addressId));
+    }
+
+    private ServiceResult<Project> getProjectByApplication(long applicationId){
+        return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 }

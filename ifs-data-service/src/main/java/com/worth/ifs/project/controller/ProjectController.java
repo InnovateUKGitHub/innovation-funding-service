@@ -31,6 +31,11 @@ public class ProjectController {
         return projectService.getProjectById(id).toGetResponse();
     }
 
+    @RequestMapping("/application/{application}")
+    public RestResult<ProjectResource> getByApplicationId(@PathVariable("application") final Long application) {
+        return projectService.getByApplicationId(application).toGetResponse();
+    }
+
     @RequestMapping("/")
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
