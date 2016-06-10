@@ -2,6 +2,7 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -40,7 +41,12 @@ public class ProjectServiceImpl implements ProjectService {
         if(applicationId == null) {
             return null;
         }
-        return projectRestService.getByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        RestResult<ProjectResource> restResult = projectRestService.getByApplicationId(applicationId);
+        if(restResult.isSuccess()){
+            return restResult.getSuccessObject();
+        } else {
+            return null;
+        }
     }
 
     @Override
