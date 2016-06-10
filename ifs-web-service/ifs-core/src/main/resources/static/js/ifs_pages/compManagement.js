@@ -178,23 +178,32 @@ IFS.competition_management = (function(){
         handleCompetitionCode : function(){
             jQuery(document).on('click','#generate-code',function(){
                 var inst = jQuery(this);
+                var day = jQuery('#openingDate .day input').val();
+                var month = jQuery('#openingDate .month input').val();
+                var year = jQuery('#openingDate .year input').val();
+                var formGroup = inst.closest('.form-group');
 
-                if(jQuery('#openingDate').hasClass('error') === false){
-                    var day = jQuery('#openingDate .day input').val();
-                    var month = jQuery('#openingDate .month input').val();
-                    var year = jQuery('#openingDate .year input').val();
+                if((jQuery('#openingDate').hasClass('error') === false) && day.length && month.length && year.length){
+                    formGroup.removeClass('error');
+                    formGroup.find("label .error-message").remove();
 
-                    if(day.length && month.length && year.length){
-                      var competitionId = inst.val();
-                      var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/'+competitionId+'/generateCompetitionCode?day='+day+'&month='+month+'&year='+year;
-                      //todo ajax failure
-                      jQuery.ajaxProtected({
-                        type: "GET",
-                        url: url,
-                        success: function(data) {
-                            inst.closest('.form-group').find('input').val(data);
-                        }
-                      });
+                    var competitionId = inst.val();
+                    var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/'+competitionId+'/generateCompetitionCode?day='+day+'&month='+month+'&year='+year;
+                    //todo ajax failure
+                    jQuery.ajaxProtected({
+                      type: "GET",
+                      url: url,
+                      success: function(data) {
+                           data = data.replace(/"/g,"");
+                          inst.closest('.form-group').find('input').val(data);
+                          inst.remove();
+                      }
+                    });
+                }
+                else {
+                  formGroup.addClass('error');
+                  if(formGroup.find('.error-message').length === 0){
+                    formGroup.find("label").append('<span class="error-message">Please fill in a correct date before generating the competition code</span>');
                   }
                 }
             });
