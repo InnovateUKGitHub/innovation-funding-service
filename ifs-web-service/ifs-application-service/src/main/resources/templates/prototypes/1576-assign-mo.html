@@ -50,6 +50,14 @@
 		
 		
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
+
+			<div class="success-alert">
+				<h2 class="heading-small no-margin-top">A Monitoring Officer has been assigned.</h2>
+			</div>
+
+		</th:block>
 		
 		
 		<div class="column-half">
@@ -117,7 +125,7 @@
 				            		<a href="/prototypes/1576-assign-mo">Cancel</a>
 				            	</div>
 				            	<div class="column-half alignright-button">
-				            		<input type="hidden" id="stage" name="stage" value="level1" />
+				            		<input type="hidden" id="stage" name="stage" value="1" />
 				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring officer</button>
 				            	</div>
 				            </div>

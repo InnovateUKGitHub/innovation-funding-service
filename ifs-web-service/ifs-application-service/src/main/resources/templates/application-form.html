@@ -12,8 +12,8 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
 
-
-	<div class="page-title">
+    <div th:include="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" th:remove="tag" />
+      	<div class="page-title">
             <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${title}" />
         </div>

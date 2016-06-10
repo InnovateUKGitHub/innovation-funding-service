@@ -27,6 +27,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
@@ -532,6 +533,9 @@ public class ApplicationFormController extends AbstractApplicationController {
             addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
             addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
             addNavigation(section, applicationId, model);
+            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+            Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+            addCompletedDetails(model, application, userOrganisation);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);
