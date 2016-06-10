@@ -15,7 +15,10 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3' : '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3')})" th:remove="tag" />
+    
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accpeted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5' : '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3')})" th:unless="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5&#38;reject=docs'})" th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -81,7 +84,7 @@
 				
 				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
 
-        		<a href="/prototypes/2682-moderate-docs?status=ok" class="button">Accept documents</a>
+        		<a href="/prototypes/2682-moderate-docs?status=accepted" class="button">Accept documents</a>
         	</div>
 
         </div>

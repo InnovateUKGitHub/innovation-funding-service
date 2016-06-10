@@ -22,11 +22,12 @@
          th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"
          th:remove="tag"/>
 
+    <div th:include="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" th:remove="tag" />
+
     <div class="page-title">
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
         <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Summary</h1>
         <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Overview</h1>
-
     </div>
     <p class="subtitle extra-margin" th:if="${currentApplication.isOpen()}">
         Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
