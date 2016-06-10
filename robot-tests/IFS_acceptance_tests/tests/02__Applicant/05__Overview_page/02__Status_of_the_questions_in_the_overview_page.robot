@@ -4,6 +4,7 @@ Documentation     INFUND-39: As an applicant and I am on the application overvie
 ...               INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Email
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
