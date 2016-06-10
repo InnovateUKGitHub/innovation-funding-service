@@ -5,6 +5,7 @@ import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -28,7 +30,11 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
 
     @Override
     public ServiceResult<List<CategoryResource>> getByParent(Long parentId){
-        Category parent = categoryRepository.findOne(parentId);
-        return serviceSuccess((List) categoryMapper.mapToResource(parent.getChildren()));
+        if(categoryRepository.exists(parentId)){
+            Category parent = categoryRepository.findOne(parentId);
+            return serviceSuccess((List) categoryMapper.mapToResource(parent.getChildren()));
+        }else{
+            return serviceFailure(CommonErrors.notFoundError(Category.class, parentId));
+        }
     }
 }
