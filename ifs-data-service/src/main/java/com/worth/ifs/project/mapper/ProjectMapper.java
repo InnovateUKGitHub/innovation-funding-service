@@ -12,6 +12,7 @@ import org.mapstruct.Mapper;
         config = GlobalMapperConfig.class,
         uses = {
                 AddressMapper.class,
+                ProjectUserMapper.class,
                 ProcessRoleMapper.class
         }
 )
@@ -21,4 +22,12 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
 
     @Override
     public abstract Project mapToDomain(ProjectResource projectResource);
+
+
+    public Long mapProjectToId(Project object) {
+        if (object == null) {
+            return null;
+        }
+        return object.getId();
+    }
 }
