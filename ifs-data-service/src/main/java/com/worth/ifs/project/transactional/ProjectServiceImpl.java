@@ -10,6 +10,8 @@ import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -19,12 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -37,7 +40,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
+    
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -51,6 +54,13 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
         return serviceSuccess(createProjectFromApplicationId(applicationId));
+    }
+    
+    @Override
+    public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+        return getProject(projectId).
+                andOnSuccess(project -> validateProjectManager(project, projectManagerId).
+                andOnSuccessReturnVoid(project::setProjectManager));
     }
 
     @Override
@@ -78,6 +88,21 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         return serviceSuccess();
     }
+    
+    private ServiceResult<ProcessRole> validateProjectManager(Project project, Long projectManagerId) {
+
+        Application application = applicationRepository.findOne(project.getId());
+		Organisation leadPartner = application.getLeadOrganisation();
+
+        List<ProcessRole> leadPartnerProcessRoles = simpleFilter(application.getProcessRoles(), pr -> leadPartner.equals(pr.getOrganisation()));
+        List<ProcessRole> matchingProcessRoles = simpleFilter(leadPartnerProcessRoles, lppr -> projectManagerId.equals(lppr.getUser().getId()));
+
+        if(!matchingProcessRoles.isEmpty()) {
+			return getOnlyElementOrFail(matchingProcessRoles).andOnSuccess(processRole -> serviceSuccess(processRole));
+		} else {
+			return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+		}
+	}
 
     private ProjectResource createProjectFromApplicationId(final Long applicationId){
         Application application = applicationRepository.findOne(applicationId);
@@ -93,7 +118,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
-
+    
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }

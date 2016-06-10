@@ -5,7 +5,7 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...
 Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
 ...               AND    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

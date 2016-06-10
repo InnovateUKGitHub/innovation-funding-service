@@ -10,9 +10,11 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
@@ -51,5 +53,15 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(get("/project/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(projectNumber)));
+    }
+    
+    @Test
+    public void projectControllerSetProjectManager() throws Exception {
+    	when(projectServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
+    	
+        mockMvc.perform(post("/project/3/project-manager/5").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+                .andExpect(status().isOk());
+        
+        verify(projectServiceMock).setProjectManager(3L, 5L);
     }
 }

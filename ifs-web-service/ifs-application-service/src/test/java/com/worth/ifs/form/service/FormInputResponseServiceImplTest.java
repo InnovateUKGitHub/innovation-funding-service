@@ -1,22 +1,20 @@
 package com.worth.ifs.form.service;
 
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.form.resource.FormInputResponseResource;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
-import static com.worth.ifs.util.CollectionFunctions.reverse;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 
 /**
  * Testing FormInputResponseServiceImpl and its interactions with its mock rest service.

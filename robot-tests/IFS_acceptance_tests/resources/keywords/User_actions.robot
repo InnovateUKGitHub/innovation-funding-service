@@ -79,6 +79,7 @@ the user should be redirected to the correct page without error checking
 
 the user reloads the page
     Reload Page
+    run keyword and ignore error      confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -218,7 +219,7 @@ the user should not see an error in the page
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error-message
+    wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
@@ -237,8 +238,8 @@ The user should not see the element
 
 The user should get an error page
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error
-    Page should contain    ${ERROR_TEXT}
+    wait until page contains element    css=.error
+    wait until page contains    ${ERROR_TEXT}
 
 The user should see the browser notification
     [Arguments]    ${MESSAGE}
@@ -446,7 +447,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
     The guest user clicks the log-in button
-    user closes the browser
+    the user closes the browser
 
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -475,7 +476,7 @@ the lead applicant invites a registered user
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
-    User closes the browser
+    the user closes the browser
     The guest user opens the browser
 
 Open mailbox and verify the content

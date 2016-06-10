@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+
 
 /**
  * This class contains methods to retrieve and store {@link UserResource} related data,
@@ -63,6 +65,17 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+    
+	@Override
+	public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
+		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application);
+		if(leadProcessRole == null) {
+			return new ArrayList<>();
+		}
+		return processRoleService.getByIds(application.getProcessRoles()).stream()
+				.filter(pr -> leadProcessRole.getOrganisation().equals(pr.getOrganisation()))
+				.collect(Collectors.toList());
+	}
 
     @Override
     public Set<UserResource> getAssignableUsers(ApplicationResource application) {
@@ -133,4 +146,5 @@ public class UserServiceImpl implements UserService {
     public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
         return userRestService.findUserByEmail(email);
     }
+
 }
