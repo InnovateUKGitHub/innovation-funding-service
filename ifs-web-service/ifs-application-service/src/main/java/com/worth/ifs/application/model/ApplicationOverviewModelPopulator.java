@@ -216,11 +216,8 @@ public class ApplicationOverviewModelPopulator {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
 
-        Long eachCollaboratorFinanceSectionId;
-
-        if(eachOrganisationFinanceSections.isEmpty()) {
-            eachCollaboratorFinanceSectionId = null;
-        } else {
+        Long eachCollaboratorFinanceSectionId = null;
+        if(!eachOrganisationFinanceSections.isEmpty()) {
             eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
         }
         return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
