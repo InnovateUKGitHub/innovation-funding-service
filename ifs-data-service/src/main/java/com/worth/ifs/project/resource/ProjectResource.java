@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.Digits;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 
@@ -14,6 +15,7 @@ public class ProjectResource {
     private LocalDate targetStartDate;
     private Long address;
     private String name;
+    private List<Long> projectUsers;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -66,6 +68,14 @@ public class ProjectResource {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Long> getProjectUsers() {
+        return projectUsers;
+    }
+
+    public void setProjectUsers(List<Long> projectUsers) {
+        this.projectUsers = projectUsers;
     }
 
     @JsonIgnore

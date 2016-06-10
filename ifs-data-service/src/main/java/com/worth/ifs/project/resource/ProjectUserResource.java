@@ -1,29 +1,30 @@
-package com.worth.ifs.user.resource;
+package com.worth.ifs.project.resource;
 
-import com.worth.ifs.application.resource.ApplicationResource;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserResource;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 
-public class ProcessRoleResource {
+public class ProjectUserResource {
     private Long id;
     private Long user;
     private String userName;
-    private Long application;
+    private Long project;
     private Long role;
     private String roleName;
     private Long organisation;
-    private List<Long> responses = new ArrayList<>();
 
-    public ProcessRoleResource(){
+    public ProjectUserResource(){
     	// no-arg constructor
     }
 
-    public ProcessRoleResource(Long id, UserResource user, ApplicationResource application, RoleResource role, OrganisationResource organisation) {
+    public ProjectUserResource(Long id, UserResource user, ProjectResource project, RoleResource role, OrganisationResource organisation) {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();
-        this.application = application.getId();
+        this.project = project.getId();
         this.role = role.getId();
         this.roleName = role.getName();
         this.organisation = organisation.getId();
@@ -51,8 +52,8 @@ public class ProcessRoleResource {
         return organisation;
     }
 
-    public Long getApplication() {
-        return this.application;
+    public Long getProject() {
+        return this.project;
     }
 
     public void setUser(Long user) {
@@ -63,8 +64,8 @@ public class ProcessRoleResource {
         this.userName = userName;
     }
 
-    public void setApplication(Long application) {
-        this.application = application;
+    public void setProject(Long project) {
+        this.project = project;
     }
 
     public void setRole(Long role) {
@@ -79,15 +80,12 @@ public class ProcessRoleResource {
         this.organisation = organisation;
     }
 
-    public List<Long> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(List<Long> responses) {
-        this.responses = responses;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @JsonIgnore
+    public boolean isFinanceContact() {
+        return FINANCE_CONTACT.getName().equals(getRoleName());
     }
 }
