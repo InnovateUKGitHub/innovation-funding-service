@@ -123,8 +123,7 @@
             <!-- needs to work dynamic with competition type -->
             <div class="form-group">
                 <h3 class="heading-small">State aid</h3>
-                <p id="stateAid">
-                </p>
+                <p id="stateAid" />
             </div>
 
             <div th:class="${#fields.hasErrors('LeadTechnologistUserId')}? 'form-group error':'form-group'">
@@ -201,7 +200,7 @@
                 <dt>Competition type</dt>
                 <dd th:text="${competitionSetupForm.competitionTypeId}"></dd>
                 <dt>State aid</dt>
-                <dd id="stateAid">
+                <dd>
                     <span class="yes">Yes</span>
                     <span class="no">No</span>
                 </dd>
