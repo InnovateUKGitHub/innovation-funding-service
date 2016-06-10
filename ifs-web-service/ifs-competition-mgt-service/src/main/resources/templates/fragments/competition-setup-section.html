@@ -176,7 +176,7 @@
                 <input disabled="disabled" th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                        type="text"
                        th:field="${competitionSetupForm.competitionCode}" />
-                <button class="button button-secondary" type="button" id="generate-code" th:value="${competition.id}">Generate competition code</button>
+                <button class="button button-secondary" th:unless="${competitionSetupForm.competitionCode}" type="button" id="generate-code" th:value="${competition.id}">Generate competition code</button>
             </div>
 
             <button class="button">Done</button>
