@@ -143,7 +143,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-        @Override
+		@Override
+		public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+			return null;
+		}
+
+		@Override
         public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
             return null;
         }

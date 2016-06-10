@@ -57,6 +57,16 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(projectNumber)));
     }
+    
+    @Test
+    public void projectControllerSetProjectManager() throws Exception {
+    	when(projectServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
+    	
+        mockMvc.perform(post("/project/3/project-manager/5").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+                .andExpect(status().isOk());
+        
+        verify(projectServiceMock).setProjectManager(3L, 5L);
+    }
 
     @Test
     public void updateFinanceContact() throws Exception {

@@ -21,6 +21,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return getWithRestResult(projectRestURL + "/" + projectId, ProjectResource.class);
     }
 
+	@Override
+	public RestResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId) {
+		return postWithRestResult(projectRestURL + "/" + projectId + "/project-manager/" + projectManagerUserId, Void.class);
+	}
     @Override
     public RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/startdate?projectStartDate=" + projectStartDate, Void.class);

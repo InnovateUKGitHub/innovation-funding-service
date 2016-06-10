@@ -6,11 +6,12 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.user.builder.ProcessRoleBuilder;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserRoleType;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -35,51 +36,51 @@ import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
-    @Test
-    public void testCreateProjectFromApplication() {
+	private Long projectId = 123L;
+	private Long userId = 7L;
+	private Long otherUserId = 8L;
 
-        Application application = newApplication().
-                withId(123L).
+	private Application application;
+	private Organisation organisation;
+	private Role role;
+	private User user;
+	private ProcessRole processRole;
+	private Project project;
+
+	@Before
+	public void setUp() {
+		organisation = newOrganisation().build();
+    	role = newRole().
+    			withType(UserRoleType.LEADAPPLICANT).
+    			build();
+    	user = newUser().
+    			withid(userId).
+    			build();
+    	processRole = newProcessRole().
+    			withOrganisation(organisation).
+    			withRole(role).
+    			withUser(user).
+    			build();
+    	application = newApplication().
+				withId(projectId).
+	            withProcessRoles(processRole).
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
+    	project = newProject().withId(projectId).build();
 
-        ProjectResource newProjectResource = newProjectResource().build();
+        when(applicationRepositoryMock.findOne(projectId)).thenReturn(application);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+	}
+	
+    @Test
+    public void testCreateProjectFromApplication() {
 
-        User leadApplicant = newUser().build();
-        User collaborator1 = newUser().build();
-        User collaborator2 = newUser().build();
-
-        Organisation leadOrganisation = newOrganisation().build();
-        Organisation collaboratorOrganisation1 = newOrganisation().build();
-        Organisation collaboratorOrganisation2 = newOrganisation().build();
-
-        ProcessRoleBuilder processRoleBuilder = newProcessRole().
-                withApplication(application);
-
-        @SuppressWarnings("unused")
-        ProcessRole leadApplicantProcessRole = processRoleBuilder.
-                withRole(LEADAPPLICANT).
-                withUser(leadApplicant).
-                withOrganisation(collaboratorOrganisation1).
-                build();
-
-        @SuppressWarnings("unused")
-        ProcessRole collaborator1ProcessRole = processRoleBuilder.
-                withRole(COLLABORATOR).
-                withUser(collaborator1).
-                withOrganisation(leadOrganisation).
-                build();
-
-        @SuppressWarnings("unused")
-        ProcessRole collaborator2ProcessRole = processRoleBuilder.
-                withRole(COLLABORATOR).
-                withUser(collaborator2).
-                withOrganisation(collaboratorOrganisation2).
-                build();
 
         Role partnerRole = newRole().withType(PARTNER).build();
+
+        ProjectResource newProjectResource = newProjectResource().build();
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
 
@@ -95,6 +96,22 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(123L);
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
+    }
+    
+    @Test
+    public void testInvalidProjectManagerProvided() {
+
+        ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
+        assertFalse(result.isSuccess());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+    }
+    
+    @Test
+    public void testValidProjectManagerProvided() {
+
+        ServiceResult<Void> result = service.setProjectManager(projectId, userId);
+        assertTrue(result.isSuccess());
+        assertEquals(processRole, project.getProjectManager());
     }
 
     @Test

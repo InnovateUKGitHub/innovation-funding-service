@@ -32,6 +32,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public void updateProjectManager(Long projectId, Long projectManagerUserId) {
+        projectRestService.updateProjectManager(projectId, projectManagerUserId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public void updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         projectRestService.updateFinanceContact(projectId, organisationId, financeContactUserId).getSuccessObjectOrThrowException();
     }

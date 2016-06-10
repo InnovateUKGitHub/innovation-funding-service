@@ -67,9 +67,9 @@ User can print the application
 
 *** Keywords ***
 the applicant should see three sections
-    Element Should Be Visible    css=#section-1 .bold-medium
-    Element Should Be Visible    css=#section-2 .heading-medium
-    Element Should Be Visible    css=#section-6 .heading-medium
+    the user should see the element    css=#section-1 .bold-medium
+    the user should see the element    css=#section-2 .heading-medium
+    the user should see the element    css=#section-6 .heading-medium
 
 the user should get a new print window
     Select Window    Title=Print Application - Innovation Funding Service

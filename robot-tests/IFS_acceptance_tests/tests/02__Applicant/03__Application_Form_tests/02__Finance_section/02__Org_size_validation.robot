@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1110: As an applicant/partner applicant I want to add my required Funding Level so that innovate uk know my grant request
 Suite Setup       log in and create new application if there is not one already
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -83,7 +83,7 @@ The 'your finances' section cannot be successfully saved with the message
 
 The applicant enters the organisation size
     [Arguments]    ${org_size_option}
-    Select Radio Button    financePosition-organisationSize    ${org_size_option}
+    the user selects the radio button    financePosition-organisationSize    ${org_size_option}
 
 The applicant enters the funding level
     [Arguments]    ${funding_level}
@@ -95,6 +95,6 @@ The applicant can see the correct organisation size has been selected
 
 The applicant can see the correct funding level has been saved
     [Arguments]    ${funding_level}
-    Wait Until Element Is Visible    id=cost-financegrantclaim
+    the user should see the element    id=cost-financegrantclaim
     ${saved_funding_level} =    Get Element Attribute    id=cost-financegrantclaim@value
     Should Be Equal As Integers    ${saved_funding_level}    ${funding_level}

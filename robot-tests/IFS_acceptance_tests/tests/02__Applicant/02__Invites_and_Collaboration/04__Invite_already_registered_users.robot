@@ -12,7 +12,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
-*** variables ***
+*** Variables ***
 ${INVITE_COLLABORATORS_PAGE_APPL1}    ${SERVER}application/1/contributors/invite
 
 *** Test Cases ***
@@ -48,11 +48,13 @@ The continue button should redirect to the overview page
 
 When this user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'View team members and add collaborators'.
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=View and edit your profile details
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the change in the view team members page
+
 
 *** Keywords ***
 the user enters profile details

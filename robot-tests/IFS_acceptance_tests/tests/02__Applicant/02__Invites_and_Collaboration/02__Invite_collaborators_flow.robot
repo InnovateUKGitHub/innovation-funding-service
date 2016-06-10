@@ -125,7 +125,7 @@ Partner cannot invite others to other organisations
     [Documentation]    INFUND-2335
     [Tags]    Email
     Then the user cannot invite another person to a different organisation
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 Partner who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
@@ -168,7 +168,7 @@ The Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application
-    [Teardown]    User closes the browser
+    [Teardown]    the user closes the browser
 
 The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
@@ -212,7 +212,7 @@ the user adds new collaborator
     sleep    300ms
 
 The status of the invited people should be correct in the application team page
-    Page should contain    Adrian Booth
+    the user should see the text in the page    Adrian Booth
     Element Should Contain    xpath=//a[contains(text(),"Adrian Booth")]//following::small    (pending)
 
 the invited collaborators are not editable
@@ -252,7 +252,7 @@ the user can invite another person to their own organisation
     the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
-    Element Should Not Be Visible    jQuery=li:nth-child(1) button:contains("Add person")
+    the user should not see the element   jQuery=li:nth-child(1) button:contains("Add person")
     #This comments should be removed after the review
     #${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
     #the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]

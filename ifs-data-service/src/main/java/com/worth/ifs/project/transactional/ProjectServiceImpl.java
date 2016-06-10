@@ -1,5 +1,7 @@
 package com.worth.ifs.project.transactional;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -49,6 +51,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Autowired
     private ProjectMapper projectMapper;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+    
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -62,6 +67,13 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
         return createProjectFromApplicationId(applicationId);
+    }
+    
+    @Override
+    public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+        return getProject(projectId).
+                andOnSuccess(project -> validateProjectManager(project, projectManagerId).
+                andOnSuccessReturnVoid(project::setProjectManager));
     }
 
     @Override
@@ -138,6 +150,21 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         return getOnlyElementOrFail(partnerUsers);
     }
+
+    private ServiceResult<ProcessRole> validateProjectManager(Project project, Long projectManagerId) {
+
+        Application application = applicationRepository.findOne(project.getId());
+		Organisation leadPartner = application.getLeadOrganisation();
+
+        List<ProcessRole> leadPartnerProcessRoles = simpleFilter(application.getProcessRoles(), pr -> leadPartner.equals(pr.getOrganisation()));
+        List<ProcessRole> matchingProcessRoles = simpleFilter(leadPartnerProcessRoles, lppr -> projectManagerId.equals(lppr.getUser().getId()));
+
+        if(!matchingProcessRoles.isEmpty()) {
+			return getOnlyElementOrFail(matchingProcessRoles).andOnSuccess(processRole -> serviceSuccess(processRole));
+		} else {
+			return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+		}
+	}
     
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
 
@@ -172,7 +199,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
-
+    
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }

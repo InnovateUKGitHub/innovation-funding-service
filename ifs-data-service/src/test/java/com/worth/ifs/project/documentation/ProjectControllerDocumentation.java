@@ -112,6 +112,40 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andExpect(status().isBadRequest())
                 .andDo(this.document);
     }
+    
+    @Test
+    public void setProjectManager() throws Exception {
+        Long project1Id = 1L;
+        Long projectManagerId = 8L;
+
+        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of the project"),
+                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
+                        )
+                ));
+    }
+
+    @Test
+    public void setProjectManagerButInvalidProjectManager() throws Exception {
+        Long project1Id = 1L;
+        Long projectManagerId = 8L;
+
+        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+
+        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of the project"),
+                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
+                        )
+                ));
+    }
 
     @Test
     public void updateFinanceContact() throws Exception {
