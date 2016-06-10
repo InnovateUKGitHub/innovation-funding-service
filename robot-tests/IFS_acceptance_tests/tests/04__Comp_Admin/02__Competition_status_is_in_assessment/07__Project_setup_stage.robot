@@ -101,7 +101,7 @@ Comp admin can view unsuccessful uploaded feedback
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should see the text in the page    ${valid_pdf_excerpt}
-    And the user navigates to the page    ${unsuccessful_application_overview}
+    And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
     [Teardown]    Logout as user
 
 Unsuccessful applicant can view the uploaded feedback
@@ -112,7 +112,7 @@ Unsuccessful applicant can view the uploaded feedback
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should see the text in the page    ${valid_pdf_excerpt}
-    [Teardown]    the user navigates to the page    ${unsuccessful_application_overview}
+    [Teardown]    the user navigates to the page    ${unsuccessful_application_comp_admin_view}
 
 Unsuccessful applicant cannot remove the uploaded feedback
     [Documentation]    INFUND-2607
