@@ -82,8 +82,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
-
-
         Competition competition = competitionRepository.findById(id);
         String datePart = formatter.format(dateTime);
         List<Competition> openingSameMonth = competitionRepository.findByCodeLike("%"+datePart+"%");

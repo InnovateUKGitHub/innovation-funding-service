@@ -102,8 +102,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
     }
 
-
-
     private List<CompetitionResource> getAllCompetitions(int expectedCompetitionCount) {
         RestResult<List<CompetitionResource>> allCompetitionsResult = controller.findAll();
         assertTrue(allCompetitionsResult.isSuccess());
