@@ -361,7 +361,7 @@ public class ProjectDetailsController {
                                 @PathVariable("projectId") final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectResource.getApplication());
-        if (bindingResult.hasErrors() && form.getAddressForm() == null) {
+        if (bindingResult.hasErrors() && form.getAddressType() == null) {
             return viewCurrentAddressForm(model, form, projectResource);
         }
         AddressResource newAddressResource = null;
