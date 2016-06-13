@@ -95,12 +95,14 @@ public class AddressResource {
 
     @JsonIgnore
     public String getAsSingleLine(){
+        if(getAddressLine1() == null && getTown() == null && getPostcode() == null){
+            return "";
+        }
         String[] location = new String[3];
-        location[0] = getAddressLine1();
-        location[1] = getTown();
-        location[2] = getPostcode();
+        location[0] = getAddressLine1() == null ? "" : getAddressLine1();
+        location[1] = getTown() == null ? "" : getTown();
+        location[2] = getPostcode() == null ? "" : getPostcode();
         return String.join(", ", location);
-
     }
 
     public Long getId() {
