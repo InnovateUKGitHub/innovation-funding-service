@@ -54,8 +54,8 @@
                     <span th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}" th:remove="tag"></span>
                 </td>
                 <td>
-                    <span th:if="${model.project.address == null}" id="project-address-status" class="no">No</span>
-                    <span th:unless="${model.project.address == null}" id="project-address-status" class="yes">Yes</span>
+                    <span th:if="${model.project.address.id == null}" id="project-address-status" class="no">No</span>
+                    <span th:unless="${model.project.address.id == null}" id="project-address-status" class="yes">Yes</span>
                 </td>
             </tr>
             <tr>
