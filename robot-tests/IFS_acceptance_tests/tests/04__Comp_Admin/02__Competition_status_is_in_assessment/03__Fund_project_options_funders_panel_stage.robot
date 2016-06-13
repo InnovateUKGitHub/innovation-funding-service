@@ -103,7 +103,7 @@ Successful applicants can see the assessment outcome on the dashboard page
 Successful applicants can see the assessment outcome on the overview page
     [Documentation]    INFUND-2605
     [Tags]
-    When the user clicks the button/link    link=00000016: Cheese is good
+    When the user clicks the button/link    link=00000001: Cheese is good
     Then the user should see the text in the page    Project setup status
     [Teardown]    Logout as user
 

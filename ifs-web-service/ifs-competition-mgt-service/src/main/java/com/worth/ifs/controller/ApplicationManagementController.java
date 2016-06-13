@@ -133,7 +133,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
             HttpServletRequest request) {
 
         RestResult<FileEntryResource> uploadFileResult = uploadFormInput(applicationId, request);
-        bindAnyErrorsToField(uploadFileResult, "assessorFeedback", bindingResult, applicationForm);
+        bindAnyErrorsToField(uploadFileResult.toServiceResult(), "assessorFeedback", bindingResult, applicationForm);
 
         if (uploadFileResult.isFailure()) {
             model.addAttribute("form", applicationForm);
@@ -158,7 +158,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
     private String handleErrorsOrRedirectToApplicationOverview(Long competitionId, Long applicationId, Model model, ApplicationForm applicationForm, BindingResult bindingResult, HttpServletRequest request, RestResult<Void> result) {
 
         if (result.isFailure()) {
-            bindAnyErrorsToField(result, "assessorFeedback", bindingResult, applicationForm);
+            bindAnyErrorsToField(result.toServiceResult(), "assessorFeedback", bindingResult, applicationForm);
             model.addAttribute("form", applicationForm);
             return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
         }

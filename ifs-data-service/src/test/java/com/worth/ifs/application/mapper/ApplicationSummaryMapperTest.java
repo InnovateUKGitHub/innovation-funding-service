@@ -3,6 +3,7 @@ package com.worth.ifs.application.mapper;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -135,6 +136,7 @@ public class ApplicationSummaryMapperTest {
 		leadProcessRole.setOrganisation(organisation);
 		Role role = new Role();
 		role.setName(UserRoleType.LEADAPPLICANT.getName());
+        leadProcessRole.setUser(newUser().build());
 		leadProcessRole.setRole(role);
 		return leadProcessRole;
 	}

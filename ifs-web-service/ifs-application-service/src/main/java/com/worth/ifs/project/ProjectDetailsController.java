@@ -1,19 +1,25 @@
 package com.worth.ifs.project;
 
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.service.AddressRestService;
+import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.form.FinanceContactForm;
 import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.service.ProjectRestService;
-import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
-import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
-import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -23,10 +29,12 @@ import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +43,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.worth.ifs.address.resource.AddressType.*;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
@@ -47,12 +56,22 @@ import static java.util.Arrays.asList;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController {
+    static final String FORM_ATTR_NAME = "form";
+    private static final String MANUAL_ADDRESS = "manual-address";
+    private static final String SEARCH_ADDRESS = "search-address";
+    private static final String SELECT_ADDRESS = "select-address";
 
 	@Autowired
     private ProjectService projectService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -62,25 +81,24 @@ public class ProjectDetailsController {
     
     @Autowired
     private UserAuthenticationService userAuthenticationService;
-    
+
     @Autowired
-    private UserService userService;
-	
+    private AddressRestService addressRestService;
+
     @Autowired
     private ProcessRoleService processRoleService;
-    
+
     @Autowired
-    private ProjectRestService projectRestService;
+    private OrganisationAddressRestService organisationAddressRestService;
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
-
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), applicationResource);
-        
+
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
         
@@ -191,12 +209,14 @@ public class ProjectDetailsController {
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) throws InterruptedException, ExecutionException {
-		if(!userIsLeadApplicant(projectId, request)) {
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadApplicant(projectResource.getApplication(), request)) {
 			return redirectToProjectDetails(projectId);
 		}
     	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
         
-        ApplicationResource applicationResource = applicationService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 
         populateProjectManagerModel(model, projectId, form, applicationResource);
     	
@@ -205,10 +225,12 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
     public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form, BindingResult bindingResult, HttpServletRequest request) {
-    	if(!userIsLeadApplicant(projectId, request)) {
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadApplicant(projectResource.getApplication(), request)) {
 			return redirectToProjectDetails(projectId);
 		}
-        ApplicationResource applicationResource = applicationService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         
         if(bindingResult.hasErrors()) {
         	populateProjectManagerModel(model, projectId, form, applicationResource);
@@ -225,10 +247,9 @@ public class ProjectDetailsController {
         return redirectToProjectDetails(projectId);
     }
 
-    private boolean userIsLeadApplicant(Long projectId, HttpServletRequest request) {
+    private boolean userIsLeadApplicant(Long applicationId, HttpServletRequest request) {
     	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-    	ApplicationResource applicationResource = applicationService.getById(projectId);
-    	
+    	ApplicationResource applicationResource = applicationService.getById(applicationId);
     	return userService.isLeadApplicant(user.getId(), applicationResource);
     }
     
@@ -286,44 +307,132 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute("form") ProjectDetailsStartDateForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                 HttpServletRequest request) {
-    	
-        if(!userIsLeadApplicant(projectId, request)) {
-	    return redirectToProjectDetails(projectId);
-	}
+        ProjectResource projectResource = projectService.getById(projectId);
 
-    	ProjectResource project = projectService.getById(projectId);
-    	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
-        LocalDate defaultStartDate = project.getTargetStartDate().withDayOfMonth(1);
+        if(!userIsLeadApplicant(projectResource.getApplication(), request)) {
+            return redirectToProjectDetails(projectId);
+        }
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
         return "project/details-start-date";
     }
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute("form") ProjectDetailsStartDateForm form,
+                                  @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   Model model,
                                   BindingResult bindingResult,
                                   HttpServletRequest request) {
+        ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, request));
+    }
 
-	if (!userIsLeadApplicant(projectId, request)) {
-	    return redirectToProjectDetails(projectId);
-	}
-    	
-        RestResult<Void> updateResult = projectRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, request);
+    @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
+    public String viewAddress(Model model,
+                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                              @PathVariable("projectId") final Long projectId) {
+        ProjectResource project = projectService.getById(projectId);
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
+        if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
+            RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
+            if (result.isSuccess()) {
+                form.setAddressType(result.getSuccessObject().getAddressType());
+            }
+        }
+        model.addAttribute("model", projectDetailsAddressViewModel);
+        return "project/details-address";
+    }
+
+    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressViewModelForm form,
+                                          ProjectResource project){
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
+        processAddressLookupFields(form);
+        model.addAttribute("model", projectDetailsAddressViewModel);
+        return "project/details-address";
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
+    public String updateAddress(Model model,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                BindingResult bindingResult,
+                                @PathVariable("projectId") final Long projectId) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(projectResource.getApplication());
+        if (bindingResult.hasErrors() && form.getAddressForm() == null) {
+            return viewCurrentAddressForm(model, form, projectResource);
+        }
+        AddressResource newAddressResource = null;
+        AddressType addressType = null;
+        switch (form.getAddressType()) {
+            case REGISTERED:
+            case OPERATING:
+            case PROJECT:
+                Optional<OrganisationAddressResource> organisationAddressResource = getAddress(leadOrganisation, form.getAddressType());
+                if (organisationAddressResource.isPresent()) {
+                    newAddressResource = organisationAddressResource.get().getAddress();
+                }
+                addressType = form.getAddressType();
+                break;
+            case ADD_NEW:
+                form.getAddressForm().setTriedToSave(true);
+                if (bindingResult.hasErrors()) {
+                    return viewCurrentAddressForm(model, form, projectResource);
+                }
+                newAddressResource = form.getAddressForm().getSelectedPostcode();
+                addressType = PROJECT;
+                break;
+            default:
+                newAddressResource = null;
+                break;
+        }
+        projectResource.setAddress(newAddressResource);
+        ServiceResult<Void> updateResult = projectService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
+        return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> viewAddress(model, form, projectId));
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
+    public String searchAddress(Model model,
+                                @PathVariable("projectId") Long projectId,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                BindingResult bindingResult) {
+        form.getAddressForm().setSelectedPostcodeIndex(null);
+        form.getAddressForm().setTriedToSearch(true);
+        form.setAddressType(AddressType.valueOf(form.getAddressType().name()));
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = RequestMethod.POST)
+    public String selectAddress(Model model,
+                                @PathVariable("projectId") Long projectId,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
+        form.getAddressForm().setSelectedPostcode(null);
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
+    public String manualAddress(Model model,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @PathVariable("projectId") Long projectId) {
+        AddressForm addressForm = form.getAddressForm();
+        addressForm.setManualAddress(true);
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(
-            String fieldName, Long projectId, Model model,
-            ProjectDetailsStartDateForm form, BindingResult bindingResult,
-            RestResult<?> result, HttpServletRequest request) {
-
+            String fieldName, long projectId, Model model,
+            BindingResultTarget form, BindingResult bindingResult,
+            ServiceResult<?> result,
+            Supplier<String> viewSupplier) {
         if (result.isFailure()) {
             bindAnyErrorsToField(result, fieldName, bindingResult, form);
-            model.addAttribute("form", form);
-            return viewStartDate(model, projectId, form, request);
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return viewSupplier.get();
         }
 
         return redirectToProjectDetails(projectId);
@@ -331,6 +440,71 @@ public class ProjectDetailsController {
 
     private String redirectToProjectDetails(long projectId) {
         return "redirect:/project/" + projectId + "/details";
+    }
+
+    private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final AddressType addressType) {
+        return organisation.getAddresses().stream().filter(a -> addressType.equals(a.getAddressType())).findFirst();
+    }
+
+    private OrganisationResource getLeadOrganisation(final Long applicationId){
+        ApplicationResource application = applicationService.getById(applicationId);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
+    }
+
+    /**
+     * Get the list of postcode options, with the entered postcode. Add those results to the form.
+     */
+    private void addAddressOptions(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+        if (StringUtils.hasText(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput())) {
+            AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
+            addressForm.setPostcodeOptions(searchPostcode(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput()));
+            addressForm.setPostcodeInput(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput());
+        }
+    }
+
+    /**
+     * if user has selected a address from the dropdown, get it from the list, and set it as selected.
+     */
+    private void addSelectedAddress(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+        AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
+        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
+            addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
+        }
+    }
+
+    private List<AddressResource> searchPostcode(String postcodeInput) {
+        RestResult<List<AddressResource>> addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        return addressLookupRestResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(),
+                addresses -> addresses);
+    }
+
+    private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
+        OrganisationResource leadOrganisation = getLeadOrganisation(project.getApplication());
+
+        Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, REGISTERED);
+        if(registeredAddress.isPresent()){
+            projectDetailsAddressViewModel.setRegisteredAddress(registeredAddress.get().getAddress());
+        }
+
+        Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, OPERATING);
+        if(operatingAddress.isPresent()){
+            projectDetailsAddressViewModel.setOperatingAddress(operatingAddress.get().getAddress());
+        }
+
+        Optional<OrganisationAddressResource> projectAddress = getAddress(leadOrganisation, PROJECT);
+        if(projectAddress.isPresent()){
+            projectDetailsAddressViewModel.setProjectAddress(projectAddress.get().getAddress());
+        }
+
+        return projectDetailsAddressViewModel;
+    }
+
+    private void processAddressLookupFields(ProjectDetailsAddressViewModelForm form) {
+        addAddressOptions(form);
+        addSelectedAddress(form);
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {

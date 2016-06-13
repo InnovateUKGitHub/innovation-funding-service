@@ -98,6 +98,17 @@
 
 				localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
 
+			}else if (compStatus == 'ready'){ // set all tabs to done, if the comp is ready to open
+
+				localStorage.setItem('section'+i, 'section-'+i+'-complete'); 
+			
+			}else if (compStatus == 'draft'){ // In draft mode show some that some tavs aren;t complete yet
+
+				if (i <= 3){
+					localStorage.setItem('section'+i, 'section-'+i+'-complete');
+				}else{
+					localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
+				}
 			}
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
@@ -121,12 +132,20 @@
 		//alert(sectionCount+1 +' test'+sectionNumber);
 
 		if(sectionCount+1 == sectionNumber){ // Check that all tabs are complete, thwn change state of CTA
-			alert('all sections complete');
+			jQuery('#compStatus').text('Draft');
+			jQuery('#compCTA').text('Ready to open');
+			jQuery('#compCTA').attr('href','/prototypes/1345-comp-dashboard-MVP?comp=saveOpen');
+
+			if(compStatus == 'ready'){
+				jQuery('#compStatus').text('Ready to open');
+				jQuery('#compCTA').hide();
+			}
+		
+		}else{
+			jQuery('#compStatus').text('Draft');
+			jQuery('#compCTA').text('Save as draft');
+			jQuery('#compCTA').attr('href','/prototypes/1345-comp-dashboard-MVP?comp=saveDraft');
 		}
-
-
-
-
 
 
 
