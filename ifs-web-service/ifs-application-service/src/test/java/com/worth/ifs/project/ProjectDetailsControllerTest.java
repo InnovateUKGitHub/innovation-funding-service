@@ -8,6 +8,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,11 +23,12 @@ import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -130,10 +132,16 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withDuration(4L).
                 build();
 
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+                build(1);
 
-        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
-        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-        when(projectService.getById(applicationResource.getId())).thenReturn(project);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(leadOrganisation.getId())).thenReturn(leadOrganisation);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/start-date", project.getId()))
                 .andExpect(status().isOk())

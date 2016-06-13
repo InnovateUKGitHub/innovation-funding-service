@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,4 +30,6 @@ public interface ProjectService {
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource address);
+
+    OrganisationResource getLeadOrganisation(Long projectId);
 }
