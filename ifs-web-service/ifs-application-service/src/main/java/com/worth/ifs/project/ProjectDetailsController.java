@@ -167,11 +167,11 @@ public class ProjectDetailsController {
 	}
 
 	private String modelForFinanceContact(Model model, Long projectId, HttpServletRequest request, FinanceContactForm form) {
-		ApplicationResource applicationResource = applicationService.getById(projectId);
+        ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
-		ProjectResource projectResource = projectService.getById(projectId);
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         
         model.addAttribute("organisationUsers", thisOrganisationUsers);
         model.addAttribute("form", form);
