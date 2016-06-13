@@ -31,4 +31,15 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
         assertNotNull(addresses);
         assertEquals(returnedAddresses, addresses);
     }
+
+    @Test
+    public void testGetById(){
+        AddressResource addressResource = newAddressResource().build();
+        String url = addressRestURL + "/" + addressResource.getId();
+        setupGetWithRestResultExpectations(url, AddressResource.class, addressResource);
+
+        AddressResource returnedAddressResource = service.getById(addressResource.getId()).getSuccessObject();
+        assertNotNull(returnedAddressResource);
+        assertEquals(returnedAddressResource, addressResource);
+    }
 }

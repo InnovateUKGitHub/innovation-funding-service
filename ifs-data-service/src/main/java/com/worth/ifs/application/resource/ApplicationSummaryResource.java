@@ -11,14 +11,15 @@ public class ApplicationSummaryResource {
     private Long id;
     private String name;
     private String lead;
-    private String status;
+	private String leadApplicant;
+	private String status;
     private Integer completedPercentage;
 	private Integer numberOfPartners;
 	private BigDecimal grantRequested;
 	private BigDecimal totalProjectCost;
 	private Long duration;
 	private FundingDecision fundingDecision;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -39,6 +40,13 @@ public class ApplicationSummaryResource {
 	public void setLead(String lead) {
 		this.lead = lead;
 	}
+	public String getLeadApplicant() {
+		return leadApplicant;
+	}
+	public void setLeadApplicant(String leadApplicant) {
+		this.leadApplicant = leadApplicant;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -84,5 +92,5 @@ public class ApplicationSummaryResource {
 	public void setFundingDecision(FundingDecision fundingDecision) {
 		this.fundingDecision = fundingDecision;
 	}
-    
+
 }

@@ -11,11 +11,10 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
-        <h1 class="heading-xlarge no-margin">Project setup status</h1>
+    <div class="page-title">
+        <div th:include="fragments/elements :: application-title (application=${app}, competition=${currentCompetition})" th:remove="tag" />
+        <h1 class="heading-xlarge">Project setup status</h1>
     </div>
-
     <p class="form-hint">You need to complete the following steps before this project can begin.</p>
 
     <div class="warning-alert" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
@@ -29,9 +28,9 @@
 			<div class="progress-status" />
 			<div class="progress-info">
 				<h2 class="heading-medium">Successful application</h2>
-				<p>The application <strong th:text="${app.applicationDisplayName}">Machine learning in robots</strong> has been successful within the <strong th:text="${competition.name}">Technology inspired</strong> competition</p>
+				<p>The application <strong th:text="${project.name}">Machine learning in robots</strong> has been successful within the <strong th:text="${competition.name}">Technology inspired</strong> competition</p>
 				<p class="linkbar">
-					<a th:href="@{/application/{id}/summary(id=${app.getId()})}" class="buttonlink">View application and feedback</a>
+					<a th:href="@{/application/{id}/summary(id=${project.application})}" class="buttonlink">View application and feedback</a>
 					<a href="#" class="buttonlink">View terms and conditions of grant offer</a>
 				</p>
 			</div>
@@ -41,7 +40,7 @@
 			<div class="progress-status" />
 			<div class="progress-info">
 				<h2 class="heading-medium">
-					<a th:href="@{/project/{id}/details(id=${app.getId()})}" >Project details</a>
+					<a th:href="@{/project/{id}/details(id=${project.getId()})}" >Project details</a>
 				</h2>
 
 				<p>Confirm the contact details, proposed start date and location of the project.</p>

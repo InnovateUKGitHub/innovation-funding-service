@@ -23,6 +23,7 @@ import java.util.Map;
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -52,18 +53,16 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     
     @Test
     public void testCompetitionDetailsCompetitionId() throws Exception {
-    	Long projectId = 20L;
-
         CompetitionResource competitionResource = newCompetitionResource().build();
-    	ApplicationResource applicationResource = newApplicationResource().withId(projectId).withCompetition(competitionResource.getId()).build();
-        ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
+    	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
 
-    	when(applicationService.getById(projectId)).thenReturn(applicationResource);
+    	when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
                 .andReturn();
@@ -83,7 +82,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
 
         when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-    	when(applicationService.getById(projectId)).thenReturn(applicationResource);
+    	when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 
@@ -104,7 +103,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
 
         when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-    	when(applicationService.getById(projectId)).thenReturn(applicationResource);
+    	when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
         ProcessRoleResource processRoleResource = new ProcessRoleResource();
@@ -121,20 +120,22 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Test
     public void testViewStartDate() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource().build();
 
         ProjectResource project = newProjectResource().
+                withApplication(applicationResource).
                 with(name("My Project")).
                 withDuration(4L).
                 withTargetStartDate(LocalDate.now().withDayOfMonth(5)).
                 withDuration(4L).
                 build();
 
-        ApplicationResource applicationResource = newApplicationResource().build();
-        when(applicationService.getById(123L)).thenReturn(applicationResource);
-        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-        when(projectService.getById(123L)).thenReturn(project);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/details/start-date", 123L))
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
+        when(projectService.getById(applicationResource.getId())).thenReturn(project);
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/details/start-date", project.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/details-start-date"))
                 .andReturn();
@@ -146,26 +147,28 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getFormattedId(), viewModel.getProjectNumber());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
 
-        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get("form");
+        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(ProjectDetailsController.FORM_ATTR_NAME);
         assertEquals(project.getTargetStartDate().withDayOfMonth(1), form.getProjectStartDate());
     }
 
     @Test
     public void testUpdateStartDate() throws Exception {
-
         ApplicationResource applicationResource = newApplicationResource().build();
-        when(applicationService.getById(123L)).thenReturn(applicationResource);
-        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-        when(projectRestService.updateProjectStartDate(123L, LocalDate.of(2017, 6, 3))).thenReturn(restSuccess());
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
 
-        mockMvc.perform(post("/project/{id}/details/start-date", 123L).
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
+        when(projectService.updateProjectStartDate(projectResource.getId(), LocalDate.of(2017, 6, 3))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/details/start-date", projectResource.getId()).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).
                     param("projectStartDate", "projectStartDate").
                     param("projectStartDate.dayOfMonth", "3").
                     param("projectStartDate.monthValue", "6").
                     param("projectStartDate.year", "2017"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/project/123/details"))
+                .andExpect(view().name("redirect:/project/" + projectResource.getId() + "/details"))
                 .andReturn();
 
     }
