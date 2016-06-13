@@ -331,7 +331,7 @@ public class ProjectDetailsController {
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, request, loggedInUser));
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, loggedInUser));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)

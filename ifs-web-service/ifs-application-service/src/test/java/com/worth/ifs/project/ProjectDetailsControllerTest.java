@@ -23,13 +23,14 @@ import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,7 +46,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 		super.setUp();
 		setupInvites();
 		loginDefaultUser();
-		loggedInUser.setOrganisations(asList(8L));
+		loggedInUser.setOrganisations(singletonList(8L));
 	}
 	
     @Override
@@ -57,20 +58,31 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void testCompetitionDetailsCompetitionId() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource().build();
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).build();
 
-    	when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
-        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+                build(1);
+
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectResource.getId()))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", project.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
                 .andReturn();
 
         ProjectDetailsViewModel viewModel = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(projectResource, viewModel.getProject());
+        assertEquals(project, viewModel.getProject());
         assertEquals(applicationResource, viewModel.getApp());
         assertEquals(competitionResource, viewModel.getCompetition());
     }
@@ -81,37 +93,55 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         CompetitionResource competitionResource = newCompetitionResource().build();
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
+        ProjectResource project = newProjectResource().withId(projectId).build();
 
-        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-    	when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
-        when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+                build(1);
+
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
 
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("project", projectResource))
+                .andExpect(model().attribute("project", project))
                 .andExpect(model().attribute("app", applicationResource))
                 .andExpect(view().name("project/project-manager"));
     }
     
     @Test
-    public void testCompetitionDetailsSetProjectManager() throws Exception {
+    public void testProjectDetailsSetProjectManager() throws Exception {
     	Long projectId = 20L;
     	Long projectManagerUserId = 80L;
 
         CompetitionResource competitionResource = newCompetitionResource().build();
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
+        ProjectResource project = newProjectResource().withId(projectId).build();
 
-        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
-    	when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
-        when(projectService.getById(projectId)).thenReturn(projectResource);
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId(), projectManagerUserId).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+                build(2);
+
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+
         ProcessRoleResource processRoleResource = new ProcessRoleResource();
         processRoleResource.setUser(projectManagerUserId);
-        when(userService.getLeadPartnerOrganisationProcessRoles(applicationResource)).thenReturn(asList(processRoleResource));
-        
+        when(userService.getLeadPartnerOrganisationProcessRoles(applicationResource)).thenReturn(singletonList(processRoleResource));
+
         mockMvc.perform(post("/project/{id}/details/project-manager", projectId)
         		.param("projectManager", projectManagerUserId.toString()))
                 .andExpect(status().is3xxRedirection())
@@ -141,7 +171,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(projectService.getLeadOrganisation(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/start-date", project.getId()))
                 .andExpect(status().isOk())
@@ -166,7 +196,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
-        when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
         when(projectService.updateProjectStartDate(projectResource.getId(), LocalDate.of(2017, 6, 3))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/details/start-date", projectResource.getId()).
