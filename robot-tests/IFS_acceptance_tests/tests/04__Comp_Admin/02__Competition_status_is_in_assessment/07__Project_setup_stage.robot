@@ -18,7 +18,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
-${SUCCESFUL_PROJECT_PAGE}    ${server}/project/1
+${SUCCESSFUL_PROJECT_PAGE}    ${server}/project/1
 ${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
 ${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
 
@@ -51,7 +51,7 @@ Partner can download the uploaded feedback
 
 Partner can see the project setup page
     [Documentation]    INFUND-2612
-    When the user navigates to the page    ${SUCCESFUL_PROJECT_PAGE}
+    When the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application Cheese is good has been successful within the La Fromage competition
@@ -74,10 +74,11 @@ Partner can see the overview of the project details
 Partner can change the Start Date
     [Documentation]    INFUND-2614
     Given the user clicks the button/link    link=Start date
-    Then the duration should be visible
+    And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
     And the user enters text to a text field    id=projectStartDate_month    1
     Then the user should see a validation error    Please enter a future date
+    And the user shouldn't be able to edit the day field as all projects start on the first of the month
     When the user enters text to a text field    id=projectStartDate_month    1
     When the user enters text to a text field    id=projectStartDate_year    2018
     When the user clicks the button/link    jQuery=button:contains("Save")
@@ -143,3 +144,6 @@ status of the start date should be Yes
 
 the duration should be visible
     Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    3 months
+
+the user shouldn't be able to edit the day field as all projects start on the first of the month
+    the user should see the element      css=.day [readonly]
