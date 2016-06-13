@@ -8,6 +8,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,15 +23,15 @@ import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -189,5 +190,27 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
 
         verify(projectService).updateFinanceContact(123L, 8L, 789L);
+    }
+
+    @Test
+    public void testAddressTypeValidation() throws Exception {
+        ProcessRoleResource processRoleResource = newProcessRoleResource().build();
+        ApplicationResource applicationResource = newApplicationResource().build();
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(processRoleResource);
+        when(organisationService.getOrganisationById(processRoleResource.getOrganisation())).thenReturn(organisationResource);
+
+        mockMvc.perform(post("/project/{id}/details/project-address", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("addressType", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/details-address")).
+                andExpect(model().hasErrors()).
+                andExpect(model().attributeHasFieldErrors("form", "addressType")).
+                andReturn();
     }
 }
