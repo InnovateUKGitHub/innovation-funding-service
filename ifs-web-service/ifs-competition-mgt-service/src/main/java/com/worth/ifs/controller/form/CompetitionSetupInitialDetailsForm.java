@@ -13,16 +13,16 @@ public class CompetitionSetupInitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "Please select a competition executive")
     private Long executiveUserId;
 
-    @NotNull(message = "Please enter a opening date day")
-    @Range(min=1, max=31, message= "Please enter a opening date day")
+    @NotNull(message = "Please enter a opening day")
+    @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer openingDateDay;
 
-    @NotNull(message = "Please enter a opening date month")
-    @Range(min=1, max=12, message= "Please enter a opening date month")
+    @NotNull(message = "Please enter a opening month")
+    @Range(min=1, max=12, message= "Please enter a opening month")
     private Integer openingDateMonth;
 
-    @NotNull(message = "Please enter a opening date year")
-    @Range(min=1900, max=9000, message= "Please enter a opening date year")
+    @NotNull(message = "Please enter a opening year")
+    @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer openingDateYear;
 
     private String title;
