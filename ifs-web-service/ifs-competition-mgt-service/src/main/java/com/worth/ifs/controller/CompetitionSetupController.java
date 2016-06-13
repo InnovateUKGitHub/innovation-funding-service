@@ -191,7 +191,6 @@ public class CompetitionSetupController {
     private void saveInitialDetailSection(CompetitionSetupInitialDetailsForm competitionSetupForm, CompetitionResource competition) {
         competition.setName(competitionSetupForm.getTitle());
         competition.setBudgetCode(competitionSetupForm.getBudgetCode());
-        competition.setCode(competitionSetupForm.getCompetitionCode());
         competition.setExecutive(competitionSetupForm.getExecutiveUserId());
 
         try {
@@ -208,6 +207,8 @@ public class CompetitionSetupController {
         competition.setInnovationSector(competitionSetupForm.getInnovationSectorCategoryId());
 
         competitionService.update(competition);
+
+        competitionSetupForm.setCompetitionCode(competition.getCode());
     }
 
     private Optional<CompetitionSetupSectionResource> findCompetitionSetupSection(List<CompetitionSetupSectionResource> sections, long sectionId) {
