@@ -18,9 +18,9 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-medium" th:field="${competitionSetupForm.executiveUserId}">
-                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}">User</option>
+                <select class="form-control width-medium" name="executiveUserId" id="executiveUserId">
+                    <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
+                    <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
                 </select>
             </div>
 
@@ -87,10 +87,13 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:field="${competitionSetupForm.innovationSectorCategoryId}">
-                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}">Innovation Sector</option>
+
+                <select class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId">
+                    <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
+                    <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
+
+
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -100,9 +103,10 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:field="${competitionSetupForm.innovationAreaCategoryId}">
-                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}">Innovation Area</option>
+                <select class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId">
+                    <option th:if="${competitionSetupForm.innovationSectorCategoryId == null}" value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>
+                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
+                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
             </div>
 
@@ -113,17 +117,20 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:field="${competitionSetupForm.competitionTypeId}">
-                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(competitionType : ${competitionTypes})" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}">Competition Type</option>
+                <select class="form-control width-x-large" name="competitionTypeId" id="competitionTypeId">
+                    <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
+                    <option th:each="(competitionType : ${competitionTypes})" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
             </div>
 
-
-            <!-- needs to work dynamic with competition type -->
-            <div class="form-group">
+            <div class="form-group" th:attr="aria-hidden=${competitionSetupForm.competitionTypeId == null ? 'true' : 'false'}" id="stateAid">
                 <h3 class="heading-small">State aid</h3>
-                <p id="stateAid" />
+                <p>
+                  <span th:each="(competitionType : ${competitionTypes})" th:remove="tag">
+                      <span class="yes" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == true}">Yes</span>
+                      <span class="no" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == false}">No</span>
+                  </span>
+                </p>
             </div>
 
             <div th:class="${#fields.hasErrors('LeadTechnologistUserId')}? 'form-group error':'form-group'">
@@ -133,9 +140,9 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('LeadTechnologistUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:field="${competitionSetupForm.LeadTechnologistUserId}">
-                    <option value="" selected="selected" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}">Lead technologist</option>
+                <select class="form-control width-x-large" name="LeadTechnologistUserId" id="LeadTechnologistUserId">
+                    <option value="" th:selected="${competitionSetupForm.LeadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.LeadTechnologistUserId == competitionLeadTechUser.id}">Lead technologist</option>
                 </select>
             </div>
 
@@ -204,7 +211,7 @@
                 <dd th:each="(competitionType : ${competitionTypes})" th:text="${competitionType.name}"  th:if="${competitionType.id == competitionSetupForm.competitionTypeId}">Competition Type</dd>
                 <dt>State aid</dt>
                 <dd>
-                    <span th:each="(competitionType : ${competitionTypes})">
+                    <span th:each="(competitionType : ${competitionTypes})" th:remove="tag">
                         <span class="yes" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == true}">Yes</span>
                         <span class="no" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == false}">No</span>
                     </span>

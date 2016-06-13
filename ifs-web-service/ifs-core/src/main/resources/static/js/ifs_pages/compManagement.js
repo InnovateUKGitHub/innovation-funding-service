@@ -25,7 +25,6 @@ IFS.competition_management = (function(){
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
             IFS.competition_management.handleCompetitionCode();
-            IFS.competition_management.handleStateAid();
 
             jQuery("body.competition-management.setup").on('change','#competitionTypeId',function(){
               IFS.competition_management.handleStateAid();
@@ -226,7 +225,7 @@ IFS.competition_management = (function(){
                 url: url,
                 success: function(data) {
                     var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
-                    innovationCategory.find('option:not([disabled])').remove();
+                    innovationCategory.children().remove();
                     jQuery.each(data,function(){
                         innovationCategory.append('<option value="'+this.id+'">'+this.name+'</option>');
                     });
@@ -241,7 +240,7 @@ IFS.competition_management = (function(){
            else {
              stateAid = 'no';
            }
-           jQuery('#stateAid').html('<span class="'+stateAid+'">'+stateAid+'</span>');
+           jQuery('#stateAid').attr('aria-hidden','false').find('p').html('<span class="'+stateAid+'">'+stateAid+'</span>');
         }
     };
 })();
