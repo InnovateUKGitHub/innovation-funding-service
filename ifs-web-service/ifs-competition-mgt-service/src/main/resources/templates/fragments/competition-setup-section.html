@@ -41,6 +41,8 @@
                           <input th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
+                                 required="required"
+                                 data-required-errormessage="Please enter a opening day"
                                  th:field="${competitionSetupForm.openingDateDay}" />
                       </div>
 
@@ -51,6 +53,8 @@
                           <input th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="MM"
+                                 required="required"
+                                 data-required-errormessage="Please enter a opening month"
                                  th:field="${competitionSetupForm.openingDateMonth}" />
                       </div>
 
@@ -61,6 +65,8 @@
                           <input th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="YYYY"
+                                 required="required"
+                                 data-required-errormessage="Please enter a opening year"
                                  th:field="${competitionSetupForm.openingDateYear}" />
                       </div>
                   </div>
