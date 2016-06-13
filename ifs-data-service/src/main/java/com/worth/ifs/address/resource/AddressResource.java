@@ -93,6 +93,16 @@ public class AddressResource {
 
     }
 
+    @JsonIgnore
+    public String getAsSingleLine(){
+        String[] location = new String[3];
+        location[0] = getAddressLine1();
+        location[1] = getTown();
+        location[2] = getPostcode();
+        return String.join(", ", location);
+
+    }
+
     public Long getId() {
         return id;
     }
