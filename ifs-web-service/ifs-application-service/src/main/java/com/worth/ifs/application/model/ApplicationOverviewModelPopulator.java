@@ -1,6 +1,5 @@
 package com.worth.ifs.application.model;
 
-import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
@@ -12,11 +11,11 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.project.ProjectService;
+import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
@@ -24,12 +23,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
@@ -65,13 +62,14 @@ public class ApplicationOverviewModelPopulator {
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
     @Autowired
-    OrganisationRestService organisationRestService;
+    private ProjectService projectService;
     
     public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
+        ProjectResource projectResource = projectService.getByApplicationId(applicationId);
 
         if(form == null){
             form = new ApplicationForm();
@@ -86,6 +84,7 @@ public class ApplicationOverviewModelPopulator {
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
+        model.addAttribute("currentProject", projectResource);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));

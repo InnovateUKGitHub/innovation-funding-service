@@ -23,27 +23,34 @@ public abstract class ApplicationSummaryMapper {
 
 	@Autowired
 	private ApplicationService applicationService;
-	
+
 	@Autowired
 	private ApplicationSummarisationService applicationSummarisationService;
-	
+
 	@Autowired
 	private FundingDecisionMapper fundingDecisionMapper;
-	
+
 	public ApplicationSummaryResource mapToResource(Application source){
-		
+
 		ApplicationSummaryResource result = new ApplicationSummaryResource();
-		
+
 		ServiceResult<CompletedPercentageResource> percentageResult = applicationService.getProgressPercentageByApplicationId(source.getId());
 		if(percentageResult.isSuccess()){
 			result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage().intValue());
 		}
-		
+
 		result.setStatus(status(source, result.getCompletedPercentage()));
 		result.setId(source.getId());
-		result.setLead(source.getLeadOrganisation().getName());
-		result.setName(source.getName());
-		result.setDuration(source.getDurationInMonths());
+        result.setName(source.getName());
+        result.setDuration(source.getDurationInMonths());
+
+        if(source.getLeadApplicant()!=null) {
+            result.setLeadApplicant(source.getLeadApplicant().getName());
+        }
+
+        if(source.getLeadOrganisation()!=null) {
+            result.setLead(source.getLeadOrganisation().getName());
+        }
 
 		if(source.getFundingDecision() != null) {
 			result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
@@ -51,33 +58,33 @@ public abstract class ApplicationSummaryMapper {
 		if(ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
 			result.setFundingDecision(FundingDecision.FUNDED);
 		}
-		
+
 		BigDecimal grantRequested = getGrantRequested(source);
 		result.setGrantRequested(grantRequested);
-		
+
 		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisation)).size();
 		result.setNumberOfPartners(numberOfPartners);
-		
+
 		BigDecimal totalProjectCost = getTotalProjectCost(source);
 		result.setTotalProjectCost(totalProjectCost);
-		
+
 		return result;
 	}
 
 	private String status(Application source, Integer completedPercentage) {
-		
+
 		if(ApplicationStatusConstants.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
 				|| ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())
 				|| ApplicationStatusConstants.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
 			return "Submitted";
 		}
-		
+
 		if(completedPercentage != null && completedPercentage > 50) {
 			return "In Progress";
 		}
 		return "Started";
 	}
-	
+
 	private BigDecimal getTotalProjectCost(Application source) {
 		ServiceResult<BigDecimal> totalCostResult = applicationSummarisationService.getTotalProjectCost(source);
 		if(totalCostResult.isFailure()){
@@ -101,5 +108,5 @@ public abstract class ApplicationSummaryMapper {
 		}
 		return result;
 	}
-    
+
 }

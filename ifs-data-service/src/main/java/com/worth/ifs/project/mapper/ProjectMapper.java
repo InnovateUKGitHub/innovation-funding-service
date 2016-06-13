@@ -1,6 +1,7 @@
 package com.worth.ifs.project.mapper;
 
 import com.worth.ifs.address.mapper.AddressMapper;
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.project.domain.Project;
@@ -12,6 +13,8 @@ import org.mapstruct.Mapper;
         config = GlobalMapperConfig.class,
         uses = {
                 AddressMapper.class,
+                ProcessRoleMapper.class,
+                ApplicationMapper.class,
                 ProjectUserMapper.class,
                 ProcessRoleMapper.class
         }

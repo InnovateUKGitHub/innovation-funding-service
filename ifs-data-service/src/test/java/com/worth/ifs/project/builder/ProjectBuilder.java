@@ -2,6 +2,7 @@ package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.ProcessRole;
 
@@ -51,5 +52,9 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
+    }
+
+    public ProjectBuilder withApplication(Application... application){
+        return withArray((app, project) -> project.setApplication(app), application);
     }
 }

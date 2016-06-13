@@ -4,6 +4,10 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
 </head>
 <body class="project-detail">
+
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+<div th:include="fragments/modals :: modal-project-details" th:remove="tag" />
+
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -15,7 +19,6 @@
         <p class="subtitle" th:text="${#numbers.formatInteger(model.project.id,8)} + ': ' + ${model.app.getApplicationDisplayName()} "/>
         <h1 class="heading-xlarge no-margin">Project details</h1>
     </div>
-
     <p class="form-hint">Please supply the following details for your project and the team. We need these to setup your project.</p>
 
     <table>
@@ -103,30 +106,7 @@
         </tbody>
     </table>
 
-    <div class="extra-margin">
-
-        <a href="#" class="button button-large" data-js-modal="modal-project-details" role="button" tabindex="0">Submit project details</a>
-
-
-        <div class="modal-project-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-            <button class="js-close close" aria-label="Close Popup">X</button>
-            <div>
-
-                <h2 class="heading-medium no-margin">Submit project details</h2>
-
-                <p>Are you sure that you wish to submit your project details to Innovate UK</p>
-
-                <hr/>
-
-                <div class="alignright-button">
-                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                    <a href="/prototypes/1588-project-status?stage=level2" class="button">Submit</a>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
+    <button type="submit" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</button>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
