@@ -249,7 +249,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return questionStatuses.stream()
                 .anyMatch(questionStatusResource -> (
                         questionStatusResource.getAssignee() == null || questionStatusResource.getAssigneeUserId() == userId)
-                        && questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete());
+                        && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
     }
 
     private BindingResult removeDuplicateFieldErrors(BindingResult bindingResult) {
