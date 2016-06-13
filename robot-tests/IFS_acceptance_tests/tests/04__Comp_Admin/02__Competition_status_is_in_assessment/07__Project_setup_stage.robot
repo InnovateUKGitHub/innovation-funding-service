@@ -85,6 +85,24 @@ Partner can change the Start Date
     Then the user should see the text in the page    1 Jan 2018
     Then status of the start date should be Yes
 
+Partner can change the project manager
+    [Documentation]     INFUND-2616
+    [Tags]          Pending
+    Given the user clicks the button/link    link=Project manager
+    # The following two steps are currently commented until completion of the INFUND-2616 story, with the frontend validations
+    # When the user clicks the button/link    jQuery=.button:contains("Save")
+    # Then the user should see a validation error     Please choose a project manager
+    When the user selects the radio button
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should see the text in the page     text ten
+    When the user clicks the button/link     link=Project manager
+    And the user sees that the radio button is selected    name=projectManager
+    And the user selects the radio button
+    Then the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user should see the text in the page        Steve Smith
+
+
+
 Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
