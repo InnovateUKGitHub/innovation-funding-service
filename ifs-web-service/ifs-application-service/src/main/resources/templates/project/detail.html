@@ -50,8 +50,8 @@
                     <span th:unless="${userIsLeadApplicant}" th:remove="tag">Project address</span>
                 </td>
                 <td id="project-address">
-                    <span th:if="${model.project.address == null}" th:remove="tag">-</span>
-                    <span th:unless="${model.project.address == null}" th:text="${model.project.address.asSingleLine}" th:remove="tag"></span>
+                    <span th:if="${model.project.address.id == null}" th:remove="tag">-</span>
+                    <span th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}" th:remove="tag"></span>
                 </td>
                 <td>
                     <span th:if="${model.project.address == null}" id="project-address-status" class="no">No</span>
