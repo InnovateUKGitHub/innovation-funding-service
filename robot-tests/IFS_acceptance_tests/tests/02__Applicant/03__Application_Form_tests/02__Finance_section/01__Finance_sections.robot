@@ -7,6 +7,8 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2965: Investigation into why financials return to zero when back spacing
 ...
 ...               INFUND-2051: Remove the '0' in finance fields
+...
+...               INFUND-2961: ‘Working Days Per Year’ in Labour Costs do not default to 232.
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
@@ -30,12 +32,16 @@ Organisation name visible in the Finance section
     Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
     And the user should see the text in the page    'Empire Ltd' Total project costs
 
-Guidance in the 'Your Finances' section
+Guidance in the Your Finances section
     [Documentation]    INFUND-192
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Labour")
     And the user clicks the button/link    css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
+
+Working days per year should be 232
+    [Documentation]    INFUND-2961
+    Then the working days per year should be 232 by default
 
 Finance fields are empty
     [Documentation]    INFUND-2051: Remove the '0' in finance fields
@@ -89,3 +95,7 @@ the Funding levels value should be empty
     log    ${input_value}
     Should Not Be Equal As Strings    ${input_value}    0
     Should Be Equal As Strings    ${input_value}    ${EMPTY}
+
+the working days per year should be 232 by default
+    ${Days_value} =    Get Value    css=[name^="labour-labourDaysYearly"]
+    Should Be Equal As Strings    ${Days_value}    232
