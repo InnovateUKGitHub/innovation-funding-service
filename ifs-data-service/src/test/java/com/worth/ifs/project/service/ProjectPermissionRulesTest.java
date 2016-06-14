@@ -127,9 +127,4 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
             }
         });
     }
-
-    @Test
-    public void userIsConnectedToApplicationResourceTest() {
-        assertTrue(rules.userIsConnectedToProjectResource(projectResource1, leadOnApplication1));
-    }
 }

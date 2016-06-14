@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 
@@ -29,7 +28,7 @@ public class ProjectDetailsViewModel {
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
 
-    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, Long currentOrganisation, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner) {
+    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, List<Long> currentOrganisations, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner) {
         this.project = project;
         this.currentUser = currentUser;
         this.currentOrganisation = currentOrganisation;
@@ -38,7 +37,7 @@ public class ProjectDetailsViewModel {
         this.competition = competition;
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
-        this.userLeadPartner = userLeadPartner;
+        this.userLeadPartner = userIsLeadPartner;
     }
 
     public ProjectResource getProject() {
@@ -71,9 +70,5 @@ public class ProjectDetailsViewModel {
 
     public boolean isUserLeadPartner() {
         return userLeadPartner;
-    }
-
-    private boolean userHasLeadPartnerRole(UserResource currentUser, OrganisationResource leadOrganisation, ProjectUserResource projectUser) {
-        return projectUser.getUser().equals(currentUser.getId()) && projectUser.getOrganisation().equals(leadOrganisation.getId()) && PARTNER.getName().equals(projectUser.getRoleName());
     }
 }

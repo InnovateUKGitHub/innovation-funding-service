@@ -365,7 +365,7 @@ public class ProjectDetailsController {
                                 BindingResult bindingResult,
                                 @PathVariable("projectId") final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getApplication());
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
         if (bindingResult.hasErrors() && form.getAddressForm() == null) {
             return viewCurrentAddressForm(model, form, projectResource);
         }
@@ -481,7 +481,7 @@ public class ProjectDetailsController {
 
     private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getApplication());
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
 
         Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, REGISTERED);
         if(registeredAddress.isPresent()){
