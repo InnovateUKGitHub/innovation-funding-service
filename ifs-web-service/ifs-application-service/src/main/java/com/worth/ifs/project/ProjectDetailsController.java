@@ -360,11 +360,15 @@ public class ProjectDetailsController {
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
                                 BindingResult bindingResult,
                                 @PathVariable("projectId") final Long projectId) {
+
         ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
-        if (bindingResult.hasErrors() && form.getAddressForm() == null) {
+
+        if (bindingResult.hasErrors() && form.getAddressType() == null) {
             return viewCurrentAddressForm(model, form, projectResource);
         }
+
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
+
         AddressResource newAddressResource = null;
         AddressType addressType = null;
         switch (form.getAddressType()) {

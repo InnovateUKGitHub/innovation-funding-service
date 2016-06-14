@@ -231,4 +231,24 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         verify(projectService).updateFinanceContact(123L, 8L, 789L);
     }
+
+    @Test
+    public void testAddressTypeValidation() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource().build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).build();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
+        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+
+        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("addressType", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/details-address")).
+                andExpect(model().hasErrors()).
+                andExpect(model().attributeHasFieldErrors("form", "addressType")).
+                andReturn();
+    }
 }

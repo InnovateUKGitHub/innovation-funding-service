@@ -89,16 +89,20 @@
 				    </div>
 				</details>
 
-				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 
 					<input type="file" name="file-collaboration-agreement" id="file-collaboration-agreement" class="inputfile" />
 					<label for="file-collaboration-agreement" class="button-secondary extra-margin">+ Upload</label>
 
 				</div>
 
-				<div th:if="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 				
 					<a href="#" class="uploaded-file">Collab-agreement-file.pdf</a>
+
+					<div class="alignright">
+                		<button class="button-secondary no-margin-right" type="submit" name="remove_agreement_plan">Remove</button>
+            		</div>
 
 				</div>
 
@@ -150,7 +154,7 @@
 				    </div>
 				</details>
 
-				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 
 					<input type="file" name="file-exploitation-plan" id="file-exploitation-plan" class="inputfile" />
 					<label for="file-exploitation-plan" class="button-secondary extra-margin">+ Upload</label>
@@ -163,9 +167,13 @@
 
 				</div>
 
-				<div th:if="${param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 				
 					<a href="#" class="uploaded-file">Expolitation-file.pdf</a>
+
+					<div class="alignright">
+                		<button class="button-secondary no-margin-right" type="submit" name="remove_exploitation_plan">Remove</button>
+            		</div>
 
 				</div>
 
@@ -185,7 +193,7 @@
 
 					<h2 class="heading-medium no-margin">Submit documents</h2>
 
-					<p>Are you sure that you wish to send these documents to Innovate UK for review, if further clarification is required they will contact the project manager.</p>
+					<p>Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the project manager.</p>
 
 					<hr />
 
