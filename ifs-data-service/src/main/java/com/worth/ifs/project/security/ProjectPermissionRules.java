@@ -13,8 +13,8 @@ import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 @Component
 public class ProjectPermissionRules extends BasePermissionRules {
 
-    @PermissionRule(value = "READ", description = "A user can see an project resource which they are connected to")
-    public boolean usersConnectedToTheProjectCanView(ProjectResource project, UserResource user) {
+    @PermissionRule(value = "READ", description = "A user can see projects that they are partners on")
+    public boolean partnersOnProjectCanView(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
 
@@ -25,8 +25,16 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
-            description = "The lead partner can update the basic project details like start date")
-    public boolean updateBasicProjectSetupDetails(ProjectResource project, UserResource user) {
+            description = "The lead partners can update the basic project details, like start date, address, project manager")
+    public boolean leadPartnersCanUpdateTheBasicProjectDetails(ProjectResource project, UserResource user) {
         return isLeadPartner(project.getId(), user.getId());
+    }
+
+
+    @PermissionRule(
+            value = "UPDATE_FINANCE_CONTACT",
+            description = "The lead partner can update the basic project details like start date")
+    public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
     }
 }

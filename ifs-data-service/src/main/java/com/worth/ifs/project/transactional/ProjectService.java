@@ -50,7 +50,7 @@ public interface ProjectService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(final Long userId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
     @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")

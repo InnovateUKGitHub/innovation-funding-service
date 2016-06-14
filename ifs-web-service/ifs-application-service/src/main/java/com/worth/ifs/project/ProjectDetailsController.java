@@ -46,6 +46,7 @@ import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 
 /**
@@ -98,7 +99,8 @@ public class ProjectDetailsController {
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
 
-        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser, loggedInUser.getOrganisations().get(0),
+        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
+                getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 userIsLeadPartner(projectId, loggedInUser.getId())));
 
@@ -109,13 +111,12 @@ public class ProjectDetailsController {
     public String viewFinanceContact(Model model,
                                      @PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
-                                     HttpServletRequest request,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
         }
 
-        if(!userIsInOrganisation(organisation, loggedInUser)){
+        if(!userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
             return redirectToProjectDetails(projectId);
         }
 
@@ -134,7 +135,7 @@ public class ProjectDetailsController {
                                        HttpServletRequest request,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         
-		if(!userIsInOrganisation(form.getOrganisation(), loggedInUser)){
+		if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), loggedInUser.getId())){
     		return redirectToProjectDetails(projectId);
     	}
     	
@@ -146,7 +147,7 @@ public class ProjectDetailsController {
         	return modelForFinanceContact(model, projectId, form, loggedInUser);
         }
         
-        if(!userIsInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
+        if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
         	return modelForFinanceContact(model, projectId, form, loggedInUser);
         }
         
@@ -181,15 +182,10 @@ public class ProjectDetailsController {
         model.addAttribute("form", form);
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
-        model.addAttribute("currentOrganisation", loggedInUser.getOrganisations().get(0));
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
         return "project/finance-contact";
 	}
-    
-    private boolean userIsInOrganisation(Long organisation, UserResource user) {
-        return organisation.equals(user.getOrganisations().get(0));
-    }
     
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
         List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
@@ -197,7 +193,7 @@ public class ProjectDetailsController {
         return !projectUsersForOrganisation.isEmpty();
 	}
     
-	private boolean userIsInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
+	private boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
 		if(userId == null) {
 			return false;
 		}
@@ -529,5 +525,11 @@ public class ProjectDetailsController {
 
     private boolean userHasLeadPartnerRole(Long userId, Long leadOrganisationId, ProjectUserResource projectUser) {
         return projectUser.getUser().equals(userId) && projectUser.getOrganisation().equals(leadOrganisationId) && PARTNER.getName().equals(projectUser.getRoleName());
+    }
+
+    private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {
+        List<ProjectUserResource> partnerProjectUsers = simpleFilter(projectUsers,
+                user -> loggedInUser.getId().equals(user.getUser()) && user.getRoleName().equals(PARTNER.getName()));
+        return simpleMap(partnerProjectUsers, ProjectUserResource::getOrganisation);
     }
 }

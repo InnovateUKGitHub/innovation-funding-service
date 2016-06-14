@@ -2,6 +2,7 @@ package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -42,6 +43,10 @@ public class ProjectUserResourceBuilder extends BaseBuilder<ProjectUserResource,
 
     public ProjectUserResourceBuilder withRoleName(String... roleName) {
         return withArray((name, projectUser) -> projectUser.setRoleName(name), roleName);
+    }
+
+    public ProjectUserResourceBuilder withRoleName(UserRoleType... roleName) {
+        return withArray((name, projectUser) -> projectUser.setRoleName(name.getName()), roleName);
     }
 
     public ProjectUserResourceBuilder withProject(Long... project) {

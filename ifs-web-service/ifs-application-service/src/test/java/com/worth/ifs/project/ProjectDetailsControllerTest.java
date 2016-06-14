@@ -213,7 +213,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateFinanceContact() throws Exception {
 
-        List<ProjectUserResource> availableUsers = newProjectUserResource().withUser(789L).withOrganisation(8L).build(1);
+        List<ProjectUserResource> availableUsers = newProjectUserResource().
+                withUser(loggedInUser.getId(), 789L).
+                withOrganisation(8L).
+                withRoleName(PARTNER).
+                build(2);
 
         when(projectService.getProjectUsersForProject(123L)).thenReturn(availableUsers);
 
