@@ -276,12 +276,6 @@ Select NO and mark as complete should be possible
     ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
 
 *** Keywords ***
-the user marks the finances as complete
-    #Sleep    300ms
-    Focus    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    #Sleep    300ms
-
 user selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
     the user selects the radio button    ${RADIO_BUTTON}    ${SELECTION}
@@ -322,4 +316,4 @@ The user gets the expected validation errors
     And the user should see an error    ${ERROR2}
 
 the user selects a radio button
-    the user selects the radio button     financePosition-organisationSize    MEDIUM
+    the user selects the radio button    financePosition-organisationSize    MEDIUM
