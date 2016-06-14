@@ -1,9 +1,8 @@
-package com.worth.ifs.project.service;
+package com.worth.ifs.project.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.security.ProjectPermissionRules;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
