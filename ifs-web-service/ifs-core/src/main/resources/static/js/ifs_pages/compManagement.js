@@ -229,6 +229,7 @@ IFS.competition_management = (function(){
                     jQuery.each(data,function(){
                         innovationCategory.append('<option value="'+this.id+'">'+this.name+'</option>');
                     });
+                    innovationCategory.trigger('change');
                 }
             });
         },
