@@ -30,12 +30,15 @@ Organisation name visible in the Finance section
     Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
     And the user should see the text in the page    'Empire Ltd' Total project costs
 
-Guidance in the 'Your Finances' section
+Guidance in the Your Finances section
     [Documentation]    INFUND-192
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Labour")
     And the user clicks the button/link    css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
+
+Working days per year should be 232
+    Then the working days per year should be 234 by default
 
 Finance fields are empty
     [Documentation]    INFUND-2051: Remove the '0' in finance fields
@@ -60,7 +63,7 @@ the Applicant should see all the "Your Finance" Sections
     the user should see the element    css=.question section:nth-of-type(7) button
 
 the user adds three material rows
-    the user clicks the button/link   jQuery=button:contains("Materials")
+    the user clicks the button/link    jQuery=button:contains("Materials")
     Focus    jQuery=button:contains('Add another materials cost')
     the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
@@ -68,13 +71,13 @@ the user adds three material rows
     the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link     jQuery=button:contains('Add another materials cost')
+    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Focus    link=Please refer to our guide to project costs for further information.
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
-    the user clicks the button/link     jQuery=#material-costs-table button:contains("Remove")
+    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
     the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Focus    jQuery=#material-costs-table button:contains("Remove")
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
@@ -89,3 +92,7 @@ the Funding levels value should be empty
     log    ${input_value}
     Should Not Be Equal As Strings    ${input_value}    0
     Should Be Equal As Strings    ${input_value}    ${EMPTY}
+
+the working days per year should be 234 by default
+    ${Days_value} =    Get Value    css=[name^="labour-labourDaysYearly"]
+    Should Be Equal As Strings    ${Days_value}    232
