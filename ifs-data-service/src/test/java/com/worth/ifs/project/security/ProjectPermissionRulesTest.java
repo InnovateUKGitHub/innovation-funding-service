@@ -102,4 +102,56 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         assertTrue(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
     }
+
+    @Test
+    public void testLeadPartnersCanUpdateTheBasicProjectDetailsButUserNotLeadPartner() {
+
+        Application originalApplication = newApplication().build();
+        ProjectResource project = newProjectResource().build();
+        Project projectEntity = newProject().withApplication(originalApplication).build();
+        UserResource user = newUserResource().build();
+        Role leadApplicantRole = newRole().build();
+        Role partnerRole = newRole().build();
+        Organisation leadOrganisation = newOrganisation().build();
+        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisation(leadOrganisation).build();
+
+        // find the lead organisation
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
+        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
+        when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
+
+        // see if the user is a partner on the lead organisation
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(
+                project.getId(), user.getId(), leadOrganisation.getId(), partnerRole.getId())).thenReturn(null);
+
+        assertFalse(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
+    }
+
+    @Test
+    public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContacts() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        Role partnerRole = newRole().build();
+        List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
+
+        assertTrue(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, user));
+    }
+
+    @Test
+    public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContactsButUserNotPartner() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        Role partnerRole = newRole().build();
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(emptyList());
+
+        assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, user));
+    }
 }
