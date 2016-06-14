@@ -87,17 +87,17 @@ Partner can change the Start Date
 
 Partner can change the project manager
     [Documentation]     INFUND-2616
-    [Tags]          Pending
+    [Tags]
     Given the user clicks the button/link    link=Project manager
     # The following two steps are currently commented until completion of the INFUND-2616 story, with the frontend validations
     # When the user clicks the button/link    jQuery=.button:contains("Save")
     # Then the user should see a validation error     Please choose a project manager
-    When the user selects the radio button
+    When the user selects the radio button      projectManager        27
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page     text ten
+    Then the user should see the text in the page     test ten
     When the user clicks the button/link     link=Project manager
-    And the user sees that the radio button is selected    name=projectManager
-    And the user selects the radio button
+    And the user sees that the radio button is selected    projectManager     27
+    And the user selects the radio button    projectManager       1
     Then the user clicks the button/link    jQuery=.button:contains("Save")
     And the user should see the text in the page        Steve Smith
 
