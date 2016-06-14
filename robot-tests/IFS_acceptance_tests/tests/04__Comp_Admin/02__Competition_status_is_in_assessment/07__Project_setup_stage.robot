@@ -105,7 +105,6 @@ Lead partner can change the project address
     [Documentation]     INFUND-3157, INFUND-2165
     [Tags]
     Given the user clicks the button/link     link=Project address
-    # The following two steps are currently commented until completion of the INFUND-2615 story, with the frontend validations
     When the user clicks the button/link     jQuery=.button:contains("Save")
     Then the user should see the text in the page    You need to select a project address before you can continue.
     When the user selects the radio button      addressType       ADD_NEW
@@ -136,7 +135,7 @@ Non-lead partner cannot change any project details
     And the user should not see the element        link=Project manager
     And the user should see the text in the page      Project address
     And the user should see the text in the page      1 Cheese Road, Bath, BA1 5LR
-    And the user should not see the element       link=Project Address
+    And the user should not see the element       link=Project address
     And the user navigates to the page       ${project_start_date_page}
     And the user should be redirected to the correct page      ${successful_project_page}
     And the user navigates to the page       ${project_manager_page}
