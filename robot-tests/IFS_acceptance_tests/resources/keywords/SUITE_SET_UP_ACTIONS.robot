@@ -124,3 +124,9 @@ the user marks the finances as complete
     Focus    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
+
+Make the finances ready for mark as complete
+    Applicant navigates to the finances of the Robot application
+    The user clicks the button/link    jQuery=label:contains(Medium - claim up to 60%) input
+    Input Text    id=cost-financegrantclaim    20
+    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input

@@ -51,9 +51,3 @@ none of the sections are marked as complete
 
 the applicant can see that the economics benefit section is marked as complete
     the user should see the element    jQuery=#section-2 .section:nth-child(4) img[src*="/images/field/field-done-right"]
-
-Make the finances ready for mark as complete
-    Applicant navigates to the finances of the Robot application
-    The user clicks the button/link    jQuery=label:contains(Medium - claim up to 60%) input
-    Input Text    id=cost-financegrantclaim    20
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
