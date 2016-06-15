@@ -241,6 +241,10 @@ table{
 		height: 60px;
 	}
 
+	th[scope='col']{
+		min-width: 7em;
+	}
+
 	input{
 		width: 100%;
 		text-align: right;
