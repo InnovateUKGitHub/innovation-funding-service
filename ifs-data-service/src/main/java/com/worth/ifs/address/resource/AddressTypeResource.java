@@ -2,6 +2,9 @@ package com.worth.ifs.address.resource;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+/**
+ * Usually used within OrganisationAddressResource to link with AddressType entity by id.
+ */
 public class AddressTypeResource {
     private Long id;
 
