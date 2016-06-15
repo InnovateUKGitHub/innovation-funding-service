@@ -1,7 +1,7 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.worth.ifs.address.resource.AddressType.*;
+import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
@@ -339,7 +339,7 @@ public class ProjectDetailsController {
         if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
             RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
             if (result.isSuccess()) {
-                form.setAddressType(result.getSuccessObject().getAddressType());
+                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccessObject().getAddressType().getName()));
             }
         }
         model.addAttribute("model", projectDetailsAddressViewModel);
@@ -365,7 +365,7 @@ public class ProjectDetailsController {
             return viewCurrentAddressForm(model, form, projectResource);
         }
         AddressResource newAddressResource = null;
-        AddressType addressType = null;
+        OrganisationAddressType addressType = null;
         switch (form.getAddressType()) {
             case REGISTERED:
             case OPERATING:
@@ -400,7 +400,7 @@ public class ProjectDetailsController {
                                 BindingResult bindingResult) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
-        form.setAddressType(AddressType.valueOf(form.getAddressType().name()));
+        form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
     }
@@ -442,8 +442,8 @@ public class ProjectDetailsController {
         return "redirect:/project/" + projectId + "/details";
     }
 
-    private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final AddressType addressType) {
-        return organisation.getAddresses().stream().filter(a -> addressType.equals(a.getAddressType())).findFirst();
+    private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
+        return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
     }
 
     private OrganisationResource getLeadOrganisation(final Long applicationId){

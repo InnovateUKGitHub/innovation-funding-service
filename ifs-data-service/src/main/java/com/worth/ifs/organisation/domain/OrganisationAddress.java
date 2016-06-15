@@ -2,7 +2,7 @@ package com.worth.ifs.organisation.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.address.domain.Address;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
@@ -24,7 +24,8 @@ public class OrganisationAddress {
     @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name="address_type_id", referencedColumnName="id")
     private AddressType addressType;
 
     public OrganisationAddress(Organisation organisation, Address address, AddressType addressType) {
