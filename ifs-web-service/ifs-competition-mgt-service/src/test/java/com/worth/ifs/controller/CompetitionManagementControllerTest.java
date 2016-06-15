@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -319,5 +320,14 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(redirectedUrl("/competition/123"));
     	
     	verifyNoMoreInteractions(applicationSummaryService);
+    }
+
+    @Test
+    public void createCompetition() throws Exception {
+        when(competitionService.create()).thenReturn(newCompetitionResource().withId(COMPETITION_ID).build());
+
+        mockMvc.perform(get("/competition/create"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/competition/setup/" + COMPETITION_ID));
     }
 }
