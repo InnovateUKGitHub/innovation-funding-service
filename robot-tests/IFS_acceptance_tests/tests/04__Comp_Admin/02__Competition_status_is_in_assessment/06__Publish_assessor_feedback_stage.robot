@@ -71,12 +71,14 @@ Choosing to Notify the applicants in the dialogue
 
 Successful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email
+    [Tags]    Email      Pending
+    # Pending due to INFUND-3476
     Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}       Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email
+    [Tags]    Email     Pending
+    # Pending due to INFUND-3476
     Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}      Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
