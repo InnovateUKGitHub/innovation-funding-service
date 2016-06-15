@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller for finding generic categories by type or parentId
+ */
 @RestController
 @RequestMapping("/category")
 public class CategoryController {

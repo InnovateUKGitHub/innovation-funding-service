@@ -6,6 +6,16 @@ public class CategoryLinkResource {
     private String className;
     private Long classPk;
 
+    public CategoryLinkResource() {
+    }
+
+    public CategoryLinkResource(Long id, Long category, String className, Long classPk) {
+        this.id = id;
+        this.category = category;
+        this.className = className;
+        this.classPk = classPk;
+    }
+
     public Long getId() {
         return id;
     }

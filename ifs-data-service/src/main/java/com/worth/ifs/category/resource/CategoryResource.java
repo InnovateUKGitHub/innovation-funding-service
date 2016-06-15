@@ -2,6 +2,9 @@ package com.worth.ifs.category.resource;
 
 import java.util.Set;
 
+/**
+ * Resource Class for a generic {@link com.worth.ifs.category.domain.Category}
+ */
 public class CategoryResource {
     private Long id;
     private String name;
@@ -10,6 +13,16 @@ public class CategoryResource {
     private Long parent;
     private Set<Long> children;
 
+    public CategoryResource() {
+    }
+
+    public CategoryResource(Long id, String name, CategoryType type, Long parent, Set<Long> children) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.parent = parent;
+        this.children = children;
+    }
 
     public Long getId() {
         return id;

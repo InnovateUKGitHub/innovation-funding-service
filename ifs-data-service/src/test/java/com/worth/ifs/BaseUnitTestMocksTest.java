@@ -13,6 +13,7 @@ import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.*;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
+import com.worth.ifs.category.transactional.CategoryService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -209,6 +210,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectRepository projectRepositoryMock;
+
+    @Mock
+    protected CategoryService categoryServiceMock;
 
     @Before
     public void setupMockInjection() {
