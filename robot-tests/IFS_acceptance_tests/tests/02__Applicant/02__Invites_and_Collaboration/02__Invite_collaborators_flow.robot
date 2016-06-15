@@ -130,19 +130,19 @@ Partner cannot invite others to other organisations
 Partner who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
     [Tags]    HappyPath    Email    Pending
-    # Pending due to INFUND-3266
     [Setup]    Log in as user    &{lead_applicant_credentials}
+    # Pending due to INFUND-3266
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary
     When the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
-    [Teardown]  Logout as user
+    [Teardown]    Logout as user
 
 Partners are not editable
     [Documentation]    INFUND-929
     [Tags]
-    Given guest user log-in     &{lead_applicant_credentials}
+    Given guest user log-in    &{lead_applicant_credentials}
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=View team members and add collaborators
@@ -252,7 +252,7 @@ the user can invite another person to their own organisation
     the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
-    the user should not see the element   jQuery=li:nth-child(1) button:contains("Add person")
+    the user should not see the element    jQuery=li:nth-child(1) button:contains("Add person")
     #This comments should be removed after the review
     #${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
     #the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
