@@ -85,6 +85,13 @@ Collaborators can download a pdf file
     Then the file should be downloaded    ${valid_pdf}
     [Teardown]    Remove File    ${valid_pdf}
 
+Collaborators cannot upload a file if not assigned
+    [Documentation]    INFUND-3007
+    [Tags]    Pending
+    #This test is pending due to INFUND-3380
+    When the user should see the text in the page    Appendix
+    Then the user should not see the text in the page    Upload
+
 Collaborators cannot remove a file if not assigned
     [Documentation]    INFUND-2720
     [Tags]
@@ -134,6 +141,13 @@ Collaborator can remove a file when the question is assigned
     And the user should see the text in the page    ${valid_pdf}
     When the user can remove the uploaded file    ${valid_pdf}
     Then the user can re-assign the question back to the lead applicant
+
+Collaborators can upload a file when the question is assigned
+    [Documentation]    INFUND_3007
+    [Tags]    Pending
+    #This test is pending due to INFUND-3380
+    When the user should see the text in the page    Upload
+    Then the user uploads the file to the 'technical approach' question    ${valid_pdf}
 
 Appendices available only for the correct questions
     [Documentation]    INFUND-832
