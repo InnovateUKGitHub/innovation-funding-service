@@ -153,46 +153,46 @@
 				<table id="table-forecast">
 					<thead>
 						<tr>
-							<th class="alignleft fix-left">Month</th>
-							<th>Jun 16</th>
-							<th>Jul 16</th>
-							<th>Aug 16</th>
-							<th>Sep 16</th>
-							<th>Oct 16</th>
-							<th>Nov 16</th>
-							<th>Dec 16</th>
-							<th>Jan 17</th>
-							<th>Feb 17</th>
-							<th class="separate-cell year">Mar 17</th>
+							<th class="alignleft fix-left" scope="row" id="month">Month</th>
+							<th scope="col" id="month1">Jun 16</th>
+							<th scope="col" id="month2">Jul 16</th>
+							<th scope="col" id="month3">Aug 16</th>
+							<th scope="col" id="month4">Sep 16</th>
+							<th scope="col" id="month5">Oct 16</th>
+							<th scope="col" id="month6">Nov 16</th>
+							<th scope="col" id="month7">Dec 16</th>
+							<th scope="col" id="month8">Jan 17</th>
+							<th scope="col" id="month9">Feb 17</th>
+							<th scope="col" id="month10" class="separate-cell year">Mar 17</th>
 
-							<th>Apr 17</th>
-							<th>May 17</th>
-							<th>Jun 17</th>
-							<th>Jul 17</th>
-							<th>Aug 17</th>
-							<th>Sep 17</th>
-							<th>Oct 17</th>
-							<th>Nov 17</th>
-							<th>Dec 17</th>
-							<th>Jan 18</th>
-							<th>Feb 18</th>
-							<th class="separate-cell year">Mar 18</th>
+							<th scope="col" id="month11">Apr 17</th>
+							<th scope="col" id="month12">May 17</th>
+							<th scope="col" id="month13">Jun 17</th>
+							<th scope="col" id="month14">Jul 17</th>
+							<th scope="col" id="month15">Aug 17</th>
+							<th scope="col" id="month16">Sep 17</th>
+							<th scope="col" id="month17">Oct 17</th>
+							<th scope="col" id="month18">Nov 17</th>
+							<th scope="col" id="month19">Dec 17</th>
+							<th scope="col" id="month20">Jan 18</th>
+							<th scope="col" id="month21">Feb 18</th>
+							<th scope="col" id="month22" class="separate-cell year">Mar 18</th>
 
-							<th>Apr 18</th>
-							<th>May 18</th>
-							<th>Jun 18</th>
-							<th>Jul 18</th>
-							<th>Aug 18</th>
-							<th>Sep 18</th>
-							<th>Oct 18</th>
-							<th>Nov 18</th>
-							<th>Dec 18</th>
-							<th>Jan 19</th>
-							<th>Feb 19</th>
-							<th class="separate-cell year">Mar 19</th>
+							<th scope="col" id="month23">Apr 18</th>
+							<th scope="col" id="month24">May 18</th>
+							<th scope="col" id="month25">Jun 18</th>
+							<th scope="col" id="month26">Jul 18</th>
+							<th scope="col" id="month27">Aug 18</th>
+							<th scope="col" id="month28">Sep 18</th>
+							<th scope="col" id="month29">Oct 18</th>
+							<th scope="col" id="month30">Nov 18</th>
+							<th scope="col" id="month31">Dec 18</th>
+							<th scope="col" id="month32">Jan 19</th>
+							<th scope="col" id="month33">Feb 19</th>
+							<th scope="col" id="month34" class="separate-cell year">Mar 19</th>
 
-							<th>Apr 19</th>
-							<th>May 19</th>
+							<th scope="col" id="month35">Apr 19</th>
+							<th scope="col" id="month36">May 19</th>
 
 							<th scope="col" class="total fix-right2" id="grand-total">Total</th>
 							<th scope="col" class="total eligible fix-right" id="eligible-project-cost">Eligible project cost</th>
@@ -247,23 +247,23 @@
 					</tfoot>
 					<tbody>
 						<div th:if="${param.status == null or param.status[0] != 'edit'}" th:remove="tag">
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Travel &#38; subsistence'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
 						</div>
 
 						<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Admin support costs (20%)'}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Sub-contracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel &#38; subsistance'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel &#38; subsistence'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
 						</div>
 					</tbody>
 				</table>
