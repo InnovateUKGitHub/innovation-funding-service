@@ -1,5 +1,8 @@
 package com.worth.ifs.category.resource;
 
+/**
+ * Resource to link any class to {@link CategoryResource}
+ */
 public class CategoryLinkResource {
     private Long id;
     private Long category;
