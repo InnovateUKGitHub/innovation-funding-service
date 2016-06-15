@@ -25,23 +25,24 @@
     </div>
 
     <div class="competitions-list">
-        <ul class="comp-list boxed-list">
-            <li class="status comp-status-closed" th:each="competition: ${competitions}">
-                <div class="comp-details">
+        <ul class="comp-list">
+            <li th:each="competition: ${competitions}">
+                <div class="column-two-thirds">
                     <h3 class="heading-small">
-                        <a th:href="@{'competition/'+${competition.id}}" >
-                            <span th:text="${competition.name}"></span>
-                            <span th:if="${competition.name == null}" th:text="#{ifs.competition.no_title}">No Title</span>
+                        <a th:href="@{'competition/setup/'+${competition.id}}" th:if="${competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP}" >
+                          <span th:unless="${competition.name == null}" th:text="${competition.name}" th:remove="tag" />
+                          <span th:if="${competition.name == null}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
+                        </a>
+                        <a th:href="@{'competition/'+${competition.id}}" th:unless="${competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP}"  >
+                          <span th:unless="${competition.name == null}" th:text="${competition.name}" th:remove="tag" />
+                          <span th:if="${competition.name == null}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
                         </a>
                     </h3>
-                    <a th:if="${competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP}" th:href="@{'competition/setup/'+${competition.id}}" >
-                        Edit Competition
-                    </a>
-                    <p>Ref number: <span th:text="${competition.id}"></span></p>
+                    <p>Ref number: <span th:text="${competition.id}" th:remove="tag" /></p>
                 </div>
-                <p class="status">
-                    <span th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"></span>
-                </p>
+                <div class="column-third">
+                  <p class="status" th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"/>
+                </div>
             </li>
         </ul>
     </div>

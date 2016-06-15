@@ -224,3 +224,22 @@ dl.standard-definition-list{
         }
     }
 }
+
+.comp-list{
+    li {
+        border-top:1px solid $border-colour;
+				overflow: hidden;
+		}
+    li:last-child {
+        border-bottom:1px solid $border-colour;
+    }
+    .status{
+        display:block;
+				color: $secondary-text-colour;
+        background: $panel-colour;
+        padding: 12px;
+        text-align: center;
+        margin-top: 1.2em;
+        font-weight: bold;
+    }
+}
