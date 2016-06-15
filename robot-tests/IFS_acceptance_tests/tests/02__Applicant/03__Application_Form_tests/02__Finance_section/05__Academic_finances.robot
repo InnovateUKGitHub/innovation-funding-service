@@ -149,6 +149,7 @@ Academic finance overview
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf
     Then the user should see the text in the page    Adobe Acrobat PDF Files
+    [Teardown]    The user marks the academic application finances as incomplete
 
 *** Keywords ***
 the academic partner fills the finances
@@ -228,13 +229,3 @@ Mark academic finances as complete
 the user waits for the file to be scanned by the anti virus software
     Sleep    5s
     # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
-
-The user navigates to the academic application finances
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Your finances
-
-The user navigates to the finance overview of the academic
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Finances overview
