@@ -11,6 +11,8 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.project.ProjectService;
+import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -28,6 +30,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
+import static com.worth.ifs.application.resource.SectionType.FINANCE;
+import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -57,12 +61,15 @@ public class ApplicationOverviewModelPopulator {
     private SectionService sectionService;
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
+    @Autowired
+    private ProjectService projectService;
     
     public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
+        ProjectResource projectResource = projectService.getByApplicationId(applicationId);
 
         if(form == null){
             form = new ApplicationForm();
@@ -73,9 +80,11 @@ public class ApplicationOverviewModelPopulator {
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
         addCompletedDetails(model, application, userOrganisation);
         addSections(model, competition);
+        addYourFinancesStatus(model, application);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
+        model.addAttribute("currentProject", projectResource);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
@@ -185,14 +194,47 @@ public class ApplicationOverviewModelPopulator {
     }
 
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        final Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        final Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        final Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
 
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
+        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
+
+        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         model.addAttribute("markedAsComplete", markedAsComplete);
+
+        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
+        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(model, application, userOrganisation, completedSectionsByOrganisation);
+        model.addAttribute("userFinanceSectionCompleted", userFinanceSectionCompleted);
+
+    }
+
+    private Boolean isUserFinanceSectionCompleted(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
+
+        Long eachCollaboratorFinanceSectionId = null;
+        if(!eachOrganisationFinanceSections.isEmpty()) {
+            eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
+        }
+        return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
+    }
+
+    private void addYourFinancesStatus(Model model, ApplicationResource application) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
+
+        Long financeSectionId=null;
+        if (!financeSections.isEmpty()) {
+            financeSectionId = financeSections.get(0).getId();
+        }
+        model.addAttribute("financeSectionId", financeSectionId);
+    }
+
+    private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
+        return simpleFilter(list, s -> type.equals(s.getType()));
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
@@ -220,4 +262,7 @@ public class ApplicationOverviewModelPopulator {
         FileEntryResource fileEntry = fileEntryResult.getSuccessObject();
         return new FileDetailsViewModel(fileEntry);
     }
+
+
+
 }

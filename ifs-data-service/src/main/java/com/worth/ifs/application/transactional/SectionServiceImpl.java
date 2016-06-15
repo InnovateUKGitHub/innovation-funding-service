@@ -1,33 +1,14 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
@@ -39,6 +20,23 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.validator.util.ValidationUtil;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.aggregate;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.tuple.Pair.of;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -70,7 +68,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return getSection(sectionId).andOnSuccessReturn(sectionMapper::mapToResource);
     }
 
-    // TODO DW - INFUND-1555 - remove getSuccessObject call
     @Override
     public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::completedSections);
@@ -80,11 +77,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<Section> sections = application.getCompetition().getSections();
         List<Organisation> organisations = application.getProcessRoles().stream()
                 .filter(p ->
-                        p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) ||
-                                p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) ||
-                                p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
+                                p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) ||
+                                        p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) ||
+                                        p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
                 )
-                .map(ProcessRole::getOrganisation).collect(Collectors.toList());
+                .map(ProcessRole::getOrganisation).collect(toList());
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
         for (Organisation organisation : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();
@@ -98,27 +95,18 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return organisationMap;
     }
 
-    // TODO DW - INFUND-1555 - remove getSuccessObject call
     @Override
-    public ServiceResult<Set<Long>> getCompletedSections(final Long applicationId,
-                                                         final Long organisationId) {
-
-        return find(() -> getApplication(applicationId), () -> getIncompleteSections(applicationId)).
+    public ServiceResult<Set<Long>> getCompletedSections(final long applicationId, final long organisationId) {
+        return find(application(applicationId), () -> getIncompleteSections(applicationId)).
                 andOnSuccess((application, incomplete) -> {
-
-                    Set<Long> completedSections = new LinkedHashSet<>();
-                    List<Section> sections = application.getCompetition().getSections();
-                    for (Section section : sections) {
-                        if (this.isSectionComplete(section, applicationId, organisationId).getSuccessObject()) {
-                            completedSections.add(section.getId());
-                        }
+                    final List<ServiceResult<Pair<Long, Boolean>>> unaggregatedSectionsAndStatus = new ArrayList<>();
+                    for (final Section section : application.getCompetition().getSections()) {
+                        unaggregatedSectionsAndStatus.add(isSectionComplete(section, applicationId, organisationId).andOnSuccessReturn(isComplete -> of(section.getId(), isComplete)));
                     }
-
-                    completedSections = completedSections.stream()
-                            .filter(c -> !incomplete.contains(c))
-                            .collect(Collectors.toSet());
-
-                    return serviceSuccess(completedSections);
+                    final ServiceResult<List<Pair<Long, Boolean>>> aggregatedSectionsAndStatus = aggregate(unaggregatedSectionsAndStatus);
+                    final ServiceResult<List<Pair<Long, Boolean>>> aggregatedCompleteSectionsAndStatus = aggregatedSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> simpleFilter(sectionsWithStatus, Pair::getValue));
+                    final ServiceResult<Set<Long>> aggregatedCompleteSections = aggregatedCompleteSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> new HashSet(simpleMap(sectionsWithStatus, Pair::getKey)));
+                    return aggregatedCompleteSections;
                 });
     }
 
@@ -215,72 +203,75 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return incompleteSections;
     }
 
-	@Override
-	public ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(final Long competitionId, final SectionType type) {
-		return getCompetition(competitionId).andOnSuccessReturn(comp -> sectionsOfType(comp, type));
-	}
-	
-	private List<SectionResource> sectionsOfType(Competition competition, SectionType type) {
-		return competition.getSections().stream()
-				.filter(s -> s.isType(type))
-				.map(sectionMapper::mapToResource)
-				.collect(Collectors.toList());
-	}
-	
-    // TODO DW - INFUND-1555 - work out the getSuccessObject call
-    private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
-        return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(sectionIsComplete -> {
-
-            // check if section has subsections, if there are subsections let the outcome depend on those subsections
-            // and the section itself if it contains questions with mark as complete attached
-            if (sectionIsComplete && section.hasChildSections()) {
-                sectionIsComplete = section.getChildSections()
-                        .stream()
-                        .allMatch(s -> isSectionComplete(s, applicationId, organisationId).getSuccessObject());
-            }
-            return serviceSuccess(sectionIsComplete);
-        });
+    @Override
+    public ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(final Long competitionId, final SectionType type) {
+        return getCompetition(competitionId).andOnSuccessReturn(comp -> sectionsOfType(comp, type));
     }
 
-    // TODO DW - INFUND-1555 - work out the getSuccessObject call
-    @Override
-    public ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
-        boolean sectionIsComplete = true;
+    private List<SectionResource> sectionsOfType(Competition competition, SectionType type) {
+        return competition.getSections().stream()
+                .filter(s -> s.isType(type))
+                .map(sectionMapper::mapToResource)
+                .collect(toList());
+    }
+
+    private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
+        return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(
+                mainSectionComplete -> {
+                    // If there are child sections are they complete?
+                    if (mainSectionComplete && section.hasChildSections()) {
+                        for (final Section childSection : section.getChildSections()) {
+                            final ServiceResult<Boolean> sectionComplete = isSectionComplete(childSection, applicationId, organisationId);
+                            if (sectionComplete.isFailure()) {
+                                return sectionComplete;
+                            } else if (!sectionComplete.getSuccessObject()) {
+                                return serviceSuccess(false);
+                            }
+
+                        }
+                    }
+                    return serviceSuccess(mainSectionComplete);
+                });
+    }
+
+    private ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
         for (Question question : section.getQuestions()) {
             if (!ignoreOtherOrganisations && question.getName() != null && "FINANCE_SUMMARY_INDICATOR_STRING".equals(question.getName()) && section.getParentSection() != null) {
-                if (!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section).getSuccessObject()) {
-                    sectionIsComplete = false;
+                final ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations = childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section);
+                if (childSectionsAreCompleteForAllOrganisations.isFailure()) {
+                    return childSectionsAreCompleteForAllOrganisations;
+                } else if (!childSectionsAreCompleteForAllOrganisations.getSuccessObject()) {
+                    return serviceSuccess(false);
                 }
-                break;
             }
 
-            if (!question.isMarkAsCompletedEnabled())
-                continue;
-
-            boolean questionMarkedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject();
-            // if one of the questions is incomplete then the whole section is incomplete
-            if (!questionMarkedAsComplete) {
-                sectionIsComplete = false;
-                break;
+            if (question.isMarkAsCompletedEnabled()) {
+                final ServiceResult<Boolean> markedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId);
+                // if one of the questions is incomplete then the whole section is incomplete
+                if (markedAsComplete.isFailure()) {
+                    return markedAsComplete;
+                } else if (!markedAsComplete.getSuccessObject()) {
+                    return serviceSuccess(false);
+                }
             }
         }
-        return serviceSuccess(sectionIsComplete);
+        return serviceSuccess(true);
     }
 
-    // TODO DW - INFUND-1555 - work out the getSuccessObject call
+
     @Override
     public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
-        return getApplication(applicationId).andOnSuccessReturn(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
+        return getApplication(applicationId).andOnSuccess(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
     }
 
-    private Boolean childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
+    private ServiceResult<Boolean> childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
         boolean allSectionsWithSubsectionsAreComplete = true;
 
         List<Section> sections;
         // if no parent defined, just check all sections.
-        if(parentSection == null){
+        if (parentSection == null) {
             sections = sectionRepository.findByCompetitionId(application.getCompetition().getId());
-        }else{
+        } else {
             sections = parentSection.getChildSections();
         }
 
@@ -296,7 +287,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 break;
             }
         }
-        return allSectionsWithSubsectionsAreComplete;
+        return serviceSuccess(allSectionsWithSubsectionsAreComplete);
     }
 
     @Override
@@ -367,9 +358,10 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 andOnSuccessReturn(sectionMapper::mapToResource);
     }
 
-    @Override public ServiceResult<List<SectionResource>> getByCompetionId(final Long competitionId) {
+    @Override
+    public ServiceResult<List<SectionResource>> getByCompetionId(final Long competitionId) {
         return find(sectionRepository.findByCompetitionId(competitionId), notFoundError(Section.class, competitionId)).
-            andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
+                andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
     }
 
 }

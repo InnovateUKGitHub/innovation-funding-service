@@ -6,7 +6,6 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +20,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competit
 @Service
 public class CompetitionsRestServiceImpl extends BaseRestService implements CompetitionsRestService {
 
-    @Value("${ifs.data.service.rest.competition}")
-    String competitionsRestURL;
+    private String competitionsRestURL = "/competition";
 
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(CompetitionsRestServiceImpl.class);

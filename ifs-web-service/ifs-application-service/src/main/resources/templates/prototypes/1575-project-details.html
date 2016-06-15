@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" th:remove="tag" />
 	
-	<p>Please supply the following details for your project and the team. We need these to setup your project.</p>
+	<p>Please supply the following details for your project and the team. We need these to set up your project.</p>
 
 	<h2 class="heading-medium">Project details</h2>
 
@@ -38,8 +38,8 @@
 		<tbody>
 			<tr>
 				<td>
-					<a href="/prototypes/1575-start-date" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Start date</a>
-					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Start date</span>
+					<a href="/prototypes/1575-start-date" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Target start date</a>
+					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Target start date</span>
 				</td>
 				<td id="start-date">
 					&nbsp;
@@ -158,7 +158,7 @@
 
 				<h2 class="heading-medium no-margin">Submit project details</h2>
 
-				<p>Are you sure that you wish to submit your project details to Innovate UK</p>
+				<p>Are you sure that you wish to submit your project details to Innovate UK?</p>
 
 				<hr />
 

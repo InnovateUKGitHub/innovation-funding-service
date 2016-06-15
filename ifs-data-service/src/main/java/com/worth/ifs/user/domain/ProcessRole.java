@@ -103,4 +103,16 @@ public class ProcessRole {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public boolean isLeadApplicant() {
+        return role.isLeadApplicant();
+    }
+
+    public boolean isCollaborator() {
+        return role.isCollaborator();
+    }
+
+    public boolean isLeadApplicantOrCollaborator() {
+        return isLeadApplicant() || isCollaborator();
+    }
 }

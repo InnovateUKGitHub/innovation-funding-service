@@ -4,7 +4,7 @@ Documentation     INFUND-2129 As an internal Innovate UK user I want to be able 
 ...
 ...               INFUND-1987 As a Competition Administrator I want to be able to export specified data from all successfully submitted applications so that the competitions team can work with this data in the existing competitions database
 Suite Setup       The guest user opens the browser
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -22,7 +22,7 @@ If user from the list is not registered shouldn't be able to login
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
     [Tags]    HappyPath    Email
-    [Setup]    Delete the emails from the test mailbox
+    [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_OPEN}

@@ -2,6 +2,7 @@ package com.worth.ifs.address.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.transactional.AddressLookupService;
+import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,9 @@ import java.util.List;
 public class AddressController {
 
     @Autowired
+    private AddressService addressService;
+
+    @Autowired
     private AddressLookupService addressLookupService;
 
     @RequestMapping("/doLookup/{lookup}")
@@ -29,5 +33,10 @@ public class AddressController {
     @RequestMapping("/validatePostcode/{postcode}")
     public RestResult<Boolean> validatePostcode(@PathVariable("postcode") final String postcode) {
         return addressLookupService.validatePostcode(postcode).toGetResponse();
+    }
+
+    @RequestMapping("/{id}")
+    public RestResult<AddressResource> getById(@PathVariable("id") final Long id){
+        return addressService.getById(id).toGetResponse();
     }
 }

@@ -18,7 +18,7 @@ public class FileDownloadControllerUtils {
         httpHeaders.setContentLength(resource.contentLength());
         httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));
         if(StringUtils.hasText(fileEntry.getName())) {
-        	httpHeaders.add("Content-Disposition", "attachment; filename=\"" + fileEntry.getName() + "\"");
+        	httpHeaders.add("Content-Disposition", "inline; filename=\"" + fileEntry.getName() + "\"");
         }
         return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }

@@ -16,6 +16,7 @@ public interface UserService {
     List<UserResource> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application);
+    List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
     RestResult<Void> verifyEmail(String hash);
     void resendEmailVerificationNotification(String email);
 
@@ -30,4 +31,5 @@ public interface UserService {
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber);
+	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
 }

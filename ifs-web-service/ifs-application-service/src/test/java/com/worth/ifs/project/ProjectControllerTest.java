@@ -26,9 +26,9 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         CompetitionResource competitionResource = newCompetitionResource().build();
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource projectResource = newProjectResource().withId(applicationResource.getId()).build();
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
 
-    	when(applicationService.getById(projectId)).thenReturn(applicationResource);
+    	when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 

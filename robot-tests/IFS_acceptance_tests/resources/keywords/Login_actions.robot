@@ -44,14 +44,14 @@ TestTeardown User closes the browser
     Run keyword if      '${REMOTE_URL}' != ''        Get Sauce Labs Test Report
     Close any open browsers
 
-User closes the browser
+The user closes the browser
     Run keyword if    '${REMOTE_URL}' != ''          Get Sauce Labs Suite Report
     Close any open browsers
 
 Logout as user
-    Click Element    link=Logout
-    Sleep    1s
-    Location Should contain    ${LOGGED_OUT_URL_FRAGMENT}
+    the user clicks the button/link     link=Logout
+    The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
+    run keyword and ignore error        confirm action
 
 The user can log out
     logout as user

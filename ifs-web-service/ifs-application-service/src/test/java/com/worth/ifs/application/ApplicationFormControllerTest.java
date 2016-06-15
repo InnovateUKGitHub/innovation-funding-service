@@ -3,11 +3,15 @@ package com.worth.ifs.application;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.List;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.builder.QuestionStatusResourceBuilder;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.category.CostCategory;
@@ -29,6 +33,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -103,6 +108,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         this.setupUserRoles();
         this.setupFinances();
         this.setupInvites();
+        this.setupQuestionStatus(applications.get(0));
 
         application = applications.get(0);
         sectionId = Long.valueOf(1);
@@ -200,6 +206,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
+
         mockMvc.perform(post("/application/1/form/question/1"))
                 .andExpect(status().is3xxRedirection());
     }

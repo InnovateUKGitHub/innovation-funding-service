@@ -1,155 +1,177 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
+Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Upload    Applicant    Email    Pending
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot    # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files    # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically    # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
-Force Tags
-
+Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
-${download_link}        ${SERVER}/application/1/form/question/8/forminput/18/download
-${virus_scanning_warning}   This file is awaiting virus scanning
-
+${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/download
+${virus_scanning_warning}    This file is awaiting virus scanning
 
 *** Test Cases ***
-Lead applicant can upload a pdf file
-    [Documentation]    INFUND-832
-    [Tags]    Collaboration    Upload
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    Given the user can see the option to upload a file on the page    ${technical_approach_url}
-    And the user uploads the file to the 'technical approach' question    ${valid_pdf}
-
-Lead applicant can view a file
-    [Documentation]     INFUND-2720
-    [Tags]  Collaboration   Upload
-    Given the user should see the text in the page  ${valid_pdf}
-    And the file has been scanned for viruses
-    When the user clicks the button/link        link=${valid_pdf}
-    Then the user should see the text in the page   ${valid_pdf_excerpt}
-    [Teardown]  The user navigates to the page  ${technical_approach_url}
-
-
-Lead applicant can download a pdf file
-    [Documentation]     INFUND-2720
-    [Tags]  Collaboration   Upload      Pending
-    # Pending until download functionality has been plugged in
-    Given the user should see the text in the page  ${valid_pdf}
-    When the user downloads the file from the link     ${valid_pdf}     ${download_link}
-    Then the file should be downloaded      ${valid_pdf}
-    [Teardown]  Remove File     ${valid_pdf}
-
-
-Collaborators can view a file
-    [Documentation]    INFUND-2306
-    [Tags]    Collaboration    Upload
-    [Setup]    Guest user log-in    &{collaborator2_credentials}
-    Given the user cannot see the option to upload a file on the page    ${technical_approach_url}
-    And the user should see the text in the page    ${valid_pdf}
-    When the user clicks the button/link     link=${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf_excerpt}
-    [Teardown]  The user navigates to the page  ${technical_approach_url}
-
-
-Collaborators can download a pdf file
-    [Documentation]     INFUND-2720
-    [Tags]  Collaboration   Upload  Pending
-    # Pending until download functionality has been plugged in
-    Given the user should see the text in the page  ${valid_pdf}
-    When the user downloads the file from the link     ${valid_pdf}     ${download_link}
-    Then the file should be downloaded      ${valid_pdf}
-    [Teardown]  Remove File     ${valid_pdf}
-
-
-Collaborators cannot remove a file if not assigned to them
-    [Documentation]     INFUND-2720
-    [Tags]  Collaboration   Upload
-    When the user should see the text in the page    ${valid_pdf}
-    Then the user should not see the text in the page    Remove
-
-
-
-Questions can be assigned with appendices to the collaborator
-    [Documentation]    INFUND-832
-    ...    INFUND-409
-    [Tags]    Collaboration    Upload
-    [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${technical_approach_url}
-    And the user should see the text in the page    ${valid_pdf}
-    When the user assigns the question to the collaborator    Jessica Doe
-    Then the user should not see the text in the page    Remove
-
-
-Collaborators can view a file when the question is assigned to them
-    [Documentation]     INFUND_2720
-    [Tags]  Collaboration   Upload
-    [Setup]     Guest user log-in       &{collaborator1_credentials}
-    Given the user navigates to the page    ${technical_approach_url}
-    And the user reloads the page
-    And the user should see the text in the page      ${valid_pdf}
-    When the user clicks the button/link        link=${valid_pdf}
-    Then the user should see the text in the page       ${valid_pdf_excerpt}
-    [Teardown]  The user navigates to the page      ${technical_approach_url}
-
-
-Collaborator can download a file when the question is assigned to them
-    [Documentation]     INFUND-2720
-    [Tags]      Collaboration   Upload  Pending
-    # Pending until download functionality has been plugged in
-    Given the user should see the text in the page      ${valid_pdf}
-    When the user downloads the file from the link  ${valid_pdf}    ${download_link}
-    Then the file should be downloaded      ${valid_pdf}
-    [Teardown]  The user navigates to the page      ${project_team_url}
-
-Collaborator can remove a file when the question is assigned to them
-    [Documentation]     INFUND-2720
-    [Tags]  Collaboration   Upload
-    Given the user should see the text in the page     ${valid_pdf}
-    When the user can remove the uploaded file    ${valid_pdf}
-    Then the user can re-assign the question back to the lead applicant
-
-
-Appendices are only available for the correct questions
-    [Documentation]    INFUND-832
-    [Tags]    Collaboration    Upload
-    [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    the user cannot see the option to upload a file on the page    ${business_opportunity_url}
-    the user cannot see the option to upload a file on the page    ${potential_market_url}
-    the user cannot see the option to upload a file on the page    ${project_exploitation_url}
-    the user cannot see the option to upload a file on the page    ${economic_benefit_url}
-    the user can see the option to upload a file on the page    ${technical_approach_url}
-    the user can see the option to upload a file on the page    ${innovation_url}
-    the user cannot see the option to upload a file on the page    ${risks_url}
-    the user cannot see the option to upload a file on the page    ${project_team_url}
-    the user cannot see the option to upload a file on the page    ${funding_url}
-    the user cannot see the option to upload a file on the page    ${adding_value_url}
-
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]    Collaboration    Upload
-    Given the user can see the option to upload a file on the page    ${technical_approach_url}
+    [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    # due to INFUND-3274
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=5. Technical approach
     When the user uploads the file to the 'technical approach' question    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]    Collaboration    Upload
-    Given the user can see the option to upload a file on the page    ${technical_approach_url}
+    [Tags]
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=5. Technical approach
     When the user uploads the file to the 'technical approach' question    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
+
+Lead applicant can upload a pdf file
+    [Documentation]    INFUND-832
+    [Tags]
+    [Setup]
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=5. Technical approach
+    Then the user uploads the file to the 'technical approach' question    ${valid_pdf}
+    And the user should see the text in the page    ${valid_pdf}
+
+Lead applicant can view a file
+    [Documentation]    INFUND-2720
+    [Tags]
+    Given the user should see the element    link=${valid_pdf}
+    And the file has been scanned for viruses
+    The applicant opens the uploaded file
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    [Teardown]    The user goes back to the previous page
+
+Lead applicant can download a pdf file
+    [Documentation]    INFUND-2720
+    [Tags]    Pending
+    # Pending until download functionality has been plugged in
+    Given the user should see the text in the page    ${valid_pdf}
+    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
+    Then the file should be downloaded    ${valid_pdf}
+    [Teardown]    Remove File    ${valid_pdf}
+
+Collaborators can view a file
+    [Documentation]    INFUND-2306
+    [Tags]
+    [Setup]    Guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=5. Technical approach
+    And the user should see the text in the page    ${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    [Teardown]    The user goes back to the previous page
+
+Collaborators can download a pdf file
+    [Documentation]    INFUND-2720
+    [Tags]    Pending
+    # Pending until download functionality has been plugged in
+    Given the user should see the text in the page    ${valid_pdf}
+    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
+    Then the file should be downloaded    ${valid_pdf}
+    [Teardown]    Remove File    ${valid_pdf}
+
+Collaborators cannot upload a file if not assigned
+    [Documentation]    INFUND-3007
+    [Tags]    Pending
+    #This test is pending due to INFUND-3380
+    When the user should see the text in the page    Appendix
+    Then the user should not see the text in the page    Upload
+
+Collaborators cannot remove a file if not assigned
+    [Documentation]    INFUND-2720
+    [Tags]
+    When the user should see the text in the page    ${valid_pdf}
+    Then the user should not see the text in the page    Remove
+
+Questions can be assigned with appendices
+    [Documentation]    INFUND-832
+    ...    INFUND-409
+    [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=5. Technical approach
+    And the user should see the text in the page    ${valid_pdf}
+    When the user assigns the question to the collaborator    Arsene Wenger
+    Then the user should not see the text in the page    Remove
+
+Collaborators can view a file when the question is assigned
+    [Documentation]    INFUND_2720
+    [Tags]
+    [Setup]    Guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=5. Technical approach
+    And the user reloads the page
+    And the user should see the element    link=${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    [Teardown]    The user goes back to the previous page
+
+Collaborator can download a file when the question is assigned
+    [Documentation]    INFUND-2720
+    [Tags]    Pending
+    # Pending until download functionality has been plugged in
+    Given the user should see the text in the page    ${valid_pdf}
+    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
+    Then the file should be downloaded    ${valid_pdf}
+
+Collaborator can remove a file when the question is assigned
+    [Documentation]    INFUND-2720
+    [Tags]    Pending
+    #pending INFUND-3259
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=5. Technical approach
+    And the user should see the text in the page    ${valid_pdf}
+    When the user can remove the uploaded file    ${valid_pdf}
+    Then the user can re-assign the question back to the lead applicant
+
+Collaborators can upload a file when the question is assigned
+    [Documentation]    INFUND_3007
+    [Tags]    Pending
+    #This test is pending due to INFUND-3380
+    When the user should see the text in the page    Upload
+    Then the user uploads the file to the 'technical approach' question    ${valid_pdf}
+
+Appendices available only for the correct questions
+    [Documentation]    INFUND-832
+    [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    the user cannot see the option to upload a file on the question    link=1. Business opportunity
+    the user cannot see the option to upload a file on the question    link=2. Potential market
+    the user cannot see the option to upload a file on the question    link=3. Project exploitation
+    the user cannot see the option to upload a file on the question    link=4. Economic benefit
+    the user can see the option to upload a file on the question    link=6. Innovation
+    the user cannot see the option to upload a file on the question    link=7. Risks
+    the user can see the option to upload a file on the question    link=8. Project team
+    the user cannot see the option to upload a file on the question    link=9. Funding
+    the user cannot see the option to upload a file on the question    link=10. Adding value
 
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
     ...    INFUND-2684
-    [Tags]        Upload
-    [Setup]     Guest user log-in   &{lead_applicant_credentials}
+    [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_team_url}
     When the user should see the text in the page    test_quarantine.pdf
     And the user clicks the button/link    link=test_quarantine.pdf
-    Then the user should see the text in the page   File not available for download
+    Then the user should see the text in the page    File not available for download
     And the user should see the text in the page    This file has been quarantined by the virus scanner
 
 *** Keywords ***
@@ -164,12 +186,25 @@ the user uploads the file to the 'technical approach' question
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
     Sleep    500ms
 
-
 the user can re-assign the question back to the lead applicant
     the user reloads the page
     the user clicks the button/link    name=assign_question
     the user reloads the page
 
+the user cannot see the option to upload a file on the question
+    [Arguments]    ${QUESTION}
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    ${QUESTION}
+    the user should not see the text in the page    Upload
 
+the user can see the option to upload a file on the question
+    [Arguments]    ${QUESTION}
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    ${QUESTION}
+    the user should see the text in the page    Upload
 
-
+The applicant opens the uploaded file
+    When the user clicks the button/link    link=${valid_pdf}
+    Run Keyword And Ignore Error    Confirm Action

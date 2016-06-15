@@ -28,7 +28,7 @@
 
 </head>
 
-<body class="full-width">
+<body >
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -47,9 +47,17 @@
 	
 	<hr />
 
-	<div class="grid-row constrain-width">		
+		
 		
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
+
+			<div class="success-alert">
+				<h2 class="heading-small no-margin-top">A Monitoring Officer has been assigned.</h2>
+			</div>
+
+		</th:block>
 		
 		
 		<div class="column-half">
@@ -117,7 +125,8 @@
 				            		<a href="/prototypes/1576-assign-mo">Cancel</a>
 				            	</div>
 				            	<div class="column-half alignright-button">
-				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup" class="button">Assign Monitoring officer</button>
+				            		<input type="hidden" id="stage" name="stage" value="1" />
+				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring officer</button>
 				            	</div>
 				            </div>
 
@@ -153,8 +162,7 @@
 			<p class="form-hint">Project manager for the project, designated by the lead organisation.</p>
 			<p>David Smith</p>
 
-			<h3 class="heading-medium no-margin">Partners with their finance contacts</h3>
-			<p class="form-hint">Project partners with their Finance contacts</p>
+			<h3 class="heading-medium no-margin">Project partners</h3>
 
 			<ul class="list-bullet">
 				<li>Company A (Lead)</li>
@@ -164,12 +172,7 @@
 				<li>Company E</li>
 			</ul>
 
-
-
 		</div>
-
-
-	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

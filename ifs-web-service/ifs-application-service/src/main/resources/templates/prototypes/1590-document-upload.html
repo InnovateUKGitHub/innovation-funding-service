@@ -20,12 +20,21 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Other documents'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Other documents'})" th:remove="tag" />
 
 	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
 		<div class="success-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'submitted'}">
 			<p><strong>These documents have been submitted to Innovate UK</strong></p>
+		</div>
+
+		<div th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag">
+			<div class="warning-alert extra-margin-bottom">
+				<h3 class="heading-small">These documents have been returned to the project team, the following reason was given;</h3>
+				<ul class="list-bullet">
+					<li>the collaboration agreement only has 2 signatures when there are 3 partners</li>
+				</ul>
+			</div>
 		</div>
 
 
@@ -80,16 +89,20 @@
 				    </div>
 				</details>
 
-				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 
 					<input type="file" name="file-collaboration-agreement" id="file-collaboration-agreement" class="inputfile" />
 					<label for="file-collaboration-agreement" class="button-secondary extra-margin">+ Upload</label>
 
 				</div>
 
-				<div th:if="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 				
 					<a href="#" class="uploaded-file">Collab-agreement-file.pdf</a>
+
+					<div class="alignright">
+                		<button class="button-secondary no-margin-right" type="submit" name="remove_agreement_plan">Remove</button>
+            		</div>
 
 				</div>
 
@@ -104,13 +117,13 @@
 			<div class="upload-section">
 			
 				<h2 class="heading-medium no-margin">Exploitation plan</h2>
-				<p class="form-hint">The aim of the plan is to confirm the benefits realisation that the project hopes to achieve. Describe the partner activities towards exploitation of the results of the project.</p>
+				<p class="form-hint">The plan aims to confirm the benefits realisation that the project hopes to achieve. You should describe the partner activities that will exploit the results of the project.</p>
 				
 				<details>
 				    <summary><span class="summary">What should I include in the exploitation plan?</span></summary>
 				    <div class="panel-indent">
 						
-						<p>This plan is a living document and will be updated during the project. The aim of the plan is to confirm the business case for the project and describe the partner activities towards exploitation of the results of the project so that:</p>
+						<p>This plan will evolve and change during the lifetime of the project. It's aim is to confirm the business case for the project. It should also describe partner activities that will exploit the results of the project so that:</p>
 
 						<ul class="list-bullet">
 							<li>changes in the commercial environment can be monitored and accounted for</li>
@@ -141,7 +154,7 @@
 				    </div>
 				</details>
 
-				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 
 					<input type="file" name="file-exploitation-plan" id="file-exploitation-plan" class="inputfile" />
 					<label for="file-exploitation-plan" class="button-secondary extra-margin">+ Upload</label>
@@ -154,9 +167,13 @@
 
 				</div>
 
-				<div th:if="${param.status != null and param.status[0] == 'submitted'}">
+				<div th:if="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'reject'}">
 				
 					<a href="#" class="uploaded-file">Expolitation-file.pdf</a>
+
+					<div class="alignright">
+                		<button class="button-secondary no-margin-right" type="submit" name="remove_exploitation_plan">Remove</button>
+            		</div>
 
 				</div>
 
@@ -164,7 +181,7 @@
 
 		</fieldset>
 
-		<div th:if="${param.user == null and param.status == null}">
+		<div th:if="${param.user == null and param.status == null or param.user == null and param.status != null and param.status[0] == 'reject'}">
 
 			<p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
 
@@ -176,7 +193,7 @@
 
 					<h2 class="heading-medium no-margin">Submit documents</h2>
 
-					<p>Are you sure that you wish to send these documents to Innovate UK for review, if further clarification is required they will contact the project manager.</p>
+					<p>Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the project manager.</p>
 
 					<hr />
 

@@ -1,7 +1,9 @@
 package com.worth.ifs;
 
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
+import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.alert.mapper.AlertMapper;
 import com.worth.ifs.alert.repository.AlertRepository;
 import com.worth.ifs.alert.transactional.AlertService;
@@ -27,6 +29,8 @@ import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.mapper.ProjectMapper;
+import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
@@ -144,6 +148,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AddressLookupService addressLookupServiceMock;
 
     @Mock
+    protected AddressService addressService;
+
+    @Mock
     protected OrganisationService organisationServiceMock;
 
     @Mock
@@ -189,10 +196,19 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FileEntryMapper fileEntryMapperMock;
 
     @Mock
+    protected AddressMapper addressMapperMock;
+
+    @Mock
     protected AssessorFeedbackService assessorFeedbackServiceMock;
 
     @Mock
     protected ProjectService projectServiceMock;
+
+    @Mock
+    protected ProjectMapper projectMapperMock;
+
+    @Mock
+    protected ProjectRepository projectRepositoryMock;
 
     @Before
     public void setupMockInjection() {

@@ -17,7 +17,6 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
     @Override
     protected AddressRestServiceImpl registerRestServiceUnderTest() {
         AddressRestServiceImpl addressRestService = new AddressRestServiceImpl();
-        addressRestService.addressRestUrl = addressRestURL;
         return addressRestService;
     }
 
@@ -31,5 +30,16 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
         List<AddressResource> addresses = service.doLookup("BS348XU").getSuccessObject();
         assertNotNull(addresses);
         assertEquals(returnedAddresses, addresses);
+    }
+
+    @Test
+    public void testGetById(){
+        AddressResource addressResource = newAddressResource().build();
+        String url = addressRestURL + "/" + addressResource.getId();
+        setupGetWithRestResultExpectations(url, AddressResource.class, addressResource);
+
+        AddressResource returnedAddressResource = service.getById(addressResource.getId()).getSuccessObject();
+        assertNotNull(returnedAddressResource);
+        assertEquals(returnedAddressResource, addressResource);
     }
 }
