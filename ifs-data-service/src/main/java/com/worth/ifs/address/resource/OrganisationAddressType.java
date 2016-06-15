@@ -11,4 +11,8 @@ public enum OrganisationAddressType {
         this.name = name;
         this.ordinal = ordinal;
     }
+
+    public int getOrdinal() {
+        return ordinal;
+    }
 }

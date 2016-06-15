@@ -74,7 +74,7 @@ public class ProfileControllerTest extends BaseUnitTest {
 	}
 
    private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {
-       AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)addressType.ordinal()).withName(addressType.name()).build();
+       AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)addressType.getOrdinal()).withName(addressType.name()).build();
     	return newOrganisationAddressResource()
         		.withAddressType(addressTypeResource)
         		.withAddress(newAddressResource()

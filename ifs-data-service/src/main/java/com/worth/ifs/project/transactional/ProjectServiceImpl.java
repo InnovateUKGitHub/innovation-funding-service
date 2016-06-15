@@ -130,7 +130,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             } else {
                 Address newAddress = addressMapper.mapToDomain(address);
                 if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
-                    AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.ordinal());
+                    AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
                     List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                     existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
                     OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
