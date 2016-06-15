@@ -30,6 +30,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setSections(sections));
     }
 
+    public CompetitionResourceBuilder withName(String name) {
+        return with(competition -> setField("name", name, competition));
+    }
+
     public CompetitionResourceBuilder withStartDate(LocalDateTime startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }

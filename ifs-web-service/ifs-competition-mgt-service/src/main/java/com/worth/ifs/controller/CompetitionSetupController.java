@@ -115,7 +115,7 @@ public class CompetitionSetupController {
     }
 
     @RequestMapping(value = "/{competitionId}/section/{sectionId}/edit", method = RequestMethod.GET)
-    public String submitSectionInitialDetails(@PathVariable("competitionId") Long competitionId,
+    public String setSectionAsIncomplete(@PathVariable("competitionId") Long competitionId,
                                               @PathVariable("sectionId") Long sectionId) {
 
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, sectionId);
@@ -136,7 +136,7 @@ public class CompetitionSetupController {
     @RequestMapping(value = "/{competitionId}/generateCompetitionCode", method = RequestMethod.GET)
     public
     @ResponseBody
-    String generateCompetionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
+    String generateCompetitionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
 
         LocalDateTime openingDate = LocalDateTime.of(Integer.parseInt(request.getParameter("year")),
                 Integer.parseInt(request.getParameter("month")),
