@@ -18,7 +18,6 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
-${SUCCESSFUL_PROJECT_PAGE}    ${server}/project/1
 ${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
 ${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
 
@@ -62,7 +61,7 @@ Partner can see the project setup page
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
 
-Partner can see the overview of the project details
+Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Please supply the following details for your project and the team
@@ -71,7 +70,7 @@ Partner can see the overview of the project details
     And the user should see the element    link=Project manager
     And the user should see the text in the page    Finance contacts
 
-Partner can change the Start Date
+Lead partner can change the Start Date
     [Documentation]    INFUND-2614
     Given the user clicks the button/link    link=Start date
     And the duration should be visible
@@ -85,7 +84,7 @@ Partner can change the Start Date
     Then the user should see the text in the page    1 Jan 2018
     Then status of the start date should be Yes
 
-Partner can change the project manager
+Lead partner can change the project manager
     [Documentation]     INFUND-2616
     [Tags]
     Given the user clicks the button/link    link=Project manager
@@ -100,6 +99,49 @@ Partner can change the project manager
     And the user selects the radio button    projectManager       1
     Then the user clicks the button/link    jQuery=.button:contains("Save")
     And the user should see the text in the page        Steve Smith
+
+
+Lead partner can change the project address
+    [Documentation]     INFUND-3157, INFUND-2165
+    [Tags]
+    Given the user clicks the button/link     link=Project address
+    When the user clicks the button/link     jQuery=.button:contains("Save")
+    Then the user should see the text in the page    You need to select a project address before you can continue.
+    When the user selects the radio button      addressType       ADD_NEW
+    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    Then the user should see the element    css=#select-address-block
+    And the user clicks the button/link    css=#select-address-block > button
+    And the address fields should be filled
+    And the user clicks the button/link     jQuery=.button:contains("Save")
+    And the user should see the address data
+    When the user clicks the button/link    link=Project address
+    And the user selects the radio button    addressType       REGISTERED
+    And the user clicks the button/link       jQuery=.button:contains("Save")
+    Then the user should see the text in the page       	1 Cheese Road, Bath, BA1 5LR
+
+
+Non-lead partner cannot change any project details
+    [Documentation]     INFUND-2619
+    [Setup]       Run Keywords    logout as user
+    ...           AND     guest user log-in    jessica.doe@ludlow.co.uk     Passw0rd
+    Given the user navigates to the page      ${successful_project_page}
+    When the user clicks the button/link      link=Project details
+    Then the user should see the text in the page        Start date
+    And the user should see the text in the page       1 Jan 2018
+    And the user should not see the element        link=Start date
+    And the user should see the text in the page      Project manager
+    And the user should see the text in the page      Steve Smith
+    And the user should not see the element        link=Project manager
+    And the user should see the text in the page      Project address
+    And the user should see the text in the page      1 Cheese Road, Bath, BA1 5LR
+    And the user should not see the element       link=Project address
+    And the user navigates to the page       ${project_start_date_page}
+    And the user should be redirected to the correct page      ${successful_project_page}
+    And the user navigates to the page       ${project_manager_page}
+    And the user should be redirected to the correct page      ${successful_project_page}
+    And the user navigates to the page       ${project_address_page}
+    And the user should be redirected to the correct page      ${successful_project_page}
 
 
 
@@ -165,3 +207,14 @@ the duration should be visible
 
 the user shouldn't be able to edit the day field as all projects start on the first of the month
     the user should see the element      css=.day [readonly]
+
+
+the user should see the address data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != 'NO'    the user should see the valid data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == 'NO'    the user should see the dummy data
+
+the user should see the valid data
+    the user should see the text in the page      Am Reprographics, Bristol, BS1 4NT
+
+the user should see the dummy data
+ 	the user should see the text in the page      Montrose House 1, Neston, CH64 3RU
