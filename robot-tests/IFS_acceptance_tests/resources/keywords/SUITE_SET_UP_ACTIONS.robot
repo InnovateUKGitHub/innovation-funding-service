@@ -8,9 +8,7 @@ Resource          ../../resources/keywords/User_actions.robot
 *** Keywords ***
 log in and create new application if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
-    ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    xpath=//*[@class='in-progress']/ul/li
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Robot test application
-    #${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    3
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user
 
 log in and create new application for collaboration if there is not one already
@@ -121,3 +119,30 @@ The user navigates to the summary page of the Robot test application
 The user navigates to the overview page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
+
+the user marks the finances as complete
+    Focus    jQuery=button:contains("Mark all as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
+    Sleep    1s
+
+Make the finances ready for mark as complete
+    Applicant navigates to the finances of the Robot application
+    The user clicks the button/link    jQuery=label:contains(Medium - claim up to 60%) input
+    Input Text    id=cost-financegrantclaim    20
+    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+
+The user navigates to the academic application finances
+    When the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=Your finances
+
+The user navigates to the finance overview of the academic
+    When the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=Finances overview
+
+The user marks the academic application finances as incomplete
+    When The user navigates to the academic application finances
+    Focus    jQuery=button:contains("Edit")
+    the user clicks the button/link    jQuery=button:contains("Edit")
+    Sleep    1s

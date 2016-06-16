@@ -68,9 +68,9 @@ public interface QuestionService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
-
+    
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
+	ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);

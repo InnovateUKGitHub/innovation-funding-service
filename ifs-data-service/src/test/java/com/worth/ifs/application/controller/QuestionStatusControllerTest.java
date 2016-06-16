@@ -10,11 +10,9 @@ import org.mockito.Mock;
 
 import java.util.List;
 
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
@@ -26,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<QuestionStatusController> {
 
     @Mock
-    protected QuestionService questionService;
+    private QuestionService questionService;
 
     @Override
     protected QuestionStatusController supplyControllerUnderTest() {
@@ -39,7 +37,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         QuestionStatusResource questionStatus = newQuestionStatusResource().withApplication(applicationResource).build();
         List<QuestionStatusResource> questionStatuses = singletonList(questionStatus);
 
-        when(questionService.getQuestionStatusByApplicationIdAndAssigneeId(1L, 2L)).thenReturn(serviceSuccess(questionStatuses));
+        when(questionService.getQuestionStatusByQuestionIdAndApplicationId(1L, 2L)).thenReturn(serviceSuccess(questionStatuses));
 
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplication/1/2"))
             .andExpect(status().isOk())
