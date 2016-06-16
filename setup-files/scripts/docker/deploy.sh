@@ -57,7 +57,7 @@ case "$target" in
         web "$@"
     ;;
     *)
-        echo $"Usage: $0 {all|data|web}"
+        echo $"Usage: $0 {all|data|web} {gradleOpts}"
         exit 1
 esac
 

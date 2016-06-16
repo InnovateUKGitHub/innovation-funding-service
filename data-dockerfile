@@ -11,4 +11,10 @@ ENTRYPOINT sh /opt/tomcat/bin/catalina.sh run
 
 COPY setup-files/scripts/docker/server.xml /opt/tomcat/conf/server.xml
 
-COPY ifs-data-service/build/war/* /opt/tomcat/webapps
+COPY setup-files/scripts/docker/certificate /certificate
+
+WORKDIR $JAVA_HOME/jre/lib/security
+
+# RUN ../../bin/keytool -import -trustcacerts -keystore cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
+
+WORKDIR /

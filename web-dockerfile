@@ -10,5 +10,3 @@ EXPOSE 8080
 ENTRYPOINT sh /opt/tomcat/bin/catalina.sh run
 
 COPY setup-files/scripts/docker/server.xml /opt/tomcat/conf/server.xml
-
-COPY ["ifs-web-service/ifs-application-service/build/war/*","ifs-web-service/ifs-competition-mgt-service/build/war/*", "/opt/tomcat/webapps/"]

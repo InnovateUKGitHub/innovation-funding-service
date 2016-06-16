@@ -58,6 +58,7 @@ services:
       back-tier:
         aliases:
          - database
+         - ifs-database
 
 networks:
   front-tier:
