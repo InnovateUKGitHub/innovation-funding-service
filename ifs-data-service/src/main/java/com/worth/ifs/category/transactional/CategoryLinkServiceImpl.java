@@ -10,6 +10,10 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * Service to link categories to every possible class
+ */
 @Service
 public class CategoryLinkServiceImpl extends BaseTransactionalService implements CategoryLinkService {
     @Autowired
