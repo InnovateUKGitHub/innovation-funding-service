@@ -9,6 +9,7 @@ import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
 
+import com.worth.ifs.commons.rest.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,11 +32,11 @@ public class QuestionController {
     }
 
     @RequestMapping("/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
-    public RestResult<Void> markAsComplete(@PathVariable("questionId") final Long questionId,
-                        @PathVariable("applicationId") final Long applicationId,
-                        @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
+    public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("questionId") final Long questionId,
+                                                               @PathVariable("applicationId") final Long applicationId,
+                                                               @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
-        return questionService.markAsComplete(ids, markedAsCompleteById).toPutResponse();
+        return questionService.markAsComplete(ids, markedAsCompleteById).toGetResponse();
     }
 
     @RequestMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
