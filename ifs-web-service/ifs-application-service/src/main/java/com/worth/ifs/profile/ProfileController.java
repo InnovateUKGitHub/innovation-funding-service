@@ -1,11 +1,15 @@
 package com.worth.ifs.profile;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +22,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.worth.ifs.address.resource.AddressType;
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.UserService;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This controller will handle all requests that are related to a user profile.
@@ -103,15 +101,15 @@ public class ProfileController {
     }
 	
 	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation) {
-		Optional<OrganisationAddressResource> registeredAddress = getAddress(organisation, AddressType.OPERATING);
+		Optional<OrganisationAddressResource> registeredAddress = getAddress(organisation, OrganisationAddressType.OPERATING);
 		if(registeredAddress.isPresent()) {
 			return registeredAddress;
 		}
-		return getAddress(organisation, AddressType.REGISTERED);
+		return getAddress(organisation, OrganisationAddressType.REGISTERED);
 	}
 	
-	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final AddressType addressType) {
-		return organisation.getAddresses().stream().filter(a -> addressType.equals(a.getAddressType())).findFirst();
+	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
+		return organisation.getAddresses().stream().filter(a -> addressType.equals(OrganisationAddressType.valueOf(a.getAddressType().getName()))).findFirst();
 	}
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
