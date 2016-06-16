@@ -22,8 +22,8 @@ public class QuestionStatusController {
     private QuestionService questionService;
 
     @RequestMapping("/findByQuestionAndApplication/{questionId}/{applicationId}")
-    public RestResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
-        return questionService.getQuestionStatusByApplicationIdAndAssigneeId(questionId, applicationId).toGetResponse();
+    public RestResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
+        return questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}")
