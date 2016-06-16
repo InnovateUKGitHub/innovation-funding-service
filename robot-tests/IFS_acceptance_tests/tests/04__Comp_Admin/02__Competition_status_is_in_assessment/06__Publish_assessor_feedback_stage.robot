@@ -78,7 +78,7 @@ Successful applicant gets feedback email
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email    Pending
-    # pending due to INFUND-3476
+    # Pending due to INFUND-3476
     Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}    Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
