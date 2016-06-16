@@ -35,7 +35,7 @@ Academic finances should be editable when lead marks them as complete
 Academic finance validations
     [Documentation]    INFUND-2399
     [Tags]
-    [Setup]    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
     Mark academic finances as complete
@@ -77,7 +77,7 @@ Lead applicant can't upload a JeS file
 Academics upload
     [Documentation]    INFUND-917
     [Tags]
-    [Setup]    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
@@ -116,7 +116,7 @@ Lead applicant can view the file on the finances overview page
 Academic finances JeS link showing
     [Documentation]    INFUND-2402
     [Tags]    Academic
-    [Setup]    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     Then the user can see the link for more JeS details
 
@@ -149,6 +149,7 @@ Academic finance overview
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf
     Then the user should see the text in the page    Adobe Acrobat PDF Files
+    [Teardown]    The user marks the academic application finances as incomplete
 
 *** Keywords ***
 the academic partner fills the finances
@@ -228,13 +229,3 @@ Mark academic finances as complete
 the user waits for the file to be scanned by the anti virus software
     Sleep    5s
     # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
-
-The user navigates to the academic application finances
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Your finances
-
-The user navigates to the finance overview of the academic
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Finances overview

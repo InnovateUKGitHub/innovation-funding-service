@@ -48,11 +48,11 @@
 
 		<div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'Submitted'}" th:unless="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
 			<div class="success-alert extra-margin-bottom">
-				<p><strong>Your spend profile is currently with the lead applicant who will submit it to Innovate UK</strong></p>
+				<p><strong>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.</strong></p>
 			</div>
 		</div>
 
-		<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have now been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
+		<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
 
 		<dl class="standard-definition-list">
 			<dt>Project start date</dt>
@@ -154,45 +154,45 @@
 					<thead>
 						<tr>
 							<th class="alignleft fix-left" scope="row" id="month">Month</th>
-							<th scope="col" id="month1">Jun 16</th>
-							<th scope="col" id="month2">Jul 16</th>
-							<th scope="col" id="month3">Aug 16</th>
-							<th scope="col" id="month4">Sep 16</th>
-							<th scope="col" id="month5">Oct 16</th>
-							<th scope="col" id="month6">Nov 16</th>
-							<th scope="col" id="month7">Dec 16</th>
-							<th scope="col" id="month8">Jan 17</th>
-							<th scope="col" id="month9">Feb 17</th>
-							<th scope="col" id="month10" class="separate-cell year">Mar 17</th>
+							<th scope="col" id="month1">Jun 2016</th>
+							<th scope="col" id="month2">Jul 2016</th>
+							<th scope="col" id="month3">Aug 2016</th>
+							<th scope="col" id="month4">Sep 2016</th>
+							<th scope="col" id="month5">Oct 2016</th>
+							<th scope="col" id="month6">Nov 2016</th>
+							<th scope="col" id="month7">Dec 2016</th>
+							<th scope="col" id="month8">Jan 2017</th>
+							<th scope="col" id="month9">Feb 2017</th>
+							<th scope="col" id="month10" class="separate-cell year">Mar 2017</th>
 
-							<th scope="col" id="month11">Apr 17</th>
-							<th scope="col" id="month12">May 17</th>
-							<th scope="col" id="month13">Jun 17</th>
-							<th scope="col" id="month14">Jul 17</th>
-							<th scope="col" id="month15">Aug 17</th>
-							<th scope="col" id="month16">Sep 17</th>
-							<th scope="col" id="month17">Oct 17</th>
-							<th scope="col" id="month18">Nov 17</th>
-							<th scope="col" id="month19">Dec 17</th>
-							<th scope="col" id="month20">Jan 18</th>
-							<th scope="col" id="month21">Feb 18</th>
-							<th scope="col" id="month22" class="separate-cell year">Mar 18</th>
+							<th scope="col" id="month11">Apr 2017</th>
+							<th scope="col" id="month12">May 2017</th>
+							<th scope="col" id="month13">Jun 2017</th>
+							<th scope="col" id="month14">Jul 2017</th>
+							<th scope="col" id="month15">Aug 2017</th>
+							<th scope="col" id="month16">Sep 2017</th>
+							<th scope="col" id="month17">Oct 2017</th>
+							<th scope="col" id="month18">Nov 2017</th>
+							<th scope="col" id="month19">Dec 2017</th>
+							<th scope="col" id="month20">Jan 2018</th>
+							<th scope="col" id="month21">Feb 2018</th>
+							<th scope="col" id="month22" class="separate-cell year">Mar 2018</th>
 
-							<th scope="col" id="month23">Apr 18</th>
-							<th scope="col" id="month24">May 18</th>
-							<th scope="col" id="month25">Jun 18</th>
-							<th scope="col" id="month26">Jul 18</th>
-							<th scope="col" id="month27">Aug 18</th>
-							<th scope="col" id="month28">Sep 18</th>
-							<th scope="col" id="month29">Oct 18</th>
-							<th scope="col" id="month30">Nov 18</th>
-							<th scope="col" id="month31">Dec 18</th>
-							<th scope="col" id="month32">Jan 19</th>
-							<th scope="col" id="month33">Feb 19</th>
-							<th scope="col" id="month34" class="separate-cell year">Mar 19</th>
+							<th scope="col" id="month23">Apr 2018</th>
+							<th scope="col" id="month24">May 2018</th>
+							<th scope="col" id="month25">Jun 2018</th>
+							<th scope="col" id="month26">Jul 2018</th>
+							<th scope="col" id="month27">Aug 2018</th>
+							<th scope="col" id="month28">Sep 2018</th>
+							<th scope="col" id="month29">Oct 2018</th>
+							<th scope="col" id="month30">Nov 2018</th>
+							<th scope="col" id="month31">Dec 2018</th>
+							<th scope="col" id="month32">Jan 2019</th>
+							<th scope="col" id="month33">Feb 2019</th>
+							<th scope="col" id="month34" class="separate-cell year">Mar 2019</th>
 
-							<th scope="col" id="month35">Apr 19</th>
-							<th scope="col" id="month36">May 19</th>
+							<th scope="col" id="month35">Apr 2019</th>
+							<th scope="col" id="month36">May 2019</th>
 
 							<th scope="col" class="total fix-right2" id="grand-total">Total</th>
 							<th scope="col" class="total eligible fix-right" id="eligible-project-cost">Eligible project cost</th>
