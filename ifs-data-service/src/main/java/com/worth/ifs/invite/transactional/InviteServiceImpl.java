@@ -202,7 +202,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return findByApplicationId(applicationId).andOnSuccessReturn(invites -> {
 
             List<Long> inviteOrganisationIds = invites.stream().map(i -> i.getInviteOrganisation().getId()).collect(Collectors.toList());
-            Iterable<InviteOrganisation> inviteOrganisations = inviteOrganisationRepository.findAll(inviteOrganisationIds);
+            Iterable<InviteOrganisation> inviteOrganisations = inviteOrganisationRepository.findByOrganisationIdAndInvitesApplicationId(inviteOrganisationIds.get(0),applicationId);
             return Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations));
         });
     }
@@ -273,6 +273,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {
+        LOG.debug("Invites found by application id: " + applicationId + " are: " + inviteRepository.findByApplicationId(applicationId).stream().count());
         return serviceSuccess(inviteRepository.findByApplicationId(applicationId));
     }
 
