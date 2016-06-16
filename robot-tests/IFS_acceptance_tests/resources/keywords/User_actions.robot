@@ -79,7 +79,7 @@ the user should be redirected to the correct page without error checking
 
 the user reloads the page
     Reload Page
-    run keyword and ignore error      confirm action
+    run keyword and ignore error    confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -125,10 +125,9 @@ the user selects the radio button
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
-
 the user sees that the radio button is selected
-    [Arguments]     ${RADIO_BUTTON}     ${SELECTION}
-    Radio Button Should Be Set To     ${RADIO_BUTTON}    ${SELECTION}
+    [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
+    Radio Button Should Be Set To    ${RADIO_BUTTON}    ${SELECTION}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -137,8 +136,6 @@ the user sees that the radio button is selected
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
-
-
 
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -240,7 +237,6 @@ the user should not see an error in the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
 
-
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
     wait until page contains element    css=.error-message
@@ -285,6 +281,7 @@ The applicant assigns the question to the collaborator
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
+    Wait Until Element Is Not Visible    css=div.event-alert
     The user clicks the button/link    css=.assign-button
     The user clicks the button/link    jQuery=button:contains("${NAME}")
     Reload Page
