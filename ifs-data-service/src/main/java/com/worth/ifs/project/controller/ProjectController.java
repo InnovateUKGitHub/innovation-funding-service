@@ -1,7 +1,7 @@
 package com.worth.ifs.project.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -57,7 +57,7 @@ public class ProjectController {
                                                  @RequestParam("leadOrganisationId") final Long leadOrganisationId,
                                                  @RequestParam("addressType") final String addressType,
                                                  @RequestBody AddressResource addressResource) {
-        return projectService.updateProjectAddress(leadOrganisationId, projectId, AddressType.valueOf(addressType), addressResource).toPostResponse();
+        return projectService.updateProjectAddress(leadOrganisationId, projectId, OrganisationAddressType.valueOf(addressType), addressResource).toPostResponse();
     }
 
     @RequestMapping(value = "/user/{userId}")
