@@ -30,7 +30,7 @@ public class CategoryLinkServiceImplTest extends BaseUnitTestMocksTest {
 
         when(categoryLinkRepositoryMock.findByClassNameAndClassPkAndCategory_Type(categoryLink.getClassName(), categoryLink.getClassPk(), CategoryType.INNOVATION_AREA)).thenReturn(categoryLink);
 
-        categoryLinkService.addOrUpdateOrDeleteLink(categoryLink.getClassName(), categoryLink.getClassPk(), CategoryType.INNOVATION_AREA, null).getSuccessObject();
+        categoryLinkService.updateCategoryLink(null, CategoryType.INNOVATION_AREA, categoryLink.getClassName(), categoryLink.getClassPk()).getSuccessObject();
 
         verify(categoryLinkRepositoryMock, times(1)).delete(categoryLink);
     }
@@ -46,7 +46,7 @@ public class CategoryLinkServiceImplTest extends BaseUnitTestMocksTest {
 
         when(categoryLinkRepositoryMock.findByClassNameAndClassPkAndCategory_Type(categoryLink.getClassName(), categoryLink.getClassPk(), CategoryType.INNOVATION_AREA)).thenReturn(categoryLink);
 
-        categoryLinkService.addOrUpdateOrDeleteLink(categoryLink.getClassName(), categoryLink.getClassPk(), CategoryType.INNOVATION_AREA, 2L).getSuccessObject();
+        categoryLinkService.updateCategoryLink(2L, CategoryType.INNOVATION_AREA, categoryLink.getClassName(), categoryLink.getClassPk()).getSuccessObject();
 
         verify(categoryLinkRepositoryMock, times(1)).save(categoryLink);
     }
@@ -61,7 +61,7 @@ public class CategoryLinkServiceImplTest extends BaseUnitTestMocksTest {
 
         when(categoryLinkRepositoryMock.findByClassNameAndClassPkAndCategory_Type(categoryLink.getClassName(), categoryLink.getClassPk(), CategoryType.INNOVATION_AREA)).thenReturn(null);
 
-        categoryLinkService.addOrUpdateOrDeleteLink(categoryLink.getClassName(), categoryLink.getClassPk(), CategoryType.INNOVATION_AREA, 2L).getSuccessObject();
+        categoryLinkService.updateCategoryLink(2L, CategoryType.INNOVATION_AREA, categoryLink.getClassName(), categoryLink.getClassPk()).getSuccessObject();
 
         verify(categoryLinkRepositoryMock, times(1)).save(isA(CategoryLink.class));
     }

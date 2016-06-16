@@ -6,5 +6,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CategoryLinkService {
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<Void> addOrUpdateOrDeleteLink(String className, Long classPk, CategoryType categoryType, Long categoryId);
+    ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, String className, Long classPk);
 }

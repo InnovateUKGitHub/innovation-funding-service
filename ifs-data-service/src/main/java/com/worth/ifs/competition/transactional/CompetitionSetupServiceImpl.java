@@ -132,7 +132,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
-        categoryLinkService.addOrUpdateOrDeleteLink(COMPETITION_CLASS_NAME, competitionResource.getId(), categoryType, categoryId);
+        categoryLinkService.updateCategoryLink(categoryId, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
     }
 
     @Override

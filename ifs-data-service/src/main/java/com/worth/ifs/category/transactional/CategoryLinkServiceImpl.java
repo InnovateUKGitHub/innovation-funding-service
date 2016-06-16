@@ -28,13 +28,13 @@ public class CategoryLinkServiceImpl extends BaseTransactionalService implements
      * This method checks if there already is a CategoryLink, if there is it updates that CategoryLink.
      * If there is no CategoryLink, it creates it.
      * If the param categoryId is empty, the CategoryLink is removed if it is existing.
+     * @param categoryId The ID of the Category instance. If null the (optional) existing CategoryLink is deleted.
+     * @param categoryType The type of the Category.
      * @param className The Class name of the object to link the Category to.
      * @param classPk The Primary Key of the object to link the Category to.
-     * @param categoryType The type of the Category.
-     * @param categoryId The ID of the Category instance. If null the (optional) existing CategoryLink is deleted.
      */
     @Override
-    public ServiceResult<Void> addOrUpdateOrDeleteLink(String className, Long classPk, CategoryType categoryType, Long categoryId){
+    public ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, String className, Long classPk){
         CategoryLink existingCategoryLink = categoryLinkRepository.findByClassNameAndClassPkAndCategory_Type(className, classPk, categoryType);
 
         if (categoryId == null) {
