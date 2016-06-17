@@ -109,21 +109,21 @@ public class FormInputResponsePermissionRules {
         List<QuestionStatus> questionStatuses = formInput.getQuestion().getQuestionStatuses();
 
         return questionStatuses.stream()
-                .filter(questionStatus -> questionStatus.getApplication().getId() == responseCommand.getApplicationId()).collect(Collectors.toList());
+                .filter(questionStatus -> questionStatus.getApplication().getId().equals(responseCommand.getApplicationId())).collect(Collectors.toList());
     }
 
 
     private boolean checkIfAssignedToQuestion(List<QuestionStatus> questionStatuses, final UserResource user) {
         boolean isAssigned = questionStatuses.stream()
                 .anyMatch(questionStatus -> questionStatus.getAssignee() == null
-                                || questionStatus.getAssignee().getUser().getId() == user.getId());
+                                || questionStatus.getAssignee().getUser().getId().equals(user.getId()));
 
         return isAssigned;
     }
 
     private boolean checkIfQuestionIsMarked(List<QuestionStatus> questionStatuses) {
         boolean isMarked = questionStatuses.stream()
-                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete() == true);
+                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true));
 
         return isMarked;
     }
