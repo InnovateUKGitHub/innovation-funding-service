@@ -1,4 +1,4 @@
-FROM davidcaste/alpine-tomcat:jre8tomcat8
+FROM davidcaste/alpine-tomcat:jdk8tomcat8
 MAINTAINER David Soff <dsoff@worth.systems>
 
 COPY setup-files/scripts/docker/jrebel.jar /jrebel.jar
@@ -13,8 +13,8 @@ COPY setup-files/scripts/docker/server.xml /opt/tomcat/conf/server.xml
 
 COPY setup-files/scripts/docker/certificate /certificate
 
-WORKDIR $JAVA_HOME/jre/lib/security
+WORKDIR $JAVA_HOME
 
-# RUN ../../bin/keytool -import -trustcacerts -keystore cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
+RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
 
 WORKDIR /
