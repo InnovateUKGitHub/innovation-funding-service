@@ -1,6 +1,6 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
@@ -53,7 +53,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressType type) {
+     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type) {
         return postWithRestResultAnonymous(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
     }
 }

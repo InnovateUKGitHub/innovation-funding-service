@@ -12,8 +12,8 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
 
-
-	<div class="page-title">
+    <div th:include="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" th:remove="tag" />
+      	<div class="page-title">
             <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${title}" />
         </div>
@@ -33,6 +33,7 @@
                  th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
                 <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}" />
             </div>
+
             <div th:if="${currentSection}" th:remove="tag">
                 <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
                 <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
@@ -46,8 +47,13 @@
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
+            <div th:if="${allReadOnly}" th:remove="tag">
+                <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
+            </div>
+            <div th:unless="${allReadOnly}" th:remove="tag">
+                <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+            </div>
 
-            <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             <div class="alignright-button" th:if="${(currentSection != null) and (currentSection.getName() != null) and (#strings.equals(currentSection.getName(), 'Your finances'))}">
                 <div th:include="question-type/form-elements :: form-mark-all-as-complete-buttons" th:remove="tag"/>
             </div>

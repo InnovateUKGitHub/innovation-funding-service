@@ -6,7 +6,7 @@ Documentation     INFUND-1987
 ...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
 ...
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Comp admin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

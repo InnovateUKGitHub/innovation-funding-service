@@ -132,6 +132,10 @@ table{
 			@extend %icon-tick;
 			background-position: 50% 50%;
 		}
+		&.rejected{
+			@extend  %icon-cross;
+			background-position: 50% 50%;
+		}
 		&.action{
 			//background: $red;
 			@extend  %icon-assigned-to-me;
@@ -165,6 +169,7 @@ table{
 		flex: 0 0 270px;
 		border-right: 1px solid #bfc1c3;
 		margin-right: 5px;
+		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 	.flex-middle{ 
 		overflow: auto;
@@ -188,6 +193,7 @@ table{
 		width: 150px;
 		right: 150px;
 		padding: 1.3em 0;
+		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 	
 	.fix-right{
@@ -195,6 +201,7 @@ table{
 		width: 150px;
 		right: 0;
 		padding: 1.3em 0;
+		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 
 	@include media-down(tablet) {
@@ -232,6 +239,10 @@ table{
 	th, td{
 		box-sizing: border-box;
 		height: 60px;
+	}
+
+	th[scope='col']{
+		min-width: 7em;
 	}
 
 	input{

@@ -93,8 +93,8 @@ the field is empty
 
 the applicant should not see the validation error any more
     Focus    css=.app-submit-btn
-    sleep    1s
-    Wait Until Element Is Not Visible    css=.error-message
+
+    the user should not see the element   css=.error-message
 
 the applicant inserts an invalid date "18-11-2015"
     Clear Element Text    id=application_details-startdate_day
@@ -113,7 +113,7 @@ the applicant clears the text area of the "Project Summary"
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
     Comment    Click Element    css=.fa-bold
-    Sleep    2s
+    Sleep    300ms
 
 the applicant clears the application title field
     Clear Element Text    id=application_details-title
@@ -121,11 +121,10 @@ the applicant clears the application title field
 The applicant should get a validation error message
     [Arguments]    ${validation error}
     focus    jQuery=button:contains("Save and")
-    sleep    5s
+    sleep    300ms
     Run Keyword and ignore error    Wait Until Page Contains    ${validation_error}
-    #Element Should Be Visible    css=.error-message
 
 Applicant goe to the application details page of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    When the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Application details

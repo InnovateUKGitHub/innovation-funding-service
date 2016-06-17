@@ -23,7 +23,7 @@
 		<div th:if="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
 			<div class="marked-complete-alert extra-margin-bottom">
 				<p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
-	have submitted their profile spends submit them to Innovate UK</p>
+	have submitted their spend profiles submit them to Innovate UK</p>
 			</div>
 		</div>
 
@@ -48,11 +48,11 @@
 
 		<div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'Submitted'}" th:unless="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
 			<div class="success-alert extra-margin-bottom">
-				<p><strong>Your spend profile is currently with the lead applicant who will submit it to Innovate UK</strong></p>
+				<p><strong>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.</strong></p>
 			</div>
 		</div>
 
-		<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have now been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
+		<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
 
 		<dl class="standard-definition-list">
 			<dt>Project start date</dt>
@@ -129,7 +129,7 @@
 			Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.
 		</p>
 
-		<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for your project.</p>
+		<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed spend profile for your project.</p>
 
 		<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 
@@ -153,46 +153,46 @@
 				<table id="table-forecast">
 					<thead>
 						<tr>
-							<th class="alignleft fix-left">Month</th>
-							<th>Jun 16</th>
-							<th>Jul 16</th>
-							<th>Aug 16</th>
-							<th>Sep 16</th>
-							<th>Oct 16</th>
-							<th>Nov 16</th>
-							<th>Dec 16</th>
-							<th>Jan 17</th>
-							<th>Feb 17</th>
-							<th class="separate-cell year">Mar 17</th>
+							<th class="alignleft fix-left" scope="row" id="month">Month</th>
+							<th scope="col" id="month1">Jun 2016</th>
+							<th scope="col" id="month2">Jul 2016</th>
+							<th scope="col" id="month3">Aug 2016</th>
+							<th scope="col" id="month4">Sep 2016</th>
+							<th scope="col" id="month5">Oct 2016</th>
+							<th scope="col" id="month6">Nov 2016</th>
+							<th scope="col" id="month7">Dec 2016</th>
+							<th scope="col" id="month8">Jan 2017</th>
+							<th scope="col" id="month9">Feb 2017</th>
+							<th scope="col" id="month10" class="separate-cell year">Mar 2017</th>
 
-							<th>Apr 17</th>
-							<th>May 17</th>
-							<th>Jun 17</th>
-							<th>Jul 17</th>
-							<th>Aug 17</th>
-							<th>Sep 17</th>
-							<th>Oct 17</th>
-							<th>Nov 17</th>
-							<th>Dec 17</th>
-							<th>Jan 18</th>
-							<th>Feb 18</th>
-							<th class="separate-cell year">Mar 18</th>
+							<th scope="col" id="month11">Apr 2017</th>
+							<th scope="col" id="month12">May 2017</th>
+							<th scope="col" id="month13">Jun 2017</th>
+							<th scope="col" id="month14">Jul 2017</th>
+							<th scope="col" id="month15">Aug 2017</th>
+							<th scope="col" id="month16">Sep 2017</th>
+							<th scope="col" id="month17">Oct 2017</th>
+							<th scope="col" id="month18">Nov 2017</th>
+							<th scope="col" id="month19">Dec 2017</th>
+							<th scope="col" id="month20">Jan 2018</th>
+							<th scope="col" id="month21">Feb 2018</th>
+							<th scope="col" id="month22" class="separate-cell year">Mar 2018</th>
 
-							<th>Apr 18</th>
-							<th>May 18</th>
-							<th>Jun 18</th>
-							<th>Jul 18</th>
-							<th>Aug 18</th>
-							<th>Sep 18</th>
-							<th>Oct 18</th>
-							<th>Nov 18</th>
-							<th>Dec 18</th>
-							<th>Jan 19</th>
-							<th>Feb 19</th>
-							<th class="separate-cell year">Mar 19</th>
+							<th scope="col" id="month23">Apr 2018</th>
+							<th scope="col" id="month24">May 2018</th>
+							<th scope="col" id="month25">Jun 2018</th>
+							<th scope="col" id="month26">Jul 2018</th>
+							<th scope="col" id="month27">Aug 2018</th>
+							<th scope="col" id="month28">Sep 2018</th>
+							<th scope="col" id="month29">Oct 2018</th>
+							<th scope="col" id="month30">Nov 2018</th>
+							<th scope="col" id="month31">Dec 2018</th>
+							<th scope="col" id="month32">Jan 2019</th>
+							<th scope="col" id="month33">Feb 2019</th>
+							<th scope="col" id="month34" class="separate-cell year">Mar 2019</th>
 
-							<th>Apr 19</th>
-							<th>May 19</th>
+							<th scope="col" id="month35">Apr 2019</th>
+							<th scope="col" id="month36">May 2019</th>
 
 							<th scope="col" class="total fix-right2" id="grand-total">Total</th>
 							<th scope="col" class="total eligible fix-right" id="eligible-project-cost">Eligible project cost</th>
@@ -200,7 +200,7 @@
 					</thead>
 					<tfoot>
 						<tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
-							<th scope="row" id="total" class="fix-left">Total</th>
+							<th scope="row" id="total" class="fix-left" >Total</th>
 							<td>26,000</td>
 							<td>26,000</td>
 							<td>26,000</td>
@@ -247,23 +247,23 @@
 					</tfoot>
 					<tbody>
 						<div th:if="${param.status == null or param.status[0] != 'edit'}" th:remove="tag">
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Sub-contracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Travel &#38; subsistance'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Travel &#38; subsistence'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
 						</div>
 
 						<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Admin support costs (20%)'}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
 							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Sub-contracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel &#38; subsistance'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel &#38; subsistence'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
 						</div>
 					</tbody>
 				</table>
@@ -275,10 +275,13 @@
 		
 		
 		<div class="centralise">
+
+			<div th:include="prototypes/fragments/applicant-view :: prototype-spend-year-totals" th:remove="tag" />
+
 			<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
 				<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
-					<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
+					<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
 				</div>
 
 
@@ -290,9 +293,9 @@
 					<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/3100-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/3100-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 				</div>
 
-				<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">When you are satisfied with the profile spend and it matches the Eligible project costs you will be able to submit your spend profile to the lead partner, before they are submitted to Innovate UK.</p>
+				<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit, make sure you are satisfied with your spend profile and that it matches the eligible project costs. You can submit your spend profile to the lead partner. They will then submit to Innovate UK.</p>
 
-				<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the profile spend mark the section as complete, this will allow you to submit the Project profile spend to innovate UK. If you wish you return to allow edits to this page.</p>
+				<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
 
 
 				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
@@ -311,7 +314,7 @@
 
 							<h2 class="heading-medium no-margin">Send to lead partner</h2>
 
-							<p>Are you sure you want to send your Spend Profile to the lead partner?</p>
+							<p>Are you sure you want to submit your spend profile to the lead partner?</p>
 
 							<hr />
 
@@ -337,11 +340,12 @@
 
 			 	</div>
 			</div>
+
 		</div>
 
 		<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 
-			<div class="extra-margin">
+			<div class="centralise extra-margin">
 
 				<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead':'/prototypes/3100-spend'}" class="button button-secondary" th:unless="${param.spend != null and param.spend[0] == 'high'}" >Save and return to spend profile overview</a>
 
@@ -353,9 +357,9 @@
 
 						<h2 class="heading-medium no-margin">Save</h2>
 
-						<p>Are you sure you wish to save your profile spend with higher costs than your eligible project costs?</p>
+						<p>Are you sure you wish to save your spend profile with higher costs than your eligible project costs?</p>
 
-						<p>You will not be able to submit your project spend until this is corrected.</p>
+						<p>You will not be able to submit your spend profile until this is corrected.</p>
 
 						<hr />
 
@@ -368,6 +372,7 @@
 
 			        </div>
 			    </div>
+
 
 
 			</div>
@@ -387,7 +392,7 @@
 
 					<h2 class="heading-medium no-margin">Allow partner to edit</h2>
 
-					<p><strong>Biotech Corp's</strong> profile spend has been handed back to them, they have been informaed of by email, if there are any specific changes required please contact them.</p>
+					<p><strong>Biotech Corp's</strong> spend profile has been handed back to them, they have been informed of by email, if there are any specific changes required please contact them.</p>
 
 					<hr />
 
@@ -399,8 +404,6 @@
 		    </div>
 		</div>
 
-
-
 		<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
 
 			<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'Submitted'}">
@@ -411,9 +414,9 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Submit project profile spend</h2>
+					<h2 class="heading-medium no-margin">Submit project spend profile</h2>
 
-					<p>The project profile spend will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+					<p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
 
 					<hr />
 

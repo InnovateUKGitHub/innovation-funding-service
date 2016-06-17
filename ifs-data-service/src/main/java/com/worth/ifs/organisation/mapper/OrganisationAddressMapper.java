@@ -1,6 +1,7 @@
 package com.worth.ifs.organisation.mapper;
 
 import com.worth.ifs.address.mapper.AddressMapper;
+import com.worth.ifs.address.mapper.AddressTypeMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
@@ -10,8 +11,9 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        AddressMapper.class,
-        OrganisationMapper.class
+            AddressMapper.class,
+            AddressTypeMapper.class,
+            OrganisationMapper.class
     }
 )
 public abstract class OrganisationAddressMapper extends BaseMapper<OrganisationAddress, OrganisationAddressResource, Long> {

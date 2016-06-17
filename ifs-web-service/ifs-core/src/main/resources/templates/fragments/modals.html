@@ -135,3 +135,21 @@
         </div>
     </div>
 </div>
+
+<!-- save project details -->
+<div th:fragment="modal-project-details">
+	<div class="modal-project-details" role="dialog" aria-hidden="true">
+				<div th:include="fragments/modals :: close-button" th:remove="tag" />
+				<h2 class="heading-medium no-margin">Submit project details</h2>
+				<p>Are you sure that you wish to submit your project details to Innovate UK</p>
+				<hr/>
+				<div class="grid-row">
+					<div class="column-half">
+							<button type="button" class="js-close button buttonlink large">Cancel</button>
+					</div>
+					<div class="column-half alignright-button">
+						<a href="/prototypes/1588-project-status?stage=level2" class="button large">Submit</a>
+					</div>
+				</div>
+	</div>
+</div>

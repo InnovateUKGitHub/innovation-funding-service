@@ -29,19 +29,19 @@
 
 <div th:fragment="prototype-section-essential">
     <h2 class="heading-medium no-margin-top">Step 1: Initial competition details</h2>
-
-     <div class="warning-alert extra-margin-bottom" th:unless="${param.compPaf != null and param.compPaf[0] != ''}">
-        <h2 class="heading-small">Invalid input provided</h2>
-        <p>PAF No is a mandatory field. <br />
-        Please enter a PAF (Project Authorisation Form) number - It looks like this: <i>XX12345ZZ_6</i></p>
-    </div>
     
     <div class="panel-indent">
         This will create a new Competition - you will be able to specify more details as you proceed
     </div>
 
     <form id="form-essential">
-        <fieldset th:if="${param.status == null or param.status[0] == 'edit'}" id="section-1-edit">
+        <fieldset id="section-1-edit">
+
+            <div class="warning-alert extra-margin-bottom" th:unless="${param.compPaf != null and param.compPaf[0] != ''}">
+                <h2 class="heading-small">Invalid input provided</h2>
+                <p>PAF No is a mandatory field. <br />
+                Please enter a PAF (Project Authorisation Form) number - It looks like this: <i>XX12345ZZ_6</i></p>
+            </div>
 
             <legend class="visuallyhidden">Initial details</legend>
             
@@ -190,57 +190,45 @@
             </div>
         </fieldset>
         
-        <fieldset th:if="${param.status != null and param.status[0] == 'done'}" id="section-1-">
+        <fieldset id="section-1-done">
 
             <dl class="standard-definition-list">
                 <dt>Competition executive</dt>
-                <dd th:text="${param.compExecutive[0]}"></dd>
+                <dd>John Smith (you)</dd>
 
                 <dt>Opening date</dt>
-                <dd th:text="${param.startDay[0]+'/'+param.startMonth[0]+'/'+param.startYear[0]}"></dd>
+                <dd>15/07/2017</dd>
 
                 <dt>Competition title</dt>
-                <dd th:text="${param.compTitle[0]}"></dd>
+                <dd>A newly created competition</dd>
 
                 <dt>Innovation sector</dt>
-                <dd th:text="${param.compInnovationSector[0]}"></dd>
+                <dd>Health and life sciences</dd>
 
                 <dt>Innovation area</dt>
-                <dd th:text="${param.compInnovationArea[0]}"></dd>
+                <dd>Agriculture &#38; food</dd>
 
                 <dt>Competition type</dt>
-                <dd th:text="${param.compType[0]}"></dd>
+                <dd>Programme</dd>
 
                 <dt>State aid</dt>
                 <dd id="stateAid">
                     <span class="yes">Yes</span>
-                    <span class="no">No</span>
                 </dd>
+
+                <dt>Lead technologist</dt>
+                <dd>Natalie Wilson</dd>
                 
                 <dt>PAF number</dt>
-                <dd th:text="${param.compPaf[0]}"></dd>
+                <dd>12345</dd>
 
                 <dt>Budget code</dt>
-                <dd th:text="${param.compBudgetCode[0]}"></dd>
+                <dd>AA1233544</dd>
 
                 <dt>Competition code</dt>
-                <dd th:text="${param.compCode[0]}"></dd>
-
-
+                <dd>1605-1</dd>
             </dl>
-            
-            
-            <input type="hidden" name="compExecutive" th:value="${param.compExecutive[0]}" />
-            <input type="hidden" name="startDay" th:value="${param.startDay[0]}" /> 
-            <input type="hidden" name="startMonth" th:value="${param.startMonth[0]}" /> 
-            <input type="hidden" name="startYear" th:value="${param.startYear[0]}" />
-            <input type="hidden" name="compTitle" th:value="${param.compTitle[0]}" /> 
-            <input type="hidden" name="compInnovationSector" th:value="${param.compInnovationSector[0]}" />
-            <input type="hidden" name="compInnovationArea" th:value="${param.compInnovationArea[0]}" />
-            <input type="hidden" name="compType" th:value="${param.compType[0]}" />
-            <input type="hidden" name="compPaf" th:value="${param.compPaf[0]}" />
-            <input type="hidden" name="compBudgetCode" th:value="${param.compBudgetCode[0]}" />
-            <input type="hidden" name="compCode" th:value="${param.compCode[0]}" /> 
+        
 
         </fieldset>
 
@@ -271,7 +259,7 @@
     </div>
 
     <form>
-        <fieldset>
+        <fieldset  id="section-2-edit">
             <legend class="visuallyhidden">Additional information</legend>
 
             <div class="form-group">
@@ -300,7 +288,22 @@
             </div>
         </fieldset>
 
-        <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=additional, sectionId=2" th:remove="tag" />
+        <fieldset id="section-2-done">
+            <dl class="standard-definition-list">
+                <dt>Activity code (optional)</dt>
+                <dd>1243</dd>
+                <dt>Innovate budget (optional)</dt>
+                <dd>5 M</dd>
+                <dt>Co-funders (optional)</dt>
+                <dd>Research council</dd>
+                <dt>Co-funders budget (optional)</dt>
+                <dd>1.5 M</dd>
+            </dl>
+        </fieldset>
+        
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=additional, sectionId=2" th:remove="tag" />
+        </div>
 
     </form>
     <ul class="pagination">
@@ -330,7 +333,7 @@
     </div>
 
     <form>
-        <fieldset>
+        <fieldset id="section-3-edit">
             <legend class="visuallyhidden">Eligibility</legend>
             
             <div class="form-group">
@@ -355,7 +358,26 @@
         </fieldset>
 
 
-        <div class="grid-row">
+        <fieldset id="section-3-done">
+            
+            <dl class="standard-definition-list">
+                <dt>Multiple stream</dt>
+                <dd>Yes</dd>
+                <dt>Research category</dt>
+                <dd>Technical feasibility, Industrial research</dd>
+                <dt>Single or collaborative?</dt>
+                <dd>Single or collaborative</dd>
+                <dt>Research participation</dt>
+                <dd>50%</dd>
+                <dt>Are resubmissions allowed?</dt>
+                <dd>No</dd>
+            </dl>
+            
+
+        </fieldset>
+
+
+        <div class="grid-row ">
             <div class="column-half">
                  <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
             </div>
@@ -542,33 +564,69 @@
     </div>
 
     <form>
+        
+        <fieldset id="section-4-edit">
 
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col" style="width: 40%" id="milestone">Milestone</th>
-                    <th scope="col" style="width: 10%" class="aligncentre" id="weekday">Weekday</th>
-                    <th scope="col" style="width: 10%" class="aligncentre" id="day">Day</th>
-                    <th scope="col" style="width: 10%" class="aligncentre" id="month">Month</th>
-                    <th scope="col" style="width: 10%" class="aligncentre" id="year">Year</th>
-                    <th scope="col" style="width: 15%" class="aligncentre" id="date-picker">Calendar view</th>
-                </tr>
-            </thead>
-            <tbody>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
-            </tbody>
-        </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 40%" id="milestone">Milestone</th>
+                        <th scope="col" style="width: 10%" class="aligncentre" id="weekday">Weekday</th>
+                        <th scope="col" style="width: 10%" class="aligncentre" id="day">Day</th>
+                        <th scope="col" style="width: 10%" class="aligncentre" id="month">Month</th>
+                        <th scope="col" style="width: 10%" class="aligncentre" id="year">Year</th>
+                        <th scope="col" style="width: 15%" class="aligncentre" id="date-picker">Calendar view</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
+                </tbody>
+            </table>
+
+        </fieldset>
+
+        <fieldset id="section-4-done">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 40%" id="milestone">Milestone</th>
+                        <th scope="col" style="width: 10%" id="weekday">Weekday</th>
+                        <th scope="col" style="width: 10%" id="day">Day</th>
+                        <th scope="col" style="width: 10%" id="month">Month</th>
+                        <th scope="col" style="width: 10%" id="year">Year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>2. Briefing event</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>3. Submission date</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>4. Allocate assessors</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>5. Assessor briefing</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>6. Assessor accepts</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>7. Assessor deadline</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>8. Line draw</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>9. Assessment panel</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>10. Panel date</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>11. Funders panel</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>12. Notifications</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>13. Release feedback</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                </tbody>
+            </table>
+
+        </fieldset>
+
+
 
         <div class="extra-margin">
             <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4" th:remove="tag" />

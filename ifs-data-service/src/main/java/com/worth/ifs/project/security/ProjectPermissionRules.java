@@ -16,8 +16,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "A user can see an project resource which they are connected to")
     public boolean usersConnectedToTheProjectCanView(ProjectResource project, UserResource user) {
-        boolean isConnectedToProject = userIsConnectedToProjectResource(project, user);
-        return isConnectedToProject;
+        return userIsConnectedToProjectResource(project, user);
     }
 
     @PermissionRule(value = "READ", description = "Comp admins can see project resources")
@@ -29,12 +28,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
             value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
             description = "The lead partner can update the basic project details like start date")
     public boolean updateBasicProjectSetupDetails(ProjectResource project, UserResource user) {
-        return isLeadApplicant(project.getId(), user);
+        return isLeadApplicant(project.getApplication(), user);
     }
 
     public boolean userIsConnectedToProjectResource(ProjectResource project, UserResource user) {
-        ProcessRole processRole =  processRoleRepository.findByUserIdAndApplicationId(user.getId(), project.getId());
+        ProcessRole processRole =  processRoleRepository.findByUserIdAndApplicationId(user.getId(), project.getApplication());
         return processRole != null;
     }
 }
-

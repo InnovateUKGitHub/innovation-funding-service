@@ -1,5 +1,6 @@
 package com.worth.ifs.address.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,5 +34,14 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
         mockMvc.perform(get("/address/doLookup/{postcode}", postCode))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(numberOfAddresses)));
+    }
+
+    @Test
+    public void getByIdShouldReturnAddress() throws Exception {
+        AddressResource addressResource = newAddressResource().build();
+        when(addressService.getById(addressResource.getId())).thenReturn(serviceSuccess(addressResource));
+        mockMvc.perform(get("/address/{id}", addressResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(addressResource)));;
     }
 }

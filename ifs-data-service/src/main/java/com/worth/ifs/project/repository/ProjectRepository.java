@@ -8,4 +8,5 @@ import java.util.List;
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long>{
     @Override
     List<Project> findAll();
+    Project findOneByApplicationId(final Long applicationId);
 }

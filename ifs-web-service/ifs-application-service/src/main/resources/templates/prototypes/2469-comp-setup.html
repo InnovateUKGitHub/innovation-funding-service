@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'14060010:  A newly created competition'}, ${'Competition setup'}, ${'Create new competition'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'14060010:  A newly created competition'}, ${'Competition setup'}, ${'createComp'})" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/comp-setup :: prototype-comp-setup-navigation" th:remove="tag" />
 
@@ -66,7 +66,8 @@
 
 	    var sectionId = $_GET('sectionId'),
 			status = $_GET('status'),
-			compType = $_GET('compType');
+			compType = $_GET('compType'),
+			compStatus = $_GET('compStatus');
 
 
 		if(compType == 'Programme' || compType == 'Managed services'){
@@ -84,33 +85,67 @@
 
 		//Of the available tabs check which section has been 'done'
 
-		
-		for(i = 1; i < jQuery(".inline-nav li").length+1; i++) {
+		var sectionCount = 0;
+		var sectionNumber = jQuery(".inline-nav li").length+1; // count number of sections based on tab;e
+
+		for(i = 1; i < sectionNumber; i++) {
 			
 			if(sectionId == i && status == 'done'){
-				localStorage.setItem('section'+i, 'section-'+i+'-complete');		
+
+				localStorage.setItem('section'+i, 'section-'+i+'-complete');
+
 			}else if (sectionId == i && status == 'edit'){
+
 				localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
+
+			}else if (compStatus == 'ready'){ // set all tabs to done, if the comp is ready to open
+
+				localStorage.setItem('section'+i, 'section-'+i+'-complete'); 
+			
+			}else if (compStatus == 'draft'){ // In draft mode show some that some tavs aren;t complete yet
+
+				if (i <= 3){
+					localStorage.setItem('section'+i, 'section-'+i+'-complete');
+				}else{
+					localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
+				}
 			}
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
 				jQuery('#section-'+i).addClass('marked-as-complete');
+				
+				jQuery('#section-'+i+'-done').show();
+				jQuery('#section-'+i+'-edit').hide();
 
-				/*var querystring = "status=done";
-
-				jQuery('#section-'+i+' a').each(function(){
-					var href = jQuery(this).attr('href');
-					alert(href);
-					 href += (href.match(/\?/) ? '&' : '?') + querystring; // change last '?' to '#' if need
-					 jQuery(this).attr('href', href);
-				});*/
+				sectionCount ++;
 
 			}else{
 				jQuery('#section-'+i).removeClass('marked-as-complete');
-			}
-		} 
-			
 
+				jQuery('#section-'+i+'-done').hide();
+				jQuery('#section-'+i+'-edit').show();
+
+			}
+
+		} 
+
+		//alert(sectionCount+1 +' test'+sectionNumber);
+
+		if(sectionCount+1 == sectionNumber){ // Check that all tabs are complete, thwn change state of CTA
+			jQuery('#compStatus').text('Draft');
+			jQuery('#compCTA').text('Ready to open');
+			jQuery('#compCTA').attr('href','/prototypes/1345-comp-dashboard-MVP?comp=saveOpen');
+
+			if(compStatus == 'ready'){
+				jQuery('#compStatus').text('Ready to open');
+				jQuery('#compCTA').hide();
+			}
+		
+		}else{
+			jQuery('#compStatus').text('Draft');
+			jQuery('#compCTA').text('Save as draft');
+			jQuery('#compCTA').attr('href','/prototypes/1345-comp-dashboard-MVP?comp=saveDraft');
+		}
 
 
 
