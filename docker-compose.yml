@@ -7,6 +7,8 @@ services:
     ports:
       - "443:443"
       - "389:389"
+    environment:
+      - JAVA_OPTS:"$JAVA_OPTS -Xms256m -Xmx512m"
     links:
       - web
       - data
@@ -20,6 +22,7 @@ services:
       dockerfile: web-dockerfile
     ports:
       - "8080:8080"
+      - "12345:12345"
     links:
       - data
     networks:
@@ -35,6 +38,7 @@ services:
       dockerfile: data-dockerfile
     ports:
       - "8090:8080"
+      - "12346:12345"
     depends_on:
       - mysql
     networks:
