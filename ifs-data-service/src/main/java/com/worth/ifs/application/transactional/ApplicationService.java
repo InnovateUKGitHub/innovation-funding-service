@@ -77,13 +77,6 @@ public interface ApplicationService {
                                                                                      final Long userId,
                                                                                      final UserRoleType role);
 
-    //@NotSecured("user only has to be authenticated")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            final Long competitionId,
-            final Long userId,
-            String applicationName);
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
 

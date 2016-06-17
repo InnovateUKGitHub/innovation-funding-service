@@ -378,11 +378,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, String applicationName) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<ApplicationResource> findByProcessRole(Long id) {
             return null;
         }

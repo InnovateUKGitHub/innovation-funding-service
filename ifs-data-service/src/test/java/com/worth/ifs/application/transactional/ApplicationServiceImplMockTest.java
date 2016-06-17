@@ -111,7 +111,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
 
-        ApplicationResource applicationResource = newApplicationResource().build();
+        ApplicationResource  applicationResource = newApplicationResource().build();
 
         when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(Collections.singletonList(applicationStatus));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
@@ -136,6 +136,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
             return true;
         }));
 
+        when(applicationRepositoryMock.save(applicationExpectations)).thenReturn(applicationExpectations);
         when(applicationMapperMock.mapToResource(applicationExpectations)).thenReturn(applicationResource);
 
         ApplicationResource created =

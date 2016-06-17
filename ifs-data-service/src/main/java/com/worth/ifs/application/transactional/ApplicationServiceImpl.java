@@ -121,7 +121,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
         Role role = roles.get(0);
 
-        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+        List<ProcessRole> usersProcessRoles = user.getProcessRoles();
+        Organisation userOrganisation = usersProcessRoles.size()!=0
+                ? usersProcessRoles.get(0).getOrganisation()
+                : user.getOrganisations().get(0);
 
         ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
@@ -131,10 +134,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setProcessRoles(processRoles);
         application.setCompetition(competition);
 
-        applicationRepository.save(application);
+        Application createdApplication = applicationRepository.save(application);
         processRoleRepository.save(processRole);
 
-        return serviceSuccess(applicationMapper.mapToResource(application));
+        return serviceSuccess(applicationMapper.mapToResource(createdApplication));
     }
 
     @Override
@@ -396,49 +399,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         }
 
         return contains;
-    }
-
-    @Override
-    public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            final Long competitionId,
-            final Long userId,
-            final String applicationName) {
-        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) ->
-            createApplicationByApplicationNameForUserAndCompetition(applicationName, user, competition)
-        );
-    }
-    
-    private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserAndCompetition(String applicationName, User user, Competition competition) {
-    	  Application application = new Application();
-          application.setName(applicationName);
-          LocalDate currentDate = null;
-          application.setStartDate(currentDate);
-
-          String name = ApplicationStatusConstants.CREATED.getName();
-
-          List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-          ApplicationStatus applicationStatus = applicationStatusList.get(0);
-
-          application.setApplicationStatus(applicationStatus);
-          application.setDurationInMonths(3L);
-
-          List<Role> roles = roleRepository.findByName("leadapplicant");
-          Role role = roles.get(0);
-
-          Organisation userOrganisation = user.getOrganisations().get(0);
-
-          ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
-
-          List<ProcessRole> processRoles = new ArrayList<>();
-          processRoles.add(processRole);
-
-          application.setProcessRoles(processRoles);
-          application.setCompetition(competition);
-
-          Application createdApplication = applicationRepository.save(application);
-          processRoleRepository.save(processRole);
-
-          return serviceSuccess(applicationMapper.mapToResource(createdApplication));
     }
 
     @Override
