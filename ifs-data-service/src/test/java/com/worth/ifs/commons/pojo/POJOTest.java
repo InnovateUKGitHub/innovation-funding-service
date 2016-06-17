@@ -9,6 +9,8 @@ import com.openpojo.validation.rule.impl.*;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.alert.domain.Alert;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.domain.Application;
@@ -79,7 +81,9 @@ public class POJOTest {
             Project.class,
             ProjectResource.class,
             ProjectUser.class,
-            ProjectUserResource.class
+            ProjectUserResource.class,
+            AddressType.class,
+            AddressTypeResource.class
     );
 
     @Before

@@ -1,5 +1,6 @@
 package com.worth.ifs.transactional;
 
+import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Response;
@@ -59,6 +60,9 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected OrganisationRepository organisationRepository;
+
+    @Autowired
+    protected AddressTypeRepository addressTypeRepository;
 
     protected Supplier<ServiceResult<Response>> response(Long responseId) {
         return () -> getResponse(responseId);

@@ -2,7 +2,7 @@ package com.worth.ifs.project.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -84,7 +84,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void test_CreateProjectFromFundingDecisionsAllowedIfGlobalCompAdminRole() {
         RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-        service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+        service.createProjectsFromFundingDecisions(new HashMap<>());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+                service.createProjectsFromFundingDecisions(new HashMap<>());
                 Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -161,7 +161,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource projectAddress) {
+        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource projectAddress) {
             return null;
         }
 
