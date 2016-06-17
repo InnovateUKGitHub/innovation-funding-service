@@ -9,8 +9,8 @@ services:
       selenium-network:
         aliases:
           - hub
-  firefox:
-    image: selenium/node-firefox
+  chrome:
+    image: selenium/node-chrome
     links:
       - "hub:hub"
     external_links:

@@ -1,5 +1,5 @@
 *** Variables ***
-${BROWSER}        firefox
+${BROWSER}        chrome
 ${SELENIUM_HUB_URL}    ifs-local-dev:4444
 ${SERVER_BASE}    ifs-local-dev
 ${PROTOCOL}       https://

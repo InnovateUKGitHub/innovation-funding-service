@@ -98,16 +98,18 @@ function startSeleniumGrid {
     cd ${testDirectory}
     cd ${scriptDir}
     docker-compose up -d
-    docker-compose scale firefox=5
+    docker-compose scale chrome=5
 }
 
 function startPybot {
     echo "********** starting pybot for ${1} **************"
+    targetDir=`basename ${1}`
     if [ "$localMailSendingImplemented" ]
     then
-        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files  --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS ${1}/* &
+        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome  --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS ${1}/* &
+
     else
-        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files  --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
+        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
     fi
 }
 
