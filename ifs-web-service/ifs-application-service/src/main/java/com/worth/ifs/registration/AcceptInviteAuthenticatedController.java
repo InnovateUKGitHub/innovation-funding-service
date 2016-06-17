@@ -1,19 +1,8 @@
 package com.worth.ifs.registration;
 
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.worth.ifs.BaseController;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
@@ -27,6 +16,15 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
@@ -115,7 +113,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
         return organisation;
     }
 
-    public static boolean invalidInvite(Model model, UserResource loggedInUser, InviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
+    static boolean invalidInvite(Model model, UserResource loggedInUser, InviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
         if (!inviteResource.getEmail().equals(loggedInUser.getEmail())) {
             // Invite is for different emailaddress then current logged in user.
             model.addAttribute("failureMessageKey", "registration.LOGGED_IN_WITH_OTHER_ACCOUNT");
@@ -136,7 +134,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
         if (organisation.getAddresses().size() == 1) {
             address = organisation.getAddresses().get(0).getAddress();
         } else if (!organisation.getAddresses().isEmpty()) {
-            Optional<OrganisationAddressResource> addressOptional = organisation.getAddresses().stream().filter(a -> AddressType.OPERATING.equals(a.getAddressType())).findAny();
+            Optional<OrganisationAddressResource> addressOptional = organisation.getAddresses().stream().filter(a -> OrganisationAddressType.OPERATING.equals(OrganisationAddressType.valueOf(a.getAddressType().getName()))).findAny();
             if (addressOptional.isPresent()) {
                 address = addressOptional.get().getAddress();
             } else {

@@ -1,10 +1,7 @@
 package com.worth.ifs.application.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -13,6 +10,9 @@ import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This class contains methods to retrieve and store {@link OrganisationResource} related data,
@@ -55,7 +55,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressType addressType) {
+    public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType addressType) {
         return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }
 

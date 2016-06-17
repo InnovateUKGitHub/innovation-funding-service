@@ -2,7 +2,7 @@
 Documentation     INFUND-1423 Going back from the 'create your account' page gives an error
 Suite Setup       The guest user opens the browser
 Suite Teardown
-Test Teardown     User closes the browser
+Test Teardown     The user closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

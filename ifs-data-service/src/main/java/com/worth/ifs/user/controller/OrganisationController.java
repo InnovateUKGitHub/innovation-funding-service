@@ -3,7 +3,7 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.organisation.transactional.OrganisationService;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class OrganisationController {
 
     // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?
     @RequestMapping(value = "/addAddress/{organisationId}", method = RequestMethod.POST)
-    public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final AddressType addressType, @RequestBody AddressResource address) {
+    public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final OrganisationAddressType addressType, @RequestBody AddressResource address) {
         return organisationService.addAddress(organisationId, addressType, address).toPutWithBodyResponse();
     }
 }

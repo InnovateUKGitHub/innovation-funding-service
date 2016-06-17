@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2606 - As a competition administrator I want a view of all applications at the 'Assessor Feedback' stage so that I can publish their uploaded assessor feedback
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Comp admin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

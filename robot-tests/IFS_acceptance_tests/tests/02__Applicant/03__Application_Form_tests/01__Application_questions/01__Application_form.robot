@@ -110,7 +110,7 @@ Review and submit button
 
 *** Keywords ***
 the text should be visible
-    Element Should Contain    css=#form-input-11 .editor    I am a robot
+    wait until element contains    css=#form-input-11 .editor    I am a robot
 
 The user clicks the section link and is redirected to the correct section
     [Arguments]    ${link}    ${url}
@@ -129,22 +129,21 @@ the Applicant edits the Project summary
     Sleep    500ms
 
 the word count should be correct for the Project summary
-    sleep    1s
-    Element Should Contain    css=#form-input-11 .count-down    369
+    wait until element contains    css=#form-input-11 .count-down    369
 
 the Applicant edits the Project description question (300 words)
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Input Text    css=#form-input-11 .editor    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
     Focus    css=.app-submit-btn
-    Sleep    1s
+    Sleep    300ms
 
 the text box should turn to green
-    Wait Until Element Is Visible    css=#form-input-11 div.marked-as-complete img.marked-as-complete
+    the user should see the element    css=#form-input-11 div.marked-as-complete img.marked-as-complete
     Element Should Be Disabled    css=#form-input-11 textarea
 
 the button state should change to 'Edit'
-    Wait Until Element Is Visible    jQuery=button:contains("Edit")
+    the user should see the element    jQuery=button:contains("Edit")
 
 the word count for the Project description question should be correct (100 words)
     Element Should Contain    css=#form-input-11 .count-down    100
@@ -155,23 +154,23 @@ the Applicant edits Project summary and marks it as complete
     Press Key    css=#form-input-11 .editor    \\8
     focus    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    Hi, I’m a robot @#$@#$@#$
-    Click Element    css=#form-input-11 div.textarea-footer button[name="mark_as_complete"]
+    the user clicks the button/link    css=#form-input-11 div.textarea-footer button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
-    The user should see the element    jQuery=#section-1 .section:nth-child(2) img[src="/images/field/field-done-right.png"]
+    The user should see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 the text box should be editable
     Element Should Be Enabled    css=#form-input-11 textarea
 
 the button state should change to 'Mark as complete'
-    Wait Until Element Is Visible    jQuery=button:contains("Mark as complete")
+    the user should see the element   jQuery=button:contains("Mark as complete")
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
     Run Keyword And Ignore Error    confirm action
-    Wait Until Element Is Visible    jQuery=#section-1 .section:nth-child(2)
-    Page Should Not Contain Element    jQuery=#section-1 .section:nth-child(2) img[src="/images/field/field-done-right.png"]
+    the user should see the element        jQuery=#section-1 .section:nth-child(2)
+    the user should not see the element   jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label

@@ -1,15 +1,15 @@
 package com.worth.ifs.assessment;
 
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentStates;
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.List;
-
-import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 
 public class AssessmentStatusComparatorTest {
 

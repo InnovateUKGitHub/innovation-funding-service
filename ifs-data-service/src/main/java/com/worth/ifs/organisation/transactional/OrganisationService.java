@@ -1,7 +1,7 @@
 package com.worth.ifs.organisation.transactional;
 
-import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -31,7 +31,7 @@ public interface OrganisationService {
     ServiceResult<OrganisationResource> update(@P("organisation") OrganisationResource organisationResource);
 
     @PreAuthorize("hasPermission(#organisationId, 'com.worth.ifs.user.resource.OrganisationResource', 'UPDATE')")
-    ServiceResult<OrganisationResource> addAddress(@P("organisationId") Long organisationId, AddressType addressType, AddressResource addressResource);
+    ServiceResult<OrganisationResource> addAddress(@P("organisationId") Long organisationId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<OrganisationSearchResult>> searchAcademic(String organisationName, int maxItems);

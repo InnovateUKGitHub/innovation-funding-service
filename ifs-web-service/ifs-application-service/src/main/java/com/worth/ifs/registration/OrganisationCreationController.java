@@ -1,7 +1,6 @@
 package com.worth.ifs.registration;
 
 import com.google.common.net.UrlEscapers;
-import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
@@ -13,8 +12,8 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.registration.form.OrganisationTypeForm;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -42,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
+import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 
 
@@ -57,28 +58,27 @@ public class OrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationController.class);
 
     public static final String ORGANISATION_ID = "organisationId";
-    public static final String ORGANISATION_FORM = "organisationForm";
-    public static final String TEMPLATE_PATH = "registration/organisation";
-    public static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
-    public static final String ADD_ADDRESS_DETAILS = "add-address-details";
-    public static final String CREATE_ORGANISATION_TYPE = "create-organisation-type";
-    public static final String FIND_BUSINESS = "find-business";
-    public static final String FIND_ORGANISATION = "find-organisation";
-    public static final String SELECTED_ORGANISATION = "selected-organisation";
-    public static final String CONFIRM_ORGANISATION = "confirm-organisation";
-    public static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
-    public static final String BASE_URL = "/organisation/create";
-    public static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
-    public static final String SELECTED_POSTCODE = "selectedPostcode";
-    public static final String SAVE_ORGANISATION_DETAILS = "save-organisation-details";
-    public static final String REFERER = "referer";
-    public static final String SEARCH_ORGANISATION = "search-organisation";
-    public static final String NOT_IN_COMPANY_HOUSE = "not-in-company-house";
-    public static final String MANUAL_ADDRESS = "manual-address";
-    public static final String SEARCH_ADDRESS = "search-address";
-    public static final String SELECT_ADDRESS = "select-address";
-    public static final String ORGANISATION_NAME = "organisationName";
-    public static final String MANUAL_ORGANISATION = "manual-organisation";
+    static final String ORGANISATION_FORM = "organisationForm";
+    private static final String TEMPLATE_PATH = "registration/organisation";
+    private static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
+    private static final String ADD_ADDRESS_DETAILS = "add-address-details";
+    private static final String CREATE_ORGANISATION_TYPE = "create-organisation-type";
+    private static final String FIND_BUSINESS = "find-business";
+    private static final String FIND_ORGANISATION = "find-organisation";
+    private static final String SELECTED_ORGANISATION = "selected-organisation";
+    private static final String CONFIRM_ORGANISATION = "confirm-organisation";
+    private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
+    private static final String BASE_URL = "/organisation/create";
+    private static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
+    private static final String SELECTED_POSTCODE = "selectedPostcode";
+    private static final String SAVE_ORGANISATION_DETAILS = "save-organisation-details";
+    private static final String REFERER = "referer";
+    private static final String SEARCH_ORGANISATION = "search-organisation";
+    private static final String NOT_IN_COMPANY_HOUSE = "not-in-company-house";
+    private static final String MANUAL_ADDRESS = "manual-address";
+    private static final String SEARCH_ADDRESS = "search-address";
+    private static final String SELECT_ADDRESS = "select-address";
+    private static final String ORGANISATION_NAME = "organisationName";
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -115,7 +115,7 @@ public class OrganisationCreationController {
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         CookieUtil.removeCookie(response, ORGANISATION_ID);
         organisationForm.setOrganisationSearching(false);
@@ -241,7 +241,7 @@ public class OrganisationCreationController {
     public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                      HttpServletRequest request, HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(true);
@@ -254,7 +254,7 @@ public class OrganisationCreationController {
     public String manualOrganisationEntry(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                           HttpServletRequest request, HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(false);
@@ -267,7 +267,7 @@ public class OrganisationCreationController {
     public String manualAddressWithCompanyHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 HttpServletRequest request, HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
@@ -284,7 +284,7 @@ public class OrganisationCreationController {
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         organisationForm.setSearchOrganisationId(searchOrganisationId);
@@ -323,7 +323,7 @@ public class OrganisationCreationController {
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         organisationForm.setSearchOrganisationId(searchOrganisationId);
@@ -349,7 +349,7 @@ public class OrganisationCreationController {
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         organisationForm.setSearchOrganisationId(searchOrganisationId);
@@ -375,7 +375,7 @@ public class OrganisationCreationController {
                                 HttpServletResponse response,
                                 @RequestHeader(value = REFERER, required = false) final String referer) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
@@ -420,7 +420,7 @@ public class OrganisationCreationController {
                                 HttpServletRequest request, HttpServletResponse response,
                                 @RequestHeader(value = REFERER, required = false) final String referer) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         addOrganisationType(organisationForm, request);
         organisationForm.getAddressForm().setSelectedPostcode(null);
@@ -432,7 +432,7 @@ public class OrganisationCreationController {
     public String manualAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                 HttpServletRequest request, HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
@@ -448,7 +448,7 @@ public class OrganisationCreationController {
                                    @RequestHeader(value = REFERER, required = false) final String referer
     ) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm.setTriedToSave(true);
         addOrganisationType(organisationForm, request);
@@ -473,7 +473,7 @@ public class OrganisationCreationController {
     private boolean isOrganisationAlreadyCreated(HttpServletRequest request){
         return StringUtils.hasText(CookieUtil.getCookieValue(request, ORGANISATION_ID));
     }
-    private String getRegistrationRedirectURL(HttpServletRequest request){
+    private String getRegistrationRedirectURL(){
         return "redirect:" + RegistrationController.BASE_URL;
     }
 
@@ -485,7 +485,7 @@ public class OrganisationCreationController {
                                  Model model,
                                  HttpServletRequest request) throws IOException {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         addOrganisationType(organisationForm, request);
@@ -497,7 +497,7 @@ public class OrganisationCreationController {
     @RequestMapping(value = "/" + FIND_BUSINESS, method = RequestMethod.GET)
     public String createOrganisationBusiness(HttpServletRequest request, HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         // when user comes to this page, set the organisationTypeForm, and redirect.
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
@@ -510,7 +510,7 @@ public class OrganisationCreationController {
     @RequestMapping("/save-organisation")
     public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if(isOrganisationAlreadyCreated(request))
-            return getRegistrationRedirectURL(request);
+            return getRegistrationRedirectURL();
 
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
@@ -526,10 +526,10 @@ public class OrganisationCreationController {
 
         organisationResource = saveNewOrganisation(organisationResource, request);
         if (address != null && !organisationForm.isUseSearchResultAddress()) {
-            organisationService.addAddress(organisationResource, address, AddressType.OPERATING);
+            organisationService.addAddress(organisationResource, address, OPERATING);
         }
         if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
-            organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), AddressType.REGISTERED);
+            organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), REGISTERED);
         }
         CookieUtil.saveToCookie(response, ORGANISATION_ID, String.valueOf(organisationResource.getId()));
         CookieUtil.removeCookie(response, ORGANISATION_FORM);
@@ -569,7 +569,7 @@ public class OrganisationCreationController {
     }
 
 
-    public List<AddressResource> searchPostcode(String postcodeInput) {
+    private List<AddressResource> searchPostcode(String postcodeInput) {
         RestResult<List<AddressResource>>  addressLookupRestResult = addressRestService.doLookup(postcodeInput);
         List<AddressResource> addressResourceList = addressLookupRestResult.handleSuccessOrFailure(
                 failure -> new ArrayList<>(),

@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2602 As a competition administrator I want a view of the Application Overview page that allows me to upload the assessor feedback document so that this can be shared with the applicants
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
-Suite Teardown    User closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

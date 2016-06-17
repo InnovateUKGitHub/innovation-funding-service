@@ -121,4 +121,8 @@ public class QuestionServiceImpl implements QuestionService {
     public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
         return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrThrowException());
     }
+
+    public List<QuestionStatusResource> findQuestionStatusesByQuestionAndApplicationId(Long questionId, Long applicationId) {
+        return questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccessObjectOrThrowException();
+    }
 }

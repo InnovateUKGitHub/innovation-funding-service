@@ -4,6 +4,7 @@ import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.dashboard.ApplicantController;
+import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
@@ -13,9 +14,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -56,6 +59,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
     @Test
     public void testDashboard() throws Exception {
+        when(projectService.findByUser(loggedInUser.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
@@ -75,6 +79,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
         when(applicationService.getInProgress(applicant.getId())).thenReturn(progressMap);
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
         when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
+        when(projectService.findByUser(applicant.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -98,6 +103,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
         when(processRoleService.findProcessRole(this.users.get(1).getId(), progressMap.get(0).getId())).thenReturn(processRoles.get(0));
         when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
+        when(projectService.findByUser(collabUsers.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())

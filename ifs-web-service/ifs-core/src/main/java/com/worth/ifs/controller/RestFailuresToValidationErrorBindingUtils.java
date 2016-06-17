@@ -1,8 +1,8 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestFailure;
-import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceFailure;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -15,9 +15,9 @@ import static java.util.Collections.emptyList;
  */
 public class RestFailuresToValidationErrorBindingUtils {
 
-    public static <T> RestResult<T> bindAnyErrorsToField(RestResult<T> restResult, String fieldName, BindingResult bindingResult, BindingResultTarget bindingResultTarget) {
+    public static <T> ServiceResult<T> bindAnyErrorsToField(ServiceResult<T> serviceResult, String fieldName, BindingResult bindingResult, BindingResultTarget bindingResultTarget) {
 
-        List<String> errorKeys = restResult.handleSuccessOrFailure(
+        List<String> errorKeys = serviceResult.handleSuccessOrFailure(
                 failure -> lookupValidationErrorsFromServiceFailures(failure),
                 success -> emptyList()
         );
@@ -26,7 +26,7 @@ public class RestFailuresToValidationErrorBindingUtils {
             addErrorsToForm(fieldName, bindingResultTarget, bindingResult, errorKeys);
         }
 
-        return restResult;
+        return serviceResult;
     }
 
     private static void addErrorsToForm(String fieldName, BindingResultTarget bindingResultTarget, BindingResult bindingResult, List<String> errorKeys) {
@@ -39,7 +39,7 @@ public class RestFailuresToValidationErrorBindingUtils {
         errorKeys.forEach(error -> bindingResult.rejectValue(fieldName, error));
     }
 
-    private static List<String> lookupValidationErrorsFromServiceFailures(RestFailure failure) {
+    private static List<String> lookupValidationErrorsFromServiceFailures(ServiceFailure failure) {
         return simpleMap(failure.getErrors(), Error::getErrorKey);
     }
 }
