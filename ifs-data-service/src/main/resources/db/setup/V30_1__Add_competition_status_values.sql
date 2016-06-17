@@ -21,15 +21,6 @@ INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('High value manufac
 INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Resource efficiency', 'INNOVATION_AREA', '2');
 INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Advanced materials', 'INNOVATION_AREA', '2');
 
--- ADD Competition Setup Sections
-INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (1, 'Initial details', 'initial-details', '1');
-INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (2, 'Additional info', 'additional-info', '2');
-INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (3, 'Eligibility', 'eligibility', '3');
-INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (4, 'Milestones', 'milestones', '4');
-INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (5, 'Assessors', 'assessors', '5');
-INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (6, 'Application form', 'application-form', '6');
-INSERT INTO `competition_setup_section` (`id`, `name`, `path`, `priority`) VALUES (7, 'Finance', 'finance', '7');
-
 
 INSERT INTO `role` (`id`, `name`) VALUES (12, 'competition_executive');
 INSERT INTO `role` (`id`, `name`) VALUES (13, 'competition_technologist');

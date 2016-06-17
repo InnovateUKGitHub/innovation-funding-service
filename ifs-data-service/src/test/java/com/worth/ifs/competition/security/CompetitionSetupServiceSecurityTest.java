@@ -1,24 +1,24 @@
 package com.worth.ifs.competition.security;
 
-import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.competition.transactional.CompetitionSetupService;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.transactional.CompetitionSetupService;
 
 /**
  * Testing the permission rules applied to the secured methods in OrganisationService.  This set of tests tests for the
@@ -45,22 +45,16 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     @Test
     public void testAllAccessDenied() {
         setLoggedInUser(null);
-        assertAccessDenied(() -> service.findAllCompetitionSections(), () -> {
-            verifyNoMoreInteractions(rules);
-        });
         Long competitionId = 2L;
-        assertAccessDenied(() -> service.findAllCompetitionSectionsStatuses(competitionId), () -> {
-            verifyNoMoreInteractions(rules);
-        });
 
         assertAccessDenied(() -> service.create(), () -> {
             verifyNoMoreInteractions(rules);
         });
         Long sectionId = 3L;
-        assertAccessDenied(() -> service.markSectionComplete(competitionId, sectionId), () -> {
+        assertAccessDenied(() -> service.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
             verifyNoMoreInteractions(rules);
         });
-        assertAccessDenied(() -> service.markSectionInComplete(competitionId, sectionId), () -> {
+        assertAccessDenied(() -> service.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
             verifyNoMoreInteractions(rules);
         });
         assertAccessDenied(() -> service.findAllTypes(), () -> {
@@ -72,14 +66,12 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     public void testAllAccessAllowed() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
 
-        service.findAllCompetitionSections();
         service.findAllTypes();
         Long competitionId = 2L;
-        service.findAllCompetitionSectionsStatuses(competitionId);
         service.create();
         Long sectionId = 3L;
-        service.markSectionComplete(competitionId, sectionId);
-        service.markSectionInComplete(competitionId, sectionId);
+        service.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+        service.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
     }
 
     @Test
@@ -93,16 +85,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
      * methods, which is lost when using mocks)
      */
     public static class TestCompetitionSetupService implements CompetitionSetupService {
-
-        @Override
-        public ServiceResult<List<CompetitionSetupCompletedSectionResource>> findAllCompetitionSectionsStatuses(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections() {
-            return null;
-        }
 
         @Override
         public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
@@ -120,18 +102,18 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Void> markSectionComplete(Long competitionId, Long sectionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSectionInComplete(Long competitionId, Long sectionId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
             return null;
         }
+
+		@Override
+		public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
+			return null;
+		}
+
+		@Override
+		public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
+			return null;
+		}
     }
 }

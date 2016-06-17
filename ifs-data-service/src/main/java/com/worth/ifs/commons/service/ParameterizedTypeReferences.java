@@ -1,5 +1,10 @@
 package com.worth.ifs.commons.service;
 
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.core.ParameterizedTypeReference;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -9,8 +14,6 @@ import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -25,10 +28,6 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import org.springframework.core.ParameterizedTypeReference;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * A utility for commonly used ParameterizedTypeReferences
@@ -82,12 +81,6 @@ public final class ParameterizedTypeReferences {
     }
     public static ParameterizedTypeReference<List<CompetitionTypeResource>> competitionTypeResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionTypeResource>>() {};
-    }
-    public static ParameterizedTypeReference<List<CompetitionSetupSectionResource>> competitionSetupSectionResourceListType() {
-        return new ParameterizedTypeReference<List<CompetitionSetupSectionResource>>() {};
-    }
-    public static ParameterizedTypeReference<List<CompetitionSetupCompletedSectionResource>> competitionSetupCompletedSectionResourceListType() {
-        return new ParameterizedTypeReference<List<CompetitionSetupCompletedSectionResource>>() {};
     }
     public static ParameterizedTypeReference<List<QuestionStatusResource>> questionStatusResourceListType() {
         return new ParameterizedTypeReference<List<QuestionStatusResource>>() {};

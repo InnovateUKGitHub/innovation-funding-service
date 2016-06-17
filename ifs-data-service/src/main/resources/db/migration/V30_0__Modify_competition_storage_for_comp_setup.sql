@@ -58,9 +58,4 @@ CREATE TABLE milestone (
 
 ALTER TABLE milestone ADD CONSTRAINT FK_d2gmngr50hf7lkjv8s9mxhfms FOREIGN KEY (competition_id) REFERENCES competition (id);
 
-create table competition_setup_section (id bigint not null auto_increment, name varchar(255), path varchar(255), priority integer, primary key (id));
-create table competition_setup_completed_section (id bigint not null auto_increment, competition_id bigint, competition_setup_section_id bigint, primary key (id));
-alter table competition_setup_completed_section add constraint FK_gyu0t6uwwtp0054ntnpp329pd foreign key (competition_id) references competition (id);
-alter table competition_setup_completed_section add constraint FK_60s1dqy6e4u6qopvbk759g5nb foreign key (competition_setup_section_id) references competition_setup_section (id);
-
 alter table competition_type add column state_aid bit;

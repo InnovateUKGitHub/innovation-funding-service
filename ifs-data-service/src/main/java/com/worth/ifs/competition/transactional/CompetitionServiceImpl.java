@@ -1,5 +1,14 @@
 package com.worth.ifs.competition.transactional;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
@@ -8,36 +17,25 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.repository.CompetitionSetupCompletedSectionRepository;
-import com.worth.ifs.competition.repository.CompetitionSetupSectionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service for operations around the usage and processing of Competitions
  */
 @Service
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
-    public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
-    private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
+    
+	private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
+	
+	public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
+    
     @Autowired
-    CategoryLinkRepository categoryLinkRepository;
+    private CompetitionRepository competitionRepository;
+
     @Autowired
-    CompetitionSetupCompletedSectionRepository competitionSetupSectionStatusRepository;
-    @Autowired
-    CompetitionSetupSectionRepository competitionSetupSectionRepository;
-    @Autowired
-    CompetitionRepository competitionRepository;
-    @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
+    
     @Autowired
     private CompetitionMapper competitionMapper;
 

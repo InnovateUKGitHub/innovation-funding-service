@@ -1,17 +1,23 @@
 
 package com.worth.ifs.controller;
 
-import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.category.resource.CategoryType;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
-import com.worth.ifs.user.builder.UserResourceBuilder;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserService;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.time.LocalDateTime;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,17 +28,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
+import com.worth.ifs.application.service.CategoryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.user.builder.UserResourceBuilder;
+import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.service.UserService;
 
 /**
  * Class for testing public functions of {@link CompetitionSetupController}
@@ -57,25 +64,9 @@ public class CompetitionSetupControllerTest {
 
     private MockMvc mockMvc;
 
-    private List<CompetitionSetupSectionResource> competitionSetupSectionResourceList;
-
     @Before
     public void setupMockMvc() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-
-        competitionSetupSectionResourceList = new ArrayList();
-        CompetitionSetupSectionResource cs1 = new CompetitionSetupSectionResource();
-        cs1.setId(1L);
-        cs1.setName("Initial details");
-        cs1.setPriority(1);
-        competitionSetupSectionResourceList.add(cs1);
-
-        CompetitionSetupSectionResource cs2 = new CompetitionSetupSectionResource();
-        cs2.setId(2L);
-        cs2.setName("Additional info");
-        cs2.setPriority(2);
-        competitionSetupSectionResourceList.add(cs2);
-
 
         when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Exec").build()));
 
@@ -108,52 +99,41 @@ public class CompetitionSetupControllerTest {
     
     @Test
     public void initCompetitionSetupSection() throws Exception {
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
-        when(competitionService.getCompetitionSetupSectionsByCompetitionId(COMPETITION_ID)).thenReturn(competitionSetupSectionResourceList);
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/1"));
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
     }
 
-
     @Test
-    public void editCompetitionSetupSection() throws Exception{
-        Long sectionId = 1L;
-
-        when(competitionService.getCompetitionSetupSectionsByCompetitionId(COMPETITION_ID)).thenReturn(competitionSetupSectionResourceList);
+    public void editCompetitionSetupSectionInitial() throws Exception{
 
         CompetitionSetupInitialDetailsForm competitionSetupInitialDetailsForm = new CompetitionSetupInitialDetailsForm();
         competitionSetupInitialDetailsForm.setCompetitionCode("Code");
         competitionSetupInitialDetailsForm.setTitle("Test competition");
         competitionSetupInitialDetailsForm.setCompetitionTypeId(2L);
 
-        CompetitionResource competition = newCompetitionResource().withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/" + sectionId))
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attribute("competitionSetupForm", Matchers.hasProperty("competitionCode", Matchers.equalTo(competitionSetupInitialDetailsForm.getCompetitionCode()))))
                 .andExpect(model().attribute("competitionSetupForm", Matchers.hasProperty("competitionTypeId", Matchers.equalTo(competitionSetupInitialDetailsForm.getCompetitionTypeId()))))
                 .andExpect(model().attribute("competitionSetupForm", Matchers.hasProperty("title", Matchers.equalTo(competitionSetupInitialDetailsForm.getTitle()))))
-                .andExpect(model().attribute("allSections", competitionSetupSectionResourceList));
+                .andExpect(model().attribute("allSections", CompetitionSetupSection.values()));
     }
-
 
     @Test
     public void setSectionAsIncomplete() throws Exception {
-        Long sectionId = 1L;
 
-        CompetitionSetupSectionResource competitionSetupSectionResource = new CompetitionSetupSectionResource();
-        competitionSetupSectionResource.setId(1L);
-        competitionSetupSectionResource.setName("Competition name");
-        competitionSetupSectionResource.setPriority(1);
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/" + sectionId + "/edit"))
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/edit"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/" + sectionId));
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
     }
 
     @Test
@@ -186,22 +166,38 @@ public class CompetitionSetupControllerTest {
                 .andExpect(content().string(is("1612-1")));
     }
 
-
     @Test
-    public void submitSectionInitialDetails() throws Exception {
-        LocalDateTime time = LocalDateTime.of(2016, 12, 1, 0, 0);
-        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).withName("Test competition").withStartDate(time).build();
-        Long sectionId = 1L;
+    public void submitSectionInitialDetailsWithErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
-        when(competitionService.getCompetitionSetupSectionsByCompetitionId(COMPETITION_ID)).thenReturn(competitionSetupSectionResourceList);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/" + sectionId))
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"));
+        
+        verify(competitionService, never()).update(competition);
     }
+    
+    @Test
+    public void submitSectionInitialDetailsWithoutErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial")
+        				.param("executiveUserId", "1")
+        				.param("openingDateDay", "1")
+        				.param("openingDateMonth", "1")
+        				.param("openingDateYear", "2016")
+        				.param("innovationSectorCategoryId", "1")
+        				.param("innovationAreaCategoryId", "1")
+        				.param("competitionTypeId", "1")
+        				.param("leadTechnologistUserId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+        
+        verify(competitionService).update(competition);
+    }
 
 }

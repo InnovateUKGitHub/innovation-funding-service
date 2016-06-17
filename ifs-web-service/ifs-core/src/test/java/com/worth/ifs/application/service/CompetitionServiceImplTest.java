@@ -2,8 +2,6 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.junit.Before;
@@ -82,45 +80,10 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(Long.valueOf(2L), found.get(1).getId());
     }
 
-    @Test
-    public void test_getCompetitionSetupSectionsByCompetitionId() throws Exception {
-        CompetitionSetupSectionResource section1 = new CompetitionSetupSectionResource();
-        section1.setName("Section one");
-        section1.setId(1L);
-
-        CompetitionSetupSectionResource section2 = new CompetitionSetupSectionResource();
-        section2.setName("Section two");
-        section2.setId(2L);
-
-        final List<CompetitionSetupSectionResource> expected = new ArrayList<>(asList(section1, section2));
-        when(competitionsRestService.getSetupSections()).thenReturn(restSuccess(expected));
-
-        final List<CompetitionSetupSectionResource> found = service.getCompetitionSetupSectionsByCompetitionId(1L);
-        assertEquals(2, found.size());
-        assertEquals(Long.valueOf(1L), found.get(0).getId());
-        assertEquals(Long.valueOf(2L), found.get(1).getId());
-    }
-
 
     @Test
     public void test_getCompletedCompetitionSetupSectionStatusesByCompetitionId() throws Exception {
-        CompetitionSetupCompletedSectionResource completed1 = new CompetitionSetupCompletedSectionResource();
-        completed1.setCompetition(1L);
-        completed1.setCompetitionSetupSection(2L);
-        completed1.setId(1L);
-
-        CompetitionSetupCompletedSectionResource completed2 = new CompetitionSetupCompletedSectionResource();
-        completed2.setCompetition(1L);
-        completed2.setCompetitionSetupSection(3L);
-        completed2.setId(2L);
-
-        final List<CompetitionSetupCompletedSectionResource> expected = new ArrayList<>(asList(completed1, completed2));
-        when(competitionsRestService.getCompletedSetupSections(1L)).thenReturn(restSuccess(expected));
-
-        final List<Long> found = service.getCompletedCompetitionSetupSectionStatusesByCompetitionId(1L);
-        assertEquals(2, found.size());
-        assertEquals(Long.valueOf(2L), found.get(0));
-        assertEquals(Long.valueOf(3L), found.get(1));
+       //TODO
     }
 
 

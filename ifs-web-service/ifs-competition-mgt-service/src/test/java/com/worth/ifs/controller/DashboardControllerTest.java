@@ -1,18 +1,17 @@
 
 package com.worth.ifs.controller;
 
-import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.category.resource.CategoryType;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
-import com.worth.ifs.user.builder.UserResourceBuilder;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserService;
-import org.hamcrest.Matchers;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,17 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.application.service.CompetitionService;
 
 /**
  * Class for testing public functions of {@link DashboardController}

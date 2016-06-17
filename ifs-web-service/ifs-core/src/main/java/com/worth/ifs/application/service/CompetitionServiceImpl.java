@@ -1,18 +1,16 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.competition.service.CompetitionsRestService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.service.CompetitionsRestService;
 
 /**
  * This class contains methods to retrieve and store {@link CompetitionResource} related data,
@@ -40,21 +38,13 @@ public class CompetitionServiceImpl implements CompetitionService {
         return competitionsRestService.getAll().getSuccessObjectOrThrowException();
     }
 
-    @Override
-    public List<CompetitionSetupSectionResource> getCompetitionSetupSectionsByCompetitionId(long competitionId) {
-        return competitionsRestService.getSetupSections().getSuccessObjectOrThrowException();
-    }
+    public List<CompetitionSetupSection> getCompletedCompetitionSetupSectionStatusesByCompetitionId(Long competitionId) {
 
-    @Override
-    public List<Long> getCompletedCompetitionSetupSectionStatusesByCompetitionId(long competitionId) {
-
-        List<CompetitionSetupCompletedSectionResource> completedSections = competitionsRestService.getCompletedSetupSections(competitionId).getSuccessObjectOrThrowException();
-
-        List<Long> completedSectionIds = completedSections.stream()
-                .map(competitionSetupCompletedSectionResource -> competitionSetupCompletedSectionResource.getCompetitionSetupSection())
-                .collect(Collectors.toList());
-
-        return completedSectionIds;
+        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        
+        //TODO process map from competition
+        
+        return new ArrayList<CompetitionSetupSection>();
     }
 
     @Override
@@ -68,13 +58,13 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void setSetupSectionMarkedAsComplete(Long competitionId, Long sectionId) {
-        competitionsRestService.markSectionComplete(competitionId, sectionId).getSuccessObjectOrThrowException();
+    public void setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section) {
+        competitionsRestService.markSectionComplete(competitionId, section).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public void setSetupSectionMarkedAsIncomplete(Long competitionId, Long sectionId) {
-        competitionsRestService.markSectionInComplete(competitionId, sectionId).getSuccessObjectOrThrowException();
+    public void setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section) {
+        competitionsRestService.markSectionInComplete(competitionId, section).getSuccessObjectOrThrowException();
     }
 
     @Override

@@ -1,17 +1,21 @@
 package com.worth.ifs.competition.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * CompetitionController exposes Competition data and operations through a REST API.
@@ -62,25 +66,14 @@ public class CompetitionController {
         return competitionSetupService.findAllTypes().toGetResponse();
     }
 
-
-    @RequestMapping("/sectionStatus/find/{competitionId}")
-    public RestResult<List<CompetitionSetupCompletedSectionResource>> findAllCompetitionSection(@PathVariable("competitionId") final Long competitionId) {
-        return competitionSetupService.findAllCompetitionSectionsStatuses(competitionId).toGetResponse();
+    @RequestMapping("/sectionStatus/complete/{competitionId}/{section}")
+    public RestResult<Void> markSectionComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("section") final CompetitionSetupSection section) {
+        return competitionSetupService.markSectionComplete(competitionId, section).toGetResponse();
     }
 
-    @RequestMapping("/sectionStatus/complete/{competitionId}/{sectionId}")
-    public RestResult<Void> markSectionComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("sectionId") final Long sectionId) {
-        return competitionSetupService.markSectionComplete(competitionId, sectionId).toGetResponse();
-    }
-
-    @RequestMapping("/sectionStatus/incomplete/{competitionId}/{sectionId}")
-    public RestResult<Void> markSectionInComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("sectionId") final Long sectionId) {
-        return competitionSetupService.markSectionInComplete(competitionId, sectionId).toGetResponse();
-    }
-
-    @RequestMapping("/sections/getAll")
-    public RestResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections() {
-        return competitionSetupService.findAllCompetitionSections().toGetResponse();
+    @RequestMapping("/sectionStatus/incomplete/{competitionId}/{section}")
+    public RestResult<Void> markSectionInComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("section") final CompetitionSetupSection section) {
+        return competitionSetupService.markSectionInComplete(competitionId, section).toGetResponse();
     }
 
     /**

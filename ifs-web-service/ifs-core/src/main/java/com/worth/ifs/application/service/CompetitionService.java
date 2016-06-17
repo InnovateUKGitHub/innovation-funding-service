@@ -1,13 +1,13 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 
 /**
  * Interface for CRUD operations on {@link CompetitionResource} related data.
@@ -20,17 +20,15 @@ public interface CompetitionService {
 
     List<CompetitionResource> getAllCompetitions();
 
-    List<CompetitionSetupSectionResource> getCompetitionSetupSectionsByCompetitionId(long competitionId);
-
-    List<Long> getCompletedCompetitionSetupSectionStatusesByCompetitionId(long competitionId);
+    List<CompetitionSetupSection> getCompletedCompetitionSetupSectionStatusesByCompetitionId(Long competitionId);
 
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
     void update(CompetitionResource competition);
 
-    void setSetupSectionMarkedAsComplete(Long competitionId, Long sectionId);
+    void setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section);
 
-    void setSetupSectionMarkedAsIncomplete(Long competitionId, Long sectionId);
+    void setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);
 
     String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
 }

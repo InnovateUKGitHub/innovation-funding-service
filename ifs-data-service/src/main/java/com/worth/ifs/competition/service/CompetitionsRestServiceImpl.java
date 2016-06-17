@@ -1,20 +1,21 @@
 package com.worth.ifs.competition.service;
 
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -44,16 +45,6 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<List<CompetitionSetupSectionResource>> getSetupSections() {
-        return getWithRestResult(competitionsRestURL + "/sections/getAll", competitionSetupSectionResourceListType());
-    }
-
-    @Override
-    public RestResult<List<CompetitionSetupCompletedSectionResource>> getCompletedSetupSections(Long competitionId) {
-        return getWithRestResult(String.format("%s/sectionStatus/find/%d", competitionsRestURL, competitionId), competitionSetupCompletedSectionResourceListType());
-    }
-
-    @Override
     public RestResult<CompetitionResource> create() {
         return postWithRestResult(competitionsRestURL + "", CompetitionResource.class);
     }
@@ -65,13 +56,13 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionComplete(Long competitionId, Long sectionId) {
-        return getWithRestResult(String.format("%s/sectionStatus/complete/%s/%s", competitionsRestURL, competitionId, sectionId), competitionSetupCompletedSectionResourceListType());
+    public RestResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
+        return getWithRestResult(String.format("%s/sectionStatus/complete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
     }
 
     @Override
-    public RestResult<List<CompetitionSetupCompletedSectionResource>> markSectionInComplete(Long competitionId, Long sectionId) {
-        return getWithRestResult(String.format("%s/sectionStatus/incomplete/%s/%s", competitionsRestURL, competitionId, sectionId), competitionSetupCompletedSectionResourceListType());
+    public RestResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
+        return getWithRestResult(String.format("%s/sectionStatus/incomplete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
     }
 
     @Override

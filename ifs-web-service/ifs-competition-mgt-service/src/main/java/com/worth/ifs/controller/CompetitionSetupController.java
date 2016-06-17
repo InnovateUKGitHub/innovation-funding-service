@@ -1,28 +1,34 @@
 package com.worth.ifs.controller;
 
-import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.category.resource.CategoryType;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.controller.form.CompetitionSetupForm;
-import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserService;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.worth.ifs.application.service.CategoryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.controller.form.CompetitionSetupForm;
+import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.service.UserService;
 
 
 /**
@@ -32,7 +38,6 @@ import java.util.Optional;
 @RequestMapping("/competition/setup")
 public class CompetitionSetupController {
 
-    private static final String SECTION_ONE = "Initial details";
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
     @Autowired
     private CompetitionService competitionService;
@@ -44,85 +49,50 @@ public class CompetitionSetupController {
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId) {
 
-        List<CompetitionSetupSectionResource> sections = competitionService.getCompetitionSetupSectionsByCompetitionId(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (sections.size() > 0) {
-            return "redirect:/competition/setup/" + competitionId + "/section/" + sections.get(0).getId();
-        } else {
-            LOG.error("Competition is not found");
+        if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
+        	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
+
+        return "redirect:/competition/setup/" + competitionId + "/section/initial";
     }
 
 
-    @RequestMapping(value = "/{competitionId}/section/{section}", method = RequestMethod.GET)
-    public String editCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId, @PathVariable("section") Long sectionId) {
+    @RequestMapping(value = "/{competitionId}/section/initial", method = RequestMethod.GET)
+    public String editCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId) {
 
-        List<CompetitionSetupSectionResource> sections = competitionService.getCompetitionSetupSectionsByCompetitionId(competitionId);
-        Optional<CompetitionSetupSectionResource> competitionSetupSection = findCompetitionSetupSection(sections, sectionId);
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competitionSetupSection.isPresent()) {
-            LOG.error("Competition setup section is not found");
+        if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
+        	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
 
-        populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection.get(), sections);
-        model.addAttribute("competitionSetupForm", getSectionFormData(competition, competitionSetupSection.get()));
+        populateCompetitionSectionModelAttributes(model, competition, CompetitionSetupSection.INITIAL_DETAILS);
+        model.addAttribute("competitionSetupForm", getSectionFormData(competition, CompetitionSetupSection.INITIAL_DETAILS));
 
         return "competition/setup";
     }
+    
+    @RequestMapping(value = "/{competitionId}/section/initial", method = RequestMethod.POST)
+    public String submitSectionInitialDetails(@Valid @ModelAttribute("competitionSetupForm") CompetitionSetupInitialDetailsForm competitionSetupForm,
+                                              BindingResult bindingResult,
+                                              @PathVariable("competitionId") Long competitionId,
+                                              Model model, HttpServletRequest request) {
 
-    private CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource, CompetitionSetupSectionResource competitionSetupSectionResource) {
-        CompetitionSetupForm competitionSetupForm;
-
-        switch (competitionSetupSectionResource.getName()) {
-            case SECTION_ONE:
-                competitionSetupForm = fillFirstSectionFormSection(competitionResource);
-                break;
-            default:
-                competitionSetupForm = fillFirstSectionFormSection(competitionResource);
-                break;
-        }
-
-
-        return competitionSetupForm;
+        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
+    
+    @RequestMapping(value = "/{competitionId}/section/initial/edit", method = RequestMethod.POST)
+    public String setSectionAsIncomplete(@PathVariable("competitionId") Long competitionId) {
 
-    private CompetitionSetupForm fillFirstSectionFormSection(CompetitionResource competitionResource) {
-        CompetitionSetupInitialDetailsForm competitionSetupForm = new CompetitionSetupInitialDetailsForm();
+        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
 
-        competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());
-        competitionSetupForm.setExecutiveUserId(competitionResource.getExecutive());
-
-        competitionSetupForm.setInnovationAreaCategoryId(competitionResource.getInnovationArea());
-        competitionSetupForm.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
-        competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
-
-
-        if (competitionResource.getStartDate() != null) {
-            competitionSetupForm.setOpeningDateDay(competitionResource.getStartDate().getDayOfMonth());
-            competitionSetupForm.setOpeningDateMonth(competitionResource.getStartDate().getMonth().getValue());
-            competitionSetupForm.setOpeningDateYear(competitionResource.getStartDate().getYear());
-        }
-
-        competitionSetupForm.setCompetitionCode(competitionResource.getCode());
-        competitionSetupForm.setPafNumber(competitionResource.getPafCode());
-        competitionSetupForm.setTitle(competitionResource.getName());
-        competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
-
-        return competitionSetupForm;
+        return "redirect:/competition/setup/" + competitionId + "/section/initial";
     }
-
-    @RequestMapping(value = "/{competitionId}/section/{sectionId}/edit", method = RequestMethod.GET)
-    public String setSectionAsIncomplete(@PathVariable("competitionId") Long competitionId,
-                                              @PathVariable("sectionId") Long sectionId) {
-
-        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, sectionId);
-
-        return "redirect:/competition/setup/" + competitionId + "/section/" + sectionId;
-    }
-
+    
     /* AJAX Function */
     @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
     public
@@ -145,47 +115,74 @@ public class CompetitionSetupController {
         return competitionService.generateCompetitionCode(competitionId, openingDate);
     }
 
+    private CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource, CompetitionSetupSection section) {
+        CompetitionSetupForm competitionSetupForm;
 
-    @RequestMapping(value = "/{competitionId}/section/1", method = RequestMethod.POST)
-    public String submitSectionInitialDetails(@Valid @ModelAttribute("competitionSetupForm") CompetitionSetupInitialDetailsForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable("competitionId") Long competitionId,
-                                              Model model, HttpServletRequest request) {
+        switch (section) {
+            case INITIAL_DETAILS:
+                competitionSetupForm = fillFirstSectionFormSection(competitionResource);
+                break;
+            default:
+                competitionSetupForm = fillFirstSectionFormSection(competitionResource);
+                break;
+        }
 
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, 1L, model);
+
+        return competitionSetupForm;
     }
 
-    private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, Long sectionId, Model model) {
-        List<CompetitionSetupSectionResource> sections = competitionService.getCompetitionSetupSectionsByCompetitionId(competitionId);
-        Optional<CompetitionSetupSectionResource> competitionSetupSection = findCompetitionSetupSection(sections, sectionId);
+    private CompetitionSetupForm fillFirstSectionFormSection(CompetitionResource competitionResource) {
+        CompetitionSetupInitialDetailsForm competitionSetupForm = new CompetitionSetupInitialDetailsForm();
+
+        competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());
+        competitionSetupForm.setExecutiveUserId(competitionResource.getExecutive());
+
+        competitionSetupForm.setInnovationAreaCategoryId(competitionResource.getInnovationArea());
+        competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
+
+
+        if (competitionResource.getStartDate() != null) {
+            competitionSetupForm.setOpeningDateDay(competitionResource.getStartDate().getDayOfMonth());
+            competitionSetupForm.setOpeningDateMonth(competitionResource.getStartDate().getMonth().getValue());
+            competitionSetupForm.setOpeningDateYear(competitionResource.getStartDate().getYear());
+        }
+
+        competitionSetupForm.setCompetitionCode(competitionResource.getCode());
+        competitionSetupForm.setPafNumber(competitionResource.getPafCode());
+        competitionSetupForm.setTitle(competitionResource.getName());
+        competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
+
+        return competitionSetupForm;
+    }
+
+    private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competitionSetupSection.isPresent()) {
-            LOG.error("Competition setup section is not found");
+        if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
+        	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
 
 
         if (!bindingResult.hasErrors()) {
-            saveCompetitionSetupSection(competitionSetupForm, competition, competitionSetupSection.get());
+            saveCompetitionSetupSection(competitionSetupForm, competition, section);
         } else {
             LOG.debug("Form errors");
         }
 
-        populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection.get(), sections);
+        populateCompetitionSectionModelAttributes(model, competition, section);
 
         return "competition/setup";
     }
 
-    private void saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, CompetitionResource competitionResource, CompetitionSetupSectionResource competitionSetupSectionResource) {
-        switch (competitionSetupSectionResource.getName()) {
-            case SECTION_ONE:
+    private void saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, CompetitionResource competitionResource, CompetitionSetupSection section) {
+        switch (section) {
+            case INITIAL_DETAILS:
                 saveInitialDetailSection((CompetitionSetupInitialDetailsForm) competitionSetupForm, competitionResource);
                 break;
         }
 
-        competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), competitionSetupSectionResource.getId());
-
+        competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
     }
 
     private void saveInitialDetailSection(CompetitionSetupInitialDetailsForm competitionSetupForm, CompetitionResource competition) {
@@ -211,25 +208,16 @@ public class CompetitionSetupController {
         competitionSetupForm.setCompetitionCode(competition.getCode());
     }
 
-    private Optional<CompetitionSetupSectionResource> findCompetitionSetupSection(List<CompetitionSetupSectionResource> sections, long sectionId) {
-        Optional<CompetitionSetupSectionResource> competitionSetupSection = sections.stream()
-                .filter(competitionSetupSectionResource -> competitionSetupSectionResource.getId() == sectionId)
-                .findAny();
-
-        return competitionSetupSection;
-    }
-
     private void populateCompetitionSectionModelAttributes(Model model,
                                                            CompetitionResource competitionResource,
-                                                           CompetitionSetupSectionResource competitionSetupSectionResource,
-                                                           List<CompetitionSetupSectionResource> sections) {
-        List<Long> completedSections = competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competitionResource.getId());
+                                                           CompetitionSetupSection section) {
+        List<CompetitionSetupSection> completedSections = competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competitionResource.getId());
 
         model.addAttribute("competition", competitionResource);
-        model.addAttribute("currentSection", competitionSetupSectionResource.getId());
-        model.addAttribute("currentSectionFragment", "section-" + competitionSetupSectionResource.getName().replaceAll(" ", "-").toLowerCase());
-        model.addAttribute("editable", !completedSections.contains(competitionSetupSectionResource.getId()));
-        model.addAttribute("allSections", sections);
+        model.addAttribute("currentSection", section);
+        model.addAttribute("currentSectionFragment", "section-" + section.getPath());
+        model.addAttribute("editable", !completedSections.contains(section));
+        model.addAttribute("allSections", CompetitionSetupSection.values());
         model.addAttribute("allCompletedSections", completedSections);
         model.addAttribute("subTitle", (competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": " + (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 

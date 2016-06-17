@@ -14,10 +14,6 @@ INSERT INTO `milestone` (`id`, `name`, `competition_id`) VALUES (NULL, 'Allocate
 INSERT INTO `milestone` (`id`, `name`, `competition_id`) VALUES (NULL, 'Assessor briefing', '7');
 
 
-INSERT INTO `competition_setup_completed_section` (`competition_id`, `competition_setup_section_id`) VALUES ('7', '2');
-INSERT INTO `competition_setup_completed_section` (`competition_id`, `competition_setup_section_id`) VALUES ('7', '3');
-
-
 -- Roles should have been added, now add the users
 INSERT INTO `user` (`id`, `email`, `first_name`, `last_name`, `title`, `status`, `uid`, `system_user`) VALUES (49, 'comp_exec1@innovateuk.test', 'Competition', 'Executive One', 'Mr', 'ACTIVE', '', '0');
 INSERT INTO `user` (`id`, `email`, `first_name`, `last_name`, `title`, `status`, `uid`, `system_user`) VALUES (50, 'comp_exec2@innovateuk.test', 'Competition', 'Executive Two', 'Mr', 'ACTIVE', '', '0');

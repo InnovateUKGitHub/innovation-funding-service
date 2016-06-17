@@ -1,21 +1,16 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupCompletedSectionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSectionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CompetitionSetupService {
-    @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<List<CompetitionSetupCompletedSectionResource>> findAllCompetitionSectionsStatuses(Long competitionId);
+import org.springframework.security.access.prepost.PreAuthorize;
 
-    @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<List<CompetitionSetupSectionResource>> findAllCompetitionSections();
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
+
+public interface CompetitionSetupService {
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime);
@@ -27,10 +22,10 @@ public interface CompetitionSetupService {
     ServiceResult<CompetitionResource> create();
 
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<Void> markSectionComplete(Long competitionId, Long sectionId);
+    ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section);
 
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<Void> markSectionInComplete(Long competitionId, Long sectionId);
+    ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<List<CompetitionTypeResource>> findAllTypes();

@@ -1,5 +1,5 @@
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
-<div th:fragment="section-initial-details">
+<div th:fragment="section-initial">
     <h2>Step 1: Initial competition details</h2>
 
     <div class="panel-indent">
@@ -237,7 +237,7 @@
     </form>
     <ul class="pagination">
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{'?section=additional'}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='additional')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Additional information</span>
             </a>
