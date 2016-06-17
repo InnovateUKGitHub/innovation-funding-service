@@ -44,15 +44,9 @@ setHostFile(){
     esac
 }
 
-installShib() {
-    cd setup-files/scripts/shibboleth
-    ./install-or-upgrade.sh
-    cd ../../../
-}
-
 cd ../../../
 setEnv
-installShib
+./_install-or-upgrade.sh
 docker-compose up -d
 sleep 2
 docker-compose exec mysql mysql -uroot -ppassword -e 'create database ifs_test'

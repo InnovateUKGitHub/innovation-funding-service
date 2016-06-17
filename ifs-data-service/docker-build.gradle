@@ -47,4 +47,3 @@ ext.ifsWebBaseURL="https://ifs-local-dev"
 ext.serverPort=8090
 ext.activeProfile="local"
 ext.tomcatWebAppsDir="build/war"
-ext.shibbolethDir="/Users/worthsystems/servers/ifs/shib-docker"
