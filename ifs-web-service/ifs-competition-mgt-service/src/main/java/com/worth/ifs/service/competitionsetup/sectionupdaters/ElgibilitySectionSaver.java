@@ -7,6 +7,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.EligibilityForm;
 
+/**
+ * Competition setup section saver for the eligibility section.
+ */
 @Service
 public class ElgibilitySectionSaver implements CompetitionSetupSectionSaver {
 

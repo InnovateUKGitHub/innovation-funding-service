@@ -7,6 +7,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.AssessorsForm;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 
+/**
+ * Form populator for the assessors form competition setup section.
+ */
 @Service
 public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 

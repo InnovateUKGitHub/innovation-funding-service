@@ -7,6 +7,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.FinanceForm;
 
+/**
+ * Competition setup section saver for the finance section.
+ */
 @Service
 public class FinanceSectionSaver implements CompetitionSetupSectionSaver {
 

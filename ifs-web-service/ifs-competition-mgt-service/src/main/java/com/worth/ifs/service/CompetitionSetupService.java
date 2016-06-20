@@ -6,6 +6,9 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 
+/**
+ * service for logic around handling the various sections of competition setup.
+ */
 public interface CompetitionSetupService {
 
 	void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,

@@ -7,6 +7,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.MilestonesForm;
 
+/**
+ * Competition setup section saver for the milestones section.
+ */
 @Service
 public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 

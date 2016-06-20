@@ -7,6 +7,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.MilestonesForm;
 
+/**
+ * Form populator for the milestones competition setup section.
+ */
 @Service
 public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 

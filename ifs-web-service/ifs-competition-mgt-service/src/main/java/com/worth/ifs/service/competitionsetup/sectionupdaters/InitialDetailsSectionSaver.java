@@ -11,6 +11,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.InitialDetailsForm;
 
+/**
+ * Competition setup section saver for the initial details section.
+ */
 @Service
 public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver {
 

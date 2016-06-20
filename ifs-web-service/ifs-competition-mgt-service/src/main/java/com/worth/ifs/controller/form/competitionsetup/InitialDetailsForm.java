@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotNull;
 
 /**
- * Form class to pass and save for the first section.
+ * Form for the initial details competition setup section.
  */
 public class InitialDetailsForm extends CompetitionSetupForm {
 

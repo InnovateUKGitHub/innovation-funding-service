@@ -7,6 +7,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.AdditionalInfoForm;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 
+/**
+ * Competition setup section saver for the additional info section.
+ */
 @Service
 public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver {
 
