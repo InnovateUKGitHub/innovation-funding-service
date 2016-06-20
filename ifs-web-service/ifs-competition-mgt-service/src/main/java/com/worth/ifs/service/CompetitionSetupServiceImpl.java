@@ -1,8 +1,13 @@
 package com.worth.ifs.service;
 
-import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -12,14 +17,17 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.controller.form.CompetitionSetupForm;
-import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
+import com.worth.ifs.service.competitionsetup.formpopulator.CompetitionSetupFormPopulator;
+import com.worth.ifs.service.competitionsetup.sectionupdaters.CompetitionSetupSectionSaver;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
+	private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
+	
 	@Autowired
 	private CompetitionService competitionService;
 
@@ -28,7 +36,21 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Autowired
 	private CategoryService categoryService;
-
+	
+	private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
+	
+	private Map<CompetitionSetupSection, CompetitionSetupSectionSaver> sectionSavers;
+	
+	@Autowired
+	public void setCompetitionSetupFormPopulators(Collection<CompetitionSetupFormPopulator> populators) {
+		formPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToFill(), Function.identity()));
+	}
+	
+	@Autowired
+	public void setCompetitionSetupSectionSavers(Collection<CompetitionSetupSectionSaver> savers) {
+		sectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
+	}
+	
 	@Override
 	public void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
 			CompetitionSetupSection section) {
@@ -63,77 +85,29 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	@Override
 	public CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
 			CompetitionSetupSection section) {
-		CompetitionSetupForm competitionSetupForm;
-
-		switch (section) {
-		case INITIAL_DETAILS:
-			competitionSetupForm = fillFirstSectionFormSection(competitionResource);
-			break;
-		default:
-			competitionSetupForm = fillFirstSectionFormSection(competitionResource);
-			break;
+		
+		CompetitionSetupFormPopulator populator = formPopulators.get(section);
+		if(populator == null) {
+			LOG.error("unable to populate form for section " + section);
+			throw new IllegalArgumentException();
 		}
-
-		return competitionSetupForm;
+		
+		return populator.populateForm(competitionResource);
 	}
 	
 	@Override
 	public void saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section) {
-		switch (section) {
-		case INITIAL_DETAILS:
-			saveInitialDetailSection((CompetitionSetupInitialDetailsForm) competitionSetupForm, competitionResource);
-			break;
+		
+		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
+		if(saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
+			LOG.error("unable to save section " + section);
+			throw new IllegalArgumentException();
 		}
-
+		
+		saver.saveSection(competitionResource, competitionSetupForm);
+		
 		competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
 	}
 
-	private CompetitionSetupForm fillFirstSectionFormSection(CompetitionResource competitionResource) {
-		CompetitionSetupInitialDetailsForm competitionSetupForm = new CompetitionSetupInitialDetailsForm();
-
-		competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());
-		competitionSetupForm.setExecutiveUserId(competitionResource.getExecutive());
-
-		competitionSetupForm.setInnovationAreaCategoryId(competitionResource.getInnovationArea());
-		competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
-
-		if (competitionResource.getStartDate() != null) {
-			competitionSetupForm.setOpeningDateDay(competitionResource.getStartDate().getDayOfMonth());
-			competitionSetupForm.setOpeningDateMonth(competitionResource.getStartDate().getMonth().getValue());
-			competitionSetupForm.setOpeningDateYear(competitionResource.getStartDate().getYear());
-		}
-
-		competitionSetupForm.setCompetitionCode(competitionResource.getCode());
-		competitionSetupForm.setPafNumber(competitionResource.getPafCode());
-		competitionSetupForm.setTitle(competitionResource.getName());
-		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
-
-		return competitionSetupForm;
-	}
-
-	private void saveInitialDetailSection(CompetitionSetupInitialDetailsForm competitionSetupForm,
-			CompetitionResource competition) {
-		competition.setName(competitionSetupForm.getTitle());
-		competition.setBudgetCode(competitionSetupForm.getBudgetCode());
-		competition.setExecutive(competitionSetupForm.getExecutiveUserId());
-
-		try {
-			LocalDateTime startDate = LocalDateTime.of(competitionSetupForm.getOpeningDateYear(),
-					competitionSetupForm.getOpeningDateMonth(), competitionSetupForm.getOpeningDateDay(), 0, 0);
-			competition.setStartDate(startDate);
-		} catch (Exception e) {
-			competition.setStartDate(null);
-		}
-		competition.setCompetitionType(competitionSetupForm.getCompetitionTypeId());
-		competition.setLeadTechnologist(competitionSetupForm.getLeadTechnologistUserId());
-		competition.setPafCode(competitionSetupForm.getPafNumber());
-
-		competition.setInnovationArea(competitionSetupForm.getInnovationAreaCategoryId());
-		competition.setInnovationSector(competitionSetupForm.getInnovationSectorCategoryId());
-
-		competitionService.update(competition);
-
-		competitionSetupForm.setCompetitionCode(competition.getCode());
-	}
 }

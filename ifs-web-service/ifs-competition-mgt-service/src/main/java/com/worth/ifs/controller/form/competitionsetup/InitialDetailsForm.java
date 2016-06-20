@@ -1,6 +1,5 @@
-package com.worth.ifs.controller.form;
+package com.worth.ifs.controller.form.competitionsetup;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -8,7 +7,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Form class to pass and save for the first section.
  */
-public class CompetitionSetupInitialDetailsForm extends CompetitionSetupForm {
+public class InitialDetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "Please select a competition executive")
     private Long executiveUserId;

@@ -39,8 +39,8 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.controller.form.CompetitionSetupForm;
-import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
+import com.worth.ifs.controller.form.competitionsetup.InitialDetailsForm;
 import com.worth.ifs.service.CompetitionSetupService;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -119,7 +119,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void editCompetitionSetupSectionInitial() throws Exception{
 
-        CompetitionSetupInitialDetailsForm competitionSetupInitialDetailsForm = new CompetitionSetupInitialDetailsForm();
+        InitialDetailsForm competitionSetupInitialDetailsForm = new InitialDetailsForm();
         competitionSetupInitialDetailsForm.setCompetitionCode("Code");
         competitionSetupInitialDetailsForm.setTitle("Test competition");
         competitionSetupInitialDetailsForm.setCompetitionTypeId(2L);

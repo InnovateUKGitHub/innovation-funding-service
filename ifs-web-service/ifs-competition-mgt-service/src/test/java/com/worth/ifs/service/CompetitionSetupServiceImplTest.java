@@ -1,13 +1,14 @@
 package com.worth.ifs.service;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,10 @@ import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.controller.form.CompetitionSetupForm;
-import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.controller.form.competitionsetup.AdditionalInfoForm;
+import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
+import com.worth.ifs.service.competitionsetup.formpopulator.CompetitionSetupFormPopulator;
+import com.worth.ifs.service.competitionsetup.sectionupdaters.CompetitionSetupSectionSaver;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
@@ -84,68 +87,48 @@ public class CompetitionSetupServiceImplTest {
 	}
 	
 	@Test
-	public void testGetSectionFormDataInitialDetails() {
-		CompetitionResource competition = newCompetitionResource()
-				.withCompetitionType(4L)
-				.withExecutive(5L)
-				.withInnovationArea(6L)
-				.withLeadTechnologist(7L)
-				.withStartDate(LocalDateTime.of(2000, 1, 2, 3, 4))
-				.withCompetitionCode("code")
-				.withPafCode("paf")
-				.withName("name")
-				.withBudgetCode("budgetcode")
-				.withId(8L).build();
-
-		CompetitionSetupForm result = service.getSectionFormData(competition, CompetitionSetupSection.INITIAL_DETAILS);
+	public void testGetSectionFormData() {
+		CompetitionResource competitionResource = newCompetitionResource().build();
 		
-		assertTrue(result instanceof CompetitionSetupInitialDetailsForm);
-		CompetitionSetupInitialDetailsForm form = (CompetitionSetupInitialDetailsForm) result;
-		assertEquals(Long.valueOf(4L), form.getCompetitionTypeId());
-		assertEquals(Long.valueOf(5L), form.getExecutiveUserId());
-		assertEquals(Long.valueOf(6L), form.getInnovationAreaCategoryId());
-		assertEquals(Long.valueOf(7L), form.getLeadTechnologistUserId());
-		assertEquals(Integer.valueOf(2), form.getOpeningDateDay());
-		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
-		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
-		assertEquals("code", form.getCompetitionCode());
-		assertEquals("paf", form.getPafNumber());
-		assertEquals("name", form.getTitle());
-		assertEquals("budgetcode", form.getBudgetCode());
+		CompetitionSetupFormPopulator matchingPopulator = mock(CompetitionSetupFormPopulator.class);
+		when(matchingPopulator.sectionToFill()).thenReturn(CompetitionSetupSection.ADDITIONAL_INFO);
+		CompetitionSetupForm matchingForm = mock(CompetitionSetupForm.class);
+		when(matchingPopulator.populateForm(competitionResource)).thenReturn(matchingForm);
+		
+		CompetitionSetupFormPopulator otherPopulator = mock(CompetitionSetupFormPopulator.class);
+		when(otherPopulator.sectionToFill()).thenReturn(CompetitionSetupSection.APPLICATION_FORM);
+		CompetitionSetupForm otherForm = mock(CompetitionSetupForm.class);
+		when(otherPopulator.populateForm(competitionResource)).thenReturn(otherForm);
+
+		service.setCompetitionSetupFormPopulators(asList(matchingPopulator, otherPopulator));
+		
+		CompetitionSetupForm result = service.getSectionFormData(competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
+		
+		assertEquals(matchingForm, result);
+		verify(matchingPopulator).populateForm(competitionResource);
+		verify(otherPopulator, never()).populateForm(competitionResource);
 	}
 	
 	@Test
-	public void testSaveCompetitionSetupSection() {
-		CompetitionSetupInitialDetailsForm competitionSetupForm = new CompetitionSetupInitialDetailsForm();
-		competitionSetupForm.setTitle("title");
-		competitionSetupForm.setBudgetCode("budgetCode");
-		competitionSetupForm.setExecutiveUserId(1L);
-		competitionSetupForm.setOpeningDateDay(1);
-		competitionSetupForm.setOpeningDateMonth(12);
-		competitionSetupForm.setOpeningDateYear(2000);
-		competitionSetupForm.setCompetitionTypeId(2L);
-		competitionSetupForm.setLeadTechnologistUserId(3L);
-		competitionSetupForm.setPafNumber("paf");
-		competitionSetupForm.setInnovationAreaCategoryId(4L);
-		competitionSetupForm.setInnovationSectorCategoryId(5L);
+	public void testSaveSection() {
+		CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
+		CompetitionResource competitionResource = newCompetitionResource().build();
 		
-		CompetitionResource competition = newCompetitionResource()
-				.withCompetitionCode("compcode").build();
+		CompetitionSetupSectionSaver matchingSaver = mock(CompetitionSetupSectionSaver.class);
+		when(matchingSaver.sectionToSave()).thenReturn(CompetitionSetupSection.ADDITIONAL_INFO);
+		when(matchingSaver.supportsForm(AdditionalInfoForm.class)).thenReturn(true);
+		
+		CompetitionSetupSectionSaver otherSaver = mock(CompetitionSetupSectionSaver.class);
+		when(otherSaver.sectionToSave()).thenReturn(CompetitionSetupSection.APPLICATION_FORM);
+		when(otherSaver.supportsForm(AdditionalInfoForm.class)).thenReturn(false);
 
-		service.saveCompetitionSetupSection(competitionSetupForm, competition, CompetitionSetupSection.INITIAL_DETAILS);
-		
-		assertEquals("title", competition.getName());
-		assertEquals("budgetCode", competition.getBudgetCode());
-		assertEquals(Long.valueOf(1L), competition.getExecutive());
-		assertEquals(LocalDateTime.of(2000, 12, 1, 0, 0), competition.getStartDate());
-		assertEquals(Long.valueOf(2L), competition.getCompetitionType());
-		assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
-		assertEquals("paf", competition.getPafCode());
-		assertEquals(Long.valueOf(4L), competition.getInnovationArea());
-		assertEquals(Long.valueOf(5L), competition.getInnovationSector());
 
-		verify(competitionService).update(competition);
+		service.setCompetitionSetupSectionSavers(asList(matchingSaver, otherSaver));
 		
-		assertEquals("compcode", competitionSetupForm.getCompetitionCode());
+		service.saveCompetitionSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
+		
+		verify(matchingSaver).saveSection(competitionResource, competitionSetupForm);
+		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm);
 	}
+	
 }

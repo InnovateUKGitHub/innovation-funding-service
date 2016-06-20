@@ -4,7 +4,7 @@ import org.springframework.ui.Model;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.controller.form.CompetitionSetupForm;
+import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 
 public interface CompetitionSetupService {
 
