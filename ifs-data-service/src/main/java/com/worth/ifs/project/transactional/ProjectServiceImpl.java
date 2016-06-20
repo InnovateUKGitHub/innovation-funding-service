@@ -170,20 +170,20 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date) {
         return getProject(projectId).
-                andOnSuccess(this::validateIsReadyForSubmission).
-                andOnSuccess(project -> setSubmittedDate(project, date)).
-                andOnSuccessReturnVoid();
+                andOnSuccess(
+                        project -> {
+                            if(validateIsReadyForSubmission(project)){
+                                return setSubmittedDate(project, date);
+                            } else {
+                                return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+                            }
+                        }
+                ).andOnSuccessReturnVoid();
     }
 
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        ServiceResult<Project> result = getProject(projectId).andOnSuccess(this::validateIsReadyForSubmission);
-
-        if(result.isSuccess()){
-            return serviceSuccess(true);
-        } else {
-            return serviceFailure(result.getFailure().getErrors());
-        }
+        return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
     }
 
     private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {
@@ -298,11 +298,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
-    private ServiceResult<Project> validateIsReadyForSubmission(final Project project) {
-        if(project.getAddress() == null || project.getProjectManager() == null || project.getTargetStartDate() == null || project.getSubmittedDate() != null){
-            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-        } else {
-            return serviceSuccess(project);
-        }
+    private boolean validateIsReadyForSubmission(final Project project) {
+        return !(project.getAddress() == null || project.getProjectManager() == null || project.getTargetStartDate() == null || project.getSubmittedDate() != null);
     }
 }
