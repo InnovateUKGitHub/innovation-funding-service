@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public interface ProjectService {
 
-    @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getProjectById(@P("projectId") final Long projectId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -51,10 +51,10 @@ public interface ProjectService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(final Long userId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
-    @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")

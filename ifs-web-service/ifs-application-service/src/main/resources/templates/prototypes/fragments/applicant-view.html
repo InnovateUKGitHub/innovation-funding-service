@@ -384,7 +384,7 @@
         <h2 class="heading-small no-margin">You have not completed your finances</h2>
         <ul class="list-bullet">
             <li>This application cannot be submitted unless finances have been marked as complete by all partners</li>
-            <li><a href="/prototypes/631-finances-overview">Return to finances section to complete your finances</a></li>
+            <li><a href="/prototypes/631-finances-overview">Return to the finances section to complete your finances</a></li>
         </ul>
     </div>
 </div>
@@ -657,13 +657,13 @@
 
         <div class="question">
             <div class="form-group">
-            
+
                 <h3 class="heading-small">What is the business opportunity that your project addresses?</h3>
-            
+
                 <p>Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly.</p>
-            
+
                 <p>We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to </p>
-            
+
             </div>
         </div>
 
@@ -672,15 +672,15 @@
 
         <div class="question">
             <div class="form-group">
-            
+
                 <h2 class="heading-small">What is the size of the potential market for your project?</h2>
-            
+
                 <p> The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry. </p>
-            
+
                 <p>At this time no other solutions are available or near market giving us the leading edge on market share.</p>
-            
+
                 <p>Manufacture and development could remain in the United Kingdom with an international export market.</p>
-            
+
             </div>
         </div>
 
@@ -849,7 +849,7 @@
 <!-- ========Applicant view - feedback score======= -->
 
 <div th:fragment="prototype-companies-house-lookup">
-    
+
         <form th:class="${(status == 'projectSetup' ? 'extra-margin' : '')}">
             <fieldset>
                 <legend class="visuallyhidden">Business organisation</legend>
@@ -897,7 +897,7 @@
             </fieldset>
 
             <a href="#" id="manual-company-trigger" th:unless="${status == 'projectSetup'}">Not on companies House?</a>
-                
+
             <div id="manual-company-input" class="extra-margin">
                 <fieldset>
                     <legend class="visuallyhidden">Organisation details</legend>
@@ -969,7 +969,7 @@
 
                 <button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/643-org-selected-manually-lead">Continue</button>
             </div>
-            
+
         </form>
 
 

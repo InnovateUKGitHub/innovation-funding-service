@@ -10,7 +10,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
+import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 
 /**
@@ -34,7 +34,7 @@ public class ApplicationFinancePermissionRules {
 
     @PermissionRule(value = "READ", description = "An assessor can see the application finances for organisations in the applications they assess")
     public boolean assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isAssessor = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), ASSESSOR, roleRepository, processRoleRepository);
+        final boolean isAssessor = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), ASSESSOR, roleRepository, processRoleRepository);
         return isAssessor;
     }
 
@@ -81,21 +81,21 @@ public class ApplicationFinancePermissionRules {
     }
 
     private boolean isAConsortiumMemberOnApplicationAndOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
         return isLeadApplicant || isCollaborator;
     }
 
     private boolean isAConsortiumMemberOnApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;
     }
 
     private boolean isAConsortiumMemberOnApplication(final Long applicationId, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationId, LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationId, COLLABORATOR, processRoleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationId, LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationId, COLLABORATOR, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;
     }

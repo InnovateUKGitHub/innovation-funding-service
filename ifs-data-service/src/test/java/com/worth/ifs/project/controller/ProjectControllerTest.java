@@ -6,6 +6,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.JsonTestUtil.toJson;
@@ -13,6 +14,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -89,5 +91,34 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(get("/project/{projectId}/project-users", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectUsers)));
+    }
+
+    @Test
+    public void isSubmitAllowed() throws Exception {
+        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"))
+                .andReturn();
+    }
+
+    @Test
+    public void isSubmitAllowedFalse() throws Exception {
+        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
+
+        mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"))
+                .andReturn();
+    }
+
+    @Test
+    public void setApplicationDetailsSubmitted() throws Exception {
+        when(projectServiceMock.saveProjectSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 }

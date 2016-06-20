@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,4 +34,6 @@ public interface ProjectService {
     ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId);
 
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
+
+    OrganisationResource getLeadOrganisation(Long projectId);
 }
