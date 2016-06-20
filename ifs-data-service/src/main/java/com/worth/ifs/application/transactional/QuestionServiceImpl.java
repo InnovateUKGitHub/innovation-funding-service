@@ -295,7 +295,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         });
     }
 
-    private QuestionStatus isQuestionStatusMarkedAsComplete(QuestionStatus questionStatus, boolean markAsComplete {
+    private QuestionStatus isQuestionStatusMarkedAsComplete(QuestionStatus questionStatus, boolean markAsComplete) {
          if (markAsComplete) {
                 questionStatus.markAsComplete();
             } else {
