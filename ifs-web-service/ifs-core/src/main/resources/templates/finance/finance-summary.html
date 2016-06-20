@@ -226,7 +226,7 @@
             <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
-                   th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Return to finances section to complete your finances</a>
+                   th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Return to the finances section to complete your finances</a>
             </div>
 
             <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>
