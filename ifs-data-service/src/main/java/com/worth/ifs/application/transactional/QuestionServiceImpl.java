@@ -6,10 +6,7 @@ import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
@@ -291,15 +288,20 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             }
 
             if (questionStatus == null) {
-                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-            } else if (markAsComplete) {
+                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);}
+            questionStatus = isQuestionStatusMarkedAsComplete(questionStatus, markAsComplete);
+            questionStatusRepository.save(questionStatus);
+            return serviceSuccess();
+        });
+    }
+
+    private QuestionStatus isQuestionStatusMarkedAsComplete(QuestionStatus questionStatus, boolean markAsComplete {
+         if (markAsComplete) {
                 questionStatus.markAsComplete();
             } else {
                 questionStatus.markAsInComplete();
             }
-            questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
-        });
+        return questionStatus;
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
