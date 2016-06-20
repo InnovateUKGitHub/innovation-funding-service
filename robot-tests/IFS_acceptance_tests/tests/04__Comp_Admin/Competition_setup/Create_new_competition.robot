@@ -8,7 +8,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2984: As a Competition Executive I want the competition code field in the 'Initial details' tab in competition setup to generate based on open date and number of competitions in that month
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Pending    Comp admin
+Force Tags        Comp admin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -35,13 +35,13 @@ Initial details server-side validations
     And the user should see an error    Please enter a opening month
     And the user should see an error    Please enter a opening year
     And the user should see an error    Please enter a opening day
-    #And the user should see an error    Competition title
+    #And the user should see an error    Competition title validation error
     And the user should see an error    Please select a innovation sector
     And the user should see an error    Please select a innovation area
     And the user should see an error    Please select a competition type
     And the user should see an error    Please select a lead technologist
-    #And the user should see an error    PAF number validation
-    #And the user should see an error    Budget code \ \ validation
+    #And the user should see an error    PAF number validation error
+    #And the user should see an error    Budget code validation error
     And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
     Then The user should see the text in the page    Please fill in a correct date before generating the competition code
 
@@ -49,21 +49,26 @@ Initial details client-side validations
     [Documentation]    INFUND-2982
     When the user selects the option from the drop-down menu    Competition Executive One    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive
-    When the user selects the option from the drop-down menu    Infrastructure    id=innovationSectorCategoryId
+    #When The user enters text to a text field    id=title    Competition title
+    #Then The user should not see the text in the page    #Competition title error message
+    When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then The user should not see the text in the page    Please select a innovation sector
-    When the user selects the option from the drop-down menu    Energy    id=nnovationAreaCategoryId
+    When the user selects the option from the drop-down menu    Health and care    id=innovationAreaCategoryId
     Then The user should not see the text in the page    Please select a innovation area
     When the user selects the option from the drop-down menu    Technology Inspired    id=competitionTypeId
     Then The user should not see the text in the page    Please select a competition type
     When the user selects the option from the drop-down menu    Competition Technologist One    id=LeadTechnologistUserId
     Then The user should not see the text in the page    Please select a lead technologist
-    #PAF
-    #Budget
+    When The user enters text to a text field    id=pafNumber    2016
+    #Then The user should not see the text in the page    #PAF error message
+    #When The user enters text to a text field    Id=budgetCode    2004
+    #Then The user should not see the text in the page    #Budget error message
 
 The user should see the correct Staite aid status
     [Documentation]    INFUND-2982
     ...
     ...    INFUND-2983
+    #the dropdown options are not correct. we need to adjust the tests when the correct option will be added
     When the user selects the option from the drop-down menu    Technology Inspired    id=competitionTypeId
     Then The user should see the element    css=.yes
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
