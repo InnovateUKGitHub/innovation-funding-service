@@ -2,7 +2,10 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,14 +38,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Before
     public void setUp() {
         super.setUp();
-
     }
 
     @Test
     public void test_getById() throws Exception {
-        CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setId(1L);
-
+        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
         when(competitionsRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
 
@@ -52,8 +52,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_create() throws Exception {
-        CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setId(1L);
+        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
         when(competitionsRestService.create()).thenReturn(restSuccess(competitionResource));
 
@@ -63,13 +62,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getAllCompetitions() throws Exception {
-        CompetitionResource comp1 = new CompetitionResource();
-        comp1.setName("Competition 1");
-        comp1.setId(1L);
+        CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).build();
 
-        CompetitionResource comp2 = new CompetitionResource();
-        comp2.setName("Competition 2");
-        comp2.setId(2L);
+        CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
 
         final List<CompetitionResource> expected = new ArrayList<>(asList(comp1, comp2));
         when(competitionsRestService.getAll()).thenReturn(restSuccess(expected));
@@ -83,22 +78,26 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getCompletedCompetitionSetupSectionStatusesByCompetitionId() throws Exception {
-       //TODO
+    	CompetitionResource comp = newCompetitionResource().withId(1L).build();
+    	comp.getSectionSetupStatus().put(CompetitionSetupSection.INITIAL_DETAILS, true);
+    	comp.getSectionSetupStatus().put(CompetitionSetupSection.ADDITIONAL_INFO, false);
+    	comp.getSectionSetupStatus().put(CompetitionSetupSection.ELIGIBILITY, true);
+    	
+    	when(competitionsRestService.getCompetitionById(1L)).thenReturn(restSuccess(comp));
+    	
+    	List<CompetitionSetupSection> result = service.getCompletedCompetitionSetupSectionStatusesByCompetitionId(1L);
+    	
+    	assertEquals(2, result.size());
+    	assertEquals(CompetitionSetupSection.INITIAL_DETAILS, result.get(0));
+    	assertEquals(CompetitionSetupSection.ELIGIBILITY, result.get(1));
     }
 
 
     @Test
     public void test_getAllCompetitionTypes() throws Exception {
-        CompetitionTypeResource type1 = new CompetitionTypeResource();
-        type1.setStateAid(false);
-        type1.setName("Type 1");
-        type1.setId(1L);
+        CompetitionTypeResource type1 = newCompetitionTypeResource().withStateAid(false).withName("Type 1").withId(1L).build();
 
-        CompetitionTypeResource type2 = new CompetitionTypeResource();
-        type2.setStateAid(false);
-        type2.setName("Type 2");
-        type2.setId(2L);
-
+        CompetitionTypeResource type2 = newCompetitionTypeResource().withStateAid(false).withName("Type 2").withId(2L).build();
 
         final List<CompetitionTypeResource> expected = new ArrayList<>(asList(type1, type2));
 

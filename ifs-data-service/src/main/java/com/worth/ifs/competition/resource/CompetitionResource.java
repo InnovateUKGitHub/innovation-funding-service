@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CompetitionResource {
@@ -48,7 +50,7 @@ public class CompetitionResource {
     private String pafCode;
     private String budgetCode;
     private String code;
-
+    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
 
     public CompetitionResource() {
@@ -347,6 +349,14 @@ public class CompetitionResource {
     public void setMilestones(List<Long> milestones) {
         this.milestones = milestones;
     }
+    
+    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
+		return sectionSetupStatus;
+	}
+    
+    public void setSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
+		this.sectionSetupStatus = sectionSetupStatus;
+	}
 
     public enum Status {
         COMPETITION_SETUP, COMPETITION_SETUP_FINISHED, NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP

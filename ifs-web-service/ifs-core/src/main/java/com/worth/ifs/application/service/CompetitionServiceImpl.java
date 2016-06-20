@@ -1,14 +1,14 @@
 package com.worth.ifs.application.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 
@@ -21,7 +21,7 @@ import com.worth.ifs.competition.service.CompetitionsRestService;
 public class CompetitionServiceImpl implements CompetitionService {
 
     @Autowired
-    CompetitionsRestService competitionsRestService;
+    private CompetitionsRestService competitionsRestService;
 
     @Override
     public CompetitionResource getById(Long competitionId){
@@ -42,9 +42,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
         
-        //TODO process map from competition
-        
-        return new ArrayList<CompetitionSetupSection>();
+        return competition.getSectionSetupStatus().entrySet().stream()
+        				.filter(entry -> Boolean.TRUE.equals(entry.getValue()))
+        				.map(entry -> entry.getKey())
+        				.sorted()
+        				.collect(Collectors.toList());
     }
 
     @Override

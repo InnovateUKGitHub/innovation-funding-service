@@ -6,7 +6,7 @@
         This will create a new Competition - you will be able to specify more details as you proceed
     </div>
 
-    <form th:action="${competitionSetupForm.getActionUrl()}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{(${editable} ? '' : 'initial/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-1-edit">
 
@@ -231,7 +231,8 @@
                 <dt>Competition code</dt>
                 <dd th:text="${competitionSetupForm.competitionCode}"></dd>
             </dl>
-            <a href="1/edit" class="button">Edit</a>
+            
+            <button type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>

@@ -1,20 +1,40 @@
 package com.worth.ifs.competition.domain;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyEnumerated;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Transient;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.user.domain.User;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -105,6 +125,13 @@ public class Competition {
     @Transient
     private Category innovationArea;
 
+    @ElementCollection
+    @JoinTable(name="competition_setup_status", joinColumns=@JoinColumn(name="competition_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @MapKeyColumn (name="section")
+    @Column(name="status")
+    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
+    
     public Competition() {
     	// no-arg constructor
         status = CompetitionResource.Status.COMPETITION_SETUP;
@@ -377,5 +404,10 @@ public class Competition {
     public void setMilestones(List<Milestone> milestones) {
         this.milestones = milestones;
     }
+    
+    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
+		return sectionSetupStatus;
+	}
+    
 }
 

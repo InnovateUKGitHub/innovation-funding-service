@@ -58,4 +58,10 @@ CREATE TABLE milestone (
 
 ALTER TABLE milestone ADD CONSTRAINT FK_d2gmngr50hf7lkjv8s9mxhfms FOREIGN KEY (competition_id) REFERENCES competition (id);
 
+create table competition_setup_status (
+	competition_id bigint not null,
+	section VARCHAR(255),
+	status tinyint(1) not null
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
 alter table competition_type add column state_aid bit;

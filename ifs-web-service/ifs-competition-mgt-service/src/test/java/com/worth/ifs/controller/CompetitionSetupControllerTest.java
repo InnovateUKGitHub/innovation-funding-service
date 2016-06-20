@@ -4,6 +4,9 @@ package com.worth.ifs.controller;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,16 +29,19 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
 
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.controller.form.CompetitionSetupForm;
 import com.worth.ifs.controller.form.CompetitionSetupInitialDetailsForm;
+import com.worth.ifs.service.CompetitionSetupService;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
@@ -61,6 +66,9 @@ public class CompetitionSetupControllerTest {
 
     @Mock
     private CategoryService categoryService;
+    
+    @Mock
+    private CompetitionSetupService competitionSetupService;
 
     private MockMvc mockMvc;
 
@@ -119,13 +127,15 @@ public class CompetitionSetupControllerTest {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
+        CompetitionSetupForm compSetupForm = mock(CompetitionSetupForm.class);
+        when(competitionSetupService.getSectionFormData(competition, CompetitionSetupSection.INITIAL_DETAILS)).thenReturn(compSetupForm);
+        
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
-                .andExpect(model().attribute("competitionSetupForm", Matchers.hasProperty("competitionCode", Matchers.equalTo(competitionSetupInitialDetailsForm.getCompetitionCode()))))
-                .andExpect(model().attribute("competitionSetupForm", Matchers.hasProperty("competitionTypeId", Matchers.equalTo(competitionSetupInitialDetailsForm.getCompetitionTypeId()))))
-                .andExpect(model().attribute("competitionSetupForm", Matchers.hasProperty("title", Matchers.equalTo(competitionSetupInitialDetailsForm.getTitle()))))
-                .andExpect(model().attribute("allSections", CompetitionSetupSection.values()));
+                .andExpect(model().attribute("competitionSetupForm", compSetupForm));
+        
+        verify(competitionSetupService).populateCompetitionSectionModelAttributes(isA(Model.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
     @Test
@@ -197,7 +207,7 @@ public class CompetitionSetupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"));
         
-        verify(competitionService).update(competition);
+        verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
 }

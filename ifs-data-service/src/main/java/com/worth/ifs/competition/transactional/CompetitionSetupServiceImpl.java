@@ -119,16 +119,15 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
-    	
-    	// TODO
-    	// get competition, populate map accordingly
+    	Competition competition = competitionRepository.findById(competitionId);
+    	competition.getSectionSetupStatus().put(section, Boolean.TRUE);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
-    	// TODO
-    	// get competition, populate map accordingly
+    	Competition competition = competitionRepository.findById(competitionId);
+    	competition.getSectionSetupStatus().put(section, Boolean.FALSE);
         return serviceSuccess();
     }
 

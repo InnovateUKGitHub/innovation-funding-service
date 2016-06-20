@@ -221,30 +221,32 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testCompetitionCompletedSections() throws Exception {
-    	
-    	//TODO retrieve competition and check map
-        //Long competitionId = 7L;
-        //checkCompletedSections(competitionId);
+        Long competitionId = 7L;
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
+        
+        assertEquals(0, competitionsResult.getSuccessObject().getSectionSetupStatus().size());
     }
 
     @Rollback
     @Test
     public void testCompetitionCompleteSection() throws Exception {
-    	//TODO retrieve competition and check map
-//        Long competitionId = 7L;
-//        checkCompletedSections(competitionId);
-//        controller.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
-//        checkCompletedSectionsAfterCompletingSection(competitionId);
+    	Long competitionId = 7L;
+    	
+    	controller.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+    	
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
+        assertEquals(Boolean.TRUE, competitionsResult.getSuccessObject().getSectionSetupStatus().get(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
     @Rollback
     @Test
     public void testCompetitionInCompleteSection() throws Exception {
-    	//TODO retrieve competition and check map
-//        Long competitionId = 7L;
-//        checkCompletedSections(competitionId);
-//        controller.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
-//        checkCompletedSectionsAfterIncompletingSection(competitionId);
+    	Long competitionId = 7L;
+    	
+    	controller.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+    	
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
+        assertEquals(Boolean.FALSE, competitionsResult.getSuccessObject().getSectionSetupStatus().get(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
     private CompetitionResource createNewCompetition() {

@@ -34,7 +34,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("innovationAreaName").description("the Innovation area name this competition belongs to"),
             fieldWithPath("pafCode").description("the paf code entered during competition setup"),
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
-            fieldWithPath("code").description("the unique competition code entered during competition setup")
+            fieldWithPath("code").description("the unique competition code entered during competition setup"),
+            fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
