@@ -245,3 +245,76 @@
         </li>
     </ul>
 </div>
+
+<!-- =================== Comp setup section - Additional Info (2) ============================== -->
+<div th:fragment="section-additional">
+    <h2>Step 2: Additional Information</h2>
+
+    <div class="panel-indent">
+        TODO
+    </div>
+
+    <form th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+
+        <fieldset th:if="${editable}" id="section-2-edit">
+
+            <legend class="visuallyhidden">Additional information</legend>
+
+            <button class="button">Done</button>
+        </fieldset>
+
+        <fieldset th:if="${!editable}" id="section-2-">
+
+            <dl class="standard-definition-list">
+                
+            </dl>
+            
+            <button type="submit" class="button">Edit</button>
+        </fieldset>
+
+    </form>
+    <ul class="pagination">
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- =================== Comp setup section - Eligibility (3) ============================== -->
+<div th:fragment="section-eligibility">
+    <h2>Step 3: Eligibility</h2>
+
+    <div class="panel-indent">
+        Todo
+    </div>
+
+    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+
+        <fieldset th:if="${editable}" id="section-3-edit">
+
+            <legend class="visuallyhidden">Eligibility</legend>
+
+            <button class="button">Done</button>
+        </fieldset>
+
+        <fieldset th:if="${!editable}" id="section-3-">
+
+            <dl class="standard-definition-list">
+            </dl>
+            
+            <button type="submit" class="button">Edit</button>
+        </fieldset>
+
+    </form>
+    <ul class="pagination">
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='milestones')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Milestones</span>
+            </a>
+        </li>
+    </ul>
+</div>
