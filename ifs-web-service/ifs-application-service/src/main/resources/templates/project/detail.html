@@ -109,7 +109,10 @@
         </tbody>
     </table>
 
-    <button type="submit" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</button>
+    <!-- use is isSubmissionAllowed attribute to set class and disable/enable (INFUND-3457) -->
+    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+        <button type="submit" name="submit-app-details" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</button>
+    </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

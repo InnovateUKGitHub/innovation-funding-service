@@ -73,4 +73,14 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address) {
         return projectRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
     }
+
+    @Override
+    public ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId) {
+        return projectRestService.setApplicationDetailsSubmitted(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
+        return projectRestService.isSubmitAllowed(projectId).toServiceResult();
+    }
 }

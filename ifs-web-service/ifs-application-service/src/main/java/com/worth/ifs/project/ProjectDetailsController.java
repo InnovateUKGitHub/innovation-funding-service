@@ -101,12 +101,15 @@ public class ProjectDetailsController {
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
-        
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).isSuccess();
+
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", user);
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, user, user.getOrganisations().get(0), partnerOrganisations, applicationResource, projectUsers, competitionResource));
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
+
         return "project/detail";
     }
 
@@ -396,8 +399,7 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
-                                BindingResult bindingResult) {
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
         form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
@@ -422,6 +424,12 @@ public class ProjectDetailsController {
         addressForm.setManualAddress(true);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
+    }
+
+    @RequestMapping(value = "/{projectId}/details/submit", method = RequestMethod.POST)
+    public String manualAddress(@PathVariable("projectId") Long projectId, Model model) {
+        ServiceResult<Void> serviceResult = projectService.setApplicationDetailsSubmitted(projectId);
+        return redirectToProjectDetails(projectId);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(

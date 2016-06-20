@@ -32,6 +32,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -160,9 +161,35 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         });
     }
 
+    @Override
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByProjectId(projectId);
         return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
+    }
+
+    @Override
+    public ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date) {
+        return getProject(projectId).
+                andOnSuccess(this::validateIsReadyForSubmission).
+                andOnSuccess(project -> setSubmittedDate(project, date)).
+                andOnSuccessReturnVoid();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
+        ServiceResult<Project> result = getProject(projectId).andOnSuccess(this::validateIsReadyForSubmission);
+
+        if(result.isSuccess()){
+            return serviceSuccess(true);
+        } else {
+            return serviceFailure(result.getFailure().getErrors());
+        }
+    }
+
+    private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {
+        project.setSubmittedDate(date);
+        projectRepository.save(project);
+        return serviceSuccess();
     }
 
     private void addFinanceContactToProject(Project project, ProjectUser financeContact) {
@@ -269,5 +296,13 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> getProjectByApplication(long applicationId){
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
+    }
+
+    private ServiceResult<Project> validateIsReadyForSubmission(final Project project) {
+        if(project.getAddress() == null || project.getProjectManager() == null || project.getTargetStartDate() == null || project.getSubmittedDate() != null){
+            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+        } else {
+            return serviceSuccess(project);
+        }
     }
 }

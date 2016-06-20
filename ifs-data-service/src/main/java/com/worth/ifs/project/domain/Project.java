@@ -9,6 +9,7 @@ import com.worth.ifs.user.resource.UserRoleType;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class Project {
     private Long durationInMonths; // in months
 
     private String name;
+
+    private LocalDateTime submittedDate;
 
     @OneToOne
     @JoinColumn(name="projectManager", referencedColumnName="id")
@@ -139,5 +142,13 @@ public class Project {
 
     public void setProjectUsers(List<ProjectUser> projectUsers) {
         this.projectUsers = projectUsers;
+    }
+
+    public LocalDateTime getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 		super.setUp();
 		setupInvites();
 		loginDefaultUser();
-		loggedInUser.setOrganisations(asList(8L));
+		loggedInUser.setOrganisations(Collections.singletonList(8L));
 	}
 	
     @Override
@@ -62,6 +63,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(userService.isLeadApplicant(loggedInUser.getId(), applicationResource)).thenReturn(Boolean.TRUE);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(projectService.isSubmitAllowed(projectResource.getId())).thenReturn(serviceSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details", projectResource.getId()))
                 .andExpect(status().isOk())
