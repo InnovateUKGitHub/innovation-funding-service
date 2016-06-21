@@ -92,6 +92,7 @@ ifs-web-service.ipr
 robot-tests/target
 robot-tests/test_counting
 robot-tests/benchmarking_report.txt
+robot-tests/ubuntu-vm-headless/logs
 jmeter/jmeter.log
 
 
