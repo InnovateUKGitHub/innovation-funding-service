@@ -7,19 +7,20 @@ services:
     ports:
       - "443:443"
       - "389:389"
-    environment:
-      - JAVA_OPTS:"$JAVA_OPTS -Xms256m -Xmx512m"
     links:
       - web
       - data
     networks:
-      - front-tier
+      front-tier:
+        aliases:
+         - iuk-auth-localdev
 
   web:
     container_name: ifs-web-service
     build:
       context: .
       dockerfile: web-dockerfile
+    mem_limit: 750m
     ports:
       - "8080:8080"
       - "12345:12345"
@@ -36,6 +37,7 @@ services:
     build:
       context: .
       dockerfile: data-dockerfile
+    mem_limit: 750m
     ports:
       - "8090:8080"
       - "12346:12345"

@@ -44,11 +44,12 @@ setHostFile(){
     esac
 }
 
-cd ../../../
 setEnv
+./_delete-shib-users-remote.sh
 ./_install-or-upgrade.sh
+cd ../../../
 docker-compose up -d
-sleep 2
+wait
 docker-compose exec mysql mysql -uroot -ppassword -e 'create database ifs_test'
 docker-compose exec mysql mysql -uroot -ppassword -e 'create database ifs'
 setHostFile
