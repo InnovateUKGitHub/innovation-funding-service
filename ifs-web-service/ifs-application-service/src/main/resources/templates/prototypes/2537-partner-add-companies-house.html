@@ -21,18 +21,12 @@
 
 	<p class="form-hint icon-info-small-blue">Updating your company details will update them for all members of your company.</p>
 
-	<h2 class="heading-small">Nomensa</h2>
-	<p class="form-hint">Company name entered during account creation</p>
-
 	<div th:include="prototypes/fragments/applicant-view :: prototype-companies-house-lookup" th:with="status='projectSetup'" th:remove="tag" th:class="extra-margin" />
 
-
 	<h3 class="heading-small no-margin-bottom">Not registered yet?</h3>
-	<p><a href="https://www.gov.uk/topic/company-registration-filing/starting-company">Register with Companies House</a></p>
+	<p><a rel="external" href="https://www.gov.uk/topic/company-registration-filing/starting-company" target="_blank">Register with Companies House</a></p>
 	<p>You will not be funded until you have registered with Companies House</p>
 
-
-	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
