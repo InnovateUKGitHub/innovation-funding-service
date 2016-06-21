@@ -1,9 +1,8 @@
 package com.worth.ifs.finance.transactional;
 
-import java.util.List;
-
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -15,9 +14,10 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationType;
-
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
@@ -129,5 +129,15 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
         ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
         assertTrue(result.isSuccess());
         assertEquals(expectedFinance, result.getSuccessObject());
+    }
+
+    @Test
+    public void testAddWhenApplicationNotOpen() {
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
+        Application application = newApplication().withCompetition(openCompetition).build();
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
+        ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.COMPETITION_NOT_OPEN));
     }
 }
