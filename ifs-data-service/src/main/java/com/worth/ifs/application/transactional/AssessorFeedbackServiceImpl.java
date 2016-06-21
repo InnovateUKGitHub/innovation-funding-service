@@ -162,36 +162,35 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 
     @Override
     public ServiceResult<Void> notifyLeadApplicantsOfAssessorFeedback(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition -> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback(competition, competitionId));
+    }
 
-        return getCompetition(competitionId).andOnSuccess(competition -> {
+    private ServiceResult<Void> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback (Competition competition, Long competitionId) {
+        List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS);
 
-            List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS);
+        Pair<List<Application>, List<Application>> applicationsByFundingSuccess = simplePartition(applicationsToPublishAssessorFeedbackFor, applicationApprovedFilter);
+        List<Application> successfulApplications = applicationsByFundingSuccess.getLeft();
+        List<Application> unsuccessfulApplications = applicationsByFundingSuccess.getRight();
 
-            Pair<List<Application>, List<Application>> applicationsByFundingSuccess = simplePartition(applicationsToPublishAssessorFeedbackFor, applicationApprovedFilter);
-            List<Application> successfulApplications = applicationsByFundingSuccess.getLeft();
-            List<Application> unsuccessfulApplications = applicationsByFundingSuccess.getRight();
+        List<ServiceResult<Pair<Long, NotificationTarget>>> successfulApplicationTargets = getLeadApplicantNotificationTargets(simpleMap(successfulApplications, Application::getId));
+        List<ServiceResult<Pair<Long, NotificationTarget>>> unsuccessfulApplicationTargets = getLeadApplicantNotificationTargets(simpleMap(unsuccessfulApplications, Application::getId));
 
-            List<ServiceResult<Pair<Long, NotificationTarget>>> successfulApplicationTargets = getLeadApplicantNotificationTargets(simpleMap(successfulApplications, Application::getId));
-            List<ServiceResult<Pair<Long, NotificationTarget>>> unsuccessfulApplicationTargets = getLeadApplicantNotificationTargets(simpleMap(unsuccessfulApplications, Application::getId));
+        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(successfulApplicationTargets);
+        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(unsuccessfulApplicationTargets);
 
-            ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(successfulApplicationTargets);
-            ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(unsuccessfulApplicationTargets);
+        if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
 
-            if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
+            Notification fundedNotification = createFundingDecisionNotification(competition, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED);
+            Notification unfundedNotification = createFundingDecisionNotification(competition, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED);
 
-                Notification fundedNotification = createFundingDecisionNotification(competition, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED);
-                Notification unfundedNotification = createFundingDecisionNotification(competition, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED);
+            ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundedNotification, EMAIL);
+            ServiceResult<Void> unfundedEmailSendResult = notificationService.sendNotification(unfundedNotification, EMAIL);
 
-                ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundedNotification, EMAIL);
-                ServiceResult<Void> unfundedEmailSendResult = notificationService.sendNotification(unfundedNotification, EMAIL);
+            return processAnyFailuresOrSucceed(fundedEmailSendResult, unfundedEmailSendResult);
 
-                return processAnyFailuresOrSucceed(fundedEmailSendResult, unfundedEmailSendResult);
-
-            } else {
-                return serviceFailure(internalServerErrorError("Unable to determine all Notification targets for funding decision emails"));
-            }
-        });
-
+        } else {
+            return serviceFailure(internalServerErrorError("Unable to determine all Notification targets for funding decision emails"));
+        }
     }
 
     private Notification createFundingDecisionNotification(Competition competition, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
