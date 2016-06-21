@@ -147,9 +147,9 @@
 					<div class="column-half">
 							<button type="button" class="js-close button buttonlink large">Cancel</button>
 					</div>
-					<div class="column-half alignright-button">
-						<a href="/prototypes/1588-project-status?stage=level2" class="button large">Submit</a>
-					</div>
-				</div>
+					<form class="column-half alignright-button"  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+						<button class="button large" name="submit-app-details" >Submit</button>
+					</form>
+			</div>
 	</div>
 </div>

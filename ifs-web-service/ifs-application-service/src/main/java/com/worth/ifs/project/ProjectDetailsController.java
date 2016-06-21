@@ -71,10 +71,10 @@ public class ProjectDetailsController {
 
     @Autowired
     private CompetitionService competitionService;
-    
+
     @Autowired
     private OrganisationRestService organisationRestService;
-    
+
     @Autowired
     private AddressRestService addressRestService;
 
@@ -108,6 +108,18 @@ public class ProjectDetailsController {
         return "project/detail";
     }
 
+    @RequestMapping(value = "/{projectId}/confirm-project-details", method = RequestMethod.GET)
+    public String projectDetailConfirmSubmit(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("currentUser", loggedInUser);
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
+        return "project/confirm-project-details";
+    }
+
+
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.GET)
     public String viewFinanceContact(Model model,
                                      @PathVariable("projectId") final Long projectId,
@@ -135,11 +147,11 @@ public class ProjectDetailsController {
                                        BindingResult bindingResult,
                                        HttpServletRequest request,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        
+
 		if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), loggedInUser.getId())){
     		return redirectToProjectDetails(projectId);
     	}
-    	
+
     	if(!anyUsersInGivenOrganisationForProject(projectId, form.getOrganisation())){
     		return redirectToProjectDetails(projectId);
     	}
@@ -147,13 +159,13 @@ public class ProjectDetailsController {
         if(bindingResult.hasErrors()) {
         	return modelForFinanceContact(model, projectId, form, loggedInUser);
         }
-        
+
         if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
         	return modelForFinanceContact(model, projectId, form, loggedInUser);
         }
-        
+
         projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
-    	
+
         return redirectToProjectDetails(projectId);
     }
 
@@ -178,7 +190,7 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
 		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        
+
         model.addAttribute("organisationUsers", thisOrganisationUsers);
         model.addAttribute("form", form);
         model.addAttribute("project", projectResource);
@@ -187,13 +199,13 @@ public class ProjectDetailsController {
         model.addAttribute("competition", competitionResource);
         return "project/finance-contact";
 	}
-    
+
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
         List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         return !projectUsersForOrganisation.isEmpty();
 	}
-    
+
 	private boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
 		if(userId == null) {
 			return false;
@@ -205,7 +217,7 @@ public class ProjectDetailsController {
 
 		return !projectUsersForUserAndOrganisation.isEmpty();
 	}
-    
+
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) throws InterruptedException, ExecutionException {
@@ -217,11 +229,11 @@ public class ProjectDetailsController {
 		}
 
     	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
-        
+
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 
         populateProjectManagerModel(model, projectId, form, applicationResource);
-    	
+
         return "project/project-manager";
     }
 
@@ -240,21 +252,21 @@ public class ProjectDetailsController {
         	populateProjectManagerModel(model, projectId, form, applicationResource);
             return "project/project-manager";
         }
-        
+
         if(!projectManagerSelectionIsInLeadPartnerOrganisation(projectId, form.getProjectManager())) {
         	populateProjectManagerModel(model, projectId, form, applicationResource);
             return "project/project-manager";
         }
-        
+
         projectService.updateProjectManager(projectId, form.getProjectManager());
-    	
+
         return redirectToProjectDetails(projectId);
     }
 
 	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
 
         Future<ProcessRoleResource> processRoleResource = getProjectManagerProcessRole(projectId);
-    	
+
         ProjectManagerForm form = new ProjectManagerForm();
         if(processRoleResource != null) {
 			form.setProjectManager(processRoleResource.get().getUser());
@@ -276,13 +288,13 @@ public class ProjectDetailsController {
     private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
 			ApplicationResource applicationResource) {
 		ProjectResource projectResource = projectService.getById(projectId);
-		
+
 		ProcessRoleResource lead = userService.getLeadApplicantProcessRoleOrNull(applicationResource);
 		List<ProcessRoleResource> leadPartnerUsers = userService.getLeadPartnerOrganisationProcessRoles(applicationResource);
 		List<ProcessRoleResource> leadPartnerUsersExcludingLead = leadPartnerUsers.stream()
 				.filter(prr -> !lead.getUser().equals(prr.getUser()))
 				.collect(Collectors.toList());
-		
+
 		List<ProcessRoleResource> allUsers = Stream.of(asList(lead), leadPartnerUsersExcludingLead)
 				.flatMap(x -> x.stream())
 				.collect(Collectors.toList());
@@ -294,7 +306,7 @@ public class ProjectDetailsController {
 	}
 
 	private boolean projectManagerSelectionIsInLeadPartnerOrganisation(Long projectId, Long projectManager) {
-		
+
 		if(projectManager == null) {
 			return false;
 		}
