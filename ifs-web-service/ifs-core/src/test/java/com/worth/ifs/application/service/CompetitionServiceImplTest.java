@@ -4,8 +4,6 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -75,6 +75,19 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(Long.valueOf(2L), found.get(1).getId());
     }
 
+    @Test
+    public void test_getAllCompetitionsNotInSetup() throws Exception {
+        CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build();
+
+        CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
+
+        final List<CompetitionResource> expected = new ArrayList<>(asList(comp1, comp2));
+        when(competitionsRestService.getAll()).thenReturn(restSuccess(expected));
+
+        final List<CompetitionResource> found = service.getAllCompetitionsNotInSetup();
+        assertEquals(1, found.size());
+        assertEquals(Long.valueOf(2L), found.get(0).getId());
+    }
 
     @Test
     public void test_getCompletedCompetitionSetupSectionStatusesByCompetitionId() throws Exception {
