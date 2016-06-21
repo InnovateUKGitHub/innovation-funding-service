@@ -51,6 +51,21 @@ public class EntityLookupCallbacks {
         }
     }
 
+    public static <S,T> ServiceResult<S> spider(ServiceResult<T> initial, Function<T,S> firstFn){
+        return spiderNotNull(initial, firstFn);
+    }
+
+    public static <R,S,T> ServiceResult<R> spider(ServiceResult<T> initial, Function<T,S> firstFn, Function<S,R> secondFn){
+        return spiderNotNull(spiderNotNull(initial, firstFn), secondFn);
+    }
+
+    private static <S, T> ServiceResult<S> spiderNotNull(final ServiceResult<T> initial, final Function<T,S> fn){
+        return initial.andOnSuccess(first -> {
+            final S secondValue = fn.apply(first);
+            return secondValue != null ? serviceSuccess(secondValue) :serviceFailure(internalServerErrorError("Not found"));
+        });
+    }
+
     /**
      * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
