@@ -2,7 +2,6 @@ package com.worth.ifs.form.transactional;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
@@ -126,9 +125,5 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private List<FormInputResponseResource> formInputResponsesToResources(List<FormInputResponse> filtered) {
         return simpleMap(filtered, formInputResponse -> formInputResponseMapper.mapToResource(formInputResponse));
-    }
-
-    private boolean applicationBelongsToOpenCompetition(final Application application) {
-        return application.getCompetition().getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
     }
 }

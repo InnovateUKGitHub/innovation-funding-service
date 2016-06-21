@@ -1,6 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.mapper.QuestionMapper;
@@ -12,7 +11,6 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -408,8 +406,4 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return simpleMap(filtered, question -> questionMapper.mapToResource(question));
     }
 
-    private boolean applicationBelongsToOpenCompetition(final Long applicationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        return application.getCompetition().getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
-    }
 }

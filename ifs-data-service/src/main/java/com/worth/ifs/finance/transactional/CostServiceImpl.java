@@ -453,10 +453,4 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return costHandler;
     }
 
-//    private boolean applicationBelongsToOpenCompetition(final Application application) {
-//        if (application != null && application.getCompetition() != null) {
-//            return CompetitionResource.Status.OPEN.equals(application.getCompetition().getCompetitionStatus());
-//        }
-//        return false;
-//    }
 }
