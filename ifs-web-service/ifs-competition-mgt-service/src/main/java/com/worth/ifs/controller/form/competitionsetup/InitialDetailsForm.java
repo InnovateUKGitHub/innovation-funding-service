@@ -1,5 +1,6 @@
 package com.worth.ifs.controller.form.competitionsetup;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer openingDateYear;
 
+    @NotEmpty(message = "Please enter a title")
     private String title;
 
     @NotNull(message = "Please select a innovation sector")
@@ -38,8 +40,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "Please select a lead technologist")
     private Long LeadTechnologistUserId;
 
+    @NotEmpty(message = "Please enter a PAF number")
     private String pafNumber;
+    @NotEmpty(message = "Please generate a competition code")
     private String competitionCode;
+    @NotEmpty(message = "Please enter a budget code")
     private String budgetCode;
 
     public Long getExecutiveUserId() {

@@ -83,7 +83,9 @@
                 </label>
                 <input th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
-                       th:field="${competitionSetupForm.title}" />
+                       th:field="${competitionSetupForm.title}"
+                       required="required"
+                       data-required-errormessage="Please enter a title" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationSectorCategoryId')}? 'form-group error':'form-group'">
@@ -161,7 +163,9 @@
                 </label>
                 <input th:class="${#fields.hasErrors('pafNumber') ? 'form-control field-error width-large' : 'form-control width-large'}"
                        type="text"
-                       th:field="${competitionSetupForm.pafNumber}" />
+                       th:field="${competitionSetupForm.pafNumber}"
+                       required="required"
+                       data-required-errormessage="Please enter a PAF number" />
             </div>
 
             <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -173,7 +177,9 @@
                 </label>
                 <input th:class="${#fields.hasErrors('budgetCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                        type="text"
-                       th:field="${competitionSetupForm.budgetCode}" />
+                       th:field="${competitionSetupForm.budgetCode}"
+                       required="required"
+                       data-required-errormessage="Please enter a budget code" />
             </div>
 
             <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
@@ -185,7 +191,9 @@
                 </label>
                 <input disabled="disabled" th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                        type="text"
-                       th:field="${competitionSetupForm.competitionCode}" />
+                       th:field="${competitionSetupForm.competitionCode}"
+                       required="required"
+                       data-required-errormessage="Please generate a competition code"/>
                 <button class="button button-secondary" th:unless="${competitionSetupForm.competitionCode}" type="button" id="generate-code" th:value="${competition.id}">Generate competition code</button>
             </div>
 
