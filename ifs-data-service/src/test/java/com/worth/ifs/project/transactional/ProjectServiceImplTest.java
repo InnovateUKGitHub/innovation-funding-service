@@ -78,7 +78,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testCreateProjectFromApplication() {
 
-
         Role partnerRole = newRole().withType(PARTNER).build();
 
         ProjectResource newProjectResource = newProjectResource().build();

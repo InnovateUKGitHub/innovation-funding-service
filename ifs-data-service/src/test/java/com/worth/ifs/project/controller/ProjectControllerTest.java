@@ -2,14 +2,18 @@ package com.worth.ifs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.JsonTestUtil.toJson;
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -91,6 +95,23 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(get("/project/{projectId}/project-users", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectUsers)));
+    }
+
+    @Test
+    public void updateProjectAddress() throws Exception {
+        AddressResource addressResource = newAddressResource().withId(1L).build();
+
+        when(projectServiceMock.updateProjectAddress(123L, 456L, OrganisationAddressType.REGISTERED, addressResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/address", 456L)
+                .param("leadOrganisationId", "123")
+                .param("addressType", OrganisationAddressType.REGISTERED.name())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(addressResource)))
+            .andExpect(status().isOk())
+            .andExpect(content().string(""));
+
+        verify(projectServiceMock).updateProjectAddress(123L, 456L, OrganisationAddressType.REGISTERED, addressResource);
     }
 
     @Test

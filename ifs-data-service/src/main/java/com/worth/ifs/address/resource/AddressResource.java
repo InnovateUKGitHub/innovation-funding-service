@@ -120,4 +120,22 @@ public class AddressResource {
     public void setOrganisations(List<Long> organisations) {
         this.organisations = organisations;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AddressResource that = (AddressResource) o;
+
+        if (!id.equals(that.id)) return false;
+        if (addressLine1 != null ? !addressLine1.equals(that.addressLine1) : that.addressLine1 != null) return false;
+        if (addressLine2 != null ? !addressLine2.equals(that.addressLine2) : that.addressLine2 != null) return false;
+        if (addressLine3 != null ? !addressLine3.equals(that.addressLine3) : that.addressLine3 != null) return false;
+        if (town != null ? !town.equals(that.town) : that.town != null) return false;
+        if (county != null ? !county.equals(that.county) : that.county != null) return false;
+        if (postcode != null ? !postcode.equals(that.postcode) : that.postcode != null) return false;
+        return organisations != null ? organisations.equals(that.organisations) : that.organisations == null;
+
+    }
 }

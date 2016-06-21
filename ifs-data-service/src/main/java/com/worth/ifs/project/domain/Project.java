@@ -52,7 +52,7 @@ public class Project {
 
     public Project() {}
 
-    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name) {
+    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name, LocalDateTime submittedDate) {
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
@@ -60,6 +60,7 @@ public class Project {
         this.durationInMonths = durationInMonths;
         this.projectManager = projectManager;
         this.name = name;
+        this.submittedDate = submittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
