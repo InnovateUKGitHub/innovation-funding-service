@@ -272,27 +272,31 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
-        return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
-            QuestionStatus questionStatus = null;
+        return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
+                -> findAndOnSuccessToSetComplete(markedAsCompleteBy, question, applicationId, processRoleId, markAsComplete));
+    }
 
-            if (question.hasMultipleStatuses()) {
-                //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
-                List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
-                Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
-                        .map(m -> getQuestionStatusByMarkedAsCompleteId(question, applicationId, m.getId()))
-                        .filter(m -> m != null)
-                        .findFirst();
-                questionStatus = optionalQuestionStatus.orElse(null);
-            } else {
-                questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
-            }
+    private ServiceResult<Void> findAndOnSuccessToSetComplete(ProcessRole markedAsCompleteBy, Question question, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
-            if (questionStatus == null) {
-                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);}
-            questionStatus = isQuestionStatusMarkedAsComplete(questionStatus, markAsComplete);
-            questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
-        });
+        QuestionStatus questionStatus = null;
+
+        if (question.hasMultipleStatuses()) {
+            //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
+            List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
+            Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
+                    .map(m -> getQuestionStatusByMarkedAsCompleteId(question, applicationId, m.getId()))
+                    .filter(m -> m != null)
+                    .findFirst();
+            questionStatus = optionalQuestionStatus.orElse(null);
+        } else {
+            questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
+        }
+
+        if (questionStatus == null) {
+            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);}
+        questionStatus = isQuestionStatusMarkedAsComplete(questionStatus, markAsComplete);
+        questionStatusRepository.save(questionStatus);
+        return serviceSuccess();
     }
 
     private QuestionStatus isQuestionStatusMarkedAsComplete(QuestionStatus questionStatus, boolean markAsComplete) {
