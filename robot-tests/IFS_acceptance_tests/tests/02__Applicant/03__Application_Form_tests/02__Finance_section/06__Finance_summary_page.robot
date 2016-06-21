@@ -87,7 +87,7 @@ Green check should show when the finances are complete
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     [Setup]    Log in create a new invite application invite academic collaborators and accept the invite
     Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
