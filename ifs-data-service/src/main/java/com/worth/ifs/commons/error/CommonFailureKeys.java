@@ -39,6 +39,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     FILES_FILE_QUARANTINED("The file has been quarantined by the virus scanner", FORBIDDEN),
 
     /**
+     * Competitions
+     */
+
+    COMPETITION_NOT_OPEN("The competition this application belongs to is no longer open for application submissions", BAD_REQUEST),
+
+    /**
      * Notifications
      */
     NOTIFICATIONS_UNABLE_TO_SEND_SINGLE("The notification could not be sent", INTERNAL_SERVER_ERROR),
