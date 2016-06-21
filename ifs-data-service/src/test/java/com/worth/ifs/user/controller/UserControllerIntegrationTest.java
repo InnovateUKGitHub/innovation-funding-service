@@ -8,6 +8,7 @@ import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.UserStatus;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -64,6 +65,15 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         List<String> emailAddresses = users.stream().map(UserResource::getEmail).collect(toList());
         List<String> expectedUsers = ALL_USERS_EMAIL;
         assertTrue(emailAddresses.containsAll(expectedUsers));
+    }
+
+    @Test
+    public void test_findByRole() {
+
+        loginCompAdmin();
+        List<UserResource> users = controller.findByRole(UserRoleType.COMP_EXEC.getName()).getSuccessObject();
+        int compExecUserCount = 2;
+        assertEquals(compExecUserCount, users.size());
     }
 
     @Test

@@ -1,14 +1,13 @@
 package com.worth.ifs.documentation;
 
-import static com.google.common.primitives.Longs.asList;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDateTime;
 
-import org.springframework.restdocs.payload.FieldDescriptor;
-
-import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import static com.google.common.primitives.Longs.asList;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
@@ -24,7 +23,19 @@ public class CompetitionResourceDocs {
             fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
             fieldWithPath("maxResearchRatio").description("maximum ratio of research participation"),
-            fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics")
+            fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics"),
+            fieldWithPath("milestones").description("List of milestone ids"),
+            fieldWithPath("competitionType").description("the competition type this competition belongs to"),
+            fieldWithPath("executive").description("the user id of the competition executive"),
+            fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist"),
+            fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
+            fieldWithPath("innovationSectorName").description("the Innovation sector name this competition belongs to"),
+            fieldWithPath("innovationArea").description("the Innovation area this competition belongs to"),
+            fieldWithPath("innovationAreaName").description("the Innovation area name this competition belongs to"),
+            fieldWithPath("pafCode").description("the paf code entered during competition setup"),
+            fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
+            fieldWithPath("code").description("the unique competition code entered during competition setup"),
+            fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -38,5 +49,16 @@ public class CompetitionResourceDocs {
             .withAssessmentEndDate(LocalDateTime.now().plusDays(44))
             .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
             .withMaxResearchRatio(20)
-            .withAcademicGrantClaimPercentage(100);
+            .withAcademicGrantClaimPercentage(100)
+            .withCompetitionCode("COMP-1")
+            .withCompetitionType(1L)
+            .withExecutive(1L)
+            .withLeadTechnologist(1L)
+            .withInnovationArea(1L)
+            .withInnovationAreaName("Tech")
+            .withInnovationSector(2L)
+            .withInnovationSectorName("IT")
+            .withPafCode("PAF-123")
+            .withBudgetCode("BUDGET-456")
+            ;
 }

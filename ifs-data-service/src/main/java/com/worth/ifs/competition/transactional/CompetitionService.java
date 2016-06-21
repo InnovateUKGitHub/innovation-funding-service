@@ -1,10 +1,12 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -12,12 +14,11 @@ import java.util.List;
  * Service for operations around the usage and processing of Competitions
  */
 public interface CompetitionService {
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<CompetitionResource> create();
+    @NotSecured(value = "Not secured here, because this is only added extra information on the competition instance.", mustBeSecuredByOtherServices = true)
+    void addCategories(@P("competition") Competition competition);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();

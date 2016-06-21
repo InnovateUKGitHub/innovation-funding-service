@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controller for showing and creating new competitions
+ */
 @Controller
 @RequestMapping("/competition")
 public class CompetitionManagementController {

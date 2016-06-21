@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ public class CompetitionStatusTest {
     	when(dateProvider.provideDate()).thenReturn(currentDate);
     	
     	competition = new Competition();
+        competition.setStatus(COMPETITION_SETUP_FINISHED);
     	competition.setDateProvider(dateProvider);
     }
     
@@ -178,10 +180,14 @@ public class CompetitionStatusTest {
         assertEquals(CompetitionResource.Status.PROJECT_SETUP, competition.getCompetitionStatus());
     }
 
+    /**
+     * By default the competition status of a new competition should be COMPETITION_SETUP. When this state is finished, the status is changed to
+     * COMPETITION_SETUP_FINISHED, then the other statusses are used.
+     */
     @Test
     public void competitionStatusProjectSetupForNewCompetition(){
         Competition newCompetition = new Competition();
-        assertEquals(CompetitionResource.Status.PROJECT_SETUP, newCompetition.getCompetitionStatus());
+        assertEquals(CompetitionResource.Status.COMPETITION_SETUP, newCompetition.getCompetitionStatus());
     }
     
 }

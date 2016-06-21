@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CompetitionResource {
@@ -21,6 +23,7 @@ public class CompetitionResource {
     private List<Long> applications = new ArrayList<>();
     private List<Long> questions = new ArrayList<>();
     private List<Long> sections = new ArrayList<>();
+    private List<Long> milestones = new ArrayList<>();
     private String name;
     private String description;
     private LocalDateTime startDate;
@@ -36,6 +39,20 @@ public class CompetitionResource {
     @Min(0)
     @Max(100)
     private Integer academicGrantPercentage;
+    private Long competitionType;
+    private Long executive;
+    private Long leadTechnologist;
+    private Long innovationSector;
+    private String innovationSectorName;
+    private Long innovationArea;
+    private String innovationAreaName;
+
+    private String pafCode;
+    private String budgetCode;
+    private String code;
+    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
+
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -245,7 +262,103 @@ public class CompetitionResource {
 		this.fundersPanelEndDate = fundersPanelEndDate;
 	}
 
+    public Long getExecutive() {
+        return executive;
+    }
+
+    public void setExecutive(Long executive) {
+        this.executive = executive;
+    }
+
+    public Long getLeadTechnologist() {
+        return leadTechnologist;
+    }
+
+    public void setLeadTechnologist(Long leadTechnologist) {
+        this.leadTechnologist = leadTechnologist;
+    }
+
+    public String getPafCode() {
+        return pafCode;
+    }
+
+    public void setPafCode(String pafCode) {
+        this.pafCode = pafCode;
+    }
+
+    public String getBudgetCode() {
+        return budgetCode;
+    }
+
+    public void setBudgetCode(String budgetCode) {
+        this.budgetCode = budgetCode;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Long getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(Long competitionType) {
+        this.competitionType = competitionType;
+    }
+
+    public Long getInnovationSector() {
+        return innovationSector;
+    }
+
+    public void setInnovationSector(Long innovationSector) {
+        this.innovationSector = innovationSector;
+    }
+
+    public Long getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(Long innovationArea) {
+        this.innovationArea = innovationArea;
+    }
+
+    public String getInnovationSectorName() {
+        return innovationSectorName;
+    }
+
+    public void setInnovationSectorName(String innovationSectorName) {
+        this.innovationSectorName = innovationSectorName;
+    }
+
+    public String getInnovationAreaName() {
+        return innovationAreaName;
+    }
+
+    public void setInnovationAreaName(String innovationAreaName) {
+        this.innovationAreaName = innovationAreaName;
+    }
+
+    public List<Long> getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(List<Long> milestones) {
+        this.milestones = milestones;
+    }
+    
+    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
+		return sectionSetupStatus;
+	}
+    
+    public void setSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
+		this.sectionSetupStatus = sectionSetupStatus;
+	}
+
     public enum Status {
-        NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP
+        COMPETITION_SETUP, COMPETITION_SETUP_FINISHED, NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP
     }
 }

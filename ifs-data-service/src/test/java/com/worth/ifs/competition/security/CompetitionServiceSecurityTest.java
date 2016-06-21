@@ -2,6 +2,7 @@ package com.worth.ifs.competition.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
@@ -51,6 +52,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         verifyNoMoreInteractions(rules);
     }
 
+    @Test
     public void testGetCompetitionById() {
 
         setLoggedInUser(null);
@@ -73,8 +75,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<CompetitionResource> create() {
-            return serviceSuccess(newCompetitionResource().build());
+        public void addCategories(Competition competition) {
         }
 
         @Override

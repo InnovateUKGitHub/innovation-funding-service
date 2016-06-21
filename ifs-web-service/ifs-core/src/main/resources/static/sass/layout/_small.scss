@@ -237,3 +237,15 @@ p.subtitle {
 	border:1px solid $border-colour;
 	padding:20px;
 }
+
+
+
+span.yes{
+	@extend %icon-tick;
+	padding-left: 28px;
+}
+
+span.no{
+	@extend %icon-cross;
+	padding-left: 28px;
+}
