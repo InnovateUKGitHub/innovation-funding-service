@@ -94,7 +94,7 @@ public class ProjectDetailsController {
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
-        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).isSuccess();
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
