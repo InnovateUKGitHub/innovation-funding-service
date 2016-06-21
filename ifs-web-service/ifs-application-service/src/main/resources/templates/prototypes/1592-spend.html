@@ -21,8 +21,7 @@
 
 	<div th:if="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
 		<div class="marked-complete-alert extra-margin-bottom">
-			<p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
-have submitted their profile spends submit them to Innovate UK</p>
+			<p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners have submitted their spend profiles submit them to Innovate UK</p>
 		</div>
 	</div>
 
@@ -47,11 +46,11 @@ have submitted their profile spends submit them to Innovate UK</p>
 
 	<div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'Submitted'}" th:unless="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
 		<div class="success-alert extra-margin-bottom">
-			<p><strong>Your spend profile is currently with the lead applicant who will submit it to Innovate UK</strong></p>
+			<p><strong>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.</strong></p>
 		</div>
 	</div>
 
-	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have now been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
+	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
 
 	<dl class="standard-definition-list">
 		<dt>Project start date</dt>
@@ -128,7 +127,7 @@ have submitted their profile spends submit them to Innovate UK</p>
 		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.
 	</p>
 
-	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for your project.</p>
+	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed spend profile for your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 
@@ -417,9 +416,9 @@ have submitted their profile spends submit them to Innovate UK</p>
 				<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 			</div>
 
-			<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit, make sure you are satisfied with your profile spend and that it matches the eligible project costs. You can submit your spend profile to the lead partner. They will then submit to Innovate UK.</p>
+			<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit, make sure you are satisfied with your spend profile and that it matches the eligible project costs. You can submit your spend profile to the lead partner. They will then submit to Innovate UK.</p>
 
-			<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the profile spend mark the section as complete, this will allow you to submit the Project profile spend to innovate UK. If you wish you return to allow edits to this page.</p>
+			<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the spend profile mark the section as complete, this will allow you to submit the project spend profile to innovate UK. If you wish you return to allow edits to this page.</p>
 
 
 			<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
@@ -481,7 +480,7 @@ have submitted their profile spends submit them to Innovate UK</p>
 
 						<h2 class="heading-medium no-margin">Save</h2>
 
-						<p>Are you sure you wish to save your profile spend with higher costs than your eligible project costs?</p>
+						<p>Are you sure you wish to save your spend profile with higher costs than your eligible project costs?</p>
 
 						<p>You will not be able to submit your project spend until this is corrected.</p>
 
@@ -515,7 +514,7 @@ have submitted their profile spends submit them to Innovate UK</p>
 
 					<h2 class="heading-medium no-margin">Allow partner to edit</h2>
 
-					<p><strong>Biotech Corp's</strong> profile spend has been handed back to them, they have been informaed of by email, if there are any specific changes required please contact them.</p>
+					<p><strong>Biotech Corp's</strong> spend profile has been handed back to them, they have been informaed of by email, if there are any specific changes required please contact them.</p>
 
 					<hr />
 
@@ -539,9 +538,9 @@ have submitted their profile spends submit them to Innovate UK</p>
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Submit project profile spend</h2>
+					<h2 class="heading-medium no-margin">Submit project spend profile</h2>
 
-					<p>The project profile spend will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+					<p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
 
 					<hr />
 

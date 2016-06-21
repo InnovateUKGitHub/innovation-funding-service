@@ -1,6 +1,8 @@
 package com.worth.ifs.project.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -20,7 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
@@ -55,20 +60,20 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(
                 () -> service.getProjectById(projectId),
                 () -> {
-                    verify(projectPermissionRules, times(1)).usersConnectedToTheProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
                     verify(projectPermissionRules, times(1)).compAdminsCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
                 }
         );
     }
 
     @Test
-    public void test_createProjectFromApplicationAllowedIfCompAdminRole() {
+    public void testCreateProjectFromApplicationAllowedIfCompAdminRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
         service.createProjectFromApplication(123L);
     }
 
     @Test
-    public void test_createProjectFromApplicationDeniedForApplicant() {
+    public void testCreateProjectFromApplicationDeniedForApplicant() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
         try {
             service.createProjectFromApplication(123L);
@@ -79,14 +84,14 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void test_CreateProjectFromFundingDecisionsAllowedIfGlobalCompAdminRole() {
+    public void testCreateProjectFromFundingDecisionsAllowedIfGlobalCompAdminRole() {
         RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-        service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+        service.createProjectsFromFundingDecisions(new HashMap<>());
     }
 
     @Test
-    public void test_CreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
+    public void testCreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
         try {
             service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
             Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
@@ -96,7 +101,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void test_CreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
+    public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
 
         List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
                 .collect(toList());
@@ -106,11 +111,77 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+                service.createProjectsFromFundingDecisions(new HashMap<>());
                 Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
+        });
+    }
+
+    @Test
+    public void testUpdateProjectStartDate() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.updateProjectStartDate(123L, LocalDate.now()), () -> {
+            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testUpdateProjectAddress() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
+            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testUpdateFinanceContact() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.updateFinanceContact(123L, 456L, 789L), () -> {
+            verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testSetProjectManager() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.setProjectManager(123L, 456L), () -> {
+            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetProjectUsers() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getProjectUsers(123L), () -> {
+            verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
+            verify(projectPermissionRules).compAdminsCanViewProjects(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
         });
     }
 
@@ -125,7 +196,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
-            return ServiceResult.serviceSuccess(newProjectResource().withId(1L).build());
+            return serviceSuccess(newProjectResource().withId(1L).build());
+        }
+
+        @Override
+        public ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId) {
+            return null;
         }
 
         @Override
@@ -153,6 +229,16 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
+        @Override
+        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource projectAddress) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<ProjectResource>> findByUserId(Long userId) {
+            return null;
+        }
+
 		@Override
 		public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
 			return null;
@@ -160,7 +246,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-            return null;
+            return serviceSuccess(newProjectUserResource().build(2));
         }
     }
 }

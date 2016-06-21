@@ -1,26 +1,12 @@
 package com.worth.ifs.profile;
 
-import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.util.Arrays;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.address.resource.AddressTypeResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,12 +15,25 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.address.resource.AddressType;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserResource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Collections;
+
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
+import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
+import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProfileControllerTest extends BaseUnitTest {
     @InjectMocks
@@ -59,7 +58,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
                 .withEmail("email@provider.com")
-                .withOrganisations(Arrays.asList(6L))
+                .withOrganisations(Collections.singletonList(6L))
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
     }
@@ -74,9 +73,10 @@ public class ProfileControllerTest extends BaseUnitTest {
         when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
 	}
 
-   private OrganisationAddressResource organisationAddress(AddressType addressType) {
+   private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {
+       AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)addressType.getOrdinal()).withName(addressType.name()).build();
     	return newOrganisationAddressResource()
-        		.withAddressType(addressType)
+        		.withAddressType(addressTypeResource)
         		.withAddress(newAddressResource()
 	        		.withAddressLine1("line1" + addressType.name())
 	        		.withAddressLine2("line2" + addressType.name())
@@ -91,7 +91,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void userProfileDetailsAndOrganisationDetailsAreAddedToModelWhenViewingDetails() throws Exception {
     	
-    	OrganisationAddressResource operatingOrgAddress = organisationAddress(AddressType.OPERATING);
+    	OrganisationAddressResource operatingOrgAddress = organisationAddress(OPERATING);
     	setupOrganisation(operatingOrgAddress);
     	
         ResultActions result = mockMvc.perform(get("/profile/view"))
@@ -110,8 +110,8 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void operationAddressForOrganisationIsFavouredWhenRegisteredAddressIsAlsoPresent() throws Exception {
 
-    	OrganisationAddressResource registeredOrgAddress = organisationAddress(AddressType.REGISTERED);
-    	OrganisationAddressResource operatingOrgAddress = organisationAddress(AddressType.OPERATING);
+    	OrganisationAddressResource registeredOrgAddress = organisationAddress(REGISTERED);
+    	OrganisationAddressResource operatingOrgAddress = organisationAddress(OPERATING);
     	setupOrganisation(registeredOrgAddress, operatingOrgAddress);
     	
         ResultActions result = mockMvc.perform(get("/profile/view"))
@@ -123,7 +123,7 @@ public class ProfileControllerTest extends BaseUnitTest {
 	@Test
     public void registeredAddressIsUsedWhenOperatingAddressIsAbsent() throws Exception {
 
-    	OrganisationAddressResource registeredOrgAddress = organisationAddress(AddressType.REGISTERED);
+    	OrganisationAddressResource registeredOrgAddress = organisationAddress(REGISTERED);
     	setupOrganisation(registeredOrgAddress);
     	
         ResultActions result = mockMvc.perform(get("/profile/view"))

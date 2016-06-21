@@ -40,8 +40,10 @@ import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -242,7 +244,15 @@ public class BaseUnitTest {
                 .findFirst().orElse(null);
     }
 
+    @Before
     public void setup(){
+
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
+
+        // start with fresh ids when using builders
+        BuilderAmendFunctions.clearUniqueIds();
+
         applications = new ArrayList<>();
         questionResources = new HashMap<>();
         organisations = new ArrayList<>();

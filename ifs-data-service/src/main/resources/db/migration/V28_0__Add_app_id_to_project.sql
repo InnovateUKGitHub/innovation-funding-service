@@ -1,0 +1,1 @@
+ALTER TABLE project ADD COLUMN `application` BIGINT(20) NOT NULL;

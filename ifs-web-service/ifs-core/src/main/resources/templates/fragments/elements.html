@@ -82,6 +82,15 @@
 <div th:fragment="application-title (application, competition) ">
     <p class="subtitle" th:text="${#numbers.formatInteger(application.id,8)} + ': ' + ${application.getApplicationDisplayName()} "/>
 </div>
+
+<!-- =========================== Element: Competition Closing soon? =========================== -->
+<div th:fragment="competition-closing-warning (competition) ">
+    <div th:if="${competition.isClosingSoon()}" th:remove="tag">
+        <div class="warning-alert">
+            Please note that this competition will close shortly. You will not be able to submit after the competition closes and any edits you make will not be saved.
+        </div>
+    </div>
+</div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
     <div class="pie-container">
@@ -174,23 +183,24 @@
 
 <!-- =========================== Element: Competition status warning ================ -->
 <div th:fragment="competition-status-message (application, competition)">
-	<div th:if="${(application.applicationStatusName == 'created' or application.applicationStatusName == 'open') and competition.competitionStatus.name() != 'OPEN'}" th:remove="tag">
-		<div class="warning-alert">
-	        <h2 class="heading-small no-margin">Application not submitted</h2>
-	        <p>This application has not been entered into the competition <span th:text="${competition.name}" th:remove="tag"/> as it was not submitted before the competition deadline.</p>
-	    </div>
+		<div class="warning-alert"  th:if="${(application.applicationStatusName == 'created' or application.applicationStatusName == 'open') and competition.competitionStatus.name() != 'OPEN'}">
+        <h2 class="heading-small no-margin">Application not submitted</h2>
+        <p>This application has not been entered into the competition <span th:text="${competition.name}" th:remove="tag"/> as it was not submitted before the competition deadline.</p>
     </div>
-    <div th:if="${(application.applicationStatusName == 'approved')}" th:remove="tag">
-		<div class="success-alert">
+		<div class="success-alert" th:if="${(application.applicationStatusName == 'approved')}">
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
-	        <p>You have been successful in this round of funding. All partners and collaborators in the project have been informed. <span th:if="${competition.assessorFeedbackDate != null}" th:text="${'Assessor feedback on your application will be available here by 5:30pm on ' + #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" /></p>
-			<p><a th:href="@{/project/{applicationId}(applicationId=${application.id})}">Start to plan your project</a></p>
-	    </div>
+	        <p>
+            You have been successful in this round of funding.
+            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here by '+ #temporals.format(competition.assessorFeedbackDate, 'hh:mma')+' on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />
+          </p>
+          <p th:if="${currentProject}">
+            <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
+          </p>
     </div>
-    <div th:if="${(application.applicationStatusName == 'rejected')}" th:remove="tag">
-		<div class="warning-alert">
-	        <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
-	        <p>All partners and collaborators in the project have been informed. <span th:if="${competition.assessorFeedbackDate != null}" th:text="${'Assessor feedback on your application will be available here by 5:30pm on ' + #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" /></p>
-	    </div>
+	  <div class="warning-alert" th:if="${(application.applicationStatusName == 'rejected')}">
+        <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
+        <p th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}">
+          <span th:text="${'Assessor feedback on your application will be available here by '+ #temporals.format(competition.assessorFeedbackDate, 'hh:mma')+' on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />
+        </p>
     </div>
 </div>

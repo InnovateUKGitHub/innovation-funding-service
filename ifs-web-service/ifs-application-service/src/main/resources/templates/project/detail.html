@@ -4,6 +4,10 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
 </head>
 <body class="project-detail">
+
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+<div th:include="fragments/modals :: modal-project-details" th:remove="tag" />
+
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -15,8 +19,7 @@
         <p class="subtitle" th:text="${#numbers.formatInteger(model.project.id,8)} + ': ' + ${model.app.getApplicationDisplayName()} "/>
         <h1 class="heading-xlarge no-margin">Project details</h1>
     </div>
-
-    <p class="form-hint">Please supply the following details for your project and the team. We need these to setup your project.</p>
+    <p class="form-hint">Please supply the following details for your project and the team. We need these to set up your project.</p>
 
     <table>
         <thead>
@@ -29,8 +32,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Start date</a>
-                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Start date</span>
+                    <a th:if="${model.userLeadPartner}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Start date</a>
+                    <span th:unless="${model.userLeadPartner}" th:remove="tag">Start date</span>
                 </td>
                 <td id="start-date">
                     <span th:if="${model.project.targetStartDate == null}" th:remove="tag">-</span>
@@ -43,19 +46,22 @@
             </tr>
             <tr>
                 <td>
-                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
-                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Project address</span>
+                    <a th:if="${model.userLeadPartner}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
+                    <span th:unless="${model.userLeadPartner}" th:remove="tag">Project address</span>
                 </td>
-                <td id="project-address">-</td>
+                <td id="project-address">
+                    <span th:if="${model.project.address.id == null}" th:remove="tag">-</span>
+                    <span th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}" th:remove="tag"></span>
+                </td>
                 <td>
-                    <span th:if="${model.project.address == null}" id="project-address-status" class="no">No</span>
-                    <span th:unless="${model.project.address == null}" id="project-address-status" class="yes">Yes</span>
+                    <span th:if="${model.project.address.id == null}" id="project-address-status" class="no">No</span>
+                    <span th:unless="${model.project.address.id == null}" id="project-address-status" class="yes">Yes</span>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a th:if="${userIsLeadApplicant}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project manager</a>
-                    <span th:unless="${userIsLeadApplicant}" th:remove="tag">Project manager</span>
+                    <a th:if="${model.userLeadPartner}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project manager</a>
+                    <span th:unless="${model.userLeadPartner}" th:remove="tag">Project manager</span>
                 </td>
                 <td id="project-manager" th:if="${projectManager != null}" th:text="${projectManager?.userName}">John Smith</td>
                 <td id="no-project-manager" th:if="${projectManager == null}">-</td>
@@ -84,8 +90,8 @@
             <tr th:each="organisation: ${model.partnerOrganisations}">
 
                 <td>
-                    <a th:if="${organisation.id == model.currentOrganisation}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                    <span th:unless="${organisation.id == model.currentOrganisation}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
+                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id)}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                    <span th:unless="${model.isUserPartnerInOrganisation(organisation.id)}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
                 </td>
                 <td>
                   <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" th:remove="tag">
@@ -103,30 +109,7 @@
         </tbody>
     </table>
 
-    <div class="extra-margin">
-
-        <a href="#" class="button button-large" data-js-modal="modal-project-details" role="button" tabindex="0">Submit project details</a>
-
-
-        <div class="modal-project-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-            <button class="js-close close" aria-label="Close Popup">X</button>
-            <div>
-
-                <h2 class="heading-medium no-margin">Submit project details</h2>
-
-                <p>Are you sure that you wish to submit your project details to Innovate UK</p>
-
-                <hr/>
-
-                <div class="alignright-button">
-                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                    <a href="/prototypes/1588-project-status?stage=level2" class="button">Submit</a>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
+    <button type="submit" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</button>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

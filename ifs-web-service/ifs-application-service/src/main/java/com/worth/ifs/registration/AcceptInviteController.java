@@ -1,8 +1,8 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
@@ -162,7 +162,7 @@ public class AcceptInviteController extends BaseController {
         if (organisation.getAddresses().size() == 1) {
             address = organisation.getAddresses().get(0).getAddress();
         } else if (!organisation.getAddresses().isEmpty()) {
-            Optional<OrganisationAddressResource> addressOptional = organisation.getAddresses().stream().filter(a -> AddressType.OPERATING.equals(a.getAddressType())).findAny();
+            Optional<OrganisationAddressResource> addressOptional = organisation.getAddresses().stream().filter(a -> OrganisationAddressType.OPERATING.equals(OrganisationAddressType.valueOf(a.getAddressType().getName()))).findAny();
             if (addressOptional.isPresent()) {
                 address = addressOptional.get().getAddress();
             } else {

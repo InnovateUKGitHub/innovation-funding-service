@@ -1,19 +1,23 @@
 package com.worth.ifs.project;
 
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.address.service.AddressRestService;
+import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.form.FinanceContactForm;
 import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.service.ProjectRestService;
-import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
-import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
-import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -23,10 +27,12 @@ import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -35,10 +41,12 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 
 /**
@@ -47,9 +55,16 @@ import static java.util.Arrays.asList;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController {
+    static final String FORM_ATTR_NAME = "form";
+    private static final String MANUAL_ADDRESS = "manual-address";
+    private static final String SEARCH_ADDRESS = "search-address";
+    private static final String SELECT_ADDRESS = "select-address";
 
 	@Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -61,44 +76,47 @@ public class ProjectDetailsController {
     private OrganisationRestService organisationRestService;
     
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-    
-    @Autowired
-    private UserService userService;
-	
+    private AddressRestService addressRestService;
+
     @Autowired
     private ProcessRoleService processRoleService;
-    
+
     @Autowired
-    private ProjectRestService projectRestService;
+    private OrganisationAddressRestService organisationAddressRestService;
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
-    public String projectDetail(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) {
+    public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), applicationResource);
-        
+
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
-        
+
         model.addAttribute("project", projectResource);
-        model.addAttribute("currentUser", user);
-        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
+        model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
-        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, user, user.getOrganisations().get(0), partnerOrganisations, applicationResource, projectUsers, competitionResource));
+
+        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
+                getUsersPartnerOrganisations(loggedInUser, projectUsers),
+                partnerOrganisations, applicationResource, projectUsers, competitionResource,
+                userIsLeadPartner(projectId, loggedInUser.getId())));
+
         return "project/detail";
     }
 
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.GET)
-    public String viewFinanceContact(Model model, @PathVariable("projectId") final Long projectId, @RequestParam(value="organisation",required=false) Long organisation, HttpServletRequest request) {
+    public String viewFinanceContact(Model model,
+                                     @PathVariable("projectId") final Long projectId,
+                                     @RequestParam(value="organisation",required=false) Long organisation,
+                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
         }
 
-        if(!userIsInOrganisation(organisation, request)){
+        if(!userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
             return redirectToProjectDetails(projectId);
         }
 
@@ -106,13 +124,18 @@ public class ProjectDetailsController {
             return redirectToProjectDetails(projectId);
         }
 
-        return modelForFinanceContact(model, projectId, organisation, request);
+        return modelForFinanceContact(model, projectId, organisation, loggedInUser);
     }
 
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.POST)
-    public String updateFinanceContact(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute FinanceContactForm form, BindingResult bindingResult, HttpServletRequest request) {
+    public String updateFinanceContact(Model model,
+                                       @PathVariable("projectId") final Long projectId,
+                                       @ModelAttribute FinanceContactForm form,
+                                       BindingResult bindingResult,
+                                       HttpServletRequest request,
+                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         
-		if(!userIsInOrganisation(form.getOrganisation(), request)){
+		if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), loggedInUser.getId())){
     		return redirectToProjectDetails(projectId);
     	}
     	
@@ -121,11 +144,11 @@ public class ProjectDetailsController {
     	}
 
         if(bindingResult.hasErrors()) {
-        	return modelForFinanceContact(model, projectId, request, form);
+        	return modelForFinanceContact(model, projectId, form, loggedInUser);
         }
         
-        if(!userIsInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
-        	return modelForFinanceContact(model, projectId, request, form);
+        if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
+        	return modelForFinanceContact(model, projectId, form, loggedInUser);
         }
         
         projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
@@ -133,7 +156,7 @@ public class ProjectDetailsController {
         return redirectToProjectDetails(projectId);
     }
 
-	private String modelForFinanceContact(Model model, Long projectId, Long organisation, HttpServletRequest request) {
+	private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser) {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> financeContacts = simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
@@ -145,31 +168,24 @@ public class ProjectDetailsController {
             form.setFinanceContact(getOnlyElement(financeContacts).getUser());
         }
 
-		return modelForFinanceContact(model, projectId, request, form);
+		return modelForFinanceContact(model, projectId, form, loggedInUser);
 	}
 
-	private String modelForFinanceContact(Model model, Long projectId, HttpServletRequest request, FinanceContactForm form) {
-		ApplicationResource applicationResource = applicationService.getById(projectId);
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+	private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm form, UserResource loggedInUser) {
+
+        ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
-		ProjectResource projectResource = projectService.getById(projectId);
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         
         model.addAttribute("organisationUsers", thisOrganisationUsers);
         model.addAttribute("form", form);
         model.addAttribute("project", projectResource);
-        model.addAttribute("currentUser", user);
-        model.addAttribute("currentOrganisation", user.getOrganisations().get(0));
+        model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
         return "project/finance-contact";
 	}
-    
-    private boolean userIsInOrganisation(Long organisation, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        
-        return organisation.equals(user.getOrganisations().get(0));
-    }
     
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
         List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
@@ -177,7 +193,7 @@ public class ProjectDetailsController {
         return !projectUsersForOrganisation.isEmpty();
 	}
     
-	private boolean userIsInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
+	private boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
 		if(userId == null) {
 			return false;
 		}
@@ -190,13 +206,18 @@ public class ProjectDetailsController {
 	}
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
-    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request) throws InterruptedException, ExecutionException {
-		if(!userIsLeadApplicant(projectId, request)) {
+    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request,
+                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) throws InterruptedException, ExecutionException {
+
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
 			return redirectToProjectDetails(projectId);
 		}
+
     	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
         
-        ApplicationResource applicationResource = applicationService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 
         populateProjectManagerModel(model, projectId, form, applicationResource);
     	
@@ -204,18 +225,22 @@ public class ProjectDetailsController {
     }
 
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
-    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form, BindingResult bindingResult, HttpServletRequest request) {
-    	if(!userIsLeadApplicant(projectId, request)) {
+    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form,
+                                       BindingResult bindingResult, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
 			return redirectToProjectDetails(projectId);
 		}
-        ApplicationResource applicationResource = applicationService.getById(projectId);
-        
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+
         if(bindingResult.hasErrors()) {
         	populateProjectManagerModel(model, projectId, form, applicationResource);
             return "project/project-manager";
         }
         
-        if(!userIsInLeadPartnerOrganisation(applicationResource, form.getProjectManager())) {
+        if(!projectManagerSelectionIsInLeadPartnerOrganisation(projectId, form.getProjectManager())) {
         	populateProjectManagerModel(model, projectId, form, applicationResource);
             return "project/project-manager";
         }
@@ -225,13 +250,6 @@ public class ProjectDetailsController {
         return redirectToProjectDetails(projectId);
     }
 
-    private boolean userIsLeadApplicant(Long projectId, HttpServletRequest request) {
-    	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-    	ApplicationResource applicationResource = applicationService.getById(projectId);
-    	
-    	return userService.isLeadApplicant(user.getId(), applicationResource);
-    }
-    
 	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
 
         Future<ProcessRoleResource> processRoleResource = getProjectManagerProcessRole(projectId);
@@ -274,56 +292,152 @@ public class ProjectDetailsController {
 		model.addAttribute("form", form);
 	}
 
-	private boolean userIsInLeadPartnerOrganisation(ApplicationResource applicationResource, Long projectManager) {
+	private boolean projectManagerSelectionIsInLeadPartnerOrganisation(Long projectId, Long projectManager) {
 		
 		if(projectManager == null) {
 			return false;
 		}
-        List<ProcessRoleResource> leadPartnerUsers = userService.getLeadPartnerOrganisationProcessRoles(applicationResource);
 
-        return leadPartnerUsers.stream().anyMatch(prr -> projectManager.equals(prr.getUser()));
+        return userIsLeadPartner(projectId, projectManager);
 	}
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute("form") ProjectDetailsStartDateForm form,
-                                HttpServletRequest request) {
-    	
-        if(!userIsLeadApplicant(projectId, request)) {
-	    return redirectToProjectDetails(projectId);
-	}
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-    	ProjectResource project = projectService.getById(projectId);
-    	model.addAttribute("model", new ProjectDetailsStartDateViewModel(project));
-        LocalDate defaultStartDate = project.getTargetStartDate().withDayOfMonth(1);
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
+            return redirectToProjectDetails(projectId);
+        }
+
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
         return "project/details-start-date";
     }
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute("form") ProjectDetailsStartDateForm form,
+                                  @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   Model model,
                                   BindingResult bindingResult,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,
+                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-	if (!userIsLeadApplicant(projectId, request)) {
-	    return redirectToProjectDetails(projectId);
-	}
-    	
-        RestResult<Void> updateResult = projectRestService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, request);
+        ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, loggedInUser));
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
+    public String viewAddress(Model model,
+                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                              @PathVariable("projectId") final Long projectId) {
+
+        ProjectResource project = projectService.getById(projectId);
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
+        if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
+            RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
+            if (result.isSuccess()) {
+                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccessObject().getAddressType().getName()));
+            }
+        }
+        model.addAttribute("model", projectDetailsAddressViewModel);
+        return "project/details-address";
+    }
+
+    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressViewModelForm form,
+                                          ProjectResource project){
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
+        processAddressLookupFields(form);
+        model.addAttribute("model", projectDetailsAddressViewModel);
+        return "project/details-address";
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
+    public String updateAddress(Model model,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                BindingResult bindingResult,
+                                @PathVariable("projectId") final Long projectId) {
+
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        if (bindingResult.hasErrors() && form.getAddressType() == null) {
+            return viewCurrentAddressForm(model, form, projectResource);
+        }
+
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
+
+        AddressResource newAddressResource = null;
+        OrganisationAddressType addressType = null;
+        switch (form.getAddressType()) {
+            case REGISTERED:
+            case OPERATING:
+            case PROJECT:
+                Optional<OrganisationAddressResource> organisationAddressResource = getAddress(leadOrganisation, form.getAddressType());
+                if (organisationAddressResource.isPresent()) {
+                    newAddressResource = organisationAddressResource.get().getAddress();
+                }
+                addressType = form.getAddressType();
+                break;
+            case ADD_NEW:
+                form.getAddressForm().setTriedToSave(true);
+                if (bindingResult.hasErrors()) {
+                    return viewCurrentAddressForm(model, form, projectResource);
+                }
+                newAddressResource = form.getAddressForm().getSelectedPostcode();
+                addressType = PROJECT;
+                break;
+            default:
+                newAddressResource = null;
+                break;
+        }
+        projectResource.setAddress(newAddressResource);
+        ServiceResult<Void> updateResult = projectService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
+        return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> viewAddress(model, form, projectId));
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
+    public String searchAddress(Model model,
+                                @PathVariable("projectId") Long projectId,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                BindingResult bindingResult) {
+        form.getAddressForm().setSelectedPostcodeIndex(null);
+        form.getAddressForm().setTriedToSearch(true);
+        form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = RequestMethod.POST)
+    public String selectAddress(Model model,
+                                @PathVariable("projectId") Long projectId,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
+        form.getAddressForm().setSelectedPostcode(null);
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
+    }
+
+    @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
+    public String manualAddress(Model model,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @PathVariable("projectId") Long projectId) {
+        AddressForm addressForm = form.getAddressForm();
+        addressForm.setManualAddress(true);
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(
-            String fieldName, Long projectId, Model model,
-            ProjectDetailsStartDateForm form, BindingResult bindingResult,
-            RestResult<?> result, HttpServletRequest request) {
-
+            String fieldName, long projectId, Model model,
+            BindingResultTarget form, BindingResult bindingResult,
+            ServiceResult<?> result,
+            Supplier<String> viewSupplier) {
         if (result.isFailure()) {
             bindAnyErrorsToField(result, fieldName, bindingResult, form);
-            model.addAttribute("form", form);
-            return viewStartDate(model, projectId, form, request);
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return viewSupplier.get();
         }
 
         return redirectToProjectDetails(projectId);
@@ -331,6 +445,65 @@ public class ProjectDetailsController {
 
     private String redirectToProjectDetails(long projectId) {
         return "redirect:/project/" + projectId + "/details";
+    }
+
+    private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
+        return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
+    }
+
+    /**
+     * Get the list of postcode options, with the entered postcode. Add those results to the form.
+     */
+    private void addAddressOptions(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+        if (StringUtils.hasText(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput())) {
+            AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
+            addressForm.setPostcodeOptions(searchPostcode(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput()));
+            addressForm.setPostcodeInput(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput());
+        }
+    }
+
+    /**
+     * if user has selected a address from the dropdown, get it from the list, and set it as selected.
+     */
+    private void addSelectedAddress(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+        AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
+        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
+            addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
+        }
+    }
+
+    private List<AddressResource> searchPostcode(String postcodeInput) {
+        RestResult<List<AddressResource>> addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        return addressLookupRestResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(),
+                addresses -> addresses);
+    }
+
+    private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
+        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
+
+        Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, REGISTERED);
+        if(registeredAddress.isPresent()){
+            projectDetailsAddressViewModel.setRegisteredAddress(registeredAddress.get().getAddress());
+        }
+
+        Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, OPERATING);
+        if(operatingAddress.isPresent()){
+            projectDetailsAddressViewModel.setOperatingAddress(operatingAddress.get().getAddress());
+        }
+
+        Optional<OrganisationAddressResource> projectAddress = getAddress(leadOrganisation, PROJECT);
+        if(projectAddress.isPresent()){
+            projectDetailsAddressViewModel.setProjectAddress(projectAddress.get().getAddress());
+        }
+
+        return projectDetailsAddressViewModel;
+    }
+
+    private void processAddressLookupFields(ProjectDetailsAddressViewModelForm form) {
+        addAddressOptions(form);
+        addSelectedAddress(form);
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
@@ -346,5 +519,21 @@ public class ProjectDetailsController {
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
+    }
+
+    private boolean userIsLeadPartner(Long projectId, Long userId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        return !simpleFilter(projectUsers, projectUser -> userHasLeadPartnerRole(userId, leadOrganisation.getId(), projectUser)).isEmpty();
+    }
+
+    private boolean userHasLeadPartnerRole(Long userId, Long leadOrganisationId, ProjectUserResource projectUser) {
+        return projectUser.getUser().equals(userId) && projectUser.getOrganisation().equals(leadOrganisationId) && PARTNER.getName().equals(projectUser.getRoleName());
+    }
+
+    private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {
+        List<ProjectUserResource> partnerProjectUsers = simpleFilter(projectUsers,
+                user -> loggedInUser.getId().equals(user.getUser()) && user.getRoleName().equals(PARTNER.getName()));
+        return simpleMap(partnerProjectUsers, ProjectUserResource::getOrganisation);
     }
 }

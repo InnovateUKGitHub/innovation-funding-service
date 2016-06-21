@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project address'" th:remove="tag" />
+</head>
+<body class="project-details project-address">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}"  th:remove="tag"></div>
+
+	<form action="#" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+
+		<fieldset>
+
+			<h2 class="heading-medium">Project location</h2>
+
+			<legend class="visuallyhidden">Project location</legend>
+
+			<p class="form-hint">Please select the address where the majority of work will be carried out.</p>
+
+			<p>We will assign a Monitoring Officer who will visit your project at this address.</p>
+
+			<div th:include="project/fragments :: select-address" th:with="form=${form}" th:remove="tag"/>
+
+		</fieldset>
+
+		<button class="button extra-margin">Save</button>
+
+	</form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

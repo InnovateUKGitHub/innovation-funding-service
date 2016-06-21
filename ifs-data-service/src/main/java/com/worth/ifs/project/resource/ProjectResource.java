@@ -1,6 +1,7 @@
 package com.worth.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.address.resource.AddressResource;
 
 import javax.validation.constraints.Digits;
 import java.time.LocalDate;
@@ -12,8 +13,9 @@ public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
     private Long id;
+    private Long application;
     private LocalDate targetStartDate;
-    private Long address;
+    private AddressResource address;
     private String name;
     private List<Long> projectUsers;
 
@@ -38,11 +40,11 @@ public class ProjectResource {
         this.targetStartDate = targetStartDate;
     }
 
-    public Long getAddress() {
+    public AddressResource getAddress() {
         return address;
     }
 
-    public void setAddress(Long address) {
+    public void setAddress(AddressResource address) {
         this.address = address;
     }
 
@@ -81,5 +83,13 @@ public class ProjectResource {
     @JsonIgnore
     public String getFormattedId(){
         return formatter.format(id);
+    }
+
+    public Long getApplication() {
+        return application;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
     }
 }
