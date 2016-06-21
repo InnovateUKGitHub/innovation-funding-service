@@ -3,16 +3,17 @@ package com.worth.ifs.transactional;
 import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
-import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
@@ -34,9 +35,6 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
  */
 @Transactional
 public abstract class BaseTransactionalService  {
-
-    @Autowired
-    protected ResponseRepository responseRepository;
 
     @Autowired
     protected ProcessRoleRepository processRoleRepository;
@@ -63,14 +61,6 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected AddressTypeRepository addressTypeRepository;
-
-    protected Supplier<ServiceResult<Response>> response(Long responseId) {
-        return () -> getResponse(responseId);
-    }
-
-    protected ServiceResult<Response> getResponse(Long responseId) {
-        return find(responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
-    }
 
     protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
         return () -> getProcessRole(processRoleId);

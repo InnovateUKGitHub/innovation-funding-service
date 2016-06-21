@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
@@ -39,16 +38,6 @@ public class AssessorFeedbackController {
     @Autowired
     @Qualifier("assessorFeedbackFileValidator")
     private FileHttpHeadersValidator fileValidator;
-
-    @RequestMapping("/{id}")
-    public RestResult<AssessorFeedbackResource> findById(@PathVariable("id") final Long id) {
-        return assessorFeedbackService.findOne(id).toGetResponse();
-    }
-
-    @RequestMapping("/findByAssessor/{id}")
-    public RestResult<AssessorFeedbackResource> findByAssessorId(@PathVariable("id") final Long assessorId) {
-        return assessorFeedbackService.findByAssessorId(assessorId).toGetResponse();
-    }
 
     @RequestMapping(value = "/assessorFeedbackDocument", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addAssessorFeedbackDocument(
