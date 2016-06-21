@@ -1,21 +1,20 @@
 package com.worth.ifs.competition.service;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -28,6 +27,7 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(CompetitionsRestServiceImpl.class);
     private String competitionsRestURL = "/competition";
+    private String competitionsTypesRestURL = "/competition-type";
 
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
@@ -41,7 +41,7 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
     @Override
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
-        return getWithRestResult(competitionsRestURL + "/types/findAll", competitionTypeResourceListType());
+        return getWithRestResult(competitionsTypesRestURL + "/findAll", competitionTypeResourceListType());
     }
 
     @Override
