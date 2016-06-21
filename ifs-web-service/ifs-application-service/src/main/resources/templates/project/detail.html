@@ -108,7 +108,7 @@
             </tr>
         </tbody>
     </table>
-    <a th:if="${isSubmissionAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
+    <a th:if="${model.userLeadPartner and isSubmissionAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

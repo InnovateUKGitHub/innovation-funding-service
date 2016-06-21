@@ -33,8 +33,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -295,6 +296,28 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private boolean validateIsReadyForSubmission(final Project project) {
-        return !(project.getAddress() == null || project.getProjectManager() == null || project.getTargetStartDate() == null || project.getSubmittedDate() != null);
+        return !(project.getAddress() == null || project.getProjectManager() == null || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
+    }
+
+    private boolean allFinanceContactsNotSet(Long projectId){
+        List<ProjectUserResource> projectUsers = getProjectUsers(projectId).getSuccessObject();
+        List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUsers);
+        List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
+        return financeRoles.size() < partnerOrganisations.size();
+    }
+
+    private List<Organisation> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
+
+        final Comparator<Organisation> compareById =
+                Comparator.comparingLong(Organisation::getId);
+
+        final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+
+        SortedSet<Organisation> organisationSet = projectRoles.stream()
+                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
+                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
+                .collect(Collectors.toCollection(supplier));
+
+        return new ArrayList<>(organisationSet);
     }
 }
