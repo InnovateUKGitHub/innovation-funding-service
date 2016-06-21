@@ -3,6 +3,7 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...
 ...               INFUND-2259 As a competitions administrator I want to see summary details of all applications in a competition displayed alongside the list of applications so that I can reference information relating to the status of the competition
 ...
+...               INFUND-3006 As a Competition Management I want the ability to view the name of the lead on the 'all applications' page so I can better support the Customer Support Service.
 Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
 ...               AND    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
 Suite Teardown    the user closes the browser
@@ -23,7 +24,7 @@ Competitions admin should be able to see the list of applications
     Then the user should see the text in the page    Application list
 
 The correct columns show for the application list table
-    [Documentation]    INFUND-2135: listing of applications for an open competition
+    [Documentation]    INFUND-2135: listing of applications for an open competition, INFUND-3063
     [Tags]    Competition management
     Then the user should see the text in the page    Application no.
     And the user should see the text in the page    Project title
