@@ -28,6 +28,7 @@ The correct columns show for the application list table
     [Tags]    Competition management
     Then the user should see the text in the page    Application no.
     And the user should see the text in the page    Project title
+    And the user should see the text in the page    Lead name
     And the user should see the text in the page    Lead
     And the user should see the text in the page    Status
     And the user should see the text in the page    Percentage complete
