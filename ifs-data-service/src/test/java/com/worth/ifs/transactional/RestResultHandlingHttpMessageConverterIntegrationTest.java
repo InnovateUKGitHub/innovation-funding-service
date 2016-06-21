@@ -13,12 +13,15 @@ import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserRestService;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -29,6 +32,7 @@ import java.util.concurrent.Future;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
+import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
@@ -62,13 +66,19 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     UserMapper userMapper;
 
     @Test
+    @Rollback
     public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
 
         RestTemplate restTemplate = new RestTemplate();
 
+        final long questionId = 13L;
+        final long applicationId = 1L;
+        final long assigneeId = 2L;
+        final long assignedById = leadApplicantUser().getId();
+
         try {
-            String url = dataUrl + "/response/saveQuestionResponse/25/assessorFeedback?assessorUserId=3&feedbackText=Nicework";
-            ResponseEntity<String> response = restTemplate.exchange(url, PUT, assessorHeadersEntity(), String.class);
+            final String url = String.format("%s/question/assign/%s/%s/%s/%s", dataUrl, questionId, applicationId, assigneeId, assignedById);
+            ResponseEntity<String> response = restTemplate.exchange(url, PUT, leadApplicantHeadersEntity(), String.class);
             assertEquals(OK, response.getStatusCode());
             assertTrue(isBlank(response.getBody()));
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -118,10 +128,6 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         return getUserJSONHeaders(leadApplicantUser());
     }
 
-    private <T> HttpEntity<T> assessorHeadersEntity(){
-        return getUserJSONHeaders(assessorUser());
-    }
-
     private <T> HttpEntity<T> getUserJSONHeaders(UserResource user) {
         HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, user.getUid());
@@ -132,15 +138,12 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         return getUserResourceForSecurity("steve.smith@empire.com");
     }
 
-    private UserResource assessorUser(){
-        return getUserResourceForSecurity("paul.plum@gmail.com");
-    }
-
     private UserResource getUserResourceForSecurity(String email) {
 
         User user = userRepository.findByEmail(email).get();
 
         UserResource resource = new UserResource();
+        resource.setId(user.getId());
         resource.setUid(user.getUid());
         return resource;
     }

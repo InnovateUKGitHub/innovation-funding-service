@@ -3,7 +3,6 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
@@ -95,10 +94,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withMultipleStatuses(Boolean... multipleStatuses) {
         return withArray((multipleStatus, object) -> setField("multipleStatuses", multipleStatus, object), multipleStatuses);
-    }
-
-    public QuestionBuilder withResponses(List<Response>... responses) {
-        return withArray((response, object) -> setField("responses", response, object), responses);
     }
 
     public QuestionBuilder withQuestionStatuses(List<QuestionStatus>... questionStatuses) {
