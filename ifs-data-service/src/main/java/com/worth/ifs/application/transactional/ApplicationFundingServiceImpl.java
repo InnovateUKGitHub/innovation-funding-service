@@ -87,39 +87,40 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-		return getCompetition(competitionId).andOnSuccess(competition -> {
-
-			if (competition.getAssessorFeedbackDate() == null) {
-				LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competitionId);
-				return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
-			}
-			
-			if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
-				LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competitionId);
-				return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
-			}
-			
-			List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
-			
-			saveFundingDecisionData(competition, applicationsForCompetition, applicationFundingDecisions);
-			
-			boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()) || FundingDecision.UNDECIDED.equals(applicationFundingDecisions.get(app.getId())));
-
-			if(!allPresent) {
-				return serviceFailure(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED);
-			}
-
-			applicationsForCompetition.forEach(app -> {
-				FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
-				ApplicationStatus status = statusFromDecision(applicationFundingDecision);
-				app.setApplicationStatus(status);
-			});
-
-			competition.setFundersPanelEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-			
-			return serviceSuccess();
-		});
+		return getCompetition(competitionId).andOnSuccess(competition -> getCompetitionOnSuccessToMakeFundingDecision(competition, competitionId, applicationFundingDecisions));
 	}
+
+    public ServiceResult<Void> getCompetitionOnSuccessToMakeFundingDecision (Competition competition, Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+        if (competition.getAssessorFeedbackDate() == null) {
+            LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competitionId);
+            return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
+        }
+
+        if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
+            LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competitionId);
+            return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
+        }
+
+        List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
+
+        saveFundingDecisionData(competition, applicationsForCompetition, applicationFundingDecisions);
+
+        boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()) || FundingDecision.UNDECIDED.equals(applicationFundingDecisions.get(app.getId())));
+
+        if(!allPresent) {
+            return serviceFailure(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED);
+        }
+
+        applicationsForCompetition.forEach(app -> {
+            FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
+            ApplicationStatus status = statusFromDecision(applicationFundingDecision);
+            app.setApplicationStatus(status);
+        });
+
+        competition.setFundersPanelEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+
+        return serviceSuccess();
+    }
 
 	@Override
 	public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
