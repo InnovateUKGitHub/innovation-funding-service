@@ -126,17 +126,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
 		return getCompetition(competitionId).andOnSuccess(competition -> {
 
-			List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
-			List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
-			List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> UNFUNDED.equals(decision.getValue()));
-			List<Long> fundedApplicationIds = simpleMap(fundedApplicationDecisions, Pair::getKey);
-			List<Long> unfundedApplicationIds = simpleMap(unfundedApplicationDecisions, Pair::getKey);
-
-			List<ServiceResult<Pair<Long, NotificationTarget>>> fundedNotificationTargets = getLeadApplicantNotificationTargets(fundedApplicationIds);
-			List<ServiceResult<Pair<Long, NotificationTarget>>> unfundedNotificationTargets = getLeadApplicantNotificationTargets(unfundedApplicationIds);
-
-			ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(fundedNotificationTargets);
-			ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(unfundedNotificationTargets);
+			ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(getFunderNotificationTargets(applicationFundingDecisions));
+			ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(getUnfunderNotificationTargets(applicationFundingDecisions));
 
 			if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
 
@@ -151,6 +142,21 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 				return serviceFailure(internalServerErrorError("Unable to determine all Notification targets for funding decision emails"));
 			}
 		});
+	}
+
+	private List<ServiceResult<Pair<Long, NotificationTarget>>> getFunderNotificationTargets(Map<Long, FundingDecision> applicationFundingDecisions){
+		List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
+		List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
+		List<Long> fundedApplicationIds = simpleMap(fundedApplicationDecisions, Pair::getKey);
+		return getLeadApplicantNotificationTargets(fundedApplicationIds);
+
+	}
+
+	private List<ServiceResult<Pair<Long, NotificationTarget>>> getUnfunderNotificationTargets(Map<Long, FundingDecision> applicationFundingDecisions) {
+		List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
+		List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> UNFUNDED.equals(decision.getValue()));
+		List<Long> unfundedApplicationIds = simpleMap(unfundedApplicationDecisions, Pair::getKey);
+		return getLeadApplicantNotificationTargets(unfundedApplicationIds);
 	}
 
 	private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
