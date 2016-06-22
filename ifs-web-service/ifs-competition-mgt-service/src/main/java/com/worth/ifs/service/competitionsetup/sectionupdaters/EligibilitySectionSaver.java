@@ -42,11 +42,8 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 			competition.setMaxResearchRatio(amount.getAmount());
 		}
 		
-		if("yes".equals(eligibilityForm.getMultipleStream())) {
-			competition.setMultiStream(true);
-		} else {
-			competition.setMultiStream(false);
-		}
+		boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
+		competition.setMultiStream(multiStream);
 
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);
