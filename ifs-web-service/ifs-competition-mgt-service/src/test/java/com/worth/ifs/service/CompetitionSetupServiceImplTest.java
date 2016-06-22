@@ -24,16 +24,20 @@ import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.controller.form.competitionsetup.AdditionalInfoForm;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
+import com.worth.ifs.controller.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.service.competitionsetup.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.service.competitionsetup.sectionupdaters.CompetitionSetupSectionSaver;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.util.CollectionFunctions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -50,10 +54,22 @@ public class CompetitionSetupServiceImplTest {
 	@Mock
 	private CategoryService categoryService;
 	
+	@Mock
+	private CategoryFormatter categoryFormatter;
+	
+	private List<CompetitionSetupSection> completedSections;
+	
 	@Test
-	public void testPopulateCompetitionSectionModelAttributes() {
-		List<CompetitionSetupSection> completedSections = new ArrayList<>();
-		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(8L)).thenReturn(completedSections);
+	public void testPopulateCompetitionSectionModelAttributesInitial() {
+		Model model = new ExtendedModelMap();
+		CompetitionResource competition = newCompetitionResource()
+				.withCompetitionCode("code")
+				.withName("name")
+				.withId(8L)
+				.build();
+		CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
+		
+		setUpCommonModelItems();
 		List<UserResource> compExecs = new ArrayList<>();
 		when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(compExecs);
 		List<CategoryResource> innovationSectors = new ArrayList<>();
@@ -65,26 +81,62 @@ public class CompetitionSetupServiceImplTest {
 		List<UserResource> leadTechs = new ArrayList<>();
 		when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(leadTechs);
 		
-		Model model = new ExtendedModelMap();
-		CompetitionResource competition = newCompetitionResource().withCompetitionCode("code").withName("name").withId(8L).build();
-		CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
-		
 		service.populateCompetitionSectionModelAttributes(model, competition, section);
 		
 		assertEquals(12, model.asMap().size());
-		assertEquals(Boolean.TRUE, model.asMap().get("editable"));
-		assertEquals(competition, model.asMap().get("competition"));
-		assertEquals(section, model.asMap().get("currentSection"));
+		verifyCommonModelItems(model, competition, section);
 		assertEquals("section-initial", model.asMap().get("currentSectionFragment"));
-		assertArrayEquals(CompetitionSetupSection.values(), (Object[])model.asMap().get("allSections"));
-		assertEquals(completedSections, model.asMap().get("allCompletedSections"));
-		assertEquals("code: name", model.asMap().get("subTitle"));
 		assertEquals(compExecs, model.asMap().get("competitionExecutiveUsers"));
 		assertEquals(innovationSectors, model.asMap().get("innovationSectors"));
 		assertEquals(innovationAreas, model.asMap().get("innovationAreas"));
 		assertEquals(competitionTypes, model.asMap().get("competitionTypes"));
 		assertEquals(leadTechs, model.asMap().get("competitionLeadTechUsers"));
 	}
+	
+	@Test
+	public void testPopulateCompetitionSectionModelAttributesEligibility() {
+		Model model = new ExtendedModelMap();
+		CompetitionResource competition = newCompetitionResource()
+				.withCompetitionCode("code")
+				.withName("name")
+				.withId(8L)
+				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+				.build();
+		CompetitionSetupSection section = CompetitionSetupSection.ELIGIBILITY;
+		
+		setUpCommonModelItems();
+		
+		List<CategoryResource> researchCategories = new ArrayList<>();
+		when(categoryService.getCategoryByType(CategoryType.RESEARCH_CATEGORY)).thenReturn(researchCategories);
+		when(categoryFormatter.format(CollectionFunctions.asLinkedSet(2L, 3L), researchCategories)).thenReturn("formattedcategories");
+
+		service.populateCompetitionSectionModelAttributes(model, competition, section);
+		
+		assertEquals(12, model.asMap().size());
+		verifyCommonModelItems(model, competition, section);
+		assertEquals("section-eligibility", model.asMap().get("currentSectionFragment"));
+		assertArrayEquals(ResearchParticipationAmount.values(), (Object[])model.asMap().get("researchParticipationAmounts"));
+		assertArrayEquals(CollaborationLevel.values(), (Object[])model.asMap().get("collaborationLevels"));
+		assertArrayEquals(LeadApplicantType.values(), (Object[])model.asMap().get("leadApplicantTypes"));
+		assertEquals(researchCategories, model.asMap().get("researchCategories"));
+		assertEquals("formattedcategories", model.asMap().get("researchCategoriesFormatted"));
+	}
+	
+	private void setUpCommonModelItems() {
+		completedSections = new ArrayList<>();
+		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(8L)).thenReturn(completedSections);
+	}
+	
+	private void verifyCommonModelItems(Model model, CompetitionResource competition, CompetitionSetupSection section) {
+		assertEquals(Boolean.TRUE, model.asMap().get("editable"));
+		assertEquals(competition, model.asMap().get("competition"));
+		assertEquals(section, model.asMap().get("currentSection"));
+		assertArrayEquals(CompetitionSetupSection.values(), (Object[])model.asMap().get("allSections"));
+		assertEquals(completedSections, model.asMap().get("allCompletedSections"));
+		assertEquals("code: name", model.asMap().get("subTitle"));
+	}
+	
+	
 	
 	@Test
 	public void testGetSectionFormData() {

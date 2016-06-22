@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -32,8 +33,10 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.category.domain.Category;
+import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.user.domain.User;
 
 /**
@@ -124,7 +127,15 @@ public class Competition {
     private Category innovationSector;
     @Transient
     private Category innovationArea;
+    @Transient
+    private Set<Category> researchCategories;
 
+    private boolean multiStream;
+    @Enumerated(EnumType.STRING)
+    private CollaborationLevel collaborationLevel;
+    @Enumerated(EnumType.STRING)
+    private LeadApplicantType leadApplicantType;
+    
     @ElementCollection
     @JoinTable(name="competition_setup_status", joinColumns=@JoinColumn(name="competition_id"))
     @MapKeyEnumerated(EnumType.STRING)
@@ -396,6 +407,14 @@ public class Competition {
     public void setInnovationArea(Category innovationArea) {
         this.innovationArea = innovationArea;
     }
+    
+    public Set<Category> getResearchCategories() {
+		return researchCategories;
+	}
+    
+    public void setResearchCategories(Set<Category> researchCategories) {
+		this.researchCategories = researchCategories;
+	}
 
     public List<Milestone> getMilestones() {
         return milestones;
@@ -404,6 +423,30 @@ public class Competition {
     public void setMilestones(List<Milestone> milestones) {
         this.milestones = milestones;
     }
+    
+    public boolean isMultiStream() {
+		return multiStream;
+	}
+    
+    public void setMultiStream(boolean multiStream) {
+		this.multiStream = multiStream;
+	}
+    
+    public CollaborationLevel getCollaborationLevel() {
+		return collaborationLevel;
+	}
+    
+    public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
+		this.collaborationLevel = collaborationLevel;
+	}
+    
+    public LeadApplicantType getLeadApplicantType() {
+		return leadApplicantType;
+	}
+    
+    public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
+		this.leadApplicantType = leadApplicantType;
+	}
     
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
 		return sectionSetupStatus;

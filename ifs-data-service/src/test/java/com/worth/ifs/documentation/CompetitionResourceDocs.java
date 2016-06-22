@@ -1,6 +1,9 @@
 package com.worth.ifs.documentation;
 
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import com.worth.ifs.competition.resource.CollaborationLevel;
+import com.worth.ifs.competition.resource.LeadApplicantType;
+
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDateTime;
@@ -35,6 +38,10 @@ public class CompetitionResourceDocs {
             fieldWithPath("pafCode").description("the paf code entered during competition setup"),
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
             fieldWithPath("code").description("the unique competition code entered during competition setup"),
+            fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
+            fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),
+            fieldWithPath("leadApplicantType").description("permitted type of elad applicant (business, research...)"),
+            fieldWithPath("researchCategories").description("the research categories entered during competition setup"),
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections")
     };
 

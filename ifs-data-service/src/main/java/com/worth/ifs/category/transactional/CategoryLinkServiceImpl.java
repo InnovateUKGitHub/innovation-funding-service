@@ -1,14 +1,22 @@
 package com.worth.ifs.category.transactional;
 
-import com.worth.ifs.category.domain.Category;
-import com.worth.ifs.category.domain.CategoryLink;
-import com.worth.ifs.category.resource.CategoryType;
-import com.worth.ifs.category.repository.CategoryLinkRepository;
-import com.worth.ifs.category.repository.CategoryRepository;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.worth.ifs.category.domain.Category;
+import com.worth.ifs.category.domain.CategoryLink;
+import com.worth.ifs.category.repository.CategoryLinkRepository;
+import com.worth.ifs.category.repository.CategoryRepository;
+import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.util.CollectionFunctions;
 
 
 /**
@@ -22,38 +30,61 @@ public class CategoryLinkServiceImpl extends BaseTransactionalService implements
     @Autowired
     private CategoryRepository categoryRepository;
 
-    /**
-     * This method is for object that only have one categorylink for this CategoryType.
-     * For example, a Competition instance can only have one InnovationSector category link.
-     * This method checks if there already is a CategoryLink, if there is it updates that CategoryLink.
-     * If there is no CategoryLink, it creates it.
-     * If the param categoryId is empty, the CategoryLink is removed if it is existing.
-     * @param categoryId The ID of the Category instance. If null the (optional) existing CategoryLink is deleted.
-     * @param categoryType The type of the Category.
-     * @param className The Class name of the object to link the Category to.
-     * @param classPk The Primary Key of the object to link the Category to.
-     */
     @Override
     public ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, String className, Long classPk){
-        CategoryLink existingCategoryLink = categoryLinkRepository.findByClassNameAndClassPkAndCategory_Type(className, classPk, categoryType);
+    	Set<Long> categoryIds;
+    	if(categoryId == null){
+    		categoryIds = new HashSet<>();
+    	} else {
+    		categoryIds = CollectionFunctions.asLinkedSet(categoryId);
+    	}
+    	return updateCategoryLinks(categoryIds, categoryType, className, classPk);
+    }
+    
+    @Override
+    public ServiceResult<Void> updateCategoryLinks(Set<Long> categoryIds, CategoryType categoryType, String className, Long classPk){
+        List<CategoryLink> existingCategoryLinks = categoryLinkRepository.findByClassNameAndClassPkAndCategory_Type(className, classPk, categoryType);
 
-        if (categoryId == null) {
-            // Not category id available, so remove existing categoryLink
-            if(existingCategoryLink != null){
-                categoryLinkRepository.delete(existingCategoryLink);
+        if (categoryIds.isEmpty()) {
+            // Not category ids provided, so remove existing categoryLinks
+            if(!existingCategoryLinks.isEmpty()){
+                categoryLinkRepository.delete(existingCategoryLinks);
             }
         } else {
             // Got a Category id, so either add or update the CategoryLink
-            Category category = categoryRepository.findOne(categoryId);
-            if (existingCategoryLink == null) {
-                categoryLinkRepository.save(new CategoryLink(category, className, classPk));
-            } else {
-                existingCategoryLink.setCategory(category);
-                categoryLinkRepository.save(existingCategoryLink);
+            Iterable<Category> categories = categoryRepository.findAll(categoryIds);
+            
+            // determine what to leave, add or remove.
+            List<CategoryLink> toAdd = toAdd(categories, existingCategoryLinks, className, classPk);
+            List<CategoryLink> toRemove = toRemove(categories, existingCategoryLinks, className, classPk);
+            
+            if(!toRemove.isEmpty()) {
+            	categoryLinkRepository.delete(toRemove);
+            }
+            
+            if(!toAdd.isEmpty()) {
+            	categoryLinkRepository.save(toAdd);
             }
         }
         return ServiceResult.serviceSuccess();
     }
+
+	private List<CategoryLink> toAdd(Iterable<Category> categoriesWanted, List<CategoryLink> alreadyInDb, String className, Long classPk) {
+		return StreamSupport.stream(categoriesWanted.spliterator(), false)
+				.filter(cat -> {
+					return !alreadyInDb.stream().anyMatch(link -> link.getCategory().getId().equals(cat.getId()));
+				})
+				.map(cat -> new CategoryLink(cat, className, classPk))
+				.collect(Collectors.toList());
+	}
+	
+	private List<CategoryLink> toRemove(Iterable<Category> categoriesWanted, List<CategoryLink> alreadyInDb, String className, Long classPk) {
+		return alreadyInDb.stream()
+				.filter(link -> {
+					return !StreamSupport.stream(categoriesWanted.spliterator(), false).anyMatch(cat -> link.getCategory().getId().equals(cat.getId()));
+				})
+				.collect(Collectors.toList());
+	}
 
 
 }

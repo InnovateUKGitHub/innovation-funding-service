@@ -14,10 +14,14 @@ import org.springframework.ui.Model;
 
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
+import com.worth.ifs.controller.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.service.competitionsetup.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.service.competitionsetup.sectionupdaters.CompetitionSetupSectionSaver;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -36,6 +40,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private CategoryFormatter categoryFormatter;
 	
 	private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
 	
@@ -70,16 +77,26 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 
-		model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_EXEC));
-		model.addAttribute("innovationSectors", categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR));
-		if (competitionResource.getInnovationSector() != null) {
-			model.addAttribute("innovationAreas",
-					categoryService.getCategoryByParentId(competitionResource.getInnovationSector()));
-		} else {
-			model.addAttribute("innovationAreas", categoryService.getCategoryByType(CategoryType.INNOVATION_AREA));
+		
+		if(CompetitionSetupSection.INITIAL_DETAILS.equals(section)) {
+			model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_EXEC));
+			model.addAttribute("innovationSectors", categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR));
+			if (competitionResource.getInnovationSector() != null) {
+				model.addAttribute("innovationAreas",
+						categoryService.getCategoryByParentId(competitionResource.getInnovationSector()));
+			} else {
+				model.addAttribute("innovationAreas", categoryService.getCategoryByType(CategoryType.INNOVATION_AREA));
+			}
+			model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
+			model.addAttribute("competitionLeadTechUsers", userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST));
+		} else if (CompetitionSetupSection.ELIGIBILITY.equals(section)) {
+			model.addAttribute("researchParticipationAmounts", ResearchParticipationAmount.values());
+			model.addAttribute("collaborationLevels", CollaborationLevel.values());
+			model.addAttribute("leadApplicantTypes", LeadApplicantType.values());
+			List<CategoryResource> researchCategories = categoryService.getCategoryByType(CategoryType.RESEARCH_CATEGORY);
+			model.addAttribute("researchCategories",researchCategories);
+			model.addAttribute("researchCategoriesFormatted", categoryFormatter.format(competitionResource.getResearchCategories(), researchCategories));
 		}
-		model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
-		model.addAttribute("competitionLeadTechUsers", userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST));
 	}
 
 	@Override
