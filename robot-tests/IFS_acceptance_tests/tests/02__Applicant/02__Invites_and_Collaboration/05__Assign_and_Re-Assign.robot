@@ -10,7 +10,7 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...
 ...               INFUND-3016 As a collaborator I want to mark my finances as complete so the lead can progress with submitting the application.
 
-...               INFUND-3288 Assigning questions more than once leads to an internal server error
+...               INFUND-3288: Assigning questions more than once leads to an internal server error
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags
