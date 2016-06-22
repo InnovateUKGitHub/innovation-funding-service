@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2312: Competition status in assessment
+...
+...               INFUND-3175: Applications in project setup still have a 'Review & submit' button
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
@@ -32,11 +34,19 @@ The application shows as not submitted on the overview page when the competition
 
 
 Submit button should be disabled when the competition is closed
-    [Documentation]    INFUND-2742, INFUND-2312: Competition status in assessment
+    [Documentation]    INFUND-2742, INFUND-2312, INFUND-3175
     [Tags]
     When the user navigates to the page    ${SERVER}/application/15/summary
     Then the user should see the text in the page    This competition has already closed, you are no longer able to submit your application
     And the user should not see the element    jQuery=.button:contains("Submit application")
+    And the user should not see the element    jQuery=.button:contains("Review & submit")
+
+When application already submitted should not show error when the competition is closed
+    [Documentation]    INFUND-3175
+    [Tags]
+    When the user navigates to the page    ${dashboard_url}
+    And the user clicks the button/link    link=00000003: Mobile Phone Data for Logistics Analytics
+    Then the user should not see the text in the page    Application not submitted
 
 *** Keywords ***
 
