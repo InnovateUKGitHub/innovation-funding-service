@@ -83,8 +83,4 @@ ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 ${TEST_MAILBOX_ONE}    worth.email.test@gmail.com
 ${TEST_MAILBOX_TWO}    worth.email.test.two@gmail.com
-<<<<<<< HEAD
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
-=======
-${row_count_second_page}      0
->>>>>>> fa9e0995cea4c04fd2d295e3bb21b92fefa1b677

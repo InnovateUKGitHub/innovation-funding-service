@@ -49,7 +49,7 @@ Comp admin should not be able to edit the finances
 Comp admin should view the detailed finance section for every partner
     [Documentation]    INFUND-2483
     Given the user navigates to the page    ${Providing_Sustainable_Childcare_Application_Overview}
-    And the user clicks the button/link    jQuery=button:contains("Finances Summary")
+    When the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should see the text in the page    Funding breakdown
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
