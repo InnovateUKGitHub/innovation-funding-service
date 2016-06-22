@@ -28,7 +28,7 @@ Invalid company name
     [Tags]
     When the user enters text to a text field    id=organisationSearchName    innoavte
     And the user clicks the button/link    id=org-search
-    Then the user should see the text in the page    Sorry we couldn't find any results
+    Then the user should see the text in the page    No results found.
 
 Valid registration number
     [Documentation]    INFUND-887
@@ -43,7 +43,7 @@ Invalid registration number
     [Tags]
     When the user enters text to a text field    id=organisationSearchName    64536
     And the user clicks the button/link    id=org-search
-    Then the user should see the text in the page    Sorry we couldn't find any results
+    Then the user should see the text in the page    No results found.
 
 Company with spaces in the name
     [Documentation]    INFUND-1757

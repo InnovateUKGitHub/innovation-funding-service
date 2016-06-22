@@ -52,6 +52,14 @@
 		padding-bottom: 20px;
 	}
 }
+/* SG
+# IFS/warning button
+
+```
+<button class="button-warning button large">No</button>
+```
+
+*/
 
 .button-warning{
 	@include button(#c00000);

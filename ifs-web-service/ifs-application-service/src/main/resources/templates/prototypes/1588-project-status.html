@@ -21,15 +21,15 @@
 
 	<p class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
 
-	<strong><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
-
-	<div class="warning-alert" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
-        <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
-        <p>To enable your project to be funded by Innovate UK <strong>[Business name]</strong> must be registered with Companies House. </p>
-        <p><a href="/prototypes/2537-partner-add-companies-house">Link [Business name] to Companies House registration</a></p>
+	<div class="warning-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
+        <h2 class="heading-small no-margin">Complete your account</h2>
+        <p>To enable your project to be funded by Innovate UK your business must be registered with Companies House. </p>
+        <p><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>
     </div>
-
-	<ul class="application-progress-list extra-margin">
+	
+	<strong><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
+	
+	<ul class="application-progress-list extra-margin" th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
 		<li class="complete">
 			<span>
 				<h2 class="heading-medium">Successful application</h2>
@@ -166,6 +166,63 @@
 			</span>
 		</li>
 
+	</ul>
+
+	<ul class="application-progress-list extra-margin" th:if="${param.status != null and param.status[0] == 'noCompHouse'}">
+		<li>
+			<span>
+				<h2 class="heading-medium">Successful application</h2>
+				<p>The application <strong>Machine learning in robots</strong> has been successful within the <strong>Technology inspired</strong> competition</p>
+			</span>
+		</li>
+		<li>
+			<span>
+				<h2 class="heading-medium">Project details</h2>
+				<p>Confirm the contact details, proposed start date and location of the project.</p>
+			</span>
+		</li>
+		<li>
+			<span>
+				<h2 class="heading-medium">Monitoring officer</h2>
+				<p>Innovate UK will assign you a Monitoring Officer.</p>
+			</span>
+		</li>
+		<li>
+			<span>
+				<h2 class="heading-medium">Bank details</h2>
+				<p>We need bank details for each consortium member so that we can pay the grant.</p>
+			</span>
+		</li>
+		<li>
+			<span>
+				<h2 class="heading-medium">Finance checks</h2>
+				<p>We will review all project costs and contact you if we have any queries.</p>
+			</span>
+		</li>
+		<li>
+			<span>
+				<h2 class="heading-medium">Spend profile</h2>
+				<p>Once we have approved your financial information, we will produce a spend profile.</p>
+			</span>
+		</li>
+		<li>
+			<span>
+				<h2 class="heading-medium">Other documents</h2>
+				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+				<p>The lead partner of the consortium will need to upload documents including:</p>
+				<ul class="list-bullet">
+					<li>a collaboration agreement</li>
+					<li>exploitation plan</li>
+					<li>project plan</li>
+				</ul>
+			</span>
+		</li>
+		<li>
+			<span>
+				<h2 class="heading-medium">Grant offer letter</h2>
+				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+			</span>
+		</li>
 	</ul>
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
