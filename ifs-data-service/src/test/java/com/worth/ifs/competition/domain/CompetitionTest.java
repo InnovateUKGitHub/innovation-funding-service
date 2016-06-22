@@ -34,8 +34,10 @@ public class CompetitionTest {
     private LocalDateTime assemmentStartDate;
     private LocalDateTime assemmentEndDate;
 
-    private String activityCode;
     private String budgetCode;
+
+    private String activityCode;
+    private String innovateBudget;
     private String coFunders;
     private String coFundersBudget;
 
@@ -53,8 +55,9 @@ public class CompetitionTest {
         maxResearchRatio = 10;
         academicGrantPercentage = 30;
 
-        activityCode = "ActivityCode";
         budgetCode = "BudgetCode";
+        activityCode = "ActivityCode";
+        innovateBudget = "Innovate Budget";
         coFunders = "CoFunders";
         coFundersBudget = "CoFundersBudget";
 
@@ -69,8 +72,10 @@ public class CompetitionTest {
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
 
-        competition.setActivityCode(activityCode);
+
         competition.setBudgetCode(budgetCode);
+        competition.setActivityCode(activityCode);
+        competition.setInnovateBudget(innovateBudget);
         competition.setCoFunders(coFunders);
         competition.setCoFundersBudget(coFundersBudget);
     }
@@ -84,8 +89,9 @@ public class CompetitionTest {
         assertEquals(competition.getMaxResearchRatio(), maxResearchRatio);
         assertEquals(competition.getAcademicGrantPercentage(), academicGrantPercentage);
 
-        assertEquals(competition.getActivityCode(), activityCode);
         assertEquals(competition.getBudgetCode(), budgetCode);
+        assertEquals(competition.getActivityCode(), activityCode);
+        assertEquals(competition.getInnovateBudget(), innovateBudget);
         assertEquals(competition.getCoFunders(), coFunders);
         assertEquals(competition.getCoFundersBudget(), coFundersBudget);
     }
