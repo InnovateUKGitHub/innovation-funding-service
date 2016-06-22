@@ -1,12 +1,18 @@
 package com.worth.ifs.controller.form.competitionsetup;
 
+import javax.validation.constraints.Size;
+
 /**
  * Form for the additional info competition setup section.
  */
 public class AdditionalInfoForm extends CompetitionSetupForm {
+    @Size(max = 255, message = "Activity code has a maximum length of 255 characters")
     private String activityCode;
+    @Size(max = 255, message = "Innovate budget has a maximum length of 255 characters")
     private String innovateBudget;
+    @Size(max = 255, message = "Co-funders has a maximum length of 255 characters")
     private String coFunders;
+    @Size(max = 255, message = "Co-funders budget has a maximum length of 255 characters")
     private String coFundersBudget;
 
     public AdditionalInfoForm() {

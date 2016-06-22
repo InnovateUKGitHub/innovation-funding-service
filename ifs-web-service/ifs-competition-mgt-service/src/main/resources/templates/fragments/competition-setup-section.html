@@ -277,7 +277,9 @@
                 </label>
                 <input th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
-                       th:field="${competitionSetupForm.activityCode}" />
+                       th:field="${competitionSetupForm.activityCode}"
+                       maxlength="255"
+                       data-maxlength-errormessage="Activity code has a maximum length of 255 characters" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovateBudget')}? 'form-group error':'form-group'">
@@ -289,7 +291,9 @@
                 </label>
                 <input th:class="${#fields.hasErrors('innovateBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
-                       th:field="${competitionSetupForm.innovateBudget}" />
+                       th:field="${competitionSetupForm.innovateBudget}"
+                       maxlength="255"
+                       data-maxlength-errormessage="Innovate budget has a maximum length of 255 characters" />
             </div>
 
             <div th:class="${#fields.hasErrors('coFunders')}? 'form-group error':'form-group'">
@@ -301,7 +305,9 @@
                 </label>
                 <input th:class="${#fields.hasErrors('coFunders') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
-                       th:field="${competitionSetupForm.coFunders}" />
+                       th:field="${competitionSetupForm.coFunders}"
+                       maxlength="255"
+                       data-maxlength-errormessage="Co-funders has a maximum length of 255 characters" />
             </div>
 
             <div th:class="${#fields.hasErrors('coFundersBudget')}? 'form-group error':'form-group'">
@@ -314,8 +320,8 @@
                 <input th:class="${#fields.hasErrors('coFundersBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        th:field="${competitionSetupForm.coFundersBudget}"
-                       required="required"
-                       data-required-errormessage="Please enter a title" />
+                       maxlength="255"
+                       data-maxlength-errormessage="Co-funders budget has a maximum length of 255 characters" />
             </div>
 
             <button class="button">Done</button>

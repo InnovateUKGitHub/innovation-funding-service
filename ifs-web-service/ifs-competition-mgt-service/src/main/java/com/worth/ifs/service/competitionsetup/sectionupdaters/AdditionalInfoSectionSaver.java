@@ -16,7 +16,7 @@ import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver {
 
     @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
