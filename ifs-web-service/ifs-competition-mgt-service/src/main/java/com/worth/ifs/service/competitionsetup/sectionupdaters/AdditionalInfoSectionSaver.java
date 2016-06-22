@@ -1,5 +1,7 @@
 package com.worth.ifs.service.competitionsetup.sectionupdaters;
 
+import com.worth.ifs.application.service.CompetitionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -13,6 +15,9 @@ import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 @Service
 public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver {
 
+    @Autowired
+    private CompetitionService competitionService;
+
 	@Override
 	public CompetitionSetupSection sectionToSave() {
 		return CompetitionSetupSection.ADDITIONAL_INFO;
@@ -20,7 +25,13 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Override
 	public void saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		
+		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
+		competition.setActivityCode(additionalInfoForm.getActivityCode());
+		competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
+		competition.setCoFunders(additionalInfoForm.getCoFunders());
+		competition.setCoFundersBudget(additionalInfoForm.getCoFundersBudget());
+
+        competitionService.update(competition);
 	}
 
 	@Override

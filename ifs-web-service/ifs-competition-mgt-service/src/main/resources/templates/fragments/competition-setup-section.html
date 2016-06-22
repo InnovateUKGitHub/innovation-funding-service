@@ -253,3 +253,107 @@
         </li>
     </ul>
 </div>
+
+
+<!-- =================== Comp setup section - Additional info (2) ============================== -->
+<div th:fragment="section-additional">
+    <h2>Step 2: Additional competition information</h2>
+
+    <div class="panel-indent">
+        These fields are for reporting purposes
+    </div>
+
+    <form th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+
+        <fieldset th:if="${editable}" id="section-2-edit">
+            <legend class="visuallyhidden">Additional information</legend>
+
+            <div th:class="${#fields.hasErrors('activityCode')}? 'form-group error':'form-group'">
+                <label class="form-label" for="competitionSetupForm.activityCode">
+                    <span class="form-label-bold">Activity code (optional)</span>
+                    <span th:if="${#fields.hasErrors('activityCode')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       th:field="${competitionSetupForm.activityCode}"
+                       maxlength="255"
+                       data-maxlength-errormessage="Activity code has a maximum length of 255 characters" />
+            </div>
+
+            <div th:class="${#fields.hasErrors('innovateBudget')}? 'form-group error':'form-group'">
+                <label class="form-label" for="competitionSetupForm.innovateBudget">
+                    <span class="form-label-bold">Innovate budget (optional)</span>
+                    <span th:if="${#fields.hasErrors('innovateBudget')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovateBudget')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('innovateBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       th:field="${competitionSetupForm.innovateBudget}"
+                       maxlength="255"
+                       data-maxlength-errormessage="Innovate budget has a maximum length of 255 characters" />
+            </div>
+
+            <div th:class="${#fields.hasErrors('coFunders')}? 'form-group error':'form-group'">
+                <label class="form-label" for="competitionSetupForm.coFunders">
+                    <span class="form-label-bold">Co-funders (optional)</span>
+                    <span th:if="${#fields.hasErrors('coFunders')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('coFunders')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('coFunders') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       th:field="${competitionSetupForm.coFunders}"
+                       maxlength="255"
+                       data-maxlength-errormessage="Co-funders has a maximum length of 255 characters" />
+            </div>
+
+            <div th:class="${#fields.hasErrors('coFundersBudget')}? 'form-group error':'form-group'">
+                <label class="form-label" for="competitionSetupForm.coFundersBudget">
+                    <span class="form-label-bold">Co-funders budget (optional)</span>
+                    <span th:if="${#fields.hasErrors('coFundersBudget')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('coFundersBudget')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('coFundersBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       th:field="${competitionSetupForm.coFundersBudget}"
+                       maxlength="255"
+                       data-maxlength-errormessage="Co-funders budget has a maximum length of 255 characters" />
+            </div>
+
+            <button class="button">Done</button>
+        </fieldset>
+
+        <fieldset th:if="${!editable}" id="section-2-">
+                <dl class="standard-definition-list">
+                    <dt>Activity code (optional)</dt>
+                    <dd th:text="${competitionSetupForm.activityCode}"></dd>
+                    <dt>Innovate budget (optional)</dt>
+                    <dd th:text="${competitionSetupForm.innovateBudget}"></dd>
+                    <dt>Co-funders (optional)</dt>
+                    <dd th:text="${competitionSetupForm.coFunders}"></dd>
+                    <dt>Co-funders budget (optional)</dt>
+                    <dd th:text="${competitionSetupForm.coFundersBudget}"></dd>
+                </dl>
+            <button type="submit" class="button">Edit</button>
+        </fieldset>
+
+    </form>
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='initial')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Initial details</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+    </ul>
+</div>

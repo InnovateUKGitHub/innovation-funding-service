@@ -52,6 +52,11 @@ public class CompetitionResource {
     private String code;
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
+    private String activityCode;
+    private String innovateBudget;
+    private String coFunders;
+    private String coFundersBudget;
+
 
     public CompetitionResource() {
         // no-arg constructor
@@ -360,5 +365,37 @@ public class CompetitionResource {
 
     public enum Status {
         COMPETITION_SETUP, COMPETITION_SETUP_FINISHED, NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP
+    }
+
+    public String getActivityCode() {
+        return activityCode;
+    }
+
+    public void setActivityCode(String activityCode) {
+        this.activityCode = activityCode;
+    }
+
+    public String getInnovateBudget() {
+        return innovateBudget;
+    }
+
+    public void setInnovateBudget(String innovateBudget) {
+        this.innovateBudget = innovateBudget;
+    }
+
+    public String getCoFunders() {
+        return coFunders;
+    }
+
+    public void setCoFunders(String coFunders) {
+        this.coFunders = coFunders;
+    }
+
+    public String getCoFundersBudget() {
+        return coFundersBudget;
+    }
+
+    public void setCoFundersBudget(String coFundersBudget) {
+        this.coFundersBudget = coFundersBudget;
     }
 }
