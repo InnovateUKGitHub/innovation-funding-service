@@ -7,7 +7,10 @@ import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
@@ -78,8 +81,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
-
-        return find(getQuestion(ids.questionId), application(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+        return find(getQuestion(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
 
             QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
 
@@ -273,7 +275,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
-        return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
                 -> findAndOnSuccessToSetComplete(markedAsCompleteBy, question, application, processRoleId, markAsComplete));
     }
 
@@ -293,20 +295,16 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
         }
 
-        if (questionStatus == null) {
-            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);}
-        questionStatus = isQuestionStatusMarkedAsComplete(questionStatus, markAsComplete);
-        questionStatusRepository.save(questionStatus);
-        return serviceSuccess();
-    }
-
-    private QuestionStatus isQuestionStatusMarkedAsComplete(QuestionStatus questionStatus, boolean markAsComplete) {
-         if (markAsComplete) {
+            if (questionStatus == null) {
+                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
+            } else if (markAsComplete) {
                 questionStatus.markAsComplete();
             } else {
                 questionStatus.markAsInComplete();
             }
-        return questionStatus;
+            questionStatusRepository.save(questionStatus);
+            return serviceSuccess();
+        });
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
