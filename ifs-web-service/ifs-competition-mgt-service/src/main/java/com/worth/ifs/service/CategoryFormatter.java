@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.worth.ifs.category.resource.CategoryResource;
 
+/**
+ * Formats the set of categories associated with a competition, for display purposes.
+ */
 @Service
 public class CategoryFormatter {
 

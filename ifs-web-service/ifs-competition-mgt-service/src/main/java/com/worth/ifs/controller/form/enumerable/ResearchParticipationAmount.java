@@ -1,5 +1,8 @@
 package com.worth.ifs.controller.form.enumerable;
 
+/**
+ * defines the possible values for max research participation amount when defining a competition.
+ */
 public enum ResearchParticipationAmount {
 	
 	THIRTY(1, 30, "30%"), FIFTY(2, 50, "50%"), HUNDRED(3, 100, "100%"), NONE(4, 0, "None");

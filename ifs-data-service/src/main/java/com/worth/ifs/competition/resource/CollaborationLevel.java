@@ -1,5 +1,8 @@
 package com.worth.ifs.competition.resource;
 
+/**
+ * This enum defines the options for the level of collaboration for a competition.
+ */
 public enum CollaborationLevel {
 	SINGLE("single", "Single"), COLLABORATIVE("collaborative", "Collaborative"), SINGLE_OR_COLLABORATIVE("single-or-collaborative", "Single or Collaborative");
 

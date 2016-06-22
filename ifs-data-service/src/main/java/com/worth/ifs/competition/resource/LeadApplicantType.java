@@ -1,5 +1,8 @@
 package com.worth.ifs.competition.resource;
 
+/**
+ * This enum defines the options for the lead applicant type for a competition.
+ */
 public enum LeadApplicantType {
 	BUSINESS("business", "Business"), RESEARCH("research", "Research"), EITHER("either", "Either");
 
