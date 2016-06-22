@@ -1,27 +1,23 @@
 package com.worth.ifs.competition.controller;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.category.repository.CategoryLinkRepository;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.category.repository.CategoryLinkRepository;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Integration test for testing the rest servcies of the competition controller
@@ -39,7 +35,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     public static final String INNOVATION_SECTOR_NAME = "Health and life sciences";
     public static final int INNOVATION_AREA_ID = 9;
     public static final int INNOVATION_AREA_ID_TWO = 10;
-    public static final String INNOVATION_AREA_NAME = "Agriculture and food";
+    public static final String INNOVATION_AREA_NAME = "User Experience";
     public static final String EXISTING_COMPETITION_NAME = "Connected digital additive manufacturing";
     private static final Long COMPETITION_ID = 1L;
 
