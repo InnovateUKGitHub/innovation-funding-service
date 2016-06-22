@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 public class AdditionalInfoSectionSaverTest {
 
 	@InjectMocks
-	private InitialDetailsSectionSaver service;
+	private AdditionalInfoSectionSaver service;
 	
 	@Mock
 	private CompetitionService competitionService;
