@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -152,7 +153,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
-        List<Project> projects = simpleMap(projectUsers, projectUser -> projectUser.getProject());
+        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProject).parallelStream().distinct().collect(Collectors.toList());
         return serviceSuccess(simpleMap(projects, projectMapper::mapToResource));
     }
 
