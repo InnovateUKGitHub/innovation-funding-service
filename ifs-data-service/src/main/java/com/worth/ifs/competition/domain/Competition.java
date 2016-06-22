@@ -1,32 +1,5 @@
 package com.worth.ifs.competition.domain;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.MapKeyEnumerated;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -35,6 +8,12 @@ import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.user.domain.User;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -124,6 +103,12 @@ public class Competition {
     private Category innovationSector;
     @Transient
     private Category innovationArea;
+
+    private String activityCode;
+    private String innovateBudget;
+    private String coFunders;
+    private String coFundersBudget;
+
 
     @ElementCollection
     @JoinTable(name="competition_setup_status", joinColumns=@JoinColumn(name="competition_id"))
@@ -408,6 +393,37 @@ public class Competition {
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
 		return sectionSetupStatus;
 	}
-    
+
+    public String getActivityCode() {
+        return activityCode;
+    }
+
+    public void setActivityCode(String activityCode) {
+        this.activityCode = activityCode;
+    }
+
+    public String getInnovateBudget() {
+        return innovateBudget;
+    }
+
+    public void setInnovateBudget(String innovateBudget) {
+        this.innovateBudget = innovateBudget;
+    }
+
+    public String getCoFunders() {
+        return coFunders;
+    }
+
+    public void setCoFunders(String coFunders) {
+        this.coFunders = coFunders;
+    }
+
+    public String getCoFundersBudget() {
+        return coFundersBudget;
+    }
+
+    public void setCoFundersBudget(String coFundersBudget) {
+        this.coFundersBudget = coFundersBudget;
+    }
 }
 
