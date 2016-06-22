@@ -87,21 +87,22 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-		return getCompetition(competitionId).andOnSuccess(competition -> getCompetitionOnSuccessToMakeFundingDecision(competition, competitionId, applicationFundingDecisions));
-	}
+        return getCompetition(competitionId).andOnSuccess(competition -> makeFundingDecisionOnCompetitionAndSuccess(competition, applicationFundingDecisions));
+    }
 
-    public ServiceResult<Void> getCompetitionOnSuccessToMakeFundingDecision (Competition competition, Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+    private ServiceResult<Void> makeFundingDecisionOnCompetitionAndSuccess(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions ) {
+
         if (competition.getAssessorFeedbackDate() == null) {
-            LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competitionId);
+            LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competition.getId());
             return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
         }
 
         if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
-            LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competitionId);
+            LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competition.getId());
             return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
         }
 
-        List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
+        List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competition.getId());
 
         saveFundingDecisionData(competition, applicationsForCompetition, applicationFundingDecisions);
 
@@ -120,14 +121,15 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         competition.setFundersPanelEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 
         return serviceSuccess();
-    }
+	}
 
 	@Override
 	public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-        return getCompetition(competitionId).andOnSuccess(competition -> getCompetitionOnSuccessToNotifyLeadApplicantsOfFundingDecisions(competition, applicationFundingDecisions));
+
+        return getCompetition(competitionId).andOnSuccess(competition -> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccess(competition, applicationFundingDecisions));
     }
 
-    public ServiceResult<Void> getCompetitionOnSuccessToNotifyLeadApplicantsOfFundingDecisions(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions) {
+    private ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccess(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
         List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
@@ -153,7 +155,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         } else {
             return serviceFailure(internalServerErrorError("Unable to determine all Notification targets for funding decision emails"));
         }
-    }
+	}
 
 	private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
 		return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());

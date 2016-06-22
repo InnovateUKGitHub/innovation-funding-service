@@ -274,12 +274,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
-
         return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
-                -> findAndOnSuccessToSetComplete(markedAsCompleteBy, question, application, processRoleId, markAsComplete));
+                -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete));
     }
 
-    private ServiceResult<Void> findAndOnSuccessToSetComplete(ProcessRole markedAsCompleteBy, Question question, Application application, Long processRoleId, boolean markAsComplete) {
+    private ServiceResult<Void> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, Long processRoleId, boolean markAsComplete){
 
         QuestionStatus questionStatus = null;
 
@@ -294,6 +293,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         } else {
             questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
         }
+
         if (questionStatus == null) {
             questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
         } else if (markAsComplete) {
@@ -311,7 +311,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
         return null;
-
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {

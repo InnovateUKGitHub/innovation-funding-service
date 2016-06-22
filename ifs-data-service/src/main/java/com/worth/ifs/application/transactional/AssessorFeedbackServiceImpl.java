@@ -165,7 +165,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
         return getCompetition(competitionId).andOnSuccess(competition -> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback(competition, competitionId));
     }
 
-    private ServiceResult<Void> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback (Competition competition, Long competitionId) {
+    private ServiceResult<Void> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback (Competition competition, long competitionId) {
         List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS);
 
         Pair<List<Application>, List<Application>> applicationsByFundingSuccess = simplePartition(applicationsToPublishAssessorFeedbackFor, applicationApprovedFilter);
