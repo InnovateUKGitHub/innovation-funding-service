@@ -1,5 +1,7 @@
 package com.worth.ifs.controller.form.competitionsetup;
 
+import java.util.Set;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -11,7 +13,7 @@ public class EligibilityForm extends CompetitionSetupForm {
 	@NotNull(message = "Please select a stream option")
 	private String multipleStream;
 	@NotEmpty(message = "Please select at least one research category")
-	private Long[] researchCategoryId;
+	private Set<Long> researchCategoryId;
 	@NotNull(message = "Please select a competition executive")
 	private String singleOrCollaborative;
 	@NotNull(message = "Please select a lead applicant type")
@@ -25,10 +27,10 @@ public class EligibilityForm extends CompetitionSetupForm {
 	public void setMultipleStream(String multipleStream) {
 		this.multipleStream = multipleStream;
 	}
-	public Long[] getResearchCategoryId() {
+	public Set<Long> getResearchCategoryId() {
 		return researchCategoryId;
 	}
-	public void setResearchCategoryId(Long[] researchCategoryId) {
+	public void setResearchCategoryId(Set<Long> researchCategoryId) {
 		this.researchCategoryId = researchCategoryId;
 	}
 	public String getSingleOrCollaborative() {

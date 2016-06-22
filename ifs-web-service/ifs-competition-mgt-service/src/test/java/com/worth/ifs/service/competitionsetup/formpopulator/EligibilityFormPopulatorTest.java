@@ -2,7 +2,6 @@ package com.worth.ifs.service.competitionsetup.formpopulator;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -45,7 +44,7 @@ public class EligibilityFormPopulatorTest {
 		
 		assertTrue(result instanceof EligibilityForm);
 		EligibilityForm form = (EligibilityForm) result;
-		assertArrayEquals(new Long[]{2L, 3L}, form.getResearchCategoryId());
+		assertEquals(CollectionFunctions.asLinkedSet(2L, 3L), form.getResearchCategoryId());
 		assertEquals("yes", form.getMultipleStream());
 		assertEquals("collaborative", form.getSingleOrCollaborative());
 		assertEquals("business", form.getLeadApplicantType());

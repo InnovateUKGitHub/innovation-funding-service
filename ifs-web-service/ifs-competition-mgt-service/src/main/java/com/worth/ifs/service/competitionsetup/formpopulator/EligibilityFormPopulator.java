@@ -2,9 +2,9 @@ package com.worth.ifs.service.competitionsetup.formpopulator;
 
 import org.springframework.stereotype.Service;
 
+import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.EligibilityForm;
@@ -25,7 +25,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
 		
-		competitionSetupForm.setResearchCategoryId(competitionResource.getResearchCategories().toArray(new Long[]{}));
+		competitionSetupForm.setResearchCategoryId(competitionResource.getResearchCategories());
 		
 		ResearchParticipationAmount amount = ResearchParticipationAmount.fromAmount(competitionResource.getMaxResearchRatio());
 		if(amount != null) {

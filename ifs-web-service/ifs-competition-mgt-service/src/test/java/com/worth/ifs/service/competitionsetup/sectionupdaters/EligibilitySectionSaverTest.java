@@ -32,7 +32,7 @@ public class EligibilitySectionSaverTest {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
 		competitionSetupForm.setLeadApplicantType("business");
 		competitionSetupForm.setMultipleStream("yes");
-		competitionSetupForm.setResearchCategoryId(new Long[]{1L, 2L, 3L});
+		competitionSetupForm.setResearchCategoryId(CollectionFunctions.asLinkedSet(1L, 2L, 3L));
 		competitionSetupForm.setResearchParticipationAmountId(1);
 		competitionSetupForm.setSingleOrCollaborative("collaborative");
 		

@@ -1,17 +1,13 @@
 package com.worth.ifs.service.competitionsetup.sectionupdaters;
 
-import static java.util.Arrays.asList;
-
-import java.util.HashSet;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.worth.ifs.competition.resource.CollaborationLevel;
-import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.EligibilityForm;
 import com.worth.ifs.controller.form.enumerable.ResearchParticipationAmount;
@@ -35,7 +31,7 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 		
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		
-		competition.setResearchCategories(new HashSet<Long>(asList(eligibilityForm.getResearchCategoryId())));
+		competition.setResearchCategories(eligibilityForm.getResearchCategoryId());
 		
 		ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId());
 		if(amount != null) {
