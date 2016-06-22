@@ -17,11 +17,15 @@
         <h1 class="heading-xlarge">Finance contact</h1>
     </div>
 
-    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${project.id})}" th:object="${form}">
+    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${project.id})}" th:object="${form}" novalidate="novalidate">
         <fieldset>
+          <div class="form-group" th:classappend="${#fields.hasErrors('financeContact') ? 'error' : ''}">
             <h2 class="heading-medium">Finance contact</h2>
             <legend>
                 <span class="visuallyhidden">Finance contact</span>
+                <div th:if="${#fields.hasErrors('financeContact')}" th:remove="tag">
+                   <span class="error-message" th:each="err : ${#fields.errors('financeContact')}" th:text="${err}" />
+               </div>
             </legend>
             <p class="form-hint">Who will be responsible for project finances in your organisation?</p>
             <p>We will ask this person to</p>
@@ -30,15 +34,16 @@
                 <li>confirm any queries we have with your project costs</li>
                 <li>review the spend profile of your project costs</li>
             </ul>
-            <div class="form-group extra-margin">
+            <div class="extra-margin">
                 <div th:each="user : ${organisationUsers}" th:remove="tag">
                     <input type="hidden" th:field="*{organisation}"></input>
                     <label th:for="${#ids.next('financeContact')}" class="block-label">
-                        <input type="radio" th:field="*{financeContact}" th:value="${user.user}" />
+                        <input type="radio" th:field="*{financeContact}" th:value="${user.user}" required="required" />
                         <span th:text="${user.userName}" th:remove="tag"></span>
                     </label>
                 </div>
             </div>
+          </div>
         </fieldset>
         <button class="button extra-margin">Save</button>
     </form>
