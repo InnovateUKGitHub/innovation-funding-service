@@ -5,6 +5,7 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -57,6 +58,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessmentFeedbackResource>> assessmentFeedbackReosourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentFeedbackResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
