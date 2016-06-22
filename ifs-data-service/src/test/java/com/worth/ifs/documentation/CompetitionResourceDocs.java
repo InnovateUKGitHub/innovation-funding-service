@@ -64,7 +64,7 @@ public class CompetitionResourceDocs {
             .withInnovationSectorName("IT")
             .withPafCode("PAF-123")
             .withBudgetCode("BUDGET-456")
-            .withActitiyCode("Activity-Code")
+            .withActivityCode("Activity-Code")
             .withInnovateBudget("INNOVATE-Budget")
             .withCoFunders("Cofunder, Cofunder")
             .withCoFundersBudget("1234, 23423");
