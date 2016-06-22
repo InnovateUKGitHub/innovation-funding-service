@@ -13,7 +13,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
+import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -64,8 +64,8 @@ public class CostPermissionRules {
         final ApplicationFinance applicationFinance = cost.getApplicationFinance();
         final Long applicationId = applicationFinance.getApplication().getId();
         final Long organisationId = applicationFinance.getOrganisation().getId();
-        final boolean isLead = checkRole(user, applicationId, organisationId, LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
+        final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, roleRepository, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
         return isLead || isCollaborator;
     }
 

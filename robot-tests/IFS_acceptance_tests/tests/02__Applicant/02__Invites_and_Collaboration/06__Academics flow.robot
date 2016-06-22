@@ -26,7 +26,7 @@ Academic organisations search
     Then the user should see an error    ${empty_field_warning_message}
     When the user enters text to a text field    id=organisationSearchName    abcd
     And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see the text in the page    Sorry we couldn't find any results.
+    Then the user should see the text in the page    No results found.
     When the user enters text to a text field    id=organisationSearchName    !!
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Please enter valid characters

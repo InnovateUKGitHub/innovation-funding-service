@@ -247,7 +247,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         List<QuestionStatusResource> questionStatuses = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
         return questionStatuses.isEmpty() || questionStatuses.stream()
                 .anyMatch(questionStatusResource -> (
-                        questionStatusResource.getAssignee() == null || questionStatusResource.getAssigneeUserId() == userId)
+                        questionStatusResource.getAssignee() == null || questionStatusResource.getAssigneeUserId().equals(userId))
                         && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
     }
 
