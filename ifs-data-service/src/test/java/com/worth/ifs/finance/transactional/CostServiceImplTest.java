@@ -2,7 +2,10 @@ package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
@@ -19,6 +22,7 @@ import java.util.List;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -97,7 +101,8 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
     @Test
     public void testAddCost() {
         Organisation organisation = newOrganisation().withOrganisationType(new OrganisationType("Business", null)).build();
-        Application application = newApplication().build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        Application application = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
         when(organisationRepositoryMock.findOne(456L)).thenReturn(organisation);
@@ -124,5 +129,15 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
         ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
         assertTrue(result.isSuccess());
         assertEquals(expectedFinance, result.getSuccessObject());
+    }
+
+    @Test
+    public void testAddWhenApplicationNotOpen() {
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
+        Application application = newApplication().withCompetition(openCompetition).build();
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
+        ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.COMPETITION_NOT_OPEN));
     }
 }
