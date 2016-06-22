@@ -1,8 +1,12 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -18,9 +22,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
+import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
+import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
+import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
+import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -30,6 +41,9 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -290,6 +304,88 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+    }
+
+    @Test
+    public void testFindByUserIdReturnsOnlyDistinctProjects(){
+
+        Project project = newProject().withId(123L).build();
+        Organisation organisation = newOrganisation().withId(5L).build();
+        User user = newUser().withid(7L).build();
+
+        Role partnerRole = newRole().withType(PARTNER).build();
+        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
+
+        ProjectUser projectUserWithPartnerRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(partnerRole).build();
+        ProjectUser projectUserWithFinanceRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(financeContactRole).build();
+
+        List<ProjectUser> projectUserRecords = asList(projectUserWithPartnerRole, projectUserWithFinanceRole);
+
+        ProjectResource projectResource = newProjectResource().withId(project.getId()).build();
+
+        when(projectUserRepositoryMock.findByUserId(user.getId())).thenReturn(projectUserRecords);
+
+        when(projectMapperMock.mapToResource(project)).thenReturn(projectResource);
+
+        ServiceResult<List<ProjectResource>> result = service.findByUserId(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(result.getSuccessObject().size(), 1L);
+    }
+
+    @Test
+    public void testUpdateProjectAddressToBeRegisteredAddress(){
+
+        Project project = newProject().withId(1L).build();
+        Organisation leadOrganisation = newOrganisation().withId(1L).build();
+        AddressResource existingRegisteredAddressResource = newAddressResource().build();
+        Address registeredAddress = newAddress().build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(addressRepositoryMock.exists(existingRegisteredAddressResource.getId())).thenReturn(true);
+        when(addressRepositoryMock.findOne(existingRegisteredAddressResource.getId())).thenReturn(registeredAddress);
+
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testUpdateProjectAddressToBeOperatingAddress(){
+        Project project = newProject().withId(1L).build();
+        Organisation leadOrganisation = newOrganisation().withId(1L).build();
+        AddressResource existingOperatingAddressResource = newAddressResource().build();
+        Address operatingAddress = newAddress().build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(addressRepositoryMock.exists(existingOperatingAddressResource.getId())).thenReturn(true);
+        when(addressRepositoryMock.findOne(existingOperatingAddressResource.getId())).thenReturn(operatingAddress);
+
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testUpdateProjectAddressToNewProjectAddress(){
+        Project project = newProject().withId(1L).build();
+        Organisation leadOrganisation = newOrganisation().withId(1L).build();
+        AddressResource newAddressResource = newAddressResource().build();
+        Address newAddress = newAddress().build();
+        AddressType projectAddressType = newAddressType().withId((long)PROJECT.getOrdinal()).withName(PROJECT.name()).build();
+        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
+        when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
+        when(addressTypeRepositoryMock.findOne((long)PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
+        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        assertTrue(result.isSuccess());
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

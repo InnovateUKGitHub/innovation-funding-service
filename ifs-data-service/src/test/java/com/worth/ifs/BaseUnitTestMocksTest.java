@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.repository.AddressRepository;
+import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
 import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.alert.mapper.AlertMapper;
@@ -28,6 +29,7 @@ import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
@@ -198,6 +200,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressMapper addressMapperMock;
+
+    @Mock
+    protected AddressTypeRepository addressTypeRepositoryMock;
+
+    @Mock
+    protected OrganisationAddressRepository organisationAddressRepositoryMock;
 
     @Mock
     protected AssessorFeedbackService assessorFeedbackServiceMock;
