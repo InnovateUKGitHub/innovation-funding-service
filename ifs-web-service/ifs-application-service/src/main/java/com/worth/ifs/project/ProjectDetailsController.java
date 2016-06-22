@@ -306,6 +306,14 @@ public class ProjectDetailsController {
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        return doViewStartDate(model, projectId, form, loggedInUser, true);
+    }
+
+    private String doViewStartDate(Model model, final Long projectId,
+                                   ProjectDetailsStartDateForm form,
+                                   UserResource loggedInUser,
+                                   boolean addDefaultStartDate) {
+
         ProjectResource projectResource = projectService.getById(projectId);
 
         if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
@@ -313,8 +321,12 @@ public class ProjectDetailsController {
         }
 
         model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
-        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
-        form.setProjectStartDate(defaultStartDate);
+
+        if (addDefaultStartDate) {
+            LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
+            form.setProjectStartDate(defaultStartDate);
+        }
+
         return "project/details-start-date";
     }
 
@@ -327,7 +339,7 @@ public class ProjectDetailsController {
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, loggedInUser));
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> doViewStartDate(model, projectId, form, loggedInUser, false));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
