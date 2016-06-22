@@ -130,8 +130,15 @@ submitted application calculations are correct
     the calculations should be correct    jQuery=td:contains("submitted")    css=.info-area p:nth-child(5) span
 
 the table header matches the number of rows in the applications list table
-    ${row_count}=    get matching xpath count    //*[td]
-    ${apps_string}=    Catenate    ${row_count}    applications
+    ${pagination}=   Run Keyword and Ignore Error      the user clicks the button/link     name=page
+    Run Keyword If     ${pagination} == 'PASS'      ${row_count_second_page}=       get matching xpath count      //*[td]
+    the user navigates to the page        ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+    ${row_count_first_page}=      get matching xpath count      //*[td]
+    ${row_count_first_page_number}=    convert to integer      ${row_count_first_page}
+    ${row_count_second_page_number}=     convert to integer    ${row_count_second_page}
+    ${total_row_count}=       Evaluate        ${row_count_first_page_number} + ${row_count_second_page_number}
+    ${apps_string}=    Catenate    ${total_row_count}    applications
+    the user navigates to the page      ${comp_management_applications_list}
     The user should see the text in the page    ${apps_string}
 
 the user can see the option to upload a file on the page
