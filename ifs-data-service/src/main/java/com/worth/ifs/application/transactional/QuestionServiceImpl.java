@@ -294,17 +294,15 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         } else {
             questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
         }
-
-            if (questionStatus == null) {
-                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-            } else if (markAsComplete) {
-                questionStatus.markAsComplete();
-            } else {
-                questionStatus.markAsInComplete();
-            }
-            questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
-        });
+        if (questionStatus == null) {
+            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
+        } else if (markAsComplete) {
+            questionStatus.markAsComplete();
+        } else {
+            questionStatus.markAsInComplete();
+        }
+        questionStatusRepository.save(questionStatus);
+        return serviceSuccess();
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
