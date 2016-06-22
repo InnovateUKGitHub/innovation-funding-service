@@ -43,7 +43,7 @@ Initial details server-side validations
     #And the user should see an error    PAF number validation error
     #And the user should see an error    Budget code validation error
     And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
-    Then The user should see the text in the page    Please fill in a correct date before generating the competition code
+    # Then The user should see the text in the page    Please fill in a correct date before generating the competition code
 
 Initial details client-side validations
     [Documentation]    INFUND-2982
@@ -53,9 +53,9 @@ Initial details client-side validations
     #Then The user should not see the text in the page    #Competition title error message
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then The user should not see the text in the page    Please select a innovation sector
-    When the user selects the option from the drop-down menu    Health and care    id=innovationAreaCategoryId
+    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
     Then The user should not see the text in the page    Please select a innovation area
-    When the user selects the option from the drop-down menu    Technology Inspired    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then The user should not see the text in the page    Please select a competition type
     When the user selects the option from the drop-down menu    Competition Technologist One    id=LeadTechnologistUserId
     Then The user should not see the text in the page    Please select a lead technologist
@@ -68,6 +68,7 @@ The user should see the correct Staite aid status
     [Documentation]    INFUND-2982
     ...
     ...    INFUND-2983
+    [Tags]    Pending
     #the dropdown options are not correct. we need to adjust the tests when the correct option will be added
     When the user selects the option from the drop-down menu    Technology Inspired    id=competitionTypeId
     Then The user should see the element    css=.yes
