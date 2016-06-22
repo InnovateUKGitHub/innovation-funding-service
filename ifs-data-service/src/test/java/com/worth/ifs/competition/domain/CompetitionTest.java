@@ -34,6 +34,11 @@ public class CompetitionTest {
     private LocalDateTime assemmentStartDate;
     private LocalDateTime assemmentEndDate;
 
+    private String activityCode;
+    private String budgetCode;
+    private String coFunders;
+    private String coFundersBudget;
+
     @Before
     public void setUp() throws Exception {
         id = 0L;
@@ -48,6 +53,11 @@ public class CompetitionTest {
         maxResearchRatio = 10;
         academicGrantPercentage = 30;
 
+        activityCode = "ActivityCode";
+        budgetCode = "BudgetCode";
+        coFunders = "CoFunders";
+        coFundersBudget = "CoFundersBudget";
+
         sections = new ArrayList<>();
         sections.add(new Section());
         sections.add(new Section());
@@ -58,6 +68,11 @@ public class CompetitionTest {
         competition.setAssessmentEndDate(assemmentEndDate);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
+
+        competition.setActivityCode(activityCode);
+        competition.setBudgetCode(budgetCode);
+        competition.setCoFunders(coFunders);
+        competition.setCoFundersBudget(coFundersBudget);
     }
 
     @Test
@@ -68,6 +83,11 @@ public class CompetitionTest {
         assertEquals(competition.getSections(), sections);
         assertEquals(competition.getMaxResearchRatio(), maxResearchRatio);
         assertEquals(competition.getAcademicGrantPercentage(), academicGrantPercentage);
+
+        assertEquals(competition.getActivityCode(), activityCode);
+        assertEquals(competition.getBudgetCode(), budgetCode);
+        assertEquals(competition.getCoFunders(), coFunders);
+        assertEquals(competition.getCoFundersBudget(), coFundersBudget);
     }
 
     @Test

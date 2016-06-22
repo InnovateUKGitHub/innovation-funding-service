@@ -35,7 +35,11 @@ public class CompetitionResourceDocs {
             fieldWithPath("pafCode").description("the paf code entered during competition setup"),
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
             fieldWithPath("code").description("the unique competition code entered during competition setup"),
-            fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections")
+            fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
+            fieldWithPath("activityCode").description("the activity code entered during competition setup"),
+            fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
+            fieldWithPath("coFunders").description("the co-funders entered during competition setup"),
+            fieldWithPath("coFundersBudget").description("the co-funders budget entered during competition setup")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -60,5 +64,8 @@ public class CompetitionResourceDocs {
             .withInnovationSectorName("IT")
             .withPafCode("PAF-123")
             .withBudgetCode("BUDGET-456")
-            ;
+            .withActitiyCode("Activity-Code")
+            .withInnovateBudget("INNOVATE-Budget")
+            .withCoFunders("Cofunder, Cofunder")
+            .withCoFundersBudget("1234, 23423");
 }
