@@ -1,5 +1,6 @@
 package com.worth.ifs.transactional;
 
+import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Response;
@@ -11,7 +12,10 @@ import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
@@ -25,6 +29,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -60,6 +68,9 @@ public abstract class BaseTransactionalService  {
     @Autowired
     protected OrganisationRepository organisationRepository;
 
+    @Autowired
+    protected AddressTypeRepository addressTypeRepository;
+
     protected Supplier<ServiceResult<Response>> response(Long responseId) {
         return () -> getResponse(responseId);
     }
@@ -86,6 +97,21 @@ public abstract class BaseTransactionalService  {
 
     protected Supplier<ServiceResult<Application>> application(final Long id) {
         return () -> getApplication(id);
+    }
+
+    protected final Supplier<ServiceResult<Application>> openApplication(long applicationId) {
+        return () -> getOpenApplication(applicationId);
+    }
+
+    protected final ServiceResult<Application> getOpenApplication(long applicationId) {
+        return find(application(applicationId)).andOnSuccess(application -> {
+                    if (application.getCompetition() != null && !OPEN.equals(application.getCompetition().getCompetitionStatus())) {
+                        return serviceFailure(COMPETITION_NOT_OPEN);
+                    } else {
+                        return serviceSuccess(application);
+                    }
+                }
+        );
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {

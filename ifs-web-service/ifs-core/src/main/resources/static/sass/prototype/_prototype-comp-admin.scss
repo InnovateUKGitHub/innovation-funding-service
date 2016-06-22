@@ -241,6 +241,10 @@ table{
 		height: 60px;
 	}
 
+	th[scope='col']{
+		min-width: 7em;
+	}
+
 	input{
 		width: 100%;
 		text-align: right;
@@ -394,6 +398,39 @@ table{
 
 		& + p{
 			display: none;
+		}
+	}
+}
+
+/*----- Comp dashboard tables styling----*/
+
+.comp-dashboard{
+	
+	.list-overview{
+		li {
+	    	display: table-row; 
+	    	width: 100%;
+		}
+
+		li h3,
+		li p{
+	    	display: table-cell;
+	    	padding: 0.5em 0;
+	        border-bottom: 1px solid $border-colour;
+		}
+
+		li h3{
+		    width: 50%;
+		}
+
+		li p{
+		    width: 30%;
+		    color: $secondary-text-colour;
+		}
+
+		li p + p{
+		    text-align: right;
+		    width: 20%;
 		}
 	}
 }

@@ -39,7 +39,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     public static final String INNOVATION_SECTOR_NAME = "Health and life sciences";
     public static final int INNOVATION_AREA_ID = 9;
     public static final int INNOVATION_AREA_ID_TWO = 10;
-    public static final String INNOVATION_AREA_NAME = "Agriculture and food";
+    public static final String INNOVATION_AREA_NAME = "User Experience";
     public static final String EXISTING_COMPETITION_NAME = "Connected digital additive manufacturing";
     private static final Long COMPETITION_ID = 1L;
 

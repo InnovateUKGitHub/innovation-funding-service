@@ -1,16 +1,15 @@
 package com.worth.ifs.application.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class contains methods to retrieve and store {@link CompetitionResource} related data,
@@ -36,6 +35,16 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public List<CompetitionResource> getAllCompetitions() {
         return competitionsRestService.getAll().getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<CompetitionResource> getAllCompetitionsNotInSetup() {
+        List<CompetitionResource> competitions = competitionsRestService.getAll().getSuccessObjectOrThrowException();
+
+        return competitions
+                .stream()
+                .filter(competition -> competition.getCompetitionStatus() == null || !competition.getCompetitionStatus().equals(CompetitionResource.Status.COMPETITION_SETUP))
+                .collect(Collectors.toList());
     }
 
     public List<CompetitionSetupSection> getCompletedCompetitionSetupSectionStatusesByCompetitionId(Long competitionId) {

@@ -1,16 +1,16 @@
 package com.worth.ifs.organisation.resource;
 
-import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 public class OrganisationAddressResource {
     private Long id;
     private Long organisation;
     private AddressResource address;
-    private AddressType addressType;
+    private AddressTypeResource addressType;
 
-    public OrganisationAddressResource(OrganisationResource organisation, AddressResource address, AddressType addressType) {
+    public OrganisationAddressResource(OrganisationResource organisation, AddressResource address, AddressTypeResource addressType) {
         this.organisation = organisation.getId();
         this.address = address;
         this.addressType = addressType;
@@ -32,11 +32,11 @@ public class OrganisationAddressResource {
         this.address = address;
     }
 
-    public AddressType getAddressType() {
+    public AddressTypeResource getAddressType() {
         return addressType;
     }
 
-    public void setAddressType(AddressType addressType) {
+    public void setAddressType(AddressTypeResource addressType) {
         this.addressType = addressType;
     }
 

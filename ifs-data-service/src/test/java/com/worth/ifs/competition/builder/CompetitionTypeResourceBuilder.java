@@ -1,14 +1,14 @@
 package com.worth.ifs.competition.builder;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 public class CompetitionTypeResourceBuilder extends BaseBuilder<CompetitionTypeResource, CompetitionTypeResourceBuilder> {
 
@@ -40,5 +40,9 @@ public class CompetitionTypeResourceBuilder extends BaseBuilder<CompetitionTypeR
 
     public CompetitionTypeResourceBuilder withStateAid(Boolean... stateAid) {
         return withArray((aid, object) -> setField("stateAid", aid, object), stateAid);
+    }
+
+    public CompetitionTypeResourceBuilder withCompetitions(List<Long> competitions) {
+        return with(object -> object.setCompetitions(competitions));
     }
 }

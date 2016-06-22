@@ -130,6 +130,11 @@ public class Competition {
     @Transient
     private Set<Category> researchCategories;
 
+    private String activityCode;
+    private String innovateBudget;
+    private String coFunders;
+    private String coFundersBudget;
+
     private boolean multiStream;
     @Enumerated(EnumType.STRING)
     private CollaborationLevel collaborationLevel;
@@ -451,6 +456,37 @@ public class Competition {
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
 		return sectionSetupStatus;
 	}
-    
+
+    public String getActivityCode() {
+        return activityCode;
+    }
+
+    public void setActivityCode(String activityCode) {
+        this.activityCode = activityCode;
+    }
+
+    public String getInnovateBudget() {
+        return innovateBudget;
+    }
+
+    public void setInnovateBudget(String innovateBudget) {
+        this.innovateBudget = innovateBudget;
+    }
+
+    public String getCoFunders() {
+        return coFunders;
+    }
+
+    public void setCoFunders(String coFunders) {
+        this.coFunders = coFunders;
+    }
+
+    public String getCoFundersBudget() {
+        return coFundersBudget;
+    }
+
+    public void setCoFundersBudget(String coFundersBudget) {
+        this.coFundersBudget = coFundersBudget;
+    }
 }
 

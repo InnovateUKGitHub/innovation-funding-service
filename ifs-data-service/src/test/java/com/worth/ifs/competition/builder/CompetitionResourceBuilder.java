@@ -130,6 +130,22 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((leadApplicantType, object) -> setField("leadApplicantType", leadApplicantType, object), leadApplicantTypes);
     }
 
+    public CompetitionResourceBuilder withActivityCode(String... activityCodes) {
+        return withArray((activityCode, object) -> setField("activityCode", activityCode, object), activityCodes);
+    }
+
+    public CompetitionResourceBuilder withInnovateBudget(String... innovateBudgets) {
+        return withArray((innovateBudget, object) -> setField("innovateBudget", innovateBudget, object), innovateBudgets);
+    }
+
+    public CompetitionResourceBuilder withCoFunders(String... coFundersMultiple) {
+        return withArray((coFunders, object) -> setField("coFunders", coFunders, object), coFundersMultiple);
+    }
+
+    public CompetitionResourceBuilder withCoFundersBudget(String... coFundersBudgets) {
+        return withArray((coFundersBudget, object) -> setField("coFundersBudget", coFundersBudget, object), coFundersBudgets);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

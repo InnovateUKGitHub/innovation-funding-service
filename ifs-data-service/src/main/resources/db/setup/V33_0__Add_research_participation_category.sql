@@ -1,5 +1,5 @@
 
 -- ADD RESEARCH_CATEGORY
-INSERT INTO `category` (id, `name`, `type`) VALUES (14, 'Technical feasibility', 'RESEARCH_CATEGORY');
-INSERT INTO `category` (id, `name`, `type`) VALUES (15, 'Industrial research', 'RESEARCH_CATEGORY');
-INSERT INTO `category` (id, `name`, `type`) VALUES (16, 'Experimental development', 'RESEARCH_CATEGORY');
+INSERT INTO `category` (`name`, `type`) VALUES ('Technical feasibility', 'RESEARCH_CATEGORY');
+INSERT INTO `category` (`name`, `type`) VALUES ('Industrial research', 'RESEARCH_CATEGORY');
+INSERT INTO `category` (`name`, `type`) VALUES ('Experimental development', 'RESEARCH_CATEGORY');

@@ -1,13 +1,12 @@
 package com.worth.ifs.application.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.springframework.stereotype.Service;
 
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Interface for CRUD operations on {@link CompetitionResource} related data.
@@ -19,6 +18,8 @@ public interface CompetitionService {
     CompetitionResource create();
 
     List<CompetitionResource> getAllCompetitions();
+
+    List<CompetitionResource> getAllCompetitionsNotInSetup();
 
     List<CompetitionSetupSection> getCompletedCompetitionSetupSectionStatusesByCompetitionId(Long competitionId);
 

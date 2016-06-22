@@ -1,21 +1,15 @@
 package com.worth.ifs.competition.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * CompetitionController exposes Competition data and operations through a REST API.
@@ -59,11 +53,6 @@ public class CompetitionController {
     @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
     public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
-    }
-
-    @RequestMapping("/types/findAll")
-    public RestResult<List<CompetitionTypeResource>> findAllTypes() {
-        return competitionSetupService.findAllTypes().toGetResponse();
     }
 
     @RequestMapping("/sectionStatus/complete/{competitionId}/{section}")
