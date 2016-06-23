@@ -14,7 +14,11 @@ import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.assessment.mapper.AssessmentFeedbackMapper;
+import com.worth.ifs.assessment.mapper.AssessmentMapper;
+import com.worth.ifs.assessment.repository.AssessmentFeedbackRepository;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.transactional.AssessmentFeedbackService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
@@ -78,6 +82,15 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock    
     protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
+
+    @Mock
+    protected AssessmentMapper assessmentMapperMock;
+
+    @Mock
+    protected AssessmentFeedbackMapper assessmentFeedbackMapperMock;
+
+    @Mock
+    protected AssessmentFeedbackService assessmentFeedbackServiceMock;
 
     @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
@@ -159,6 +172,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    protected AssessmentFeedbackRepository assessmentFeedbackRepositoryMock;
 
     @Mock
     protected RegistrationService registrationServiceMock;

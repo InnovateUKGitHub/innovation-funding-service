@@ -26,13 +26,13 @@ CREATE TABLE `assessment_feedback` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `feedback` longtext NOT NULL,
   `score` int(11) NOT NULL,
-  `process_role_id` bigint(20) NOT NULL,
+  `assessment_id` bigint(20) NOT NULL,
   `question_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_e2a0q6tcyk1ask1cp8w9sfif2` (`process_role_id`),
+  KEY `FK_ngpw7vdkae8sdg1g6dce6pa12` (`assessment_id`),
   KEY `FK_77fjdtwvg49942188ko6wpbnk` (`question_id`),
   CONSTRAINT `FK_77fjdtwvg49942188ko6wpbnk` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`),
-  CONSTRAINT `FK_e2a0q6tcyk1ask1cp8w9sfif2` FOREIGN KEY (`process_role_id`) REFERENCES `process_role` (`id`)
+  CONSTRAINT `FK_ngpw7vdkae8sdg1g6dce6pa12` FOREIGN KEY (`assessment_id`) REFERENCES `process` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -45,4 +45,4 @@ CREATE TABLE `assessment_feedback` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-21 15:05:24
+-- Dump completed on 2016-06-23 11:30:28

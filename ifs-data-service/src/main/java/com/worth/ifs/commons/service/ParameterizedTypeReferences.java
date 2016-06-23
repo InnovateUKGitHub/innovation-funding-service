@@ -60,7 +60,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AssessmentFeedbackResource>> assessmentFeedbackReosourceListType() {
+    public static ParameterizedTypeReference<List<AssessmentFeedbackResource>> assessmentFeedbackResourceListType() {
         return new ParameterizedTypeReference<List<AssessmentFeedbackResource>>() {};
     }
 
