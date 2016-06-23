@@ -29,6 +29,7 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
+import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.*;
@@ -136,6 +137,8 @@ public class BaseUnitTest {
     public OrganisationRestService organisationRestService;
     @Mock
     public OrganisationTypeRestService organisationTypeRestService;
+    @Mock
+    public OrganisationAddressRestService organisationAddressRestService;
     @Mock
     public SectionService sectionService;
     @Mock
