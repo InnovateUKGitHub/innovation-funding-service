@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to competition dashboard'}, ${'/prototypes/871-assessor-comp-dashboard'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Assessment overview'})" th:remove="tag" />
+
+	<form action="#" method="post" class="application-overview">
+
+		<h2 class="heading-medium no-margin-bottom">Details</h2>
+		<p class="form-hint">These sections of the application should be read for background information about the project - but do not require scoring.</p>
+		<ul class="list-overview">
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-details">Application details</a></h3>
+					</div>
+					<div class="column-third">
+						<p class="form-hint no-margin">No score required</p>
+					</div>
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-summary">Project summary</a></h3>
+					</div>
+					<div class="column-third">
+						<p class="form-hint no-margin">No score required</p>
+					</div>
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-description">Public description</a></h3>
+					</div>
+					<div class="column-third">
+						<p class="form-hint no-margin">No score required</p>
+					</div>
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question-scope">Scope</a></h3>
+					</div>
+					<div class="column-third">
+				        In scope? <strong>Yes</strong>
+				    </div>
+				</div>
+			</li>
+		</ul>
+		
+		<h2 class="heading-medium no-margin-bottom">Application questions</h2>
+		<p class="form-hint">Each of these questions should be scored out of 10 and written feedback provided.</p>
+		<ul class="list-overview">
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question1">1. Business opportunity</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question2">2. Potential market</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=7" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question3">3. Project exploitation</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question4">4. Economic benefit</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question5">5. Technical approach</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question6">6. Innovation</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status marked-as-complete">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question7">7. Risks</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=5" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question8">8. Project team</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question9">9. Funding</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+				</div>
+			</li>
+			<li class="section-status">
+				<div class="grid-row">
+					<div class="column-two-thirds">
+						<h3 class="heading-small"><a href="/prototypes/984-assessor-question10">10. Adding value</a></h3>
+					</div>
+					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+				</div>
+			</li>
+		</ul>
+
+	</form>
+
+
+	<h2 class="heading-medium">Appendices</h2>
+
+	<div class="form-group download">
+        <h3 class="heading-small no-margin">View project management appendix:</h3>
+        <a href="#">Project-plan.pdf (161.96 KB)</a>
+    </div>
+
+    <div class="form-group download">
+        <h3 class="heading-small no-margin">View innovation appendix:</h3>
+        <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
+    </div>
+
+    <div class="form-group download">
+        <h3 class="heading-small no-margin">View project team appendix:</h3>
+        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
+    </div>
+
+	<div class="alignright-button">
+        <a role="button" tabindex="0" class="button large" href="/prototypes/984-assessor-application-summary">Review assessment</a>
+    </div>
+
+	<details>
+		<summary><span class="summary">Unable to assess this application?</span></summary>
+		<div class="panel-indent">
+			<p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
+			<a role="button" tabindex="0" href="#" data-js-modal="modal-reject-assessment">Reject this application</a>
+		</div>
+	</details>
+	
+	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
