@@ -11,8 +11,6 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -63,7 +61,6 @@ import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static com.worth.ifs.application.builder.ResponseResourceBuilder.newResponseResource;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -108,8 +105,6 @@ public class BaseUnitTest {
     @Mock
     public UserAuthenticationService userAuthenticationService;
     @Mock
-    public ResponseService responseService;
-    @Mock
     public FormInputResponseService formInputResponseService;
     @Mock
     public FormInputService formInputService;
@@ -119,8 +114,6 @@ public class BaseUnitTest {
     public ApplicationStatusRestService applicationStatusService;
     @Mock
     public CompetitionsRestService competitionRestService;
-    @Mock
-    public AssessmentRestService assessmentRestService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
@@ -188,11 +181,9 @@ public class BaseUnitTest {
     public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
-    public List<AssessmentResource> assessments;
     // TODO BO - remove assessorProcessRolesTemporary when Assessment is converted to DTO
     public List<ProcessRoleResource> assessorProcessRoleResources;
     public List<ProcessRoleResource> applicantRoles;
-    public List<AssessmentResource> submittedAssessments;
     public ApplicationFinanceResource applicationFinanceResource;
     public ApplicationStatusResource submittedApplicationStatus;
     public ApplicationStatusResource createdApplicationStatus;
@@ -612,19 +603,6 @@ public class BaseUnitTest {
 
     public void setupApplicationResponses(){
         ApplicationResource application = applications.get(0);
-        ApplicationResource app = newApplicationResource().build();
-
-        Long userApplicationRoleId = loggedInUser.getProcessRoles().get(0);
-        ProcessRoleResource userApplicationRole = processRoles.stream().filter(p -> p.getId().equals(userApplicationRoleId)).findFirst().get();
-        ResponseResource responseResource = newResponseResource().withId(1L).withUpdatedBy(userApplicationRole.getId()).withQuestion(newQuestionResource().withId(20L)).withApplication(app).build();
-        ResponseResource responseResource2 = newResponseResource().withId(2L).withUpdatedBy(userApplicationRole.getId()).withQuestion(newQuestionResource().withId(21L)).withApplication(app).build();
-
-        List<ResponseResource> responseResources = asList(responseResource, responseResource2);
-
-        questionResources.get(20L).setResponses(Arrays.asList(responseResource.getId()));
-        questionResources.get(21L).setResponses(Arrays.asList(responseResource2.getId()));
-
-        when(responseService.getByApplication(application.getId())).thenReturn(responseResources);
 
         when(formInputService.getOne(anyLong())).thenAnswer(invocation -> {
             Object[] args = invocation.getArguments();

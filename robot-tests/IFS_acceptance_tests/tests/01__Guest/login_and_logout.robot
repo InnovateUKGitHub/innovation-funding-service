@@ -48,7 +48,8 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor    HappyPath
+    [Tags]    Assessor    HappyPath     Pending
+    # Pending until Assessor Journey is completed
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]

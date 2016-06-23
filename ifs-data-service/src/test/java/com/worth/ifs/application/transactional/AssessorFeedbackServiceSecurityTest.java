@@ -2,14 +2,12 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
 import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserRoleType;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
@@ -216,16 +214,6 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     public static class TestAssessorFeedbackService implements AssessorFeedbackService {
-
-        @Override
-        public ServiceResult<AssessorFeedbackResource> findOne(Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorFeedbackResource> findByAssessorId(Long assessorId) {
-            return null;
-        }
 
         @Override
         public ServiceResult<FileEntryResource> createAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
