@@ -1,8 +1,15 @@
 package com.worth.ifs.application.service;
 
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.application.service.Futures.call;
-import static java.util.stream.Collectors.toMap;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +18,13 @@ import java.util.Map.Entry;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.service.CompetitionsRestService;
+import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.application.service.Futures.call;
+import static java.util.stream.Collectors.toMap;
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
  */
-// TODO DW - INFUND-1555 - get service calls to return rest responses
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 
@@ -32,6 +33,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Autowired
     private CompetitionsRestService competitionsRestService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     @Override
     public ApplicationResource getById(Long applicationId) {
@@ -168,5 +175,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return applicationRestService.findByProcessRoleId(id);
     }
+
+    @Override
+    public OrganisationResource getLeadOrganisation(Long applicationId) {
+        ApplicationResource application = getById(applicationId);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
+    }
+
+
 
 }

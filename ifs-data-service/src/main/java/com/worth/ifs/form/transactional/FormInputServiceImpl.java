@@ -12,8 +12,8 @@ import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputResponseCommand;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -92,8 +92,8 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         String htmlUnescapedValue = formInputResponseCommand.getValue();
         long userId = formInputResponseCommand.getUserId();
         ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(userId, applicationId);
-        return find(user(userId), application(applicationId), formInput(formInputId)).
-                andOnSuccess((user, application, formInput) ->
+        return find(user(userId), formInput(formInputId), openApplication(applicationId)).
+                andOnSuccess((user, formInput, application) ->
                                 getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
                                     if (!response.getValue().equals(htmlUnescapedValue)) {
                                         response.setUpdateDate(LocalDateTime.now());

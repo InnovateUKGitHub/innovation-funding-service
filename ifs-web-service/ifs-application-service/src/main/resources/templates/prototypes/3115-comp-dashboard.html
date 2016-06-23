@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="comp-dashboard">
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div class="grid-row">
+		<div class="column-half">
+			<h1 class="heading-large">Competitions</h1>
+		</div>
+
+		<div class="column-half">
+			<div class="alignright extra-margin">
+				<a href="/prototypes/2469-comp-setup?section=essential&#38;compPaf=1234" class="button button-large">Create competition</a>
+			</div>
+		</div>
+	</div>
+
+	<section>
+		
+		<h2 class="heading-medium">Open (5)</h2>
+		
+		<ul class="list-overview">
+		<li>
+			<h3 class="heading-small">Solving problems with data</h3>
+			<p>Infrastructure</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Connected digital additive manufacturing</h3>
+			<p>Advanced therapies</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Portable renewable energy generation</h3>
+			<p>Nuclear</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Managing energy on marine vessels</h3>
+			<p>Precision medicine</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Energy catalyst</h3>
+			<p>Electronics, sensors and photonics</p>
+			<p>132 applications</p>
+		</li>
+	</ul>
+
+	</section>
+
+
+
+	<section>
+		
+		<h2 class="heading-medium">Closed (5)</h2>
+		
+		<ul class="list-overview">
+		<li>
+			<h3 class="heading-small">Solving problems with data</h3>
+			<p>Infrastructure</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Connected digital additive manufacturing</h3>
+			<p>Advanced therapies</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Portable renewable energy generation</h3>
+			<p>Nuclear</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Managing energy on marine vessels</h3>
+			<p>Precision medicine</p>
+			<p>132 applications</p>
+		</li>
+		<li>
+			<h3 class="heading-small">Energy catalyst</h3>
+			<p>Electronics, sensors and photonics</p>
+			<p>132 applications</p>
+		</li>
+	</ul>
+
+	</section>
+
+	
+	<div th:if="${param.filterStatus == null}" th:remove="tag">
+
+		<ul class="pagination">
+		    <li class="next">
+		        <a href="#" rel="next" title="Navigate to next part">
+		            <span class="pagination-label">Next</span>
+		            <span class="pagination-part-title">2 of 2</span>
+		        </a>
+		    </li>
+		</ul>
+
+	</div>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

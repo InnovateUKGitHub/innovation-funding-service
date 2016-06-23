@@ -1,45 +1,13 @@
-/*
+/* SG
 # IFS/Collapsible
-Uses javascript to make it expand, when there is no javascript it will just show an header with a list (doesn't work in styleguide).
+The collapsible element will show a normal header when there is no javascript, when there is a javascript it will be toggleable 
 
 ```
 <div class="collapsible">
-    <h2 class="open">Application details</h2>
-    <div>
-        <ul>
-            <li class="section">
-                <a tabindex="0" href="#">Application details</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Project Summary</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Public Description</a>
-            </li>
-        </ul>
-    </div>
-    <h2>Another Section 2</h2>
-    <div>
-        <ul>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-        </ul>
-    </div>
-    <h2>Another Section 3</h2>
-    <div>
-        <ul>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-            <li class="section">
-                <a tabindex="0" href="#">Another subsection</a>
-            </li>
-        </ul>
-    </div>
+    <h2 class="open">Collapsible header</h2>
+    <div>content goes here</div>
+		<h2 class="open">Collapsible header 2</h2>
+		<div>content goes here 2</div>
 </div>
 ```
 */
