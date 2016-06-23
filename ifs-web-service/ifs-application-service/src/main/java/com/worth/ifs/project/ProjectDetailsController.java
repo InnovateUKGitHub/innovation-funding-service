@@ -260,9 +260,7 @@ public class ProjectDetailsController {
 			ApplicationResource applicationResource) {
 
 		ProjectResource projectResource = projectService.getById(projectId);
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<ProjectUserResource> leadPartners = simpleFilter(projectUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
+        List<ProjectUserResource> leadPartners = getLeadPartners(projectId);
 
         model.addAttribute("allUsers", leadPartners);
 		model.addAttribute("project", projectResource);
@@ -270,16 +268,18 @@ public class ProjectDetailsController {
 		model.addAttribute(FORM_ATTR_NAME, form);
 	}
 
+    private List<ProjectUserResource> getLeadPartners(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        return simpleFilter(projectUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
+    }
+
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-
-        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
-            return redirectToProjectDetails(projectId);
-        }
 
         model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
         LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
@@ -492,13 +492,7 @@ public class ProjectDetailsController {
     }
 
     private boolean userIsLeadPartner(Long projectId, Long userId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        return !simpleFilter(projectUsers, projectUser -> userHasLeadPartnerRole(userId, leadOrganisation.getId(), projectUser)).isEmpty();
-    }
-
-    private boolean userHasLeadPartnerRole(Long userId, Long leadOrganisationId, ProjectUserResource projectUser) {
-        return projectUser.getUser().equals(userId) && projectUser.getOrganisation().equals(leadOrganisationId) && PARTNER.getName().equals(projectUser.getRoleName());
+        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }
 
     private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {
