@@ -43,8 +43,4 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
         return getWithRestResult(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, questionStatusResourceListType());
     }
 
-    @Override
-    public RestResult<List<QuestionStatusResource>> getByIds(List<Long> ids){
-        return getWithRestResult(questionStatusRestURL + "/getByIds", questionStatusResourceListType());
-    }
 }

@@ -81,16 +81,4 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         assertEquals(questionStatuses, returnedQuestionStatuses);
     }
 
-    @Test
-    public void getByIdsTest() {
-        List<Long> ids = asList(1L, 2L);
-
-        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource().build(3);
-        setupGetWithRestResultExpectations(questionStatusRestURL + "/getByIds", questionStatusResourceListType(), questionStatuses);
-
-        List<QuestionStatusResource> returnedQuestionStatuses = service.getByIds(ids).getSuccessObject();
-        assertEquals(questionStatuses, returnedQuestionStatuses);
-    }
-
-
 }
