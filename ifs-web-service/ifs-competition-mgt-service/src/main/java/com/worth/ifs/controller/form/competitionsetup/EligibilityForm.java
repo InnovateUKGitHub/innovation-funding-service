@@ -4,21 +4,22 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Form for the eligibility competition setup section.
  */
 public class EligibilityForm extends CompetitionSetupForm {
-	@NotNull(message = "Please select a stream option")
+	@NotBlank(message = "Please select a stream option")
 	private String multipleStream;
 	@NotEmpty(message = "Please select at least one research category")
 	private Set<Long> researchCategoryId;
-	@NotNull(message = "Please select a competition executive")
+	@NotBlank(message = "Please select a collaboration level")
 	private String singleOrCollaborative;
-	@NotNull(message = "Please select a lead applicant type")
+	@NotBlank(message = "Please select a lead applicant type")
 	private String leadApplicantType;
-	@NotNull(message = "Please select a research participation amount")
+	@NotNull(message = "Please select a research participation percentage")
 	private Integer researchParticipationAmountId;
 	
 	public String getMultipleStream() {

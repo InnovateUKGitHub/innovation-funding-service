@@ -373,18 +373,19 @@
             
             <div th:class="${#fields.hasErrors('multipleStream')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
-	                <span class="form-label-bold">Stream</span>
-	                <p>Does the competition have multiple streams?</p>
-	                <span th:if="${#fields.hasErrors('multipleStream')}" th:remove="tag">
-	                      <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
-	                </span>
-                
+                    <legend>
+		                <span class="form-label-bold">Stream</span>
+		                <span class="hint">Does the competition have multiple streams?</span>
+		                <span th:if="${#fields.hasErrors('multipleStream')}" th:remove="tag">
+		                      <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
+		                </span>
+                    </legend>
 	                <label class="block-label" for="comp-stream-yes">
-	                    <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}"></input>
+	                    <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
 	                Yes
 	                </label>
 	                <label class="block-label" for="comp-stream-no">
-	                    <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}"></input>
+	                    <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
 	                No
 	                </label>
                 </fieldset>
@@ -392,12 +393,15 @@
             
             <div th:class="${#fields.hasErrors('researchCategoryId')}? 'form-group error':'form-group'">
 		        <fieldset class="inline">
-		            <legend class="form-label-bold">Research categories</legend>
-		            <span th:if="${#fields.hasErrors('researchCategoryId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}" />
-                    </span>
+		            <legend>
+			            <span class="form-label-bold">Research categories</span>
+			            <span th:if="${#fields.hasErrors('researchCategoryId')}" th:remove="tag">
+	                          <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}" />
+	                    </span>
+	                </legend>
+	                
 		            <label class="block-label selected" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
-		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"></input>
+		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" ></input>
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
 		        </fieldset>
@@ -405,42 +409,48 @@
             
             <div th:class="${#fields.hasErrors('singleOrCollaborative')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
-	                <span class="form-label-bold">Single or collaborative?</span>
-                    <p>Is this a single or collaborative project?</p>
-                    <span th:if="${#fields.hasErrors('singleOrCollaborative')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}" />
-                    </span>
+	                <legend>
+		                <span class="form-label-bold">Single or collaborative?</span>
+	                    <span class="hint">Is this a single or collaborative project?</span>
+	                    <span th:if="${#fields.hasErrors('singleOrCollaborative')}" th:remove="tag">
+	                          <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}" />
+	                    </span>
+	                </legend>
+	                   
 	                <label th:each="collaborationLevel : ${collaborationLevels}" class="block-label" th:for="${'single-or-collaborative-' + collaborationLevel.code}">
-	                    <input th:id="${'single-or-collaborative-' + collaborationLevel.code}" name="singleOrCollaborative" th:value="${collaborationLevel.code}" type="radio" th:checked="${competitionSetupForm.singleOrCollaborative == collaborationLevel.code}"></input>
+	                    <input th:id="${'single-or-collaborative-' + collaborationLevel.code}" name="singleOrCollaborative" th:value="${collaborationLevel.code}" type="radio" th:checked="${competitionSetupForm.singleOrCollaborative == collaborationLevel.code}" required="required" data-required-errormessage="Please select a collaboration level"></input>
 	                    <span th:text="${collaborationLevel.name}" th:remove="tag" />
 	                </label>
 	            </fieldset>
             </div>
             
             <div th:class="${#fields.hasErrors('leadApplicantType')}? 'form-group error':'form-group'">
-                <fieldset class="inline">
-	                <span class="form-label-bold">Lead applicant</span>
-                    <p>Select the Lead Applicant type required</p>
-                    <span th:if="${#fields.hasErrors('leadApplicantType')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantType')}" th:text="${err}" />
-                    </span>
-	                <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label" th:for="${'lead-applicant-type-' + leadApplicantType.code}">
-	                    <input th:id="${'lead-applicant-type-' + leadApplicantType.code}" name="leadApplicantType" th:value="${leadApplicantType.code}" type="radio" th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}"></input>
-	                    <span th:text="${leadApplicantType.name}" th:remove="tag" />
-	                </label>
-                </fieldset>
+               <fieldset class="inline">
+					<legend>
+					   <span class="form-label-bold">Lead applicant</span>
+					   <span class="hint">Select the Lead Applicant type required</span>
+					   <span th:if="${#fields.hasErrors('leadApplicantType')}" th:remove="tag">
+			             <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantType')}" th:text="${err}" />
+					   </span>
+					</legend>
+					
+					 <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label" th:for="${'lead-applicant-type-' + leadApplicantType.code}">
+					    <input th:id="${'lead-applicant-type-' + leadApplicantType.code}" name="leadApplicantType" th:value="${leadApplicantType.code}" type="radio" th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}" required="required" data-required-errormessage="Please select a lead applicant type" />
+					    <span th:text="${leadApplicantType.name}" th:remove="tag" />
+					 </label>
+				</fieldset>
             </div>
             
             <div th:class="${#fields.hasErrors('researchParticipationAmountId')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
-	                <label class="form-label" for="researchParticipation">
+	                <legend>
 	                    <span class="form-label-bold">Research participation</span>
-	                    <p>This indicates the maximum level of Research participation alllowed</p>
+	                    <span class="hint">This indicates the maximum level of Research participation allowed</span>
 	                    <span th:if="${#fields.hasErrors('researchParticipationAmountId')}" th:remove="tag">
 	                          <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}" />
 	                    </span>
-	                </label>
-	                <select class="form-control width-large" name="researchParticipationAmountId" id="researchParticipation" required="required" data-required-errormessage="Please select a research participation percentage">
+	                </legend>
+	                <select class="form-control width-large" name="researchParticipationAmountId" id="researchParticipation" required="required" data-required-errormessage="Please select a research participation percentage" >
 	                    <option th:each="researchParticipationAmount : ${researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
 	                </select>
                 </fieldset>
