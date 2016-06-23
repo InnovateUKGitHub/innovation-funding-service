@@ -1,15 +1,21 @@
 package com.worth.ifs.assessment.service;
 
+import com.worth.ifs.BaseServiceUnitTest;
 import org.junit.Before;
+import org.mockito.Mock;
 
-import static org.junit.Assert.*;
+public class AssessmentFeedbackServiceImplTest extends BaseServiceUnitTest<AssessmentFeedbackService> {
 
+    @Mock
+    private AssessmentFeedbackRestService assessmentFeedbackRestService;
 
-public class AssessmentFeedbackServiceImplTest {
-
-    @Before
-    public void setUp() throws Exception {
-
+    @Override
+    protected AssessmentFeedbackService supplyServiceUnderTest() {
+        return new AssessmentFeedbackServiceImpl();
     }
 
+    @Before
+    public void setUp() {
+        super.setUp();
+    }
 }
