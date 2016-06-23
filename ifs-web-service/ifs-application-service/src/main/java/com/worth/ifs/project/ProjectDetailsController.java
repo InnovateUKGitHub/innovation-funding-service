@@ -442,7 +442,7 @@ public class ProjectDetailsController {
     }
 
     @RequestMapping(value = "/{projectId}/details/submit", method = RequestMethod.POST)
-    public String manualAddress(@PathVariable("projectId") Long projectId, Model model) {
+    public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
         ServiceResult<Void> serviceResult = projectService.setApplicationDetailsSubmitted(projectId);
         return redirectToProjectDetails(projectId);
     }

@@ -128,7 +128,9 @@ public class AddressResource {
 
         AddressResource that = (AddressResource) o;
 
-        if (!id.equals(that.id)) return false;
+        if(id != null) {
+            if (!id.equals(that.id)) return false;
+        }
         if (addressLine1 != null ? !addressLine1.equals(that.addressLine1) : that.addressLine1 != null) return false;
         if (addressLine2 != null ? !addressLine2.equals(that.addressLine2) : that.addressLine2 != null) return false;
         if (addressLine3 != null ? !addressLine3.equals(that.addressLine3) : that.addressLine3 != null) return false;

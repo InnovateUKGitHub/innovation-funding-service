@@ -27,7 +27,7 @@ import java.util.Map;
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -83,11 +83,12 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
-        when(projectService.isSubmitAllowed(project.getId())).thenReturn(serviceSuccess(true));
+        when(projectService.isSubmitAllowed(project.getId())).thenReturn(serviceSuccess(false));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details", project.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
+                .andExpect(model().attribute("isSubmissionAllowed", false))
                 .andReturn();
 
         ProjectDetailsViewModel viewModel = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
@@ -295,4 +296,63 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectDetailsAddressViewModelForm form = (ProjectDetailsAddressViewModelForm) model.get(ProjectDetailsController.FORM_ATTR_NAME);
         assertEquals(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()), form.getAddressType());
     }
-}
+
+    @Test
+    public void testUpdateProjectAddressToBeSameAsRegistered() throws Exception {
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        AddressResource addressResource = newAddressResource().withOrganisationList(Collections.singletonList(leadOrganisation.getId())).build();
+        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
+        leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(projectService.updateAddress(leadOrganisation.getId(), project.getId(), REGISTERED, addressResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("addressType", REGISTERED.name())).
+                andExpect(status().is3xxRedirection()).
+                andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
+                andReturn();
+    }
+
+    @Test
+    public void testUpdateProjectAddressAddNewManually() throws Exception {
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        AddressResource addressResource = newAddressResource().withPostcode("S1 2LB").withAddressLine1("Address Line 1").withTown("Sheffield").build();
+        addressResource.setId(null);
+        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
+        leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(projectService.updateAddress(leadOrganisation.getId(), project.getId(), PROJECT, addressResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("addressType", ADD_NEW.name())
+                .param("manualEntry", "true")
+                .param("addressForm.postcodeInput", "S101LB")
+                .param("addressForm.selectedPostcode.addressLine1", addressResource.getAddressLine1())
+                .param("addressForm.selectedPostcode.town", addressResource.getTown())
+                .param("addressForm.selectedPostcode.postcode", addressResource.getPostcode()))
+                .andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
+                andReturn();
+    }
+
+    @Test
+    public void testSubmitProjectDetails() throws Exception {
+        when(projectService.setApplicationDetailsSubmitted(1L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/details/submit", 1L)).
+        andExpect(redirectedUrl("/project/1/details"));
+    }
+ }
