@@ -13,7 +13,6 @@ public interface QuestionStatusRestService {
     RestResult<List<QuestionStatusResource>> findByQuestionAndApplicationAndOrganisation(final Long questionId, final Long applicationId, final Long organisationId);
     RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(final Long applicationId, final Long organisationId);
     RestResult<QuestionStatusResource> findQuestionStatusById(final Long id);
-    RestResult<List<QuestionStatusResource>> getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
     RestResult<List<QuestionStatusResource>> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId);
     RestResult<List<QuestionStatusResource>> getByIds(final List<Long> ids);
 }
