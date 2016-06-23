@@ -10,7 +10,10 @@ import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.*;
-import com.worth.ifs.application.transactional.*;
+import com.worth.ifs.application.transactional.ApplicationFundingService;
+import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.AssessorFeedbackService;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.category.mapper.CategoryLinkMapper;
@@ -68,9 +71,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AlertMapper alertMapperMock;
 
     @Mock
-    protected ResponseService responseServiceMock;
-
-    @Mock
     protected AddressRepository addressRepositoryMock;
 
     @Mock
@@ -102,9 +102,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
-
-    @Mock
-    protected ResponseRepository responseRepositoryMock;
 
     @Mock
     protected CompetitionRepository competitionRepositoryMock;

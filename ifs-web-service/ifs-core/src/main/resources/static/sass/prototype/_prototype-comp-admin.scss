@@ -407,9 +407,20 @@ table{
 .comp-dashboard{
 	
 	.list-overview{
+
+		display: table;
+		width: 100%;
+
 		li {
 	    	display: table-row; 
 	    	width: 100%;
+			
+			&:first-child{
+				h3, p{
+					border-top: 1px solid $border-colour;
+				}
+			}
+
 		}
 
 		li h3,
@@ -418,6 +429,8 @@ table{
 	    	padding: 0.5em 0;
 	        border-bottom: 1px solid $border-colour;
 		}
+
+
 
 		li h3{
 		    width: 50%;
