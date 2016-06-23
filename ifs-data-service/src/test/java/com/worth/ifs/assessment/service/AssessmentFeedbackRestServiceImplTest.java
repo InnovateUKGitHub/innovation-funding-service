@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import org.junit.Before;
 
-
 public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTest<AssessmentFeedbackRestServiceImpl> {
 
     private static final String assessmentFeedbackRestURL = "/assessment-feedback";
