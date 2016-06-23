@@ -35,6 +35,7 @@ public class PasswordPolicyValidator {
     static final String PASSWORD_MUST_NOT_CONTAIN_FIRST_NAME = "PASSWORD_MUST_NOT_CONTAIN_FIRST_NAME";
     static final String PASSWORD_MUST_NOT_CONTAIN_LAST_NAME = "PASSWORD_MUST_NOT_CONTAIN_LAST_NAME";
     static final String PASSWORD_MUST_NOT_CONTAIN_FULL_NAME = "PASSWORD_MUST_NOT_CONTAIN_FULL_NAME";
+    static final String PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME = "PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME";
     static final String PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME = "PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME";
 
     @Autowired
@@ -111,9 +112,9 @@ public class PasswordPolicyValidator {
     @PostConstruct
     void postConstruct() {
 
-        ExclusionRule containsFirstName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_NAME, 4, true, user -> singletonList(user.getFirstName()));
-        ExclusionRule containsLastName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_LAST_NAME, 4, true, user -> singletonList(user.getLastName()));
-        ExclusionRule containsFullName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FULL_NAME, 5, true, user -> asList(user.getFirstName(), user.getLastName()));
+        ExclusionRule containsFirstName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, user -> singletonList(user.getFirstName()));
+        ExclusionRule containsLastName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, user -> singletonList(user.getLastName()));
+        ExclusionRule containsFullName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 5, true, user -> asList(user.getFirstName(), user.getLastName()));
         ExclusionRule containsOrganisationName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME, 4, false, user -> {
             List<Long> organisationIds = user.getOrganisations();
             List<Organisation> organisations = simpleMap(organisationIds, organisationRepository::findOne);
