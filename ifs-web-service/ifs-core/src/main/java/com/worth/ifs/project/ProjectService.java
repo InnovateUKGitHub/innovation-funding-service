@@ -23,7 +23,7 @@ public interface ProjectService {
 
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
-    void updateProjectManager(Long projectId, Long projectManagerUserId);
+    ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
 
     ServiceResult<List<ProjectResource>> findByUser(Long userId);
 

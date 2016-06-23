@@ -55,8 +55,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void updateProjectManager(Long projectId, Long projectManagerUserId) {
-        projectRestService.updateProjectManager(projectId, projectManagerUserId).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId) {
+        return projectRestService.updateProjectManager(projectId, projectManagerUserId).toServiceResult();
     }
 
     @Override
