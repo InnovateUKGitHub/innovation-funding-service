@@ -6,6 +6,7 @@ import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COM
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -94,6 +95,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private void saveCategories(CompetitionResource competitionResource) {
         saveInnovationArea(competitionResource);
         saveInnovationSector(competitionResource);
+        saveResearchCategories(competitionResource);
     }
 
     private void saveInnovationSector(CompetitionResource competitionResource) {
@@ -105,10 +107,19 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Long areaId = competitionResource.getInnovationArea();
         saveCategoryLink(competitionResource, areaId, CategoryType.INNOVATION_AREA);
     }
+    
+    private void saveResearchCategories(CompetitionResource competitionResource) {
+        Set<Long> researchCategories = competitionResource.getResearchCategories();
+        saveCategoryLinks(competitionResource, researchCategories, CategoryType.RESEARCH_CATEGORY);
+    }
 
-    private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
+	private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
         categoryLinkService.updateCategoryLink(categoryId, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
     }
+	
+    private void saveCategoryLinks(CompetitionResource competitionResource, Set<Long> categoryIds, CategoryType categoryType) {
+    	categoryLinkService.updateCategoryLinks(categoryIds, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
+	}
 
     @Override
     public ServiceResult<CompetitionResource> create() {

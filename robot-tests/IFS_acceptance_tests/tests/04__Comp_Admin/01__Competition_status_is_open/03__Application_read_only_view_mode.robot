@@ -46,6 +46,16 @@ Comp admin should not be able to edit the finances
     When the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should not see the element    link=your finances
 
+Comp admin should view the detailed finance section for every partner
+    [Documentation]    INFUND-2483
+    [Tags]     Pending
+    # Pending due to ongoing work
+    Given the user navigates to the page    ${Providing_Sustainable_Childcare_Application_Overview}
+    When the user clicks the button/link    jQuery=button:contains("Finances Summary")
+    Then the user should see the text in the page    Funding breakdown
+    And the finance summary calculations should be correct
+    And the finance Project cost breakdown calculations should be correct
+
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
@@ -57,7 +67,6 @@ the user can see the option to upload a file on the page
     The user navigates to the page    ${url}
     the user should see the text in the page        Upload
 
-
 the user can view this file without any errors
     the user clicks the button/link         link=testing.pdf(7 KB)
     the user should see the text in the page    ${valid_pdf_excerpt}
@@ -67,3 +76,19 @@ the user cannot see this file but gets a quarantined message
     the user clicks the button/link      link=test_quarantine.pdf(7 KB)
     the user should not see the text in the page    ${valid_pdf_excerpt}
     the user should see the text in the page        ${quarantine_warning}
+
+the finance summary calculations should be correct
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
+    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
+    Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
+
+the finance Project cost breakdown calculations should be correct
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £129,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(1)    £60,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £60,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
