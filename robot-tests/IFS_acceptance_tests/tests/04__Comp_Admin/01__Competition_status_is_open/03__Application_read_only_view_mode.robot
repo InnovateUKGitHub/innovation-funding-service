@@ -48,6 +48,8 @@ Comp admin should not be able to edit the finances
 
 Comp admin should view the detailed finance section for every partner
     [Documentation]    INFUND-2483
+    [Tags]     Pending
+    # Pending due to ongoing work
     Given the user navigates to the page    ${Providing_Sustainable_Childcare_Application_Overview}
     When the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should see the text in the page    Funding breakdown
