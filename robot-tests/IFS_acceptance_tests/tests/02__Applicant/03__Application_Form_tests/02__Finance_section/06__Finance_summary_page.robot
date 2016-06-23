@@ -87,7 +87,7 @@ Green check should show when the finances are complete
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     [Setup]    Log in create a new invite application invite academic collaborators and accept the invite
     Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
@@ -105,7 +105,7 @@ Alert shows If the academic research participation is too high
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]    HappyPath
-    Given guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When Lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are within the required range

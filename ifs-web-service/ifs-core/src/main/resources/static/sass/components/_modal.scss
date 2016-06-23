@@ -1,13 +1,24 @@
-/* 
+/* SG
 
 # IFS/Modal dialogs
 Controlled with javascript, an alternative standard html page should be used for non-js users
 ```
-<div class="modal-overlay js-close"></div>
-<div class="modal-reject-assessment" role="dialog" aria-hidden="true">
-	<button class="js-close close" aria-label="Close Popup">X</button>
-				<p>content</p>
-    </div>
+<a href="#fallback-pagewhen-no-js" data-js-modal="my-important-modal" class="button">Open dialog</a>
+
+<div class="modal-overlay js-close" aria-hidden="true"></div>
+<div class="my-important-modal" role="dialog" aria-hidden="true">
+	<button class="js-close close" type="button" aria-label="Close Popup">X</button>
+	<p>Content goes here</p>
+	<hr/>
+	<div class="grid-row">
+			<div class="column-half">
+					<button class="js-close button buttonlink large" type="button">Cancel</button>
+			</div>
+			<div class="column-half alignright">
+					<button class="button large">Submit</button>
+			</div>
+		</div>
+</div>
 ```
 
 */
@@ -50,12 +61,6 @@ Controlled with javascript, an alternative standard html page should be used for
 	&.js-close {
 		cursor:pointer;
 	}
-	&.hidden {
-		background:transparent;
-		height: 0;
-	}
-	@include transition-property(background);
-	@include transition-duration(300ms);
 	position:fixed;
 	width:100%;
 	height: 100%;

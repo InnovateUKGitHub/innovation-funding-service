@@ -42,6 +42,7 @@ public class RegistrationForm {
 
     @NotEmpty(message = "Please select a title")
     @Size(max = 5, message = "The title has a maximum input of 5 characters")
+    @Pattern(regexp = "^(Mr|Miss|Mrs|Ms|Dr)$", message = "Please select a valid title")
     private String title;
 
     @NotEmpty(message = "Please enter a first name")

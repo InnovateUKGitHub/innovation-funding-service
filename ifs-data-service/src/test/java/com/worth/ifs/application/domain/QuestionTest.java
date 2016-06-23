@@ -1,19 +1,12 @@
 package com.worth.ifs.application.domain;
 
-import java.util.List;
-
 import com.worth.ifs.competition.domain.Competition;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.worth.ifs.BuilderAmendFunctions.competition;
-import static com.worth.ifs.BuilderAmendFunctions.description;
-import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.BuilderAmendFunctions.name;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
-import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.Collections.singletonList;
@@ -29,9 +22,6 @@ public class QuestionTest {
     String name;
     String number;
     String description;
-    String guidanceQuestion;
-    String guidanceAnswer;
-    List<Response> responses;
     Integer priority;
 
     @Before
@@ -52,7 +42,6 @@ public class QuestionTest {
                 withPriority(priority).
                 build();
 
-        responses = newResponse().withQuestions(singletonList(question)).build(3);
         section = newSection().withQuestions(singletonList(question)).build();
     }
 
@@ -64,7 +53,6 @@ public class QuestionTest {
         Assert.assertEquals(question.getCompetition(), competition);
         Assert.assertEquals(question.getSection(), section);
         Assert.assertEquals(question.getDescription(), description);
-        Assert.assertEquals(question.getResponses(), responses);
         Assert.assertEquals(question.getPriority(), priority);
     }
 
@@ -103,5 +91,4 @@ public class QuestionTest {
     public void hashCodeShouldWorkCorrectly() throws Exception{
 
     }
-
 }

@@ -2,10 +2,8 @@
 
 # IFS/Assign-container
 
-The assign container normally a select, which gets transformed by javascript to a list of buttons
+The assign container is normally a `<select>`, which gets progressivly transformed by javascript to a list of buttons
 ```
-<p>Without javascript (what should be inside of the template)</p>
-
 <div class="assign-container">
     <div class="assign-button">
         <span>Assigned to:</span>

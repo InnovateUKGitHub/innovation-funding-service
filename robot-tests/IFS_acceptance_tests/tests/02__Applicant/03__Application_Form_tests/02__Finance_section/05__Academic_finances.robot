@@ -8,7 +8,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    the user closes the browser
-Force Tags        Finances
+Force Tags        Finances    Email
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -35,7 +35,7 @@ Academic finances should be editable when lead marks them as complete
 Academic finance validations
     [Documentation]    INFUND-2399
     [Tags]
-    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
     Mark academic finances as complete
@@ -77,7 +77,7 @@ Lead applicant can't upload a JeS file
 Academics upload
     [Documentation]    INFUND-917
     [Tags]
-    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
@@ -116,7 +116,7 @@ Lead applicant can view the file on the finances overview page
 Academic finances JeS link showing
     [Documentation]    INFUND-2402
     [Tags]    Academic
-    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     Then the user can see the link for more JeS details
 

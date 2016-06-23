@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * {@code CostCategory} interface is for defined for retrieving updating and calculating costs
- * of which a cost category consists.
+ * of which a cost Category consists.
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
 @JsonSubTypes({

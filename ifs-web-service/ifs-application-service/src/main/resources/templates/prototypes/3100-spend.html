@@ -380,33 +380,39 @@
 		</div>
 
 		<div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-			<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
+			
+			<div class="centralise">
 
-			<div class="extra-margin">
-				<a href="#" class="button button-secondary" data-js-modal="modal-allow-edits">Allow partner to edit</a>
-			</div>
+				<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
 
-			<div class="modal-allow-edits" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-		        <button class="js-close close" aria-label="Close Popup">X</button>
-		        <div>
+				<div class="extra-margin">
+					<a href="#" class="button button-secondary" data-js-modal="modal-allow-edits">Allow partner to edit</a>
+				</div>
 
-					<h2 class="heading-medium no-margin">Allow partner to edit</h2>
+				<div class="modal-allow-edits" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			        <button class="js-close close" aria-label="Close Popup">X</button>
+			        <div>
 
-					<p><strong>Biotech Corp's</strong> spend profile has been handed back to them, they have been informed of by email, if there are any specific changes required please contact them.</p>
+						<h2 class="heading-medium no-margin">Allow partner to edit</h2>
 
-					<hr />
+						<p><strong>Biotech Corp's</strong> spend profile has been handed back to them, they have been informed of by email, if there are any specific changes required please contact them.</p>
 
-	            	<div class="alignright-button">
-	            		<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>
-	            	</div>
+						<hr />
 
-		        </div>
-		    </div>
+		            	<div class="alignright-button">
+		            		<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>
+		            	</div>
+
+			        </div>
+			    </div>
+
+ 			</div>
+
 		</div>
 
 		<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
 
-			<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'Submitted'}">
+			<div class="extra-margin centralise" th:unless="${param.status != null and param.status[0] == 'Submitted'}">
 				<a href="#" class="button button-large" data-js-modal="modal-submit-spend">Submit project spend profile</a>
 			</div>
 

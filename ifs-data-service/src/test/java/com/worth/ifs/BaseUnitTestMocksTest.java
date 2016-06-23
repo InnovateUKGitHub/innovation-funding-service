@@ -10,9 +10,18 @@ import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.*;
-import com.worth.ifs.application.transactional.*;
+import com.worth.ifs.application.transactional.ApplicationFundingService;
+import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.AssessorFeedbackService;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
+import com.worth.ifs.category.mapper.CategoryLinkMapper;
+import com.worth.ifs.category.mapper.CategoryMapper;
+import com.worth.ifs.category.repository.CategoryLinkRepository;
+import com.worth.ifs.category.repository.CategoryRepository;
+import com.worth.ifs.category.transactional.CategoryLinkService;
+import com.worth.ifs.category.transactional.CategoryService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -62,9 +71,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AlertMapper alertMapperMock;
 
     @Mock
-    protected ResponseService responseServiceMock;
-
-    @Mock
     protected AddressRepository addressRepositoryMock;
 
     @Mock
@@ -96,9 +102,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
-
-    @Mock
-    protected ResponseRepository responseRepositoryMock;
 
     @Mock
     protected CompetitionRepository competitionRepositoryMock;
@@ -213,6 +216,24 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectUserRepository projectUserRepositoryMock;
+
+    @Mock
+    protected CategoryService categoryServiceMock;
+
+    @Mock
+    protected CategoryRepository categoryRepositoryMock;
+
+    @Mock
+    protected CategoryMapper categoryMapperMock;
+
+    @Mock
+    protected CategoryLinkService categoryLinkServiceMock;
+
+    @Mock
+    protected CategoryLinkRepository categoryLinkRepositoryMock;
+
+    @Mock
+    protected CategoryLinkMapper categoryLinkMapperMock;
 
     @Before
     public void setupMockInjection() {
