@@ -1,42 +1,6 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
-import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
-import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
-import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.aggregate;
-import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.CollectionFunctions.simplePartition;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.mapper.AssessorFeedbackMapper;
-import com.worth.ifs.application.repository.AssessorFeedbackRepository;
-import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
@@ -51,6 +15,31 @@ import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.util.EntityLookupCallbacks;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
+import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
+import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 @Service
 public class AssessorFeedbackServiceImpl extends BaseTransactionalService implements AssessorFeedbackService {
@@ -61,12 +50,6 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
     }
-
-    @Autowired
-    private AssessorFeedbackRepository repository;
-
-    @Autowired
-    private AssessorFeedbackMapper mapper;
 
     @Autowired
     private FileService fileService;
@@ -82,16 +65,6 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
-
-    @Override
-    public ServiceResult<AssessorFeedbackResource> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(AssessorFeedback.class, id)).andOnSuccessReturn(mapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<AssessorFeedbackResource> findByAssessorId(Long assessorId) {
-        return find(repository.findByAssessorId(assessorId), notFoundError(AssessorFeedback.class, assessorId)).andOnSuccessReturn(mapper::mapToResource);
-    }
 
     @Override
     public ServiceResult<FileEntryResource> createAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {

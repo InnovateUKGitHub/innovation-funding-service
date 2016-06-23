@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+<!-- =================Tabbed navigation competion dashboard=========================== -->
+
+<div th:fragment="prototype-comp-dashboard-navigation">
+    <ul class="inline-nav cf">
+        <li id="section-1" th:class="${(param.section == null or param.section[0] == 'live' ? 'selected' : '')}"><a th:href="@{'?section=live'}">Live (18)</a></li>
+        <li id="section-2" th:class="${(param.section != null and param.section[0] == 'upcoming' ? 'selected' : '')}"><a th:href="@{'?section=upcoming'}">Upcoming (4)</a></li>
+        <li id="section-3" th:class="${(param.section != null and param.section[0] == 'archive' ? 'selected' : '')}"><a th:href="@{'?section=archive'}">Archive (27)</a></li>
+    </ul>
+</div>
+
 <!-- =================Tabbed navigation competion setup=========================== -->
 
 <div th:fragment="prototype-comp-setup-navigation">
@@ -16,6 +26,7 @@
 </div>
 
 <!-- =================Section: Done / edit buttons=========================== -->
+
 <div th:fragment="prototype-section-cta">
     <input type="hidden" id="section" name="section" th:value="${section}" />
     <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
@@ -24,6 +35,321 @@
     <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit'}">Edit</button>
 </div>
 
+<!-- =================Section: Dashboard competitions =========================== -->
+
+<div th:fragment="prototype-dashboard-live">
+    
+    <section>
+        
+        <h2 class="heading-medium">Open (5)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Infrastructure'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Advanced therapies'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Portable renewable energy generation'}, 
+                rowType=${'Nuclear'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Managing energy on marine vessels'}, 
+                rowType=${'Precision medicine'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Energy catalyst'}, 
+                rowType=${'Electronics, sensors and photonics'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">Closed (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Portable renewable energy generation'}, 
+                rowType=${'Cyber security'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">In assessment (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Resource effieciency'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">Panel (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Portable renewable energy generation'}, 
+                rowType=${'Agri productivity'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">Inform (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Urban living'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+     <section>
+        
+        <h2 class="heading-medium">Project set up (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Infrastructure'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+
+</div>
+
+<div th:fragment="prototype-dashboard-upcoming">
+
+    <section>
+        
+        <h2 class="heading-medium">In preparation (3)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Infrastructure'}, 
+                rowStatus=${' '}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digtial additive manufacturing'}, 
+                rowType=${'Emerging tech &#38; industries'}, 
+                rowStatus=${' '}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Portable renewable energy generation'}, 
+                rowType=${'Energy systems'}, 
+                rowStatus=${'Open: 12/07/2016'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">Ready to open (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Portable renewable energy generation'}, 
+                rowType=${'Offshore renewable energy'}, 
+                rowStatus=${'Open: 12/07/2016'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <div class="extra-margin">
+        <a href="/prototypes/2469-comp-setup?section=essential&amp;compPaf=1234" class="button button-large">Create competition</a>
+    </div>
+</div>
+
+<div th:fragment="prototype-dashboard-archive">
+
+    <ul class="list-overview">
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Solving problems with data'}, 
+            rowType=${'Advanced therapies'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+       <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+            rowType=${'Precision medicine'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
+            rowType=${'Medicines technology'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Solving problems with data'}, 
+            rowType=${'Bioscience'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+            rowType=${'Agri productivity'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Solving problems with data'}, 
+            rowType=${'Enhanced food quality'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+            rowType=${'Transport systems'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Solving problems with data'}, 
+            rowType=${'Urban living'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+            rowType=${'Infrastructure'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Solving problems with data'}, 
+            rowType=${'Energy systems'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+        <th:block 
+            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+            rowType=${'Nuclear'}, 
+            rowStatus=${'Archived: 12/06/2016'}">
+        </th:block>
+    </ul>
+
+</div>
+
+
+<div th:fragment="prototype-dashboard-search">
+
+    <p><span class="heading-xlarge">4</span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p>
+    
+    <section>
+        
+        <h2 class="heading-medium">Open competitions (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${param.searchQuery[0] + ' 1'}, 
+                rowType=${'Advanced therapies'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">In assessment (1)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Another ' + param.searchQuery[0]}, 
+                rowType=${'Manufacturing readiness'}, 
+                rowStatus=${'132 applications'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">Archive (2)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Old ' + param.searchQuery[0]}, 
+                rowType=${'Enhanced food quality'}, 
+                rowStatus=${'Archived: 21/08/2015'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Really old ' + param.searchQuery[0]}, 
+                rowType=${'Bioscience'}, 
+                rowStatus=${'Archived: 13/04/2010'}">
+            </th:block>
+        </ul>
+
+    </section>
+
+
+
+
+</div>
+
+<!-- =================Section: Dashboard item row=========================== -->
+
+<div th:fragment="prototype-dashboard-row">
+    
+    <li>
+        <h3 class="heading-small" th:text="${rowTitle}">ROW TITLE</h3>
+        <p th:text="${rowType}">TYPE</p>
+        <p th:text="${rowStatus}">STATUS</p>
+    </li>
+
+</div>
 
 <!-- =================Section: Essential information=========================== -->
 

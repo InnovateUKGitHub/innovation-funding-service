@@ -1,6 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -13,16 +12,6 @@ import org.springframework.stereotype.Service;
 public class AssessorFeedbackRestServiceImpl extends BaseRestService implements AssessorFeedbackRestService {
 
     private String restUrl = "/assessorfeedback";
-
-    @Override
-    public RestResult<AssessorFeedbackResource> findOne(Long id) {
-        return getWithRestResult(restUrl + "/" + id, AssessorFeedbackResource.class);
-    }
-
-    @Override
-    public RestResult<AssessorFeedbackResource> findByAssessorId(Long assessorId) {
-        return getWithRestResult(restUrl + "/findByAssessor/" + assessorId, AssessorFeedbackResource.class);
-    }
 
     @Override
     public RestResult<FileEntryResource> addAssessorFeedbackDocument(Long applicationId, String contentType, long contentLength, String originalFilename, byte[] file) {
