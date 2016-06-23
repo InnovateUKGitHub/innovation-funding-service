@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.controller.form.competitionsetup.InitialDetailsForm;
 
@@ -22,6 +23,12 @@ public class InitialDetailsFormPopulatorTest {
 		service = new InitialDetailsFormPopulator();
 	}
 	
+	@Test
+	public void testSectionToFill() {
+		CompetitionSetupSection result = service.sectionToFill();
+		assertEquals(CompetitionSetupSection.INITIAL_DETAILS, result);
+	}
+				
 	@Test
 	public void testGetSectionFormDataInitialDetails() {
 		CompetitionResource competition = newCompetitionResource()

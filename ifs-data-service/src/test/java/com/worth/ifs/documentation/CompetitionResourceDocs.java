@@ -1,13 +1,14 @@
 package com.worth.ifs.documentation;
 
-import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
-
-import java.time.LocalDateTime;
-
 import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+
+import java.time.LocalDateTime;
+
+import org.springframework.restdocs.payload.FieldDescriptor;
+
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 
 public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
@@ -35,6 +36,10 @@ public class CompetitionResourceDocs {
             fieldWithPath("pafCode").description("the paf code entered during competition setup"),
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
             fieldWithPath("code").description("the unique competition code entered during competition setup"),
+            fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
+            fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),
+            fieldWithPath("leadApplicantType").description("permitted type of elad applicant (business, research...)"),
+            fieldWithPath("researchCategories").description("the research categories entered during competition setup"),
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),

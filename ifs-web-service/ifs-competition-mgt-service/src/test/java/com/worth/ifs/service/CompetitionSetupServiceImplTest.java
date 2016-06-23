@@ -20,20 +20,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.controller.form.competitionsetup.AdditionalInfoForm;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.service.competitionsetup.formpopulator.CompetitionSetupFormPopulator;
+import com.worth.ifs.service.competitionsetup.modelpopulator.CompetitionSetupSectionModelPopulator;
 import com.worth.ifs.service.competitionsetup.sectionupdaters.CompetitionSetupSectionSaver;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -44,46 +38,65 @@ public class CompetitionSetupServiceImplTest {
 	@Mock
 	private CompetitionService competitionService;
 
-	@Mock
-	private UserService userService;
-
-	@Mock
-	private CategoryService categoryService;
-	
 	@Test
-	public void testPopulateCompetitionSectionModelAttributes() {
+	public void testPopulateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
+		Model model = new ExtendedModelMap();
+		CompetitionResource competition = newCompetitionResource()
+				.withCompetitionCode("code")
+				.withName("name")
+				.build();
+		
+		service.setCompetitionSetupSectionModelPopulators(asList());
+		
+		CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
+		
 		List<CompetitionSetupSection> completedSections = new ArrayList<>();
 		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(8L)).thenReturn(completedSections);
-		List<UserResource> compExecs = new ArrayList<>();
-		when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(compExecs);
-		List<CategoryResource> innovationSectors = new ArrayList<>();
-		when(categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR)).thenReturn(innovationSectors);
-		List<CategoryResource> innovationAreas = new ArrayList<>();
-		when(categoryService.getCategoryByType(CategoryType.INNOVATION_AREA)).thenReturn(innovationAreas);
-		List<CompetitionTypeResource> competitionTypes = new ArrayList<>();
-		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
-		List<UserResource> leadTechs = new ArrayList<>();
-		when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(leadTechs);
-		
-		Model model = new ExtendedModelMap();
-		CompetitionResource competition = newCompetitionResource().withCompetitionCode("code").withName("name").withId(8L).build();
-		CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
 		
 		service.populateCompetitionSectionModelAttributes(model, competition, section);
 		
-		assertEquals(12, model.asMap().size());
+		verifyCommonModelAttributes(model, competition, section, completedSections);
+		assertEquals("section-initial", model.asMap().get("currentSectionFragment"));
+	}
+	
+	@Test
+	public void testPopulateCompetitionSectionModelAttributesEligibility() {
+		Model model = new ExtendedModelMap();
+		CompetitionResource competition = newCompetitionResource()
+				.withCompetitionCode("code")
+				.withName("name")
+				.build();
+		
+		CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
+		when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.ELIGIBILITY);
+		CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
+		when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);
+		
+		service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator, notMatchingPopulator));
+
+		CompetitionSetupSection section = CompetitionSetupSection.ELIGIBILITY;
+		
+		List<CompetitionSetupSection> completedSections = new ArrayList<>();
+		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(8L)).thenReturn(completedSections);
+		
+		service.populateCompetitionSectionModelAttributes(model, competition, section);
+		
+		verifyCommonModelAttributes(model, competition, section, completedSections);
+		assertEquals("section-eligibility", model.asMap().get("currentSectionFragment"));
+		
+		verify(matchingPopulator).populateModel(model, competition);
+		verify(notMatchingPopulator, never()).populateModel(model, competition);;
+	}
+
+	private void verifyCommonModelAttributes(Model model, CompetitionResource competition,
+			CompetitionSetupSection section, List<CompetitionSetupSection> completedSections) {
+		assertEquals(7, model.asMap().size());
 		assertEquals(Boolean.TRUE, model.asMap().get("editable"));
 		assertEquals(competition, model.asMap().get("competition"));
 		assertEquals(section, model.asMap().get("currentSection"));
-		assertEquals("section-initial", model.asMap().get("currentSectionFragment"));
 		assertArrayEquals(CompetitionSetupSection.values(), (Object[])model.asMap().get("allSections"));
 		assertEquals(completedSections, model.asMap().get("allCompletedSections"));
 		assertEquals("code: name", model.asMap().get("subTitle"));
-		assertEquals(compExecs, model.asMap().get("competitionExecutiveUsers"));
-		assertEquals(innovationSectors, model.asMap().get("innovationSectors"));
-		assertEquals(innovationAreas, model.asMap().get("innovationAreas"));
-		assertEquals(competitionTypes, model.asMap().get("competitionTypes"));
-		assertEquals(leadTechs, model.asMap().get("competitionLeadTechUsers"));
 	}
 	
 	@Test
