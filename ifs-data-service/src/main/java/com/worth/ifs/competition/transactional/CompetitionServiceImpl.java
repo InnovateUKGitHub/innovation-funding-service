@@ -3,6 +3,7 @@ package com.worth.ifs.competition.transactional;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.category.domain.Category;
-import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -51,6 +51,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public void addCategories(Competition competition) {
         addInnovationSector(competition);
         addInnovationArea(competition);
+        addResearchCategories(competition);
     }
 
     private void addInnovationSector(Competition competition) {
@@ -61,6 +62,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private void addInnovationArea(Competition competition) {
         Category category = categoryRepository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_AREA, COMPETITION_CLASS_NAME, competition.getId());
         competition.setInnovationArea(category);
+    }
+    
+    private void addResearchCategories(Competition competition) {
+        Set<Category> categories = categoryRepository.findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.RESEARCH_CATEGORY, COMPETITION_CLASS_NAME, competition.getId());
+        competition.setResearchCategories(categories);
     }
 
     @Override

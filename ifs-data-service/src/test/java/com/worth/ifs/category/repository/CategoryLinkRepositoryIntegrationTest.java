@@ -31,11 +31,12 @@ public class CategoryLinkRepositoryIntegrationTest extends BaseRepositoryIntegra
 
     @Test
     public void test_findByClassNameAndClassPkAndCategory_Type() throws Exception {
-        CategoryLink found  = repository.findByClassNameAndClassPkAndCategory_Type("com.worth.ifs.competition.domain.Competition", 7L, CategoryType.INNOVATION_SECTOR);
+        List<CategoryLink> found  = repository.findByClassNameAndClassPkAndCategory_Type("com.worth.ifs.competition.domain.Competition", 7L, CategoryType.INNOVATION_SECTOR);
 
-        assertEquals(Long.valueOf(1L), found.getId());
-        assertEquals("com.worth.ifs.competition.domain.Competition", found.getClassName());
-        assertEquals(Long.valueOf(1L), found.getCategory().getId());
+        assertEquals(1, found.size());
+        assertEquals(Long.valueOf(1L), found.get(0).getId());
+        assertEquals("com.worth.ifs.competition.domain.Competition", found.get(0).getClassName());
+        assertEquals(Long.valueOf(1L), found.get(0).getCategory().getId());
     }
 
 }
