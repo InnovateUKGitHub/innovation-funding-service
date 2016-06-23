@@ -7,7 +7,6 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -30,9 +29,8 @@ import static org.junit.Assert.assertTrue;
 @Rollback
 public class ApplicationSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationSummaryController> {
 
-
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
 	public static final long APPLICATION_ID = 1L;
 	public static final long COMPETITION_ID = 1L;
@@ -92,7 +90,6 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
         assertTrue(result.isSuccess());
         CompetitionSummaryResource resource = result.getSuccessObject();
-        //assertTrue(CompetitionResource.Status.OPEN.equals(resource.getCompetitionStatus()));
         assertEquals(6, resource.getTotalNumberOfApplications().intValue());
         assertEquals(1, resource.getApplicationsStarted().intValue());
         assertEquals(0, resource.getApplicationsInProgress().intValue());
@@ -106,7 +103,6 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
         assertTrue(result.isSuccess());
         CompetitionSummaryResource resource = result.getSuccessObject();
-        //assertTrue(CompetitionResource.Status.OPEN.equals(resource.getCompetitionStatus()));
         assertEquals(6, resource.getTotalNumberOfApplications().intValue());
         assertEquals(1, resource.getApplicationsStarted().intValue());
         assertEquals(0, resource.getApplicationsInProgress().intValue());
@@ -119,7 +115,6 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         result = controller.getCompetitionSummary(COMPETITION_ID);
         assertTrue(result.isSuccess());
         resource = result.getSuccessObject();
-        //assertTrue(CompetitionResource.Status.OPEN.equals(resource.getCompetitionStatus()));
         assertEquals(6, resource.getTotalNumberOfApplications().intValue());
         assertEquals(0, resource.getApplicationsStarted().intValue());
         assertEquals(0, resource.getApplicationsInProgress().intValue());
@@ -141,6 +136,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
+        assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLeadApplicant());
         assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
     @Test
@@ -156,6 +152,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
+        assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLeadApplicant());
         assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
     @Test
