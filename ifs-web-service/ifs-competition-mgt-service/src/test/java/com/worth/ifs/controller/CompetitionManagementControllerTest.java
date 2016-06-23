@@ -320,4 +320,13 @@ public class CompetitionManagementControllerTest  {
     	
     	verifyNoMoreInteractions(applicationSummaryService);
     }
+
+    @Test
+    public void createCompetition() throws Exception {
+        when(competitionService.create()).thenReturn(newCompetitionResource().withId(COMPETITION_ID).build());
+
+        mockMvc.perform(get("/competition/create"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/competition/setup/" + COMPETITION_ID));
+    }
 }
