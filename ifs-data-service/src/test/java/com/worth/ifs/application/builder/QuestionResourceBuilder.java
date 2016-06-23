@@ -61,10 +61,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((section, object) -> setField("section", section, object), sections);
     }
 
-    public QuestionResourceBuilder withResponses(List<Long>... responses) {
-        return withArray((response, object) -> setField("responses", response, object), responses);
-    }
-
     public QuestionResourceBuilder withQuestionStatuses(List<Long>... questionStatuses) {
         return withArray((questionStatus, object) -> setField("questionStatuses", questionStatus, object), questionStatuses);
     }
