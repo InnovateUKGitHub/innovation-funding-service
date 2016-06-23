@@ -89,6 +89,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.isSubmitAllowed(projectId).toServiceResult();
     }
 
+    @Override
     public OrganisationResource getLeadOrganisation(Long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
         return applicationService.getLeadOrganisation(project.getApplication());
