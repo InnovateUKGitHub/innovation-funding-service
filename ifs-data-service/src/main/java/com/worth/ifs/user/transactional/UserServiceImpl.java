@@ -12,10 +12,11 @@ import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,11 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A Service that covers basic operations concerning Users
@@ -85,6 +86,11 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<List<UserResource>> findAll() {
         return serviceSuccess(usersToResources(repository.findAll()));
+    }
+
+    @Override
+    public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
+        return serviceSuccess(usersToResources(repository.findByRoles_Name(roleType.getName())));
     }
 
     @Override

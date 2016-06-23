@@ -96,6 +96,7 @@ public class ApplicationSummaryMapperTest {
 		assertEquals("In Progress", result.getStatus());
 		assertEquals(Integer.valueOf(66), result.getCompletedPercentage());
 		assertEquals("leadorg", result.getLead());
+		assertEquals("User 1", result.getLeadApplicant());
 		assertEquals(Integer.valueOf(2), result.getNumberOfPartners());
 		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
 		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());

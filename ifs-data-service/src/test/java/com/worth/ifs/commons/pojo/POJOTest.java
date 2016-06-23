@@ -15,7 +15,6 @@ import com.worth.ifs.alert.domain.Alert;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
@@ -48,7 +47,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 32;
+    private static final int EXPECTED_RESOURCES = 34;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -70,7 +69,6 @@ public class POJOTest {
             OrganisationAddress.class,
             CostValue.class,
             Token.class,
-            AssessorFeedback.class,
             InviteOrganisation.class,
             Section.class,
             ApplicationFinance.class,

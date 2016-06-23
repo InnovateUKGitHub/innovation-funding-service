@@ -96,7 +96,7 @@
 
 		<li th:class="${(param.stage != null and param.stage[0] == 'level3' ? 'require-action' : '')}" th:unless="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">
 			<span>
-				<h2 class="heading-medium"><a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}">Spend profile</a></h2>
+				<h2 class="heading-medium"><a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}">Spend profile</a></h2>
 				<p>Once we have approved your financial information, we will produce a spend profile.</p>
 			</span>
 		</li>

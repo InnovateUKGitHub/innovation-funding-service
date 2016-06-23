@@ -2,11 +2,8 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Response;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ProcessRole defines database relations and a model to use client side and server side.
@@ -32,9 +29,6 @@ public class ProcessRole {
     @ManyToOne
     @JoinColumn(name="organisationId", referencedColumnName="id")
     private Organisation organisation;
-
-    @OneToMany(mappedBy="updatedBy",fetch = FetchType.LAZY)
-    private List<Response> responses = new ArrayList<>();
 
     public ProcessRole(){
     	// no-arg constructor
@@ -73,15 +67,6 @@ public class ProcessRole {
 
     public Long getId() {
         return id;
-    }
-
-    @JsonIgnore
-    public List<Response> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(List<Response> responses) {
-        this.responses = responses;
     }
 
     public void setRole(Role role) {
