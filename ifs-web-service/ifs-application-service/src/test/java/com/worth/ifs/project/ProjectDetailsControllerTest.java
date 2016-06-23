@@ -137,6 +137,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(projectService.updateProjectManager(projectId, projectManagerUserId)).thenReturn(serviceSuccess());
 
         ProcessRoleResource processRoleResource = new ProcessRoleResource();
         processRoleResource.setUser(projectManagerUserId);
