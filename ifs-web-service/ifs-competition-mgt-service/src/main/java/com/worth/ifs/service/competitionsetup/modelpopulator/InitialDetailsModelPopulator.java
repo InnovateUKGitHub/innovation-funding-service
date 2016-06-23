@@ -12,6 +12,9 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
 
+/**
+ * populates the model for the initial details competition setup section.
+ */
 @Service
 public class InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator {
 

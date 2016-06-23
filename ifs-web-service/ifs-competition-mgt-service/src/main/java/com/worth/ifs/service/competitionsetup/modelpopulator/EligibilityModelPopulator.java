@@ -16,6 +16,9 @@ import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.controller.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.service.CategoryFormatter;
 
+/**
+ * populates the model for the eligibility competition setup section.
+ */
 @Service
 public class EligibilityModelPopulator implements CompetitionSetupSectionModelPopulator {
 
