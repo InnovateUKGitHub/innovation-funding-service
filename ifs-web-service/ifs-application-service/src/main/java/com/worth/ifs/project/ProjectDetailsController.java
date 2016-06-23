@@ -112,6 +112,12 @@ public class ProjectDetailsController {
                                      @PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        FinanceContactForm form = new FinanceContactForm();
+        return doViewFinanceContact(model, projectId, organisation, loggedInUser, form, true);
+    }
+
+    private String doViewFinanceContact(Model model, @PathVariable("projectId") Long projectId, @RequestParam(value = "organisation", required = false) Long organisation, @ModelAttribute("loggedInUser") UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
         }
@@ -124,47 +130,36 @@ public class ProjectDetailsController {
             return redirectToProjectDetails(projectId);
         }
 
-        return modelForFinanceContact(model, projectId, organisation, loggedInUser);
+        return modelForFinanceContact(model, projectId, organisation, loggedInUser, form, setDefaultFinanceContact);
     }
 
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.POST)
     public String updateFinanceContact(Model model,
                                        @PathVariable("projectId") final Long projectId,
-                                       @ModelAttribute FinanceContactForm form,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
                                        BindingResult bindingResult,
                                        HttpServletRequest request,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        
-		if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), loggedInUser.getId())){
-    		return redirectToProjectDetails(projectId);
-    	}
-    	
-    	if(!anyUsersInGivenOrganisationForProject(projectId, form.getOrganisation())){
-    		return redirectToProjectDetails(projectId);
-    	}
 
-        if(bindingResult.hasErrors()) {
-        	return modelForFinanceContact(model, projectId, form, loggedInUser);
+        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
+
+        if (bindingResult.hasErrors()) {
+            form.setBindingResult(bindingResult);
+            return failureView.get();
         }
-        
-        if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
-        	return modelForFinanceContact(model, projectId, form, loggedInUser);
-        }
-        
-        projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
-    	
-        return redirectToProjectDetails(projectId);
+
+        ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
+        return handleErrorsOrRedirectToProjectOverview("financeContact", projectId, model, form, bindingResult, updateResult, failureView);
     }
 
-	private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser) {
+	private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> financeContacts = simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
 
-		FinanceContactForm form = new FinanceContactForm();
 		form.setOrganisation(organisation);
 
-        if (!financeContacts.isEmpty()) {
+        if (setDefaultFinanceContact && !financeContacts.isEmpty()) {
             form.setFinanceContact(getOnlyElement(financeContacts).getUser());
         }
 
@@ -179,7 +174,7 @@ public class ProjectDetailsController {
 		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         
         model.addAttribute("organisationUsers", thisOrganisationUsers);
-        model.addAttribute("form", form);
+        model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("app", applicationResource);
@@ -434,6 +429,7 @@ public class ProjectDetailsController {
             BindingResultTarget form, BindingResult bindingResult,
             ServiceResult<?> result,
             Supplier<String> viewSupplier) {
+
         if (result.isFailure()) {
             bindAnyErrorsToField(result, fieldName, bindingResult, form);
             model.addAttribute(FORM_ATTR_NAME, form);
