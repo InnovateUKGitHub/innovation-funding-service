@@ -30,6 +30,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setSections(sections));
     }
 
+    public CompetitionResourceBuilder withName(String name) {
+        return with(competition -> setField("name", name, competition));
+    }
+
     public CompetitionResourceBuilder withStartDate(LocalDateTime startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }
@@ -72,6 +76,57 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     
     public CompetitionResourceBuilder withCompetitionStatus(Status... statuses) {
     	return withArray((status, object) -> setField("competitionStatus", status, object), statuses);
+    }
+
+    public CompetitionResourceBuilder withLeadTechnologist(Long... userIds) {
+        return withArray((id, object) -> setField("leadTechnologist", id, object), userIds);
+    }
+
+    public CompetitionResourceBuilder withExecutive(Long... userIds) {
+        return withArray((id, object) -> setField("executive", id, object), userIds);
+    }
+
+    public CompetitionResourceBuilder withCompetitionType(Long... typeId) {
+        return withArray((id, object) -> setField("competitionType", id, object), typeId);
+    }
+
+    public CompetitionResourceBuilder withInnovationSector(Long... ids) {
+        return withArray((id, object) -> setField("innovationSector", id, object), ids);
+    }
+    public CompetitionResourceBuilder withInnovationSectorName(String... names) {
+        return withArray((name, object) -> setField("innovationSectorName", name, object), names);
+    }
+    public CompetitionResourceBuilder withInnovationArea(Long... ids) {
+        return withArray((id, object) -> setField("innovationArea", id, object), ids);
+    }
+    public CompetitionResourceBuilder withInnovationAreaName(String... names) {
+        return withArray((name, object) -> setField("innovationAreaName", name, object), names);
+    }
+
+    public CompetitionResourceBuilder withPafCode(String... codes) {
+        return withArray((code, object) -> setField("pafCode", code, object), codes);
+    }
+    public CompetitionResourceBuilder withBudgetCode(String... codes) {
+        return withArray((code, object) -> setField("budgetCode", code, object), codes);
+    }
+    public CompetitionResourceBuilder withCompetitionCode(String... codes) {
+        return withArray((code, object) -> setField("code", code, object), codes);
+    }
+
+    public CompetitionResourceBuilder withActivityCode(String... activityCodes) {
+        return withArray((activityCode, object) -> setField("activityCode", activityCode, object), activityCodes);
+    }
+
+    public CompetitionResourceBuilder withInnovateBudget(String... innovateBudgets) {
+        return withArray((innovateBudget, object) -> setField("innovateBudget", innovateBudget, object), innovateBudgets);
+    }
+
+    public CompetitionResourceBuilder withCoFunders(String... coFundersMultiple) {
+        return withArray((coFunders, object) -> setField("coFunders", coFunders, object), coFundersMultiple);
+    }
+
+    public CompetitionResourceBuilder withCoFundersBudget(String... coFundersBudgets) {
+        return withArray((coFundersBudget, object) -> setField("coFundersBudget", coFundersBudget, object), coFundersBudgets);
     }
 
     @Override

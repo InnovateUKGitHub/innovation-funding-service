@@ -6,6 +6,7 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserProfileService;
 import com.worth.ifs.user.transactional.UserService;
@@ -63,6 +64,11 @@ public class UserController {
     @RequestMapping("/id/{id}")
     public RestResult<UserResource> getUserById(@PathVariable("id") final Long id) {
         return userService.getUserById(id).toGetResponse();
+    }
+
+    @RequestMapping("/findByRole/{userRoleName}")
+    public RestResult<List<UserResource>> findByRole(@PathVariable("userRoleName") final String userRoleName) {
+        return userService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
     @RequestMapping("/findAll/")

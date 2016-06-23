@@ -103,7 +103,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     /**
      * The costs are converted to a representation based on its type that can be used in the view and
-     * are added to a specific category (e.g. labour).
+     * are added to a specific Category (e.g. labour).
      * @param cost Cost to be added
      */
     private void addCostToCategory(Cost cost) {
