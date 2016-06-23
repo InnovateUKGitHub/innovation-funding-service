@@ -18,7 +18,7 @@
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 
-    <form  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
+    <form  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
 
     <fieldset>
       <h2 class="heading-medium">Target project start date</h2>
