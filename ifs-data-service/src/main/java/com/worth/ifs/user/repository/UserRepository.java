@@ -20,5 +20,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
         @Override
         List<User> findAll();
+        List<User> findByRoles_Name(@Param("name") String name);
         User findOneByUid(@Param("uid") String uid);
 }
