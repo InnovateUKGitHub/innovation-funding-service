@@ -2,7 +2,6 @@ package com.worth.ifs.form.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
@@ -20,8 +19,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInpu
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.stringsListType;
 
 /**
- * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
- * This class connects to the {@link com.worth.ifs.application.controller.ResponseController}
+ * ResponseRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.form.domain.FormInputResponse}'s.
+ * This class connects to the {@link com.worth.ifs.form.controller.FormInputResponseController}
  * through a REST call.
  */
 @Service
