@@ -1,0 +1,2 @@
+/* Patch to accompany V29_0__Adding_users_for_project_setup_testing.sql to allow non-Lead Partners to see their Organisations' financial data*/
+insert into application_finance (application_id, organisation_id, organisation_size, finance_file_entry_id) values (16, 4, 'SMALL', null), (16, 6, 'SMALL', null);

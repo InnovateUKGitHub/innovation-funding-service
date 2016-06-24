@@ -6,8 +6,10 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static com.worth.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionStatusResourceListType;
+import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.assertEquals;
 
 public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionStatusRestServiceImpl> {
@@ -28,4 +30,55 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         List<QuestionStatusResource> returnedQuestionStatuses = service.findQuestionStatusesByQuestionAndApplicationId(1L, 2L).getSuccessObject();
         assertEquals(questionStatuses, returnedQuestionStatuses);
     }
+
+
+    @Test
+    public void findByQuestionAndApplicationAndOrganisationTest() {
+        Long questionId = 1L;
+        Long applicationId = 2L;
+        Long organisationId = 3L;
+
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource().build(3);
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
+
+        List<QuestionStatusResource> returnedQuestionStatuses = service.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccessObject();
+        assertEquals(questionStatuses, returnedQuestionStatuses);
+    }
+
+    @Test
+    public void findByApplicationAndOrganisationTest() {
+        Long applicationId = 2L;
+        Long organisationId = 3L;
+
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource().build(3);
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
+
+        List<QuestionStatusResource> returnedQuestionStatuses = service.findByApplicationAndOrganisation(applicationId, organisationId).getSuccessObject();
+        assertEquals(questionStatuses, returnedQuestionStatuses);
+    }
+
+    @Test
+    public void findQuestionStatusByIdTest() {
+        Long id = 2L;
+
+        QuestionStatusResource questionStatus = newQuestionStatusResource().build();
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/" + id, QuestionStatusResource.class, questionStatus);
+
+        QuestionStatusResource returnedQuestionStatus = service.findQuestionStatusById(id).getSuccessObject();
+        assertEquals(questionStatus, returnedQuestionStatus);
+    }
+
+    @Test
+    public void getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationIdTest() {
+        List<Long> questionIds = asList(1L, 2L);
+        Long applicationId = 2L;
+        Long organisationId = 3L;
+
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource().build(3);
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
+
+        List<QuestionStatusResource> returnedQuestionStatuses = service.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObject();
+        assertEquals(questionStatuses, returnedQuestionStatuses);
+    }
+
 }

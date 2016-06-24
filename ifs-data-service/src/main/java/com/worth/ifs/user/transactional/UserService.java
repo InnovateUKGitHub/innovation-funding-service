@@ -3,6 +3,7 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -24,6 +25,9 @@ public interface UserService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<UserResource>> findAll();
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findByEmail(final String email);

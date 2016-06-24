@@ -1,0 +1,23 @@
+=== Retrieve categories by type
+==== Request
+include::{snippets}/category/find-by-type/http-request.adoc[]
+include::{snippets}/category/find-by-type/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/category/find-by-type/http-response.adoc[]
+include::{snippets}/category/find-by-type/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/category/find-by-type/curl-request.adoc[]
+
+=== Retrieve categories by parent category id
+==== Request
+include::{snippets}/category/find-by-parent-id/http-request.adoc[]
+include::{snippets}/category/find-by-parent-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/category/find-by-parent-id/http-response.adoc[]
+include::{snippets}/category/find-by-parent-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/category/find-by-parent-id/curl-request.adoc[]
