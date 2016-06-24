@@ -36,6 +36,7 @@ public class EligibilityFormPopulatorTest {
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.withMaxResearchRatio(30)
 				.withMultiStream(true)
+				.withStreamName("streamname")
 				.withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
 				.withLeadApplicantType(LeadApplicantType.BUSINESS)
 				.build();
@@ -46,6 +47,7 @@ public class EligibilityFormPopulatorTest {
 		EligibilityForm form = (EligibilityForm) result;
 		assertEquals(CollectionFunctions.asLinkedSet(2L, 3L), form.getResearchCategoryId());
 		assertEquals("yes", form.getMultipleStream());
+		assertEquals("streamname", form.getStreamName());
 		assertEquals("collaborative", form.getSingleOrCollaborative());
 		assertEquals("business", form.getLeadApplicantType());
 	}

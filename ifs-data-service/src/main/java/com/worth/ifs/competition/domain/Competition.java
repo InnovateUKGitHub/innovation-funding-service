@@ -136,6 +136,7 @@ public class Competition {
     private String coFundersBudget;
 
     private boolean multiStream;
+    private String streamName;
     @Enumerated(EnumType.STRING)
     private CollaborationLevel collaborationLevel;
     @Enumerated(EnumType.STRING)
@@ -435,6 +436,14 @@ public class Competition {
     
     public void setMultiStream(boolean multiStream) {
 		this.multiStream = multiStream;
+	}
+    
+    public String getStreamName() {
+		return streamName;
+	}
+    
+    public void setStreamName(String streamName) {
+		this.streamName = streamName;
 	}
     
     public CollaborationLevel getCollaborationLevel() {

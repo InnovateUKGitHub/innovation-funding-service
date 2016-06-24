@@ -61,7 +61,9 @@ var IFSLoader = {
   },
   'competition-management': {
     init : function(){ IFS.competition_management.init(); }
-
+  },
+  'competition-setup' : {
+    init : function(){ IFS.competition_setup.init(); }
   }
 };
 
