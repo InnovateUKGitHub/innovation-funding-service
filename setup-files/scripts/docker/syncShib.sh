@@ -35,6 +35,9 @@ function addUserToShibboleth {
 
 export -f addUserToShibboleth
 
+BASEDIR=$(dirname "$0")
+cd $BASEDIR
+
 docker cp _delete-shib-users-remote.sh ifs-local-dev:/tmp/_delete-shib-users-remote.sh
 docker exec ifs-local-dev /tmp/_delete-shib-users-remote.sh
 
