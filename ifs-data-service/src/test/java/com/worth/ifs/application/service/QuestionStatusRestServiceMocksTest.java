@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.google.common.primitives.Longs.asList;
+import static java.util.Arrays.asList;
 import static com.worth.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionStatusResourceListType;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
