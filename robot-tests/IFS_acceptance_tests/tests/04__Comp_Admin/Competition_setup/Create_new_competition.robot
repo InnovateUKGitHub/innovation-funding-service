@@ -84,6 +84,40 @@ Competition code generation
     And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
     Then the competition code should be correct
 
+
+Additional information can be saved
+    [Documentation]     INFUND-2985
+    Given the user clicks the button/link    link=Additional Information
+    And the user should see the text in the page      Additional competition information
+    When the user enters text to a text field   id=activityCode     lorem
+    When the user enters text to a text field   id=innovateBudget   ipsum
+    And the user enters text to a text field    id=coFunders        dolor
+    When the user enters text to a text field   id=coFundersBudget    sit
+    And the user clicks the button/link      jQuery=.button:contains("Done")
+    Then the user should see the element     css=.marked-as-complete
+    And the user clicks the button/link      link=Initial Details
+    And the user clicks the button/link      link=Additional Information
+    Then the user should see the text in the page      lorem
+    And the user should see the text in the page      ipsum
+    And the user should see the text in the page     dolor
+    And the user should see the text in the page      sit
+
+
+Additional information can be edited again
+    [Documentation]      INFUND-2985
+    Given the user clicks the button/link      jQuery=.button:contains("Edit")
+    And the user enters text to a text field      id=activityCode    amet
+    And the user clicks the button/link      jQuery=.button:contains("Done")
+    Then the user should see the element     css=.marked-as-complete
+    And the user clicks the button/link      link=Initial Details
+    And the user clicks the button/link      link=Additional Information
+    Then the user should see the text in the page      amet
+    And the user should see the text in the page      ipsum
+    And the user should see the text in the page     dolor
+    And the user should see the text in the page      sit
+    And the user should not see the text in the page     lorem
+
+
 *** Keywords ***
 the competition code should be correct
     the user should not see the element   jQuery=.button:contains("Generate competition code")
