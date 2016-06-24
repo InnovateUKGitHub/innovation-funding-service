@@ -114,8 +114,8 @@ the user unselects the checkbox
     Page Should Contain    BETA
 
 the user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+    [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong

@@ -6,6 +6,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2983: As a Competition Executive I want to be informed if the competition will fall under State Aid when I select a 'Competition type' in competition setup
 ...
 ...               INFUND-2984: As a Competition Executive I want the competition code field in the 'Initial details' tab in competition setup to generate based on open date and number of competitions in that month
+...
+...               INFUND-2986 Create a Competition: Step 3: Eligibility
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Comp admin
@@ -64,7 +66,7 @@ Initial details client-side validations
     #When The user enters text to a text field    Id=budgetCode    2004
     #Then The user should not see the text in the page    #Budget error message
 
-The user should see the correct Staite aid status
+The user should see the correct State aid status
     [Documentation]    INFUND-2982
     ...
     ...    INFUND-2983
@@ -82,6 +84,33 @@ Competition code generation
     And The user enters text to a text field    id=openingDateYear    2016
     And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
     Then competition code should be correct
+
+Eligibility
+    [Documentation]    INFUND-3048
+    [Tags]    Pending
+    When the user clicks the button/link            link=Eligibility
+    Then the user should see the text in the page   Stream
+    And the user selects the radio button               multipleStream  'comp-stream-no' ${EMPTY}
+    Then the user should see an error    ${empty_field_warning_message}
+    And the user should see the text in the page        Research categories
+    Then the user selects the checkbox                  name=researchCategoryId ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+    And The user should see the text in the page    Single or collaborative?
+    Then the user selects the radio button          singleOrCollaborative  'single' ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+    And The user should see the text in the page    Lead applicant
+    Then the user selects the radio button          leadApplicantType  'business' ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+    And The user should see the text in the page    Research participation
+    Then the user selects the option from the drop-down menu  id=researchParticipation ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+
+
+
+
+
+
+
 
 *** Keywords ***
 competition code should be correct
