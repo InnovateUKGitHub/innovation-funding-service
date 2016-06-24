@@ -206,6 +206,7 @@ public class RegistrationController {
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
         if(!bindingResult.hasErrors()) {
+            //TODO : INFUND-3691
             RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), getCompetitionId(request));
 
             if (createUserResult.isSuccess()) {

@@ -4,6 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -18,6 +19,9 @@ public interface UserRestService {
 
     RestResult<UserResource> retrieveUserById(Long id);
     RestResult<List<UserResource>> findAll();
+
+    RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType);
+
     RestResult<ProcessRoleResource> findProcessRole(Long userId, Long applicationId);
     RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId);
     RestResult<List<UserResource>> findAssignableUsers(Long applicationId);
