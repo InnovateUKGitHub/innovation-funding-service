@@ -82,16 +82,16 @@ IFS.formValidation = (function(){
                     IFS.formValidation.checkEqualPasswords(true);
               }
           });
-          jQuery('body').on('change ifsValidate', s.passwordPolicy.fields.password, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this),true);});
-          jQuery('body').on('change ifsValidate', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this),true);});
-          jQuery('body').on('change ifsValidate', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this),true);});
-          jQuery('body').on('change ifsValidate', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this),true);});
-          jQuery('body').on('change ifsValidate', s.max.fields , function(){IFS.formValidation.checkMax(jQuery(this),true);});
-          jQuery('body').on('blur change ifsValidate',s.required.fields,function(){ IFS.formValidation.checkRequired(jQuery(this),true); });
-          jQuery('body').on('change ifsValidate',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this),true); });
-          jQuery('body').on('change ifsValidate',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this),true); });
-          jQuery('body').on('change ifsValidate',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this),true); });
-          jQuery('body').on('change ifsValidate',s.date.fields,function(){  IFS.formValidation.checkDate(jQuery(this),true); });
+          jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this),true);});
+          jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this),true);});
+          jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this),true);});
+          jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this),true);});
+          jQuery('body').on('change', s.max.fields , function(){IFS.formValidation.checkMax(jQuery(this),true);});
+          jQuery('body').on('blur change',s.required.fields,function(){ IFS.formValidation.checkRequired(jQuery(this),true); });
+          jQuery('body').on('change',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this),true); });
+          jQuery('body').on('change',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this),true); });
+          jQuery('body').on('change',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this),true); });
+          jQuery('body').on('change',s.date.fields,function(){  IFS.formValidation.checkDate(jQuery(this),true); });
 
           //set data attribute on date fields
           //which has the combined value of the dates
@@ -100,7 +100,7 @@ IFS.formValidation = (function(){
 
           //will only work on html5 validation browsers
           jQuery('form:not([novalidate]) input').on('invalid',function(){
-              jQuery(this).trigger('ifsValidate');
+            jQuery(this).trigger('change');
           });
 
         },
@@ -406,10 +406,9 @@ IFS.formValidation = (function(){
             return errorMessage;
         },
         setInvalid : function(field,message){
-            //html5 validation browsermessage
-            if(s.html5validationMode){ field[0].setCustomValidity(message);}
             var formGroup = field.closest('.form-group');
             if(formGroup){
+                if(s.html5validationMode){ field[0].setCustomValidity(message);}
                 field.addClass('field-error');
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
                 var errorEl = formGroup.find('.error-message:contains("'+message+'")');
@@ -434,6 +433,7 @@ IFS.formValidation = (function(){
                if(formGroup.find('.error-message').length === 0){
                    formGroup.removeClass('error');
                    field.removeClass('field-error');
+                   if(s.html5validationMode){ field[0].setCustomValidity('');}
                }
             }
             if(jQuery('.error-summary-list li:contains('+message+')').length){
