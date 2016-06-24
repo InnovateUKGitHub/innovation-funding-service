@@ -69,11 +69,11 @@ The user should see the correct State aid status
     [Documentation]    INFUND-2982
     ...
     ...    INFUND-2983
-    [Tags]    Pending
-    #the dropdown options are not correct. we need to adjust the tests when the correct option will be added
-    When the user selects the option from the drop-down menu    Technology Inspired    id=competitionTypeId
+    [Tags]
+    Given the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
+    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     Then the user should see the element    css=.yes
-    When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
+    When the user selects the option from the drop-down menu     SBRI       id=competitionTypeId
     Then the user should see the element    css=.no
 
 Competition code generation
