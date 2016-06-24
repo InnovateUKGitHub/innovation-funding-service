@@ -1,1 +1,1 @@
-ALTER TABLE `project` ADD COLUMN `s//ubmitted_date` DATETIME NULL;
+ALTER TABLE `project` ADD COLUMN `submitted_date` DATETIME NULL;
