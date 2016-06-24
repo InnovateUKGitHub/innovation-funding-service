@@ -62,7 +62,7 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Competition Technologist One    id=LeadTechnologistUserId
     Then the user should not see the text in the page    Please select a lead technologist
     When the user enters text to a text field    id=pafNumber    2016
-    And the user enters text to a text field    Id=budgetCode    2004
+    And the user enters text to a text field    id=budgetCode    2004
     And the user moves focus to a different part of the page
     Then the user should not see the text in the page    Please enter a budget code
     And the user should not see the text in the page      Please enter a PAF number
@@ -75,6 +75,10 @@ The user should see the correct State aid status
     Given the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     Then the user should see the element    css=.yes
+    When the user selects the option from the drop-down menu     Special     id=competitionTypeId
+    Then the user should see the element     css=.no
+    When the user selects the option from the drop-down menu     Additive Manufacturing     id=competitionTypeId
+    Then the user should see the element     css=.yes
     When the user selects the option from the drop-down menu     SBRI       id=competitionTypeId
     Then the user should see the element    css=.no
 
@@ -119,28 +123,35 @@ Additional information can be edited again
     And the user should see the text in the page     dolor
     And the user should see the text in the page      sit
     And the user should not see the text in the page     lorem
+    [Teardown]  the user clicks the button/link    jQuery=.button:contains("Edit")
 
 
-Eligibility
-    [Documentation]    INFUND-3048
-    [Tags]    Pending
-    When the user clicks the button/link            link=Eligibility
-    Then the user should see the text in the page   Stream
-    And the user selects the radio button               multipleStream  'comp-stream-no' ${EMPTY}
-    Then the user should see an error    ${empty_field_warning_message}
-    And the user should see the text in the page        Research categories
-    Then the user selects the checkbox                  name=researchCategoryId ${EMPTY}
-    And the user should see an error    ${empty_field_warning_message}
-    And The user should see the text in the page    Single or collaborative?
-    Then the user selects the radio button          singleOrCollaborative  'single' ${EMPTY}
-    And the user should see an error    ${empty_field_warning_message}
-    And The user should see the text in the page    Lead applicant
-    Then the user selects the radio button          leadApplicantType  'business' ${EMPTY}
-    And the user should see an error    ${empty_field_warning_message}
-    And The user should see the text in the page    Research participation
-    Then the user selects the option from the drop-down menu  id=researchParticipation ${EMPTY}
-    And the user should see an error    ${empty_field_warning_message}
+Eligibility server-side validations
+    [Documentation]    INFUND-2986
+    [Tags]
+    Given the user clicks the button/link            link=Eligibility
+    And the user should see the text in the page   Stream
+    When the user clicks the button/link     jQuery=.button:contains("Done")
+    Then the user should see the text in the page      Please select at least one research category
+    And the user should see the text in the page      Please select a collaboration level
+    And the user should see the text in the page      Please select a lead applicant type
 
+
+Eligibility client-side validations
+    [Documentation]     INFUND-2986
+    [Tags]
+    When the user selects the checkbox       id=research-categories-33
+    And the user selects the checkbox        id=research-categories-34
+    And the user moves focus to a different part of the page
+    # Then the user should not see the text in the page      Please select at least one research category
+    And the user should see the text in the page       Please select a collaboration level
+    And the user should see the text in the page       Please select a lead applicant type
+    When the user selects the radio button     singleOrCollaborative       single
+    And the user selects the radio button      leadApplicantType      business
+    And the user selects the option from the drop-down menu    30%     name=researchParticipationAmountId
+    Then the user should not see the text in the page   Please select a collaboration level
+    And the user should not see the text in the page     Please select a lead applicant type
+    # And the user should not see the text in the page    Please select at least one research category
 
 
 
