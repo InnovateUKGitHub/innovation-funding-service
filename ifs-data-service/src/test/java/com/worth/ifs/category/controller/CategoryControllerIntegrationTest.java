@@ -62,9 +62,9 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertThat(categories, everyItem(Matchers.hasProperty("parent", equalTo(1L))));
         assertThat(categories, containsInAnyOrder(asList(
                 Matchers.hasProperty("name", equalTo("Advanced Therapies")),
-                Matchers.hasProperty("name", equalTo("Bioscience")),
                 Matchers.hasProperty("name", equalTo("Precision Medicine")),
                 Matchers.hasProperty("name", equalTo("Medicines Technology")),
+                Matchers.hasProperty("name", equalTo("Bioscience")),
                 Matchers.hasProperty("name", equalTo("Agri Productivity")),
                 Matchers.hasProperty("name", equalTo("Enhanced Food Quality"))
         )));

@@ -1,16 +1,19 @@
 package com.worth.ifs.competition.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.competition.resource.CollaborationLevel;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.LeadApplicantType;
 
 public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource, CompetitionResourceBuilder> {
 
@@ -40,6 +43,14 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withEndDate(LocalDateTime endDate) {
         return with(competition -> setField("endDate", endDate, competition));
+    }
+    
+    public CompetitionResourceBuilder withResearchCategories(Set<Long> categories) {
+        return with(competition -> competition.setResearchCategories(categories));
+    }
+    
+    public CompetitionResourceBuilder withMultiStream(boolean multiStream) {
+        return with(competition -> competition.setMultiStream(multiStream));
     }
 
     public CompetitionResourceBuilder withId(Long... ids) {
@@ -111,6 +122,12 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
     public CompetitionResourceBuilder withCompetitionCode(String... codes) {
         return withArray((code, object) -> setField("code", code, object), codes);
+    }
+    public CompetitionResourceBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
+        return withArray((collaborationLevel, object) -> setField("collaborationLevel", collaborationLevel, object), collaborationLevels);
+    }
+    public CompetitionResourceBuilder withLeadApplicantType(LeadApplicantType... leadApplicantTypes) {
+        return withArray((leadApplicantType, object) -> setField("leadApplicantType", leadApplicantType, object), leadApplicantTypes);
     }
 
     public CompetitionResourceBuilder withActivityCode(String... activityCodes) {

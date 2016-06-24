@@ -3,7 +3,7 @@ Documentation     INFUND-832
 ...               INFUND-409
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Upload    Applicant    Email    Pending
+Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot

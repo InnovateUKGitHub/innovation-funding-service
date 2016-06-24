@@ -3,7 +3,8 @@ package com.worth.ifs.category.resource;
 
 public enum CategoryType {
     INNOVATION_SECTOR("innovation_sector"),
-    INNOVATION_AREA("innovation_area");
+    INNOVATION_AREA("innovation_area"),
+	RESEARCH_CATEGORY("research_category");
 
     private final String name;
 

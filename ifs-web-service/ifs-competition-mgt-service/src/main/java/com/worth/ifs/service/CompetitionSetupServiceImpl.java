@@ -12,16 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
 import com.worth.ifs.service.competitionsetup.formpopulator.CompetitionSetupFormPopulator;
+import com.worth.ifs.service.competitionsetup.modelpopulator.CompetitionSetupSectionModelPopulator;
 import com.worth.ifs.service.competitionsetup.sectionupdaters.CompetitionSetupSectionSaver;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserService;
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -30,16 +27,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	
 	@Autowired
 	private CompetitionService competitionService;
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private CategoryService categoryService;
 	
 	private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
 	
 	private Map<CompetitionSetupSection, CompetitionSetupSectionSaver> sectionSavers;
+
+	private Map<CompetitionSetupSection, CompetitionSetupSectionModelPopulator> modelPopulators;
+
 	
 	@Autowired
 	public void setCompetitionSetupFormPopulators(Collection<CompetitionSetupFormPopulator> populators) {
@@ -51,35 +45,22 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		sectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
 	}
 	
+	@Autowired
+	public void setCompetitionSetupSectionModelPopulators(Collection<CompetitionSetupSectionModelPopulator> populators) {
+		modelPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToPopulateModel(), Function.identity()));
+	}
+	
 	@Override
 	public void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
 			CompetitionSetupSection section) {
-		List<CompetitionSetupSection> completedSections = competitionService
-				.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competitionResource.getId());
-
-		boolean editable = !completedSections.contains(section);
-		model.addAttribute("editable", editable);
-
-		model.addAttribute("competition", competitionResource);
-		model.addAttribute("currentSection", section);
-		model.addAttribute("currentSectionFragment", "section-" + section.getPath());
-
-		model.addAttribute("allSections", CompetitionSetupSection.values());
-		model.addAttribute("allCompletedSections", completedSections);
-		model.addAttribute("subTitle",
-				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
-						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
-
-		model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_EXEC));
-		model.addAttribute("innovationSectors", categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR));
-		if (competitionResource.getInnovationSector() != null) {
-			model.addAttribute("innovationAreas",
-					categoryService.getCategoryByParentId(competitionResource.getInnovationSector()));
-		} else {
-			model.addAttribute("innovationAreas", categoryService.getCategoryByType(CategoryType.INNOVATION_AREA));
+		
+		populateGeneralModelAttributes(model, competitionResource, section);
+		
+		CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
+		
+		if(populator != null) {
+			populator.populateModel(model, competitionResource);
 		}
-		model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
-		model.addAttribute("competitionLeadTechUsers", userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST));
 	}
 
 	@Override
@@ -108,6 +89,24 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		saver.saveSection(competitionResource, competitionSetupForm);
 		
 		competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
+	}
+	
+	private void populateGeneralModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
+		List<CompetitionSetupSection> completedSections = competitionService
+				.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competitionResource.getId());
+
+		boolean editable = !completedSections.contains(section);
+		model.addAttribute("editable", editable);
+
+		model.addAttribute("competition", competitionResource);
+		model.addAttribute("currentSection", section);
+		model.addAttribute("currentSectionFragment", "section-" + section.getPath());
+
+		model.addAttribute("allSections", CompetitionSetupSection.values());
+		model.addAttribute("allCompletedSections", completedSections);
+		model.addAttribute("subTitle",
+				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
+						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 	}
 
 }
