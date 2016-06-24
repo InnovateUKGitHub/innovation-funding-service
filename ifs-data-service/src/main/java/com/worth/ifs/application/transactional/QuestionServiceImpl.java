@@ -86,8 +86,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
-
-        return find(getQuestion(ids.questionId), application(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+        return find(getQuestion(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
 
             QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
 
@@ -235,8 +234,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
-        List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+	public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
+    	List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
         List<QuestionStatusResource> resources = simpleMap(statuses, questionStatusMapper::mapToResource);
         return serviceSuccess(resources);
     }
@@ -280,8 +279,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
-
-        return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
             QuestionStatus questionStatus = null;
 
             if (question.hasMultipleStatuses()) {
@@ -415,4 +413,5 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private List<QuestionResource> questionsToResources(List<Question> filtered) {
         return simpleMap(filtered, question -> questionMapper.mapToResource(question));
     }
+
 }

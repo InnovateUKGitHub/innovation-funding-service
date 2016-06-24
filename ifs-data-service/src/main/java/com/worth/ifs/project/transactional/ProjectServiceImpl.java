@@ -1,10 +1,12 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.repository.AddressRepository;
+import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -71,6 +73,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
 
+    @Autowired
+    private AddressTypeRepository addressTypeRepository;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -114,7 +119,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 	}
 
     @Override
-    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, AddressType addressType, AddressResource address) {
+    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
         ServiceResult<Project> result = getProject(projectId);
         if(result.isSuccess()){
             Project project = result.getSuccessObject();
@@ -125,6 +130,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             } else {
                 Address newAddress = addressMapper.mapToDomain(address);
                 if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
+                    AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
                     List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                     existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
                     OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
@@ -146,12 +152,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
-        return getUser(userId).andOnSuccessReturn(user -> {
-            List<ProcessRole> roles = processRoleRepository.findByUser(user);
-            List<Application> applications = simpleMap(roles, ProcessRole::getApplication);
-            List<Project> projects = applications.stream().map(a -> projectRepository.findOneByApplicationId(a.getId())).collect(Collectors.toList());
-            return projectsToResources(projects);
-        });
+        List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
+        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProject).parallelStream().distinct().collect(Collectors.toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
+        return serviceSuccess(simpleMap(projects, projectMapper::mapToResource));
     }
 
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {

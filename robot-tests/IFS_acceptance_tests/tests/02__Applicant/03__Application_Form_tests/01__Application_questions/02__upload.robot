@@ -3,7 +3,7 @@ Documentation     INFUND-832
 ...               INFUND-409
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Upload    Applicant    Email    Pending
+Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -87,8 +87,7 @@ Collaborators can download a pdf file
 
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
-    [Tags]    Pending
-    #This test is pending due to INFUND-3380
+    [Tags]
     When the user should see the text in the page    Appendix
     Then the user should not see the text in the page    Upload
 
@@ -109,6 +108,9 @@ Questions can be assigned with appendices
     And the user should see the text in the page    ${valid_pdf}
     When the user assigns the question to the collaborator    Arsene Wenger
     Then the user should not see the text in the page    Remove
+    And the user clicks the button/link    link=Application Overview
+    Then the user clicks the button/link    link=6. Innovation
+    And the user assigns the question to the collaborator    Arsene Wenger
 
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
@@ -144,10 +146,13 @@ Collaborator can remove a file when the question is assigned
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
-    [Tags]    Pending
-    #This test is pending due to INFUND-3380
+    [Tags]
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=6. Innovation
     When the user should see the text in the page    Upload
-    Then the user uploads the file to the 'technical approach' question    ${valid_pdf}
+    Then the user uploads the file to the 'Innovation' question    ${valid_pdf}
+    And the user can re-assign the question back to the lead applicant
 
 Appendices available only for the correct questions
     [Documentation]    INFUND-832
@@ -157,7 +162,7 @@ Appendices available only for the correct questions
     the user cannot see the option to upload a file on the question    link=2. Potential market
     the user cannot see the option to upload a file on the question    link=3. Project exploitation
     the user cannot see the option to upload a file on the question    link=4. Economic benefit
-    the user can see the option to upload a file on the question    link=6. Innovation
+   # the user can see the option to upload a file on the question    link=6. Innovation [Have commented this for implementing INFUND-3007 by Pradha]
     the user cannot see the option to upload a file on the question    link=7. Risks
     the user can see the option to upload a file on the question    link=8. Project team
     the user cannot see the option to upload a file on the question    link=9. Funding
@@ -184,6 +189,11 @@ the collaborator logs in
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
+    Sleep    500ms
+
+the user uploads the file to the 'Innovation' question
+    [Arguments]    ${file_name}
+    Choose File    name=formInput[17]    ${UPLOAD_FOLDER}/${file_name}
     Sleep    500ms
 
 the user can re-assign the question back to the lead applicant

@@ -9,6 +9,8 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-2417 As a collaborator I want to be able to review the grant Terms and Conditions so that the lead applicant can agree to them on my behalf
 ...
 ...               INFUND-3016 As a collaborator I want to mark my finances as complete so the lead can progress with submitting the application.
+
+...               INFUND-3288: Assigning questions more than once leads to an internal server error
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags
@@ -24,12 +26,21 @@ ${invitee_name}    michael
 *** Test Cases ***
 Lead applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
     Then the user should see the notification    Question assigned successfully
     And the user should see the element    css=#form-input-12 .readonly
+    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Jessica Doe
+
+Lead applicant can assign question multiple times
+    [Documentation]    INFUND-3288
+    [Tags]
+    When the user assigns the question to the collaborator    Steve Smith
+    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    you
+    And the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
+    Then the user should see the element    css=#form-input-12 .readonly
     And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Jessica Doe
     [Teardown]    the user closes the browser
 
@@ -168,6 +179,7 @@ the collaborator edits the 'public description' question
     Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
+    sleep     1s
     sleep     1s
     the user reloads the page
 

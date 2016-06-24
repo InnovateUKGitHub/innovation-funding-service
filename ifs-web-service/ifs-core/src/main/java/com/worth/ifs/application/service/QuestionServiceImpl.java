@@ -116,7 +116,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrThrowException();
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccessObjectOrThrowException();
         if(questionStatuses == null || questionStatuses.isEmpty()){
             return null;
         }

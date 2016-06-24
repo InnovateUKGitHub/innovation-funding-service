@@ -26,7 +26,7 @@ public class Project {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="application", referencedColumnName = "id")
+    @JoinColumn(name="applicationId", referencedColumnName = "id")
     private Application application;
 
     private LocalDate targetStartDate;

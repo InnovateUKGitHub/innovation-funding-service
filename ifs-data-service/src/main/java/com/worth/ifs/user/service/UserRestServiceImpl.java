@@ -6,6 +6,7 @@ import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -104,6 +105,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<List<UserResource>> findAll() {
         return getWithRestResult(userRestURL + "/findAll/", userListType());
+    }
+
+    @Override
+    public RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType) {
+        String roleName = userRoleType.getName();
+        return getWithRestResult(userRestURL + "/findByRole/"+roleName, userListType());
     }
 
     @Override

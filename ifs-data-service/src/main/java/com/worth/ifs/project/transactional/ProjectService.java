@@ -1,7 +1,7 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public interface ProjectService {
 
-    @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getProjectById(@P("projectId") final Long projectId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -45,14 +45,14 @@ public interface ProjectService {
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource addressResource);
+    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(final Long userId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
-    @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
 }

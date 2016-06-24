@@ -18,7 +18,7 @@ Resource          ../../resources/keywords/User_actions.robot
 Log-out
     [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    Given the user should see the element        link=Logout
+    Given the user should see the element        link=Sign out
     Logout as user
 
 Invalid Login
@@ -33,7 +33,7 @@ Valid login as Applicant
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Logout
+    Then the user should see the element        link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
@@ -42,17 +42,18 @@ Valid login as Collaborator
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Logout
+    Then the user should see the element        link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor    HappyPath
+    [Tags]    Assessor    HappyPath     Pending
+    # Pending until Assessor Journey is completed
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Logout
+    Then the user should see the element        link=Sign out
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should be logged-in as an Assessor
     [Teardown]    Logout as user
@@ -63,8 +64,8 @@ Valid login as Comp Admin
     Given the user is not logged-in
     When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Logout
-    And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_OPEN}
+    Then the user should see the element        link=Sign out
+    And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
 Valid login as Project Finance role
@@ -127,18 +128,18 @@ Reset password (email step)
     Then the guest user should get an error message
     When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Logout
+    Then the user should see the element        link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
 
 *** Keywords ***
 the user is not logged-in
     the user should not see the element    link=My dashboard
-    the user should not see the element    link=Logout
+    the user should not see the element    link=Sign out
 
 the guest user should get an error message
     the user should see the text in the page    Your login was unsuccessful because of the following issue(s)
     the user should see the text in the page    Your username/password combination doesn't seem to work
-    the user should not see the element    link=Logout
+    the user should not see the element    link=Sign out
 
 
 the user should be logged-in as an Assessor

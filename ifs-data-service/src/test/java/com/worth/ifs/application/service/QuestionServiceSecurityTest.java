@@ -179,7 +179,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
+        public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
             return null;
         }
 

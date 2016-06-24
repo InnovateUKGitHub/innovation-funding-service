@@ -130,3 +130,19 @@ Make the finances ready for mark as complete
     The user clicks the button/link    jQuery=label:contains(Medium - claim up to 60%) input
     Input Text    id=cost-financegrantclaim    20
     The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+
+The user navigates to the academic application finances
+    When the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=Your finances
+
+The user navigates to the finance overview of the academic
+    When the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=Finances overview
+
+The user marks the academic application finances as incomplete
+    When The user navigates to the academic application finances
+    Focus    jQuery=button:contains("Edit")
+    the user clicks the button/link    jQuery=button:contains("Edit")
+    Sleep    1s
