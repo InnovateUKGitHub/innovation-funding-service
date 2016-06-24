@@ -153,6 +153,16 @@ Eligibility client-side validations
     And the user should not see the text in the page     Please select a lead applicant type
     # And the user should not see the text in the page    Please select at least one research category
 
+The user can see the options for single and collaborative, lead applicant type, and streams
+    [Documentation]   INFUND-2989, INFUND-2990
+    When the user should see the element        xpath=//input[@type='radio' and @name='multipleStream' and @value='yes']
+    When the user should see the element        xpath=//input[@type='radio' and @name='multipleStream' and @value='no']
+    When the user should see the element        xpath=//input[@type='radio' and @name='singleOrCollaborative' and @value='single']
+    When the user should see the element        xpath=//input[@type='radio' and @name='singleOrCollaborative' and @value='collaborative']
+    When the user should see the element        xpath=//input[@type='radio' and @name='singleOrCollaborative' and @value='single-or-collaborative']
+    When the user should see the element        xpath=//input[@type='radio' and @name='leadApplicantType' and @value='business']
+    When the user should see the element        xpath=//input[@type='radio' and @name='leadApplicantType' and @value='research']
+    When the user should see the element        xpath=//input[@type='radio' and @name='leadApplicantType' and @value='either']
 
 
 *** Keywords ***
