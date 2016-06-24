@@ -117,7 +117,7 @@ class CsrfTokenService {
     }
 
     private String getUserId() {
-        return getAuthentication().map((authentication) ->
+        return getAuthentication().map(authentication ->
                 authentication instanceof AnonymousAuthenticationFilter ? "ANONYMOUS" : authentication.getCredentials().toString()
         ).orElse("ANONYMOUS");
     }
