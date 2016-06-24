@@ -1,5 +1,8 @@
 #!/bin/bash
 
+BASEDIR=$(dirname "$0")
+cd $BASEDIR
+
 docker stop ifs-local-dev
 docker rm ifs-local-dev
 
