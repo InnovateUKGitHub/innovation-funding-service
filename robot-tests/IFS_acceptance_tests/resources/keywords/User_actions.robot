@@ -221,7 +221,6 @@ The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
     Page Should Not Contain    Error
-    #Page Should Not Contain    error    # commented this out because it caused a test failure
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
