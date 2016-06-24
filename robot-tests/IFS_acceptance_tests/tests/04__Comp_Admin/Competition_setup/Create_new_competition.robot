@@ -6,6 +6,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2983: As a Competition Executive I want to be informed if the competition will fall under State Aid when I select a 'Competition type' in competition setup
 ...
 ...               INFUND-2984: As a Competition Executive I want the competition code field in the 'Initial details' tab in competition setup to generate based on open date and number of competitions in that month
+...
+...               INFUND-2986 Create a Competition: Step 3: Eligibility
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Comp admin
@@ -85,6 +87,7 @@ Competition code generation
     Then the competition code should be correct
 
 
+
 Additional information can be saved
     [Documentation]     INFUND-2985
     Given the user clicks the button/link    link=Additional Information
@@ -116,6 +119,29 @@ Additional information can be edited again
     And the user should see the text in the page     dolor
     And the user should see the text in the page      sit
     And the user should not see the text in the page     lorem
+
+
+Eligibility
+    [Documentation]    INFUND-3048
+    [Tags]    Pending
+    When the user clicks the button/link            link=Eligibility
+    Then the user should see the text in the page   Stream
+    And the user selects the radio button               multipleStream  'comp-stream-no' ${EMPTY}
+    Then the user should see an error    ${empty_field_warning_message}
+    And the user should see the text in the page        Research categories
+    Then the user selects the checkbox                  name=researchCategoryId ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+    And The user should see the text in the page    Single or collaborative?
+    Then the user selects the radio button          singleOrCollaborative  'single' ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+    And The user should see the text in the page    Lead applicant
+    Then the user selects the radio button          leadApplicantType  'business' ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+    And The user should see the text in the page    Research participation
+    Then the user selects the option from the drop-down menu  id=researchParticipation ${EMPTY}
+    And the user should see an error    ${empty_field_warning_message}
+
+
 
 
 *** Keywords ***
