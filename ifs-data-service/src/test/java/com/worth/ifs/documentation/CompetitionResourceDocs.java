@@ -37,6 +37,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
             fieldWithPath("code").description("the unique competition code entered during competition setup"),
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
+            fieldWithPath("streamName").description("the name of the stream"),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),
             fieldWithPath("leadApplicantType").description("permitted type of elad applicant (business, research...)"),
             fieldWithPath("researchCategories").description("the research categories entered during competition setup"),
