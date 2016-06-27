@@ -21,15 +21,19 @@ public interface ProjectService {
 
     ProjectResource getByApplicationId(Long applicationId);
 
-    void updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
+    ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
-    void updateProjectManager(Long projectId, Long projectManagerUserId);
+    ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
 
     ServiceResult<List<ProjectResource>> findByUser(Long userId);
 
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address);
+
+    ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId);
+
+    ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     OrganisationResource getLeadOrganisation(Long projectId);
 }

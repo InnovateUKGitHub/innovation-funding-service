@@ -11,6 +11,8 @@
 ##
 #set ($title = $springMacroRequestContext.getMessage("idp.title", "Web Login Service"))
 #set ($defaultTitleSuffix = $springMacroRequestContext.getMessage("idp.title.suffix", "Error"))
+#set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
+#set ($resourcesDomain = $rpContext.getRelyingPartyId())
 ##
 #if ($flowRequestContext)
 	## This handles flow events, the most common case.
@@ -45,8 +47,8 @@
     	<meta charset="utf-8">
         <title>Innovation Funding Service - Sign in</title>
 
-        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/fonts.css" >
-        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/screen.css" >
+        <link rel="stylesheet" type="text/css" href="$resourcesDomain/css/fonts.css" >
+        <link rel="stylesheet" type="text/css" href="$resourcesDomain/css/screen.css" >
   	</head>
   	
   	<body>
@@ -58,7 +60,7 @@
                     <div>
                         <div class="header-logo">
                             <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-                                <img src="//#springMessageText('ifs.webserver.resources.url', '#')/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
+                                <img src="$resourcesDomain/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
                                 GOV.UK
                             </a>
                         </div>
