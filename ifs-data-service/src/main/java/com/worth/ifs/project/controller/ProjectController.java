@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -75,5 +76,15 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}/project-users", method = GET)
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/setApplicationDetailsSubmitted", method = POST)
+    public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
+        return projectService.saveProjectSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
+    public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
+        return projectService.isSubmitAllowed(projectId).toGetResponse();
     }
 }

@@ -89,3 +89,27 @@ include::{snippets}/project/get-project-users/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/get-project-users/curl-request.adoc[]
+
+=== Is Submit Allowed
+==== Success
+===== Request
+include::{snippets}/project/is-submit-allowed/http-request.adoc[]
+include::{snippets}/project/is-submit-allowed/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-submit-allowed/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-submit-allowed/curl-request.adoc[]
+
+==== false when details not provided
+===== Success
+====== Request
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/http-request.adoc[]
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/path-parameters.adoc[]
+
+====== Response
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/http-response.adoc[]
+
+====== Curl Example
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]

@@ -7,7 +7,7 @@ echo "# Updating package repository"
 sudo apt-get -y update
 
 echo "# Installing xvfb"
-sudo apt-get -y install xvfb
+sudo apt-get install xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
 
 echo "# Installing python-wxgtk2.8"
 sudo apt-get -y install python-wxgtk2.8
@@ -50,4 +50,3 @@ echo "# Installing ftplibrary"
 pip install robotframework-ftplibrary
 
 #fi
-
