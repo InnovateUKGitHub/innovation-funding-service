@@ -269,7 +269,8 @@ IFS.formValidation = (function(){
         checkRequired : function(field,showMessage){
             var errorMessage = IFS.formValidation.getErrorMessage(field,'required');
             if(field.is(':checkbox')){
-               if(!field.prop('checked')){
+               var name = field.attr("name");
+               if(jQuery('[name="'+name+'"]:checked').length === 0){
                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
                  return false;
                }
