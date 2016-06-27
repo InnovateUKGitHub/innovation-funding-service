@@ -7,6 +7,8 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...               INFUND-2613 As a lead partner I need to see an overview of project details for my project so that I can edit the project details in order for Innovate UK to be able to assign an appropriate Monitoring Officer
 ...
 ...               INFUND-2614 As a lead partner I need to provide a target start date for the project so that Innovate UK has correct details for my project setup
+...
+...               INFUND-2620 As a partner I want to provide my organisation's finance contact details so that the correct person is assigned to the role
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -69,6 +71,16 @@ Lead partner can see the overview of the project details
     And the user should see the element    link=Project address
     And the user should see the element    link=Project manager
     And the user should see the text in the page    Finance contacts
+
+Partner nominates a finance contact
+    [Documentation]    INFUND-3162
+    When the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}/details
+    And the user should see the text in the page    Finance contacts
+    And wait until page contains                    Partner
+    And the user clicks the button/link             link=Cheeseco
+    Then the user should see the text in the page   Finance contact
+    And the user selects the radio button           financeContact     financeContact2
+    And the user clicks the button/link             jQuery=.button:contains("Save")
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
