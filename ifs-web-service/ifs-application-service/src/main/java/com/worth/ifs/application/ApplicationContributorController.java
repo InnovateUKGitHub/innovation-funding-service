@@ -8,16 +8,18 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.InviteResultsResource;
+import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
-import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +102,17 @@ public class ApplicationContributorController{
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
+
+        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
+        return APPLICATION_CONTRIBUTORS_INVITE;
+    }
+
+    private void setInviteTemplateModel(final Long applicationId,
+                                        ContributorsForm contributorsForm,
+                                        BindingResult bindingResult,
+                                        HttpServletResponse response,
+                                        HttpServletRequest request,
+                                        Model model) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -121,8 +134,8 @@ public class ApplicationContributorController{
         model.addAttribute("leadApplicant", leadApplicant);
         model.addAttribute("leadOrganisation", leadOrganisation);
         model.addAttribute("organisationInvites", organisationInvites);
-        return APPLICATION_CONTRIBUTORS_INVITE;
     }
+
 
     private Long getAuthenticatedUserOrganisationId(UserResource user, List<InviteOrganisationResource> savedInvites) {
 		Optional<InviteOrganisationResource> matchingOrganisationResource = savedInvites.stream()
@@ -173,8 +186,8 @@ public class ApplicationContributorController{
                     CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
-                    validator.validate(contributorsForm, bindingResult);
-                    validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
+                    //validator.validate(contributorsForm, bindingResult);
+                    //validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
                 } else {
                     contributorsForm.merge(contributorsFormCookie);
                 }
@@ -195,7 +208,8 @@ public class ApplicationContributorController{
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
                                      HttpServletRequest request,
-                                     HttpServletResponse response) {
+                                     HttpServletResponse response,
+                                     Model model) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         OrganisationResource organisationResource = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
@@ -217,11 +231,9 @@ public class ApplicationContributorController{
             contributorsForm.setTriedToSave(true);
             validator.validate(contributorsForm, bindingResult);
             UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
-            validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
             validatePermissionToInvite(contributorsForm, bindingResult, application, leadApplicant, request);
-            
-            if (!bindingResult.hasErrors()) {
-                saveContributors(applicationId, contributorsForm, response);
+
+            if (!bindingResult.hasErrors() && saveContributors(applicationId, contributorsForm, response, bindingResult)) {
                 // empty cookie, since the invites are saved.
                 CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
 
@@ -241,12 +253,15 @@ public class ApplicationContributorController{
         if (newApplication != null) {
             return String.format("redirect:/application/%d/contributors/invite/?newApplication", applicationId);
         }
-        return String.format("redirect:/application/%d/contributors/invite", applicationId);
+
+        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
+        return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
-    private void validatePermissionToInvite(ContributorsForm contributorsForm, BindingResult bindingResult,
-			ApplicationResource application, UserResource leadApplicant, HttpServletRequest request) {
 
+
+    private void validatePermissionToInvite(ContributorsForm contributorsForm, BindingResult bindingResult,
+        ApplicationResource application, UserResource leadApplicant, HttpServletRequest request) {
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
 
     	if(leadApplicant!=null && leadApplicant.getId().equals(authenticatedUser.getId())){
@@ -264,11 +279,13 @@ public class ApplicationContributorController{
     	});
 	}
 
-    private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
-        contributorsForm.getOrganisations().forEach((invite) -> saveContributor(invite, applicationId, response));
+    private boolean saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response, BindingResult bindingResult) {
+        contributorsForm.getOrganisations().forEach((invite) -> saveContributor(invite, applicationId, contributorsForm, response, bindingResult));
+
+        return !bindingResult.hasErrors();
     }
     
-    private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {
+    private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, ContributorsForm contributorsForm, HttpServletResponse response, BindingResult bindingResult) {
     	List<InviteResource> invites = new ArrayList<>();
         OrganisationResource existingOrganisation = null;
         if (organisationInvite.getOrganisationId() != null) {
@@ -286,34 +303,31 @@ public class ApplicationContributorController{
 
         if(!invites.isEmpty()) {
             // save new invites, to InviteOrganisation that already is saved.
+
+            RestResult<InviteResultsResource> restResponse;
             if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
-                inviteRestService.saveInvites(invites);
-                cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+                restResponse = inviteRestService.saveInvites(invites);
             } else if (existingOrganisation != null) {
                 // Save invites, and link to existing organisation.
-                inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
-                cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+                restResponse = inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
             } else {
                 // Save invites, and create new InviteOrganisation
-                inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
+                restResponse = inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
+            }
+
+
+            if(!restResponse.getStatusCode().is2xxSuccessful()) {
+                if(organisationInvite.getInvites().size() == 1) {
+                    FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(organisationInvite), 0), organisationInvite.getInvites().get(0).getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
+                    bindingResult.addError(fieldError);
+                } else {
+                    restResponse.getFailure().getErrors().forEach(errorMessage -> bindingResult.addError(new FieldError("", "", errorMessage.getErrorMessage())));
+                }
+            } else {
                 cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
             }
-        }
-    }
 
-    /**
-     * Check if e-mail addresses entered, are unique within this application's invites.
-     */
-    private void validateUniqueEmails(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
-        Set<String> savedEmails = getSavedEmailAddresses(application);
-        savedEmails.add(leadApplicant.getEmail());
-        contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {
-            if(!savedEmails.add(i.getEmail())){
-                // Could not add the element, so its a duplicate.
-                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
-                bindingResult.addError(fieldError);
-            }
-        }));
+        }
     }
 
     private Set<String> getSavedEmailAddresses(ApplicationResource application) {

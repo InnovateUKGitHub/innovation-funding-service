@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -80,6 +81,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
 
     LocalValidatorFactoryBean validator;
 
@@ -209,6 +213,18 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources) {
+
+        List<Error> errors = new ArrayList();
+
+        inviteResources.stream()
+                .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(true))
+                .forEach(inviteResource -> errors.add(new Error("Invited emailaddress is already invited in this application", HttpStatus.NOT_ACCEPTABLE)));
+
+        if(errors.size() > 0) {
+            LOG.error("Found double invites");
+            return serviceFailure(errors);
+        }
+
         List<Invite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
         inviteRepository.save(invites);
         return serviceSuccess(sendInvites(invites));
@@ -374,5 +390,26 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
 
         return true;
+    }
+
+    /**
+     * Check if e-mail addresses entered, are unique within this application's invites.
+     */
+    private Boolean validateUniqueEmail(InviteResource inviteResource) {
+
+        Application application = applicationRepository.findOne(inviteResource.getApplication());
+
+        Set<String> savedEmails = getSavedEmailAddresses(inviteResource.getApplication());
+        savedEmails.add(application.getLeadApplicant().getEmail());
+
+        return !savedEmails.contains(inviteResource.getEmail());
+    }
+
+    private Set<String> getSavedEmailAddresses(Long applicationId) {
+        Set<String> savedEmails = new TreeSet<>();
+        List<InviteOrganisationResource> savedInvites = newArrayList();
+        savedInvites.addAll(getInvitesByApplication(applicationId).getSuccessObject());
+        savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
+        return savedEmails;
     }
 }
