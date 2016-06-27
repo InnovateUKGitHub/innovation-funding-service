@@ -87,70 +87,74 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-		return getCompetition(competitionId).andOnSuccess(competition -> {
+        return getCompetition(competitionId).andOnSuccess(competition -> makeFundingDecisionOnCompetitionAndSuccess(competition, applicationFundingDecisions));
+    }
 
-			if (competition.getAssessorFeedbackDate() == null) {
-				LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competitionId);
-				return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
-			}
-			
-			if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
-				LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competitionId);
-				return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
-			}
-			
-			List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
-			
-			saveFundingDecisionData(competition, applicationsForCompetition, applicationFundingDecisions);
-			
-			boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()) || FundingDecision.UNDECIDED.equals(applicationFundingDecisions.get(app.getId())));
+    private ServiceResult<Void> makeFundingDecisionOnCompetitionAndSuccess(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions ) {
 
-			if(!allPresent) {
-				return serviceFailure(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED);
-			}
+        if (competition.getAssessorFeedbackDate() == null) {
+            LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competition.getId());
+            return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
+        }
 
-			applicationsForCompetition.forEach(app -> {
-				FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
-				ApplicationStatus status = statusFromDecision(applicationFundingDecision);
-				app.setApplicationStatus(status);
-			});
+        if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
+            LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competition.getId());
+            return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
+        }
 
-			competition.setFundersPanelEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-			
-			return serviceSuccess();
-		});
+        List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competition.getId());
+
+        saveFundingDecisionData(competition, applicationsForCompetition, applicationFundingDecisions);
+
+        boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()) || FundingDecision.UNDECIDED.equals(applicationFundingDecisions.get(app.getId())));
+
+        if(!allPresent) {
+            return serviceFailure(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED);
+        }
+
+        applicationsForCompetition.forEach(app -> {
+            FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
+            ApplicationStatus status = statusFromDecision(applicationFundingDecision);
+            app.setApplicationStatus(status);
+        });
+
+        competition.setFundersPanelEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+
+        return serviceSuccess();
 	}
 
 	@Override
 	public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 
-		return getCompetition(competitionId).andOnSuccess(competition -> {
+        return getCompetition(competitionId).andOnSuccess(competition -> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccess(competition, applicationFundingDecisions));
+    }
 
-			List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
-			List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
-			List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> UNFUNDED.equals(decision.getValue()));
-			List<Long> fundedApplicationIds = simpleMap(fundedApplicationDecisions, Pair::getKey);
-			List<Long> unfundedApplicationIds = simpleMap(unfundedApplicationDecisions, Pair::getKey);
+    private ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccess(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions) {
 
-			List<ServiceResult<Pair<Long, NotificationTarget>>> fundedNotificationTargets = getLeadApplicantNotificationTargets(fundedApplicationIds);
-			List<ServiceResult<Pair<Long, NotificationTarget>>> unfundedNotificationTargets = getLeadApplicantNotificationTargets(unfundedApplicationIds);
+        List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
+        List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
+        List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> UNFUNDED.equals(decision.getValue()));
+        List<Long> fundedApplicationIds = simpleMap(fundedApplicationDecisions, Pair::getKey);
+        List<Long> unfundedApplicationIds = simpleMap(unfundedApplicationDecisions, Pair::getKey);
 
-			ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(fundedNotificationTargets);
-			ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(unfundedNotificationTargets);
+        List<ServiceResult<Pair<Long, NotificationTarget>>> fundedNotificationTargets = getLeadApplicantNotificationTargets(fundedApplicationIds);
+        List<ServiceResult<Pair<Long, NotificationTarget>>> unfundedNotificationTargets = getLeadApplicantNotificationTargets(unfundedApplicationIds);
 
-			if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
+        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(fundedNotificationTargets);
+        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(unfundedNotificationTargets);
 
-				Notification fundedNotification = createFundingDecisionNotification(competition, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED);
-				Notification unfundedNotification = createFundingDecisionNotification(competition, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED);
+        if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
 
-				ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundedNotification, EMAIL);
-				ServiceResult<Void> unfundedEmailSendResult = notificationService.sendNotification(unfundedNotification, EMAIL);
+            Notification fundedNotification = createFundingDecisionNotification(competition, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED);
+            Notification unfundedNotification = createFundingDecisionNotification(competition, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED);
 
-				return processAnyFailuresOrSucceed(asList(fundedEmailSendResult, unfundedEmailSendResult));
-			} else {
-				return serviceFailure(internalServerErrorError("Unable to determine all Notification targets for funding decision emails"));
-			}
-		});
+            ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundedNotification, EMAIL);
+            ServiceResult<Void> unfundedEmailSendResult = notificationService.sendNotification(unfundedNotification, EMAIL);
+
+            return processAnyFailuresOrSucceed(asList(fundedEmailSendResult, unfundedEmailSendResult));
+        } else {
+            return serviceFailure(internalServerErrorError("Unable to determine all Notification targets for funding decision emails"));
+        }
 	}
 
 	private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {

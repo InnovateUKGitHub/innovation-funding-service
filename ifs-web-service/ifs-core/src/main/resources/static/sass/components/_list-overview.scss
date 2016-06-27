@@ -190,3 +190,56 @@ ol.list-counted {
 		}
 
 }
+
+
+
+dl.standard-definition-list{
+    overflow: auto;
+    @include core-19;
+
+    dt{
+        display: block;
+        float: left;
+        width: 50%;
+        max-width: 250px;
+        margin-bottom: 0.5em;
+
+        @include media-down(tablet) {
+            width: 70%;
+        }
+    }
+
+    dd{
+        display: block;
+        float: left;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+
+        &.warning{
+            color: $red;
+        }
+
+        & + dt{
+            clear: both;
+        }
+    }
+}
+
+.comp-list{
+    li {
+        border-top:1px solid $border-colour;
+				overflow: hidden;
+		}
+    li:last-child {
+        border-bottom:1px solid $border-colour;
+    }
+    .status{
+        display:block;
+				color: $secondary-text-colour;
+        background: $panel-colour;
+        padding: 12px;
+        text-align: center;
+        margin-top: 1.2em;
+        font-weight: bold;
+    }
+}

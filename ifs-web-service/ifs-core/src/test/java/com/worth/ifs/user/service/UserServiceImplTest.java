@@ -1,21 +1,34 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.finance.model.UserRole;
+import com.worth.ifs.application.service.CategoryServiceImpl;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
+
+/**
+ * Test Class for functionality in {@link UserServiceImpl}
+ */
 public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     private static final String EMAIL_THAT_EXISTS_FOR_USER = "sample@me.com";
@@ -60,5 +73,22 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         service.resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
         verify(userRestService, only()).resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
+    }
+
+    @Test
+    public void test_findUserByType() throws Exception {
+        UserResource userOne = new UserResource();
+        userOne.setId(1L);
+
+        UserResource userTwo = new UserResource();
+        userTwo.setId(2L);
+
+        List<UserResource> expected = new ArrayList<>(asList(userOne, userTwo));
+        when(userRestService.findByUserRoleType(UserRoleType.COMP_EXEC)).thenReturn(restSuccess(expected));
+
+        List<UserResource> found = service.findUserByType(UserRoleType.COMP_EXEC);
+        assertEquals(2, found.size());
+        assertEquals(Long.valueOf(1), found.get(0).getId());
+        assertEquals(Long.valueOf(2), found.get(1).getId());
     }
 }
