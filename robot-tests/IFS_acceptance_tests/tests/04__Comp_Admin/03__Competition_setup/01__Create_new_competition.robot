@@ -144,11 +144,12 @@ Eligibility server-side validations
 
 
 Eligibility client-side validations
-    [Documentation]     INFUND-2986
+    [Documentation]     INFUND-2986, INFUND-2988
     [Tags]
     Given the user selects the radio button    multipleStream       yes
     When the user selects the checkbox       id=research-categories-33
     And the user selects the checkbox        id=research-categories-34
+    And the user selects the checkbox        id=research-categories-35
     And the user moves focus to a different part of the page
     # the following step has been commented out because it is
     # Pending due to INFUND-3707
