@@ -391,7 +391,7 @@
                 </fieldset>
             </div>
             
-            <div id="competition-stream-name-fields" th:class="${#fields.hasErrors('streamName')}? 'form-group error js-hidden':'form-group js-hidden'">
+            <div id="competition-stream-name-fields" class="form-group js-hidden"  th:classappend="${#fields.hasErrors('streamName')}? 'error':''">
                 <fieldset class="inline">
                     <legend>
                        <label class="form-label" for="streamName">
