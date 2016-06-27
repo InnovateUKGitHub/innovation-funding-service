@@ -85,3 +85,15 @@
         color: white;
     }
 }
+
+.competition-management.competition-setup .inline-nav a {
+    font-size:15px;
+}
+@media (max-width: 1100px){
+  .competition-management.competition-setup .inline-nav li {
+    float:none;
+  }
+  .competition-management.competition-setup .inline-nav li.selected a {
+    border-bottom: 1px solid $border-colour;
+  }
+}
