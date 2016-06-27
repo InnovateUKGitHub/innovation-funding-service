@@ -380,7 +380,7 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
 		                </span>
                     </legend>
-	                <label class="block-label" for="comp-stream-yes">
+	                <label class="block-label" for="comp-stream-yes" data-target="competition-stream-name-fields">
 	                    <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
 	                Yes
 	                </label>
@@ -391,7 +391,7 @@
                 </fieldset>
             </div>
             
-            <div id="competition-stream-name-fields" th:class="${#fields.hasErrors('streamName')}? 'form-group error':'form-group'">
+            <div id="competition-stream-name-fields" th:class="${#fields.hasErrors('streamName')}? 'form-group error js-hidden':'form-group js-hidden'">
                 <fieldset class="inline">
                     <legend>
                        <label class="form-label" for="streamName">
