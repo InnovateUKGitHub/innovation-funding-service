@@ -5,7 +5,6 @@ import com.worth.ifs.assessment.domain.AssessmentFeedback;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
-import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 
 /**
@@ -14,7 +13,7 @@ import org.mapstruct.Mapper;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                ProcessRoleMapper.class,
+                AssessmentMapper.class,
                 QuestionMapper.class
         }
 )

@@ -22,7 +22,7 @@ public class AssessmentFeedbackLookupStrategy {
     private AssessmentFeedbackMapper assessmentFeedbackMapper;
 
     @PermissionEntityLookupStrategy
-    public AssessmentFeedbackResource getAsessmentFeedbackResource(final Long id){
+    public AssessmentFeedbackResource getAssessmentFeedbackResource(final Long id){
         return assessmentFeedbackMapper.mapToResource(assessmentFeedbackRepository.findOne(id));
     }
 

@@ -6,7 +6,7 @@ package com.worth.ifs.assessment.resource;
 public class AssessmentFeedbackResource {
 
     private Long id;
-    private Long processRole;
+    private Long assessment;
     private String feedback;
     private Integer score;
     private Long question;
@@ -14,9 +14,9 @@ public class AssessmentFeedbackResource {
     public AssessmentFeedbackResource() {
     }
 
-    public AssessmentFeedbackResource(Long id, Long processRole, String feedback, Integer score, Long question) {
+    public AssessmentFeedbackResource(Long id, Long assessment, String feedback, Integer score, Long question) {
         this.id = id;
-        this.processRole = processRole;
+        this.assessment = assessment;
         this.feedback = feedback;
         this.score = score;
         this.question = question;
@@ -30,12 +30,12 @@ public class AssessmentFeedbackResource {
         this.id = id;
     }
 
-    public Long getProcessRole() {
-        return processRole;
+    public Long getAssessment() {
+        return assessment;
     }
 
-    public void setProcessRole(Long processRole) {
-        this.processRole = processRole;
+    public void setAssessment(Long assessment) {
+        this.assessment = assessment;
     }
 
     public String getFeedback() {

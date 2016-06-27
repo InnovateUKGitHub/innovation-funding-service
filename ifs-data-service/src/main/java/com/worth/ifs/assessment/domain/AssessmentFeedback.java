@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.domain;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,8 +17,8 @@ public class AssessmentFeedback {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="processRoleId", referencedColumnName="id")
-    private ProcessRole processRole;
+    @JoinColumn(name="assessmentId", referencedColumnName="id")
+    private Assessment assessment;
 
     @Lob
     @NotNull
@@ -37,23 +36,23 @@ public class AssessmentFeedback {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public ProcessRole getProcessRole() {
-        return processRole;
+    public Assessment getAssessment() {
+        return assessment;
     }
 
-    public void setProcessRole(final ProcessRole processRole) {
-        this.processRole = processRole;
+    public void setAssessment(Assessment assessment) {
+        this.assessment = assessment;
     }
 
     public String getFeedback() {
         return feedback;
     }
 
-    public void setFeedback(final String feedback) {
+    public void setFeedback(String feedback) {
         this.feedback = feedback;
     }
 
@@ -61,7 +60,7 @@ public class AssessmentFeedback {
         return score;
     }
 
-    public void setScore(final Integer score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
@@ -69,7 +68,7 @@ public class AssessmentFeedback {
         return question;
     }
 
-    public void setQuestion(final Question question) {
+    public void setQuestion(Question question) {
         this.question = question;
     }
 }
