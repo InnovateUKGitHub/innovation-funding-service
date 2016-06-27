@@ -1,9 +1,11 @@
 package com.worth.ifs.assessment.model;
 
 
-import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.assessment.form.AssessmentOverviewForm;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -61,24 +64,23 @@ public class AssessmentOverviewModelPopulator {
     private AssessmentService assessmentService;
 
 
-
-    public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
-        ApplicationResource application = applicationService.getById(applicationId);
+    public void populateModel(Long assessmentId, Long userId, AssessmentOverviewForm form, Model model) throws InterruptedException, ExecutionException {
+        final ApplicationResource application = getApplicationForAssessment(assessmentId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
-        ProjectResource projectResource = projectService.getByApplicationId(applicationId);
+        ProjectResource projectResource = projectService.getByApplicationId(application.getId());
 
         if(form == null){
-            form = new ApplicationForm();
+            form = new AssessmentOverviewForm();
         }
-        form.setApplication(application);
-        addUserDetails(model, application, userId);
+        //form.setApplication(application);
+        //addUserDetails(model, application, userId);
 
-        addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
+        //addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
         addCompletedDetails(model, application, userOrganisation);
         addSections(model, competition);
-        addYourFinancesStatus(model, application);
+        //addYourFinancesStatus(model, application);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
