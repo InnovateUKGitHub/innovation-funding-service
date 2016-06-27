@@ -2205,13 +2205,11 @@
   		<div class="section" id="IFS-Assign-container" data-section="IFS" data-heading="Assign-container">
         <div class="comment">
             <h1 class="heading-medium">Assign-container</h1>
-            <p>The assign container normally a select, which gets transformed by javascript to a list of buttons</p>
+            <p>The assign container is normally a <code>&lt;select&gt;</code>, which gets progressivly transformed by javascript to a list of buttons</p>
         </div>
 
             <div class="result">
-                <![CDATA[//><p>Without javascript (what should be inside of the template)</p>
-
-<div class="assign-container">
+                <![CDATA[//><div class="assign-container">
     <div class="assign-button">
         <span>Assigned to:</span>
          <strong>You</strong>
@@ -2230,9 +2228,7 @@
             </div>
 
             <div class="markup hljs">
-              <pre><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Without javascript (what should be inside of the template)<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
-
-<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-container"</span>&gt;</span>
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-container"</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"assign-button"</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Assigned to:<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
          <span class="hljs-tag">&lt;<span class="hljs-title">strong</span>&gt;</span>You<span class="hljs-tag">&lt;/<span class="hljs-title">strong</span>&gt;</span>
@@ -2248,6 +2244,90 @@
         <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span>&gt;</span>Reassign<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
+            </div>
+  		</div>
+  		<div class="section" id="IFS-Collapsible" data-section="IFS" data-heading="Collapsible">
+        <div class="comment">
+            <h1 class="heading-medium">Collapsible</h1>
+            <p>The collapsible element will show a normal header when there is no javascript, when there is a javascript it will be toggleable </p>
+        </div>
+
+            <div class="result">
+                <![CDATA[//><div class="collapsible">
+    <h2 class="open">Collapsible header</h2>
+    <div>content goes here</div>
+        <h2 class="open">Collapsible header 2</h2>
+        <div>content goes here 2</div>
+</div><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"collapsible"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h2</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"open"</span>&gt;</span>Collapsible header<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>content goes here<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">h2</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"open"</span>&gt;</span>Collapsible header 2<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>content goes here 2<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
+            </div>
+  		</div>
+  		<div class="section" id="IFS-Input_sizes" data-section="IFS" data-heading="Input sizes">
+        <div class="comment">
+            <h1 class="heading-medium">Input sizes</h1>
+            <p>Used to define input widths, so they can be more specific to digits that need to ne entered. Used particularly for numerical fields</p>
+        </div>
+
+            <div class="result">
+                <![CDATA[//><div class="form-group">
+    <label class="form-label" for="">Extra small</label>
+    <input class="width-extra-small" id="width-extra-small" value="65px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Small</label>
+    <input class="width-small" id="width-small" value="80px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Small medium</label>
+    <input class="width-small-medium" id="width-small-medium" value="100px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Medium</label>
+    <input class="width-medium" id="width-medium" value="150px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">LARGE</label>
+    <input class="width-large" id="width-large" value="200px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Full</label>
+    <input class="width-full" id="width-full" value="100%">
+</div><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre>&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-group"</span>&gt;
+    &lt;label <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">""</span>&gt;Extra small&lt;/label&gt;
+    &lt;input <span class="hljs-keyword">class</span>=<span class="hljs-string">"width-extra-small"</span> id=<span class="hljs-string">"width-extra-small"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"65px"</span>&gt;
+&lt;/div&gt;
+&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-group"</span>&gt;
+    &lt;label <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">""</span>&gt;Small&lt;/label&gt;
+    &lt;input <span class="hljs-keyword">class</span>=<span class="hljs-string">"width-small"</span> id=<span class="hljs-string">"width-small"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"80px"</span>&gt;
+&lt;/div&gt;
+&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-group"</span>&gt;
+    &lt;label <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">""</span>&gt;Small medium&lt;/label&gt;
+    &lt;input <span class="hljs-keyword">class</span>=<span class="hljs-string">"width-small-medium"</span> id=<span class="hljs-string">"width-small-medium"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"100px"</span>&gt;
+&lt;/div&gt;
+&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-group"</span>&gt;
+    &lt;label <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">""</span>&gt;Medium&lt;/label&gt;
+    &lt;input <span class="hljs-keyword">class</span>=<span class="hljs-string">"width-medium"</span> id=<span class="hljs-string">"width-medium"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"150px"</span>&gt;
+&lt;/div&gt;
+&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-group"</span>&gt;
+    &lt;label <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">""</span>&gt;LARGE&lt;/label&gt;
+    &lt;input <span class="hljs-keyword">class</span>=<span class="hljs-string">"width-large"</span> id=<span class="hljs-string">"width-large"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"200px"</span>&gt;
+&lt;/div&gt;
+&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-group"</span>&gt;
+    &lt;label <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-label"</span> <span class="hljs-keyword">for</span>=<span class="hljs-string">""</span>&gt;Full&lt;/label&gt;
+    &lt;input <span class="hljs-keyword">class</span>=<span class="hljs-string">"width-full"</span> id=<span class="hljs-string">"width-full"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"100%"</span>&gt;
+&lt;/div&gt;</pre>
             </div>
   		</div>
   		<div class="section" id="IFS-Large_button" data-section="IFS" data-heading="Large button">
@@ -2302,6 +2382,50 @@
       <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">strong</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span>&gt;</span>Respond to assessment request<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
+            </div>
+  		</div>
+  		<div class="section" id="IFS-Modal_dialogs" data-section="IFS" data-heading="Modal dialogs">
+        <div class="comment">
+            <h1 class="heading-medium">Modal dialogs</h1>
+            <p>Controlled with javascript, an alternative standard html page should be used for non-js users</p>
+        </div>
+
+            <div class="result">
+                <![CDATA[//><a href="#fallback-pagewhen-no-js" data-js-modal="my-important-modal" class="button">Open dialog</a>
+
+<div class="modal-overlay js-close" aria-hidden="true"></div>
+<div class="my-important-modal" role="dialog" aria-hidden="true">
+    <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+    <p>Content goes here</p>
+    <hr>
+    <div class="grid-row">
+            <div class="column-half">
+                    <button class="js-close button buttonlink large" type="button">Cancel</button>
+            </div>
+            <div class="column-half alignright">
+                    <button class="button large">Submit</button>
+            </div>
+        </div>
+</div><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre>&lt;a href=<span class="hljs-string">"#fallback-pagewhen-no-js"</span> data-js-modal=<span class="hljs-string">"my-important-modal"</span> <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"button"</span>&gt;<span class="hljs-type">Open</span> dialog&lt;/a&gt;
+
+&lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"modal-overlay js-close"</span> aria-hidden=<span class="hljs-string">"true"</span>&gt;&lt;/div&gt;
+&lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"my-important-modal"</span> role=<span class="hljs-string">"dialog"</span> aria-hidden=<span class="hljs-string">"true"</span>&gt;
+    &lt;button <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"js-close close"</span> <span class="hljs-class"><span class="hljs-keyword">type</span>=</span><span class="hljs-string">"button"</span> aria-label=<span class="hljs-string">"Close Popup"</span>&gt;<span class="hljs-type">X</span>&lt;/button&gt;
+    &lt;p&gt;<span class="hljs-type">Content</span> goes here&lt;/p&gt;
+    &lt;hr&gt;
+    &lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"grid-row"</span>&gt;
+            &lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"column-half"</span>&gt;
+                    &lt;button <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"js-close button buttonlink large"</span> <span class="hljs-class"><span class="hljs-keyword">type</span>=</span><span class="hljs-string">"button"</span>&gt;<span class="hljs-type">Cancel</span>&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"column-half alignright"</span>&gt;
+                    &lt;button <span class="hljs-class"><span class="hljs-keyword">class</span>=</span><span class="hljs-string">"button large"</span>&gt;<span class="hljs-type">Submit</span>&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+&lt;/div&gt;</pre>
             </div>
   		</div>
   		<div class="section" id="IFS-Navigation_List" data-section="IFS" data-heading="Navigation List">
@@ -2476,6 +2600,56 @@
 <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"pie small"</span>&gt;</span>10%<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></pre>
             </div>
   		</div>
+  		<div class="section" id="IFS-Progress_indicator" data-section="IFS" data-heading="Progress indicator">
+        <div class="comment">
+            <h1 class="heading-medium">Progress indicator</h1>
+            
+        </div>
+
+            <div class="result">
+                <![CDATA[//><div class="progress-container">
+    <div class="progress-indicator">
+        <div class="progress" style="width:0%" aria-valuemin="0" aria-valuenow="1" aria-valuemax="100" role="progressbar">
+            <div>
+                0%
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="progress-container">
+    <div class="progress-indicator">
+        <div class="progress" style="width:51%" aria-valuemin="0" aria-valuenow="51" aria-valuemax="100" role="progressbar">
+            <div>
+                51%
+            </div>
+        </div>
+    </div>
+</div><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre>&lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"progress-container"</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"progress-indicator"</span>&gt;
+        &lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"progress"</span> style=<span class="hljs-string">"width:0%"</span> aria-valuemin=<span class="hljs-string">"0"</span> aria-valuenow=<span class="hljs-string">"1"</span> aria-valuemax=<span class="hljs-string">"100"</span> role=<span class="hljs-string">"progressbar"</span>&gt;
+            &lt;<span class="hljs-keyword">div</span>&gt;
+                <span class="hljs-number">0</span>%
+            &lt;/<span class="hljs-keyword">div</span>&gt;
+        &lt;/<span class="hljs-keyword">div</span>&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+&lt;/<span class="hljs-keyword">div</span>&gt;
+
+&lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"progress-container"</span>&gt;
+    &lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"progress-indicator"</span>&gt;
+        &lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"progress"</span> style=<span class="hljs-string">"width:51%"</span> aria-valuemin=<span class="hljs-string">"0"</span> aria-valuenow=<span class="hljs-string">"51"</span> aria-valuemax=<span class="hljs-string">"100"</span> role=<span class="hljs-string">"progressbar"</span>&gt;
+            &lt;<span class="hljs-keyword">div</span>&gt;
+                <span class="hljs-number">51</span>%
+            &lt;/<span class="hljs-keyword">div</span>&gt;
+        &lt;/<span class="hljs-keyword">div</span>&gt;
+    &lt;/<span class="hljs-keyword">div</span>&gt;
+&lt;/<span class="hljs-keyword">div</span>&gt;</pre>
+            </div>
+  		</div>
   		<div class="section" id="IFS-Right_aligned_buttons" data-section="IFS" data-heading="Right aligned buttons">
         <div class="comment">
             <h1 class="heading-medium">Right aligned buttons</h1>
@@ -2483,17 +2657,31 @@
         </div>
 
             <div class="result">
-                <![CDATA[//><div class="alignright-button">
+                <![CDATA[//><div class="alignright">
     <button class="button">Button 1</button>
     <button class="button">Button 2</button>
 </div><!]]>
             </div>
 
             <div class="markup hljs">
-              <pre>&lt;div class=<span class="hljs-string">"alignright-button"</span>&gt;
+              <pre>&lt;div class=<span class="hljs-string">"alignright"</span>&gt;
     &lt;<span class="hljs-keyword">button </span>class=<span class="hljs-string">"button"</span>&gt;<span class="hljs-keyword">Button </span><span class="hljs-number">1</span>&lt;/<span class="hljs-keyword">button&gt;
 </span>    &lt;<span class="hljs-keyword">button </span>class=<span class="hljs-string">"button"</span>&gt;<span class="hljs-keyword">Button </span><span class="hljs-number">2</span>&lt;/<span class="hljs-keyword">button&gt;
 </span>&lt;/div&gt;</pre>
+            </div>
+  		</div>
+  		<div class="section" id="IFS-Small_Alert_Dialog" data-section="IFS" data-heading="Small Alert Dialog">
+        <div class="comment">
+            <h1 class="heading-medium">Small Alert Dialog</h1>
+            <p>Small dialog warning usually used as a warning before submitting a form</p>
+        </div>
+
+            <div class="result">
+                <![CDATA[//><p class="form-hint icon-info-small-blue">Only you can see this level of detail</p><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre>&lt;p <span class="hljs-keyword">class</span>=<span class="hljs-string">"form-hint icon-info-small-blue"</span>&gt;Only you can <span class="hljs-annotation">see</span> <span class="hljs-keyword">this</span> level <span class="hljs-keyword">of</span> detail&lt;/p&gt;</pre>
             </div>
   		</div>
   		<div class="section" id="IFS-Text" data-section="IFS" data-heading="Text">
@@ -2640,6 +2828,20 @@ Hello world <span class="hljs-tag">&lt;<span class="hljs-title">small</span>&gt;
          <span class="hljs-tag">&lt;<span class="hljs-title">h4</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"heading-medium"</span>&gt;</span>Providing sustainable childcare<span class="hljs-tag">&lt;/<span class="hljs-title">h4</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span></pre>
+            </div>
+  		</div>
+  		<div class="section" id="IFS-warning_button" data-section="IFS" data-heading="warning button">
+        <div class="comment">
+            <h1 class="heading-medium">warning button</h1>
+            
+        </div>
+
+            <div class="result">
+                <![CDATA[//><button class="button-warning button large">No</button><!]]>
+            </div>
+
+            <div class="markup hljs">
+              <pre><span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"button-warning button large"</span>&gt;</span>No<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span></pre>
             </div>
   		</div>
   </div>

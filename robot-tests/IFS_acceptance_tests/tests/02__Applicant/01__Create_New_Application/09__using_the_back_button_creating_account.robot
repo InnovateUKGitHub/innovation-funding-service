@@ -12,7 +12,8 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Click the back button while on the create account page
     [Documentation]    INFUND-1423
-    [Tags]    Create account    Back button
+    [Tags]    Create account    Back button     Pending
+    # Pending due to INFUND-3690
     Given the user navigates to the page    ${LOGIN_URL}
     When the user follows the flow to register their organisation
     And the user goes back to the previous page

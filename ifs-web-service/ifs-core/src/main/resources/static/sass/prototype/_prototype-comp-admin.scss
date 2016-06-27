@@ -402,6 +402,52 @@ table{
 	}
 }
 
+/*----- Comp dashboard tables styling----*/
+
+.comp-dashboard{
+	
+	.list-overview{
+
+		display: table;
+		width: 100%;
+
+		li {
+	    	display: table-row; 
+	    	width: 100%;
+			
+			&:first-child{
+				h3, p{
+					border-top: 1px solid $border-colour;
+				}
+			}
+
+		}
+
+		li h3,
+		li p{
+	    	display: table-cell;
+	    	padding: 0.5em 0;
+	        border-bottom: 1px solid $border-colour;
+		}
+
+
+
+		li h3{
+		    width: 50%;
+		}
+
+		li p{
+		    width: 30%;
+		    color: $secondary-text-colour;
+		}
+
+		li p + p{
+		    text-align: right;
+		    width: 20%;
+		}
+	}
+}
+
 
 /*----- Creating fixed info panels for widescreen views ----*/
 

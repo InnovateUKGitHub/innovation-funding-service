@@ -72,6 +72,7 @@ ${UPLOAD_FOLDER}    uploaded_files
 ${VIRTUAL_DISPLAY}    ${EMPTY}
 ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${LOCAL_MAIL_SENDING_IMPLEMENTED}    'YES'
+${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${COMP_ADMINISTRATOR_OPEN}    ${SERVER}/management/competition/1
 ${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/2
 ${DOWNLOAD_FOLDER}    ../download_files
@@ -83,3 +84,4 @@ ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 ${TEST_MAILBOX_ONE}    worth.email.test@gmail.com
 ${TEST_MAILBOX_TWO}    worth.email.test.two@gmail.com
+${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2

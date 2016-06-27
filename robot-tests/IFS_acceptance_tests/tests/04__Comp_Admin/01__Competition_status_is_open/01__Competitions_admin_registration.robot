@@ -25,7 +25,7 @@ Registration for a user who is in the list
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
-    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_OPEN}
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
 
 *** Keywords ***
 User creates new account verifies email and login

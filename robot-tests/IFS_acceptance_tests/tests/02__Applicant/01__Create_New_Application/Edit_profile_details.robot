@@ -94,33 +94,33 @@ Display errors for invalid inputs of the Phone field
 
 *** Keywords ***
 the user enters profile details
-    Wait Until Element Is Visible       id=title
+    the user should see the element      id=title
     Select From List By Index    id=title    4
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
     Input Text    id=phoneNumber    +-0123456789
-    Click Element    css=[name="create-account"]
+    the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the first name
     [Arguments]    ${first name}
     Input Text    id=firstName    ${first_name}
     Input Text    id=lastName    Brown
     Input Text    id=phoneNumber    0123456789
-    Click Element    css=[name="create-account"]
+    the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the last name
     [Arguments]    ${Last_name}
     Input Text    id=firstName    Chris
     Input Text    id=lastName    ${Last_name}
     Input Text    id=phoneNumber    0123456789
-    Click Element    css=[name="create-account"]
+    the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the phone field
     [Arguments]    ${phone_field}
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
     Input Text    id=phoneNumber    ${phone_field}
-    Click Element    css=[name="create-account"]
+    the user clicks the button/link    css=[name="create-account"]
 
 the user can change their details back again
     Guest user log-in    &{lead_applicant_credentials}
@@ -130,12 +130,12 @@ the user can change their details back again
     the user enters their old profile details
 
 the user enters their old profile details
-    Wait Until Element Is Visible       id=title
+    the user should see the element       id=title
     Select From List By Index    id=title    4
     Input Text    id=firstName    Steve
     Input Text    id=lastName    Smith
     Input Text    id=phoneNumber    +-0123456789
-    Click Element    css=[name="create-account"]
+    the user clicks the button/link    css=[name="create-account"]
 
 other contributors should see the applicant's updated name for the assignation options
     Logout as user

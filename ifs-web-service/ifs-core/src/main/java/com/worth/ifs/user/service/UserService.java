@@ -4,6 +4,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 import java.util.Set;
@@ -31,5 +32,6 @@ public interface UserService {
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber);
+    List<UserResource> findUserByType(UserRoleType type);
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
 }
