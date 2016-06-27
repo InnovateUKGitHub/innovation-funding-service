@@ -230,6 +230,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(2);
 
         when(projectService.getProjectUsersForProject(123L)).thenReturn(availableUsers);
+        when(projectService.updateFinanceContact(123L, 8L, 789L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/details/finance-contact", 123L).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).

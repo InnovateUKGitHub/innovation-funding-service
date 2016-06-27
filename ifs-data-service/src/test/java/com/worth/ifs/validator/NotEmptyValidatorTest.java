@@ -1,55 +1,65 @@
 package com.worth.ifs.validator;
 
-import com.worth.ifs.form.domain.FormInputResponse;
+import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.worth.ifs.form.domain.FormInputResponse;
 
-public class NotEmptyValidatorTest extends AbstractValidatorTest {
-    public Validator getValidator() {
-        return new NotEmptyValidator();
+public class NotEmptyValidatorTest {
+	
+	private Validator validator;
+
+	private FormInputResponse formInputResponse;
+	private BindingResult bindingResult;
+	
+	@Before
+	public void setUp() {
+        validator = new NotEmptyValidator();
+        
+        formInputResponse = new FormInputResponse();
+        bindingResult = getBindingResult(formInputResponse);
     }
 
     @Test
-    public void testInvalid() throws Exception {
-        FormInputResponse formInputResponse = new FormInputResponse();
-        BindingResult bindingResult = getBindingResult(formInputResponse);
-
+    public void testInvalidEmpty() {
         formInputResponse.setValue("");
-        getValidator().validate(formInputResponse, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-
-        formInputResponse.setValue(null);
-        getValidator().validate(formInputResponse, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-
-        formInputResponse.setValue(" ");
-        getValidator().validate(formInputResponse, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-
-        formInputResponse.setValue(" ");
-        getValidator().validate(formInputResponse, bindingResult);
+        validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
     }
-
     @Test
-    public void testValid() throws Exception {
-        FormInputResponse formInputResponse = new FormInputResponse();
-        BindingResult bindingResult = getBindingResult(formInputResponse);
-
+    public void testInvalidNull() {
+        formInputResponse.setValue(null);
+        validator.validate(formInputResponse, bindingResult);
+        assertTrue(bindingResult.hasErrors());
+    }
+    @Test
+    public void testInvalidWhiteSpace() {
+        formInputResponse.setValue(" ");
+        validator.validate(formInputResponse, bindingResult);
+        assertTrue(bindingResult.hasErrors());
+    }
+    @Test
+    public void testValid() {
         formInputResponse.setValue("asdf");
-        getValidator().validate(formInputResponse, bindingResult);
+        validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
-
+    }
+    @Test
+    public void testValidSingleChar() {
         formInputResponse.setValue("a");
-        getValidator().validate(formInputResponse, bindingResult);
+        validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
-
+    }
+    @Test
+    public void testValidNotAlpha() {
         formInputResponse.setValue("-");
-        getValidator().validate(formInputResponse, bindingResult);
+        validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
     }
 }

@@ -204,5 +204,56 @@ public class CompetitionSetupControllerTest {
         
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS));
     }
+    
+    @Test
+    public void submitSectionEligibilityWithErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+        
+        verify(competitionService, never()).update(competition);
+    }
+    
+    @Test
+    public void submitSectionEligibilityWithoutErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
+        				.param("multipleStream", "yes")
+        				.param("streamName", "stream")
+        				.param("researchCategoryId", "1", "2", "3")
+        				.param("singleOrCollaborative", "collaborative")
+        				.param("leadApplicantType", "business")
+        				.param("researchParticipationAmountId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+        
+        verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY));
+    }
+    
+    @Test
+    public void submitSectionEligibilityWithoutStreamName() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
+        				.param("multipleStream", "yes")
+        				.param("streamName", "")
+        				.param("researchCategoryId", "1", "2", "3")
+        				.param("singleOrCollaborative", "collaborative")
+        				.param("leadApplicantType", "business")
+        				.param("researchParticipationAmountId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+        
+        verify(competitionService, never()).update(competition);
+    }
 
 }
