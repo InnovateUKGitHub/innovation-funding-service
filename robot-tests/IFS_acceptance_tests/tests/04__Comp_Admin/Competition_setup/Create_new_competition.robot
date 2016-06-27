@@ -45,6 +45,8 @@ Initial details server-side validations
     And the user should see an error    Please enter a PAF number
     And the user should see an error   Please enter a budget code
     And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
+    # The following step has been commented out because it is
+    # Pending due to INFUND-
     # Then the user should see the text in the page    Please fill in a correct date before generating the competition code
 
 Initial details client-side validations
@@ -140,9 +142,12 @@ Eligibility server-side validations
 Eligibility client-side validations
     [Documentation]     INFUND-2986
     [Tags]
+    Given the user selects the radio button    multipleStream       yes
     When the user selects the checkbox       id=research-categories-33
     And the user selects the checkbox        id=research-categories-34
     And the user moves focus to a different part of the page
+    # the following step has been commented out because it is
+    # Pending due to INFUND-3707
     # Then the user should not see the text in the page      Please select at least one research category
     And the user should see the text in the page       Please select a collaboration level
     And the user should see the text in the page       Please select a lead applicant type
@@ -151,7 +156,19 @@ Eligibility client-side validations
     And the user selects the option from the drop-down menu    30%     name=researchParticipationAmountId
     Then the user should not see the text in the page   Please select a collaboration level
     And the user should not see the text in the page     Please select a lead applicant type
+    # the following step has been commented out because it is
+    # Pending due to INFUND-3707
     # And the user should not see the text in the page    Please select at least one research category
+
+
+Eligibility information can be saved and the stream info shows correctly
+    [Documentation]      INFUND-3051
+    [Tags]
+    When the user clicks the button/link            jQuery=.button:contains("Done")
+    Then the user should see the text in the page      Multiple Stream
+    And the user should see the text in the page        Yes
+    [Teardown]    The user clicks the button/link      jQuery=.button:contains("Edit")
+
 
 The user can see the options for single and collaborative, lead applicant type, and streams
     [Documentation]   INFUND-2989, INFUND-2990
