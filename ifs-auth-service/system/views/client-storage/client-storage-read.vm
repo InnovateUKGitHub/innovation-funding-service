@@ -13,6 +13,8 @@
 ## environment - Spring Environment object for property resolution
 #set ($title = $springMacroRequestContext.getMessage("idp.title", "Web Login Service"))
 #set ($titleSuffix = $springMacroRequestContext.getMessage("idp.client-storage-read.suffix", "Loading Session State..."))
+#set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
+#set ($resourcesDomain = $rpContext.getRelyingPartyId())
 ##
 
 
@@ -21,8 +23,8 @@
     <head>
         <meta charset="utf-8" />
         <title>$title - $titleSuffix</title>
-        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/fonts.css" >
-        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/screen.css" >
+        <link rel="stylesheet" type="text/css" href="$resourcesDomain/css/fonts.css" >
+        <link rel="stylesheet" type="text/css" href="$resourcesDomain/css/screen.css" >
         <script>
         <!--
         #include( "client-storage/local-storage-read.js" )

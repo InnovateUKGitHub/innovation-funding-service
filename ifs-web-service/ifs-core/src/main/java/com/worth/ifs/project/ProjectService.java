@@ -31,5 +31,9 @@ public interface ProjectService {
 
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address);
 
+    ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId);
+
+    ServiceResult<Boolean> isSubmitAllowed(Long projectId);
+
     OrganisationResource getLeadOrganisation(Long projectId);
 }
