@@ -67,10 +67,10 @@ public class ProjectDetailsController {
 
     @Autowired
     private CompetitionService competitionService;
-    
+
     @Autowired
     private OrganisationRestService organisationRestService;
-    
+
     @Autowired
     private AddressRestService addressRestService;
 
@@ -90,18 +90,31 @@ public class ProjectDetailsController {
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
-
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 userIsLeadPartner(projectId, loggedInUser.getId())));
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
 
         return "project/detail";
     }
+
+    @RequestMapping(value = "/{projectId}/confirm-project-details", method = RequestMethod.GET)
+    public String projectDetailConfirmSubmit(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("currentUser", loggedInUser);
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
+        return "project/confirm-project-details";
+    }
+
 
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.GET)
     public String viewFinanceContact(Model model,
@@ -168,7 +181,7 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
 		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        
+
         model.addAttribute("organisationUsers", thisOrganisationUsers);
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute("project", projectResource);
@@ -177,13 +190,13 @@ public class ProjectDetailsController {
         model.addAttribute("competition", competitionResource);
         return "project/finance-contact";
 	}
-    
+
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
         List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         return !projectUsersForOrganisation.isEmpty();
 	}
-    
+
 	private boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
 		if(userId == null) {
 			return false;
@@ -195,7 +208,7 @@ public class ProjectDetailsController {
 
 		return !projectUsersForUserAndOrganisation.isEmpty();
 	}
-    
+
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) throws InterruptedException, ExecutionException {
@@ -237,7 +250,7 @@ public class ProjectDetailsController {
 	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
 
         Future<ProcessRoleResource> processRoleResource = getProjectManagerProcessRole(projectId);
-    	
+
         ProjectManagerForm form = new ProjectManagerForm();
         if(processRoleResource != null) {
 			form.setProjectManager(processRoleResource.get().getUser());
@@ -370,8 +383,7 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
-                                BindingResult bindingResult) {
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
         form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
@@ -396,6 +408,12 @@ public class ProjectDetailsController {
         addressForm.setManualAddress(true);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
+    }
+
+    @RequestMapping(value = "/{projectId}/details/submit", method = RequestMethod.POST)
+    public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
+        ServiceResult<Void> serviceResult = projectService.setApplicationDetailsSubmitted(projectId);
+        return redirectToProjectDetails(projectId);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(

@@ -57,4 +57,14 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     public RestResult<ProjectResource> getByApplicationId(Long applicationId) {
         return getWithRestResult(projectRestURL + "/application/" + applicationId, ProjectResource.class);
     }
+
+    @Override
+    public RestResult<Void> setApplicationDetailsSubmitted(Long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/setApplicationDetailsSubmitted", Void.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isSubmitAllowed(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/isSubmitAllowed", Boolean.class);
+    }
 }
