@@ -15,6 +15,10 @@
     <div th:if="${agreeToTerms}" class="event-alert" >
       	<p><span>You must agree to the terms and conditions.</span></p>
 	</div>
+	
+	<div th:if="${cannotSubmit}" class="event-alert" >
+        <p><span>This application cannot be submitted.</span></p>
+    </div>
    		
 	<h2 class="heading-medium">This is your final chance to make changes to the application.</h2>
     <p>You will not be able to access the application after this point. Are you sure you want to submit?</p>
