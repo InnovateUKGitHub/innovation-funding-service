@@ -152,6 +152,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         processRoleResource.setUser(projectManagerUserId);
         when(userService.getLeadPartnerOrganisationProcessRoles(applicationResource)).thenReturn(singletonList(processRoleResource));
 
+        when(projectService.updateProjectManager(projectId, projectManagerUserId)).thenReturn(serviceSuccess());
+
+        
         mockMvc.perform(post("/project/{id}/details/project-manager", projectId)
         		.param("projectManager", projectManagerUserId.toString()))
                 .andExpect(status().is3xxRedirection())
