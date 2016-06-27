@@ -135,7 +135,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 
 	private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {
-		return !FIELDS_NOT_SORTABLE_IN_DB.stream().anyMatch((field) -> field.equals(sortBy));
+		return !FIELDS_NOT_SORTABLE_IN_DB.stream().anyMatch(field -> field.equals(sortBy));
 	}
 
 	private String[] getApplicationSummarySortField(String sortBy) {

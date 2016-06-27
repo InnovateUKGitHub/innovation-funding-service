@@ -56,7 +56,7 @@ small {
 
 # IFS/Right aligned buttons
 ```
-<div class="alignright-button">
+<div class="alignright">
 	<button class="button">Button 1</button>
 	<button class="button">Button 2</button>
 </div>
@@ -236,4 +236,16 @@ p.subtitle {
 .boxed {
 	border:1px solid $border-colour;
 	padding:20px;
+}
+
+
+
+span.yes{
+	@extend %icon-tick;
+	padding-left: 28px;
+}
+
+span.no{
+	@extend %icon-cross;
+	padding-left: 28px;
 }

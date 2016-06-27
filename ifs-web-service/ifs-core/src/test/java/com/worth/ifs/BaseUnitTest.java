@@ -181,7 +181,6 @@ public class BaseUnitTest {
     public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
-    // TODO BO - remove assessorProcessRolesTemporary when Assessment is converted to DTO
     public List<ProcessRoleResource> assessorProcessRoleResources;
     public List<ProcessRoleResource> applicantRoles;
     public ApplicationFinanceResource applicationFinanceResource;

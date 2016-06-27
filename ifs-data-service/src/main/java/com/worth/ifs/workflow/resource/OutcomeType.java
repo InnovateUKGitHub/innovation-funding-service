@@ -7,5 +7,5 @@ import javax.persistence.Entity;
  * These are used to progress through the workflow.
  */
 public interface OutcomeType {
-    public String getType();
+    String getType();
 }

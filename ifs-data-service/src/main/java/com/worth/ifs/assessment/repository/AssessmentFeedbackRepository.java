@@ -15,4 +15,8 @@ public interface AssessmentFeedbackRepository extends CrudRepository<AssessmentF
     @Override
     List<AssessmentFeedback> findAll();
 
+    List<AssessmentFeedback> findByAssessmentId(Long assessmentId);
+
+    AssessmentFeedback findByAssessmentIdAndQuestionId(Long assessmentId, Long questionId);
+
 }

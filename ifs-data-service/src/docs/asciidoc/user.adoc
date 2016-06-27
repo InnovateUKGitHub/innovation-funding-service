@@ -8,6 +8,19 @@ include::{snippets}/user/get-all-users/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/user/get-all-users/curl-request.adoc[]
 
+=== Retrieve users by role
+==== Request
+include::{snippets}/user/find-by-role/http-request.adoc[]
+include::{snippets}/user/find-by-role/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/find-by-role/http-response.adoc[]
+include::{snippets}/user/find-by-role/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/user/find-by-role/curl-request.adoc[]
+
+
 === Retrieve user
 ==== Request
 include::{snippets}/user/get-user/http-request.adoc[]

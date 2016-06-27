@@ -2,6 +2,8 @@ package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Optional;
 
@@ -40,5 +42,33 @@ public class AssessmentNavigationViewModel {
 
     private String getNavigationUrl(final QuestionResource question) {
         return format("/%s/question/%s", assessmentId, question.getId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessmentNavigationViewModel that = (AssessmentNavigationViewModel) o;
+
+        return new EqualsBuilder()
+                .append(assessmentId, that.assessmentId)
+                .append(previousQuestion, that.previousQuestion)
+                .append(nextQuestion, that.nextQuestion)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessmentId)
+                .append(previousQuestion)
+                .append(nextQuestion)
+                .toHashCode();
     }
 }
