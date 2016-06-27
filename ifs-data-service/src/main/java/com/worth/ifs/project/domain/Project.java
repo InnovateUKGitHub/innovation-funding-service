@@ -2,6 +2,7 @@ package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.bankdetail.domain.BankDetail;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -46,6 +47,9 @@ public class Project {
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    private List<BankDetail> bankDetails;
 
     public Project() {}
 
