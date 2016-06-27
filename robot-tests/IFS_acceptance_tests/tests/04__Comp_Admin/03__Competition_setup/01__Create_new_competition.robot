@@ -20,11 +20,15 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 User can navigate to the competition setup form
-    [Documentation]    INFUND-2945
+    [Documentation]    INFUND-2945  As a Competition Executive I want to be able to create a new competition from the
+    ...                             Competitions Dashboard so Innovate UK can create a new competition.
     ...
-    ...    INFUND-2982
+    ...                INFUND-2982  Create a Competition: Step 1: Initial details
     ...
-    ...    INFUND-2983
+    ...                INFUND-2983  As a Competition Executive I want to be informed if the competition will fall under
+    ...                             State Aid when I select a 'Competition type' in competition setup.
+    ...
+    ...                INFUND-2986  Create a Competition: Step 3: Eligibility
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user redirects to the page    Competition Setup    Step 1: Initial competition details
