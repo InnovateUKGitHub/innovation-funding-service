@@ -71,18 +71,18 @@ public class CategoryLinkServiceImpl extends BaseTransactionalService implements
 
 	private List<CategoryLink> toAdd(Iterable<Category> categoriesWanted, List<CategoryLink> alreadyInDb, String className, Long classPk) {
 		return StreamSupport.stream(categoriesWanted.spliterator(), false)
-				.filter(cat -> {
-					return !alreadyInDb.stream().anyMatch(link -> link.getCategory().getId().equals(cat.getId()));
-				})
+				.filter(cat ->
+					!alreadyInDb.stream().anyMatch(link -> link.getCategory().getId().equals(cat.getId()))
+                )
 				.map(cat -> new CategoryLink(cat, className, classPk))
 				.collect(Collectors.toList());
 	}
 	
 	private List<CategoryLink> toRemove(Iterable<Category> categoriesWanted, List<CategoryLink> alreadyInDb, String className, Long classPk) {
 		return alreadyInDb.stream()
-				.filter(link -> {
-					return !StreamSupport.stream(categoriesWanted.spliterator(), false).anyMatch(cat -> link.getCategory().getId().equals(cat.getId()));
-				})
+				.filter(link ->
+					!StreamSupport.stream(categoriesWanted.spliterator(), false).anyMatch(cat -> link.getCategory().getId().equals(cat.getId()))
+				)
 				.collect(Collectors.toList());
 	}
 
