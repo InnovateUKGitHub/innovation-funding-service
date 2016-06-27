@@ -96,53 +96,48 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
         return createProjectFromApplicationId(applicationId);
     }
-    
+
     @Override
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
         return getProject(projectId).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerId).
-                andOnSuccessReturnVoid(project::setProjectManager));
+                        andOnSuccessReturnVoid(project::setProjectManager));
     }
 
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
                 andOnSuccess(() -> getProject(projectId).
-                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate)));
+                        andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate)));
     }
-    
-	@Override
-	public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
-		 return getProject(projectId).
-				  andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-				  andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                  andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
-	}
+
+    @Override
+    public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+        return getProject(projectId).
+                andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
+                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+    }
 
     @Override
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
-        ServiceResult<Project> result = getProject(projectId);
-        if(result.isSuccess()){
-            Project project = result.getSuccessObject();
-            Organisation leadOrganisation = organisationRepository.findOne(organisationId);
-            if (address.getId() != null && addressRepository.exists(address.getId())) {
-                Address existingAddress = addressRepository.findOne(address.getId());
-                project.setAddress(existingAddress);
-            } else {
-                Address newAddress = addressMapper.mapToDomain(address);
-                if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
-                    AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
-                    List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
-                    existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
-                    OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
-                    organisationAddressRepository.save(organisationAddress);
-                }
-                project.setAddress(newAddress);
-            }
-            return serviceSuccess();
+        Project project = projectRepository.findOne(projectId);
+        Organisation leadOrganisation = organisationRepository.findOne(organisationId);
+        if (address.getId() != null && addressRepository.exists(address.getId())) {
+            Address existingAddress = addressRepository.findOne(address.getId());
+            project.setAddress(existingAddress);
         } else {
-            return serviceFailure(result.getFailure().getErrors());
+            Address newAddress = addressMapper.mapToDomain(address);
+            if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
+                AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
+                List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
+                existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
+                OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
+                organisationAddressRepository.save(organisationAddress);
+            }
+            project.setAddress(newAddress);
         }
+        return serviceSuccess();
     }
 
     @Override
@@ -185,7 +180,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {
         project.setSubmittedDate(date);
-        projectRepository.save(project);
         return serviceSuccess();
     }
 
@@ -196,7 +190,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         if (existingUser != null) {
             project.removeProjectUser(existingUser);
         }
-        
+
         project.addProjectUser(financeContact);
     }
 
@@ -239,18 +233,18 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<ProcessRole> validateProjectManager(Project project, Long projectManagerId) {
         Application application = applicationRepository.findOne(project.getApplication().getId());
-		Organisation leadPartner = application.getLeadOrganisation();
+        Organisation leadPartner = application.getLeadOrganisation();
 
         List<ProcessRole> leadPartnerProcessRoles = simpleFilter(application.getProcessRoles(), pr -> leadPartner.equals(pr.getOrganisation()));
         List<ProcessRole> matchingProcessRoles = simpleFilter(leadPartnerProcessRoles, lppr -> projectManagerId.equals(lppr.getUser().getId()));
 
         if(!matchingProcessRoles.isEmpty()) {
-			return getOnlyElementOrFail(matchingProcessRoles).andOnSuccess(processRole -> serviceSuccess(processRole));
-		} else {
-			return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
-		}
-	}
-    
+            return getOnlyElementOrFail(matchingProcessRoles).andOnSuccess(processRole -> serviceSuccess(processRole));
+        } else {
+            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+        }
+    }
+
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
         return getApplication(applicationId).andOnSuccess(application -> {
             Project project = new Project();
@@ -282,7 +276,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
-    
+
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
@@ -300,9 +294,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private boolean allFinanceContactsNotSet(Long projectId){
-        List<ProjectUserResource> projectUsers = getProjectUsers(projectId).getSuccessObject();
-        List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUsers);
-        List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
+        List<ProjectUser> projectUserObjs = projectUserRepository.findByProjectId(projectId);
+        List<ProjectUserResource> projectUserResources = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
+        List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUserResources);
+        List<ProjectUserResource> financeRoles = simpleFilter(projectUserResources, ProjectUserResource::isFinanceContact);
         return financeRoles.size() < partnerOrganisations.size();
     }
 

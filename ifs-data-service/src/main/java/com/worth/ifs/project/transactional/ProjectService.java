@@ -58,7 +58,7 @@ public interface ProjectService {
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> saveProjectSubmitDateTime(final Long id, LocalDateTime date);
+    ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Boolean> isSubmitAllowed(final Long projectId);
