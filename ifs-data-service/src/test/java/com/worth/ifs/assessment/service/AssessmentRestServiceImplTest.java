@@ -31,7 +31,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         final AssessmentResource expected = newAssessmentResource()
                 .build();
 
-        final Long assessmentId = 9999L;
+        final Long assessmentId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s", assessmentRestURL, assessmentId), AssessmentResource.class, expected, OK);
         final AssessmentResource response = service.getById(assessmentId).getSuccessObject();

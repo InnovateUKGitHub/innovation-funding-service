@@ -22,7 +22,7 @@ public class AssessmentFeedbackBuilderTest {
 
     @Test
     public void buildOne() {
-        final Long expectedId = 9999L;
+        final Long expectedId = 1L;
         final Assessment expectedAssessment = newAssessment().build();
         final String expectedFeedback = "Sample message";
         final Integer expectedScore = 10;
@@ -36,7 +36,7 @@ public class AssessmentFeedbackBuilderTest {
                 .withQuestion(expectedQuestion)
                 .build();
 
-        assertEquals(Long.valueOf(expectedId), assessmentFeedback.getId());
+        assertEquals(expectedId, assessmentFeedback.getId());
         assertEquals(expectedAssessment, assessmentFeedback.getAssessment());
         assertEquals(expectedFeedback, assessmentFeedback.getFeedback());
         assertEquals(expectedScore, assessmentFeedback.getScore());
@@ -45,7 +45,7 @@ public class AssessmentFeedbackBuilderTest {
 
     @Test
     public void buildMany() {
-        final Long[] expectedIds = { 8888L, 9999L };
+        final Long[] expectedIds = { 1L, 2L };
         final Assessment[] expectedAssessments = newAssessment().buildArray(2, Assessment.class);
         final String[] expectedFeedbacks = { "Sample message 1", "Sample message 2" };
         final Integer[] expectedScores = { 10, 10 };
@@ -59,14 +59,14 @@ public class AssessmentFeedbackBuilderTest {
                 .build(2);
 
         final AssessmentFeedback first = assessmentFeedbacks.get(0);
-        assertEquals(Long.valueOf(expectedIds[0]), first.getId());
+        assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedAssessments[0], first.getAssessment());
         assertEquals(expectedFeedbacks[0], first.getFeedback());
         assertEquals(expectedScores[0], first.getScore());
         assertEquals(expectedQuestions[0], first.getQuestion());
 
         final AssessmentFeedback second = assessmentFeedbacks.get(1);
-        assertEquals(Long.valueOf(expectedIds[1]), second.getId());
+        assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedAssessments[1], second.getAssessment());
         assertEquals(expectedFeedbacks[1], second.getFeedback());
         assertEquals(expectedScores[1], second.getScore());

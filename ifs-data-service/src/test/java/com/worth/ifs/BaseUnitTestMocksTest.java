@@ -19,6 +19,7 @@ import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentFeedbackRepository;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.transactional.AssessmentFeedbackService;
+import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
@@ -85,6 +86,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentMapper assessmentMapperMock;
+
+    @Mock
+    protected AssessmentService assessmentServiceMock;
 
     @Mock
     protected AssessmentFeedbackMapper assessmentFeedbackMapperMock;

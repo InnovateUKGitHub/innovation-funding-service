@@ -25,17 +25,20 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void findById() throws Exception {
-        final Assessment assessment = newAssessment().build();
+        final Long assessmentId  = 1L;
+
+        final Assessment assessment = newAssessment()
+                        .build();
 
         final AssessmentResource expected = newAssessmentResource().build();
 
-        when(assessmentRepositoryMock.findOne(9999L)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
-        final AssessmentResource found = assessmentService.findById(9999L).getSuccessObject();
+        final AssessmentResource found = assessmentService.findById(assessmentId).getSuccessObject();
 
         assertSame(expected, found);
-        verify(assessmentRepositoryMock, only()).findOne(9999L);
+        verify(assessmentRepositoryMock, only()).findOne(assessmentId);
     }
 
 }

@@ -31,13 +31,13 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         final AssessmentResource expected = newAssessmentResource()
                 .build();
 
-        final Long assessmentId = 9999L;
+        final Long assessmentId = 1L;
 
         when(assessmentRestService.getById(assessmentId)).thenReturn(restSuccess(expected));
 
         final AssessmentResource response = service.getById(assessmentId);
 
         assertSame(expected, response);
-        verify(assessmentRestService, only()).getById(9999L);
+        verify(assessmentRestService, only()).getById(assessmentId);
     }
 }

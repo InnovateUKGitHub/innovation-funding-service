@@ -29,12 +29,38 @@ public class AssessmentFeedbackServiceImpl extends BaseTransactionalService impl
     private AssessmentFeedbackMapper assessmentFeedbackMapper;
 
     @Override
-    public ServiceResult<List<AssessmentFeedbackResource>> getAllAssessmentFeedback(Long assessmentId) {
+    public ServiceResult<List<AssessmentFeedbackResource>> getAllAssessmentFeedback(final Long assessmentId) {
         return serviceSuccess(simpleMap(assessmentFeedbackRepository.findByAssessmentId(assessmentId), assessmentFeedbackMapper::mapToResource));
     }
 
     @Override
     public ServiceResult<AssessmentFeedbackResource> getAssessmentFeedbackByAssessmentAndQuestion(final Long assessmentId, final Long questionId) {
-        return find(assessmentFeedbackRepository.findByAssessmentIdAndQuestionId(assessmentId, questionId), notFoundError(AssessmentFeedback.class, assessmentId, questionId)).andOnSuccessReturn(assessmentFeedbackMapper::mapToResource);
+        return getOrCreateAssessmentFeedback(assessmentId, questionId);
+    }
+
+    @Override
+    public ServiceResult<Void> updateFeedbackValue(final Long assessmentId, final Long questionId, final String value) {
+        final AssessmentFeedbackResource assessmentFeedback = getOrCreateAssessmentFeedback(assessmentId, questionId).getSuccessObjectOrThrowException();
+        assessmentFeedback.setFeedback(value);
+        assessmentFeedbackRepository.save(assessmentFeedbackMapper.mapToDomain(assessmentFeedback));
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> updateFeedbackScore(final Long assessmentId, final Long questionId, final Integer score) {
+        final AssessmentFeedbackResource assessmentFeedback = getOrCreateAssessmentFeedback(assessmentId, questionId).getSuccessObjectOrThrowException();
+        assessmentFeedback.setScore(score);
+        assessmentFeedbackRepository.save(assessmentFeedbackMapper.mapToDomain(assessmentFeedback));
+        return serviceSuccess();
+    }
+
+    private ServiceResult<AssessmentFeedbackResource> getOrCreateAssessmentFeedback(final Long assessmentId, final Long questionId) {
+        return find(assessmentFeedbackRepository.findByAssessmentIdAndQuestionId(assessmentId, questionId), notFoundError(AssessmentFeedback.class, assessmentId, questionId)).handleSuccessOrFailure(failure -> {
+                    final AssessmentFeedbackResource newAssessmentFeedback = new AssessmentFeedbackResource();
+                    newAssessmentFeedback.setAssessment(assessmentId);
+                    newAssessmentFeedback.setQuestion(questionId);
+                    return serviceSuccess(newAssessmentFeedback);
+                }, assessmentFeedback -> serviceSuccess(assessmentFeedbackMapper.mapToResource(assessmentFeedback))
+        );
     }
 }

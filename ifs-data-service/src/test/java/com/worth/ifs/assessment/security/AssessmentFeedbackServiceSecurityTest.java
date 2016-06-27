@@ -9,7 +9,7 @@ import org.junit.Ignore;
 
 import java.util.List;
 
-@Ignore
+@Ignore("TODO")
 public class AssessmentFeedbackServiceSecurityTest extends BaseServiceSecurityTest<AssessmentFeedbackService> {
 
     private AssessmentFeedbackPermissionRules assessmentFeedbackPermissionRules;
@@ -28,12 +28,22 @@ public class AssessmentFeedbackServiceSecurityTest extends BaseServiceSecurityTe
 
     public static class TestAssessmentFeedbackService implements AssessmentFeedbackService {
         @Override
-        public ServiceResult<List<AssessmentFeedbackResource>> getAllAssessmentFeedback(Long assessmentId) {
+        public ServiceResult<List<AssessmentFeedbackResource>> getAllAssessmentFeedback(final Long assessmentId) {
             return null;
         }
 
         @Override
-        public ServiceResult<AssessmentFeedbackResource> getAssessmentFeedbackByAssessmentAndQuestion(Long assessmentId, Long questionId) {
+        public ServiceResult<AssessmentFeedbackResource> getAssessmentFeedbackByAssessmentAndQuestion(final Long assessmentId, final Long questionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateFeedbackValue(Long assessmentId, Long questionId, String value) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateFeedbackScore(Long assessmentId, Long questionId, Integer score) {
             return null;
         }
     }

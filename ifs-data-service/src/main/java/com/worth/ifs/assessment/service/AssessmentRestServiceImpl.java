@@ -5,6 +5,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
 
+import static java.lang.String.format;
+
 /**
  * AssessmentFeedbackRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.assessment.domain.Assessment}.
  * This class connects to the {@link com.worth.ifs.assessment.controller.AssessmentController}
@@ -21,6 +23,6 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
 
     @Override
     public RestResult<AssessmentResource> getById(final Long id) {
-        return getWithRestResult(assessmentRestURL + "/" + id, AssessmentResource.class);
+        return getWithRestResult(format("%s/%s", assessmentRestURL, id), AssessmentResource.class);
     }
 }

@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentFeedback;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -31,12 +32,12 @@ public class AssessmentFeedbackRepositoryIntegrationTest extends BaseRepositoryI
         this.repository = repository;
     }
 
+    @Ignore("TODO")
     @Test
     public void findAll() throws Exception {
         final List<AssessmentFeedback> found = repository.findAll();
 
-        // TODO
-        assertTrue(found.isEmpty());
+        fail();
     }
 
     @Test

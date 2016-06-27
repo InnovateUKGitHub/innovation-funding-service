@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
+import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,10 +12,10 @@ import static com.worth.ifs.assessment.builder.AssessmentFeedbackResourceBuilder
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentFeedbackResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTest<AssessmentFeedbackRestServiceImpl> {
-
     private static final String assessmentFeedbackRestURL = "/assessment-feedback";
 
     @Before
@@ -32,10 +33,9 @@ public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTe
     @Test
     public void getAllAssessmentFeedback() throws Exception {
         final List<AssessmentFeedbackResource> expected = newAssessmentFeedbackResource()
-                .withId(1000L, 1001L)
                 .build(2);
 
-        final Long assessmentId = 9999L;
+        final Long assessmentId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/assessment/%s", assessmentFeedbackRestURL, assessmentId), assessmentFeedbackResourceListType(), expected, OK);
         final List<AssessmentFeedbackResource> response = service.getAllAssessmentFeedback(assessmentId).getSuccessObject();
@@ -47,11 +47,33 @@ public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTe
         final AssessmentFeedbackResource expected = newAssessmentFeedbackResource()
                 .build();
 
-        final Long assessmentId = 9999L;
-        final Long questionId = 8888L;
+        final Long assessmentId = 1L;
+        final Long questionId = 2L;
 
         setupGetWithRestResultExpectations(format("%s/assessment/%s/question/%s", assessmentFeedbackRestURL, assessmentId, questionId), AssessmentFeedbackResource.class, expected, OK);
         final AssessmentFeedbackResource response = service.getAssessmentFeedbackByAssessmentAndQuestion(assessmentId, questionId).getSuccessObject();
         assertSame(expected, response);
+    }
+
+    @Test
+    public void updateFeedbackValue() throws Exception {
+        final Long assessmentId = 1L;
+        final Long questionId = 2L;
+        final String value = "Blah";
+
+        setupPostWithRestResultExpectations(format("%s/assessment/%s/question/%s?feedback-value=%s", assessmentFeedbackRestURL, assessmentId, questionId, value), null, OK);
+        final RestResult<Void> response = service.updateFeedbackValue(assessmentId, questionId, value);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void updateFeedbackScore() throws Exception {
+        final Long assessmentId = 1L;
+        final Long questionId = 2L;
+        final Integer score = 10;
+
+        setupPostWithRestResultExpectations(format("%s/assessment/%s/question/%s?feedback-score=%s", assessmentFeedbackRestURL, assessmentId, questionId, score), null, OK);
+        final RestResult<Void> response = service.updateFeedbackScore(assessmentId, questionId, score);
+        assertTrue(response.isSuccess());
     }
 }
