@@ -1,7 +1,5 @@
 package com.worth.ifs.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -35,27 +33,35 @@ public class GrantClaimValidator implements Validator {
 
         OrganisationType organisationType = cost.getApplicationFinance().getOrganisation().getOrganisationType();
         
+        int min;
+        int max;
+        
         if(isAcademicOrBusiness(organisationType)) {
         	
             OrganisationSize size = cost.getApplicationFinance().getOrganisationSize();
 
         	if(size == null) {
                 errors.rejectValue("grantClaimPercentage", "validation.finance.select.organisation.size");
-            } else if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage().equals(0)) {
-                errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
-            } else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
-                errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", size.getMaxGrantClaimPercentage()));
-            } else if(response.getGrantClaimPercentage().intValue() <= 0){
-                errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", 1));
+                return;
             }
+        	
+        	if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage() == 0) {
+                errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
+            }
+        	
+        	min = 1;
+        	max = size.getMaxGrantClaimPercentage();
         } else {
-        	if(response.getGrantClaimPercentage() == null) {
-                errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
-            } else if(response.getGrantClaimPercentage() > 100){
-                errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", 100));
-            } else if(response.getGrantClaimPercentage().intValue() < 0){
-                errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", 1));
-            }
+        	min = 0;
+        	max = 100;
+        }
+        
+    	if(response.getGrantClaimPercentage() == null) {
+            errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
+        } else if(response.getGrantClaimPercentage() > max){
+            errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", max));
+        } else if(response.getGrantClaimPercentage().intValue() < min){
+            errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", min));
         }
     }
     
