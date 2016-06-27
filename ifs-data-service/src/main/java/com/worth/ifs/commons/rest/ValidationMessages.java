@@ -1,6 +1,8 @@
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
@@ -16,12 +18,12 @@ import java.util.Locale;
  * Resource object to return validation messages on rest calls.
  */
 public class ValidationMessages implements Serializable {
+
     private String objectName;
     private Long objectId;
-    private List<Error> errors;
+    private List<Error> errors = new ArrayList<>();
 
     public ValidationMessages(MessageSource messageSource, Long objectId, BindingResult bindingResult) {
-        errors = new ArrayList<>();
         bindingResult.getFieldErrors().forEach(e -> {
                     List<Object> args = Arrays.asList();
                     String errorMessage;
@@ -52,6 +54,12 @@ public class ValidationMessages implements Serializable {
 
     }
 
+    public ValidationMessages(String objectName, Long objectId, List<Error> errors) {
+        this.objectName = objectName;
+        this.objectId = objectId;
+        this.errors = errors;
+    }
+
     public String getObjectName() {
         return objectName;
     }
@@ -74,5 +82,29 @@ public class ValidationMessages implements Serializable {
 
     public void setErrors(List<Error> errors) {
         this.errors = errors;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ValidationMessages that = (ValidationMessages) o;
+
+        return new EqualsBuilder()
+                .append(objectName, that.objectName)
+                .append(objectId, that.objectId)
+                .append(errors, that.errors)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(objectName)
+                .append(objectId)
+                .append(errors)
+                .toHashCode();
     }
 }

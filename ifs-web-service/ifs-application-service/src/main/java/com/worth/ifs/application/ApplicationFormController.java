@@ -13,6 +13,7 @@ import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.*;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -596,10 +597,10 @@ public class ApplicationFormController extends AbstractApplicationController {
                         .forEach(formInput -> {
                                     if (params.containsKey("formInput[" + formInput + "]")) {
                                         String value = request.getParameter("formInput[" + formInput + "]");
-                                        List<String> errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
-                                        if (!errors.isEmpty()) {
+                                        ValidationMessages errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
+                                        if (!errors.getErrors().isEmpty()) {
                                             LOG.info("save failed. " + question.getId());
-                                            errorMap.put(question.getId(), new ArrayList<>(errors));
+                                            errorMap.put(question.getId(), simpleMap(errors.getErrors(), Error::getErrorMessage));
                                         }
                                     }
                                 }
@@ -748,7 +749,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
-            errors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
+            ValidationMessages validation = formInputResponseService.save(userId, applicationId, formInputId, value, false);
+            errors = simpleMap(validation.getErrors(), Error::getErrorMessage);
         }
         return errors;
     }
