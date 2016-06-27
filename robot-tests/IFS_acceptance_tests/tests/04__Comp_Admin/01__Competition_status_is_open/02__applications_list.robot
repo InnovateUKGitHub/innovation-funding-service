@@ -35,8 +35,8 @@ The correct columns show for the application list table
 
 The correct number of applications shows in the table header
     [Documentation]    INFUND-2135: listing of applications for an open competition
-    [Tags]    Competition management     Failing
-    Then the table header matches the number of rows in the applications list table
+    [Tags]    Competition management
+    Then the table header matches correctly
 
 The applications can be sorted by application number
     [Documentation]    INFUND-2135: listing of applications for an open competition
@@ -78,7 +78,7 @@ Calculations of the submitted application
 
 Calculations for the Number of applications
     [Documentation]    INFUND-2259
-    [Tags]     Failing
+    [Tags]
     Then the calculations should be correct    jQuery=td:contains("00000")    css=.info-area p:nth-child(2) span
     And both calculations in the page should show the same
 
@@ -114,17 +114,36 @@ the applications should be sorted in reverse order by column
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}
-    ${ELEMENT}=    Get Webelements    ${LIST_LOCATOR}
-    ${LENGTH_LIST}=    Get Length    ${ELEMENT}
-    log    ${LENGTH_LIST}
-    ${pagination}=    run keyword and ignore error       the user clicks the button/link    name=page
-    run keyword if      ${pagination} == 'PASS'       ${LENGTH_LIST_PAGE_TWO}=        get matching xpath count     //*[td]
-    ${LENGTH_LIST_NUMBER}=    convert to integer     ${LENGTH_LIST}
-    ${LENGTH_LIST_PAGE_TWO_NUMBER}=      convert to integer      ${LENGTH_LIST_PAGE_TWO}
-    ${total_length_list}=       evaluate    ${LENGTH_LIST_NUMBER}+${LENGTH_LIST_PAGE_TWO_NUMBER}
-    ${LENGTH_SUMMARY}=    Get text    ${SUMMARY_LOCATOR}
-    log    ${LENGTH_SUMMARY}
-    Should Be Equal As Integers    ${LENGTH_SUMMARY}    ${total_length_list}
+    ${pagination}=       run keyword and ignore error       the user clicks the button/link     name=page
+    run keyword if       ${pagination} == 'PASS'       check calculations on both pages      ${LIST_LOCATOR}     ${SUMMARY_LOCATOR}
+    run keyword if       ${pagination} == 'FAIL'       check calculations on one page        ${LIST_LOCATOR}     ${SUMMARY_LOCATOR}
+
+
+check calculations on one page
+    [Arguments]     ${list_locator}       ${summary_locator}
+    ${element}=    Get Webelements    ${list_locator}
+    ${length_list}=    Get Length    ${element}
+    log    ${length_list}
+    ${length_summary}=    Get text    ${summary_locator}
+    log    ${length_summary}
+    Should Be Equal As Integers    ${length_summary}    ${length_list}
+
+
+check calculations on both pages
+    [Arguments]    ${list_locator}      ${summary_locator}
+    ${element_page_two}=    Get Webelements    ${list_locator}
+    ${length_list_page_two}=    Get Length    ${element_page_two}
+    log    ${length_list_page_two}
+    the user navigates to the page       ${comp_management_applications_list}
+    ${element}=      Get Webelements      ${list_locator}
+    ${length_list}=     Get Length    ${element}
+    log     ${length_list}
+    ${total_length}=     Evaluate      ${length_list}+${length_list_page_two}
+    log     ${total_length}
+    ${length_summary}=    Get text    ${summary_locator}
+    log    ${length_summary}
+    Should Be Equal As Integers    ${length_summary}    ${total_length}
+
 
 both calculations in the page should show the same
     ${APPLICATIONS_NUMBER_SUMMARY}=    get text    css=.info-area p:nth-child(2) span
@@ -137,19 +156,33 @@ open application calculations are correct
 submitted application calculations are correct
     the calculations should be correct    jQuery=td:contains("submitted")    css=.info-area p:nth-child(5) span
 
-the table header matches the number of rows in the applications list table
-    ${pagination}=   Run Keyword and Ignore Error      the user clicks the button/link     name=page
-    Run Keyword If     ${pagination} == 'PASS'      ${row_count_second_page}=       get matching xpath count      //*[td]
-    the user navigates to the page        ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-    ${row_count_first_page}=      get matching xpath count      //*[td]
-    ${row_count_first_page_number}=    convert to integer      ${row_count_first_page}
-    ${row_count_second_page_number}=     convert to integer    ${row_count_second_page}
-    log       ${row_count_second_page_number}
-    ${total_row_count}=       Evaluate        ${row_count_first_page_number}+${row_count_second_page_number}
+the table header matches correctly
+    ${pagination}=    Run Keyword And Ignore Error       the user clicks the button/link     name=page
+    Run Keyword If      ${pagination} == 'PASS'     check both pages of applications
+    Run Keyword If      ${pagination} == 'FAIL'     check applications on one page
 
-    ${apps_string}=    Catenate    ${total_row_count}    applications
-    the user navigates to the page      ${comp_management_applications_list}
-    The user should see the text in the page    ${apps_string}
+
+check both pages of applications
+    ${row_count_second_page}=    get matching xpath count      //*[td]
+    convert to integer       ${row_count_second_page}
+    log      ${row_count_second_page}
+    the user navigates to the page     ${comp_management_applications_list}
+    ${row_count_first_page}=     get matching xpath count      //*[td]
+    convert to integer       ${row_count_first_page}
+    log      ${row_count_first_page}
+    ${total_application_count}=      evaluate      ${row_count_first_page}+${row_count_second_page}
+    log       ${total_application_count}
+    $[apps_string}=     Catenate     ${total_application_count}     applications
+    the user should see the text in the page     ${apps_string}
+
+
+check applications on one page
+    ${total_row_count}=       get matching xpath count      //*[td]
+    convert to integer       ${total_row_count}
+    log       ${total_row_count}
+    ${apps_string}=     Catenate     ${total_application_count}      applications
+    the user should see the text in the page      ${apps_string}
+
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}

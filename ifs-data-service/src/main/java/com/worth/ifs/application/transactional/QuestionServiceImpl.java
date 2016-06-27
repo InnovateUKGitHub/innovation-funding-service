@@ -1,5 +1,6 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.mapper.QuestionMapper;
@@ -279,33 +280,36 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
-        return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
-            QuestionStatus questionStatus = null;
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
+                -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete));
+    }
 
-            if (question.hasMultipleStatuses()) {
-                //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
-                List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
-                Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
-                        .map(m -> getQuestionStatusByMarkedAsCompleteId(question, applicationId, m.getId()))
-                        .filter(m -> m != null)
-                        .findFirst();
-                questionStatus = optionalQuestionStatus.orElse(null);
-            } else {
-                questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
-            }
+    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, Long processRoleId, boolean markAsComplete){
 
-            List<ValidationMessages> applicationIsValid = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
+        QuestionStatus questionStatus = null;
 
-            if (questionStatus == null) {
-                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-            } else if (applicationIsValid.isEmpty() && markAsComplete) {
-                questionStatus.markAsComplete();
-            } else {
-                questionStatus.markAsInComplete();
-            }
-            questionStatusRepository.save(questionStatus);
-            return serviceSuccess(applicationIsValid);
-        });
+        if (question.hasMultipleStatuses()) {
+            //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
+            List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(application.getId(), markedAsCompleteBy.getOrganisation().getId());
+            Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
+                    .map(m -> getQuestionStatusByMarkedAsCompleteId(question, application.getId(), m.getId()))
+                    .filter(m -> m != null)
+                    .findFirst();
+            questionStatus = optionalQuestionStatus.orElse(null);
+        } else {
+            questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
+        }
+        List<ValidationMessages> applicationIsValid = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
+
+        if (questionStatus == null) {
+            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
+        } else if (markAsComplete) {
+            questionStatus.markAsComplete();
+        } else {
+            questionStatus.markAsInComplete();
+        }
+        questionStatusRepository.save(questionStatus);
+        return serviceSuccess(applicationIsValid);
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
@@ -314,7 +318,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
         return null;
-
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {
@@ -413,5 +416,4 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private List<QuestionResource> questionsToResources(List<Question> filtered) {
         return simpleMap(filtered, question -> questionMapper.mapToResource(question));
     }
-
 }
