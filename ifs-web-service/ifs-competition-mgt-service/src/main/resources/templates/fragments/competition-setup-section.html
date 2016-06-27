@@ -380,7 +380,7 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
 		                </span>
                     </legend>
-	                <label class="block-label" for="comp-stream-yes">
+	                <label class="block-label" for="comp-stream-yes" data-target="competition-stream-name-fields">
 	                    <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
 	                Yes
 	                </label>
@@ -388,6 +388,26 @@
 	                    <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
 	                No
 	                </label>
+                </fieldset>
+            </div>
+            
+            <div id="competition-stream-name-fields" th:class="${#fields.hasErrors('streamName')}? 'form-group error js-hidden':'form-group js-hidden'">
+                <fieldset class="inline">
+                    <legend>
+                       <label class="form-label" for="streamName">
+	                        <span class="form-label-bold">Stream name</span>
+	                        <span th:if="${#fields.hasErrors('streamName')}" th:remove="tag">
+	                              <span class="error-message"  th:each="err : ${#fields.errors('streamName')}" th:text="${err}" />
+	                        </span>
+	                    </label>
+                    </legend>
+                    
+	                <input th:class="${#fields.hasErrors('streamName') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+	                       type="text"
+	                       th:field="*{streamName}"
+	                       maxlength="255"
+	                       data-maxlength-errormessage="Stream name has a maximum length of 255 characters" />
+                       
                 </fieldset>
             </div>
             
@@ -465,6 +485,11 @@
                 <dt>Multiple Stream</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.multipleStream)}"></dd>
 
+                <div th:if="${'yes' == competitionSetupForm.multipleStream}" th:remove="tag">
+                    <dt>Stream name</dt>
+                    <dd th:text="${competitionSetupForm.streamName}"></dd>
+                </div>
+                
                 <dt>Research categories</dt>
                 <dd th:text="${researchCategoriesFormatted}"></dd>
 

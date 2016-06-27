@@ -52,6 +52,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     public CompetitionResourceBuilder withMultiStream(boolean multiStream) {
         return with(competition -> competition.setMultiStream(multiStream));
     }
+    
+    public CompetitionResourceBuilder withStreamName(String... streamNames) {
+        return withArray((streamName, object) -> setField("streamName", streamName, object), streamNames);
+    }
 
     public CompetitionResourceBuilder withId(Long... ids) {
         return withArray((id, object) -> setField("id", id, object), ids);
