@@ -77,7 +77,10 @@ public class PasswordPolicyValidator {
      * common numerical replacements for letters.  e.g. given a pattern checking for ".*hello.*there.*", this generator
      * would allow numberical replacements to be checked for as well like ".*h[e3][l1][l1][o0].*th[e3]r[e3].*"
      */
-    private ExclusionRulePatternGenerator lettersForNumbersGenerator = new ExclusionRulePatternGenerator() {
+
+    private ExclusionRulePatternGeneratorImpl lettersForNumbersGenerator = new ExclusionRulePatternGeneratorImpl();
+
+    private class ExclusionRulePatternGeneratorImpl implements ExclusionRulePatternGenerator {
 
         private Map<String, String> interchangeableLettersAndNumbers = asMap(
                 "a", "4",
@@ -106,7 +109,7 @@ public class PasswordPolicyValidator {
 
             return singletonList(currentExcludedWordWithNumericalReplacementsPattern);
         }
-    };
+    }
 
     @PostConstruct
     void postConstruct() {
