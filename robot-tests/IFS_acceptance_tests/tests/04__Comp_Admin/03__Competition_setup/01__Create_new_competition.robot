@@ -50,7 +50,7 @@ Initial details server-side validations
     And the user should see an error   Please enter a budget code
     And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
     # The following step has been commented out because it is
-    # Pending due to INFUND-
+    # Pending due to INFUND-3708
     # Then the user should see the text in the page    Please fill in a correct date before generating the competition code
 
 Initial details client-side validations
@@ -151,9 +151,7 @@ Eligibility client-side validations
     And the user selects the checkbox        id=research-categories-34
     And the user selects the checkbox        id=research-categories-35
     And the user moves focus to a different part of the page
-    # the following step has been commented out because it is
-    # Pending due to INFUND-3707
-    # Then the user should not see the text in the page      Please select at least one research category
+    Then the user should not see the text in the page      Please select at least one research category
     And the user should see the text in the page       Please select a collaboration level
     And the user should see the text in the page       Please select a lead applicant type
     When the user selects the radio button     singleOrCollaborative       single
@@ -161,9 +159,7 @@ Eligibility client-side validations
     And the user selects the option from the drop-down menu    30%     name=researchParticipationAmountId
     Then the user should not see the text in the page   Please select a collaboration level
     And the user should not see the text in the page     Please select a lead applicant type
-    # the following step has been commented out because it is
-    # Pending due to INFUND-3707
-    # And the user should not see the text in the page    Please select at least one research category
+    And the user should not see the text in the page    Please select at least one research category
 
 
 Eligibility information can be saved and the stream info shows correctly
