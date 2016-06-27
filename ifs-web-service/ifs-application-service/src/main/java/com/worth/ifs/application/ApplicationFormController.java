@@ -366,13 +366,34 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         if(isMarkQuestionRequest(params)) {
-            markApplicationQuestions(application, processRole.getId(), request, response, errors);
+            markApplicationQuestions(question, application, processRole.getId(), request, response, bindingResult, errors);
         } else if(isMarkSectionRequest(params)){
             handleMarkSectionRequest(application, competition, sectionId, request, response, bindingResult, processRole, errors);
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
     }
+
+//    private void m(ApplicationResource application, QuestionResource question, ProcessRoleResource processRole, BindingResult bindingResult){
+//        if (bindingResult.hasErrors()) {
+//            bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+//        } else {
+//                List<ValidationMessages> mMessages = questionService.markAsComplete(question.getId(), application.getId(), processRole.getId()); //this returns errors
+//            if (mMessages != null && !mMessages.isEmpty()) {
+//              //  bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+//                m2(bindingResult, mMessages);
+//            }
+//        }
+//    }
+
+    private void m2(BindingResult bindingResult, List<ValidationMessages> messages) {
+//        ValidationMessages validationMessages = messages.get(0);
+        for (ValidationMessages val : messages) {
+                System.out.println(val);
+           // addNonDuplicateFieldError(bindingResult, "formInput[cost-" + val.getObjectId() + "]", "some error");// e.getErrorMessage());
+        }
+    }
+
 
     private void handleMarkSectionRequest(ApplicationResource application, CompetitionResource competition, Long sectionId, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
         if (bindingResult.hasErrors()) {
@@ -478,7 +499,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private void markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
+    private void markApplicationQuestions(QuestionResource question, ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, Map<Long, List<String>> errors) {
         Map<String, String[]> params = request.getParameterMap();
 
         boolean marked = markQuestion(request, params, application.getId(), processRoleId, errors);
@@ -486,6 +507,17 @@ public class ApplicationFormController extends AbstractApplicationController {
         // if a question is marked as complete, don't show the field saved message.
         if (!marked) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        }
+
+        if (bindingResult.hasErrors()) {
+
+        }
+        else {
+            List<ValidationMessages> mess =  questionService.markAsComplete(question.getId(), application.getId(), processRoleId);
+
+            if (mess != null && !mess.isEmpty() ){
+               // m2(bindingResult, mess);
+            }
         }
     }
 
@@ -545,6 +577,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (processRoleId == null) {
             return false;
         }
+
         boolean success = false;
         if (params.containsKey(MARK_AS_COMPLETE)) {
             Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
@@ -553,7 +586,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                 List<String> fieldErrors = errors.get(questionId);
                 fieldErrors.add("Please enter valid data before marking a question as complete.");
             } else {
-                questionService.markAsComplete(questionId, applicationId, processRoleId);
                 success = true;
             }
         } else if (params.containsKey(MARK_AS_INCOMPLETE)) {
@@ -561,7 +593,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             questionService.markAsInComplete(questionId, applicationId, processRoleId);
             success = true;
         }
-
         return success;
     }
 

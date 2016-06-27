@@ -35,7 +35,7 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
             errors.rejectValue("name", "response.emptyResponse", "Please enter the full title of the project");
         }
 
-        if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < 0 || application.getDurationInMonths() > 99) {
+        if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < 0 || application.getDurationInMonths() > 36) {
             LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
             errors.rejectValue("durationInMonths", "response.emptyResponse", "Please enter a valid duration");
         }
