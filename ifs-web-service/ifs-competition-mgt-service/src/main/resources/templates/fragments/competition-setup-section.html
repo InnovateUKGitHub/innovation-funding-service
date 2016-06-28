@@ -189,7 +189,8 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}" />
                     </span>
                 </label>
-                <input disabled="disabled" th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                <input readonly="readonly"
+                       th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                        type="text"
                        th:field="${competitionSetupForm.competitionCode}"
                        required="required"
