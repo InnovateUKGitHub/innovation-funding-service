@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,6 +20,7 @@ public class ProjectTest {
     Long durationInMonths;
     ProcessRole projectManager;
     String name;
+    LocalDateTime submittedDate;
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +31,8 @@ public class ProjectTest {
         durationInMonths = 12L;
         projectManager = new ProcessRole();
         name = "My Project";
-        project = new Project(id, application, startDate, address, durationInMonths, projectManager, name);
+        submittedDate = LocalDateTime.now();
+        project = new Project(id, application, startDate, address, durationInMonths, projectManager, name, submittedDate);
     }
 
     @Test
@@ -41,5 +44,6 @@ public class ProjectTest {
         assertEquals(project.getDurationInMonths(), durationInMonths);
         assertEquals(project.getProjectManager(), projectManager);
         assertEquals(project.getName(), name);
+        assertEquals(project.getSubmittedDate(), submittedDate);
     }
 }

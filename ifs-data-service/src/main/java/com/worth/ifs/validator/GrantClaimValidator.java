@@ -47,7 +47,8 @@ public class GrantClaimValidator implements Validator {
         	
         	if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage() == 0) {
                 errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
-            }
+                return;
+        	}
         	
         	min = 1;
         	max = size.getMaxGrantClaimPercentage();

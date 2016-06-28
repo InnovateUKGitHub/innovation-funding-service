@@ -28,10 +28,9 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
     public void setAsText(String dateFieldName) throws IllegalArgumentException {
         Map<String, String[]> parameterMap = webRequest.getParameterMap();
 
-        // should validate these...
-        Integer year = returnZeroWhenNotValid(parameterMap, dateFieldName + ".year", ChronoField.YEAR);
-        Integer month = returnZeroWhenNotValid(parameterMap, dateFieldName + ".monthValue", ChronoField.MONTH_OF_YEAR);
-        Integer day = returnZeroWhenNotValid(parameterMap, dateFieldName + ".dayOfMonth", ChronoField.DAY_OF_MONTH);
+        Integer year = returnZeroWhenNotValid(parameterMap, dateFieldName + ".year", ChronoField.YEAR, LocalDate.now().getYear());
+        Integer month = returnZeroWhenNotValid(parameterMap, dateFieldName + ".monthValue", ChronoField.MONTH_OF_YEAR, (int) ChronoField.MONTH_OF_YEAR.range().getMinimum());
+        Integer day = returnZeroWhenNotValid(parameterMap, dateFieldName + ".dayOfMonth", ChronoField.DAY_OF_MONTH, (int) ChronoField.DAY_OF_MONTH.range().getMinimum());
 
         try {
             setValue(LocalDate.of(year, month, day));
@@ -42,12 +41,12 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
         }
     }
 
-    private Integer returnZeroWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField) {
+    private Integer returnZeroWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField, int defaultValueIfInvalid) {
         try {
             return chronoField.checkValidIntValue(Long.valueOf(parameterMap.get(parameterName)[0]));
         } catch (Exception e){
             LOG.error(e);
-            return (int)chronoField.range().getMinimum();
+            return defaultValueIfInvalid;
         }
     }
 }
