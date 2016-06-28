@@ -1,5 +1,7 @@
 package com.worth.ifs.assessment.resource;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Represents feedback given as part of the assessment journey to a question for an application.
  */
@@ -60,5 +62,9 @@ public class AssessmentFeedbackResource {
 
     public void setQuestion(Long question) {
         this.question = question;
+    }
+
+    public boolean isComplete() {
+        return score != null && StringUtils.isNotBlank(feedback);
     }
 }
