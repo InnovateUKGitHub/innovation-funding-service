@@ -23,7 +23,7 @@
 
 	<div class="warning-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
         <h2 class="heading-small no-margin">Complete your account</h2>
-        <p>To enable your project to be funded by Innovate UK your business must be registered with Companies House. </p>
+        <p>To enable your project to be funded by Innovate UK, your business must be registered with Companies House. </p>
         <p><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>
     </div>
 	
@@ -96,7 +96,7 @@
 
 		<li th:class="${(param.stage != null and param.stage[0] == 'level3' ? 'require-action' : '')}" th:unless="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">
 			<span>
-				<h2 class="heading-medium"><a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}">Spend profile</a></h2>
+				<h2 class="heading-medium"><a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}">Spend profile</a></h2>
 				<p>Once we have approved your financial information, we will produce a spend profile.</p>
 			</span>
 		</li>

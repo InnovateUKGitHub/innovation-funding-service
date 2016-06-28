@@ -207,8 +207,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
+        return getOpenApplication(fileEntry.getApplicationId()).andOnSuccess(application -> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(fileEntry));
+    }
 
-        return getOpenApplication(fileEntry.getApplicationId()).andOnSuccess(application -> {
+    private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
+
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(fileEntry);
 
@@ -232,7 +235,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     return serviceFailure(notFoundError(FormInput.class, formInputFileEntryResource.getCompoundId().getFormInputId()));
                 }
             });
-        });
     }
 
     private boolean questionHasMultipleStatuses(@NotNull FormInput formInput) {

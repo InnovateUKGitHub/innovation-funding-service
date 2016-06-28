@@ -282,24 +282,29 @@ IFS.formValidation = (function(){
         },
         checkRequired : function(field,showMessage){
             var errorMessage = IFS.formValidation.getErrorMessage(field,'required');
-            if(field.is(':checkbox,:radio')){
-               if(!field.prop('checked')){
-                 if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
-                 return false;
-               }
-               else {
-                 if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
-                 return true;
-               }
-            }
-            else {
-              if(field.val().length === 0){
-                if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
-                return false;
+            if(field.val() !== null){
+              if(field.is(':checkbox')){
+                 var name = field.attr("name");
+                 if(typeof(name) !== 'undefined'){
+                   if(jQuery('[name="'+name+'"]:checked').length === 0){
+                     if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                     return false;
+                   }
+                   else {
+                     if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                     return true;
+                   }
+                 }
               }
               else {
-                if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
-                return true;
+                if(field.val().length === 0){
+                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                  return false;
+                }
+                else {
+                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                  return true;
+                }
               }
             }
         },
