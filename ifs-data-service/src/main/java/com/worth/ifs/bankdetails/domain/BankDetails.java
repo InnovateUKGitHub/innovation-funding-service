@@ -1,4 +1,4 @@
-package com.worth.ifs.bankdetail.domain;
+package com.worth.ifs.bankdetails.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.project.domain.Project;
@@ -11,7 +11,7 @@ import javax.persistence.*;
  * Entity for persisting Bank Details for organisations associated with a project.
  */
 @Entity
-public class BankDetail {
+public class BankDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -34,32 +34,6 @@ public class BankDetail {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BankDetail that = (BankDetail) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(sortCode, that.sortCode)
-                .append(accountNumber, that.accountNumber)
-                .append(project, that.project)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(sortCode)
-                .append(accountNumber)
-                .append(project)
-                .toHashCode();
     }
 
     public String getSortCode() {
@@ -92,5 +66,33 @@ public class BankDetail {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BankDetails that = (BankDetails) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(sortCode, that.sortCode)
+                .append(accountNumber, that.accountNumber)
+                .append(project, that.project)
+                .append(address, that.address)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(sortCode)
+                .append(accountNumber)
+                .append(project)
+                .append(address)
+                .toHashCode();
     }
 }

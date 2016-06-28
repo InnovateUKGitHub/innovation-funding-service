@@ -1,7 +1,6 @@
 package com.worth.ifs.address.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.bankdetail.domain.BankDetail;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import org.hibernate.validator.constraints.Length;
 
@@ -30,9 +29,6 @@ public class Address {
 
     @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
     private List<OrganisationAddress> organisations = new ArrayList<>();
-
-    @OneToOne(mappedBy = "address")
-    private BankDetail bankDetail;
 
     public Address() {
     	// no-arg constructor
