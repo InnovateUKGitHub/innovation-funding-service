@@ -84,7 +84,7 @@ Partner nominates a finance contact
     And the user selects the radio button                   financeContact     financeContact1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-#    And the matching finance-contact-status is updated      project-details-finance    2    Yes Pending
+    And the matching finance-contact-status is updated      project-details-finance    2    yes
     Then Logout as user
     When Log in as user                                     worth.email.test+fundsuccess@gmail.com    Passw0rd
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
@@ -96,7 +96,7 @@ Partner nominates a finance contact
     And the user selects the radio button                   financeContact     financeContact2
     And the user clicks the button/link                     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-#    And the matching finance-contact-status is updated      project-details-finance    3    Yes Pending
+    And the matching finance-contact-status is updated      project-details-finance    3    yes
 
 
 Lead partner can change the Start Date
@@ -228,11 +228,10 @@ the user should see a validation error
     sleep    300ms
     Then the user should see an error    ${ERROR1}
 
-#the matching finance-contact-status is updated
-#    [Arguments]    ${id}    ${COLUMN}    ${STATUS}
-#    the user should see the element  ${id}
-#    the user should see the element  jQuery=''.${id}.'tr:nth-of-type('.${COLUMN}.') .'.${STATUS}
-#
+the matching finance-contact-status is updated
+    [Arguments]    ${id}    ${COLUMN}    ${STATUS}
+    the user should see the element    ${id}
+    the user should see the element    jQuery=#${id} tr:nth-of-type(${COLUMN}) .${STATUS}
 
 
 status of the start date should be Yes
