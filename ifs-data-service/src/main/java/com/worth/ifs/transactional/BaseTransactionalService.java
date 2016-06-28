@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -80,6 +84,21 @@ public abstract class BaseTransactionalService  {
 
     protected Supplier<ServiceResult<Application>> application(final Long id) {
         return () -> getApplication(id);
+    }
+
+    protected final Supplier<ServiceResult<Application>> openApplication(long applicationId) {
+        return () -> getOpenApplication(applicationId);
+    }
+
+    protected final ServiceResult<Application> getOpenApplication(long applicationId) {
+        return find(application(applicationId)).andOnSuccess(application -> {
+                    if (application.getCompetition() != null && !OPEN.equals(application.getCompetition().getCompetitionStatus())) {
+                        return serviceFailure(COMPETITION_NOT_OPEN);
+                    } else {
+                        return serviceSuccess(application);
+                    }
+                }
+        );
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {

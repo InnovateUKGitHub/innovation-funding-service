@@ -53,8 +53,7 @@ table td input[type="number"]{
 }
 
 
-/*
-SG
+/* SG
 
 # IFS/Input sizes
 Used to define input widths, so they can be more specific to digits that need to ne entered. Used particularly for numerical fields
@@ -107,7 +106,10 @@ Used to define input widths, so they can be more specific to digits that need to
 .width-full{
     width: 100%;
 }
-
+select.form-control.width-x-large,
+.width-x-large{
+    width:60%;
+}
 input.form-control + button.button,
 select.form-control + button.button {
     line-height:1;

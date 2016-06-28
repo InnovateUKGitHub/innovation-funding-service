@@ -30,6 +30,7 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -291,6 +292,34 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+    }
+
+    @Test
+    public void testFindByUserIdReturnsOnlyDistinctProjects(){
+
+        Project project = newProject().withId(123L).build();
+        Organisation organisation = newOrganisation().withId(5L).build();
+        User user = newUser().withid(7L).build();
+
+        Role partnerRole = newRole().withType(PARTNER).build();
+        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
+
+        ProjectUser projectUserWithPartnerRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(partnerRole).build();
+        ProjectUser projectUserWithFinanceRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(financeContactRole).build();
+
+        List<ProjectUser> projectUserRecords = asList(projectUserWithPartnerRole, projectUserWithFinanceRole);
+
+        ProjectResource projectResource = newProjectResource().withId(project.getId()).build();
+
+        when(projectUserRepositoryMock.findByUserId(user.getId())).thenReturn(projectUserRecords);
+
+        when(projectMapperMock.mapToResource(project)).thenReturn(projectResource);
+
+        ServiceResult<List<ProjectResource>> result = service.findByUserId(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(result.getSuccessObject().size(), 1L);
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

@@ -265,7 +265,7 @@ public class ApplicationContributorController{
 	}
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
-        contributorsForm.getOrganisations().forEach((invite) -> saveContributor(invite, applicationId, response));
+        contributorsForm.getOrganisations().forEach(invite -> saveContributor(invite, applicationId, response));
     }
     
     private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {

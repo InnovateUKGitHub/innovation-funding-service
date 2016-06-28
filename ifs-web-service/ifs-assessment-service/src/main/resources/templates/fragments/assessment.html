@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+
+<!-- ======== Assessment - sub header back to comp dashboard ======= -->
+<div th:fragment="assessment-subheader(link, url)">
+    <div class="sub-header">
+        <div class="deadline">Days left to submit&nbsp;&nbsp;
+            <div class="pie-container">
+                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+                <div class="pie-overlay">
+                    <div>0</div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${url == ''}" th:remove="tag">
+            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
+        </div>
+        <div th:if="${url != ''}" th:remove="tag">
+             <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
+        </div>
+    </div>
+</div>
+
+
+<!-- =================== Assessment feedback score ============================== -->
+<div th:fragment="assessment-feedback-score">
+    <fieldset>
+        <legend class="visuallyhidden">Question score</legend> 
+        <div class="form-group">
+        <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
+        <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
+            <option value="">3</option>
+            <option value="0">Set score</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select> / 10
+        </div>
+    </fieldset>
+</div>
+
+
+<!-- =================== Assessment feedback scope ============================== -->
+<div th:fragment="assessment-feedback-scope">
+    <h2 class="heading-small">Is the application in scope?</h2>
+    <fieldset class="inline">
+        <legend class="visuallyhidden">Is the application in scope?</legend>
+        <div class="form-group">
+            <label class="block-label" for="assessor-question-confirmation-yes">
+                <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
+                Yes
+            </label>
+            <label class="block-label" for="assessor-question-confirmation-no">
+                <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
+                No
+            </label>
+        </div>
+    </fieldset>
+</div>
+
+
+<!-- ========================= Assessment guidance =========================== -->
+<div th:fragment="assessment-guidance (guidable)">
+    <details th:if="${guidable?.getGuidanceQuestion()}">
+        <summary>
+            <span class="summary" th:text="${guidable.getGuidanceQuestion()}"/>
+        </summary>
+        <div class="panel-indent" ifs:utext="${guidable.getGuidanceAnswer()}"/>
+    </details>
+</div>
+
+</html>
