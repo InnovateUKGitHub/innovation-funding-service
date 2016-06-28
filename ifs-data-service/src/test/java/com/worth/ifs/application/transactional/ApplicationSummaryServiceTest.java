@@ -43,6 +43,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	@Mock
 	private ApplicationSummaryPageMapper applicationSummaryPageMapper;
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void findByCompetitionNoSortWillSortById() throws Exception {
 
