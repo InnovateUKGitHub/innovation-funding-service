@@ -49,6 +49,14 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
+    public QuestionResourceBuilder withAssessorGuidanceQuestion(String... assessorGuidanceQuestions) {
+        return withArray((assessorGuidanceQuestion, object) -> setField("assessorGuidanceQuestion", assessorGuidanceQuestion, object), assessorGuidanceQuestions);
+    }
+
+    public QuestionResourceBuilder withAssessorGuidanceAnswer(String... assessorGuidanceAnswers) {
+        return withArray((assessorGuidanceAnswer, object) -> setField("assessorGuidanceAnswer", assessorGuidanceAnswer, object), assessorGuidanceAnswers);
+    }
+
     public QuestionResourceBuilder withAssessorConfirmationQuestion(String... assessorConfirmationQuestions) {
         return withArray((assessorConfirmationQuestion, object) -> setField("assessorConfirmationQuestion", assessorConfirmationQuestion, object), assessorConfirmationQuestions);
     }

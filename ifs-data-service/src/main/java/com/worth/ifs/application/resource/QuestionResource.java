@@ -15,6 +15,8 @@ public class QuestionResource {
     private String name;
     private String shortName;
     private String description;
+    private String assessorGuidanceQuestion;
+    private String assessorGuidanceAnswer;
     private final List<Long> formInputs = new ArrayList<>();
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
@@ -47,6 +49,22 @@ public class QuestionResource {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public String getAssessorGuidanceQuestion() {
+        return assessorGuidanceQuestion;
+    }
+
+    public void setAssessorGuidanceQuestion(String assessorGuidanceQuestion) {
+        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
+    }
+
+    public String getAssessorGuidanceAnswer() {
+        return assessorGuidanceAnswer;
+    }
+
+    public void setAssessorGuidanceAnswer(String assessorGuidanceAnswer) {
+        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
     }
 
     public List<Long> getQuestionStatuses() {
@@ -129,55 +147,62 @@ public class QuestionResource {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        if (o == this) {
+        if (this == o) {
             return true;
         }
-        if (o.getClass() != this.getClass()) {
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuestionResource question = (QuestionResource) o;
-        return new EqualsBuilder()
-            .append(this.id, question.id)
-            .append(this.name, question.name)
-            .append(this.description, question.description)
-            .append(this.formInputs, question.formInputs)
-            .append(this.markAsCompletedEnabled, question.markAsCompletedEnabled)
-            .append(this.assignEnabled, question.assignEnabled)
-            .append(this.multipleStatuses, question.multipleStatuses)
-            .append(this.priority, question.priority)
-            .append(this.needingAssessorScore, question.needingAssessorScore)
-            .append(this.needingAssessorFeedback, question.needingAssessorFeedback)
-            .append(this.assessorConfirmationQuestion, question.assessorConfirmationQuestion)
-            .append(this.competition, question.competition)
-            .append(this.questionStatuses, question.questionStatuses)
-            .append(this.costs, question.costs)
-            .append(this.questionNumber, question.questionNumber)
-            .isEquals();
 
+        QuestionResource that = (QuestionResource) o;
+
+        return new EqualsBuilder()
+                .append(needingAssessorScore, that.needingAssessorScore)
+                .append(needingAssessorFeedback, that.needingAssessorFeedback)
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(shortName, that.shortName)
+                .append(description, that.description)
+                .append(assessorGuidanceQuestion, that.assessorGuidanceQuestion)
+                .append(assessorGuidanceAnswer, that.assessorGuidanceAnswer)
+                .append(formInputs, that.formInputs)
+                .append(markAsCompletedEnabled, that.markAsCompletedEnabled)
+                .append(assignEnabled, that.assignEnabled)
+                .append(multipleStatuses, that.multipleStatuses)
+                .append(priority, that.priority)
+                .append(assessorConfirmationQuestion, that.assessorConfirmationQuestion)
+                .append(competition, that.competition)
+                .append(section, that.section)
+                .append(questionStatuses, that.questionStatuses)
+                .append(costs, that.costs)
+                .append(questionNumber, that.questionNumber)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-            .append(this.id)
-            .append(this.name)
-            .append(this.description)
-            .append(this.formInputs)
-            .append(this.markAsCompletedEnabled)
-            .append(this.assignEnabled)
-            .append(this.multipleStatuses)
-            .append(this.priority)
-            .append(this.needingAssessorScore)
-            .append(this.needingAssessorFeedback)
-            .append(this.assessorConfirmationQuestion)
-            .append(this.competition)
-            .append(this.questionStatuses)
-            .append(this.costs)
-            .append(this.questionNumber)
-            .toHashCode();
+                .append(id)
+                .append(name)
+                .append(shortName)
+                .append(description)
+                .append(assessorGuidanceQuestion)
+                .append(assessorGuidanceAnswer)
+                .append(formInputs)
+                .append(markAsCompletedEnabled)
+                .append(assignEnabled)
+                .append(multipleStatuses)
+                .append(priority)
+                .append(needingAssessorScore)
+                .append(needingAssessorFeedback)
+                .append(assessorConfirmationQuestion)
+                .append(competition)
+                .append(section)
+                .append(questionStatuses)
+                .append(costs)
+                .append(questionNumber)
+                .toHashCode();
     }
 
     @Override
