@@ -10,13 +10,13 @@ import com.worth.ifs.application.resource.ApplicationSummaryResource;
 public class ApplicationSummaryResourceLeadApplicantComparator extends DualFieldComparator<String, Long> implements Comparator<ApplicationSummaryResource> {
 
 	@Override
-	public int compare(ApplicationSummaryResource o1, ApplicationSummaryResource o2) {
+	public int compare(ApplicationSummaryResource resource1, ApplicationSummaryResource resource2) {
 		
-		String o1LeadApplicant = o1.getLeadApplicant();
-		String o2LeadApplicant = o2.getLeadApplicant();
+		String o1LeadApplicant = resource1.getLeadApplicant();
+		String o2LeadApplicant = resource2.getLeadApplicant();
 		
-		Long o1Id = o1.getId();
-		Long o2Id = o2.getId();
+		Long o1Id = resource1.getId();
+		Long o2Id = resource2.getId();
 		
 		return compare(o1LeadApplicant, o2LeadApplicant, o1Id, o2Id);
 	}
