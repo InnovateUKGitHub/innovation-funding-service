@@ -159,14 +159,6 @@ public class Question {
         return priority;
     }
 
-    public boolean getNeedingAssessorScore() {
-        return needingAssessorScore;
-    }
-
-    public boolean getNeedingAssessorFeedback() {
-        return needingAssessorFeedback;
-    }
-
     public String getAssessorConfirmationQuestion() {
         return assessorConfirmationQuestion;
     }
