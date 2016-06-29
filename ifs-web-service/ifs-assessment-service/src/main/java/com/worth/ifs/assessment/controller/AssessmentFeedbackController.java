@@ -116,7 +116,7 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         final QuestionResource question = getQuestion(questionId);
         final List<FormInputResource> questionFormInputs = getQuestionFormInputs(questionId);
         final Map<String, String> questionFormInputResponses = getQuestionFormInputResponsesAsMap(getQuestionFormInputResponses(application.getId(), questionFormInputs));
-        return new AssessmentFeedbackViewModel(competition, question, questionFormInputs, questionFormInputResponses);
+        return new AssessmentFeedbackViewModel(competition, application, question, questionFormInputs, questionFormInputResponses);
     }
 
     private AssessmentNavigationViewModel populateNavigation(final Long assessmentId, final Long questionId) {

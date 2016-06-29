@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+
+<!-- ======== Assessment - sub header back to assessment overview ======= -->
+<div th:fragment="assessment-header-sub">
+    <div class="sub-header">
+       <a th:if="${linkTitle != null and linkUrl != null}"
+          th:class="${linkClass != null ? linkClass : ''}"
+          th:href="${linkUrl}"
+          th:text="${linkTitle}" />
+        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
+          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
+        </div>
+    </div>
+</div>
+
+
+<!-- =================== Assessment feedback score ============================== -->
+<div th:fragment="assessment-feedback-score">
+    <fieldset>
+        <legend class="visuallyhidden">Question score</legend> 
+        <div class="form-group">
+        <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
+        <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
+            <option value="">3</option>
+            <option value="0">Set score</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select> / 10
+        </div>
+    </fieldset>
+</div>
+
+
+<!-- =================== Assessment feedback scope ============================== -->
+<div th:fragment="assessment-feedback-scope">
+    <h2 class="heading-small" th:text="${confirmationQuestion}"></h2>
+    <fieldset class="inline">
+        <legend class="visuallyhidden" th:text="${confirmationQuestion}"></legend>
+        <div class="form-group">
+            <label class="block-label" for="assessor-question-confirmation-yes">
+                <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
+                Yes
+            </label>
+            <label class="block-label" for="assessor-question-confirmation-no">
+                <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
+                No
+            </label>
+        </div>
+    </fieldset>
+</div>
+
+
+</html>
