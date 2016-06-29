@@ -19,6 +19,6 @@ public class FlywayPatchNumberHook implements RepositoryMergeRequestCheck {
 
     @Override
     public void check(final RepositoryMergeRequestCheckContext context) {
-        context.getMergeRequest().veto("Deny All 2", "Deny All 2");
+        context.getMergeRequest().veto("Deny All", "Deny All");
     }
 }
