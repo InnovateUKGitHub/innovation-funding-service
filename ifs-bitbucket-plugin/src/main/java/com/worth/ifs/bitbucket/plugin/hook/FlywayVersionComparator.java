@@ -4,7 +4,11 @@ import java.util.Comparator;
 import java.util.List;
 
 
+/**
+ * Comparator of Flyway version numbers
+ */
 public class FlywayVersionComparator implements Comparator<List<Integer>> {
+
     @Override
     public int compare(final List<Integer> o1,final List<Integer> o2) {
         if (o1.isEmpty() && o2.isEmpty()){
