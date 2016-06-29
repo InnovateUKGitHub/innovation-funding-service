@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.30, for Linux (x86_64)
 --
--- Host: localhost    Database: ifs
+-- Host: localhost    Database: ifs_test
 -- ------------------------------------------------------
 -- Server version	5.6.30
 
@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `assessment_feedback`;
 CREATE TABLE `assessment_feedback` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `feedback` longtext NOT NULL,
-  `score` int(11) NOT NULL,
+  `score` int(11) DEFAULT NULL,
   `assessment_id` bigint(20) NOT NULL,
   `question_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -45,4 +45,4 @@ CREATE TABLE `assessment_feedback` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-23 11:30:28
+-- Dump completed on 2016-06-29 15:52:30
