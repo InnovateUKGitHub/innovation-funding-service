@@ -47,6 +47,10 @@ public class AssessmentFeedbackViewModel {
         return questionFormInputResponses;
     }
 
+    public boolean isFeedbackRequired() {
+        return question.isNeedingAssessorFeedback();
+    }
+
     public long getDaysLeftPercentage() {
         return competition.getAssessmentDaysLeftPercentage();
     }
