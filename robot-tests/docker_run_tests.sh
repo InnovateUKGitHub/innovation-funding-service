@@ -56,7 +56,7 @@ function buildAndDeploy {
     mv docker-build.gradle docker-build.gradle.tmp
     mv webtest.gradle.tmp docker-build.gradle
     ./gradlew -Pprofile=docker cleanDeploy -x test
-    ./gradlew flywayMigrate
+    ./gradlew -Pprofile=docker flywayMigrate
     ## Replace the webtest build environment with the one we had before.
     echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"
     mv docker-build.gradle.tmp docker-build.gradle
@@ -74,8 +74,8 @@ function resetLDAP {
 function startServers {
     pwd
     cd ../setup-files/scripts/docker
-    ./clean.sh
     ./startup.sh
+    ./deploy.sh -x test
     wait
     cd ../shibboleth/ui
     # ./deploy-ui.sh
@@ -93,35 +93,48 @@ function startServers {
     resetLDAP
 }
 
+function startSeleniumGrid {
+    cd ../robot-tests
+    cd ${testDirectory}
+    cd ${scriptDir}
+    docker-compose up -d
+    docker-compose scale chrome=5
+}
+
+function startPybot {
+    echo "********** starting pybot for ${1} **************"
+    targetDir=`basename ${1}`
+    if [ "$localMailSendingImplemented" ]
+    then
+        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome  --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS ${1}/* &
+
+    else
+        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
+    fi
+}
 
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
-    if [ "$localMailSendingImplemented" ]
-    then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
-    else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
-    fi
-}
+    for D in `find ${testDirectory}/* -maxdepth 0 -type d`
+    do
+        startPybot ${D}
+    done
 
+    for job in `jobs -p`
+    do
+        wait $job
+    done
 
-function runHappyPathTests {
-    echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
-    cd ${scriptDir}
-    if [ "$localMailSendingImplemented" ]
-    then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
-    else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
-    fi
+    results=`find target/* -regex ".*/output\.xml"`
+    rebot -d target ${results}
 }
 
 function runTestsRemotely {
     echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude Failing --exclude Pending --exclude FailingForDev --name IFS ${testDirectory}/*
 }
 
 setEnv
@@ -144,7 +157,7 @@ dataTomcatPath="$(dirname "$dataWebappsPath")"
 echo "dataTomcatPath:    ${dataTomcatPath}"
 dataTomcatBinPath=${dataTomcatPath}"/bin"
 echo "dataTomcatBinPath: ${dataTomcatBinPath}"
-dataLogPath=$dataTomcatPath"/logs"
+dataLogPath=${dataTomcatPath}"/logs"
 echo "dataLogPath:       ${dataLogPath}"
 dataLogFilePath=${dataLogPath}"/catalina."${dateFormat}".log"
 echo "dataLogFilePath:   ${dataLogFilePath}"
@@ -196,30 +209,19 @@ echo "webBase:           ${webBase}"
 unset opt
 unset quickTest
 unset testScrub
-unset happyPath
-useXvfb=true
 unset remoteRun
 unset startServersInDebugMode
 
 
-testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :D :x" opt ; do
+testDirectory='IFS_acceptance_tests/tests'
+while getopts ":q :t :r :d: :D" opt ; do
     case $opt in
         q)
          quickTest=1
         ;;
-	t)
-	 testScrub=1
-	;;
-	h)
-	 happyPath=1
-	;;
-	p)
-	 happyPathTestOnly=1
-	;;
-	x)
-	 useXvfb=false
-	;;
+        t)
+         testScrub=1
+        ;;
         r)
          remoteRun=1
         ;;
@@ -247,6 +249,8 @@ while getopts ":q :t :h :p :r :d: :D :x" opt ; do
     esac
 done
 
+startSeleniumGrid
+
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
@@ -259,17 +263,6 @@ then
     buildAndDeploy
     startServers
     addTestFiles
-elif [ "$happyPath" ]
-then
-    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
-    buildAndDeploy
-    startServers
-    addTestFiles
-    runHappyPathTests
-elif [ "$happyPathTestOnly" ]
-then
-    echo "run test only"
-    runHappyPathTests
 elif [ "$remoteRun" ]
 then
     echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
