@@ -12,13 +12,13 @@ public class ApplicationSummaryResourceLeadApplicantComparator extends DualField
 	@Override
 	public int compare(ApplicationSummaryResource o1, ApplicationSummaryResource o2) {
 		
-		String o1Lead = o1.getLeadApplicant();
-		String o2Lead = o2.getLeadApplicant();
+		String o1LeadApplicant = o1.getLeadApplicant();
+		String o2LeadApplicant = o2.getLeadApplicant();
 		
 		Long o1Id = o1.getId();
 		Long o2Id = o2.getId();
 		
-		return compare(o1Lead, o2Lead, o1Id, o2Id);
+		return compare(o1LeadApplicant, o2LeadApplicant, o1Id, o2Id);
 	}
 
 }
