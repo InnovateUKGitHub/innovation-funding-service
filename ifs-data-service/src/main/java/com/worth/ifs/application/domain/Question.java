@@ -15,7 +15,7 @@ import java.util.List;
  * Question defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Question{
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -24,6 +24,10 @@ public class Question{
 
     @Column(length=5000)
     private String description;
+
+    private String assessorGuidanceQuestion;
+
+    private String assessorGuidanceAnswer;
 
     private Boolean markAsCompletedEnabled = false;
 
@@ -90,6 +94,22 @@ public class Question{
 
     public String getDescription() {
         return description;
+    }
+
+    public String getAssessorGuidanceQuestion() {
+        return assessorGuidanceQuestion;
+    }
+
+    public void setAssessorGuidanceQuestion(String assessorGuidanceQuestion) {
+        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
+    }
+
+    public String getAssessorGuidanceAnswer() {
+        return assessorGuidanceAnswer;
+    }
+
+    public void setAssessorGuidanceAnswer(String assessorGuidanceAnswer) {
+        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
     }
 
     public List<QuestionStatus> getQuestionStatuses() {
@@ -230,52 +250,61 @@ public class Question{
 
     @Override
     public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        if (o == this) {
+        if (this == o) {
             return true;
         }
-        if (o.getClass() != getClass()) {
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Question question = (Question) o;
-        return new EqualsBuilder()
-            .append(id, question.id)
-            .append(name, question.name)
-            .append(description, question.description)
-            .append(markAsCompletedEnabled, question.markAsCompletedEnabled)
-            .append(assignEnabled, question.assignEnabled)
-            .append(multipleStatuses, question.multipleStatuses)
-            .append(priority, question.priority)
-            .append(needingAssessorScore, question.needingAssessorScore)
-            .append(needingAssessorFeedback, question.needingAssessorFeedback)
-            .append(assessorConfirmationQuestion, question.assessorConfirmationQuestion)
-            .append(competition, question.competition)
-            .append(questionStatuses, question.questionStatuses)
-            .append(costs, question.costs)
-            .append(questionNumber, question.questionNumber)
-            .isEquals();
 
+        Question question = (Question) o;
+
+        return new EqualsBuilder()
+                .append(needingAssessorScore, question.needingAssessorScore)
+                .append(needingAssessorFeedback, question.needingAssessorFeedback)
+                .append(id, question.id)
+                .append(name, question.name)
+                .append(shortName, question.shortName)
+                .append(description, question.description)
+                .append(assessorGuidanceQuestion, question.assessorGuidanceQuestion)
+                .append(assessorGuidanceAnswer, question.assessorGuidanceAnswer)
+                .append(markAsCompletedEnabled, question.markAsCompletedEnabled)
+                .append(assignEnabled, question.assignEnabled)
+                .append(multipleStatuses, question.multipleStatuses)
+                .append(priority, question.priority)
+                .append(formInputs, question.formInputs)
+                .append(assessorConfirmationQuestion, question.assessorConfirmationQuestion)
+                .append(competition, question.competition)
+                .append(section, question.section)
+                .append(questionStatuses, question.questionStatuses)
+                .append(costs, question.costs)
+                .append(questionNumber, question.questionNumber)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-            .append(id)
-            .append(name)
-            .append(description)
-            .append(markAsCompletedEnabled)
-            .append(assignEnabled)
-            .append(multipleStatuses)
-            .append(priority)
-            .append(needingAssessorScore)
-            .append(needingAssessorFeedback)
-            .append(assessorConfirmationQuestion)
-            .append(competition)
-            .append(questionStatuses)
-            .append(costs)
-            .append(questionNumber)
-            .toHashCode();
+                .append(id)
+                .append(name)
+                .append(shortName)
+                .append(description)
+                .append(assessorGuidanceQuestion)
+                .append(assessorGuidanceAnswer)
+                .append(markAsCompletedEnabled)
+                .append(assignEnabled)
+                .append(multipleStatuses)
+                .append(priority)
+                .append(needingAssessorScore)
+                .append(needingAssessorFeedback)
+                .append(formInputs)
+                .append(assessorConfirmationQuestion)
+                .append(competition)
+                .append(section)
+                .append(questionStatuses)
+                .append(costs)
+                .append(questionNumber)
+                .toHashCode();
     }
 }

@@ -7,8 +7,10 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.JsonTestUtil.toJson;
@@ -18,6 +20,8 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -201,5 +205,53 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                     ),
                     responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
                 ));
+    }
+
+    @Test
+    public void setApplicationDetailsSubmittedDateButDetailsNotFilledIn() throws Exception {
+        when(projectServiceMock.saveProjectSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document.snippets(
+                    pathParameters(
+                        parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                    )));
+    }
+
+    @Test
+    public void setApplicationDetailsSubmittedDate() throws Exception {
+        when(projectServiceMock.saveProjectSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        )));
+    }
+
+    @Test
+    public void isSubmitAllowedReturnsFalseWhenDetailsNotProvided() throws Exception {
+        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
+    }
+
+    @Test
+    public void isSubmitAllowed() throws Exception {
+        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
     }
 }

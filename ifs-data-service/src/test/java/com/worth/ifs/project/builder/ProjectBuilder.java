@@ -7,6 +7,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.ProcessRole;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -56,5 +57,9 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withApplication(Application... application){
         return withArray((app, project) -> project.setApplication(app), application);
+    }
+
+    public ProjectBuilder withSubmittedDate(LocalDateTime... submittedDate){
+        return withArray((subDate, project) -> project.setSubmittedDate(subDate), submittedDate);
     }
 }

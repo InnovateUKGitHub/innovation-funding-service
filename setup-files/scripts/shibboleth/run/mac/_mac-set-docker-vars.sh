@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-eval $(docker-machine env)
+eval $(docker-machine env default)
 

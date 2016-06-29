@@ -34,6 +34,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 		
 		if(competitionResource.isMultiStream()) {
 			competitionSetupForm.setMultipleStream("yes");
+			competitionSetupForm.setStreamName(competitionResource.getStreamName());
 		} else {
 			competitionSetupForm.setMultipleStream("no");
 		}
