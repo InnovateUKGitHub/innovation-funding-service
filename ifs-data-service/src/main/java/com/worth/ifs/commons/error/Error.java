@@ -97,6 +97,18 @@ public class Error implements Serializable {
         return errorMessage;
     }
 
+    public static Error fieldError(String fieldName, String messageOrCode) {
+        return new Error(fieldName, messageOrCode, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    public static Error fieldError(String fieldName, String messageOrCode, List<Object> arguments) {
+        return new Error(fieldName, messageOrCode, arguments, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    public static Error fieldError(String fieldName, String messageOrCode, Object... arguments) {
+        return fieldError(fieldName, messageOrCode, asList(arguments));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

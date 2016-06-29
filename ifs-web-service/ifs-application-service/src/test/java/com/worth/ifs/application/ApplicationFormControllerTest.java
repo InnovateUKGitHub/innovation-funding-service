@@ -32,6 +32,8 @@ import java.util.EnumMap;
 import java.util.HashSet;
 
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
@@ -210,7 +212,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testAjaxAddCost() throws Exception {
         CostItem costItem = new Materials();
         when(defaultFinanceFormHandler.addCost(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 get("/application/{applicationId}/form/add_cost/{questionId}", application.getId(), questionId)
         ).andReturn();
     }
@@ -219,16 +221,15 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testAjaxRemoveCost() throws Exception {
         CostItem costItem = new Materials();
         when(costService.add(anyLong(),anyLong(), any())).thenReturn(costItem);
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
         ).andReturn();
     }
 
     @Test
     public void testApplicationFormSubmit() throws Exception {
-        Long userId = loggedInUser.getId();
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "Question 1 Response")
                         .param("formInput[2]", "Question 2 Response")
@@ -248,9 +249,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationFormSubmitMarkSectionComplete() throws Exception {
-        Long userId = loggedInUser.getId();
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(AbstractApplicationController.MARK_SECTION_AS_COMPLETE, String.valueOf(sectionId))
         ).andExpect(status().is3xxRedirection())
@@ -261,9 +261,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationFormSubmitMarkSectionInComplete() throws Exception {
-        Long userId = loggedInUser.getId();
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(AbstractApplicationController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
         )
@@ -275,8 +274,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationFormSubmitMarkAsComplete() throws Exception {
-        Long userId = loggedInUser.getId();
-        MvcResult result = mockMvc.perform(
+
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "12")
         ).andExpect(status().is3xxRedirection())
@@ -287,9 +286,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationFormSubmitMarkAsIncomplete() throws Exception {
-        Long userId = loggedInUser.getId();
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(ApplicationFormController.MARK_AS_INCOMPLETE, "3")
         ).andExpect(status().is3xxRedirection())
@@ -321,7 +319,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ValidationMessages validation = new ValidationMessages(null, null, singletonList(new Error("value", "Please enter some text", HttpStatus.NOT_ACCEPTABLE)));
         when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(validation);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        MvcResult result = mockMvc.perform(
+         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param("formInput[2]", "Question 2 Response")
@@ -333,12 +331,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
 
-        ValidationMessages validation = new ValidationMessages(null, null, singletonList(new Error("value", "Please enter some text", HttpStatus.NOT_ACCEPTABLE)));
+        ValidationMessages validation = new ValidationMessages(fieldError("value", "Please enter some text"));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(validation);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        Long userId = loggedInUser.getId();
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
@@ -351,7 +348,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationFormSubmitAssignQuestion() throws Exception {
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "Question 1 Response")
                         .param("formInput[2]", "Question 2 Response")
@@ -371,7 +368,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testSaveFormElement() throws Exception {
         String value = "Form Input "+formInputId+" Response";
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", formInputId.toString())
                         .param("fieldName", "formInput["+formInputId+"]")
@@ -483,6 +480,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testSaveFormElementCostSubcontracting() throws Exception {
         String value = "123";
         String questionId = "cost-subcontracting-13-subcontractingCost";
+
+        when(financeHandler.getFinanceFormHandler(businessOrganisationType.getName()).storeCost(loggedInUser.getId(), application.getId(), "subcontracting_costs-cost-13", value))
+                .thenReturn(noErrors());
 
         MvcResult result = mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/saveFormElement")
