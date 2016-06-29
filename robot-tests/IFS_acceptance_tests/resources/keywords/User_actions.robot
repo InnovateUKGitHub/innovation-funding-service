@@ -114,8 +114,8 @@ the user unselects the checkbox
     Page Should Contain    BETA
 
 the user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+    [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -221,7 +221,6 @@ The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
     Page Should Not Contain    Error
-    #Page Should Not Contain    error    # commented this out because it caused a test failure
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong

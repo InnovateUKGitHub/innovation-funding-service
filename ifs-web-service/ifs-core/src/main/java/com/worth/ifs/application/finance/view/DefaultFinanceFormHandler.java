@@ -76,15 +76,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         );
 
         List<CostItem> validItems = costItems.stream().filter(e -> e.isLeft()).map(e -> e.getLeft()).collect(Collectors.toList());
-        storeCostItems(validItems).forEach((costId, validationMessages) -> {
+        storeCostItems(validItems).forEach((costId, validationMessages) ->
             validationMessages.getErrors().stream().forEach(e -> {
                 if(StringUtils.hasText(e.getErrorKey())){
                     errors.put("formInput[cost-" + costId + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorMessage()));
                 }else{
                     errors.put("formInput[cost-" + costId + "]", Arrays.asList(e.getErrorMessage()));
                 }
-            });
-        });
+            })
+        );
     }
 
 

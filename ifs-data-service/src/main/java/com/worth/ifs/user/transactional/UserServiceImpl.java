@@ -156,18 +156,17 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<Void> changePassword(String hash, String password) {
-        return tokenService.getPasswordResetToken(hash).andOnSuccess(token -> {
-            return find(user(token.getClassPk())).andOnSuccess(user -> {
+        return tokenService.getPasswordResetToken(hash).andOnSuccess(token ->
+            find(user(token.getClassPk())).andOnSuccess(user -> {
 
                 UserResource userResource = userMapper.mapToResource(user);
 
                 return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturnVoid(() ->
-                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccess(() -> {
-                            tokenRepository.delete(token);
-                        })
+                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccess(() ->
+                            tokenRepository.delete(token))
                 );
-            });
-        });
+            })
+        );
     }
 
 

@@ -18,4 +18,6 @@ public interface ProjectRestService {
     RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
     RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId);
     RestResult<ProjectResource> getByApplicationId(Long applicationId);
+    RestResult<Void> setApplicationDetailsSubmitted(Long projectId);
+    RestResult<Boolean> isSubmitAllowed(Long projectId);
 }

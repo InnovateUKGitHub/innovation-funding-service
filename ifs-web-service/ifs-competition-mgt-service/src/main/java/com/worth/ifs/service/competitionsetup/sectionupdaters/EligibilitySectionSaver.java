@@ -40,6 +40,11 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 		
 		boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
 		competition.setMultiStream(multiStream);
+		if(multiStream) {
+			competition.setStreamName(eligibilityForm.getStreamName());
+		} else {
+			competition.setStreamName(null);
+		}
 
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);

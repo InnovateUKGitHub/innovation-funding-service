@@ -150,9 +150,17 @@ public class ApplicationController extends AbstractApplicationController {
     		cookieFlashMessageFilter.setFlashMessage(response, "agreeToTerms");
     		return "redirect:/application/" + applicationId + "/confirm-submit";
     	}
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    	
+    	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    	ApplicationResource application = applicationService.getById(applicationId);
+    	
+    	if(!ableToSubmitApplication(user, application)){
+    		cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
+    		return "redirect:/application/" + applicationId + "/confirm-submit";
+    	}
+       
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        ApplicationResource application = applicationService.getById(applicationId);
+        application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-submitted";
