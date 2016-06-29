@@ -1,0 +1,15 @@
+{namespace com.worth.ifs.bitbucket.plugin.hook.flywaypatchnumberhook}
+
+/**
+ * @param? config
+ * @param? errors
+ */
+{template .view}
+    {call aui.form.textField}
+        {param id: 'reviewers' /}
+        {param value: $config ? $config['reviewers'] : null /}
+        {param labelContent: 'reviewers'  /}
+        {param descriptionText: 'Some description for reviewers' /}
+        {param errorTexts: $errors ? $errors['reviewers'] : null /}
+    {/call}
+{/template}
