@@ -21,9 +21,5 @@
   <repository-hook key="flyway-patch-number-hook" name="Flyway Patch Number Hook" i18n-name-key="flyway-patch-number-hook.name" class="com.worth.ifs.bitbucket.plugin.hook.FlywayPatchNumberHook">
     <description key="flyway-patch-number-hook.description">The Flyway Patch Number Hook Plugin</description>
     <icon>icon-example.png</icon>
-    <config-form name="Flyway Patch Number Hook Config" key="flyway-patch-number-hook-config">
-      <view>com.worth.ifs.bitbucket.plugin.hook.flywaypatchnumberhook.view</view>
-      <directory location="/static/"/>
-    </config-form>
   </repository-hook>
 </atlassian-plugin>
