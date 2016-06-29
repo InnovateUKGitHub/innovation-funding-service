@@ -1,7 +1,6 @@
 package com.worth.ifs.form.service;
 
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.application.service.ResponseRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -16,7 +15,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * This class contains methods to retrieve and store {@link FormInputResponseResource} related data,
- * through the RestService {@link ResponseRestService}.
+ * through the RestService {@link FormInputResponseRestService}.
  */
 // TODO DW - INFUND-1555 - handle rest results
 @Service

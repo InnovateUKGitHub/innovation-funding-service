@@ -48,14 +48,14 @@
                 <a th:href="${userDashboardLink}">My dashboard</a>
             </li>
             <li>
-                <a th:href="${logoutUrl}">Logout</a>
+                <a th:href="${logoutUrl}">Sign out</a>
             </li>
         </ul>
     </div>
 </div>
 <!-- =========================== Element: Competition Deadline =========================== -->
 <div th:fragment="competition-deadline">
-    <div class="competition-deadline">
+    <div class="competition-deadline" th:if="${endDate != null}">
         <div class="day">
             <div th:include="fragments/elements :: ordinal-day (date=${endDate})" th:remove="tag" />
         </div>
@@ -93,7 +93,7 @@
 </div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
-    <div class="pie-container">
+    <div class="pie-container" th:if="${daysLeft != null}">
         <div class="pie small" th:text="${daysPercentage}+'%'"></div>
         <div class="pie-overlay">
             <div th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</div>

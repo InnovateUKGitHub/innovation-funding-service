@@ -25,7 +25,6 @@ public class QuestionResource {
     private String assessorConfirmationQuestion;
     private Long competition;
     private Long section;
-    private List<Long> responses;
     private List<Long> questionStatuses;
     private List<Long> costs;
     private String questionNumber;
@@ -54,20 +53,12 @@ public class QuestionResource {
         return this.questionStatuses;
     }
 
-    public List<Long> getResponses() {
-        return this.responses;
-    }
-
     public Long getCompetition() {
         return this.competition;
     }
 
     public Long getSection() {
         return this.section;
-    }
-
-    public void setResponses(List<Long> responses) {
-        this.responses = responses;
     }
 
     public void setQuestionStatuses(List<Long> questionStatusIds) {
@@ -161,7 +152,6 @@ public class QuestionResource {
             .append(this.needingAssessorFeedback, question.needingAssessorFeedback)
             .append(this.assessorConfirmationQuestion, question.assessorConfirmationQuestion)
             .append(this.competition, question.competition)
-            .append(this.responses, question.responses)
             .append(this.questionStatuses, question.questionStatuses)
             .append(this.costs, question.costs)
             .append(this.questionNumber, question.questionNumber)
@@ -184,7 +174,6 @@ public class QuestionResource {
             .append(this.needingAssessorFeedback)
             .append(this.assessorConfirmationQuestion)
             .append(this.competition)
-            .append(this.responses)
             .append(this.questionStatuses)
             .append(this.costs)
             .append(this.questionNumber)

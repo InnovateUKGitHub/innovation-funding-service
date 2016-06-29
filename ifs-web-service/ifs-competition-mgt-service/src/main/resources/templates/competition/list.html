@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+</head>
+<body class="competition-management competition-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div class="grid-row">
+        <div class="column-half">
+            <div class="page-title">
+                <h1 class="heading-xlarge">Competitions</h1>
+            </div>
+        </div>
+        <div class="column-half">
+            <div class="alignright extra-margin">
+                <a href="competition/create" class="button button-large" th:text="#{ifs.competition.create_competition}">Create Competition</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="competitions-list">
+        <ul class="comp-list">
+            <li th:each="competition: ${competitions}">
+                <div class="column-two-thirds">
+                    <h3 class="heading-small">
+                        <a th:href="@{'competition/setup/'+${competition.id}}" th:if="${competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP}" >
+                          <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
+                          <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
+                        </a>
+                        <a th:href="@{'competition/'+${competition.id}}" th:unless="${competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP}"  >
+                          <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
+                          <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
+                        </a>
+                    </h3>
+                    <p>Ref number: <span th:text="${competition.id}" th:remove="tag" /></p>
+                </div>
+                <div class="column-third">
+                  <p class="status" th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"/>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

@@ -49,7 +49,7 @@ The user closes the browser
     Close any open browsers
 
 Logout as user
-    the user clicks the button/link     link=Logout
+    the user clicks the button/link     link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
     run keyword and ignore error        confirm action
 

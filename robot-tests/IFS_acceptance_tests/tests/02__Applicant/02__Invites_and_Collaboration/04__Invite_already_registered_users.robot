@@ -23,7 +23,7 @@ The invited registered user should redirect to the correct page
     Given we create a new user    worth.email.test+invitedregistered@gmail.com
     Given the lead applicant invites a registered user    worth.email.test+invite2@gmail.com    worth.email.test+invitedregistered@gmail.com
     When the user opens the mailbox and accepts the invitation to collaborate
-    Then the user should see the text in the page    We found a user account with the invited email address
+    Then the user should see the text in the page    We've found an existing user account with the invited email address
 
 The user clicks the login link
     [Documentation]    INFUND-1458
