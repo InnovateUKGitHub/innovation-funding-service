@@ -28,6 +28,7 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return new QuestionResourceBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedNames("Section "))
+                .withNeedingAssessorFeedback(true)
                 .withNeedingAssessorScore(true)
                 .withPriority(0)
                 .withQuestionNumber("1");
@@ -77,8 +78,12 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((cost, object) -> setField("costs", cost, object), costs);
     }
 
-    public QuestionResourceBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
-        return with(question -> setField("needingAssessorScore", needingAssessorScore, question));
+    public QuestionResourceBuilder withNeedingAssessorFeedback(Boolean... needingAssessorFeedbacks) {
+        return withArray((needingAssessorFeedback, object) -> setField("needingAssessorFeedback", needingAssessorFeedback, object), needingAssessorFeedbacks);
+    }
+
+    public QuestionResourceBuilder withNeedingAssessorScore(Boolean... needingAssessorScores) {
+        return withArray((needingAssessorScore, object) -> setField("needingAssessorScore", needingAssessorScore, object), needingAssessorScores);
     }
 
     public QuestionResourceBuilder withQuestionNumber(String value) {
