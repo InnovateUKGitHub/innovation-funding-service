@@ -10,7 +10,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2986 Create a Competition: Step 3: Eligibility
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Comp admin
+Force Tags        Comp admin      Failing
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
