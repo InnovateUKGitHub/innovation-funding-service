@@ -5,19 +5,16 @@ import com.atlassian.bitbucket.content.ContentTreeNode;
 import com.atlassian.bitbucket.content.ContentTreeSummary;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
-import static java.util.stream.Collectors.toList;
+import static java.util.Collections.sort;
 
 public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallback {
 
-    private final List<List<Integer>> versionNumbers = new ArrayList<>();
+    private final List<List<Integer>> versionNumbers = new ArrayList<List<Integer>>();
     private final Consumer<List<List<Integer>>> callBack;
     private static final String FLYWAY_MAJOR_PATCH = "V([0-9]+)";
     private static final Pattern FLYWAY_MAJOR_PATCH_PATTERN = Pattern.compile(FLYWAY_MAJOR_PATCH);
@@ -45,12 +42,20 @@ public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallbac
     }
 
     static List<List<Integer>> sortAndFilter(final List<List<Integer>> unsorted){
-        final List<List<Integer>> sorted = unsorted.stream().filter(l -> !l.isEmpty()).sorted(FLYWAY_VERSION_COMPARATOR).collect(toList());
+        final List<List<Integer>> sorted = new ArrayList<List<Integer>>(unsorted);
+        final Iterator<List<Integer>> iterator = sorted.iterator();
+        while (iterator.hasNext()){
+            final List<Integer> toRemove = iterator.next();
+            if (toRemove.isEmpty()){
+                iterator.remove();
+            }
+        }
+        sort(sorted, FLYWAY_VERSION_COMPARATOR);
         return sorted;
     }
 
     static List<Integer> versionFromName(final String name) {
-        final List<Integer> version = new ArrayList<>();
+        final List<Integer> version = new ArrayList<Integer>();
         final Matcher matcher = FLYWAY_PATCH_PATTERN.matcher(name);
         if (matcher.find()) {
             final Matcher major = FLYWAY_MAJOR_PATCH_PATTERN.matcher(name);

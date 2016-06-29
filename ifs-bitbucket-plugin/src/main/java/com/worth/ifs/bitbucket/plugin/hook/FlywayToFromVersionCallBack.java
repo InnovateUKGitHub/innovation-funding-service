@@ -8,8 +8,8 @@ import java.util.List;
 public class FlywayToFromVersionCallBack {
 
     private final MergeRequest request;
-    private List<Integer> maxToVersion = new ArrayList<>();
-    private List<Integer> minFromVersion = new ArrayList<>();
+    private List<Integer> maxToVersion = new ArrayList<Integer>();
+    private List<Integer> minFromVersion = new ArrayList<Integer>();
     private static FlywayVersionComparator FLYWAY_VERSION_COMPARATOR = new FlywayVersionComparator();
 
     public FlywayToFromVersionCallBack(final MergeRequest request) {
@@ -17,12 +17,12 @@ public class FlywayToFromVersionCallBack {
     }
 
     public void onTo(final List<List<Integer>> sortedVersions) {
-        maxToVersion = sortedVersions.isEmpty() ? new ArrayList<>() : sortedVersions.get(sortedVersions.size() - 1);
+        maxToVersion = sortedVersions.isEmpty() ? new ArrayList<Integer>() : sortedVersions.get(sortedVersions.size() - 1);
         compareVersions();
     }
 
     public void onFrom(final List<List<Integer>> sortedVersions) {
-        minFromVersion = sortedVersions.isEmpty() ? new ArrayList<>() : sortedVersions.get(0);
+        minFromVersion = sortedVersions.isEmpty() ? new ArrayList<Integer>() : sortedVersions.get(0);
         compareVersions();
     }
 

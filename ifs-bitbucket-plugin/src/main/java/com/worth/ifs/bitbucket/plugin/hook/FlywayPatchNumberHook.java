@@ -12,6 +12,8 @@ import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Scanned
 public class FlywayPatchNumberHook implements RepositoryMergeRequestCheck {
 
@@ -36,8 +38,18 @@ public class FlywayPatchNumberHook implements RepositoryMergeRequestCheck {
         final PageRequest pageRequest = new PageRequestImpl(0, PageRequest.MAX_PAGE_LIMIT);
         final FlywayToFromVersionCallBack flywayToFromVersionCallBack = new FlywayToFromVersionCallBack(context.getMergeRequest());
 
-        final ContentTreeCallback toCallBack = new FlywayVersionContentTreeCallback(flywayToFromVersionCallBack::onTo);
-        final ContentTreeCallback fromCallBack = new FlywayVersionContentTreeCallback(flywayToFromVersionCallBack::onFrom);
+        final ContentTreeCallback toCallBack = new FlywayVersionContentTreeCallback(new Consumer<List<List<Integer>>>() {
+            @Override
+            public void accept(List<List<Integer>> versions) {
+                flywayToFromVersionCallBack.onTo(versions);
+            }
+        });
+        final ContentTreeCallback fromCallBack = new FlywayVersionContentTreeCallback(new Consumer<List<List<Integer>>>() {
+            @Override
+            public void accept(List<List<Integer>> versions) {
+                flywayToFromVersionCallBack.onFrom(versions);
+            }
+        });
 
         cs.streamDirectory(toRepo, toLastCommitId, "", true, toCallBack, pageRequest);
         cs.streamDirectory(fromRepo, fromLastCommitId, "", true, fromCallBack, pageRequest);

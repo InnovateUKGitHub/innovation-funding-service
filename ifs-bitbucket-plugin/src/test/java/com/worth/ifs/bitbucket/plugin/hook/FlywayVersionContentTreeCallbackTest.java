@@ -8,12 +8,12 @@ import java.util.List;
 import static com.google.common.primitives.Ints.asList;
 import static com.worth.ifs.bitbucket.plugin.hook.FlywayVersionContentTreeCallback.sortAndFilter;
 import static com.worth.ifs.bitbucket.plugin.hook.FlywayVersionContentTreeCallback.versionFromName;
-import static junit.framework.Assert.assertEquals;
+import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 public class FlywayVersionContentTreeCallbackTest {
     @Test
     public void testSortAndFilter() {
-        final List<List<Integer>> unsorted = new ArrayList<>();
+        final List<List<Integer>> unsorted = new ArrayList<List<Integer>>();
         unsorted.add(asList(1, 2, 3));
         unsorted.add(asList(1));
         unsorted.add(asList());
