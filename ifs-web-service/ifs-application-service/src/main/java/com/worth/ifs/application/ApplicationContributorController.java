@@ -38,6 +38,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 // TODO DW - INFUND-1555 - handle rest results
+/**
+ * This controller will handle all requests that are related to the application collaborators and invites.
+ */
+
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
 public class ApplicationContributorController{
@@ -317,34 +321,39 @@ public class ApplicationContributorController{
             }
 
             if(!restResponse.getStatusCode().is2xxSuccessful()) {
-                List<Integer> usedIndexes = new ArrayList();
                 Integer organisationIndex = contributorsForm.getOrganisations().indexOf(organisationInvite);
-
-                for(Error error : restResponse.getFailure().getErrors()) {
-                    List<String> inviteEmails = contributorsForm.getOrganisations().get(organisationIndex)
-                            .getInvites()
-                            .stream()
-                            .map(inviteeForm -> inviteeForm.getEmail())
-                            .collect(Collectors.toList());
-
-                    Integer index = getUnusedIndex(error.getErrorKey(), inviteEmails, usedIndexes);
-                    if(index != null) {
-                        usedIndexes.add(index);
-
-                        FieldError fieldError = new FieldError("contributorsForm",
-                                String.format("organisations[%d].invites[%d].email", organisationIndex, index),
-                                error.getErrorKey(),
-                                false,
-                                new String[]{"NotUnique"},
-                                null,
-                                "You have already added this email address.");
-                        bindingResult.addError(fieldError);
-                    }
-                }
+                handleRestErrors(restResponse, organisationIndex, contributorsForm, bindingResult);
             } else {
                 cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
             }
 
+        }
+    }
+
+    private void handleRestErrors(RestResult<InviteResultsResource> restResponse, Integer organisationIndex, ContributorsForm contributorsForm, BindingResult bindingResult) {
+        List<Integer> usedIndexes = new ArrayList();
+
+
+        for(Error error : restResponse.getFailure().getErrors()) {
+            List<String> inviteEmails = contributorsForm.getOrganisations().get(organisationIndex)
+                    .getInvites()
+                    .stream()
+                    .map(inviteeForm -> inviteeForm.getEmail())
+                    .collect(Collectors.toList());
+
+            Integer index = getUnusedIndex(error.getErrorKey(), inviteEmails, usedIndexes);
+            if(index != null) {
+                usedIndexes.add(index);
+
+                FieldError fieldError = new FieldError("contributorsForm",
+                        String.format("organisations[%d].invites[%d].email", organisationIndex, index),
+                        error.getErrorKey(),
+                        false,
+                        new String[]{"NotUnique"},
+                        null,
+                        "You have already added this email address.");
+                bindingResult.addError(fieldError);
+            }
         }
     }
 
