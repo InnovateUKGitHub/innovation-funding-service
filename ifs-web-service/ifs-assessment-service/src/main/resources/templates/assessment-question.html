@@ -14,8 +14,8 @@
             <!--/ div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Assessment Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" /-->
 
             <div class="page-title">
-                <!--/div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" /-->
-                <h1 class="heading-xlarge" th:text="${'Title'}" />
+                <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${modal.competition})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${model.competition.getName()}" />
             </div>
 
             <!--/form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data"
