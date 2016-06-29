@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -103,14 +104,12 @@ public class ApplicationContributorController{
                                      HttpServletRequest request,
                                      Model model) {
 
-        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
+        setInviteTemplateModel(applicationId, contributorsForm, request, model);
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
     private void setInviteTemplateModel(final Long applicationId,
                                         ContributorsForm contributorsForm,
-                                        BindingResult bindingResult,
-                                        HttpServletResponse response,
                                         HttpServletRequest request,
                                         Model model) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -125,7 +124,6 @@ public class ApplicationContributorController{
 
         Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
         addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
-        mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
 
         model.addAttribute("authenticatedUser", user);
         model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
@@ -149,6 +147,10 @@ public class ApplicationContributorController{
      * Add the invites from the database, to the ContributorsForm object.
      */
     private void addSavedInvitesToForm(ContributorsForm contributorsForm, OrganisationResource leadOrganisation, List<InviteOrganisationResource> savedInvites) {
+        if(contributorsForm.getOrganisations().size() > 0) {
+            return;
+        }
+
         OrganisationInviteForm leadOrganisationInviteForm = new OrganisationInviteForm();
         leadOrganisationInviteForm.setOrganisationName(leadOrganisation.getName());
         leadOrganisationInviteForm.setOrganisationId(leadOrganisation.getId());
@@ -186,8 +188,6 @@ public class ApplicationContributorController{
                     CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
-                    //validator.validate(contributorsForm, bindingResult);
-                    //validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
                 } else {
                     contributorsForm.merge(contributorsFormCookie);
                 }
@@ -254,7 +254,7 @@ public class ApplicationContributorController{
             return String.format("redirect:/application/%d/contributors/invite/?newApplication", applicationId);
         }
 
-        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
+        setInviteTemplateModel(applicationId, contributorsForm, request, model);
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
@@ -315,19 +315,47 @@ public class ApplicationContributorController{
                 restResponse = inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
             }
 
-
             if(!restResponse.getStatusCode().is2xxSuccessful()) {
-                if(organisationInvite.getInvites().size() == 1) {
-                    FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(organisationInvite), 0), organisationInvite.getInvites().get(0).getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
-                    bindingResult.addError(fieldError);
-                } else {
-                    restResponse.getFailure().getErrors().forEach(errorMessage -> bindingResult.addError(new FieldError("", "", errorMessage.getErrorMessage())));
+                List<Integer> usedIndexes = new ArrayList();
+                Integer organisationIndex = contributorsForm.getOrganisations().indexOf(organisationInvite);
+
+                for(Error error : restResponse.getFailure().getErrors()) {
+                    List<String> inviteEmails = contributorsForm.getOrganisations().get(organisationIndex)
+                            .getInvites()
+                            .stream()
+                            .map(inviteeForm -> inviteeForm.getEmail())
+                            .collect(Collectors.toList());
+
+                    Integer index = getUnusedIndex(error.getErrorKey(), inviteEmails, usedIndexes);
+                    if(index != null) {
+                        usedIndexes.add(index);
+
+                        FieldError fieldError = new FieldError("contributorsForm",
+                                String.format("organisations[%d].invites[%d].email", organisationIndex, index),
+                                error.getErrorKey(),
+                                false,
+                                new String[]{"NotUnique"},
+                                null,
+                                "You have already added this email address.");
+                        bindingResult.addError(fieldError);
+                    }
                 }
             } else {
                 cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
             }
 
         }
+    }
+
+    private Integer getUnusedIndex(String object, List<String> objects, List<Integer> usedIndexes) {
+        Integer foundIndex = null;
+        for(int i = 0; i < objects.size(); i++) {
+            if(object.equals(objects.get(i)) && !usedIndexes.contains(i)) {
+                foundIndex = i;
+            }
+        }
+
+        return foundIndex;
     }
 
     private Set<String> getSavedEmailAddresses(ApplicationResource application) {

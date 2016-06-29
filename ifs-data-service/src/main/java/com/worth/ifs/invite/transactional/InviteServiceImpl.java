@@ -216,14 +216,18 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         List<Error> errors = new ArrayList();
 
+        findDuplicatesInResourceList(inviteResources)
+                .forEach(inviteResource -> errors.add(new Error(inviteResource.getEmail(),"Invited emailaddress is already invited in this application", HttpStatus.NOT_ACCEPTABLE)));
+
         inviteResources.stream()
-                .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(true))
-                .forEach(inviteResource -> errors.add(new Error("Invited emailaddress is already invited in this application", HttpStatus.NOT_ACCEPTABLE)));
+                .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(false))
+                .forEach(inviteResource -> errors.add(new Error(inviteResource.getEmail(),"Invited emailaddress is already invited in this application", HttpStatus.NOT_ACCEPTABLE)));
 
         if(errors.size() > 0) {
             LOG.error("Found double invites");
             return serviceFailure(errors);
         }
+
 
         List<Invite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
         inviteRepository.save(invites);
@@ -411,5 +415,21 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         savedInvites.addAll(getInvitesByApplication(applicationId).getSuccessObject());
         savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
         return savedEmails;
+    }
+
+    private List<InviteResource> findDuplicatesInResourceList(List<InviteResource> resourceList) {
+        List<InviteResource> result = new ArrayList();
+        List<String> emails = resourceList.stream().map(inviteResource -> inviteResource.getEmail()).collect(Collectors.toList());
+        Integer currentIndex = 0;
+
+        for (String email : emails) {
+            if (emails.subList(currentIndex + 1, emails.size()).contains(email)) {
+                result.add(resourceList.get(currentIndex));
+            }
+            currentIndex++;
+        }
+
+        return result;
+
     }
 }
