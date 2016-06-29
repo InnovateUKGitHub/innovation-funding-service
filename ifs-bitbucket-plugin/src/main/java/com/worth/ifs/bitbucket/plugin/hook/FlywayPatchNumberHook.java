@@ -1,9 +1,12 @@
 package com.worth.ifs.bitbucket.plugin.hook;
 
+import com.atlassian.bitbucket.hook.repository.RepositoryMergeRequestCheck;
+import com.atlassian.bitbucket.hook.repository.RepositoryMergeRequestCheckContext;
 import com.atlassian.bitbucket.pull.PullRequestParticipant;
-import com.atlassian.bitbucket.repository.hook.*;
 import com.atlassian.bitbucket.repository.Repository;
-import com.atlassian.bitbucket.setting.*;
+import com.atlassian.bitbucket.setting.RepositorySettingsValidator;
+import com.atlassian.bitbucket.setting.Settings;
+import com.atlassian.bitbucket.setting.SettingsValidationErrors;
 
 import java.util.regex.Pattern;
 
