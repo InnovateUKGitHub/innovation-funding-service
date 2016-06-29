@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,4 +21,5 @@ public interface ProjectRestService {
     RestResult<ProjectResource> getByApplicationId(Long applicationId);
     RestResult<Void> setApplicationDetailsSubmitted(Long projectId);
     RestResult<Boolean> isSubmitAllowed(Long projectId);
+    RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 }

@@ -13,6 +13,7 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -26,6 +27,7 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -76,6 +78,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private AddressTypeRepository addressTypeRepository;
+
+    @Autowired
+    private OrganisationMapper organisationMapper;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
@@ -176,6 +181,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, userId);
+        return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
     }
 
     private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {

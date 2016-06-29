@@ -10,4 +10,7 @@ public interface BankDetailsService {
 
     @NotSecured("TODO")
     ServiceResult<Void> updateBankDetails(final BankDetailsResource bankDetailsResource);
+
+    @NotSecured("TODO")
+    ServiceResult<BankDetailsResource> getByProjectAndOrganisation(final Long projectId, final Long organisationId);
 }

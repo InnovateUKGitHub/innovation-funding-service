@@ -94,4 +94,9 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
         return applicationService.getLeadOrganisation(project.getApplication());
     }
+
+    @Override
+    public OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId) {
+        return projectRestService.getOrganisationByProjectAndUser(projectId, userId).getSuccessObjectOrThrowException();
+    }
 }

@@ -1,5 +1,6 @@
 package com.worth.ifs.bankdetails.resource;
 
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -17,7 +18,7 @@ public class BankDetailsResource {
 
     private Long project;
 
-    private Long address;
+    private OrganisationAddressResource organisationAddress;
 
     public Long getId() {
         return id;
@@ -51,12 +52,12 @@ public class BankDetailsResource {
         this.project = project;
     }
 
-    public Long getAddress() {
-        return address;
+    public OrganisationAddressResource getOrganisationAddress() {
+        return organisationAddress;
     }
 
-    public void setAddress(Long address) {
-        this.address = address;
+    public void setOrganisationAddress(OrganisationAddressResource organisationAddressResource) {
+        this.organisationAddress = organisationAddressResource;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class BankDetailsResource {
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
                 .append(project, that.project)
-                .append(address, that.address)
+                .append(organisationAddress, that.organisationAddress)
                 .isEquals();
     }
 
@@ -83,7 +84,7 @@ public class BankDetailsResource {
                 .append(sortCode)
                 .append(accountNumber)
                 .append(project)
-                .append(address)
+                .append(organisationAddress)
                 .toHashCode();
     }
 }

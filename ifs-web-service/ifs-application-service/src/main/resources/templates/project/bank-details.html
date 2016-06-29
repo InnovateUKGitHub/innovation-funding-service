@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Bank Details'" th:remove="tag" />
 </head>
@@ -25,11 +25,11 @@
 	<p class="form-hint">This information provided during the application process cannot be changed.</p>
 
 	<p class="extra-margin">
-		${companyName} <br />
-		Company no. ${companyNumber}
+        <th:block th:text="${organisation.name}">ACME Limited</th:block> <br />
+        <th:block th:text="|Company no. ${organisation.companyHouseNumber}|">02423435</th:block>
 	</p>
 
-	<form>
+    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" >
 
     <div class="form-group">
       <label for="bank-acc-number">
@@ -49,8 +49,21 @@
       <input type="text" required="required" maxlength="6" id="bank-sort-code" class="form-control width-medium" />
     </div>
 
+        <div class="form-group" >
+            <fieldset>
 
-		<a href="#page-with-confirm" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</a>
+                <h2 class="heading-medium">Billing address</h2>
+
+                <legend class="visuallyhidden">Billing address</legend>
+
+                <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+
+                <div th:include="project/fragments :: select-address" th:with="form=${form}" th:remove="tag"/>
+
+            </fieldset>
+        </div>
+
+        <a href="#page-with-confirm" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</a>
 
 	</form>
 

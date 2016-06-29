@@ -6,8 +6,11 @@ import com.worth.ifs.security.NotSecured;
 
 public interface BankDetailsRestService {
     @NotSecured("TODO")
-    RestResult<BankDetailsResource> getById(final Long id);
+    RestResult<BankDetailsResource> getById(final Long projectId, final Long id);
 
     @NotSecured("TODO")
-    RestResult<Void> updateBankDetails(final BankDetailsResource bankDetailsResource);
+    RestResult<Void> updateBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
+
+    @NotSecured("TODO")
+    RestResult<BankDetailsResource> getBankDetailsByProjectAndOrganisation(final Long projectId, final Long organisationId);
 }

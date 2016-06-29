@@ -6,6 +6,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -86,5 +87,10 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
     public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
         return projectService.isSubmitAllowed(projectId).toGetResponse();
+    }
+    @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
+    public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
+                                                                            @PathVariable("userId") final Long userId){
+        return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
     }
 }

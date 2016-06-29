@@ -530,14 +530,4 @@ public class ProjectDetailsController {
                 user -> loggedInUser.getId().equals(user.getUser()) && user.getRoleName().equals(PARTNER.getName()));
         return simpleMap(partnerProjectUsers, ProjectUserResource::getOrganisation);
     }
-
-    @RequestMapping(value = "/{projectId}/bank-details", method = RequestMethod.GET)
-    public String bankDetails(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectResource project = projectService.getById(projectId);
-        model.addAttribute("project", project);
-        model.addAttribute("currentUser", loggedInUser);
-        return "project/bank-details";
-    }
-
 }

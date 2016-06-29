@@ -5,15 +5,11 @@ import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/project/{projectId}/bankdetails")
+@RequestMapping("/project/{projectId}/bank-details")
 public class BankDetailsController {
-
     @Autowired
     BankDetailsService bankDetailsService;
 
@@ -27,5 +23,11 @@ public class BankDetailsController {
     public RestResult<BankDetailsResource> getBankDetails(@PathVariable("projectId") final Long projectId,
                                                           @PathVariable("bankDetailsId") final Long bankDetailsId){
         return bankDetailsService.getById(bankDetailsId).toGetResponse();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, params = "organisationId")
+    public RestResult<BankDetailsResource> getBankDetailsByOrganisationId(@PathVariable("projectId") final Long projectId,
+                                                          @RequestParam("organisationId") final Long organisationId){
+        return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
     }
 }

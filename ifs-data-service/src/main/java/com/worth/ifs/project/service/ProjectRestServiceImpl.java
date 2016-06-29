@@ -6,6 +6,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -66,5 +67,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<Boolean> isSubmitAllowed(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/isSubmitAllowed", Boolean.class);
+    }
+
+    @Override
+    public RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/getOrganisationByUser/" + userId, OrganisationResource.class);
     }
 }

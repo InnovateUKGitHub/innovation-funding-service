@@ -36,4 +36,6 @@ public interface ProjectService {
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     OrganisationResource getLeadOrganisation(Long projectId);
+
+    OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
 }

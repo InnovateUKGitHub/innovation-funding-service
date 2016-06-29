@@ -1,6 +1,6 @@
 package com.worth.ifs.bankdetails.domain;
 
-import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -25,8 +25,8 @@ public class BankDetails {
     private Project project;
 
     @OneToOne
-    @JoinColumn(name = "addressId", referencedColumnName = "id")
-    private Address address;
+    @JoinColumn(name = "organisationAddressId", referencedColumnName = "id")
+    private OrganisationAddress organisationAddress;
 
     public Long getId() {
         return id;
@@ -60,12 +60,12 @@ public class BankDetails {
         this.project = project;
     }
 
-    public Address getAddress() {
-        return address;
+    public OrganisationAddress getOrganisationAddress() {
+        return organisationAddress;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setOrganisationAddress(OrganisationAddress organisationAddress) {
+        this.organisationAddress = organisationAddress;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class BankDetails {
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
                 .append(project, that.project)
-                .append(address, that.address)
+                .append(organisationAddress, that.organisationAddress)
                 .isEquals();
     }
 
@@ -92,7 +92,7 @@ public class BankDetails {
                 .append(sortCode)
                 .append(accountNumber)
                 .append(project)
-                .append(address)
+                .append(organisationAddress)
                 .toHashCode();
     }
 }
