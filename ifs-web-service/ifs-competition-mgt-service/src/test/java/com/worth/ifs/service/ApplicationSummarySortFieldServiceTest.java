@@ -19,7 +19,7 @@ public class ApplicationSummarySortFieldServiceTest {
 	
 	@Test
 	public void testOpenCompetitionAllowedFields() {
-		Arrays.asList("percentageComplete", "id", "lead", "name").stream().forEach(field -> {
+		Arrays.asList("percentageComplete", "id", "lead", "name", "leadApplicant").stream().forEach(field -> {
 			String result = service.sortFieldForOpenCompetition(field);
 			assertEquals(field, result);
 		});
