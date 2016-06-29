@@ -27,6 +27,7 @@ public class Question {
 
     private String assessorGuidanceQuestion;
 
+    @Lob
     private String assessorGuidanceAnswer;
 
     private Boolean markAsCompletedEnabled = false;
