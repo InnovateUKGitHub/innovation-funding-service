@@ -148,9 +148,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         Section section = sectionRepository.findOne(sectionId);
         Set<Long> questions = collectAllQuestionFrom(section);
 
-        questions.forEach(q -> {
-            questionService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById);
-        });
+        questions.forEach(q ->
+            questionService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById)
+        );
 
         return serviceSuccess();
     }

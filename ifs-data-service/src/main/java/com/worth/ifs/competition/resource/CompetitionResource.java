@@ -1,11 +1,6 @@
 package com.worth.ifs.competition.resource;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.resource.ApplicationResource;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -13,7 +8,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.resource.ApplicationResource;
 
 public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
@@ -50,6 +52,13 @@ public class CompetitionResource {
     private String pafCode;
     private String budgetCode;
     private String code;
+    
+    private boolean multiStream;
+    private String streamName;
+    private CollaborationLevel collaborationLevel;
+    private LeadApplicantType leadApplicantType;
+    private Set<Long> researchCategories;
+    
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private String activityCode;
@@ -346,6 +355,14 @@ public class CompetitionResource {
     public void setInnovationAreaName(String innovationAreaName) {
         this.innovationAreaName = innovationAreaName;
     }
+    
+    public Set<Long> getResearchCategories() {
+		return researchCategories;
+	}
+    
+    public void setResearchCategories(Set<Long> researchCategories) {
+		this.researchCategories = researchCategories;
+	}
 
     public List<Long> getMilestones() {
         return milestones;
@@ -354,6 +371,38 @@ public class CompetitionResource {
     public void setMilestones(List<Long> milestones) {
         this.milestones = milestones;
     }
+    
+    public boolean isMultiStream() {
+		return multiStream;
+	}
+    
+    public void setMultiStream(boolean multiStream) {
+		this.multiStream = multiStream;
+	}
+    
+    public String getStreamName() {
+		return streamName;
+	}
+    
+    public void setStreamName(String streamName) {
+		this.streamName = streamName;
+	}
+    
+    public CollaborationLevel getCollaborationLevel() {
+		return collaborationLevel;
+	}
+    
+    public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
+		this.collaborationLevel = collaborationLevel;
+	}
+    
+    public LeadApplicantType getLeadApplicantType() {
+		return leadApplicantType;
+	}
+    
+    public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
+		this.leadApplicantType = leadApplicantType;
+	}
     
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
 		return sectionSetupStatus;

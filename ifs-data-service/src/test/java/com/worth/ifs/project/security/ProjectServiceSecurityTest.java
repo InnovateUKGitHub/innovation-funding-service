@@ -18,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,6 +248,16 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         @Override
         public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
             return serviceSuccess(newProjectUserResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<Void> saveProjectSubmitDateTime(Long id, LocalDateTime date) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
+            return null;
         }
     }
 }

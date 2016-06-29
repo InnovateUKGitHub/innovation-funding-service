@@ -3,11 +3,12 @@ function executeMySQLCommand {
 
     dbUrl=$(./_read-dev-build-properties.sh ext.ifsDatasourceUrl)
     dbName=$(echo ${dbUrl} | sed 's/.*\/\(.*\)$/\1/')
+    dbHost=$(./_read-dev-build-properties.sh ext.ifsDatasourceHost)
     dbUsername=$(./_read-dev-build-properties.sh ext.ifsDatasourceUsername)
     dbPassword=$(./_read-dev-build-properties.sh ext.ifsDatasourcePassword)
 
     if [[ -n "${dbPassword}" ]]; then
-        mysql ${dbName} -u${dbUsername} -p${dbPassword} -N -s -e "$1"
+        mysql ${dbName} -u${dbUsername} -p${dbPassword} -h${dbHost} -N -s -e "$1"
     else
         mysql ${dbName} -u${dbUsername} -N -s -e "$1"
     fi
