@@ -12,7 +12,7 @@ IFS.modal = (function(){
             IFS.modal.initButtonRole();
 
             jQuery('body').on('click',s.element,function(e){
-              IFS.modal.openModal(e);
+              IFS.modal.openModal(e,this);
             });
             jQuery('body').on('click','.js-close',function(){
               IFS.modal.closeModal();
@@ -29,18 +29,20 @@ IFS.modal = (function(){
             jQuery(s.element).attr({'role':'button','tabindex':'0'});
           }
         },
-        openModal : function(event){
+        openModal : function(event,el){
             var target = jQuery(event.target).attr('data-js-modal');
             target = jQuery('.'+target);
             if(target.length){
                 event.preventDefault();
-                IFS.modal.disableTabPage();
-                target.add('.modal-overlay').attr('aria-hidden','false');
-                //vertical center,old browser support so no fancy css stuff :(
-                setTimeout(function(){
-                    var height = target.outerHeight();
-                    target.css({'margin-top':'-'+(height/2)+'px'});
-                },50);
+                if(jQuery(el).is('[aria-disabled="true"]') === false){
+                  IFS.modal.disableTabPage();
+                  target.add('.modal-overlay').attr('aria-hidden','false');
+                  //vertical center,old browser support so no fancy css stuff :(
+                  setTimeout(function(){
+                      var height = target.outerHeight();
+                      target.css({'margin-top':'-'+(height/2)+'px'});
+                  },50);
+                }
             }
         },
         disableTabPage : function(){
