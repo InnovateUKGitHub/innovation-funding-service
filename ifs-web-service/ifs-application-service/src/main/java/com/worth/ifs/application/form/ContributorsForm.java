@@ -81,7 +81,7 @@ public class ContributorsForm implements Serializable {
 
     private void mergeInvite(InviteeForm iC, List<InviteeForm> existingInvites) {
         Optional<InviteeForm> cookieInviteFound = existingInvites.stream()
-                .filter(i -> StringUtils.isNotEmpty(iC.getEmail()) && i.getEmail().equals(iC.getEmail()) && StringUtils.isNotEmpty(iC.getPersonName()) && i.getPersonName().equals(iC.getPersonName()))
+                .filter(i -> i.getEmail().equals(iC.getEmail()) && i.getPersonName().equals(iC.getPersonName()))
                 .findAny();
         if(!cookieInviteFound.isPresent()){
             existingInvites.add(iC);

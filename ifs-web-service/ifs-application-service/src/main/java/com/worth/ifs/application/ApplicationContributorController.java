@@ -104,12 +104,14 @@ public class ApplicationContributorController{
                                      HttpServletRequest request,
                                      Model model) {
 
-        setInviteTemplateModel(applicationId, contributorsForm, request, model);
+        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
     private void setInviteTemplateModel(final Long applicationId,
                                         ContributorsForm contributorsForm,
+                                        BindingResult bindingResult,
+                                        HttpServletResponse response,
                                         HttpServletRequest request,
                                         Model model) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -124,6 +126,7 @@ public class ApplicationContributorController{
 
         Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
         addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
+        mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
 
         model.addAttribute("authenticatedUser", user);
         model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
@@ -242,8 +245,6 @@ public class ApplicationContributorController{
                     return ApplicationController.redirectToApplication(application);
                 }
                 return String.format("redirect:/application/%d/contributors", applicationId);
-            } else {
-                saveFormValuesToCookie(response, contributorsForm, applicationId);
             }
         } else {
             // no specific submit action, just save the data to the cookie.
@@ -254,7 +255,7 @@ public class ApplicationContributorController{
             return String.format("redirect:/application/%d/contributors/invite/?newApplication", applicationId);
         }
 
-        setInviteTemplateModel(applicationId, contributorsForm, request, model);
+        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
