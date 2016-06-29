@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.ExecutionException;
 
 @Controller
-@RequestMapping("/assessment")
 public class AssessmentOverviewController extends AbstractApplicationController {
 
     private static final Log LOG = LogFactory.getLog(AssessmentOverviewController.class);
@@ -28,7 +27,7 @@ public class AssessmentOverviewController extends AbstractApplicationController 
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
 
     @Autowired
-    private AssessmentService assessmentOverviewService;
+    private AssessmentService assessmentService;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/{processId}")

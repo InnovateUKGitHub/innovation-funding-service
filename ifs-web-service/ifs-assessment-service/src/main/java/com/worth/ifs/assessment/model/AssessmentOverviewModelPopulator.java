@@ -1,29 +1,28 @@
 package com.worth.ifs.assessment.model;
 
 
-import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.form.AssessmentOverviewForm;
+import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.service.AssessmentFeedbackService;
 import com.worth.ifs.assessment.service.AssessmentService;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
-import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.*;
@@ -33,10 +32,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
-import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
+@Component
 public class AssessmentOverviewModelPopulator {
     private static final Log LOG = LogFactory.getLog(AssessmentOverviewModelPopulator.class);
 
@@ -62,6 +61,8 @@ public class AssessmentOverviewModelPopulator {
     private ProjectService projectService;
     @Autowired
     private AssessmentService assessmentService;
+    @Autowired
+    private AssessmentFeedbackService assessmentFeedbackService;
 
 
     public void populateModel(Long assessmentId, Long userId, AssessmentOverviewForm form, Model model) throws InterruptedException, ExecutionException {
@@ -74,13 +75,7 @@ public class AssessmentOverviewModelPopulator {
         if(form == null){
             form = new AssessmentOverviewForm();
         }
-        //form.setApplication(application);
-        //addUserDetails(model, application, userId);
-
-        //addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
-        addCompletedDetails(model, application, userOrganisation);
-        addSections(model, competition);
-        //addYourFinancesStatus(model, application);
+        addSections(model, competition, assessmentId);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         model.addAttribute("currentApplication", application);
@@ -89,14 +84,13 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
 
-        FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
-        model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
     }
 
-    private void addSections(Model model, CompetitionResource competition) {
+    private void addSections(Model model, CompetitionResource competition, Long assessmentId) {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
         final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+        final List<AssessmentFeedbackResource> feedback = assessmentFeedbackService.getAllAssessmentFeedback(assessmentId);
 
         final Map<Long, SectionResource> sections =
                 parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
@@ -115,6 +109,12 @@ public class AssessmentOverviewModelPopulator {
 
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
+        final Map<Long, AssessmentFeedbackResource> questionFeedback = feedback.stream()
+                .collect(Collectors.toMap(
+                        AssessmentFeedbackResource::getQuestion,
+                        assessmentFeedbackResource -> assessmentFeedbackResource)
+                );
+
         boolean hasFinanceSection = false;
         Long financeSectionId = null;
         if (!financeSections.isEmpty()) {
@@ -127,11 +127,8 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("sectionQuestions", sectionQuestions);
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
+        model.addAttribute("questionFeedBack", questionFeedback);
     }
-
-    /////////////////////////////////
-
-
 
     private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
         return getApplication(getApplicationIdForProcessRole(getProcessRoleForAssessment(getAssessment(assessmentId))));
@@ -153,8 +150,6 @@ public class AssessmentOverviewModelPopulator {
         return processRoleResource.get().getApplication();
     }
 
-    ////////////////////////////////////////////////////////////
-
     private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections){
         return sections.stream()
                 .filter(s -> SectionType.FINANCE.equals(s.getType()))
@@ -169,55 +164,6 @@ public class AssessmentOverviewModelPopulator {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private void addUserDetails(Model model, ApplicationResource application, Long userId) {
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
-
-        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
-        model.addAttribute("leadApplicant", leadApplicant);
-        model.addAttribute("ableToSubmitApplication", userIsLeadApplicant && application.isSubmitable());
-    }
-
-    private void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
-                                      Long userId) {
-
-        if (isApplicationInViewMode(model, application, userOrganisation))
-            return;
-
-        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
-
-        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
-        questionService.removeNotifications(notifications);
-        List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
-
-        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
-        model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
-        model.addAttribute("questionAssignees", questionAssignees);
-        model.addAttribute("notifications", notifications);
-    }
-
-    private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
-        if(!application.isOpen() || userOrganisation == null){
-            //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
-            model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
-            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
-            model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
-            return true;
-        }
-        return false;
-    }
-
-    private List<InviteResource> pendingInvitations(ApplicationResource application) {
-        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatusConstants.ACCEPTED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
-    }
 
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
 
@@ -248,17 +194,6 @@ public class AssessmentOverviewModelPopulator {
         return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
     }
 
-    private void addYourFinancesStatus(Model model, ApplicationResource application) {
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
-
-        Long financeSectionId=null;
-        if (!financeSections.isEmpty()) {
-            financeSectionId = financeSections.get(0).getId();
-        }
-        model.addAttribute("financeSectionId", financeSectionId);
-    }
-
     private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
         return simpleFilter(list, s -> type.equals(s.getType()));
     }
@@ -271,22 +206,5 @@ public class AssessmentOverviewModelPopulator {
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 
-    private FileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
-
-        if (!application.hasPublishedAssessorFeedback()) {
-            return null;
-        }
-
-        RestResult<FileEntryResource> fileEntryResult = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-
-        if (fileEntryResult.isFailure()) {
-            LOG.error("Should have been able to find FileEntry " + application.getAssessorFeedbackFileEntry() +
-                    " for Assessor Feedback for application " + application.getId() + " - returning null");
-            return null;
-        }
-
-        FileEntryResource fileEntry = fileEntryResult.getSuccessObject();
-        return new FileDetailsViewModel(fileEntry);
-    }
 
 }

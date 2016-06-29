@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.controller;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
@@ -73,7 +73,6 @@ public class AssessmentOverviewControllerTest  extends BaseControllerMockMVCTest
 
         CompetitionResource competition = new CompetitionResource();
         competition.setId(1L);
-
 
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L,2L);

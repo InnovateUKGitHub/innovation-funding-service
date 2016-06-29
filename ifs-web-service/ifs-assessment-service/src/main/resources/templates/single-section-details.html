@@ -5,7 +5,6 @@
 <ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, leadApplicant , section, currentApplication)" th:remove="tag">
     <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
         <li class="grid-row section"
-            th:with="questionAssignee=(${questionAssignees.get(question.getId())})"
             th:id="'form-input-'+${question.getId()}">
                 <div class="column-two-thirds">
                     <h3 class="heading-small">
@@ -14,31 +13,8 @@
                     </h3>
                 </div>
                 <div class="column-third">
-                    <div th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" th:remove="tag">
-                        <!--/* lead */-->
-                        <div th:include="question-type/form-elements :: assign-buttons" th:if="${userIsLeadApplicant}" th:remove="tag"/>
-                         <!--/* collabr */-->
-                         <div class="assign-container" th:if="${!userIsLeadApplicant}">
-                            <div th:include="question-type/form-elements :: assigned-to"  th:remove="tag"/>
-                        </div>
-                    </div>
+
                 </div>
-                <img class="section-status complete"
-                     src="/images/field/field-done-right.png"
-                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
-                     width="30"
-                     height="30"
-                     th:alt="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"
-                     th:title="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"
-                     th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" />
-                <img class="section-status assigned"
-                     src="/images/field/field-assigned-right.png"
-                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
-                     width="30"
-                     height="30"
-                     th:alt="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
-                     th:title="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
-                     th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}"/>
         </li>
     </div>
 </ul>
