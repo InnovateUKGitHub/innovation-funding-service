@@ -85,7 +85,7 @@ Password with personal information
     And the user enters text to a text field    id=retypedPassword    ${personal_info_password}
     And the user submits their information
     And The user should see the text in the page    We were unable to create your account
-    And The user should see the text in the page    Password should not contain your last name
+    And The user should see the text in the page    Password should not contain either your first or last name
 
 Password is too long
     [Documentation]    INFUND-885
