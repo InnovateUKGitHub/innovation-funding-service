@@ -80,6 +80,14 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
+    public QuestionBuilder withAssessorGuidanceQuestion(String... assessorGuidanceQuestions) {
+        return withArray((assessorGuidanceQuestion, object) -> setField("assessorGuidanceQuestion", assessorGuidanceQuestion, object), assessorGuidanceQuestions);
+    }
+
+    public QuestionBuilder withAssessorGuidanceAnswer(String... assessorGuidanceAnswers) {
+        return withArray((assessorGuidanceAnswer, object) -> setField("assessorGuidanceAnswer", assessorGuidanceAnswer, object), assessorGuidanceAnswers);
+    }
+
     public QuestionBuilder withAssessorConfirmationQuestion(String... assessorConfirmationQuestions) {
         return withArray((assessorConfirmationQuestion, object) -> setField("assessorConfirmationQuestion", assessorConfirmationQuestion, object), assessorConfirmationQuestions);
     }
