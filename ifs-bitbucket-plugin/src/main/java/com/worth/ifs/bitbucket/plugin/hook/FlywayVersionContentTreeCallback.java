@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 
 public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallback {
 
-    private final List<List<Integer>> versionNumbers = new ArrayList<List<Integer>>();
+    private final List<List<Integer>> versionNumbers = new ArrayList<>();
     private final Consumer<List<List<Integer>>> callBack;
     private static final String FLYWAY_MAJOR_PATCH = "V([0-9]+)";
     private static final Pattern FLYWAY_MAJOR_PATCH_PATTERN = Pattern.compile(FLYWAY_MAJOR_PATCH);
