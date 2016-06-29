@@ -26,10 +26,10 @@ IFS.competition_management = (function(){
             IFS.competition_management.getContainerHeight();
             IFS.competition_management.handleCompetitionCode();
 
-            jQuery("body.competition-management.setup").on('change','#competitionTypeId',function(){
+            jQuery("body.competition-management.competition-setup").on('change','#competitionTypeId',function(){
               IFS.competition_management.handleStateAid();
           });
-            jQuery("body.competition-management.setup").on('change','[name="innovationSectorCategoryId"]',function(){
+            jQuery("body.competition-management.competition-setup").on('change','[name="innovationSectorCategoryId"]',function(){
               IFS.competition_management.handleInnovationSector();
             });
 
@@ -218,20 +218,22 @@ IFS.competition_management = (function(){
         },
         handleInnovationSector : function(){
               var sector = jQuery('[name="innovationSectorCategoryId"]').val();
-              var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/getInnovationArea/'+sector;
+              if(typeof(sector) !=='undefined'){
+                var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/getInnovationArea/'+sector;
+                jQuery.ajaxProtected({
+                  type: "GET",
+                  url: url,
+                  success: function(data) {
+                      var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
+                      innovationCategory.children().remove();
+                      jQuery.each(data,function(){
+                          innovationCategory.append('<option value="'+this.id+'">'+this.name+'</option>');
+                      });
+                      innovationCategory.trigger('change');
+                  }
+              });
+              }
 
-              jQuery.ajaxProtected({
-                type: "GET",
-                url: url,
-                success: function(data) {
-                    var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
-                    innovationCategory.children().remove();
-                    jQuery.each(data,function(){
-                        innovationCategory.append('<option value="'+this.id+'">'+this.name+'</option>');
-                    });
-                    innovationCategory.trigger('change');
-                }
-            });
         },
         handleStateAid : function(){
            var stateAid =  jQuery('#competitionTypeId').find('[value="'+jQuery('#competitionTypeId').val()+'"]').attr('data-stateaid');

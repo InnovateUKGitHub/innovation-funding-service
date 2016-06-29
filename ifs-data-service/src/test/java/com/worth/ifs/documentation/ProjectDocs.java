@@ -21,6 +21,7 @@ public class ProjectDocs {
             fieldWithPath("projectManager").description("Project manager designated for the project"),
             fieldWithPath("name").description("The Project's name"),
             fieldWithPath("projectUsers").description("The ids of users with Roles on the Project"),
+            fieldWithPath("submittedDate").description("Date that project details were submitted by lead partner. Null means the details have not yet been submitted")
     };
 
     public static final FieldDescriptor[] projectUserResourceFields = {
@@ -33,6 +34,7 @@ public class ProjectDocs {
             fieldWithPath("organisation").description("Id of the Organisation")
     };
 
+    @SuppressWarnings("unchecked")
     public static final ProjectResourceBuilder projectResourceBuilder = newProjectResource()
             .withId(1L)
             .with(name("Sample Project"))
