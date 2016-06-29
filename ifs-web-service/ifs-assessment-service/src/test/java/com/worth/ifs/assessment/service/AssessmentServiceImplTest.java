@@ -74,7 +74,6 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
     @Test
     public void testGetAllQuestionsById() throws ExecutionException, InterruptedException {
         final Long assessmentId = 1L;
-        final Long processRoleId ;
         final AssessmentResource assessmentResource = AssessmentResourceBuilder.newAssessmentResource().build();
         final ProcessRoleResource processRoleResource = ProcessRoleResourceBuilder.newProcessRoleResource().build();
         final ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
@@ -85,8 +84,7 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         expected.add(questionResource);
 
         when(assessmentService.getById(assessmentId)).thenReturn(assessmentResource);
-        processRoleId = assessmentResource.getProcessRole();
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
+        when(processRoleService.getById(assessmentResource.getProcessRole())).thenReturn(settable(processRoleResource));
         when(applicationService.getById(processRoleResource.getApplication())).thenReturn(applicationResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
         when(questionService.findByCompetition(competitionResource.getId())).thenReturn(expected);
