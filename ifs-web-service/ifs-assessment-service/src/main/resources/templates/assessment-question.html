@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+        <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.question.shortName) ? 'Assessment' : model.question.shortName}" th:remove="tag" />
     </head>
 
     <body class="assessment-details">
@@ -11,11 +11,11 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <!--/ div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Assessment Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" /-->
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${model.application},linkTitle='Assessment Overview',linkClass='link-back',linkUrl=@{/{id}(id=${currentApplication.id})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${modal.competition})" th:remove="tag" />
-                <h1 class="heading-xlarge" th:text="${model.competition.getName()}" />
+                <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${model.competition})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${model.question.shortName}" />
             </div>
 
             <!--/form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data"
@@ -33,39 +33,47 @@
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
                 <div class="form-group">
-                    <h2 class="heading-medium">1. What is the business opportunity that your project addresses?</h2>
+                    <h2 class="heading-medium">
+                        <span th:if="${model.question.questionNumber != null}" th:text="${model.question.questionNumber} + '. '" th:remove="tag" />
+                        <span th:text="${model.question.name}" th:remove="tag" />
+                    </h2>
 
-                    <p>Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly. </p>
-                    <p>We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to advance.</p>
+                    <p th:text="${model.question.description}" />
                 </div>
 
-                <div th:include="fragments/assessment :: assessment-feedback-score" th:remove="tag" />
+                <div th:if="${model.question.needingAssessorScore}" th:remove="tag">
+                    <div th:include="fragments/assessment :: assessment-feedback-score" th:remove="tag" />
+                </div>
 
-                <div th:include="fragments/assessment :: assessment-feedback-scope" th:remove="tag" />
+                <div th:if="${model.question.assessorConfirmationQuestion != null}" th:remove="tag">
+                    <div th:include="fragments/assessment :: assessment-feedback-scope (confirmationQuestion=${model.question.assessorConfirmationQuestion})" th:remove="tag" />
+                </div>
 
-                <fieldset>
-                    <legend class="visuallyhidden">Question feedback</legend>
-                    <div class="form-group">
+                <div th:if="${model.question.needingAssessorFeedback}" th:remove="tag">
+                    <fieldset>
+                        <legend class="visuallyhidden">Question feedback</legend>
                         <div class="form-group">
-                            <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                                <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
-                            </label>
+                            <div class="form-group">
+                                <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
+                                    <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+                                </label>
 
-                            <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
+                                <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
-                            <div class="textarea-wrapped word-count">
-                                <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" aria-hidden="true"></textarea>
+                                <div class="textarea-wrapped word-count">
+                                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" aria-hidden="true"></textarea>
 
-                                <div class="textarea-footer">
-                                    <span class="count-label">
-                                        <span class="count-message">Words remaining:</span>
-                                        <span class="count-down positive" aria-live="polite">349</span>
-                                    </span>
+                                    <div class="textarea-footer">
+                                        <span class="count-label">
+                                            <span class="count-message">Words remaining:</span>
+                                            <span class="count-down positive" aria-live="polite">349</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </fieldset>
+                    </fieldset>
+                </div>
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             <!--/form-->

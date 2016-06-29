@@ -2,22 +2,15 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 
-<!-- ======== Assessment - sub header back to comp dashboard ======= -->
-<div th:fragment="assessment-subheader(link, url)">
+<!-- ======== Assessment - sub header back to assessment overview ======= -->
+<div th:fragment="assessment-header-sub">
     <div class="sub-header">
-        <div class="deadline">Days left to submit&nbsp;&nbsp;
-            <div class="pie-container">
-                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
-                <div class="pie-overlay">
-                    <div>0</div>
-                </div>
-            </div>
-        </div>
-        <div th:if="${url == ''}" th:remove="tag">
-            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
-        </div>
-        <div th:if="${url != ''}" th:remove="tag">
-             <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
+       <a th:if="${linkTitle != null and linkUrl != null}"
+          th:class="${linkClass != null ? linkClass : ''}"
+          th:href="${linkUrl}"
+          th:text="${linkTitle}" />
+        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
+          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
         </div>
     </div>
 </div>
@@ -50,9 +43,9 @@
 
 <!-- =================== Assessment feedback scope ============================== -->
 <div th:fragment="assessment-feedback-scope">
-    <h2 class="heading-small">Is the application in scope?</h2>
+    <h2 class="heading-small" th:text="${confirmationQuestion}"></h2>
     <fieldset class="inline">
-        <legend class="visuallyhidden">Is the application in scope?</legend>
+        <legend class="visuallyhidden" th:text="${confirmationQuestion}"></legend>
         <div class="form-group">
             <label class="block-label" for="assessor-question-confirmation-yes">
                 <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
@@ -66,15 +59,5 @@
     </fieldset>
 </div>
 
-
-<!-- ========================= Assessment guidance =========================== -->
-<div th:fragment="assessment-guidance (guidable)">
-    <details th:if="${guidable?.getGuidanceQuestion()}">
-        <summary>
-            <span class="summary" th:text="${guidable.getGuidanceQuestion()}"/>
-        </summary>
-        <div class="panel-indent" ifs:utext="${guidable.getGuidanceAnswer()}"/>
-    </details>
-</div>
 
 </html>
