@@ -3,7 +3,9 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
+import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.service.AssessmentFeedbackService;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
@@ -40,6 +42,9 @@ public class AssessmentOverviewControllerTest  extends BaseControllerMockMVCTest
     @Mock
     private AssessmentService assessmentService;
 
+    @Mock
+    private AssessmentFeedbackService assessmentFeedbackService;
+
     @Spy
     @InjectMocks
     private AssessmentOverviewModelPopulator applicationOverviewModelPopulator;
@@ -65,7 +70,7 @@ public class AssessmentOverviewControllerTest  extends BaseControllerMockMVCTest
     @Test
     public void testAssessmentDetails() throws Exception {
         AssessmentResource assessment = new AssessmentResource();
-        assessment.setId(0L);
+        assessment.setId(1L);
 
         ProcessRoleResource processRole = new ProcessRoleResource();
         processRole.setId(0L);
@@ -74,24 +79,28 @@ public class AssessmentOverviewControllerTest  extends BaseControllerMockMVCTest
         CompetitionResource competition = new CompetitionResource();
         competition.setId(1L);
 
+        AssessmentFeedbackResource assessmentFeedback = new AssessmentFeedbackResource();
+        assessmentFeedback.setId(1L);
+        List<AssessmentFeedbackResource> assessmentFeedbackList = new ArrayList<>();
+        assessmentFeedbackList.add(assessmentFeedback);
+
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L,2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(competitionService.getById(app.getCompetition())).thenReturn(competition);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(processRoleService.getById(assessment.getId())).thenReturn(settable(processRole));
+        when(assessmentFeedbackService.getAllAssessmentFeedback(assessment.getId())).thenReturn(assessmentFeedbackList);
 
         LOG.debug("Show assessment overview: " + assessment.getId());
-        mockMvc.perform(get("/assessment/" + assessment.getId()))
+        mockMvc.perform(get("/" + assessment.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-application-overview"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("completedSections", sections))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())));
     }
 }
