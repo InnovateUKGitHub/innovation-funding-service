@@ -54,6 +54,7 @@ public class CompetitionResource {
     private String code;
     
     private boolean multiStream;
+    private String streamName;
     private CollaborationLevel collaborationLevel;
     private LeadApplicantType leadApplicantType;
     private Set<Long> researchCategories;
@@ -377,6 +378,14 @@ public class CompetitionResource {
     
     public void setMultiStream(boolean multiStream) {
 		this.multiStream = multiStream;
+	}
+    
+    public String getStreamName() {
+		return streamName;
+	}
+    
+    public void setStreamName(String streamName) {
+		this.streamName = streamName;
 	}
     
     public CollaborationLevel getCollaborationLevel() {

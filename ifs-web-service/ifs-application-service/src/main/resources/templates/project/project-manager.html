@@ -17,20 +17,25 @@
     </div>
 
 
-    <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}">
+    <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate">
         <fieldset>
-            <h2 class="heading-medium">Project manager</h2>
-            <legend>
-              <span class="visuallyhidden">Project manager</span>
-            </legend>
-            <p class="form-hint">Who will be the project manager for your project?</p>
-            <p>As lead partner you must choose a project manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the project manager.</p>
-            <div class="form-group extra-margin">
-              <div th:each="user : ${allUsers}" th:remove="tag">
-                  <label th:for="${#ids.next('projectManager')}" class="block-label">
-                      <input type="radio" th:field="*{projectManager}" th:value="${user.user}" />
-                      <span th:text="${user.userName}" th:remove="tag"></span>
-                  </label>
+          <div class="form-group" th:classappend="${#fields.hasErrors('projectManager') ? 'error' : ''}">
+              <h2 class="heading-medium">Project manager</h2>
+              <legend>
+                <span class="visuallyhidden">Project manager</span>
+                 <div th:if="${#fields.hasErrors('projectManager')}" th:remove="tag">
+                    <span class="error-message" th:each="err : ${#fields.errors('projectManager')}" th:text="${err}" />
+                </div>
+              </legend>
+              <p class="form-hint">Who will be the project manager for your project?</p>
+              <p>As lead partner you must choose a project manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the project manager.</p>
+              <div class="extra-margin">
+                <div th:each="user : ${allUsers}" th:remove="tag">
+                    <label th:for="${#ids.next('projectManager')}" class="block-label">
+                        <input type="radio" th:field="*{projectManager}" th:value="${user.user}" required="required"  />
+                        <span th:text="${user.userName}" th:remove="tag"></span>
+                    </label>
+                </div>
               </div>
             </div>
         </fieldset>

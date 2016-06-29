@@ -1,6 +1,6 @@
 
             <ul class="list-bullet extra-margin">
               #if ($passwordEnabled)
-                <li class="list-help-item"><a href="//#springMessageText("ifs.webserver.resources.url", "#")/login/reset-password">#springMessageText("idp.login.forgotPassword", "Forgot your password?")</a></li>
+                <li class="list-help-item"><a href="$resourcesDomain/login/reset-password">#springMessageText("idp.login.forgotPassword", "Forgot your password?")</a></li>
               #end
             </ul>

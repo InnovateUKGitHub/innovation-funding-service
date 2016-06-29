@@ -46,32 +46,44 @@
         <ul class="list-overview">
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Technology inspired'}, 
+                rowType=${'Advanced materials'},
+                rowUrl=${'/prototypes/1348-open-applications'},
+                rowStatus=${'132 applications'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Infrastructure'}, 
+                rowType=${'Infrastructure'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Connected digital additive manufacturing'}, 
                 rowType=${'Advanced therapies'}, 
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Portable renewable energy generation'}, 
                 rowType=${'Nuclear'}, 
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Managing energy on marine vessels'}, 
-                rowType=${'Precision medicine'}, 
+                rowType=${'Precision medicine'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Energy catalyst'}, 
-                rowType=${'Electronics, sensors and photonics'}, 
+                rowType=${'Electronics, sensors and photonics'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -86,7 +98,8 @@
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Portable renewable energy generation'}, 
-                rowType=${'Cyber security'}, 
+                rowType=${'Cyber security'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -101,7 +114,8 @@
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Resource effieciency'}, 
+                rowType=${'Resource effieciency'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -116,7 +130,8 @@
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Portable renewable energy generation'}, 
-                rowType=${'Agri productivity'}, 
+                rowType=${'Agri productivity'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -131,7 +146,8 @@
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Urban living'}, 
+                rowType=${'Urban living'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -146,7 +162,8 @@
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Infrastructure'}, 
+                rowType=${'Infrastructure'},
+                rowUrl=${'#'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -166,19 +183,22 @@
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Infrastructure'}, 
+                rowType=${'Infrastructure'},
+                rowUrl=${'#'},
                 rowStatus=${' '}">
             </th:block>
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Connected digtial additive manufacturing'}, 
                 rowType=${'Emerging tech &#38; industries'}, 
+                rowUrl=${'#'},
                 rowStatus=${' '}">
             </th:block>
             <th:block 
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Portable renewable energy generation'}, 
                 rowType=${'Energy systems'}, 
+                rowUrl=${'#'},
                 rowStatus=${'Open: 12/07/2016'}">
             </th:block>
         </ul>
@@ -194,6 +214,7 @@
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                 th:with="rowTitle=${'Portable renewable energy generation'}, 
                 rowType=${'Offshore renewable energy'}, 
+                rowUrl=${'#'},
                 rowStatus=${'Open: 12/07/2016'}">
             </th:block>
         </ul>
@@ -344,7 +365,7 @@
 <div th:fragment="prototype-dashboard-row">
     
     <li>
-        <h3 class="heading-small" th:text="${rowTitle}">ROW TITLE</h3>
+        <h3 class="heading-small"><a th:href="${rowUrl}" th:text="${rowTitle}">ROW TITLE</a></h3>
         <p th:text="${rowType}">TYPE</p>
         <p th:text="${rowStatus}">STATUS</p>
     </li>
@@ -934,14 +955,14 @@
                 <thead>
                     <tr>
                         <th scope="col" style="width: 40%" id="milestone">Milestone</th>
-                        <th scope="col" style="width: 10%" class="aligncentre" id="weekday">Weekday</th>
-                        <th scope="col" style="width: 10%" class="aligncentre" id="day">Day</th>
-                        <th scope="col" style="width: 10%" class="aligncentre" id="month">Month</th>
-                        <th scope="col" style="width: 10%" class="aligncentre" id="year">Year</th>
-                        <th scope="col" style="width: 15%" class="aligncentre" id="date-picker">Calendar view</th>
+                        <th scope="col" style="width: 10%" id="weekday">Weekday</th>
+                        <th scope="col" style="width: 10%" id="day">Day</th>
+                        <th scope="col" style="width: 10%" id="month">Month</th>
+                        <th scope="col" style="width: 10%" id="year">Year</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, rowNo=1, type=readOnly" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
@@ -1019,11 +1040,21 @@
 
     <tr>
         <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
-        <td class="aligncentre" th:id="${'row-'+rowNo + '-weekday'}">-</td>
-        <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
-        <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
-        <td><input type="text" class="form-control width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
-        <td></td>
+        
+        <th:block th:unless="${type=='readOnly'}">
+            <td th:id="${'row-'+rowNo + '-weekday'}">-</td>
+            <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
+            <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
+            <td><input type="text" class="form-control width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
+        </th:block>
+
+        <th:block th:if="${type=='readOnly'}">
+            <td>Weds</td>
+            <td>01</td>
+            <td>07</td>
+            <td>2016</td>
+        </th:block>
+
     </tr>
 
 </div>

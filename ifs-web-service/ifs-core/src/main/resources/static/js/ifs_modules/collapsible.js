@@ -59,7 +59,23 @@ IFS.collapsible = (function(){
           if((typeof(json[pathname]) === 'undefined')) {
             json[pathname] = {};
           }
-          json[pathname][index] = state;
+          if(state === true){
+            json[pathname][index] = state;
+          }
+          else if(typeof(json[pathname][index]) !== 'undefined'){
+              //removing of false and empty objects from the json object as we store this in a cookie,
+              //only == true will be opened on pageload so those are the only ones we have to store
+              delete json[pathname][index];
+
+              //options other than looping over for getting the object count break in ie8
+              var count = 0;
+              jQuery.each(json[pathname],function(){
+                count++;
+              });
+              if(count===0){
+                delete(json[pathname]);
+              }
+          }
           Cookies.set('collapsibleStates',json,{ expires: 0.05 }); //defined in days, 0.05 = little bit more than one hour
       }
   };
