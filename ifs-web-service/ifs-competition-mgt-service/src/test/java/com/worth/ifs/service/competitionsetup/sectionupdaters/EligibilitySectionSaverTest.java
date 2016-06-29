@@ -32,6 +32,7 @@ public class EligibilitySectionSaverTest {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
 		competitionSetupForm.setLeadApplicantType("business");
 		competitionSetupForm.setMultipleStream("yes");
+		competitionSetupForm.setStreamName("streamname");
 		competitionSetupForm.setResearchCategoryId(CollectionFunctions.asLinkedSet(1L, 2L, 3L));
 		competitionSetupForm.setResearchParticipationAmountId(1);
 		competitionSetupForm.setSingleOrCollaborative("collaborative");
@@ -42,6 +43,7 @@ public class EligibilitySectionSaverTest {
 		
 		assertEquals(LeadApplicantType.BUSINESS, competition.getLeadApplicantType());
 		assertTrue(competition.isMultiStream());
+		assertEquals("streamname", competition.getStreamName());
 		assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
 		assertEquals(Integer.valueOf(30), competition.getMaxResearchRatio());
 		assertEquals(CollaborationLevel.COLLABORATIVE, competition.getCollaborationLevel());

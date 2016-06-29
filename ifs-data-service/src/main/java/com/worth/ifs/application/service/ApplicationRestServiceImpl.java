@@ -9,7 +9,6 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.Future;
 

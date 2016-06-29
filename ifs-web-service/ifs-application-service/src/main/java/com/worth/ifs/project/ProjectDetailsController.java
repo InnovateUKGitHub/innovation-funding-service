@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
@@ -89,6 +90,7 @@ public class ProjectDetailsController {
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
@@ -98,9 +100,22 @@ public class ProjectDetailsController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 userIsLeadPartner(projectId, loggedInUser.getId())));
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
 
         return "project/detail";
     }
+
+    @RequestMapping(value = "/{projectId}/confirm-project-details", method = RequestMethod.GET)
+    public String projectDetailConfirmSubmit(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("currentUser", loggedInUser);
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
+        return "project/confirm-project-details";
+    }
+
 
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.GET)
     public String viewFinanceContact(Model model,
@@ -267,6 +282,12 @@ public class ProjectDetailsController {
         addressForm.setManualAddress(true);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
+    }
+
+    @RequestMapping(value = "/{projectId}/details/submit", method = RequestMethod.POST)
+    public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
+        ServiceResult<Void> serviceResult = projectService.setApplicationDetailsSubmitted(projectId);
+        return redirectToProjectDetails(projectId);
     }
 
     private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {

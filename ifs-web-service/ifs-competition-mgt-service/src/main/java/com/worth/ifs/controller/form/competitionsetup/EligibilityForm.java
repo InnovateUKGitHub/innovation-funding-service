@@ -3,6 +3,7 @@ package com.worth.ifs.controller.form.competitionsetup;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -13,6 +14,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class EligibilityForm extends CompetitionSetupForm {
 	@NotBlank(message = "Please select a stream option")
 	private String multipleStream;
+	@Size(max = 255, message = "Stream name has a maximum length of 255 characters")
+	private String streamName;
 	@NotEmpty(message = "Please select at least one research category")
 	private Set<Long> researchCategoryId;
 	@NotBlank(message = "Please select a collaboration level")
@@ -27,6 +30,12 @@ public class EligibilityForm extends CompetitionSetupForm {
 	}
 	public void setMultipleStream(String multipleStream) {
 		this.multipleStream = multipleStream;
+	}
+	public String getStreamName() {
+		return streamName;
+	}
+	public void setStreamName(String streamName) {
+		this.streamName = streamName;
 	}
 	public Set<Long> getResearchCategoryId() {
 		return researchCategoryId;

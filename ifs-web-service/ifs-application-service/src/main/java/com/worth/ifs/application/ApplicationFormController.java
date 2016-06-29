@@ -390,7 +390,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void handleMarkSectionValidationMessages(BindingResult bindingResult, List<ValidationMessages> financeErrorsMark) {
-        financeErrorsMark.forEach((validationMessage) -> {
+        financeErrorsMark.forEach(validationMessage ->
             validationMessage.getErrors().stream()
                 .filter(Objects::nonNull)
                 .filter(e -> StringUtils.hasText(e.getErrorMessage()))
@@ -404,8 +404,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                     } else {
                         addNonDuplicateFieldError(bindingResult, "formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage());
                     }
-                });
-        });
+                })
+        );
     }
 
     private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
