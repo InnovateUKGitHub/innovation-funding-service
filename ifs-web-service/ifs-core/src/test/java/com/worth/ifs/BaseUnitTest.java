@@ -224,7 +224,7 @@ public class BaseUnitTest {
     ;
 
 
-    public InternalResourceViewResolver viewResolver() {
+    public static InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/resources");
         viewResolver.setSuffix(".html");

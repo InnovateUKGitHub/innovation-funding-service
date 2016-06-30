@@ -1,11 +1,9 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import java.util.List;
 
@@ -31,11 +29,7 @@ public class RestFailuresToValidationErrorBindingUtils {
         return serviceResult;
     }
 
-    public static void bindAnyErrorsToBindingResult(ValidationMessages validationMessages, BindingResult bindingResult) {
-        validationMessages.getErrors().forEach(e -> bindingResult.addError(new FieldError(bindingResult.getObjectName(), e.getErrorKey(), e.getErrorMessage())));
-    }
-
-    private static void addErrorsToForm(String fieldName, BindingResultTarget bindingResultTarget, BindingResult bindingResult, List<String> errorKeys) {
+    public static void addErrorsToForm(String fieldName, BindingResultTarget bindingResultTarget, BindingResult bindingResult, List<String> errorKeys) {
         registerValidationErrorsWithBindingResult(fieldName, bindingResult, errorKeys);
         bindingResultTarget.setBindingResult(bindingResult);
         bindingResultTarget.setObjectErrors(bindingResult.getAllErrors());

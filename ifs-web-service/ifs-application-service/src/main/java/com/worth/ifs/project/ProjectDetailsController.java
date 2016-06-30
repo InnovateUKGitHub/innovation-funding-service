@@ -10,7 +10,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.controller.ControllerValidationHandler;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.form.FinanceContactForm;
@@ -28,10 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
@@ -41,7 +39,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
-import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.*;
 
@@ -116,7 +113,6 @@ public class ProjectDetailsController {
         return "project/confirm-project-details";
     }
 
-
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.GET)
     public String viewFinanceContact(Model model,
                                      @PathVariable("projectId") final Long projectId,
@@ -131,18 +127,18 @@ public class ProjectDetailsController {
     public String updateFinanceContact(Model model,
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
-                                       BindingResult bindingResult,
+                                       ControllerValidationHandler controllerValidationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
+        Supplier<String> failureView = () -> {
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
+        };
 
-        if (bindingResult.hasErrors()) {
-            form.setBindingResult(bindingResult);
-            return failureView.get();
-        }
-
-        ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
-        return handleErrorsOrRedirectToProjectOverview("financeContact", projectId, model, form, bindingResult, updateResult, failureView);
+        return controllerValidationHandler.failOnErrorsOrSucceed(failureView, () -> {
+            ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
+            return handleErrorsOrRedirectToProjectOverview("financeContact", projectId, controllerValidationHandler, updateResult, failureView);
+        });
     }
     
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
@@ -156,17 +152,17 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
     public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm form,
-                                       BindingResult bindingResult, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                       ControllerValidationHandler controllerValidationHandler, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, form);
+        Supplier<String> failureView = () -> {
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return doViewProjectManager(model, projectId, loggedInUser, form);
+        };
 
-        if(bindingResult.hasErrors()) {
-            form.setBindingResult(bindingResult);
-            return failureView.get();
-        }
-
-        ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, form.getProjectManager());
-        return handleErrorsOrRedirectToProjectOverview("projectManager", projectId, model, form, bindingResult, updateResult, failureView);
+        return controllerValidationHandler.failOnErrorsOrSucceed(failureView, () -> {
+            ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, form.getProjectManager());
+            return handleErrorsOrRedirectToProjectOverview("projectManager", projectId, controllerValidationHandler, updateResult, failureView);
+        });
     }
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
@@ -185,12 +181,19 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
+                                  ControllerValidationHandler controllerValidationHandler,
                                   Model model,
-                                  BindingResult bindingResult,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, loggedInUser));
+        Supplier<String> failureView = () -> {
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return viewStartDate(model, projectId, form, loggedInUser);
+        };
+
+        return controllerValidationHandler.failOnErrorsOrSucceed(failureView, () -> {
+            ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
+            return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, controllerValidationHandler, updateResult, failureView);
+        });
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
@@ -213,12 +216,12 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
     public String updateAddress(Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
-                                BindingResult bindingResult,
+                                ControllerValidationHandler controllerValidationHandler,
                                 @PathVariable("projectId") final Long projectId) {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
-        if (bindingResult.hasErrors() && form.getAddressType() == null) {
+        if (controllerValidationHandler.hasErrors() && form.getAddressType() == null) {
             return viewCurrentAddressForm(model, form, projectResource);
         }
 
@@ -238,7 +241,7 @@ public class ProjectDetailsController {
                 break;
             case ADD_NEW:
                 form.getAddressForm().setTriedToSave(true);
-                if (bindingResult.hasErrors()) {
+                if (controllerValidationHandler.hasErrors()) {
                     return viewCurrentAddressForm(model, form, projectResource);
                 }
                 newAddressResource = form.getAddressForm().getSelectedPostcode();
@@ -250,7 +253,13 @@ public class ProjectDetailsController {
         }
         projectResource.setAddress(newAddressResource);
         ServiceResult<Void> updateResult = projectService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
-        return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> viewAddress(model, form, projectId));
+
+        return updateResult.handleSuccessOrFailure(
+                failure -> {
+                    controllerValidationHandler.addErrorsAsFieldErrors(failure, "");
+                    return viewAddress(model, form, projectId);
+                },
+                success -> redirectToProjectDetails(projectId));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
@@ -302,6 +311,7 @@ public class ProjectDetailsController {
     }
 
     private String doViewFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
+
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
         }
@@ -417,18 +427,13 @@ public class ProjectDetailsController {
     }
 
     private String handleErrorsOrRedirectToProjectOverview(
-            String fieldName, long projectId, Model model,
-            BindingResultTarget form, BindingResult bindingResult,
+            String fieldName, long projectId,
+            ControllerValidationHandler controllerValidationHandler,
             ServiceResult<?> result,
-            Supplier<String> viewSupplier) {
+            Supplier<String> failureViewSupplier) {
 
-        if (result.isFailure()) {
-            bindAnyErrorsToField(result, fieldName, bindingResult, form);
-            model.addAttribute(FORM_ATTR_NAME, form);
-            return viewSupplier.get();
-        }
-
-        return redirectToProjectDetails(projectId);
+        return controllerValidationHandler.addErrorsAsFieldErrors(result, fieldName).
+                failOnErrorsOrSucceed(failureViewSupplier, () -> redirectToProjectDetails(projectId));
     }
 
     private String redirectToProjectDetails(long projectId) {

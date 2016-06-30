@@ -17,6 +17,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.controller.ControllerValidationHandler;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.exception.BigDecimalNumberFormatException;
 import com.worth.ifs.exception.IntegerNumberFormatException;
@@ -44,7 +45,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -64,7 +64,6 @@ import java.util.function.Predicate;
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
-import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToBindingResult;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -113,13 +112,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping(value = {QUESTION_URL + "{"+QUESTION_ID+"}", QUESTION_URL + "edit/{"+QUESTION_ID+"}"}, method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                               BindingResult bindingResult, Model model,
+                               ControllerValidationHandler controllerValidationHandler, Model model,
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        questionModelPopulator.populateModel(questionId, applicationId, user, model, form, bindingResult);
+        questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
         organisationDetailsModelPopulator.populateModel(model, applicationId);
+        controllerValidationHandler.setBindingResultTarget(form);
         return APPLICATION_FORM;
     }
 
@@ -193,7 +193,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping(value = {QUESTION_URL + "{"+QUESTION_ID+"}", QUESTION_URL + "edit/{"+QUESTION_ID+"}"}, method = RequestMethod.POST)
     public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                                     BindingResult bindingResult,
+                                     ControllerValidationHandler controllerValidationHandler,
                                      Model model,
                                      @PathVariable(APPLICATION_ID) final Long applicationId,
                                      @PathVariable(QUESTION_ID) final Long questionId,
@@ -211,7 +211,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             } else {
                 LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
             }
-            return showQuestion(form, bindingResult, model, applicationId, questionId, request);
+            return showQuestion(form, controllerValidationHandler, model, applicationId, questionId, request);
         } else {
             QuestionResource question = questionService.getById(questionId);
             SectionResource section = sectionService.getSectionByQuestionId(questionId);
@@ -222,7 +222,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+                ValidationMessages saveResults = saveApplicationForm(application, competition, form, applicationId, null, question, request, response);
+                controllerValidationHandler.addErrorsAsFieldErrors(saveResults);
             }
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -230,13 +231,13 @@ public class ApplicationFormController extends AbstractApplicationController {
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
-            bindingResult = removeDuplicateFieldErrors(bindingResult);
-            form.setBindingResult(bindingResult);
-            form.setObjectErrors(bindingResult.getAllErrors());
-            model.addAttribute("form", form);
             /* End save action */
 
-            if (bindingResult.hasErrors()) {
+            if (controllerValidationHandler.hasErrors()) {
+
+                controllerValidationHandler.setBindingResultTarget(form);
+                model.addAttribute("form", form);
+
                 this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 model.addAttribute("currentUser", user);
@@ -255,25 +256,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .anyMatch(questionStatusResource -> (
                         questionStatusResource.getAssignee() == null || questionStatusResource.getAssigneeUserId().equals(userId))
                         && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
-    }
-
-    private BindingResult removeDuplicateFieldErrors(BindingResult bindingResult) {
-        BindingResult br = new BeanPropertyBindingResult(this, "form");
-        bindingResult.getFieldErrors().stream().distinct()
-                .filter(e -> {
-                    for (FieldError fieldError : br.getFieldErrors(e.getField())) {
-                        if(fieldError.getDefaultMessage().equals(e.getDefaultMessage())){
-                            return false;
-                        }else{
-                            return true;
-                        }
-                    }
-                    return true;
-                })
-                .forEach(e -> br.addError(e));
-        bindingResult.getGlobalErrors().stream().forEach(e -> br.addError(e));
-        bindingResult = br;
-        return bindingResult;
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
@@ -330,13 +312,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         return financeHandler.getFinanceFormHandler(organisationType).addCost(applicationId, user.getId(), questionId);
     }
 
-    private void saveApplicationForm(ApplicationResource application,
+    private ValidationMessages saveApplicationForm(ApplicationResource application,
                                               CompetitionResource competition,
                                               ApplicationForm form,
                                               Long applicationId, Long sectionId, QuestionResource question,
                                               HttpServletRequest request,
-                                              HttpServletResponse response,
-                                              BindingResult bindingResult) {
+                                              HttpServletResponse response) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -377,9 +358,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             errors.addAll(handleMarkSectionRequest(application, competition, sectionId, request, errors.hasErrors(), processRole));
         }
 
-        bindAnyErrorsToBindingResult(errors, bindingResult);
-
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        return errors;
     }
 
     private ValidationMessages validateStartDate(HttpServletRequest request, ApplicationForm form) {
@@ -503,6 +483,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @RequestMapping(value = SECTION_URL + "{sectionId}", method = RequestMethod.POST)
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                         BindingResult bindingResult,
+                                        ControllerValidationHandler controllerValidationHandler,
                                         Model model,
                                         @PathVariable(APPLICATION_ID) final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
@@ -517,7 +498,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(LOG.isDebugEnabled())
             bindingResult.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
-        saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
+        ValidationMessages saveResults = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response);
+        controllerValidationHandler.addErrorsAsFieldErrors(saveResults);
 
         if(LOG.isDebugEnabled()){
             bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
@@ -556,7 +538,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             String questionId = request.getParameter(MARK_AS_COMPLETE);
 
             if (errorsSoFar.hasErrorWithKey("formInput[" + questionId + "]")) {
-                errors.addError(fieldError(questionId, "Please enter valid data before marking a question as complete."));
+//                errors.addError(fieldError(questionId, "Please enter valid data before marking a question as complete."));
                 return false;
             }
 

@@ -10,12 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,9 +33,7 @@ public class AlertControllerTest extends BaseUnitTest {
 
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(alertController)
-                .setViewResolvers(viewResolver())
-                .build();
+        mockMvc = setupMockMvc(alertController, () -> loggedInUser, env, messageSource);
 
         super.setup();
 

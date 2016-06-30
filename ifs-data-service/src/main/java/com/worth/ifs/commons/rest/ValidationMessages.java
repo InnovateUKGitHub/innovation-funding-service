@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorHolder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.context.MessageSource;
@@ -17,7 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 /**
  * Resource object to return validation messages on rest calls.
  */
-public class ValidationMessages implements Serializable {
+public class ValidationMessages implements ErrorHolder, Serializable {
 
     private String objectName;
     private Long objectId;
