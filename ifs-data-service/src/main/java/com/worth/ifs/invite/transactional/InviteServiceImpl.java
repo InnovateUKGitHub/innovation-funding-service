@@ -183,6 +183,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         List<Error> errors = validateUniqueEmails(inviteOrganisationResource.getInviteResources());
         if(errors.size() > 0) {
+            LOG.warn("Some double email addresses found");
             return serviceFailure(errors);
         }
 
@@ -220,6 +221,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         List<Error> errors = validateUniqueEmails(inviteResources);
         if(errors.size() > 0) {
+            LOG.warn("Some double email addresses found");
             return serviceFailure(errors);
         }
 
@@ -408,11 +410,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private Boolean validateUniqueEmail(InviteResource inviteResource) {
+        if(inviteResource.getEmail() == null) {
+            return true;
+        }
 
         Application application = applicationRepository.findOne(inviteResource.getApplication());
 
         Set<String> savedEmails = getSavedEmailAddresses(inviteResource.getApplication());
-        savedEmails.add(application.getLeadApplicant().getEmail());
+        if(application.getLeadApplicant() != null) {
+            savedEmails.add(application.getLeadApplicant().getEmail());
+        }
 
         return !savedEmails.contains(inviteResource.getEmail());
     }
@@ -421,7 +428,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Set<String> savedEmails = new TreeSet<>();
         List<InviteOrganisationResource> savedInvites = newArrayList();
         savedInvites.addAll(getInvitesByApplication(applicationId).getSuccessObject());
-        savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
+        savedInvites.forEach(s -> {
+                    if(s.getInviteResources() != null) {
+                        s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail()));
+                    }
+                });
         return savedEmails;
     }
 
