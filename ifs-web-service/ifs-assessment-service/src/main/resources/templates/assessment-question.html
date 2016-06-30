@@ -39,7 +39,7 @@
                         <span th:text="${model.question.name}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.question.description}" />
+                    <p class="form-hint" th:unless="${#strings.isEmpty(model.question.description)}" th:text="${model.question.description}" />
                 </div>
 
                 <div th:if="${model.question.needingAssessorScore}" th:remove="tag">
