@@ -44,7 +44,16 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
         application.setName(null);
         application.setStartDate(currentDate.minusDays(1));
-        application.setDurationInMonths(100L);
+        application.setDurationInMonths(0L);
+
+        binder = new DataBinder(application);
+        bindingResult = binder.getBindingResult();
+
+        validator.validate(application, bindingResult);
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(3, bindingResult.getErrorCount());
+
+        application.setDurationInMonths(37L);
 
         binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
@@ -59,9 +68,9 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
         application  = new Application();
 
-        application.setName("IFS TEST  DEV Project");
+        application.setName("IFS TEST DEV Project");
         application.setStartDate(currentDate.plusDays(1));
-        application.setDurationInMonths(99L);
+        application.setDurationInMonths(18L);
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();

@@ -65,9 +65,9 @@ Invalid duration field
     [Tags]
     # pending INFUND-2707
     And the applicant inserts an input    id=application_details-duration    0
-    And the applicant should get a validation error message    Please enter a valid duration
+    And the applicant should get a validation error message    Your project should last between 1 and 36 months
     When the applicant inserts an input    id=application_details-duration    -1
-    And the applicant should get a validation error message    Please enter a valid duration
+    And the applicant should get a validation error message    Your project should last between 1 and 36 months
     And the field is empty    id=application_details-duration
     Then the applicant should get a validation error message    This field should be a number
     And the applicant inserts an input    id=application_details-duration    15
