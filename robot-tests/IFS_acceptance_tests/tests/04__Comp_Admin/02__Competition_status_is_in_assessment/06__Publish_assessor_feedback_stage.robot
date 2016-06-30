@@ -77,7 +77,7 @@ Successful applicant gets feedback email
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
+    [Tags]    Email
     # Pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
     Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}    Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
