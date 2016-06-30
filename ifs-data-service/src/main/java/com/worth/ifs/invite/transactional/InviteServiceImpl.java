@@ -83,9 +83,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
     LocalValidatorFactoryBean validator;
 
     public InviteServiceImpl() {
