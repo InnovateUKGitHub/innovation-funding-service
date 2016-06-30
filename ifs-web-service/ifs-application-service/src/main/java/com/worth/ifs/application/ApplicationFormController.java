@@ -366,9 +366,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         if(isMarkQuestionRequest(params)) {
-           // call handle section
             handleApplicationDetailsMarkCompletedRequest(application, request, response, bindingResult, processRole, errors);
-            // List<ValidationMessages> messages = markApplicationQuestions(application, processRole.getId(), request, response, bindingResult, errors);
 
         } else if(isMarkSectionRequest(params)){
             handleMarkSectionRequest(application, competition, sectionId, request, response, bindingResult, processRole, errors);
@@ -381,7 +379,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (bindingResult.hasErrors()) {
             bindingResult.rejectValue("formInput[application]", "application.validation.MarkAsCompleteFailed");
         } else {
-            List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, errors);
+            List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, response, errors);
             if (applicationMessages != null && !applicationMessages.isEmpty()) {
                 bindingResult.rejectValue("formInput[application]", "application.validation.MarkAsCompleteFailed");
                 handleApplicationDetailsValidationMessages(bindingResult, applicationMessages);
@@ -396,21 +394,15 @@ public class ApplicationFormController extends AbstractApplicationController {
             .filter(Objects::nonNull)
             .filter(e -> StringUtils.hasText(e.getErrorMessage()))
             .forEach(e -> {
-                    e.toString();
-                    if (validationMessage.getObjectName().equals("target")) {
-                        if (StringUtils.hasText(e.getErrorKey())) {
-                            addNonDuplicateFieldError(bindingResult, "formInput[application." + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
-                        } else {
-                            addNonDuplicateFieldError(bindingResult, "formInput[application." + validationMessage.getObjectId() + "]", e.getErrorMessage());
-                        }
-                    } else  {
-                        addNonDuplicateFieldError(bindingResult, "formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage());
-                    }
-                }
-            )
-        );
-    }
+                        e.toString();
+                        if (validationMessage.getObjectName().equals("target")) {
+                            if (StringUtils.hasText(e.getErrorKey())) {
+                                addNonDuplicateFieldError(bindingResult, "formInput[application." + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
 
+                            }
+                        }
+                    }));
+    }
 
     private void handleMarkSectionRequest(ApplicationResource application, CompetitionResource competition, Long sectionId, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
         if (bindingResult.hasErrors()) {
@@ -516,31 +508,31 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private List<ValidationMessages> markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errors) {
+    private List<ValidationMessages> markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
 
         if (processRoleId == null) {
-            //to do - was to return false incomplete/pls check
             return null;
         }
 
         Map<String, String[]> params = request.getParameterMap();
 
-//        List<ValidationMessages> mess = markQuestion(request, params, application.getId(), processRoleId, errors, bindingResult);
-
-        String action = params.containsKey(MARK_SECTION_AS_COMPLETE) ? MARK_AS_COMPLETE : MARK_AS_INCOMPLETE;
-
-        Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
-
-        if(action.equals(MARK_AS_COMPLETE)){
+        if (params.containsKey(MARK_AS_COMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
 
             if (errors.containsKey(questionId) && !errors.get(questionId).isEmpty()) {
                 List<String> fieldErrors = errors.get(questionId);
                 fieldErrors.add("Please enter valid data before marking a question as complete.");
             }
             List<ValidationMessages> validationMessages = questionService.markAsComplete(questionId, application.getId(), processRoleId);
+            if (validationMessages != null && !validationMessages.isEmpty()) {
+                questionService.markAsInComplete(questionId, application.getId(), processRoleId);
+            }
+            else {
+                cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+            }
             return validationMessages;
-
-        }else{
+        }else if (params.containsKey(MARK_AS_INCOMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
             questionService.markAsInComplete(questionId, application.getId(), processRoleId);
         }
         return null;
@@ -598,32 +590,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<ValidationMessages> markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long processRoleId, Map<Long, List<String>> errors, BindingResult bindingResult) {
-        List<ValidationMessages> messages = null;
-        if (processRoleId == null) {
-            //to do - was to return false incomplete/pls check
-            return null;
-        }
-        //also to do
-        // if a question is marked as complete, don't show the field saved message.
-        // if (!marked) {
-        //   cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
-        //}
-        if (params.containsKey(MARK_AS_COMPLETE)) {
-            Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
-
-            if (errors.containsKey(questionId) && !errors.get(questionId).isEmpty()) {
-                List<String> fieldErrors = errors.get(questionId);
-                fieldErrors.add("Please enter valid data before marking a question as complete.");
-            }
-            messages = questionService.markAsComplete(questionId, applicationId, processRoleId);
-        } else if (params.containsKey(MARK_AS_INCOMPLETE)) {
-            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
-            questionService.markAsInComplete(questionId, applicationId, processRoleId);
-        }
-
-        return messages;
-    }
 
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request,
                                                           List<QuestionResource> questions,
