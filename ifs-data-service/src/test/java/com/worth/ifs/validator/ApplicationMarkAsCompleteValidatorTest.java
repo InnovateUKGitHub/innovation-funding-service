@@ -1,6 +1,7 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.application.domain.Application;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -11,20 +12,20 @@ import static org.junit.Assert.*;
 /**
  * Mark as complete validator test class for application details section
  */
-public class ApplicationMarkAsCompleteValidatorTest extends AbstractValidatorTest {
-    @Test
-    public void validate() throws Exception {
+public class ApplicationMarkAsCompleteValidatorTest {
 
-    }
-
-    public Validator getValidator() { return new ApplicationMarkAsCompleteValidator(); }
+    private Validator validator;
 
     BindingResult bindingResult;
-
-    LocalDate currentDate = LocalDate.now();
+    LocalDate currentDate;
     Application application;
 
-    @Override
+    @Before
+    public void setUp() {
+        validator = new ApplicationMarkAsCompleteValidator();
+        currentDate = LocalDate.now();
+    }
+
     @Test
     public void testInvalid() throws Exception {
 
@@ -36,7 +37,7 @@ public class ApplicationMarkAsCompleteValidatorTest extends AbstractValidatorTes
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
-        getValidator().validate(application, bindingResult);
+        validator.validate(application, bindingResult);
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(3, bindingResult.getErrorCount());
@@ -48,7 +49,7 @@ public class ApplicationMarkAsCompleteValidatorTest extends AbstractValidatorTes
         binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
 
-        getValidator().validate(application, bindingResult);
+        validator.validate(application, bindingResult);
         assertTrue(bindingResult.hasErrors());
         assertEquals(3, bindingResult.getErrorCount());
     }
@@ -64,7 +65,7 @@ public class ApplicationMarkAsCompleteValidatorTest extends AbstractValidatorTes
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
-        getValidator().validate(application, bindingResult);
+        validator.validate(application, bindingResult);
 
         assertFalse(bindingResult.hasErrors());
     }
