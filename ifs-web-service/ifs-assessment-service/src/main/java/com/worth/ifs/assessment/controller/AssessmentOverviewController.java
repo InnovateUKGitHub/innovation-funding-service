@@ -31,7 +31,7 @@ public class AssessmentOverviewController extends AbstractApplicationController 
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/{processId}")
-    public String getQuestion(Model model, AssessmentOverviewForm form, HttpServletResponse response, @PathVariable("processId") final Long processId,
+    public String getOverview(Model model, AssessmentOverviewForm form, HttpServletResponse response, @PathVariable("processId") final Long processId,
                               HttpServletRequest request) throws InterruptedException, ExecutionException {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
