@@ -15,12 +15,16 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
+import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
+import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -42,6 +46,7 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -65,6 +70,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ProjectMapper projectMapper;
 
     @Autowired
+    private MonitoringOfficerMapper monitoringOfficerMapper;
+
+    @Autowired
     private ApplicationRepository applicationRepository;
 
     @Autowired
@@ -78,6 +86,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private AddressTypeRepository addressTypeRepository;
+
+    @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Autowired
     private OrganisationMapper organisationMapper;
@@ -181,6 +192,31 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
+    }
+
+
+    @Override
+    public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+
+        return validateMonitoringOfficer(projectId, monitoringOfficerResource).
+            andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
+    }
+
+    private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+
+        if (projectId != monitoringOfficerResource.getProject()) {
+            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
+        } else {
+            return serviceSuccess();
+        }
+    }
+
+    private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
+
+        MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
+        monitoringOfficerRepository.save(monitoringOfficer);
+
+        return serviceSuccess();
     }
 
     @Override

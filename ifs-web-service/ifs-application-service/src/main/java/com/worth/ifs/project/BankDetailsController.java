@@ -69,7 +69,7 @@ public class BankDetailsController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId());
         BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
-        if(bankDetailsResource != null) {
+        if(bankDetailsResource != null && bankDetailsResource.getId() != null) {
             populateExitingBankDetailsInForm(bankDetailsResource, form);
         }
         return doViewBankDetails(model, form, projectResource, bankDetailsResource, loggedInUser);
