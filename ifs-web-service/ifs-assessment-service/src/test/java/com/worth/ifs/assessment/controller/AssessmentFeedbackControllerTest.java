@@ -106,7 +106,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals(expectedQuestion, model.getQuestion());
         assertEquals(expectedQuestion.getFormInputs(), model.getQuestionFormInputs().stream().map(FormInputResource::getId).collect(Collectors.toList()));
         expectedQuestion.getFormInputs().forEach(formInput ->
-                assertTrue("Form input response map should contain entry key for form input with id: " + formInput, model.getQuestionFormInputResponses().containsKey(String.valueOf(formInput)))
+                assertTrue("Form input response map should contain entry key for form input with id: " + formInput, model.getQuestionFormInputResponses().containsKey(formInput))
         );
 
         verify(assessmentService, only()).getById(ASSESSMENT_ID);
