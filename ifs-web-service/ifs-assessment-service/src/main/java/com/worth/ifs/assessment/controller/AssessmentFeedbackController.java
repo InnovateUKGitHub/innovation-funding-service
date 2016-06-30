@@ -139,7 +139,7 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         final CompetitionResource competition = getCompetition(application.getCompetition());
         final QuestionResource question = getQuestion(questionId);
         final List<FormInputResource> questionFormInputs = getQuestionFormInputs(questionId);
-        final Map<String, String> questionFormInputResponses = getQuestionFormInputResponsesAsMap(getQuestionFormInputResponses(application.getId(), questionFormInputs));
+        final Map<Long, String> questionFormInputResponses = getQuestionFormInputResponsesAsMap(getQuestionFormInputResponses(application.getId(), questionFormInputs));
         return new AssessmentFeedbackViewModel(competition, application, question, questionFormInputs, questionFormInputResponses);
     }
 
@@ -181,10 +181,10 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         return flattenLists(questionFormInputResponses.getSuccessObjectOrThrowException());
     }
 
-    private Map<String, String> getQuestionFormInputResponsesAsMap(final List<FormInputResponseResource> formInputResponses) {
+    private Map<Long, String> getQuestionFormInputResponsesAsMap(final List<FormInputResponseResource> formInputResponses) {
         return simpleToMap(
                 formInputResponses,
-                response -> String.valueOf(response.getFormInput()),
+                response -> response.getFormInput(),
                 FormInputResponseResource::getValue
         );
     }
