@@ -17,24 +17,14 @@
 
 
 <!-- =================== Assessment feedback score ============================== -->
-<div th:fragment="assessment-feedback-score">
+<div th:fragment="assessment-feedback-score (score)">
     <fieldset>
         <legend class="visuallyhidden">Question score</legend> 
         <div class="form-group">
         <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
         <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
-            <option value="">3</option>
-            <option value="0">Set score</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            <option value="">Set score</option>
+            <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" th:selected="${val == score}">1</option>
         </select> / 10
         </div>
     </fieldset>
