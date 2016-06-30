@@ -8,12 +8,15 @@
             th:id="'form-input-'+${question.getId()}">
                 <div class="column-two-thirds">
                     <h3 class="heading-small">
-                        <a th:href="'/application/'+${currentApplication.getId()}+'/form/question/'+${question.getId()}"
+                        <a th:href="'/assessment/'+${currentApplication.id}+'/question/'+${question.id}"
                            th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
                     </h3>
                 </div>
                 <div class="column-third">
-
+                    <span th:unless="${questionFeedback?.get(question.id) == null}" th:remove="tag">
+                        <div class="score"> Score <div th:text="${questionFeedback.get(question.id).score}" th:remove="tag" /> / 10 </div>
+                        <img class="section-status" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                    </span>
                 </div>
         </li>
     </div>
