@@ -59,7 +59,7 @@ public class ContributorsForm implements Serializable {
 
     private void mergeOrganisation(OrganisationInviteForm oC) {
         Optional<OrganisationInviteForm> existingOrgOptional = this.getOrganisations().stream()
-                .filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName()))
+                .filter(o -> o.getOrganisationName().equals(oC.getOrganisationName()))
                 .findAny();
 
         if(!existingOrgOptional.isPresent()){

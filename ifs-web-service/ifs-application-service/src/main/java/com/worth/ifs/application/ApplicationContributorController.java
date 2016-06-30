@@ -108,7 +108,7 @@ public class ApplicationContributorController{
                                      HttpServletRequest request,
                                      Model model) {
 
-        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
+        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model, true);
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
@@ -117,7 +117,8 @@ public class ApplicationContributorController{
                                         BindingResult bindingResult,
                                         HttpServletResponse response,
                                         HttpServletRequest request,
-                                        Model model) {
+                                        Model model,
+                                        Boolean merge) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -130,7 +131,9 @@ public class ApplicationContributorController{
 
         Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
         addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
-        mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
+        if(merge) {
+            mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
+        }
 
         model.addAttribute("authenticatedUser", user);
         model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
@@ -249,6 +252,8 @@ public class ApplicationContributorController{
                     return ApplicationController.redirectToApplication(application);
                 }
                 return String.format("redirect:/application/%d/contributors", applicationId);
+            } else {
+                saveFormValuesToCookie(response, contributorsForm, applicationId);
             }
         } else {
             // no specific submit action, just save the data to the cookie.
@@ -259,7 +264,7 @@ public class ApplicationContributorController{
             return String.format("redirect:/application/%d/contributors/invite/?newApplication", applicationId);
         }
 
-        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model);
+        setInviteTemplateModel(applicationId, contributorsForm, bindingResult, response, request, model, false);
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 

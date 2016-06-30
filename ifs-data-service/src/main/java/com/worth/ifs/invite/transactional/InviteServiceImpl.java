@@ -1,5 +1,6 @@
 package com.worth.ifs.invite.transactional;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonErrors;
@@ -183,6 +184,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
 
+        List<Error> errors = validateUniqueEmails(inviteOrganisationResource.getInviteResources());
+        if(errors.size() > 0) {
+            return serviceFailure(errors);
+        }
+
+
         if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
             return serviceFailure(badRequestError("The Invite is not valid"));
         }
@@ -214,17 +221,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources) {
 
-        List<Error> errors = new ArrayList();
-
-        findDuplicatesInResourceList(inviteResources)
-                .forEach(inviteResource -> errors.add(new Error(inviteResource.getEmail(),"Invited emailaddress is already invited in this application", HttpStatus.NOT_ACCEPTABLE)));
-
-        inviteResources.stream()
-                .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(false))
-                .forEach(inviteResource -> errors.add(new Error(inviteResource.getEmail(),"Invited emailaddress is already invited in this application", HttpStatus.NOT_ACCEPTABLE)));
-
+        List<Error> errors = validateUniqueEmails(inviteResources);
         if(errors.size() > 0) {
-            LOG.error("Found double invites");
             return serviceFailure(errors);
         }
 
@@ -396,9 +394,22 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return true;
     }
 
-    /**
-     * Check if e-mail addresses entered, are unique within this application's invites.
-     */
+
+    private List<Error> validateUniqueEmails(List<InviteResource> inviteResources) {
+        List<Error> errors = new ArrayList();
+        String errorMessage = "Invited emailaddress is already invited in this application";
+
+        Iterables.concat(findDuplicatesInResourceList(inviteResources),
+                inviteResources
+                        .stream()
+                        .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(false))
+                        .collect(Collectors.toList())
+        )
+                .forEach(inviteResource -> errors.add(new Error(inviteResource.getEmail(), errorMessage, HttpStatus.NOT_ACCEPTABLE)));
+
+        return errors;
+    }
+
     private Boolean validateUniqueEmail(InviteResource inviteResource) {
 
         Application application = applicationRepository.findOne(inviteResource.getApplication());
