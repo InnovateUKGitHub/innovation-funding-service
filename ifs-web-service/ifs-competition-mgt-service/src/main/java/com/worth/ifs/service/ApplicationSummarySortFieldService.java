@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public class ApplicationSummarySortFieldService {
 
 	public String sortFieldForOpenCompetition(String sort) {
-    	return activeSortField(sort, "percentageComplete", "id", "lead", "name");
+    	return activeSortField(sort, "percentageComplete", "id", "lead", "name", "leadApplicant");
 	}
     
 	public String sortFieldForSubmittedApplications(String sort) {
