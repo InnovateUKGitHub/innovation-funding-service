@@ -18,6 +18,7 @@
                 <h1 class="heading-xlarge" th:text="${model.question.shortName}" />
             </div>
 
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
             <!--/form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data"
                     th:with="appIsClosed=${!currentCompetition.isOpen() or !currentApplication.isOpen()}, readonly=${!currentCompetition.isOpen() or !currentApplication.isOpen()}" novalidate="novalidate"-->
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
@@ -42,7 +43,7 @@
                 </div>
 
                 <div th:if="${model.question.needingAssessorScore}" th:remove="tag">
-                    <div th:include="fragments/assessment :: assessment-feedback-score" th:remove="tag" />
+                    <div th:include="fragments/assessment :: assessment-feedback-score (score=*{score})" th:remove="tag" />
                 </div>
 
                 <div th:if="${model.question.assessorConfirmationQuestion != null}" th:remove="tag">
@@ -61,7 +62,7 @@
                                 <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
                                 <div class="textarea-wrapped word-count">
-                                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" aria-hidden="true"></textarea>
+                                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" th:text="*{value}" aria-hidden="true"></textarea>
 
                                     <div class="textarea-footer">
                                         <span class="count-label">
@@ -76,7 +77,7 @@
                 </div>
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
-            <!--/form-->
+            </form>
             <input type="hidden" id="cacheTest" value="" />
 
             <ul class="pagination" th:if="${navigation.previousUrl != '' and navigation.nextUrl !=''}">
