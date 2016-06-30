@@ -26,8 +26,6 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Autowired
     private AssessmentRestService assessmentRestService;
     @Autowired
-    private AssessmentService assessmentService;
-    @Autowired
     private ApplicationService applicationService;
     @Autowired
     private ProcessRoleService processRoleService;
@@ -45,7 +43,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public List<QuestionResource> getAllQuestionsById(Long assessmentId) throws ExecutionException, InterruptedException {
-        ProcessRoleResource processRoleResource = processRoleService.getById(assessmentService.getById(assessmentId).getProcessRole()).get();
+        ProcessRoleResource processRoleResource = processRoleService.getById(this.getById(assessmentId).getProcessRole()).get();
         ApplicationResource applicationResource = applicationService.getById(processRoleResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         return questionService.findByCompetition(competitionResource.getId());
