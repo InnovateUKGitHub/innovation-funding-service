@@ -431,7 +431,7 @@ the user cannot login with their new details
     Input Text    id=username    ${email}
     Input Password    id=password    ${password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user cannot login with either password
@@ -439,13 +439,13 @@ the user cannot login with either password
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${incorrect_password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 we create a new user

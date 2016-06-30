@@ -177,7 +177,7 @@ the user cannot login with the invalid password
     Click Button    css=button[name="_eventId_proceed"]
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user accepts the terms and conditions
