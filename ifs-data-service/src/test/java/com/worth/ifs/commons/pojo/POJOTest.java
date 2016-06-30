@@ -32,6 +32,7 @@ import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.token.domain.Token;
@@ -81,7 +82,8 @@ public class POJOTest {
             ProjectUser.class,
             ProjectUserResource.class,
             AddressType.class,
-            AddressTypeResource.class
+            AddressTypeResource.class,
+            MonitoringOfficerResource.class
     );
 
     @Before

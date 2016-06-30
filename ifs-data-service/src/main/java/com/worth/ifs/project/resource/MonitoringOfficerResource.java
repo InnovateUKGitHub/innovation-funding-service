@@ -15,7 +15,7 @@ public class MonitoringOfficerResource {
 
     private String phoneNumber;
 
-    private Long projectId;
+    private Long project;
 
     public Long getId() {
         return id;
@@ -26,11 +26,11 @@ public class MonitoringOfficerResource {
     }
 
     public Long getProject() {
-        return projectId;
+        return project;
     }
 
     public void setProject(Long projectId) {
-        this.projectId = projectId;
+        this.project = projectId;
     }
 
     public String getFirstName() {
