@@ -1,10 +1,7 @@
 package com.worth.ifs.assessment.model;
 
 
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.resource.SectionType;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.form.AssessmentOverviewForm;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
@@ -12,6 +9,12 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentFeedbackService;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileEntryRestService;
+import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -63,6 +66,12 @@ public class AssessmentOverviewModelPopulator {
     private AssessmentService assessmentService;
     @Autowired
     private AssessmentFeedbackService assessmentFeedbackService;
+    @Autowired
+    private FormInputRestService formInputRestService;
+    @Autowired
+    private FileEntryRestService fileEntryRestService;
+    @Autowired
+    private FormInputResponseService formInputResponseService;
 
 
     public void populateModel(Long assessmentId, Long userId, AssessmentOverviewForm form, Model model) throws InterruptedException, ExecutionException {
@@ -84,6 +93,8 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
 
+        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(application.getId());
+        addAppendices(application.getId(), responses, model);
     }
 
     private void addSections(Model model, CompetitionResource competition, Long assessmentId) {
@@ -164,7 +175,6 @@ public class AssessmentOverviewModelPopulator {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
 
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
@@ -206,5 +216,15 @@ public class AssessmentOverviewModelPopulator {
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 
-
+    private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
+        final List<AppendixResource> appendices = responses.stream().filter(fir -> fir.getFileEntry() != null).
+                map(fir -> {
+                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObject();
+                    FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccessObject();
+                    String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
+                    return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);
+                }).
+                collect(Collectors.toList());
+        model.addAttribute("appendices", appendices);
+    }
 }
