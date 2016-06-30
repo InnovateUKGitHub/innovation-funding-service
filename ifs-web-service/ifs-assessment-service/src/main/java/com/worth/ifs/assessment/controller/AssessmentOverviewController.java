@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 public class AssessmentOverviewController extends AbstractApplicationController {
 
     private static final Log LOG = LogFactory.getLog(AssessmentOverviewController.class);
-    private static final String QUESTION_FORM = "assessor-application-overview";
+    private static final String OVERVIEW = "assessor-application-overview";
 
     @Autowired
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
@@ -37,6 +37,6 @@ public class AssessmentOverviewController extends AbstractApplicationController 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
         assessmentOverviewModelPopulator.populateModel(processId, userId, form, model);
 
-        return "assessor-application-overview";
+        return OVERVIEW;
     }
 }

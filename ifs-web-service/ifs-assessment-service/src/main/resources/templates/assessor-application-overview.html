@@ -29,7 +29,7 @@
                 <p th:text="${section.assessorGuidanceDescription}"></p>
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
-                        <div th:replace="single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
+                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
                     <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
@@ -66,12 +66,7 @@
     </form>
 
     <div class="alignright-button">
-        <!--/*
-        <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
-        <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review &amp; submit' : 'Review'}" />
-        */-->
-    </div>
-
+   </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>

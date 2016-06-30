@@ -127,7 +127,7 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("sectionQuestions", sectionQuestions);
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
-        model.addAttribute("questionFeedBack", questionFeedback);
+        model.addAttribute("questionFeedback", questionFeedback);
     }
 
     private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
