@@ -27,12 +27,13 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     @Override
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
         BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
-        //bankDetailsRepository.save(bankDetails);
+        bankDetailsRepository.save(bankDetails);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId) {
-        return serviceSuccess(bankDetailsMapper.mapToResource(bankDetailsRepository.findByProjectIdAndOrganisationAddressOrganisationId(projectId, organisationId)));
+        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        return serviceSuccess(bankDetailsMapper.mapToResource(bankDetails));
     }
 }

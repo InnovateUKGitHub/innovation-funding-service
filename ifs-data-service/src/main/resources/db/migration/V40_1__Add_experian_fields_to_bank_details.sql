@@ -1,4 +1,4 @@
-ALTER TABLE `bank_detail`
+ALTER TABLE `bank_details`
   ADD COLUMN `company_name_score` TINYINT(1) NULL AFTER `organisation_address_id`,
   ADD COLUMN `company_number_score` TINYINT(1) NULL AFTER `company_name_score`,
   ADD COLUMN `account_number_score` TINYINT(1) NULL AFTER `company_number_score`,

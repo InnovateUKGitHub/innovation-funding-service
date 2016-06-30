@@ -10,7 +10,7 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
 
     @Override
     public RestResult<BankDetailsResource> getById(final Long projectId, final Long id){
-        return getWithRestResult("/project/" + projectId + "/bank-details/" + id, BankDetailsResource.class);
+        return getWithRestResult("/project/" + projectId + "/bank-details?bankDetailsId=" + id, BankDetailsResource.class);
     }
 
     @Override

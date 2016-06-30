@@ -2,6 +2,8 @@ package com.worth.ifs.project.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -27,6 +29,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    BankDetailsService bankDetailsService;
 
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -92,5 +97,23 @@ public class ProjectController {
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details", method = POST)
+    public RestResult<Void> updateBanksDetail(@PathVariable("projectId") final Long projectId,
+                                              @RequestBody BankDetailsResource bankDetailsResource){
+        return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details", method = GET, params = "bankDetailsId")
+    public RestResult<BankDetailsResource> getBankDetails(@PathVariable("projectId") final Long projectId,
+                                                          @RequestParam("bankDetailsId") final Long bankDetailsId){
+        return bankDetailsService.getById(bankDetailsId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details", method = GET, params = "organisationId")
+    public RestResult<BankDetailsResource> getBankDetailsByOrganisationId(@PathVariable("projectId") final Long projectId,
+                                                                          @RequestParam("organisationId") final Long organisationId){
+        return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
     }
 }

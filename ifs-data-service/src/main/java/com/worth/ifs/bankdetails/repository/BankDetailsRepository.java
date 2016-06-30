@@ -4,5 +4,5 @@ import com.worth.ifs.bankdetails.domain.BankDetails;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface BankDetailsRepository extends PagingAndSortingRepository<BankDetails, Long> {
-    BankDetails findByProjectIdAndOrganisationAddressOrganisationId(Long projectId, Long organisationId);
+    BankDetails findByProjectIdAndOrganisationId(Long projectId, Long organisationId);
 }

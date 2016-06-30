@@ -5,12 +5,12 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 
 public interface BankDetailsService {
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<BankDetailsResource> getById(final Long id);
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateBankDetails(final BankDetailsResource bankDetailsResource);
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<BankDetailsResource> getByProjectAndOrganisation(final Long projectId, final Long organisationId);
 }

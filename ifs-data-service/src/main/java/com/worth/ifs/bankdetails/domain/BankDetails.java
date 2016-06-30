@@ -2,6 +2,7 @@ package com.worth.ifs.bankdetails.domain;
 
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -27,6 +28,10 @@ public class BankDetails {
     @OneToOne
     @JoinColumn(name = "organisationAddressId", referencedColumnName = "id")
     private OrganisationAddress organisationAddress;
+
+    @OneToOne
+    @JoinColumn(name = "organisationId", referencedColumnName = "id")
+    private Organisation organisation;
 
     public Long getId() {
         return id;
@@ -68,6 +73,14 @@ public class BankDetails {
         this.organisationAddress = organisationAddress;
     }
 
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,6 +95,7 @@ public class BankDetails {
                 .append(accountNumber, that.accountNumber)
                 .append(project, that.project)
                 .append(organisationAddress, that.organisationAddress)
+                .append(organisation, that.organisation)
                 .isEquals();
     }
 
@@ -93,6 +107,7 @@ public class BankDetails {
                 .append(accountNumber)
                 .append(project)
                 .append(organisationAddress)
+                .append(organisation)
                 .toHashCode();
     }
 }

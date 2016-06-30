@@ -21,6 +21,8 @@ public class BankDetailsResource {
 
     private OrganisationAddressResource organisationAddress;
 
+    private Long organisation;
+
     public Long getId() {
         return id;
     }
@@ -61,6 +63,14 @@ public class BankDetailsResource {
         this.organisationAddress = organisationAddressResource;
     }
 
+    public Long getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
+    }
+
     @JsonIgnore
     public boolean isApproved(){
         return true;
@@ -80,6 +90,7 @@ public class BankDetailsResource {
                 .append(accountNumber, that.accountNumber)
                 .append(project, that.project)
                 .append(organisationAddress, that.organisationAddress)
+                .append(organisation, that.organisation)
                 .isEquals();
     }
 
@@ -91,6 +102,7 @@ public class BankDetailsResource {
                 .append(accountNumber)
                 .append(project)
                 .append(organisationAddress)
+                .append(organisation)
                 .toHashCode();
     }
 }
