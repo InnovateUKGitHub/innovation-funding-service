@@ -1,5 +1,6 @@
 package com.worth.ifs.bankdetails.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -58,6 +59,11 @@ public class BankDetailsResource {
 
     public void setOrganisationAddress(OrganisationAddressResource organisationAddressResource) {
         this.organisationAddress = organisationAddressResource;
+    }
+
+    @JsonIgnore
+    public boolean isApproved(){
+        return true;
     }
 
     @Override

@@ -36,6 +36,7 @@ public class ProjectController {
         model.addAttribute("project", projectResource);
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
+        model.addAttribute("isPayingPartner", true); // TODO: INFUND-3709 - Some partners don't need this
         return "project/overview";
     }
 }

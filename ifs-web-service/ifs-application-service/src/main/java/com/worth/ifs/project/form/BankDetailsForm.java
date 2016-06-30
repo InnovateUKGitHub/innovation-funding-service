@@ -2,37 +2,17 @@ package com.worth.ifs.project.form;
 
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
-import java.util.List;
+import javax.validation.constraints.Pattern;
 
 public class BankDetailsForm extends ProjectDetailsAddressViewModelForm {
     @NotEmpty(message="Please enter a valid sort code")
+    @Pattern(regexp = "\\d{8}", message = "Please enter a valid sort code")
     private String sortCode;
 
-    @NotEmpty(message="Please enter a valid sort code")
+    @NotEmpty(message="Please enter a valid account number")
+    @Pattern(regexp = "\\d{6}", message = "Please enter a valid account number")
     private String accountNumber;
-
-    @Override
-    public BindingResult getBindingResult() {
-        return null;
-    }
-
-    @Override
-    public void setBindingResult(BindingResult bindingResult) {
-
-    }
-
-    @Override
-    public List<ObjectError> getObjectErrors() {
-        return null;
-    }
-
-    @Override
-    public void setObjectErrors(List<ObjectError> errors) {
-
-    }
 
     public String getSortCode() {
         return sortCode;
