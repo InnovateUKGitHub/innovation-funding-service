@@ -105,7 +105,7 @@ IFS.formValidation = (function(){
           jQuery('form:not([novalidate]) input').on('invalid',function(){
             jQuery(this).trigger('change');
           });
-
+          IFS.formValidation.betterMinLengthSupport();
         },
         checkEqualPasswords : function(showMessage){
             var pw1 = jQuery(s.passwordEqual.field1);
@@ -309,6 +309,16 @@ IFS.formValidation = (function(){
               }
             }
         },
+        betterMinLengthSupport : function(){
+          //if the minlenght is not implemented in the browser we use pattern which is more widely supported
+          if((s.html5validationMode) && (typeof(jQuery('input')[0].validity.tooShort) == 'undefined')){
+            jQuery(s.minlength.fields).each(function(){
+              var field = jQuery(this);
+              var minlength = parseInt(field.attr('minlength'),10);
+              field.attr('pattern','.{'+minlength+',}');
+            });
+          }
+        },
         checkMinLength : function(field,showMessage){
             var errorMessage = IFS.formValidation.getErrorMessage(field,'minlength');
             var minlength = parseInt(field.attr('minlength'),10);
@@ -454,7 +464,7 @@ IFS.formValidation = (function(){
         checkHTML5validationMode : function(){
             var testField =jQuery('input');
             if(testField.length){
-              if(testField[0].validity){
+              if(typeof(testField[0].validity) !== 'undefined'){
                 return true;
               }
               else {
