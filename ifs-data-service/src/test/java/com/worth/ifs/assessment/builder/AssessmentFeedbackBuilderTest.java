@@ -15,11 +15,6 @@ import static org.junit.Assert.assertEquals;
 
 public class AssessmentFeedbackBuilderTest {
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
     @Test
     public void buildOne() {
         final Long expectedId = 1L;
