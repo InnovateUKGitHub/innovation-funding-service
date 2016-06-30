@@ -1,6 +1,7 @@
-package com.worth.ifs.project.viewmodel;
+package com.worth.ifs.project.controller.viewmodel;
 
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,14 +17,16 @@ public class ProjectMonitoringOfficerViewModel {
     private LocalDate targetProjectStartDate;
     private String projectManagerName;
     private List<String> partnerOrganisationNames;
+    private CompetitionSummaryResource competitionSummary;
 
-    public ProjectMonitoringOfficerViewModel(String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames) {
+    public ProjectMonitoringOfficerViewModel(String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames, CompetitionSummaryResource competitionSummary) {
         this.projectTitle = projectTitle;
         this.area = area;
         this.primaryAddress = primaryAddress;
         this.targetProjectStartDate = targetProjectStartDate;
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;
+        this.competitionSummary = competitionSummary;
     }
 
     public String getProjectTitle() {
@@ -48,5 +51,9 @@ public class ProjectMonitoringOfficerViewModel {
 
     public List<String> getPartnerOrganisationNames() {
         return partnerOrganisationNames;
+    }
+
+    public CompetitionSummaryResource getCompetitionSummary() {
+        return competitionSummary;
     }
 }

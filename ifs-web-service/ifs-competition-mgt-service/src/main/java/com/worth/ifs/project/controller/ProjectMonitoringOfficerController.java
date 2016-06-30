@@ -1,16 +1,16 @@
-package com.worth.ifs.project;
+package com.worth.ifs.project.controller;
 
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
-import com.worth.ifs.project.form.FinanceContactForm;
-import com.worth.ifs.project.form.ProjectMonitoringOfficerForm;
+import com.worth.ifs.project.ProjectService;
+import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
+import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.viewmodel.ProjectMonitoringOfficerViewModel;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -60,6 +59,9 @@ public class ProjectMonitoringOfficerController {
     private ProcessRoleService processRoleService;
 
     @Autowired
+    private ApplicationSummaryService applicationSummaryService;
+
+    @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
     @RequestMapping(value = "/{projectId}/monitoring-officer", method = RequestMethod.GET)
@@ -67,13 +69,17 @@ public class ProjectMonitoringOfficerController {
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(projectResource.getApplication());
+        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
 
-        new ProjectMonitoringOfficerViewModel(projectResource.getName(), "TODO Area", projectResource.getAddress(),
-                projectResource.getTargetStartDate(), "TODO Project Manager name", asList("TODO Org 1", "TODO Org 2"));
+        ProjectMonitoringOfficerViewModel viewModel = new ProjectMonitoringOfficerViewModel(projectResource.getName(), "TODO Area", projectResource.getAddress(),
+                projectResource.getTargetStartDate(), "TODO Project Manager name", asList("TODO Org 1", "TODO Org 2"), competitionSummary);
+
+        model.addAttribute("model", viewModel);
         return "project/monitoring-officer";
     }
 
-    @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/monitoring-officer", method = RequestMethod.POST)
     public String updateMonitoringOfficerDetails(Model model,
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
@@ -92,19 +98,19 @@ public class ProjectMonitoringOfficerController {
         return "project/monitoring-officer";
     }
 
-	private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm form, UserResource loggedInUser) {
-
-        ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
-		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-
-        model.addAttribute("organisationUsers", thisOrganisationUsers);
-        model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute("project", projectResource);
-        model.addAttribute("currentUser", loggedInUser);
-        model.addAttribute("app", applicationResource);
-        model.addAttribute("competition", competitionResource);
-        return "project/finance-contact";
-	}
+//	private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm form, UserResource loggedInUser) {
+//
+//        ProjectResource projectResource = projectService.getById(projectId);
+//        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+//		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
+//		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+//
+//        model.addAttribute("organisationUsers", thisOrganisationUsers);
+//        model.addAttribute(FORM_ATTR_NAME, form);
+//        model.addAttribute("project", projectResource);
+//        model.addAttribute("currentUser", loggedInUser);
+//        model.addAttribute("app", applicationResource);
+//        model.addAttribute("competition", competitionResource);
+//        return "project/finance-contact";
+//	}
 }

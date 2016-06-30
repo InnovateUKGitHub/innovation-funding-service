@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<div th:include="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" th:remove="tag" />
+</head>
+<body class="competition-management application-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<div class="grid-row">
+		<div class="column-two-thirds">
+			<div class="page-title">
+				<div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+				<h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
+			</div>
+		</div>
+		<div class="column-third alignright extra-margin">
+			<div th:include="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" th:remove="tag" />
+		</div>
+	</div>
+
+	<!--<div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />-->
+
+
+
+
+	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+
+	<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
+
+		<div class="success-alert">
+			<h2 class="heading-small no-margin-top">A Monitoring Officer has been assigned.</h2>
+		</div>
+
+	</th:block>
+
+
+	<div class="column-half">
+		<h2 class="heading-large">Monitoring Officer</h2>
+		<form>
+			<fieldset>
+				<legend class="visuallyhidden">
+					Monitoring Officer
+				</legend>
+				<div class="form-group">
+					<label class="form-label" for="first-name">
+						<span class="form-label-bold">First name</span>
+					</label>
+					<input class="form-control width-full" id="first-name" name="first-name" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+
+					<input class="form-control width-full" id="first-name" name="first-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label" for="last-name">
+						<span class="form-label-bold">Last name</span>
+					</label>
+					<input class="form-control width-full" id="last-name" name="last-name" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+					<input class="form-control width-full" id="last-name" name="last-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label" for="email">
+						<span class="form-label-bold">Email</span>
+					</label>
+					<input class="form-control width-full" id="email" name="email" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+					<input class="form-control width-full" id="email" name="email" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label" for="phone-number">
+						<span class="form-label-bold">Phone number</span>
+					</label>
+					<input class="form-control" id="phone-number" name="phone-number" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+					<input class="form-control" id="phone-number" name="phone-number" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+				</div>
+
+				<input type="hidden" id="status" name="status" value="setup" />
+
+
+				<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign Monitoring Officer</a>
+
+				<a href="/prototypes/1576-assign-mo" th:unless="${param.status == null or param.status[0] != 'edit'}">Change Monitoring Officer</a>
+
+
+
+
+				<div class="modal-assign-mo" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+					<button class="js-close close" aria-label="Close Popup">X</button>
+					<div>
+
+						<h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
+
+						<p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
+
+						<hr />
+
+						<div class="grid-row extra-margin">
+							<div class="column-half">
+								<a href="/prototypes/1576-assign-mo">Cancel</a>
+							</div>
+							<div class="column-half alignright-button">
+								<input type="hidden" id="stage" name="stage" value="1" />
+								<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring Officer</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</fieldset>
+		</form>
+	</div>
+	<div class="column-half">
+
+		<h2 class="heading-large">Supporting information</h2>
+
+		<h3 class="heading-medium no-margin">Project title</h3>
+		<p th:text="${model.projectTitle}">Technology inspired</p>
+
+		<h3 class="heading-medium no-margin">Area</h3>
+		<p th:text="${model.area}">Technology</p>
+
+		<h3 class="heading-medium no-margin">Primary address</h3>
+		<p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
+		<p>
+			TODO Algate Solutions<br />
+			TODO 21 Ballygowen Road<br />
+			TODO Bristol<br />
+			TODO BS2 1RF
+		</p>
+
+		<h3 class="heading-medium no-margin">Target project start date</h3>
+		<p class="form-hint">Planned start date for the project.</p>
+		<p th:text="${#temporals.format(model.targetProjectStartDate, 'dd MMM yyyy')}">1st January 2017</p>
+
+		<h3 class="heading-medium no-margin">Project Manager</h3>
+		<p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
+		<p th:text="${model.projectManagerName}">David Smith</p>
+
+		<h3 class="heading-medium no-margin">Project partners</h3>
+
+		<ul class="list-bullet">
+			<li th:each="organisationName : ${model.partnerOrganisationNames}" th:text="${organisationName}">Company A (Lead)</li>
+		</ul>
+
+	</div>
+
+	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
