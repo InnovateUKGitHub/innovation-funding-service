@@ -33,7 +33,6 @@ public class GrantClaimValidator implements Validator {
 
         OrganisationType organisationType = cost.getApplicationFinance().getOrganisation().getOrganisationType();
         
-        int min;
         int max;
         
         if(isAcademicOrBusiness(organisationType)) {
@@ -45,15 +44,8 @@ public class GrantClaimValidator implements Validator {
                 return;
             }
         	
-        	if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage() == 0) {
-                errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
-                return;
-        	}
-        	
-        	min = 1;
         	max = size.getMaxGrantClaimPercentage();
         } else {
-        	min = 0;
         	max = 100;
         }
         
@@ -61,8 +53,8 @@ public class GrantClaimValidator implements Validator {
             errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
         } else if(response.getGrantClaimPercentage() > max){
             errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", max));
-        } else if(response.getGrantClaimPercentage().intValue() < min){
-            errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", min));
+        } else if(response.getGrantClaimPercentage().intValue() < 0){
+            errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", 0));
         }
     }
     
