@@ -9,7 +9,7 @@
           th:class="${linkClass != null ? linkClass : ''}"
           th:href="${linkUrl}"
           th:text="${linkTitle}" />
-        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
+          <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
         </div>
     </div>

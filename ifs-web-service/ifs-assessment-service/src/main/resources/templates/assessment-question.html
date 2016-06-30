@@ -18,9 +18,7 @@
                 <h1 class="heading-xlarge" th:text="${model.question.shortName}" />
             </div>
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
-            <!--/form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data"
-                    th:with="appIsClosed=${!currentCompetition.isOpen() or !currentApplication.isOpen()}, readonly=${!currentCompetition.isOpen() or !currentApplication.isOpen()}" novalidate="novalidate"-->
+            <form action="#" enctype="multipart/form-data" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
                 <!--/div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
@@ -39,7 +37,7 @@
                         <span th:text="${model.question.name}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.question.description}" />
+                    <p th:text="${model.questionFormInputResponses.get(questionFormInput.id)}" th:with="questionFormInput=${model.questionFormInputs[0]}" />
                 </div>
 
                 <div th:if="${model.question.needingAssessorScore}" th:remove="tag">
@@ -80,17 +78,17 @@
             </form>
             <input type="hidden" id="cacheTest" value="" />
 
-            <ul class="pagination" th:if="${navigation.previousUrl != '' and navigation.nextUrl !=''}">
-                <li class="prev" th:if="${navigation.previousUrl}">
+            <ul class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
+                <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
                     <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title" th:text="${navigation.previousText}">Scope</span>
+                        <span class="pagination-part-title" th:text="${navigation.previousText}" />
                     </a>
                 </li>
-                <li class="next" th:if="${navigation.nextUrl}">
+                <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
                     <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
                         <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title" th:text="${navigation.nextText}">Potential market</span>
+                        <span class="pagination-part-title" th:text="${navigation.nextText}" />
                     </a>
                 </li>
             </ul>
