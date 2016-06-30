@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="ifs-bitbucket-plugin"/>
+  <!-- add our web resources -->
+  <web-resource key="ifs-bitbucket-plugin-resources" name="ifs-bitbucket-plugin Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="ifs-bitbucket-plugin.css" location="/css/ifs-bitbucket-plugin.css"/>
+    <resource type="download" name="ifs-bitbucket-plugin.js" location="/js/ifs-bitbucket-plugin.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>ifs-bitbucket-plugin</context>
+  </web-resource>
+  <repository-hook key="flyway-patch-number-hook" name="Flyway Patch Number Hook" i18n-name-key="flyway-patch-number-hook.name" class="com.worth.ifs.bitbucket.plugin.hook.FlywayPatchNumberHook">
+    <description key="flyway-patch-number-hook.description">The Flyway Patch Number Hook Plugin</description>
+    <icon>icon-example.png</icon>
+  </repository-hook>
+</atlassian-plugin>
