@@ -123,7 +123,7 @@
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                     th:with="rowTitle=${'Portable renewable energy generation'}, 
                     rowType=${'Programme'},
-                    rowSector=${'Emerging &#38; enabling technologie'},
+                    rowSector=${'Emerging &#38; enabling technology'},
                     rowUrl=${'#'},
                     rowStatus=${'132 applications'}">
                 </th:block>
@@ -220,18 +220,19 @@
         <div class="table-overflow">
             <ul class="list-overview">
                 <th:block 
+                    th:unless="${param.comp != null and param.comp[0] == 'saveOpen'}"
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
-                    rowType=${'Programme'},
-                    rowSector=${''},
-                    rowUrl=${'#'},
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Special'},
+                    rowSector=${'Emerging tech &#38; industries'}, 
+                    rowUrl=${'/prototypes/2469-comp-setup?compStatus=draft'},
                     rowStatus=${' '}">
                 </th:block>
                 <th:block 
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digtial additive manufacturing'}, 
-                    rowType=${'Special'},
-                    rowSector=${'Emerging tech &#38; industries'}, 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'Programme'},
+                    rowSector=${''},
                     rowUrl=${'#'},
                     rowStatus=${' '}">
                 </th:block>
@@ -255,6 +256,15 @@
         <div class="table-overflow">
             <ul class="list-overview">
                 <th:block 
+                    th:unless="${param.comp != null and param.comp[0] == 'saveDraft' or param.comp == null}"
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Special'},
+                    rowSector=${'Emerging tech &#38; industries'}, 
+                    rowUrl=${'/prototypes/2469-comp-setup?compStatus=ready'},
+                    rowStatus=${' '}">
+                </th:block>
+                <th:block 
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
                     th:with="rowTitle=${'Portable renewable energy generation'}, 
                     rowType=${'Managed service'},
@@ -276,86 +286,84 @@
 
     <h2 class="heading-medium">Complete (27)</h2>
 
-        <div class="table-overflow">
-            <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
-                    rowType=${'Programme'}, 
-                    rowSector=${'Advanced therapies'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-               <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                    rowType=${'Managed service'},
-                    rowSector=${'Precision medicine'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
-                    rowType=${'SBRI'},
-                    rowSector=${'Medicines technology'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'},
-                    rowType=${'Special'},
-                    rowSector=${'Bioscience'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                    rowType=${'Agri productivity'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'},
-                    rowType=${'Special'}, 
-                    rowSector=${'Enhanced food quality'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                    rowType=${'Programme'}, 
-                    rowSector=${'Transport systems'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
-                    rowType=${'Managed service'}, 
-                    rowSector=${'Urban living'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                    rowType=${'Special'},
-                    rowSector=${'Health &#38; life sciences'},  
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
-                    rowType=${'SBRI'},
-                    rowSector=${'Health &#38; life sciences'},
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                    rowType=${'Managed service'},
-                    rowType=${'Nuclear'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-            </ul>
-        </div>
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Programme'}, 
+                rowSector=${'Advanced therapies'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+           <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Managed service'},
+                rowSector=${'Precision medicine'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
+                rowType=${'SBRI'},
+                rowSector=${'Medicines technology'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'},
+                rowType=${'Special'},
+                rowSector=${'Bioscience'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Agri productivity'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'},
+                rowType=${'Special'}, 
+                rowSector=${'Enhanced food quality'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Programme'}, 
+                rowSector=${'Transport systems'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Managed service'}, 
+                rowSector=${'Urban living'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Special'},
+                rowSector=${'Health &#38; life sciences'},  
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'SBRI'},
+                rowSector=${'Health &#38; life sciences'},
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Managed service'},
+                rowType=${'Nuclear'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+        </ul>
 
 </div>
 
