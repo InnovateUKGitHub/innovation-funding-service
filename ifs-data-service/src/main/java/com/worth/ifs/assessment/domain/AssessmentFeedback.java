@@ -24,7 +24,6 @@ public class AssessmentFeedback {
     @NotNull
     private String feedback;
 
-    @NotNull
     private Integer score;
 
     @NotNull

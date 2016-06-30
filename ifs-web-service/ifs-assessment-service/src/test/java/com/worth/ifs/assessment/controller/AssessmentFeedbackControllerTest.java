@@ -94,7 +94,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         final AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(50, model.getDaysLeftPercentage());
         assertEquals(3, model.getDaysLeft());
-        assertEquals("Market opportunity", model.getTitle());
+        assertTrue(model.isFeedbackRequired());
         assertEquals(expectedQuestion, model.getQuestion());
         assertEquals(expectedQuestion.getFormInputs(), model.getQuestionFormInputs().stream().map(FormInputResource::getId).collect(Collectors.toList()));
         expectedQuestion.getFormInputs().forEach(formInput ->
@@ -166,6 +166,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         competitionResource.setAssessmentStartDate(LocalDateTime.now().minusDays(2));
         competitionResource.setAssessmentEndDate(LocalDateTime.now().plusDays(4));
         questionResources.get(QUESTION_ID).setShortName("Market opportunity");
+        questionResources.get(QUESTION_ID).setNeedingAssessorFeedback(true);
     }
 
     private void setupApplicationResponses(final Long applicationId, final Long questionId) {

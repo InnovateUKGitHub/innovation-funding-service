@@ -2,6 +2,7 @@ IFS.autoSave = (function(){
     "use strict";
     var s; // private alias to settings
     var promiseList = {};
+    var autoSave_timer;
     var serverSideValidationErrors = []; // we store the last validation message as deleting of messages is done by content as unique identifier.
                              // So if we have multiple messages it will only delete the one which contains the message that has been resolved.
     return {
@@ -20,8 +21,8 @@ IFS.autoSave = (function(){
             jQuery('body').on('change keyup', s.textareas, function(e){
                 if(e.type == 'keyup'){
                   //wait until the user stops typing
-                  clearTimeout(window.IFS.autoSave_timer);
-                  window.IFS.autoSave_timer = setTimeout(function(){ IFS.autoSave.fieldChanged(e.target); }, s.typeTimeout);
+                  clearTimeout(autoSave_timer);
+                  autoSave_timer = setTimeout(function(){ IFS.autoSave.fieldChanged(e.target); }, s.typeTimeout);
                 }
                 else {
                     IFS.autoSave.fieldChanged(e.target);

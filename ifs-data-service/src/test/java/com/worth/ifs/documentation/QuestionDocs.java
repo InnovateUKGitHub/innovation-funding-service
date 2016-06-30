@@ -16,12 +16,11 @@ public class QuestionDocs {
             fieldWithPath("assessorGuidanceQuestion").description("question on which the assessor guidance for this question is based"),
             fieldWithPath("assessorGuidanceAnswer").description("answer to the assessor guidance for this question"),
             fieldWithPath("markAsCompletedEnabled").description("boolean to indicate if the question can be marked as complete"),
-            fieldWithPath("markAsCompletedEnabled").description("boolean to indicate if the question can be marked as complete"),
             fieldWithPath("assignEnabled").description("boolean to indicate if the question can be assigned"),
             fieldWithPath("multipleStatuses").description("boolean to indicate if the question has multiple statuses"),
             fieldWithPath("priority").description("priority of the question, used for rendering purposes only"),
-            fieldWithPath("needingAssessorScore").description("boolean to indicate of the question still needs an assessor score"),
-            fieldWithPath("needingAssessorFeedback").description("boolean to indicate if the question still needs assessor feedback"),
+            fieldWithPath("needingAssessorFeedback").description("boolean to indicate if the question needs assessor feedback"),
+            fieldWithPath("needingAssessorScore").description("boolean to indicate if the question needs an assessor score"),
             fieldWithPath("formInputs").description("list of the inputs used to answer the question"),
             fieldWithPath("assessorConfirmationQuestion").description("scope verification question for the assessor"),
             fieldWithPath("questionStatuses").description("List of question statuses"),
@@ -29,7 +28,6 @@ public class QuestionDocs {
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
             fieldWithPath("competition").description("Id of the competition"),
             fieldWithPath("costs").description("List of ids of the costs related to the finance questions").optional()
-
     };
 
     public static final QuestionResourceBuilder questionBuilder = newQuestionResource()
@@ -37,7 +35,11 @@ public class QuestionDocs {
             .withName("question name")
             .withShortName("name")
             .withDescription("description")
+            .withAssessorGuidanceQuestion("guidance for assessing <question name>")
+            .withAssessorGuidanceAnswer("guidance text")
             .withPriority(1)
+            .withNeedingAssessorFeedback(true)
+            .withNeedingAssessorScore(true)
             .withAssessorConfirmationQuestion("confirmation question")
             .withCompetition(1L)
             .withSection(1L)
