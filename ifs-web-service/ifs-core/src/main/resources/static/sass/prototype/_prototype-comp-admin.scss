@@ -392,7 +392,9 @@ table{
 
 /*----- Remove help links for comp admin / internal pages ----*/
 .comp-assessors,
-.comp-dashboard{
+.comp-dashboard,
+.comp-setup
+{
 	.user-feedback{
 		display: none;
 
@@ -410,6 +412,7 @@ table{
 
 		display: table;
 		width: 100%;
+		min-width: $site-width;
 
 		li {
 	    	display: table-row; 
@@ -433,15 +436,19 @@ table{
 
 
 		li h3{
-		    width: 50%;
+		    width: 40%;
 		}
 
 		li p{
-		    width: 30%;
+		    width: 20%;
 		    color: $secondary-text-colour;
 		}
 
 		li p + p{
+			width: 25%;
+		}
+
+		li p + p + p{
 		    text-align: right;
 		    width: 20%;
 		}

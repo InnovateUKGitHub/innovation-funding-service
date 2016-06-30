@@ -2,6 +2,7 @@ package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.domain.Invite;
@@ -25,18 +26,19 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.builder.InviteBuilder.newInvite;
@@ -166,7 +168,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         List<InviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
-                .withEmail("testemail")
+                .withEmail("testemail", "testemail1", "testemail2", "testemail3", "testemail4")
                 .build(5);
 
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
@@ -180,6 +182,9 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         }));
 
         when(inviteOrganisationRepositoryMock.save(saveInviteOrganisationExpectations)).thenReturn(saveInviteOrganisationExpectations);
+        when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(asList());
+
+        when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
 
         List<Invite> savedInvites = newInvite().build(5);
 
@@ -189,7 +194,9 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
             return true;
         }));
 
+
         when(inviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
+        when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
         ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
         assertTrue(result.isSuccess());
@@ -244,10 +251,14 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
                 .withInviteResources(inviteResources)
                 .build();
 
+        when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(asList());
+        when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
+
+        when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+
         ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
-
+        
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
         verify(inviteRepositoryMock, never()).save(isA(List.class));
     }
@@ -346,9 +357,12 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
                 .withOrganisationName("new organisation")
                 .build();
 
+        when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(asList(inviteOrganisationResource));
+        when(applicationRepositoryMock.findOne(null)).thenReturn(newApplication().withId(1L).build());
+        when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(1));
+
         ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
         verify(inviteRepositoryMock, never()).save(isA(List.class));
