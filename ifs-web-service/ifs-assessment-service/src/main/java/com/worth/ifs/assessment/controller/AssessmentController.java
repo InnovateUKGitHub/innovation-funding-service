@@ -1,8 +1,8 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.service.AssessmentFeedbackService;
-import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,27 +21,28 @@ import java.util.concurrent.ExecutionException;
 public class AssessmentController {
 
     @Autowired
-    private AssessmentService assessmentService;
-    @Autowired
     private AssessmentFeedbackService assessmentFeedbackService;
+    @Autowired
+    private QuestionService questionService;
 
     @RequestMapping(value= "/{assessmentId}",
                     method = RequestMethod.GET)
-    public String getAllQuestionsOfGivenAssessment(
+    public String getSummary(
             @PathVariable("assessmentId") final Long assessmentId,
             final Model model) throws ExecutionException, InterruptedException {
-
-           List<AssessmentFeedbackResource> listOfAssessmentFeedback = new ArrayList<>();
-           assessmentService.getAllQuestionsById(assessmentId).stream().forEach(questionResource -> {
-               Long questionId = questionResource.getId();
-               listOfAssessmentFeedback.add(assessmentFeedbackService.getAssessmentFeedbackByAssessmentAndQuestion(assessmentId,questionId));
-           });
-           model.addAttribute("model", populateModel(listOfAssessmentFeedback));
-           return "assessor-application-summary";
+            model.addAttribute("model", populateModel(assessmentId));
+            return "assessor-application-summary";
     }
 
-    private AssessmentSummaryViewModel populateModel(List<AssessmentFeedbackResource> listOfAssessmentFeedback) {
-        return new AssessmentSummaryViewModel(listOfAssessmentFeedback);
+    private List<AssessmentSummaryViewModel> populateModel(Long assessmentId) throws ExecutionException, InterruptedException {
+        List<AssessmentSummaryViewModel> listOfAssessmentSummaryViewModel = new ArrayList<>();
+        assessmentFeedbackService.getAllAssessmentFeedback(assessmentId).stream().forEach(assessmentFeedbackResource -> {
+            Long questionId = assessmentFeedbackResource.getQuestion();
+            QuestionResource questionResource = questionService.getById(questionId);
+            listOfAssessmentSummaryViewModel.add(new AssessmentSummaryViewModel(questionResource,assessmentFeedbackResource));
+        });
+
+        return listOfAssessmentSummaryViewModel;
 
     }
 

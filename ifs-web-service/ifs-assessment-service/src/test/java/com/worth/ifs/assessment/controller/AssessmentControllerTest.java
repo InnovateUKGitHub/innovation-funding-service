@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.builder.QuestionResourceBuilder;
-import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.service.AssessmentFeedbackService;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
@@ -14,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.assessment.builder.AssessmentFeedbackResourceBuilder.newAssessmentFeedbackResource;
@@ -40,27 +38,18 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void testGetAllQuestionsOfGivenAssessment() throws Exception{
-        final String expectedValue = "Blah";
-        final Integer expectedScore = 10;
-        QuestionResource questionResource = QuestionResourceBuilder.newQuestionResource().build();
-        List<QuestionResource> listOfQuestions = new ArrayList<>();
-        Long questionId = questionResource.getId();
-        listOfQuestions.add(questionResource);
-        when(assessmentService.getAllQuestionsById(ASSESSMENT_ID )).thenReturn(listOfQuestions);
-        when(assessmentFeedbackService.getAssessmentFeedbackByAssessmentAndQuestion(ASSESSMENT_ID,questionId))
-                  .thenReturn(newAssessmentFeedbackResource()
-                          .withFeedback(expectedValue)
-                          .withScore(expectedScore)
-                          .build());
+        List<AssessmentFeedbackResource> listOfAssessmentFeedback = newAssessmentFeedbackResource().build(2);
+
+        when(assessmentFeedbackService.getAllAssessmentFeedback(ASSESSMENT_ID))
+                  .thenReturn(listOfAssessmentFeedback);
 
         final MvcResult result = mockMvc.perform(get("/assessment/summary/{assessmentId}",ASSESSMENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessor-application-summary"))
                 .andReturn();
-        AssessmentSummaryViewModel model = (AssessmentSummaryViewModel)result.getModelAndView().getModel().get("model");
-        Assert.assertTrue(model.getListOfAssessmentFeedback().size()==1);
-
+        List<AssessmentSummaryViewModel> model = (List<AssessmentSummaryViewModel>)result.getModelAndView().getModel().get("model");
+        Assert.assertTrue(model.size()==2);
     }
 
     @Override

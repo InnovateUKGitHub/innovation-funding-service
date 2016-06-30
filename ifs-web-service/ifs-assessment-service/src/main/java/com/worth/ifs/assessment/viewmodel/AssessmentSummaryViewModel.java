@@ -1,21 +1,25 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 
-import java.util.List;
-
 /**
- *
+ * Holder of model attribute of Assessment Summary, which combine the question data and assessment feedback data
+ * of a same question
  */
 public class AssessmentSummaryViewModel {
-    private List<AssessmentFeedbackResource> listOfAssessmentFeedback;
+    private QuestionResource questionResource;
+    private AssessmentFeedbackResource assessmentFeedbackResource;
 
-
-    public AssessmentSummaryViewModel(List<AssessmentFeedbackResource> listOfAssessmentFeedback){
-        this.listOfAssessmentFeedback = listOfAssessmentFeedback;
+    public AssessmentSummaryViewModel(QuestionResource questionResource,AssessmentFeedbackResource assessmentFeedbackResource){
+        this.questionResource = questionResource;
+        this.assessmentFeedbackResource = assessmentFeedbackResource;
     }
 
-    public List<AssessmentFeedbackResource> getListOfAssessmentFeedback(){
-        return this.listOfAssessmentFeedback;
+    public QuestionResource getQuestionResource(){
+        return this.questionResource;
+    }
+    public AssessmentFeedbackResource getAssessmentFeedbackResource(){
+        return this.assessmentFeedbackResource;
     }
 }
