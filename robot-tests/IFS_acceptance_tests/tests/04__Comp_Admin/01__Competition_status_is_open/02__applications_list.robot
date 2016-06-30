@@ -56,6 +56,13 @@ The applications can be sorted by project lead
     When the application list is sorted by    Lead
     Then the applications should be sorted by column    4
 
+The applications can be sorted by lead applicant
+    [Documentation]    INFUND-3006
+    [Tags]      Competition management       Pending
+    # Pending due to INFUND-3711
+    When the application list is sorted by       Lead applicant
+    Then the applications should be sorted by column        3
+
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
     [Tags]    Competition management

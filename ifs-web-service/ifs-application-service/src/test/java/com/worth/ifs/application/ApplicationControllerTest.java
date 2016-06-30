@@ -1,20 +1,46 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.Application;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
+import static com.google.common.collect.Sets.newHashSet;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,26 +55,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static com.google.common.collect.Sets.newHashSet;
-import static com.worth.ifs.application.service.Futures.settable;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -85,7 +107,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-       // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -104,7 +125,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationDetailsAssign() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -239,7 +259,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 	@Test
     public void testApplicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
@@ -301,7 +320,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH), Arrays.asList(1234l)));
 
         List<Object> arguments = new ArrayList<>();
-        arguments.add(Application.class.getName());
+        arguments.add("Application");
         arguments.add(1234l);
 
         LOG.debug("Show dashboard for application: " + app.getId());
@@ -347,7 +366,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationConfirmSubmit() throws Exception {
             ApplicationResource app = applications.get(0);
 
-            //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
             when(applicationService.getById(app.getId())).thenReturn(app);
             when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -366,26 +384,44 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
           
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("agreeToTerms"));
         verifyNoMoreInteractions(userAuthenticationService, applicationService);
-        
+        verify(applicationService, never()).updateStatus(any(Long.class), any(Long.class));
     }
     
     @Test
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
-        ApplicationResource app = applications.get(0);
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.OPEN).build();
+        when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
+        
         MvcResult result = mockMvc.perform(post("/application/1/submit")
         		.param("agreeTerms", "yes"))
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andReturn();
+        
+        verify(applicationService).updateStatus(app.getId(), ApplicationStatusConstants.SUBMITTED.getId());
+    }
+    
+    @Test
+    public void testApplicationSubmitAppisNotSubmittable() throws Exception {
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.FUNDERS_PANEL).build();
+        when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 
-        // TODO: test the application status, but how without having a database in place?
-        //        Application updatedApplication = (Application) result.getModelAndView().getModel().get("currentApplication");
-        //        String name = updatedApplication.getApplicationStatus().getName();
-        //        assertEquals(name, "submitted");
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        
+        mockMvc.perform(post("/application/1/submit")
+        		.param("agreeTerms", "yes"))
+        		.andExpect(redirectedUrl("/application/1/confirm-submit"));
+        
+        verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
+        verify(applicationService, never()).updateStatus(any(Long.class), any(Long.class));
     }
 
     @Test
