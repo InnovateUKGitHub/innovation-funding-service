@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  th:remove="tag"></div>
+</head>
+<body class="app-details">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor-comp-dashboard}"  th:remove="tag"></div>
+
+
+    <div th:include="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" th:remove="tag" />
+  	<div th:include="fragments/elements :: competition-status-message (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+        <h1 class="heading-xlarge">Assessment overview</h1>
+    </div>
+
+    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
+        <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
+            <section th:id="'section-'+${section.getId()}">
+                <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
+                <p th:text="${section.assessorGuidanceDescription}"></p>
+                <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
+                    <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
+                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication})"></div>
+                    </div>
+                    <!--/* sections with children like the finance */-->
+                    <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
+                        <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}">
+                            <div class="column-two-thirds">
+                                <h3 class="heading-small">
+                                    <a th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${childSection.getId()}"
+                                       th:text="${childSection.getName()}" />
+                                </h3>
+                            </div>
+                            <div th:if="${childSection.getId().equals(financeSectionId)}">
+                                <img class="section-status complete"
+                                     src="/images/field/field-done-right.png"
+                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
+                                     width="30"
+                                     height="30"
+                                     th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
+                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
+                                     th:if="${userFinanceSectionCompleted}"/>
+                                <img class="section-status assigned"
+                                     src="/images/field/field-assigned-right.png"
+                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
+                                     width="30"
+                                     height="30"
+                                     th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
+                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
+                                     th:unless="${userFinanceSectionCompleted}"/>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </section>
+        </div>
+    </form>
+
+    <div class="alignright-button">
+   </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+
+</body>
+</html>
