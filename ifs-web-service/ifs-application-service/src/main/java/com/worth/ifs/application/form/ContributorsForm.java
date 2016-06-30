@@ -59,7 +59,7 @@ public class ContributorsForm implements Serializable {
 
     private void mergeOrganisation(OrganisationInviteForm oC) {
         Optional<OrganisationInviteForm> existingOrgOptional = this.getOrganisations().stream()
-                .filter(o -> o.getOrganisationName().equals(oC.getOrganisationName()))
+                .filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName()))
                 .findAny();
 
         if(!existingOrgOptional.isPresent()){
@@ -81,7 +81,7 @@ public class ContributorsForm implements Serializable {
 
     private void mergeInvite(InviteeForm iC, List<InviteeForm> existingInvites) {
         Optional<InviteeForm> cookieInviteFound = existingInvites.stream()
-                .filter(i -> i.getEmail().equals(iC.getEmail()) && i.getPersonName().equals(iC.getPersonName()))
+                .filter(i -> StringUtils.isNotEmpty(iC.getEmail()) && i.getEmail().equals(iC.getEmail()) && StringUtils.isNotEmpty(iC.getPersonName()) && i.getPersonName().equals(iC.getPersonName()))
                 .findAny();
         if(!cookieInviteFound.isPresent()){
             existingInvites.add(iC);
