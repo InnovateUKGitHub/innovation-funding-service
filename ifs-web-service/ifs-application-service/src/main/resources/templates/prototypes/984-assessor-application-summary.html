@@ -37,19 +37,19 @@
                           <td>7</td>
                           <td>3</td>
                           <td>3</td>
-                          <td></td>
-                          <td></td>
+                          <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
+                          <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
                           <td>5</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
+                          <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
+                          <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
+                          <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                   <div class="extra-margin alignright">
-                    <p class="no-margin"><strong>Total: 21/100</strong></p>
-                    <p><strong>21%</strong></p>
+                    <p class="no-margin"><strong th:text="${param.status != null and param.status[0] == 'complete' ? 'Total: 51/100' : 'Total: 21/100'}">Total: 21/100</strong></p>
+                    <p><strong th:text="${param.status != null and param.status[0] == 'complete' ? '51%' : '21%'}">21%</strong></p>
                   </div>
                   <h2 class="heading-medium">Review assessment</h2>
                   <div class="collapsible section-overview">
@@ -113,8 +113,17 @@
                     </div>
 
                     <h2><span>5. Technical approach</span>
-                      <div class="section-status section-incomplete">Incomplete</div>
-                      <div class="section-score">Score: N/A</div>
+                      
+                      <th:block th:unless="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-incomplete">Incomplete</div>
+                        <div class="section-score">Score: N/A</div>
+                      </th:block>
+
+                      <th:block th:if="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-complete">Complete</div>
+                        <div class="section-score">Score: 6/10</div>
+                      </th:block>
+
                     </h2>
                     <div class="question">
                       <div class="form-group">
@@ -123,8 +132,15 @@
                     </div>
 
                     <h2><span>6. Innovate</span>
-                      <div class="section-status section-incomplete">Incomplete</div>
-                      <div class="section-score">Score: N/A</div>
+                      <th:block th:unless="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-incomplete">Incomplete</div>
+                        <div class="section-score">Score: N/A</div>
+                      </th:block>
+
+                      <th:block th:if="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-complete">Complete</div>
+                        <div class="section-score">Score: 6/10</div>
+                      </th:block>
                     </h2>
                     <div class="question">
                       <div class="form-group">
@@ -143,8 +159,15 @@
                     </div>
           
                     <h2><span>8. Project team</span>
-                      <div class="section-status section-incomplete">Incomplete</div>
-                      <div class="section-score">Score: N/A</div>
+                      <th:block th:unless="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-incomplete">Incomplete</div>
+                        <div class="section-score">Score: N/A</div>
+                      </th:block>
+
+                      <th:block th:if="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-complete">Complete</div>
+                        <div class="section-score">Score: 6/10</div>
+                      </th:block>
                     </h2>
                     <div class="question">
                       <div class="form-group">
@@ -153,8 +176,15 @@
                     </div>
  
                     <h2><span>9. Funding</span>
-                      <div class="section-status section-incomplete">Incomplete</div>
-                      <div class="section-score">Score: N/A</div>
+                      <th:block th:unless="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-incomplete">Incomplete</div>
+                        <div class="section-score">Score: N/A</div>
+                      </th:block>
+
+                      <th:block th:if="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-complete">Complete</div>
+                        <div class="section-score">Score: 6/10</div>
+                      </th:block>
                     </h2>
                     <div class="question">
                       <div class="form-group">
@@ -163,8 +193,15 @@
                     </div>
 
                     <h2><span>10. Adding value</span>
-                      <div class="section-status section-incomplete">Incomplete</div>
-                      <div class="section-score">Score: N/A</div>
+                      <th:block th:unless="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-incomplete">Incomplete</div>
+                        <div class="section-score">Score: N/A</div>
+                      </th:block>
+
+                      <th:block th:if="${param.status != null and param.status[0] == 'complete'}">
+                        <div class="section-status section-complete">Complete</div>
+                        <div class="section-score">Score: 6/10</div>
+                      </th:block>
                     </h2>
                     <div class="question">
                       <div class="form-group">
@@ -174,75 +211,81 @@
              
                   </div>
                    <div class="extra-margin alignright">
-                    <p class="no-margin"><strong>Total: 21/100</strong></p>
-                    <p><strong>21%</strong></p>
+                    <p class="no-margin"><strong th:text="${param.status != null and param.status[0] == 'complete' ? 'Total: 51/100' : 'Total: 21/100'}">Total: 21/100</strong></p>
+                    <p><strong th:text="${param.status != null and param.status[0] == 'complete' ? '51%' : '21%'}">21%</strong></p>
                   </div>
-                  <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
-                  <fieldset class="inline">
-                    <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
-                    <div class="form-group">
-                      <label class="block-label" for="assessor-question-confirmation-yes">
-                        <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
-                        Yes
-                      </label>
-                      <label class="block-label" for="assessor-question-confirmation-no">
-                        <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
-                        No
-                      </label>
-                    </div>
-                  </fieldset>
-                  <fieldset>
-                    <legend class="visuallyhidden">Question feedback</legend>
-                    <div class="form-group">
-                      <div class="form-group">
-                        
-                        <label class="form-label form-label-bold" for="assessor-application-feedback-text">Your feedback
-                          <span class="form-hint">Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback.</span>
-                        </label>
-                        
-                        <div class="textarea-wrapped word-count">
-                          
-                          <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-feedback-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
-                          <div class="textarea-footer">
+
+                  
+                  <th:block th:if="${param.status != null and param.status[0] == 'complete'}">
+                      <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
+                      <fieldset class="inline">
+                        <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
+                        <div class="form-group">
+                          <label class="block-label" for="assessor-question-confirmation-yes">
+                            <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
+                            Yes
+                          </label>
+                          <label class="block-label" for="assessor-question-confirmation-no">
+                            <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
+                            No
+                          </label>
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend class="visuallyhidden">Question feedback</legend>
+                        <div class="form-group">
+                          <div class="form-group">
                             
-                            <span class="count-label">
-                              <span class="count-message">Words remaining:</span>
-                              <span class="count-down positive" aria-live="polite">349</span>
-                            </span>
+                            <label class="form-label form-label-bold" for="assessor-application-feedback-text">Your feedback
+                              <span class="form-hint">Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback.</span>
+                            </label>
                             
+                            <div class="textarea-wrapped word-count">
+                              
+                              <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-feedback-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
+                              <div class="textarea-footer">
+                                
+                                <span class="count-label">
+                                  <span class="count-message">Words remaining:</span>
+                                  <span class="count-down positive" aria-live="polite">349</span>
+                                </span>
+                                
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="form-group">
-                        
-                        <label class="form-label form-label-bold" for="assessor-application-comments-text">Do you have any comments about this application that you would like to share with Innovate UK? (Optional)
-                        </label>
-                        
-                        <div class="textarea-wrapped word-count">
-                          
-                          <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-comments-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
-                          <div class="textarea-footer">
+                        <div class="form-group">
+                          <div class="form-group">
                             
-                            <span class="count-label">
-                              <span class="count-message">Words remaining:</span>
-                              <span class="count-down positive" aria-live="polite">349</span>
-                            </span>
+                            <label class="form-label form-label-bold" for="assessor-application-comments-text">Do you have any comments about this application that you would like to share with Innovate UK? (Optional)
+                            </label>
                             
+                            <div class="textarea-wrapped word-count">
+                              
+                              <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-comments-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
+                              <div class="textarea-footer">
+                                
+                                <span class="count-label">
+                                  <span class="count-message">Words remaining:</span>
+                                  <span class="count-down positive" aria-live="polite">349</span>
+                                </span>
+                                
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <p class="icon-info">
-                      You'll still be able to make changes after this point.<br />All assessments need to be submitted through the dashboard.
-                    </p>
-                    <div class="alignright">
-                      <form>
-                        <button class="button button-large" name="confirm-submission" id="assessment-summary-submit" formsubmit="/prototypes/871-assessor-comp-dashboard" type="submit">Save assessment</button>
-                      </form>
-                    </div>
-                  </fieldset>
+                        <p class="icon-info">
+                          You'll still be able to make changes after this point.<br />All assessments need to be submitted through the dashboard.
+                        </p>
+                        <div class="alignright">
+                          <form>
+                            <button class="button button-large" name="confirm-submission" id="assessment-summary-submit" formaction="/prototypes/871-assessor-comp-dashboard" type="submit">Save assessment</button>
+                          </form>
+                        </div>
+                      </fieldset>
+
+                    </th:block>
                   
                   <!-- END OFHARDCODED PROTOTYPE HTML -->
                   <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

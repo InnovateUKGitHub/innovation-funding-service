@@ -5,7 +5,6 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentFeedback;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -32,12 +31,27 @@ public class AssessmentFeedbackRepositoryIntegrationTest extends BaseRepositoryI
         this.repository = repository;
     }
 
-    @Ignore("TODO")
     @Test
+    @Rollback
     public void findAll() throws Exception {
-        final List<AssessmentFeedback> found = repository.findAll();
+        final Assessment assessment = assessmentRepository.save(newAssessment()
+                .build());
 
-        fail();
+        final List<Question> questions = newQuestion().build(2).stream().map(question -> questionRepository.save(question)).collect(Collectors.toList());
+
+        final List<AssessmentFeedback> assessmentFeedbacks = newAssessmentFeedback()
+                .withAssessment(assessment, assessment)
+                .withFeedback("Sample message 1", "Sample message 2")
+                .withScore(10, 10)
+                .withQuestion(questions.get(0), questions.get(1))
+                .build(2);
+
+        final List<AssessmentFeedback> saved = assessmentFeedbacks.stream().map(assessmentFeedback -> repository.save(assessmentFeedback)).collect(Collectors.toList());
+
+        final List<AssessmentFeedback> found = repository.findAll();
+        assertEquals(2, found.size());
+        assertEquals(saved.get(0), found.get(0));
+        assertEquals(saved.get(1), found.get(1));
     }
 
     @Test

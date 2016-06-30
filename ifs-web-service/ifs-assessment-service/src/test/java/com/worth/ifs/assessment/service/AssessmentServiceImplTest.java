@@ -68,6 +68,7 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         assertSame(expected, response);
         verify(assessmentRestService, only()).getById(assessmentId);
     }
+
     @Test
     public void testGetAllQuestionsById() throws ExecutionException, InterruptedException {
         final Long assessmentId = 1L;

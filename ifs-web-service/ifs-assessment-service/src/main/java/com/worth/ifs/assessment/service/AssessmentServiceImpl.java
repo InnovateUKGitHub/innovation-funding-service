@@ -40,7 +40,6 @@ public class AssessmentServiceImpl implements AssessmentService {
     public AssessmentResource getById(final Long id) {
         return assessmentRestService.getById(id).getSuccessObjectOrThrowException();
     }
-
     @Override
     public List<QuestionResource> getAllQuestionsById(Long assessmentId) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRoleResource = processRoleService.getById(this.getById(assessmentId).getProcessRole()).get();

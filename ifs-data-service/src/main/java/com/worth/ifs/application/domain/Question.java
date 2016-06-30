@@ -27,6 +27,7 @@ public class Question {
 
     private String assessorGuidanceQuestion;
 
+    @Lob
     private String assessorGuidanceAnswer;
 
     private Boolean markAsCompletedEnabled = false;
@@ -157,14 +158,6 @@ public class Question {
 
     public Integer getPriority() {
         return priority;
-    }
-
-    public boolean getNeedingAssessorScore() {
-        return needingAssessorScore;
-    }
-
-    public boolean getNeedingAssessorFeedback() {
-        return needingAssessorFeedback;
     }
 
     public String getAssessorConfirmationQuestion() {

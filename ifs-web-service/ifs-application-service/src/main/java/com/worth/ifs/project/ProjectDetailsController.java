@@ -39,15 +39,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -71,10 +67,10 @@ public class ProjectDetailsController {
 
     @Autowired
     private CompetitionService competitionService;
-    
+
     @Autowired
     private OrganisationRestService organisationRestService;
-    
+
     @Autowired
     private AddressRestService addressRestService;
 
@@ -94,24 +90,43 @@ public class ProjectDetailsController {
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
-
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 userIsLeadPartner(projectId, loggedInUser.getId())));
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
 
         return "project/detail";
     }
+
+    @RequestMapping(value = "/{projectId}/confirm-project-details", method = RequestMethod.GET)
+    public String projectDetailConfirmSubmit(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("currentUser", loggedInUser);
+        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
+        return "project/confirm-project-details";
+    }
+
 
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.GET)
     public String viewFinanceContact(Model model,
                                      @PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        FinanceContactForm form = new FinanceContactForm();
+        return doViewFinanceContact(model, projectId, organisation, loggedInUser, form, true);
+    }
+
+    private String doViewFinanceContact(Model model, @PathVariable("projectId") Long projectId, @RequestParam(value = "organisation", required = false) Long organisation, @ModelAttribute("loggedInUser") UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
         }
@@ -124,47 +139,36 @@ public class ProjectDetailsController {
             return redirectToProjectDetails(projectId);
         }
 
-        return modelForFinanceContact(model, projectId, organisation, loggedInUser);
+        return modelForFinanceContact(model, projectId, organisation, loggedInUser, form, setDefaultFinanceContact);
     }
 
     @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.POST)
     public String updateFinanceContact(Model model,
                                        @PathVariable("projectId") final Long projectId,
-                                       @ModelAttribute FinanceContactForm form,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
                                        BindingResult bindingResult,
                                        HttpServletRequest request,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        
-		if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), loggedInUser.getId())){
-    		return redirectToProjectDetails(projectId);
-    	}
-    	
-    	if(!anyUsersInGivenOrganisationForProject(projectId, form.getOrganisation())){
-    		return redirectToProjectDetails(projectId);
-    	}
 
-        if(bindingResult.hasErrors()) {
-        	return modelForFinanceContact(model, projectId, form, loggedInUser);
+        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
+
+        if (bindingResult.hasErrors()) {
+            form.setBindingResult(bindingResult);
+            return failureView.get();
         }
-        
-        if(!userIsPartnerInOrganisationForProject(projectId, form.getOrganisation(), form.getFinanceContact())) {
-        	return modelForFinanceContact(model, projectId, form, loggedInUser);
-        }
-        
-        projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
-    	
-        return redirectToProjectDetails(projectId);
+
+        ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
+        return handleErrorsOrRedirectToProjectOverview("financeContact", projectId, model, form, bindingResult, updateResult, failureView);
     }
 
-	private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser) {
+	private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> financeContacts = simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
 
-		FinanceContactForm form = new FinanceContactForm();
 		form.setOrganisation(organisation);
 
-        if (!financeContacts.isEmpty()) {
+        if (setDefaultFinanceContact && !financeContacts.isEmpty()) {
             form.setFinanceContact(getOnlyElement(financeContacts).getUser());
         }
 
@@ -177,22 +181,22 @@ public class ProjectDetailsController {
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
 		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        
+
         model.addAttribute("organisationUsers", thisOrganisationUsers);
-        model.addAttribute("form", form);
+        model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
         return "project/finance-contact";
 	}
-    
+
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
         List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         return !projectUsersForOrganisation.isEmpty();
 	}
-    
+
 	private boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
 		if(userId == null) {
 			return false;
@@ -204,56 +208,49 @@ public class ProjectDetailsController {
 
 		return !projectUsersForUserAndOrganisation.isEmpty();
 	}
-    
+
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) throws InterruptedException, ExecutionException {
 
+        ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
+        return doViewProjectManager(model, projectId, loggedInUser, form);
+    }
+
+    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser, ProjectManagerForm form) {
+
         ProjectResource projectResource = projectService.getById(projectId);
 
         if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
 			return redirectToProjectDetails(projectId);
 		}
 
-    	ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
-        
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-
         populateProjectManagerModel(model, projectId, form, applicationResource);
-    	
+
         return "project/project-manager";
     }
 
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
-    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId, @ModelAttribute ProjectManagerForm form,
+    public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm form,
                                        BindingResult bindingResult, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectResource projectResource = projectService.getById(projectId);
-
-        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
-			return redirectToProjectDetails(projectId);
-		}
-        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, form);
 
         if(bindingResult.hasErrors()) {
-        	populateProjectManagerModel(model, projectId, form, applicationResource);
-            return "project/project-manager";
+            form.setBindingResult(bindingResult);
+            return failureView.get();
         }
-        
-        if(!projectManagerSelectionIsInLeadPartnerOrganisation(projectId, form.getProjectManager())) {
-        	populateProjectManagerModel(model, projectId, form, applicationResource);
-            return "project/project-manager";
-        }
-        
-        projectService.updateProjectManager(projectId, form.getProjectManager());
-    	
-        return redirectToProjectDetails(projectId);
+
+        ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, form.getProjectManager());
+        return handleErrorsOrRedirectToProjectOverview("projectManager", projectId, model, form, bindingResult, updateResult, failureView);
     }
 
 	private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
 
         Future<ProcessRoleResource> processRoleResource = getProjectManagerProcessRole(projectId);
-    	
+
         ProjectManagerForm form = new ProjectManagerForm();
         if(processRoleResource != null) {
 			form.setProjectManager(processRoleResource.get().getUser());
@@ -274,47 +271,44 @@ public class ProjectDetailsController {
 
     private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
 			ApplicationResource applicationResource) {
-		ProjectResource projectResource = projectService.getById(projectId);
-		
-		ProcessRoleResource lead = userService.getLeadApplicantProcessRoleOrNull(applicationResource);
-		List<ProcessRoleResource> leadPartnerUsers = userService.getLeadPartnerOrganisationProcessRoles(applicationResource);
-		List<ProcessRoleResource> leadPartnerUsersExcludingLead = leadPartnerUsers.stream()
-				.filter(prr -> !lead.getUser().equals(prr.getUser()))
-				.collect(Collectors.toList());
-		
-		List<ProcessRoleResource> allUsers = Stream.of(asList(lead), leadPartnerUsersExcludingLead)
-				.flatMap(x -> x.stream())
-				.collect(Collectors.toList());
 
-		model.addAttribute("allUsers", allUsers);
+		ProjectResource projectResource = projectService.getById(projectId);
+        List<ProjectUserResource> leadPartners = getLeadPartners(projectId);
+
+        model.addAttribute("allUsers", leadPartners);
 		model.addAttribute("project", projectResource);
 		model.addAttribute("app", applicationResource);
-		model.addAttribute("form", form);
+		model.addAttribute(FORM_ATTR_NAME, form);
 	}
 
-	private boolean projectManagerSelectionIsInLeadPartnerOrganisation(Long projectId, Long projectManager) {
-		
-		if(projectManager == null) {
-			return false;
-		}
-
-        return userIsLeadPartner(projectId, projectManager);
-	}
+    private List<ProjectUserResource> getLeadPartners(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        return simpleFilter(projectUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
+    }
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        return doViewStartDate(model, projectId, form, loggedInUser, true);
+    }
+
+    private String doViewStartDate(Model model, final Long projectId,
+                                   ProjectDetailsStartDateForm form,
+                                   UserResource loggedInUser,
+                                   boolean addDefaultStartDate) {
+
         ProjectResource projectResource = projectService.getById(projectId);
 
-        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
-            return redirectToProjectDetails(projectId);
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+
+        if (addDefaultStartDate) {
+            LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
+            form.setProjectStartDate(defaultStartDate);
         }
 
-        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
-        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
-        form.setProjectStartDate(defaultStartDate);
         return "project/details-start-date";
     }
 
@@ -327,7 +321,7 @@ public class ProjectDetailsController {
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> viewStartDate(model, projectId, form, loggedInUser));
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> doViewStartDate(model, projectId, form, loggedInUser, false));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
@@ -401,8 +395,7 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
-                                BindingResult bindingResult) {
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
         form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
@@ -429,11 +422,18 @@ public class ProjectDetailsController {
         return viewCurrentAddressForm(model, form, project);
     }
 
+    @RequestMapping(value = "/{projectId}/details/submit", method = RequestMethod.POST)
+    public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
+        ServiceResult<Void> serviceResult = projectService.setApplicationDetailsSubmitted(projectId);
+        return redirectToProjectDetails(projectId);
+    }
+
     private String handleErrorsOrRedirectToProjectOverview(
             String fieldName, long projectId, Model model,
             BindingResultTarget form, BindingResult bindingResult,
             ServiceResult<?> result,
             Supplier<String> viewSupplier) {
+
         if (result.isFailure()) {
             bindAnyErrorsToField(result, fieldName, bindingResult, form);
             model.addAttribute(FORM_ATTR_NAME, form);
@@ -522,13 +522,7 @@ public class ProjectDetailsController {
     }
 
     private boolean userIsLeadPartner(Long projectId, Long userId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        return !simpleFilter(projectUsers, projectUser -> userHasLeadPartnerRole(userId, leadOrganisation.getId(), projectUser)).isEmpty();
-    }
-
-    private boolean userHasLeadPartnerRole(Long userId, Long leadOrganisationId, ProjectUserResource projectUser) {
-        return projectUser.getUser().equals(userId) && projectUser.getOrganisation().equals(leadOrganisationId) && PARTNER.getName().equals(projectUser.getRoleName());
+        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }
 
     private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {

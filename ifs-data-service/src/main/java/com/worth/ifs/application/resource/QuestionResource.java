@@ -120,14 +120,6 @@ public class QuestionResource {
         return this.priority;
     }
 
-    public boolean getNeedingAssessorScore() {
-        return this.needingAssessorScore;
-    }
-
-    public boolean getNeedingAssessorFeedback() {
-        return this.needingAssessorFeedback;
-    }
-
     public String getAssessorConfirmationQuestion() {
         return this.assessorConfirmationQuestion;
     }
@@ -143,6 +135,71 @@ public class QuestionResource {
 
     public List<Long> getCosts() {
         return this.costs;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    public Boolean getAssignEnabled() {
+        return this.assignEnabled;
+    }
+
+    public boolean isNeedingAssessorFeedback() {
+        return needingAssessorFeedback;
+    }
+
+    public void setNeedingAssessorFeedback(boolean needingAssessorFeedback) {
+        this.needingAssessorFeedback = needingAssessorFeedback;
+    }
+
+    public boolean isNeedingAssessorScore() {
+        return needingAssessorScore;
+    }
+
+    public void setNeedingAssessorScore(boolean needingAssessorScore) {
+        this.needingAssessorScore = needingAssessorScore;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public void setAssessorConfirmationQuestion(String assessorConfirmationQuestion) {
+        this.assessorConfirmationQuestion = assessorConfirmationQuestion;
+    }
+
+    public void setCompetition(Long competition) {
+        this.competition = competition;
+    }
+
+    public void setSection(Long section) {
+        this.section = section;
+    }
+
+    public void setCosts(List<Long> costs) {
+        this.costs = costs;
+    }
+
+    public void setQuestionNumber(String questionNumber) {
+        this.questionNumber = questionNumber;
     }
 
     @Override
@@ -203,70 +260,5 @@ public class QuestionResource {
                 .append(costs)
                 .append(questionNumber)
                 .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    public Boolean getAssignEnabled() {
-        return this.assignEnabled;
-    }
-
-    public boolean isNeedingAssessorScore() {
-        return this.needingAssessorScore;
-    }
-
-    public boolean isNeedingAssessorFeedback() {
-        return this.needingAssessorFeedback;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    public void setNeedingAssessorScore(boolean needingAssessorScore) {
-        this.needingAssessorScore = needingAssessorScore;
-    }
-
-    public void setNeedingAssessorFeedback(boolean needingAssessorFeedback) {
-        this.needingAssessorFeedback = needingAssessorFeedback;
-    }
-
-    public void setAssessorConfirmationQuestion(String assessorConfirmationQuestion) {
-        this.assessorConfirmationQuestion = assessorConfirmationQuestion;
-    }
-
-    public void setCompetition(Long competition) {
-        this.competition = competition;
-    }
-
-    public void setSection(Long section) {
-        this.section = section;
-    }
-
-    public void setCosts(List<Long> costs) {
-        this.costs = costs;
-    }
-
-    public void setQuestionNumber(String questionNumber) {
-        this.questionNumber = questionNumber;
     }
 }

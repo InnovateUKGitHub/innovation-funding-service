@@ -31,13 +31,10 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return new QuestionBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedNames("Section "))
+                .withNeedingAssessorFeedback(true)
                 .withNeedingAssessorScore(true)
                 .withPriority(0)
                 .withQuestionNumber("1");
-    }
-
-    public QuestionBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
-        return with(question -> setField("needingAssessorScore", needingAssessorScore, question));
     }
 
     public QuestionBuilder withQuestionNumber(String value) {
@@ -78,6 +75,14 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withDescription(String... descriptions) {
         return withArray((description, object) -> setField("description", description, object), descriptions);
+    }
+
+    public QuestionBuilder withNeedingAssessorFeedback(Boolean... needingAssessorFeedbacks) {
+        return withArray((needingAssessorFeedback, object) -> setField("needingAssessorFeedback", needingAssessorFeedback, object), needingAssessorFeedbacks);
+    }
+
+    public QuestionBuilder withNeedingAssessorScore(Boolean... needingAssessorScores) {
+        return withArray((needingAssessorScore, object) -> setField("needingAssessorScore", needingAssessorScore, object), needingAssessorScores);
     }
 
     public QuestionBuilder withAssessorGuidanceQuestion(String... assessorGuidanceQuestions) {

@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -13,27 +14,25 @@ import java.util.Map;
 public class AssessmentFeedbackViewModel {
 
     private final CompetitionResource competition;
+    private final ApplicationResource application;
     private final QuestionResource question;
     private final List<FormInputResource> questionFormInputs;
     private final Map<String, String> questionFormInputResponses;
 
-    public AssessmentFeedbackViewModel(CompetitionResource competition, QuestionResource question, List<FormInputResource> questionFormInputs, Map<String, String> questionFormInputResponses) {
+    public AssessmentFeedbackViewModel(CompetitionResource competition, ApplicationResource application, QuestionResource question, List<FormInputResource> questionFormInputs, Map<String, String> questionFormInputResponses) {
         this.competition = competition;
+        this.application = application;
         this.question = question;
         this.questionFormInputs = questionFormInputs;
         this.questionFormInputResponses = questionFormInputResponses;
     }
 
-    public long getDaysLeftPercentage() {
-        return competition.getAssessmentDaysLeftPercentage();
+    public ApplicationResource getApplication() {
+        return application;
     }
 
-    public long getDaysLeft() {
-        return competition.getAssessmentDaysLeft();
-    }
-
-    public String getTitle() {
-        return question.getShortName();
+    public CompetitionResource getCompetition() {
+        return competition;
     }
 
     public QuestionResource getQuestion() {
@@ -46,5 +45,17 @@ public class AssessmentFeedbackViewModel {
 
     public Map<String, String> getQuestionFormInputResponses() {
         return questionFormInputResponses;
+    }
+
+    public boolean isFeedbackRequired() {
+        return question.isNeedingAssessorFeedback();
+    }
+
+    public long getDaysLeftPercentage() {
+        return competition.getAssessmentDaysLeftPercentage();
+    }
+
+    public long getDaysLeft() {
+        return competition.getAssessmentDaysLeft();
     }
 }
