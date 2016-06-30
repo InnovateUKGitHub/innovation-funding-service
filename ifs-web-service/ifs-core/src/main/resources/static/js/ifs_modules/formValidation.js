@@ -1,3 +1,7 @@
+
+
+
+
 IFS.formValidation = (function(){
     "use strict";
     var s;
@@ -30,8 +34,7 @@ IFS.formValidation = (function(){
                   lowercase : 'Password must contain at least one lower case letter',
                   uppercase : 'Password must contain at least one upper case letter',
                   number : 'Password must contain at least one number',
-                  firstname : 'Password should not contain your first name',
-                  lastname : 'Password should not contain your last name',
+                  name : 'Password should not contain either your first or last name',
                   organisation : 'Password should not contain your organisation name'
                 }
             },
@@ -160,19 +163,17 @@ IFS.formValidation = (function(){
                   if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.number); }
               }
 
-              var nameCheck = ['firstname','lastname'];
-              jQuery(nameCheck).each(function(index,value){
-                var name = jQuery(s.passwordPolicy.fields[value]).val();
-                if(name.replace(' ','').length){
-                  if(password.toLowerCase().indexOf(name.toLowerCase()) > -1){
-                    if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid[value]);}
-                    confirmsToPasswordPolicy = false;
-                  }
-                  else {
-                      if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid[value]);}
-                  }
+              var firstname = jQuery(s.passwordPolicy.fields.firstname).val();
+              var lastname = jQuery(s.passwordPolicy.fields.lastname).val();
+              if(firstname.replace(' ','').length || lastname.replace(' ','').length){
+                if((password.toLowerCase().indexOf(firstname.toLowerCase()) > -1) || (password.toLowerCase().indexOf(lastname.toLowerCase()) > -1)){
+                  if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.name);}
+                  confirmsToPasswordPolicy = false;
                 }
-              });
+                else {
+                    if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.name);}
+                }
+              }
             }
             return confirmsToPasswordPolicy;
         },

@@ -74,13 +74,30 @@ Lead partner can see the overview of the project details
 
 Partner nominates a finance contact
     [Documentation]    INFUND-3162
-    When the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}/details
-    And the user should see the text in the page    Finance contacts
-    And wait until page contains                    Partner
-    And the user clicks the button/link             link=Cheeseco
-    Then the user should see the text in the page   Finance contact
-    And the user selects the radio button           financeContact     financeContact2
-    And the user clicks the button/link             jQuery=.button:contains("Save")
+    [Setup]  Logout as user
+    When Log in as user                                     pete.tom@egg.com    Passw0rd
+    Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
+    And the user clicks the button/link                     link=Project details
+    Then the user should see the text in the page           Finance contacts
+    And wait until page contains                            Partner
+    And the user clicks the button/link                     link=EGGS
+    And the user selects the radio button                   financeContact     financeContact1
+    And the user clicks the button/link                     jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
+    And the matching finance-contact-status is updated      project-details-finance    2    yes
+    Then Logout as user
+    When Log in as user                                     worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
+    And the user clicks the button/link                     link=Project details
+    Then the user should see the text in the page           Finance contacts
+    And wait until page contains                            Partner
+    And the user clicks the button/link                     link=Cheeseco
+    Then the user should see the text in the page           Finance contact
+    And the user selects the radio button                   financeContact     financeContact2
+    And the user clicks the button/link                     jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
+    And the matching finance-contact-status is updated      project-details-finance    3    yes
+
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
@@ -121,6 +138,7 @@ Lead partner can change the project address
     Then the user should see the text in the page    You need to select a project address before you can continue
     When the user selects the radio button      addressType       ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     Then the user should see the element    css=#select-address-block
     And the user clicks the button/link    css=#select-address-block > button
@@ -210,6 +228,12 @@ the user should see a validation error
     Focus    jQuery=button:contains("Save")
     sleep    300ms
     Then the user should see an error    ${ERROR1}
+
+the matching finance-contact-status is updated
+    [Arguments]    ${id}    ${COLUMN}    ${STATUS}
+    the user should see the element    ${id}
+    the user should see the element    jQuery=#${id} tr:nth-of-type(${COLUMN}) .${STATUS}
+
 
 status of the start date should be Yes
     Element Should Contain    id=start-date-status    Yes
