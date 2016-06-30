@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.question.shortName) ? 'Assessment' : model.question.shortName}" th:remove="tag" />
     </head>
@@ -59,7 +59,12 @@
                                     <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
                                 </label>
 
-                                <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
+                                <details th:unless="${#strings.isEmpty(model.question.assessorGuidanceQuestion)}">
+                                    <summary>
+                                        <span class="summary" th:text="${model.question.assessorGuidanceQuestion}" />
+                                    </summary>
+                                    <div class="panel-indent" ifs:utext="${model.question.assessorGuidanceAnswer}" />
+                                </details>
 
                                 <div class="textarea-wrapped word-count">
                                     <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" th:text="*{value}" aria-hidden="true"></textarea>
