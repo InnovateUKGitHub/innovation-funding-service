@@ -12,10 +12,18 @@ import java.util.List;
  */
 public class FlywayToFromVersionCallBack {
 
-    private final MergeRequest request;
-    private List<Pair<String, List<Integer>>> toVersions = new ArrayList<Pair<String, List<Integer>>>();
-    private List<Pair<String, List<Integer>>> fromVersions = new ArrayList<Pair<String, List<Integer>>>();
     private static FlywayVersionComparator FLYWAY_VERSION_COMPARATOR = new FlywayVersionComparator();
+    private final MergeRequest request;
+
+    /**
+     * List of Flyway patch numbers and file names on the branch being pulled to.
+     */
+    private List<Pair<String, List<Integer>>> toVersions = new ArrayList<Pair<String, List<Integer>>>();
+
+    /**
+     * List of Flyway patch numbers and file names on the branch which the pull request came from.
+     */
+    private List<Pair<String, List<Integer>>> fromVersions = new ArrayList<Pair<String, List<Integer>>>();
 
     public FlywayToFromVersionCallBack(final MergeRequest request) {
         this.request = request;

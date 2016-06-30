@@ -23,8 +23,6 @@ import static org.apache.commons.lang3.tuple.Pair.of;
  */
 public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallback {
 
-    private final List<Pair<String, List<Integer>>> versionNumbers = new ArrayList<Pair<String, List<Integer>>>();
-    private final Consumer<List<Pair<String, List<Integer>>>> callBack;
     private static final String FLYWAY_MAJOR_PATCH = "V([0-9]+)";
     private static final Pattern FLYWAY_MAJOR_PATCH_PATTERN = Pattern.compile(FLYWAY_MAJOR_PATCH);
     private static final String FLYWAY_MINOR_PATCH = "(?:_([0-9]+))";
@@ -37,6 +35,8 @@ public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallbac
             return new FlywayVersionComparator().compare(o1.getValue(), o2.getValue());
         }
     };
+    private final List<Pair<String, List<Integer>>> versionNumbers = new ArrayList<Pair<String, List<Integer>>>();
+    private final Consumer<List<Pair<String, List<Integer>>>> callBack;
 
     public FlywayVersionContentTreeCallback(final Consumer<List<Pair<String, List<Integer>>>> callBack) {
         this.callBack = callBack;
