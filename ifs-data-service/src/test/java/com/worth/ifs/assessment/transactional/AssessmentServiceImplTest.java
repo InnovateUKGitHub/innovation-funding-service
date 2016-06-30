@@ -18,11 +18,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private final AssessmentService assessmentService = new AssessmentServiceImpl();
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
     @Test
     public void findById() throws Exception {
         final Long assessmentId  = 1L;

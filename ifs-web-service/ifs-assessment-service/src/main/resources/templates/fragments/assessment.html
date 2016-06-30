@@ -9,7 +9,7 @@
           th:class="${linkClass != null ? linkClass : ''}"
           th:href="${linkUrl}"
           th:text="${linkTitle}" />
-        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
+          <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
         </div>
     </div>
@@ -49,5 +49,34 @@
     </fieldset>
 </div>
 
+
+<!-- =================== Application details ============================== -->
+<div th:fragment="application_details (currentApplication, applicationOrganisations, pendingOrganisationNames, leadOrganisation)" th:remove="tag">
+    <div class="grid-row">
+        <div class="column-half">
+            <h3 class="heading-small">Project title</h3>
+            <p th:text="${currentApplication.name}" />
+            <h3 class="heading-small">Lead organisation</h3>
+            <p th:text="${leadOrganisation.name}" />
+            <h3 class="heading-small">Partners</h3>
+            <ul class="list-bullet">
+                <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
+                    <span th:text="${organisation.getName()}"></span>
+                </li>
+                <li th:each="pendingOrganisationName : ${pendingOrganisationNames}">
+                    <span th:text="${pendingOrganisationName}"></span>
+                    <small>(pending)</small>
+                </li>
+            </ul>
+        </div>
+        <div class="column-half">
+            <h3 class="heading-small">Project timescales</h3>
+            <p>Project start date:<br/>
+            <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
+            </p>
+            <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+        </div>
+    </div>
+</div>
 
 </html>

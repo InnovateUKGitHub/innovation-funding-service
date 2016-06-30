@@ -17,9 +17,9 @@ public class AssessmentFeedbackViewModel {
     private final ApplicationResource application;
     private final QuestionResource question;
     private final List<FormInputResource> questionFormInputs;
-    private final Map<String, String> questionFormInputResponses;
+    private final Map<Long, String> questionFormInputResponses;
 
-    public AssessmentFeedbackViewModel(CompetitionResource competition, ApplicationResource application, QuestionResource question, List<FormInputResource> questionFormInputs, Map<String, String> questionFormInputResponses) {
+    public AssessmentFeedbackViewModel(CompetitionResource competition, ApplicationResource application, QuestionResource question, List<FormInputResource> questionFormInputs, Map<Long, String> questionFormInputResponses) {
         this.competition = competition;
         this.application = application;
         this.question = question;
@@ -43,7 +43,7 @@ public class AssessmentFeedbackViewModel {
         return questionFormInputs;
     }
 
-    public Map<String, String> getQuestionFormInputResponses() {
+    public Map<Long, String> getQuestionFormInputResponses() {
         return questionFormInputResponses;
     }
 
