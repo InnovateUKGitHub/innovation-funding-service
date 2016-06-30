@@ -79,7 +79,7 @@ Partner nominates a finance contact
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
     And the user clicks the button/link                     link=Project details
     Then the user should see the text in the page           Finance contacts
-    And wait until page contains                            Partner
+    And the user should see the text in the page            Partner
     And the user clicks the button/link                     link=EGGS
     And the user selects the radio button                   financeContact     financeContact1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
@@ -90,7 +90,7 @@ Partner nominates a finance contact
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
     And the user clicks the button/link                     link=Project details
     Then the user should see the text in the page           Finance contacts
-    And wait until page contains                            Partner
+    And the user should see the text in the page            Partner
     And the user clicks the button/link                     link=Cheeseco
     Then the user should see the text in the page           Finance contact
     And the user selects the radio button                   financeContact     financeContact2
@@ -233,7 +233,6 @@ the matching finance-contact-status is updated
     [Arguments]    ${id}    ${COLUMN}    ${STATUS}
     the user should see the element    ${id}
     the user should see the element    jQuery=#${id} tr:nth-of-type(${COLUMN}) .${STATUS}
-
 
 status of the start date should be Yes
     Element Should Contain    id=start-date-status    Yes
