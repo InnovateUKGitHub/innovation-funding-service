@@ -12,11 +12,11 @@ import static com.worth.ifs.assessment.builder.AssessmentFeedbackResourceBuilder
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<AssessmentFeedbackController> {
@@ -32,7 +32,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void getAllAssessmentFeedback() throws Exception {
+    public void testGetAllAssessmentFeedback() throws Exception {
         final List<AssessmentFeedbackResource> expected = newAssessmentFeedbackResource()
                 .build(2);
 
@@ -50,7 +50,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void getAssessmentFeedbackByAssessmentAndQuestion() throws Exception {
+    public void testGetAssessmentFeedbackByAssessmentAndQuestion() throws Exception {
         final AssessmentFeedbackResource expected = newAssessmentFeedbackResource()
                 .build();
 
@@ -67,7 +67,37 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void updateFeedbackValue() throws Exception {
+    public void testCreateAssessmentFeedback() throws Exception {
+        final AssessmentFeedbackResource assessmentFeedback = newAssessmentFeedbackResource()
+                .build();
+
+        when(assessmentFeedbackServiceMock.createAssessmentFeedback(assessmentFeedback)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/assessment-feedback/")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessmentFeedback)))
+                .andExpect(status().isCreated());
+
+        verify(assessmentFeedbackServiceMock, only()).createAssessmentFeedback(assessmentFeedback);
+    }
+
+    @Test
+    public void testUpdateAssessmentFeedback() throws Exception {
+        final AssessmentFeedbackResource assessmentFeedback = newAssessmentFeedbackResource()
+                .build();
+
+        when(assessmentFeedbackServiceMock.updateAssessmentFeedback(assessmentFeedback.getId(), assessmentFeedback)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment-feedback/{assessmentFeedbackId}", assessmentFeedback.getId())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessmentFeedback)))
+                .andExpect(status().isOk());
+
+        verify(assessmentFeedbackServiceMock, only()).updateAssessmentFeedback(assessmentFeedback.getId(), assessmentFeedback);
+    }
+
+    @Test
+    public void testUpdateFeedbackValue() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final String value = "Blah";
@@ -82,7 +112,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void updateFeedbackScore() throws Exception {
+    public void testUpdateFeedbackScore() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final Integer score = 10;

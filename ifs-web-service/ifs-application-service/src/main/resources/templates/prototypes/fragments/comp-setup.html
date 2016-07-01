@@ -6,23 +6,36 @@
 <div th:fragment="prototype-comp-dashboard-navigation">
     <ul class="inline-nav cf">
         <li id="section-1" th:class="${(param.section == null or param.section[0] == 'live' ? 'selected' : '')}"><a th:href="@{'?section=live'}">Live (18)</a></li>
+        <li id="section-1" th:class="${(param.section != null and param.section[0] == 'setup' ? 'selected' : '')}"><a th:href="@{'?section=setup'}">Project set up (2)</a></li>
         <li id="section-2" th:class="${(param.section != null and param.section[0] == 'upcoming' ? 'selected' : '')}"><a th:href="@{'?section=upcoming'}">Upcoming (4)</a></li>
-        <li id="section-3" th:class="${(param.section != null and param.section[0] == 'archive' ? 'selected' : '')}"><a th:href="@{'?section=archive'}">Archive (27)</a></li>
+        <li id="section-3" th:class="${(param.section != null and param.section[0] == 'complete' ? 'selected' : '')}"><a th:href="@{'?section=complete'}">Complete (27)</a></li>
     </ul>
 </div>
 
 <!-- =================Tabbed navigation competion setup=========================== -->
 
 <div th:fragment="prototype-comp-setup-navigation">
-    <ul class="inline-nav cf">
-        <li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><a th:href="@{'?section=essential'}">Initial details</a></li>
-        <li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><a th:href="@{'?section=funding'}">Funding info</a></li>
-        <li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><a th:href="@{'?section=eligibility'}">Eligibility</a></li>
-        <li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><a th:href="@{'?section=milestones'}">Milestones</a></li>
-        <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><a th:href="@{'?section=assessors'}">Assessors</a></li>
-        <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><a th:href="@{'?section=application'}">Application form</a></li>
-        <li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><a th:href="@{'?section=finance'}">Finance</a></li>
-    </ul>
+
+    <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
+
+        <ul class="list-overview">
+            <li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=essential'}">Initial details</a></h3></li>
+            <li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=funding'}">Funding information</a></h3></li>
+            <li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=eligibility'}">Eligibility</a></h3></li>
+            <li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=milestones'}">Milestones</a></h3></li>
+            <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=application'}">Application questions</a></h3></li>
+            <li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>
+            <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=assessors'}">Assessors</a></h3></li>
+            <li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>
+        
+        </ul>
+
+        <div class="extra-margin">
+            <a href="#" class="button no-margin-right" id="compCTA">CTA</a>
+        </div>
+
+    </div>
+
 </div>
 
 <!-- =================Section: Done / edit buttons=========================== -->
@@ -32,7 +45,9 @@
     <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
     <input type="hidden" id="status" name="status" th:value="${(param.status != null and param.status[0] == 'done' ? 'edit' : 'done')}" />
     <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status != null and param.status[0] == 'done'}">Done</button>
-    <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit'}">Edit</button>
+    <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>
+
+
 </div>
 
 <!-- =================Section: Dashboard competitions =========================== -->
@@ -43,50 +58,58 @@
         
         <h2 class="heading-medium">Open (5)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Technology inspired'}, 
-                rowType=${'Advanced materials'},
-                rowUrl=${'/prototypes/1348-open-applications'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Infrastructure'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                rowType=${'Advanced therapies'}, 
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Portable renewable energy generation'}, 
-                rowType=${'Nuclear'}, 
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Managing energy on marine vessels'}, 
-                rowType=${'Precision medicine'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Energy catalyst'}, 
-                rowType=${'Electronics, sensors and photonics'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Technology inspired'},
+                    rowType=${'Programme'},
+                    rowSector=${'Advanced materials'},
+                    rowUrl=${'/prototypes/1348-open-applications'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'Managed service'},
+                    rowSector=${'Infrastructure'},
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'SBRI'},
+                    rowSector=${'Advanced therapies'}, 
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Portable renewable energy generation'},
+                    rowType=${'Special'},
+                    rowSector=${'Nuclear'}, 
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Managing energy on marine vessels'},
+                    rowType=${'Programme'}, 
+                    rowSector=${'Precision medicine'},
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Energy catalyst'},
+                    rowType=${'Programme'}, 
+                    rowSector=${'Electronics, sensors and photonics'},
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
@@ -94,15 +117,18 @@
         
         <h2 class="heading-medium">Closed (1)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Portable renewable energy generation'}, 
-                rowType=${'Cyber security'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                    rowType=${'Programme'},
+                    rowSector=${'Emerging &#38; enabling technology'},
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
@@ -110,15 +136,7 @@
         
         <h2 class="heading-medium">In assessment (1)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Resource effieciency'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-        </ul>
+        
 
     </section>
 
@@ -126,15 +144,18 @@
         
         <h2 class="heading-medium">Panel (1)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Portable renewable energy generation'}, 
-                rowType=${'Agri productivity'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                    rowType=${'Special'},
+                    rowSector=${'Manufacturing &#38; materials'},
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
@@ -142,34 +163,51 @@
         
         <h2 class="heading-medium">Inform (1)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Urban living'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'Managed service'},
+                    rowSector=${'Health &#38; life sciences'},
+                    rowUrl=${'#'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
-     <section>
+</div>
+
+<div th:fragment="prototype-dashboard-setup">
+    
+    <section>
         
-        <h2 class="heading-medium">Project set up (1)</h2>
+        <h2 class="heading-medium">Project set up (2)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Infrastructure'},
-                rowUrl=${'#'},
-                rowStatus=${'132 applications'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'Programme'},
+                    rowSector=${'Manufacturing &#38; materials'},
+                    rowUrl=${'#'},
+                    rowStatus=${'12 projects'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Managed service'},
+                    rowSector=${'Open'},
+                    rowUrl=${'#'},
+                    rowStatus=${'23 projects'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
-
 
 </div>
 
@@ -179,29 +217,35 @@
         
         <h2 class="heading-medium">In preparation (3)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Infrastructure'},
-                rowUrl=${'#'},
-                rowStatus=${' '}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Connected digtial additive manufacturing'}, 
-                rowType=${'Emerging tech &#38; industries'}, 
-                rowUrl=${'#'},
-                rowStatus=${' '}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Portable renewable energy generation'}, 
-                rowType=${'Energy systems'}, 
-                rowUrl=${'#'},
-                rowStatus=${'Open: 12/07/2016'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:unless="${param.comp != null and param.comp[0] == 'saveOpen'}"
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Special'},
+                    rowSector=${'Emerging tech &#38; industries'}, 
+                    rowUrl=${'/prototypes/2469-comp-setup?compStatus=draft'},
+                    rowStatus=${' '}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'Programme'},
+                    rowSector=${''},
+                    rowUrl=${'#'},
+                    rowStatus=${' '}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                    rowType=${'Special'},
+                    rowSector=${'Manufacturing &#38; materials'},
+                    rowUrl=${'#'},
+                    rowStatus=${'12/07/2016'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
@@ -209,93 +253,117 @@
         
         <h2 class="heading-medium">Ready to open (1)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Portable renewable energy generation'}, 
-                rowType=${'Offshore renewable energy'}, 
-                rowUrl=${'#'},
-                rowStatus=${'Open: 12/07/2016'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:unless="${param.comp != null and param.comp[0] == 'saveDraft' or param.comp == null}"
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Special'},
+                    rowSector=${'Emerging tech &#38; industries'}, 
+                    rowUrl=${'/prototypes/2469-comp-setup?compStatus=ready'},
+                    rowStatus=${' '}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                    rowType=${'Managed service'},
+                    rowSector=${'Offshore renewable energy'}, 
+                    rowUrl=${'#'},
+                    rowStatus=${'12/07/2016'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
     <div class="extra-margin">
-        <a href="/prototypes/2469-comp-setup?section=essential&amp;compPaf=1234" class="button button-large">Create competition</a>
+        <a href="/prototypes/2469-comp-setup" class="button button-large">Create competition</a>
     </div>
 </div>
 
-<div th:fragment="prototype-dashboard-archive">
+<div th:fragment="prototype-dashboard-complete">
 
-    <ul class="list-overview">
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Solving problems with data'}, 
-            rowType=${'Advanced therapies'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-       <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-            rowType=${'Precision medicine'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
-            rowType=${'Medicines technology'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Solving problems with data'}, 
-            rowType=${'Bioscience'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-            rowType=${'Agri productivity'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Solving problems with data'}, 
-            rowType=${'Enhanced food quality'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-            rowType=${'Transport systems'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Solving problems with data'}, 
-            rowType=${'Urban living'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-            rowType=${'Infrastructure'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Solving problems with data'}, 
-            rowType=${'Energy systems'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-        <th:block 
-            th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-            th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-            rowType=${'Nuclear'}, 
-            rowStatus=${'Archived: 12/06/2016'}">
-        </th:block>
-    </ul>
+    <h2 class="heading-medium">Complete (27)</h2>
+
+        <ul class="list-overview">
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Programme'}, 
+                rowSector=${'Advanced therapies'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+           <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Managed service'},
+                rowSector=${'Precision medicine'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
+                rowType=${'SBRI'},
+                rowSector=${'Medicines technology'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'},
+                rowType=${'Special'},
+                rowSector=${'Bioscience'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Agri productivity'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'},
+                rowType=${'Special'}, 
+                rowSector=${'Enhanced food quality'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Programme'}, 
+                rowSector=${'Transport systems'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'Managed service'}, 
+                rowSector=${'Urban living'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Special'},
+                rowSector=${'Health &#38; life sciences'},  
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Solving problems with data'}, 
+                rowType=${'SBRI'},
+                rowSector=${'Health &#38; life sciences'},
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+            <th:block 
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                rowType=${'Managed service'},
+                rowType=${'Nuclear'}, 
+                rowStatus=${'12/06/2016'}">
+            </th:block>
+        </ul>
 
 </div>
 
@@ -367,16 +435,28 @@
     <li>
         <h3 class="heading-small"><a th:href="${rowUrl}" th:text="${rowTitle}">ROW TITLE</a></h3>
         <p th:text="${rowType}">TYPE</p>
+        <p th:text="${rowSector}">SECTOR</p>
         <p th:text="${rowStatus}">STATUS</p>
     </li>
+
+</div>
+
+<!-- =================Section: Blank index page=========================== -->
+
+<div th:fragment="prototype-section-index-page">
+    
 
 </div>
 
 <!-- =================Section: Essential information=========================== -->
 
 <div th:fragment="prototype-section-essential">
-    <h2 class="heading-medium no-margin-top">Initial details</h2>
     
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Initial details</h1>
+    </div>
+
     <div class="panel-indent">
         This will create a new Competition - you will be able to specify more details as you proceed
     </div>
@@ -390,7 +470,7 @@
                 <label class="form-label" for="compTitle">
                     <span class="form-label-bold">Competition title</span>
                 </label>
-                <input class="form-control width-x-large" id="compTitle" name="compTitle" th:readonly="${param.status != null and param.status[0] == 'done'}" th:value="${(param.compTitle != null ? param.compTitle[0] : '')}"/>
+                <input class="form-control width-x-large" id="compTitle" name="compTitle" value="" />
             </div>
 
             <div class="form-group">
@@ -536,7 +616,7 @@
             <dl class="standard-definition-list">
                 
                 <dt>Competition title</dt>
-                <dd>A newly created competition</dd>
+                <dd>Connected Digital Additive Manufacturing</dd>
 
                 <dt>Competition type</dt>
                 <dd>Programme</dd>
@@ -594,43 +674,72 @@
 <!-- =================Section: Additional information=========================== -->
 
 <div th:fragment="prototype-section-funding">
-    <h2 class="heading-medium no-margin-top">Funding information</h2>
+
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Funding information</h1>
+    </div>
 
     <form>
         <fieldset  id="section-2-edit">
             <legend class="visuallyhidden">Funding information</legend>
             
-            
-            <div class="grid-row">
+
+            <div class="grid-row" id="co-funder-row-1">
                 <div class="column-half">
-                    <div class="form-group no-margin">
-                        <label class="form-label" for="comp-co-funders">
+                    <div class="form-group">
+                        <label class="form-label" for="comp-co-funder-1">
                             <span class="form-label-bold">Funder</span>
                         </label>
-                    <input class="form-control width-x-large" id="comp-co-funders" name="comp-co-funders" />
+                    <input class="form-control width-x-large" id="comp-co-funder-1" name="comp-co-funder-1" th:value="${(param.action != null and param.action[0] == 'addCofunder' ? 'Innovate UK' : '')}" />
                     </div>
                 </div>
 
                 <div class="column-half">
-                    <div class="form-group no-margin">
-                        <label class="form-label" for="comp-co-funders-budget">
+                    <div class="form-group">
+                        <label class="form-label" for="comp-co-funders-budget-1">
                             <span class="form-label-bold">Budget</span>
                         </label>
-                        <input class="form-control width-large" id="comp-co-funders-budget" name="comp-co-funders-budget" />
-                    </div>
-
-                    <div class="alignright">
-                        <a href="#">+Add co-funder</a>
+                        <input class="form-control width-large" id="comp-co-funders-budget-1" name="comp-co-funders-budget-1" th:value="${(param.action != null and param.action[0] == 'addCofunder' ? '500,000' : '')}" />
                     </div>
                 </div>
             </div>
+
+            <th:block th:if="${param.action != null and param.action[0] == 'addCofunder'}">
+
+                <div class="grid-row" id="co-funder-row-2">
+                    <div class="column-half">
+                        <div class="form-group">
+                            <label class="form-label visuallyhidden" for="comp-co-funder-2">
+                                <span class="form-label-bold">Funder</span>
+                            </label>
+                        <input class="form-control width-x-large" id="comp-co-funder-2" name="comp-co-funder-1" value="ATI" />
+                        </div>
+                    </div>
+
+                    <div class="column-half">
+                        <div class="form-group">
+                            <label class="form-label visuallyhidden" for="comp-co-funders-budget-2">
+                                <span class="form-label-bold">Budget</span>
+                            </label>
+                            <input class="form-control width-large" id="comp-co-funders-budget-2" name="comp-co-funders-budget-2" value="800,000" />
+                        </div>
+
+                    </div>
+                </div>
+
+            </th:block>
 
             <div class="grid-row">
                 <div class="column-half">
                     &nbsp;
                 </div>
                 <div class="column-half">
-                    <p class="heading-small no-margin">Total: &pound; 0</p>
+                    <p class="heading-small no-margin">Total: &pound; <span th:text="${(param.action != null and param.action[0] == 'addCofunder' ? '1,300,000' : '0')}">TOTAL</span></p>
+
+                    <div class="alignright">
+                        <a th:href="@{''(section=funding, action=addCofunder)}" id="add-cofunder">+Add co-funder</a>
+                    </div>
                 </div>
             </div>
 
@@ -666,6 +775,7 @@
                         <span class="form-label-bold">Competition code</span>
                     </label>
                     <input class="form-control width-large" id="compCode" name="compCode" />
+                    <a href="#" class="button button-secondary">Generate code</a>
                 </div>
 
             </fieldset>
@@ -700,7 +810,7 @@
         <li class="prev">
             <a rel="prev" title="Navigate to next part" th:href="@{'?section=essential'}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Essential information</span>
+                <span class="pagination-part-title">Initial details</span>
             </a>
         </li>
         <li class="next">
@@ -716,7 +826,11 @@
 <!-- =================Section: Eligibility=========================== -->
 
 <div th:fragment="prototype-section-eligibility">
-    <h2 class="heading-medium no-margin-top">Eligibility</h2>
+
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Eligibility</h1>
+    </div>
 
     <form>
         <fieldset id="section-3-edit">
@@ -916,10 +1030,10 @@
         </select>
     </div>
 
-    <!-- <div class="form-group">
+    <div class="form-group extra-margin">
         <fieldset class="inline">
-            <legend class="form-label-bold">Are resubmissions allowed</legend>
-            <p>Please indicate whether you wish to make resubmission allowed</p>
+            <legend class="form-label-bold">Are resubmissions allowed?</legend>
+            <p>Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
             <label class="block-label" th:for="${'stream-'+streamNo+'-comp-resubmission-yes'}">
                 <input th:id="${'stream-'+streamNo+'-comp-resubmission-yes'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="Yes" type="radio" />
             Yes
@@ -930,7 +1044,7 @@
             </label>
         </fieldset>  
         <hr />
-    </div> -->
+    </div>
 
  
 
@@ -941,7 +1055,10 @@
 
 <div th:fragment="prototype-section-milestones">
     
-    <h2 class="heading-medium no-margin-top">Step 4: Add milestone dates</h2>
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Milestones</h1>
+    </div>
     
     <div class="panel-indent">
         Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
@@ -993,18 +1110,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>2. Briefing event</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>3. Submission date</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>4. Allocate assessors</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>5. Assessor briefing</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>6. Assessor accepts</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>7. Assessor deadline</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>8. Line draw</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>9. Assessment panel</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>10. Panel date</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>11. Funders panel</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>12. Notifications</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
-                    <tr><td>13. Release feedback</td><td>Tue</td><td>07</td><td>Jan</td><td>2017</td></tr>
+                    <tr><td>1. Open date</td><td>Weds</td><td>01</td><td>01</td><td>2017</td></tr>
+                    <tr><td>2. Briefing event</td><td>Tue</td><td>15</td><td>01</td><td>2017</td></tr>
+                    <tr><td>3. Submission date</td><td>Tue</td><td>01</td><td>02</td><td>2017</td></tr>
+                    <tr><td>4. Allocate assessors</td><td>Tue</td><td>01</td><td>03</td><td>2017</td></tr>
+                    <tr><td>5. Assessor briefing</td><td>Tue</td><td>01</td><td>04</td><td>2017</td></tr>
+                    <tr><td>6. Assessor accepts</td><td>Tue</td><td>01</td><td>05</td><td>2017</td></tr>
+                    <tr><td>7. Assessor deadline</td><td>Tue</td><td>01</td><td>06</td><td>2017</td></tr>
+                    <tr><td>8. Line draw</td><td>Tue</td><td>01</td><td>07</td><td>2017</td></tr>
+                    <tr><td>9. Assessment panel</td><td>Tue</td><td>01</td><td>08</td><td>2017</td></tr>
+                    <tr><td>10. Panel date</td><td>Tue</td><td>01</td><td>09</td><td>2017</td></tr>
+                    <tr><td>11. Funders panel</td><td>Tue</td><td>01</td><td>10</td><td>2017</td></tr>
+                    <tr><td>12. Notifications</td><td>Tue</td><td>01</td><td>11</td><td>2017</td></tr>
+                    <tr><td>13. Release feedback</td><td>Tue</td><td>01</td><td>12</td><td>2017</td></tr>
                 </tbody>
             </table>
 
@@ -1026,9 +1144,9 @@
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{'?section=assessors'}">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=application'}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Assessors</span>
+                <span class="pagination-part-title">Application questions</span>
             </a>
         </li>
     </ul>
@@ -1051,8 +1169,8 @@
         <th:block th:if="${type=='readOnly'}">
             <td>Weds</td>
             <td>01</td>
-            <td>07</td>
-            <td>2016</td>
+            <td>01</td>
+            <td>2017</td>
         </th:block>
 
     </tr>
@@ -1064,7 +1182,10 @@
 
 <div th:fragment="prototype-section-assessors">
     
-    <h2 class="heading-medium no-margin-top">Step 5: Assessors</h2>
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Assessors</h1>
+    </div>
 
     <form>
 
@@ -1082,9 +1203,9 @@
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{'?section=application'}">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=description'}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Application</span>
+                <span class="pagination-part-title">Description &#38; brief</span>
             </a>
         </li>
     </ul>
@@ -1096,15 +1217,27 @@
 
 <div th:fragment="prototype-section-application">
     
-    <h2 class="heading-medium no-margin-top">Step 6: Application form questions</h2>
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Application questions</h1>
+    </div>
     
     <div class="panel-indent">
         These match the template for the competition type you chose - to change questions you can change the competition type in step 1
     </div>
+
+    <p>Template: Programme 10 questions</p>
+
+    <h2 class="heading-large">Questions</h2>
     
     <form>
 
-        <div class="collapsible section-overview">
+        <ul class="list-overview application-questions">
+
+            <li><h2 class="heading-medium">Application details</h2></li>
+            <li><h2 class="heading-medium">Project summary</h2></li>
+            <li><h2 class="heading-medium">Public description</h2></li>
+            <li><h2 class="heading-medium">Scope</h2></li>
             
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
 
@@ -1126,7 +1259,7 @@
             
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
 
-        </div>
+        </ul>
         
          <div class="extra-margin">
             <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6" th:remove="tag" />
@@ -1136,26 +1269,29 @@
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{'?section=assessors'}">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=milestones'}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Assessors</span>
+                <span class="pagination-part-title">Milestones</span>
             </a>
         </li>
         <li class="next">
             <a rel="next" title="Navigate to next part" th:href="@{'?section=finance'}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Finance</span>
+                <span class="pagination-part-title">Application finances</span>
             </a>
         </li>
     </ul>
 
 </div>
 
-<!-- =================Section: Essential information=========================== -->
+<!-- =================Section: Finances=========================== -->
 
 <div th:fragment="prototype-section-finance">
 
-    <h2 class="heading-medium no-margin-top">Finance</h2>
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Application finances</h1>
+    </div>
 
     <form>
 
@@ -1169,7 +1305,41 @@
         <li class="prev">
             <a rel="prev" title="Navigate to next part" th:href="@{'?section=application'}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Application form</span>
+                <span class="pagination-part-title">Application questions</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=assessors'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Assessors</span>
+            </a>
+        </li>
+    </ul>
+
+</div>
+
+<!-- =================Section: Description=========================== -->
+
+<div th:fragment="prototype-section-description">
+    
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Description &#38; brief</h1>
+    </div>
+
+    <form>
+
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=assessors, sectionId=5" th:remove="tag" />
+        </div>
+
+    </form>
+    
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=assessors'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Assessors</span>
             </a>
         </li>
     </ul>
@@ -1180,83 +1350,165 @@
 <!-- =================Section: application questions=========================== -->
 
 <div th:fragment="prototype-application-question">
-    <h2 th:text="${questionNo+'. '+questionTitle}">
-                <!-- <div class="section-status section-incomplete">Incomplete</div> -->
-    </h2>
-                
-    <div class="question extra-margin">
-
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
-                <span class="form-label-bold">Question title</span>
-            </label>
-            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
-                <span class="form-label-bold">Competition subtitle</span>
-            </label>
-            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
-                <span class="form-label-bold">Question guidance title</span>
-            </label>
-            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
-        </div>
-
-        <div class="form-group">
-            <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
-            <div class="textarea-wrapped "> 
-                <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
-                <span class="form-label-bold">Max word count</span>
-            </label>
-            <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
-        </div>
+    
+    <li>
 
         <div class="grid-row">
-             <div class="column-half">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Is the answer scored?</legend>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
-                        <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
-                    Yes
-                    </label>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
-                         <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
-                    No
-                    </label>
-                </fieldset>
+            <div class="column-three-quarters">
+                <h2 class="heading-medium" th:text="${questionNo+'. '+questionTitle}"></h2>
             </div>
-
-
-            <div class="column-half">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Allow appendix?</legend>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
-                        <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
-                    Yes
-                    </label>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
-                         <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
-                    No
-                    </label>
-                </fieldset>
+            <div class="column-quarter alignright">
+                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">Edit</a>
             </div>
-
         </div>
-    </div>
-    
-    <div class="alignright">
-        <a href="#" class="button button-large">Save and close</a>
-    </div>
+
+        <th:block th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">
+
+            <div class="extra-margin-bottom">
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Question title</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>What is the business opportunity this project addresses?</p>
+                    </div>
+                </div>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Question subtitle</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>None</p>
+                    </div>
+                </div>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Guidance title</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>What should I include in the business opportunity section?</p>
+                    </div>
+                </div>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Guidance</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>You should describe:</p>
+                        <ul class="list-bullet">
+                            <li>the business opportunity you have identified and how you plan to take advantage of it</li>
+                            <li>the customer needs you have identified and how your project will meet them</li>
+                            <li>the challenges you expect to face and how you will overcome them</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Words</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>400</p>
+                    </div>
+                </div>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Appendix</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>No</p>
+                    </div>
+                </div>
+
+            </div>
+            
+
+        </th:block>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'edit-'+questionNo}">
+                    
+            <div class="question">
+
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
+                        <span class="form-label-bold">Question title</span>
+                    </label>
+                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
+                        <span class="form-label-bold">Competition subtitle</span>
+                    </label>
+                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
+                        <span class="form-label-bold">Question guidance title</span>
+                    </label>
+                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
+                    <div class="textarea-wrapped "> 
+                        <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
+                        <span class="form-label-bold">Max word count</span>
+                    </label>
+                    <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
+                </div>
+
+                <div class="grid-row">
+                     <div class="column-half">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Is the answer scored?</legend>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
+                                <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                            Yes
+                            </label>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
+                                 <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                            No
+                            </label>
+                        </fieldset>
+                    </div>
+
+
+                    <div class="column-half">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Allow appendix?</legend>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
+                                <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                            Yes
+                            </label>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
+                                 <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                            No
+                            </label>
+                        </fieldset>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="alignright">
+                <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="button button-large">Save and close</a>
+            </div>
+
+        </th:block>
+
+    </li>
 
 </div>
 

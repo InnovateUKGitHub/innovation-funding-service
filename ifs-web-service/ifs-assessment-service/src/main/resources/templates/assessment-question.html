@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.question.shortName) ? 'Assessment' : model.question.shortName}" th:remove="tag" />
     </head>
 
     <body class="assessment-details">
-        <div th:include="fragments/layout :: prototype-nav" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -18,18 +17,16 @@
                 <h1 class="heading-xlarge" th:text="${model.question.shortName}" />
             </div>
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
-            <!--/form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data"
-                    th:with="appIsClosed=${!currentCompetition.isOpen() or !currentApplication.isOpen()}, readonly=${!currentCompetition.isOpen() or !currentApplication.isOpen()}" novalidate="novalidate"-->
+            <form action="#" enctype="multipart/form-data" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-                <!--/div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <!--/* /div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         Invalid input provided
                     </h1>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                     </ul>
-                </div-->
+                </div */-->
 
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
@@ -39,7 +36,7 @@
                         <span th:text="${model.question.name}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.question.description}" />
+                    <p th:text="${model.questionFormInputResponses.get(questionFormInput.id)}" th:with="questionFormInput=${model.questionFormInputs[0]}" />
                 </div>
 
                 <div th:if="${model.question.needingAssessorScore}" th:remove="tag">
@@ -59,7 +56,12 @@
                                     <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
                                 </label>
 
-                                <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
+                                <details th:unless="${#strings.isEmpty(model.question.assessorGuidanceQuestion)}">
+                                    <summary>
+                                        <span class="summary" th:text="${model.question.assessorGuidanceQuestion}" />
+                                    </summary>
+                                    <div class="panel-indent" ifs:utext="${model.question.assessorGuidanceAnswer}" />
+                                </details>
 
                                 <div class="textarea-wrapped word-count">
                                     <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" th:text="*{value}" aria-hidden="true"></textarea>
@@ -80,17 +82,17 @@
             </form>
             <input type="hidden" id="cacheTest" value="" />
 
-            <ul class="pagination" th:if="${navigation.previousUrl != '' and navigation.nextUrl !=''}">
-                <li class="prev" th:if="${navigation.previousUrl}">
+            <ul class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
+                <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
                     <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title" th:text="${navigation.previousText}">Scope</span>
+                        <span class="pagination-part-title" th:text="${navigation.previousText}" />
                     </a>
                 </li>
-                <li class="next" th:if="${navigation.nextUrl}">
+                <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
                     <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
                         <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title" th:text="${navigation.nextText}">Potential market</span>
+                        <span class="pagination-part-title" th:text="${navigation.nextText}" />
                     </a>
                 </li>
             </ul>
