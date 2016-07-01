@@ -73,7 +73,7 @@ Successful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email
     # pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
-    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}    Following the success of your application Cheese is good to achieve funding in the competition La Fromage, we are happy to inform you that feedback is now available
+    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}    Following the success of your application
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
