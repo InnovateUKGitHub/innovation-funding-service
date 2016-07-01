@@ -13,32 +13,32 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "Please select a competition executive")
     private Long executiveUserId;
 
-    @NotNull(message = "Please enter a opening day")
+    @NotNull(message = "Please enter an opening day")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer openingDateDay;
 
-    @NotNull(message = "Please enter a opening month")
+    @NotNull(message = "Please enter an opening month")
     @Range(min=1, max=12, message= "Please enter a opening month")
     private Integer openingDateMonth;
 
-    @NotNull(message = "Please enter a opening year")
+    @NotNull(message = "Please enter an opening year")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer openingDateYear;
 
     @NotEmpty(message = "Please enter a title")
     private String title;
 
-    @NotNull(message = "Please select a innovation sector")
+    @NotNull(message = "Please select an innovation sector")
     private Long innovationSectorCategoryId;
 
-    @NotNull(message = "Please select a innovation area")
+    @NotNull(message = "Please select an innovation area")
     private Long innovationAreaCategoryId;
 
     @NotNull(message = "Please select a competition type")
     private Long competitionTypeId;
 
     @NotNull(message = "Please select a lead technologist")
-    private Long LeadTechnologistUserId;
+    private Long leadTechnologistUserId;
 
     @NotEmpty(message = "Please enter a PAF number")
     private String pafNumber;
@@ -112,11 +112,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     }
 
     public Long getLeadTechnologistUserId() {
-        return LeadTechnologistUserId;
+        return leadTechnologistUserId;
     }
 
     public void setLeadTechnologistUserId(Long leadTechnologistUserId) {
-        LeadTechnologistUserId = leadTechnologistUserId;
+        this.leadTechnologistUserId = leadTechnologistUserId;
     }
 
     public String getPafNumber() {

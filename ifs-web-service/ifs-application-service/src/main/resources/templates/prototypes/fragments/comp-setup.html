@@ -45,7 +45,7 @@
     <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
     <input type="hidden" id="status" name="status" th:value="${(param.status != null and param.status[0] == 'done' ? 'edit' : 'done')}" />
     <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status != null and param.status[0] == 'done'}">Done</button>
-    <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit'}">Edit</button>
+    <button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>
 
 
 </div>
@@ -1225,15 +1225,19 @@
     <div class="panel-indent">
         These match the template for the competition type you chose - to change questions you can change the competition type in step 1
     </div>
+
+    <p>Template: Programme 10 questions</p>
+
+    <h2 class="heading-large">Questions</h2>
     
     <form>
 
-        <ul class="list-overview">
+        <ul class="list-overview application-questions">
 
-            <li><h3 class="heading-small">Application details</h3></li>
-            <li><h3 class="heading-small">Project summary</h3></li>
-            <li><h3 class="heading-small">Public description</h3></li>
-            <li><h3 class="heading-small">Scope</h3></li>
+            <li><h2 class="heading-medium">Application details</h2></li>
+            <li><h2 class="heading-medium">Project summary</h2></li>
+            <li><h2 class="heading-medium">Public description</h2></li>
+            <li><h2 class="heading-medium">Scope</h2></li>
             
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
 
@@ -1349,40 +1353,77 @@
     
     <li>
 
-        <h3 class="heading-small" th:text="${questionNo+'. '+questionTitle}">
-                    <!-- <div class="section-status section-incomplete">Incomplete</div> -->
-        </h3>
+        <div class="grid-row">
+            <div class="column-three-quarters">
+                <h2 class="heading-medium" th:text="${questionNo+'. '+questionTitle}"></h2>
+            </div>
+            <div class="column-quarter alignright">
+                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">Edit</a>
+            </div>
+        </div>
 
         <th:block th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">
 
-            <div class="alignright">
-                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="button button-secondary">Edit</a>
-            </div>
-
             <div class="extra-margin-bottom">
 
-                <h3 class="heading-small">Question title</h3>
-                <p>What is the business opportunity this project addresses?</p>
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Question title</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>What is the business opportunity this project addresses?</p>
+                    </div>
+                </div>
 
-                <h3 class="heading-small">Question subtitle</h3>
-                <p>None</p>
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Question subtitle</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>None</p>
+                    </div>
+                </div>
 
-                <h3 class="heading-small">Guidance title</h3>
-                <p>What should I include in the business opportunity section?</p>
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Guidance title</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>What should I include in the business opportunity section?</p>
+                    </div>
+                </div>
 
-                <h3 class="heading-small">Guidance</h3>
-                <p>You should describe:</p>
-                <ul class="list-bullet">
-                    <li>the business opportunity you have identified and how you plan to take advantage of it</li>
-                    <li>the customer needs you have identified and how your project will meet them</li>
-                    <li>the challenges you expect to face and how you will overcome them</li>
-                </ul>
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Guidance</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>You should describe:</p>
+                        <ul class="list-bullet">
+                            <li>the business opportunity you have identified and how you plan to take advantage of it</li>
+                            <li>the customer needs you have identified and how your project will meet them</li>
+                            <li>the challenges you expect to face and how you will overcome them</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Words</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>400</p>
+                    </div>
+                </div>
 
-                <h3 class="heading-small">Words</h3>
-                <p>400</p>
-
-                <h3 class="heading-small">Appendix</h3>
-                <p>No</p>
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <h3 class="heading-small">Appendix</h3>
+                    </div>
+                    <div class="column-three-quarters">
+                        <p>No</p>
+                    </div>
+                </div>
 
             </div>
             
@@ -1391,7 +1432,7 @@
 
         <th:block th:if="${param.status != null and param.status[0] == 'edit-'+questionNo}">
                     
-            <div class="question extra-margin">
+            <div class="question">
 
                 <div class="form-group">
                     <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">

@@ -39,6 +39,7 @@ class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProce
             .addAttributes("ol", "class", "id")
             .addAttributes("h2", "class", "id")
             .addAttributes("h3", "class", "id")
+            .addAttributes("th", "style")
             .addAttributes("div", "class", "id", "aria-hidden");
 
         return Jsoup.clean((result == null? "" : result.toString()), whitelist);
