@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class BankDetailsRestServiceImpl extends BaseRestService implements BankDetailsRestService {
 
     @Override
-    public RestResult<BankDetailsResource> getById(final Long projectId, final Long id){
-        return getWithRestResult("/project/" + projectId + "/bank-details?bankDetailsId=" + id, BankDetailsResource.class);
+    public RestResult<BankDetailsResource> getById(final Long projectId, final Long bankDetailsId){
+        return getWithRestResult("/project/" + projectId + "/bank-details?bankDetailsId=" + bankDetailsId, BankDetailsResource.class);
     }
 
     @Override

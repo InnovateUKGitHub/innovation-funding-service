@@ -7,8 +7,10 @@ import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,6 +36,12 @@ public abstract class BasePermissionRules {
     @Autowired
     protected RoleRepository roleRepository;
 
+    @Autowired
+    protected OrganisationRepository organisationRepository;
+
+    @Autowired
+    protected UserRepository userRepository;
+
     protected boolean isMemberOfProjectTeam(long applicationId, UserResource user) {
         return isLeadApplicant(applicationId, user) || isCollaborator(applicationId, user);
     }
@@ -54,6 +62,12 @@ public abstract class BasePermissionRules {
         Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleId(projectId, userId, partnerRole.getId());
         return !partnerProjectUser.isEmpty();
+    }
+
+    protected boolean partnerBelongsToOrganisation(long projectId, long userId, long organisationId){
+        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(projectId, userId, organisationId,partnerRole.getId());
+        return partnerProjectUser != null;
     }
 
     protected boolean isLeadPartner(long projectId, long userId) {

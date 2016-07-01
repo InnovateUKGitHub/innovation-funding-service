@@ -33,7 +33,7 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
-    BankDetailsService bankDetailsService;
+    private BankDetailsService bankDetailsService;
 
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
