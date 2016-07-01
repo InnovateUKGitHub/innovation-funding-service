@@ -36,7 +36,7 @@ public class QuestionController {
                                                                @PathVariable("applicationId") final Long applicationId,
                                                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
-        return questionService.markAsComplete(ids, markedAsCompleteById).toGetResponse();
+        return questionService.markAsComplete(ids, markedAsCompleteById).toPutWithBodyResponse();
     }
 
     @RequestMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")

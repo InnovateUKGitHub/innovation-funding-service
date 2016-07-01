@@ -91,7 +91,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void markAsCompleteTest() {
-        setupGetWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", validationMessagesListType(), null);
+        setupPutWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", validationMessagesListType(), null, null, HttpStatus.OK);
         assertTrue(service.markAsComplete(1L, 2L, 3L).isSuccess());
     }
 
