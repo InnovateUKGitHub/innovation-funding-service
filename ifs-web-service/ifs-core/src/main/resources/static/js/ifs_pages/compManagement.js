@@ -210,8 +210,8 @@ IFS.competition_management = (function(){
                 }
                 else {
                   formGroup.addClass('error');
-                  if(formGroup.find('.error-message').length === 0){
-                    formGroup.find("label").append('<span class="error-message">Please fill in a correct date before generating the competition code</span>');
+                  if(formGroup.find('.error-message.correct-date-error-message').length === 0){
+                    formGroup.find("label").append('<span class="error-message correct-date-error-message">Please fill in a correct date before generating the competition code</span>');
                   }
                 }
             });
