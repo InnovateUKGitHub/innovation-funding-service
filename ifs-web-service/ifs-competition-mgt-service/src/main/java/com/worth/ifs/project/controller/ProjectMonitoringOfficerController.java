@@ -13,9 +13,10 @@ import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +57,9 @@ public class ProjectMonitoringOfficerController {
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
 
+    @Autowired
+    private ProcessRoleService processRoleService;
+
     @RequestMapping(method = GET)
     public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -70,14 +74,33 @@ public class ProjectMonitoringOfficerController {
         return doViewMonitoringOfficer(model, projectId, true);
     }
 
-    @RequestMapping(value = "/edit", method = POST)
-    public String updateMonitoringOfficerDetails(Model model,
+    @RequestMapping(value = "/confirm", method = POST)
+    public String confirmMonitoringOfficerDetails(Model model,
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
                                        BindingResult bindingResult,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewMonitoringOfficer(model, projectId, form, true, false);
+        Supplier<String> failureView = () -> doViewMonitoringOfficer(model, projectId, true, form, false);
+
+        if (bindingResult.hasErrors()) {
+            form.setBindingResult(bindingResult);
+            return failureView.get();
+        }
+
+        doViewMonitoringOfficer(model, projectId, false, form, false);
+        return "project/monitoring-officer-confirm";
+    }
+
+
+    @RequestMapping(value = "/assign", method = POST)
+    public String updateMonitoringOfficerDetails(Model model,
+                                                 @PathVariable("projectId") final Long projectId,
+                                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
+                                                 BindingResult bindingResult,
+                                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> doViewMonitoringOfficer(model, projectId, true, form, false);
 
         if (bindingResult.hasErrors()) {
             form.setBindingResult(bindingResult);
@@ -91,7 +114,11 @@ public class ProjectMonitoringOfficerController {
     private String doViewMonitoringOfficer(Model model, Long projectId, boolean editMode) {
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
         ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
-        return doViewMonitoringOfficer(model, projectId, form, editMode, existingMonitoringOfficer.isPresent());
+        return doViewMonitoringOfficer(model, projectId, editMode, form, existingMonitoringOfficer.isPresent());
+    }
+
+    private String doViewMonitoringOfficer(Model model, Long projectId, boolean editMode, ProjectMonitoringOfficerForm form, boolean existingMonitoringOfficer) {
+        return doViewMonitoringOfficer(model, projectId, form, editMode, existingMonitoringOfficer);
     }
 
     private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean editMode, boolean existingMonitoringOfficer) {
@@ -108,11 +135,11 @@ public class ProjectMonitoringOfficerController {
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
-        String projectManagerName = getProjectManagerName(projectId, projectResource);
+        String projectManagerName = getProjectManagerName(projectResource);
         List<String> partnerOrganisationNames = getPartnerOrganisationNames(projectId);
         String innovationArea = competition.getInnovationAreaName();
 
-        return new ProjectMonitoringOfficerViewModel(projectResource.getName(),
+        return new ProjectMonitoringOfficerViewModel(projectId, projectResource.getName(),
                 innovationArea, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
                 partnerOrganisationNames, competitionSummary, existingMonitoringOfficer, editMode);
     }
@@ -142,7 +169,7 @@ public class ProjectMonitoringOfficerController {
         return "redirect:/project/" + projectId + "/monitoring-officer";
     }
 
-    private String getProjectManagerName(Long projectId, ProjectResource projectResource) {
+    private String getProjectManagerName(ProjectResource projectResource) {
 
         Long projectManagerId = projectResource.getProjectManager();
 
@@ -150,9 +177,14 @@ public class ProjectMonitoringOfficerController {
             return "";
         }
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> projectManagerId.equals(pu.getUser()));
-        return projectManager.map(ProjectUserResource::getRoleName).orElse("");
+        // TODO DW - Project Manager needs to be a ProjectUser, not a ProcessRole
+        List<ProcessRoleResource> projectUsers = processRoleService.findProcessRolesByApplicationId(projectResource.getApplication());
+        Optional<ProcessRoleResource> projectManager = simpleFindFirst(projectUsers, pu -> projectManagerId.equals(pu.getId()));
+        return projectManager.map(pu -> pu.getUserName()).orElse("");
+
+        //        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        //        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> projectManagerId.equals(pu.getId()));
+        //        return projectManager.map(pu -> pu.getUserName()).orElse("");
     }
 
     private List<String> getPartnerOrganisationNames(Long projectId) {

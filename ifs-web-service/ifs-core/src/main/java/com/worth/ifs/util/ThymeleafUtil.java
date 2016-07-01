@@ -29,4 +29,16 @@ public class ThymeleafUtil {
         }
         return request.getQueryString() == null ? "~" + request.getRequestURI() : format("~%s?%s", request.getRequestURI(), request.getQueryString());
     }
+
+    /**
+     * Returns the current base servlet context path e.g. /management when within the management webapp
+     * @param request
+     * @return
+     */
+    public String contextPath(final HttpServletRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Cannot determine request URI with query string for null request.");
+        }
+        return request.getServletContext().getContextPath();
+    }
 }

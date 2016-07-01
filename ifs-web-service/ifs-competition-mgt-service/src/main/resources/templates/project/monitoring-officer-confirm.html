@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<div th:include="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" th:remove="tag" />
+</head>
+<body class="competition-management application-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<div class="grid-row">
+		<div class="column-two-thirds">
+			<div class="page-title">
+				<div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+				<h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
+			</div>
+		</div>
+		<div class="column-third alignright extra-margin">
+			<div th:include="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" th:remove="tag" />
+		</div>
+	</div>
+
+    <form th:action="${#ifsUtil.contextPath(#httpServletRequest)} + '/project/' + ${projectId} + '/monitoring-officer/assign'" method="post" th:object="${form}">
+        <div class="page-title">
+            <h1 class="heading-xlarge no-margin">Assign Monitoring Officer</h1>
+        </div>
+        <p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
+
+        <input type="hidden" th:field="*{firstName}" />
+        <input type="hidden" th:field="*{lastName}" />
+        <input type="hidden" th:field="*{emailAddress}" />
+        <input type="hidden" th:field="*{phoneNumber}" />
+
+        <button class="button large" name="submit-app-details">Assign Monitoring Officer</button>
+    </form>
+
+	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

@@ -35,7 +35,9 @@
 	<div class="column-half">
 
         <h2 class="heading-large">Monitoring Officer</h2>
-        <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}">
+        <form th:action="${#ifsUtil.contextPath(#httpServletRequest)} + '/project/' + ${projectId} + '/monitoring-officer/confirm'"
+              th:object="${form}" method="post" th:with="readonly=${model.readOnly}">
+
             <div class="form-group" th:classappend="${#fields.hasAnyErrors() ? 'error' : ''}">
                 <fieldset>
                     <legend class="visuallyhidden">
