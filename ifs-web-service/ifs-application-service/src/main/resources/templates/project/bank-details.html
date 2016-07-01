@@ -11,6 +11,7 @@
 
 <main id="content">
   <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}"  th:remove="tag"></div>
 
   <div class="page-title">
       <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)}"/>
