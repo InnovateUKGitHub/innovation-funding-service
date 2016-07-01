@@ -199,7 +199,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("redirect:/" + ASSESSMENT_ID))
                 .andReturn();
 
-        // TODO Verify save call
+        verify(assessmentFeedbackService, only()).updateAssessmentFeedback(ASSESSMENT_ID, QUESTION_ID, value, score);
     }
 
     @Override

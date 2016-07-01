@@ -14,6 +14,8 @@ public interface AssessmentFeedbackService {
 
     AssessmentFeedbackResource getAssessmentFeedbackByAssessmentAndQuestion(Long assessmentId, Long questionId);
 
+    ServiceResult<Void> updateAssessmentFeedback(Long assessmentId, Long questionId, String value, Integer score);
+
     ServiceResult<Void> updateFeedbackValue(Long assessmentId, Long questionId, String value);
 
     ServiceResult<Void> updateFeedbackScore(Long assessmentId, Long questionId, Integer score);

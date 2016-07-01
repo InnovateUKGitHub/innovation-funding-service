@@ -115,9 +115,9 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
             final BindingResult bindingResult,
             @PathVariable("assessmentId") final Long assessmentId,
             @PathVariable("questionId") final Long questionId) {
-        // TODO
-        // TODO Save all attributes of the assessment feedback (i.e. value and score)
-        // TODO Return to the assessment overview
+        // TODO validation
+        final ServiceResult<Void> result = assessmentFeedbackService.updateAssessmentFeedback(assessmentId, questionId, form.getValue(), form.getScore());
+        // TODO handle service errors
         return "redirect:/" + assessmentId;
     }
 

@@ -35,6 +35,16 @@ public class AssessmentFeedbackRestServiceImpl extends BaseRestService implement
     }
 
     @Override
+    public RestResult<Void> createAssessmentFeedback(final AssessmentFeedbackResource assessmentFeedback) {
+        return postWithRestResult(format("%s/", assessmentFeedbackRestURL), assessmentFeedback, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> updateAssessmentFeedback(final Long assessmentFeedbackId, final AssessmentFeedbackResource assessmentFeedback) {
+        return putWithRestResult(format("%s/%s", assessmentFeedbackRestURL, assessmentFeedbackId), assessmentFeedback, Void.class);
+    }
+
+    @Override
     public RestResult<Void> updateFeedbackValue(final Long assessmentId, final Long questionId, final String value) {
         return postWithRestResult(format("%s/assessment/%s/question/%s?feedback-value=%s", assessmentFeedbackRestURL, assessmentId, questionId, value), Void.class);
     }

@@ -18,6 +18,12 @@ public interface AssessmentFeedbackService {
     ServiceResult<AssessmentFeedbackResource> getAssessmentFeedbackByAssessmentAndQuestion(Long assessmentId, Long questionId);
 
     @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> createAssessmentFeedback(AssessmentFeedbackResource assessmentFeedback);
+
+    @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> updateAssessmentFeedback(Long assessmentFeedbackId, AssessmentFeedbackResource assessmentFeedback);
+
+    @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateFeedbackValue(Long assessmentId, Long questionId, String value);
 
     @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
