@@ -39,6 +39,9 @@
               th:object="${form}" method="post" th:with="readonly=${model.readOnly}">
 
             <div class="form-group" th:classappend="${#fields.hasAnyErrors() ? 'error' : ''}">
+                <div th:if="${#fields.hasGlobalErrors()}" th:remove="tag">
+                    <span class="error-message" th:each="err : ${#fields.globalErrors()}" th:text="${err}" />
+                </div>
                 <fieldset>
                     <legend class="visuallyhidden">
                         Monitoring Officer
