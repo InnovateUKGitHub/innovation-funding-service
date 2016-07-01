@@ -41,7 +41,7 @@
 
 	<div class="column-half">
 		<h2 class="heading-large">Monitoring Officer</h2>
-		<form>
+		<form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post" th:with="readonly=false">
 			<fieldset>
 				<legend class="visuallyhidden">
 					Monitoring Officer
@@ -50,44 +50,35 @@
 					<label class="form-label" for="first-name">
 						<span class="form-label-bold">First name</span>
 					</label>
-					<input class="form-control width-full" id="first-name" name="first-name" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
-
-					<input class="form-control width-full" id="first-name" name="first-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+					<input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
+						   id="first-name" th:field="*{firstName}" />
 				</div>
 
 				<div class="form-group">
-					<label class="form-label" for="last-name">
+					<label class="form-label" th:for="lastName">
 						<span class="form-label-bold">Last name</span>
 					</label>
-					<input class="form-control width-full" id="last-name" name="last-name" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
-					<input class="form-control width-full" id="last-name" name="last-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+                    <input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
+                           id="last-name" th:field="*{lastName}" />
 				</div>
 
 				<div class="form-group">
 					<label class="form-label" for="email">
 						<span class="form-label-bold">Email</span>
 					</label>
-					<input class="form-control width-full" id="email" name="email" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
-					<input class="form-control width-full" id="email" name="email" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+                    <input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
+                           id="email" th:field="*{emailAddress}" />
 				</div>
 
 				<div class="form-group">
 					<label class="form-label" for="phone-number">
 						<span class="form-label-bold">Phone number</span>
 					</label>
-					<input class="form-control" id="phone-number" name="phone-number" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
-					<input class="form-control" id="phone-number" name="phone-number" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+                    <input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
+                           id="phone-number" th:field="*{phoneNumber}" />
 				</div>
 
-				<input type="hidden" id="status" name="status" value="setup" />
-
-
-				<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign Monitoring Officer</a>
-
-				<a href="/prototypes/1576-assign-mo" th:unless="${param.status == null or param.status[0] != 'edit'}">Change Monitoring Officer</a>
-
-
-
+                <button type="submit" class="button">Assign Monitoring Officer</button>
 
 				<div class="modal-assign-mo" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 					<button class="js-close close" aria-label="Close Popup">X</button>

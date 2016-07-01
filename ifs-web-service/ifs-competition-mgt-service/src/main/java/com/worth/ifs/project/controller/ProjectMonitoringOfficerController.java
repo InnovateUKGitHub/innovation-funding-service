@@ -1,13 +1,11 @@
 package com.worth.ifs.project.controller;
 
-import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
@@ -15,9 +13,6 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.OrganisationRestService;
-import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,28 +42,13 @@ public class ProjectMonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private ApplicationService applicationService;
 
     @Autowired
     private CompetitionService competitionService;
 
     @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private AddressRestService addressRestService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
     private ApplicationSummaryService applicationSummaryService;
-
-    @Autowired
-    private OrganisationAddressRestService organisationAddressRestService;
 
     @RequestMapping(value = "/{projectId}/monitoring-officer", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
@@ -87,6 +67,7 @@ public class ProjectMonitoringOfficerController {
                 partnerOrganisationNames, competitionSummary);
 
         model.addAttribute("model", viewModel);
+        model.addAttribute("form", new ProjectMonitoringOfficerForm());
         return "project/monitoring-officer";
     }
 
@@ -110,16 +91,16 @@ public class ProjectMonitoringOfficerController {
     }
 
     private String getProjectManagerName(@PathVariable("projectId") Long projectId, ProjectResource projectResource) {
-        String projectManagerName;
+
         Long projectManagerId = projectResource.getProjectManager();
-        if (projectManagerId != null) {
-            List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-            Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> projectManagerId.equals(pu.getUser()));
-            projectManagerName = projectManager.map(ProjectUserResource::getRoleName).orElse("");
-        } else {
-            projectManagerName = "";
+
+        if (projectManagerId == null) {
+            return "";
         }
-        return projectManagerName;
+
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> projectManagerId.equals(pu.getUser()));
+        return projectManager.map(ProjectUserResource::getRoleName).orElse("");
     }
 
     private List<String> getPartnerOrganisationNames(@PathVariable("projectId") Long projectId) {
