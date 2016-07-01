@@ -31,7 +31,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
@@ -126,7 +125,7 @@ public class ProjectDetailsController {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, form, true);
     }
 
-    private String doViewFinanceContact(Model model, @PathVariable("projectId") Long projectId, @RequestParam(value = "organisation", required = false) Long organisation, @ModelAttribute("loggedInUser") UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
+    private String doViewFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
         }
@@ -147,7 +146,6 @@ public class ProjectDetailsController {
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
                                        BindingResult bindingResult,
-                                       HttpServletRequest request,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
@@ -210,7 +208,7 @@ public class ProjectDetailsController {
 	}
 
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
-    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId, HttpServletRequest request,
+    public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) throws InterruptedException, ExecutionException {
 
         ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
@@ -289,15 +287,13 @@ public class ProjectDetailsController {
 
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.GET)
     public String viewStartDate(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form) {
 
-        return doViewStartDate(model, projectId, form, loggedInUser, true);
+        return doViewStartDate(model, projectId, form, true);
     }
 
     private String doViewStartDate(Model model, final Long projectId,
                                    ProjectDetailsStartDateForm form,
-                                   UserResource loggedInUser,
                                    boolean addDefaultStartDate) {
 
         ProjectResource projectResource = projectService.getById(projectId);
@@ -316,12 +312,10 @@ public class ProjectDetailsController {
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   Model model,
-                                  BindingResult bindingResult,
-                                  HttpServletRequest request,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                  BindingResult bindingResult) {
 
         ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
-        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> doViewStartDate(model, projectId, form, loggedInUser, false));
+        return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, model, form, bindingResult, updateResult, () -> doViewStartDate(model, projectId, form, false));
     }
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
