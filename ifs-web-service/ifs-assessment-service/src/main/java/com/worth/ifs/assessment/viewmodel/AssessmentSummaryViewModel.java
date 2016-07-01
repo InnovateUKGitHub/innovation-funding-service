@@ -1,25 +1,40 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
+import java.util.List;
 
 /**
- * Holder of model attribute of Assessment Summary, which combine the question data and assessment feedback data
- * of a same question
+ * Holder of model attribute of Assessment Summary, which combine the all of questions and existing assessment feedback data
+ * , application and competitions
  */
 public class AssessmentSummaryViewModel {
-    private QuestionResource questionResource;
-    private AssessmentFeedbackResource assessmentFeedbackResource;
+    private List<QuestionResource> listOfQuestionResource;
+    private List<AssessmentFeedbackResource> listOfAssessmentFeedbackResource;
+    private ApplicationResource application;
+    private CompetitionResource competition;
 
-    public AssessmentSummaryViewModel(QuestionResource questionResource,AssessmentFeedbackResource assessmentFeedbackResource){
-        this.questionResource = questionResource;
-        this.assessmentFeedbackResource = assessmentFeedbackResource;
+    public AssessmentSummaryViewModel(List<QuestionResource> listOfQuestionResource, List<AssessmentFeedbackResource> listOfAssessmentFeedback, ApplicationResource application, CompetitionResource competition) {
+        this.listOfQuestionResource = listOfQuestionResource;
+        this.listOfAssessmentFeedbackResource = listOfAssessmentFeedback;
+        this.application = application;
+        this.competition = competition;
     }
 
-    public QuestionResource getQuestionResource(){
-        return this.questionResource;
+
+    public List<QuestionResource> getQuestionResource(){
+        return this.listOfQuestionResource;
     }
-    public AssessmentFeedbackResource getAssessmentFeedbackResource(){
-        return this.assessmentFeedbackResource;
+    public List<AssessmentFeedbackResource> getAssessmentFeedbackResource(){
+        return this.listOfAssessmentFeedbackResource;
+    }
+    public ApplicationResource getApplicationResource(){
+        return this.application;
+    }
+    public CompetitionResource getCompetitionResource(){
+        return this.competition;
     }
 }
