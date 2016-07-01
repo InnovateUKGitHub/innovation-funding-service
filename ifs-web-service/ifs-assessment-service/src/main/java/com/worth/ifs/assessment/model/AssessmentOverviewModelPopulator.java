@@ -84,6 +84,7 @@ public class AssessmentOverviewModelPopulator {
         if(form == null){
             form = new AssessmentOverviewForm();
         }
+
         addSections(model, competition, assessmentId);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
@@ -92,6 +93,8 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        model.addAttribute(("daysLeftPercentage"),competition.getAssessmentDaysLeftPercentage());
+        model.addAttribute(("daysLeft"),competition.getAssessmentDaysLeft());
 
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(application.getId());
         addAppendices(application.getId(), responses, model);
