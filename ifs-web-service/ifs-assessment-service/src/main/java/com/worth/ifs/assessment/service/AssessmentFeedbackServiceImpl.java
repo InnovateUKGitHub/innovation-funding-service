@@ -28,6 +28,19 @@ public class AssessmentFeedbackServiceImpl implements AssessmentFeedbackService 
     }
 
     @Override
+    public ServiceResult<Void> updateAssessmentFeedback(final Long assessmentId, final Long questionId, final String value, final Integer score) {
+        return assessmentFeedbackRestService.getAssessmentFeedbackByAssessmentAndQuestion(assessmentId, questionId).andOnSuccess(assessmentFeedback -> {
+            assessmentFeedback.setFeedback(value);
+            assessmentFeedback.setScore(score);
+            final boolean exists = assessmentFeedback.getId() != null;
+            if (exists) {
+                return assessmentFeedbackRestService.updateAssessmentFeedback(assessmentFeedback.getId(), assessmentFeedback);
+            }
+            return assessmentFeedbackRestService.createAssessmentFeedback(assessmentFeedback);
+        }).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> updateFeedbackValue(final Long assessmentId, final Long questionId, final String value) {
         return assessmentFeedbackRestService.updateFeedbackValue(assessmentId, questionId, value).toServiceResult();
     }

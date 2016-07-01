@@ -1,6 +1,8 @@
 package com.worth.ifs.assessment.resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents feedback given as part of the assessment journey to a question for an application.
@@ -66,5 +68,37 @@ public class AssessmentFeedbackResource {
 
     public boolean isComplete() {
         return score != null && StringUtils.isNotBlank(feedback);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessmentFeedbackResource that = (AssessmentFeedbackResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(assessment, that.assessment)
+                .append(feedback, that.feedback)
+                .append(score, that.score)
+                .append(question, that.question)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(assessment)
+                .append(feedback)
+                .append(score)
+                .append(question)
+                .toHashCode();
     }
 }

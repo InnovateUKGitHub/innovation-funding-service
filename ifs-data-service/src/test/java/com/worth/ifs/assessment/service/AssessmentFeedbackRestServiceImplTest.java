@@ -3,25 +3,21 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.commons.rest.RestResult;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentFeedbackResourceBuilder.newAssessmentFeedbackResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentFeedbackResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTest<AssessmentFeedbackRestServiceImpl> {
     private static final String assessmentFeedbackRestURL = "/assessment-feedback";
-
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     @Override
     protected AssessmentFeedbackRestServiceImpl registerRestServiceUnderTest() {
@@ -31,7 +27,7 @@ public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void getAllAssessmentFeedback() throws Exception {
+    public void testGetAllAssessmentFeedback() throws Exception {
         final List<AssessmentFeedbackResource> expected = newAssessmentFeedbackResource()
                 .build(2);
 
@@ -43,7 +39,7 @@ public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void getAssessmentFeedbackByAssessmentAndQuestion() throws Exception {
+    public void testGetAssessmentFeedbackByAssessmentAndQuestion() throws Exception {
         final AssessmentFeedbackResource expected = newAssessmentFeedbackResource()
                 .build();
 
@@ -56,7 +52,28 @@ public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void updateFeedbackValue() throws Exception {
+    public void testCreateAssessmentFeedback() throws Exception {
+        final AssessmentFeedbackResource assessmentFeedback = newAssessmentFeedbackResource()
+                .with(id(null))
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/", assessmentFeedbackRestURL), assessmentFeedback, CREATED);
+        final RestResult<Void> response = service.createAssessmentFeedback(assessmentFeedback);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void testUpdateAssessmentFeedback() throws Exception {
+        final AssessmentFeedbackResource assessmentFeedback = newAssessmentFeedbackResource()
+                .build();
+
+        setupPutWithRestResultExpectations(format("%s/%s", assessmentFeedbackRestURL, assessmentFeedback.getId()), assessmentFeedback, OK);
+        final RestResult<Void> response = service.updateAssessmentFeedback(assessmentFeedback.getId(), assessmentFeedback);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void testUpdateFeedbackValue() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final String value = "Blah";
@@ -67,7 +84,7 @@ public class AssessmentFeedbackRestServiceImplTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void updateFeedbackScore() throws Exception {
+    public void testUpdateFeedbackScore() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final Integer score = 10;
