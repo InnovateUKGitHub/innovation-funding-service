@@ -85,7 +85,7 @@ Password with personal information
     And the user enters text to a text field    id=retypedPassword    ${personal_info_password}
     And the user submits their information
     And The user should see the text in the page    We were unable to create your account
-    And The user should see the text in the page    Password should not contain your last name
+    And The user should see the text in the page    Password should not contain either your first or last name
 
 Password is too long
     [Documentation]    INFUND-885
@@ -177,7 +177,7 @@ the user cannot login with the invalid password
     Click Button    css=button[name="_eventId_proceed"]
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user accepts the terms and conditions

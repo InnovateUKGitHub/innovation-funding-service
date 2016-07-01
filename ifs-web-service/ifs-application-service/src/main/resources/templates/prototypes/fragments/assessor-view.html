@@ -752,7 +752,7 @@
                             <button class="js-close button buttonlink large">Cancel</button>
                         </div>
                     </div>
-                    <li th:unless="${param.status != null and param.status[0] == 'reject'}">
+                    <li th:unless="${param.status != null and param.status[0] == 'reject' or param.status != null and param.status[0] == 'accept'}">
                         <div class="grid-row">
                             <div class="column-assessment-details">
                                 <h4 class="heading-medium">
@@ -808,6 +808,30 @@
                             
                         </label>
                     </li>
+                    
+                    <li th:if="${param.status != null and param.status[0] == 'accept'}">
+                        <div class="grid-row">
+                            <div class="column-assessment-details">
+                                <h4 class="heading-medium">
+                                <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
+                                <!--">-->
+                                </h4>
+                                <div><p>Empire Ltd</p></div>
+                            </div>
+                            <div class="column-assessment-status navigation-right">
+
+                                <div class="application-status open empty">
+                                    <p>Open</p>                              
+                                </div>
+
+                            </div>
+                        </div>
+                        <label>
+                            
+                        </label>
+                    </li>
+
+
                     <li>
                         <div class="grid-row">
                             <div class="column-assessment-details">
