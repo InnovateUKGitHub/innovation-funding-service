@@ -171,11 +171,10 @@ public class Question {
         List<QuestionStatus> questionStatuses = this.getQuestionStatuses().stream()
             .filter(qs -> qs.getApplication().getId().equals(application.getId()))
             .collect(toList());
-        Boolean res = Boolean.FALSE;
         if (questionStatuses != null && !questionStatuses.isEmpty()) {
-            res = questionStatuses.get(0).getMarkedAsComplete();
+            return questionStatuses.get(0).getMarkedAsComplete();
         }
-        return Boolean.TRUE.equals(res);
+        return Boolean.TRUE;
     }
 
     public Boolean isMarkedAsCompleteForApplicationAndOrganisation(Application application, Long organisationId){
