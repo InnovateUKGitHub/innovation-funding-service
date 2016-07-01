@@ -56,7 +56,7 @@
 
                 <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
 
-                <div th:include="project/fragments :: select-address" th:with="form=${form}" th:remove="tag"/>
+                <div th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
                 <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
             </fieldset>
         </div>

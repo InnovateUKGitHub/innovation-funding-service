@@ -227,9 +227,9 @@ public class BankDetailsController {
             bankDetailsViewModel.setOperatingAddress(operatingAddress.get().getAddress());
         }
 
-        Optional<OrganisationAddressResource> projectAddress = getAddress(organisationResource, PROJECT);
-        if(projectAddress.isPresent()){
-            bankDetailsViewModel.setProjectAddress(projectAddress.get().getAddress());
+        Optional<OrganisationAddressResource> bankAddress = getAddress(organisationResource, BANK_DETAILS);
+        if(bankAddress.isPresent()){
+            bankDetailsViewModel.setBankAddress(bankAddress.get().getAddress());
         }
 
         return bankDetailsViewModel;

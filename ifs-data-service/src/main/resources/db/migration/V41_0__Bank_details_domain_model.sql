@@ -11,3 +11,5 @@ CREATE TABLE `bank_details` (
   `address_score` TINYINT(1) NULL,
   `manual_approval` TINYINT(1) NULL,
   PRIMARY KEY (`id`));
+
+INSERT INTO `address_type`(id, name) VALUES (4, 'BANK_DETAILS');

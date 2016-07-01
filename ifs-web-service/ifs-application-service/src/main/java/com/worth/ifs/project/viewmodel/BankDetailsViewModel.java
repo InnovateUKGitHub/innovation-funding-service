@@ -12,7 +12,7 @@ public class BankDetailsViewModel {
     private String organisationName;
     private AddressResource registeredAddress;
     private AddressResource operatingAddress;
-    private AddressResource projectAddress;
+    private AddressResource bankAddress;
 
     public BankDetailsViewModel(ProjectResource projectResource) {
         this.projectId = projectResource.getId();
@@ -52,12 +52,12 @@ public class BankDetailsViewModel {
         this.operatingAddress = operatingAddress;
     }
 
-    public AddressResource getProjectAddress() {
-        return projectAddress;
+    public AddressResource getBankAddress() {
+        return bankAddress;
     }
 
-    public void setProjectAddress(AddressResource projectAddress) {
-        this.projectAddress = projectAddress;
+    public void setBankAddress(AddressResource bankAddress) {
+        this.bankAddress = bankAddress;
     }
 
     public Long getProjectId() {

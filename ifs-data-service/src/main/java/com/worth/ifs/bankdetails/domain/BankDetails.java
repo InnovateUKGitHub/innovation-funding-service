@@ -25,7 +25,7 @@ public class BankDetails {
     @JoinColumn(name = "projectId" , referencedColumnName = "id")
     private Project project;
 
-    @OneToOne
+    @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "organisationAddressId", referencedColumnName = "id")
     private OrganisationAddress organisationAddress;
 
