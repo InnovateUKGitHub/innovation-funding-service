@@ -265,6 +265,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
             return null;
         }
+
+        @Override
+        public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+            return null;
+        }
     }
 }
 
