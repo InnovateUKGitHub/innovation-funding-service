@@ -67,7 +67,7 @@ Initial details client-side validations
     Then the user should not see the text in the page    Please select a innovation area
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should not see the text in the page    Please select a competition type
-    When the user selects the option from the drop-down menu    Competition Technologist One    id=LeadTechnologistUserId
+    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
     Then the user should not see the text in the page    Please select a lead technologist
     When the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
