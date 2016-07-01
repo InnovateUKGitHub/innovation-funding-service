@@ -9,11 +9,16 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.worth.ifs.commons.rest.RestResult.aggregate;
+import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -26,6 +31,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private OrganisationRestService organisationRestService;
 
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(Long projectId) {
@@ -93,5 +101,17 @@ public class ProjectServiceImpl implements ProjectService {
     public OrganisationResource getLeadOrganisation(Long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
         return applicationService.getLeadOrganisation(project.getApplication());
+    }
+
+    @Override
+    public List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId) {
+
+        List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
+
+        List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, pu -> pu.getOrganisation()));
+        List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationRestService::getOrganisationById);
+        RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);
+
+        return organisationResultsCombined.getSuccessObjectOrThrowException();
     }
 }

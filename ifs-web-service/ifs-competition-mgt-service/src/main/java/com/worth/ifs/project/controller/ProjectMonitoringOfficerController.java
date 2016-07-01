@@ -6,11 +6,14 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
@@ -25,8 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
-import static java.util.Arrays.asList;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This controller will handle the management of the Monitoring Officer on projects
@@ -70,10 +76,15 @@ public class ProjectMonitoringOfficerController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
+        String projectManagerName = getProjectManagerName(projectId, projectResource);
+        List<String> partnerOrganisationNames = getPartnerOrganisationNames(projectId);
+        String innovationArea = competition.getInnovationAreaName();
 
-        ProjectMonitoringOfficerViewModel viewModel = new ProjectMonitoringOfficerViewModel(projectResource.getName(), "TODO Area", projectResource.getAddress(),
-                projectResource.getTargetStartDate(), "TODO Project Manager name", asList("TODO Org 1", "TODO Org 2"), competitionSummary);
+        ProjectMonitoringOfficerViewModel viewModel = new ProjectMonitoringOfficerViewModel(projectResource.getName(),
+                innovationArea, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
+                partnerOrganisationNames, competitionSummary);
 
         model.addAttribute("model", viewModel);
         return "project/monitoring-officer";
@@ -98,19 +109,21 @@ public class ProjectMonitoringOfficerController {
         return "project/monitoring-officer";
     }
 
-//	private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm form, UserResource loggedInUser) {
-//
-//        ProjectResource projectResource = projectService.getById(projectId);
-//        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-//		List<ProcessRoleResource> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
-//		CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-//
-//        model.addAttribute("organisationUsers", thisOrganisationUsers);
-//        model.addAttribute(FORM_ATTR_NAME, form);
-//        model.addAttribute("project", projectResource);
-//        model.addAttribute("currentUser", loggedInUser);
-//        model.addAttribute("app", applicationResource);
-//        model.addAttribute("competition", competitionResource);
-//        return "project/finance-contact";
-//	}
+    private String getProjectManagerName(@PathVariable("projectId") Long projectId, ProjectResource projectResource) {
+        String projectManagerName;
+        Long projectManagerId = projectResource.getProjectManager();
+        if (projectManagerId != null) {
+            List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+            Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> projectManagerId.equals(pu.getUser()));
+            projectManagerName = projectManager.map(ProjectUserResource::getRoleName).orElse("");
+        } else {
+            projectManagerName = "";
+        }
+        return projectManagerName;
+    }
+
+    private List<String> getPartnerOrganisationNames(@PathVariable("projectId") Long projectId) {
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+        return simpleMap(partnerOrganisations, OrganisationResource::getName);
+    }
 }

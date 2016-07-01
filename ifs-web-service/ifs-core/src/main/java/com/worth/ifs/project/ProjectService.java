@@ -17,6 +17,8 @@ public interface ProjectService {
 
     List<ProjectUserResource> getProjectUsersForProject(Long projectId);
 
+    List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId);
+
     ProjectResource getById(Long projectId);
 
     ProjectResource getByApplicationId(Long applicationId);
