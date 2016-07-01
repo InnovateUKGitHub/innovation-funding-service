@@ -3,6 +3,7 @@ package com.worth.ifs.project.service;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -22,4 +23,6 @@ public interface ProjectRestService {
     RestResult<Void> setApplicationDetailsSubmitted(Long projectId);
     RestResult<Boolean> isSubmitAllowed(Long projectId);
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
+    RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
+    RestResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
 }

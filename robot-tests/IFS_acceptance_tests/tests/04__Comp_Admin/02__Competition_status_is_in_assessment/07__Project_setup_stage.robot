@@ -79,24 +79,24 @@ Partner nominates a finance contact
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
     And the user clicks the button/link                     link=Project details
     Then the user should see the text in the page           Finance contacts
-    And wait until page contains                            Partner
+    And the user should see the text in the page            Partner
     And the user clicks the button/link                     link=EGGS
     And the user selects the radio button                   financeContact     financeContact1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-    And the matching finance-contact-status is updated      project-details-finance    2    yes
+    And the matching status checkbox is updated             project-details-finance    2    yes
     Then Logout as user
     When Log in as user                                     worth.email.test+fundsuccess@gmail.com    Passw0rd
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
     And the user clicks the button/link                     link=Project details
     Then the user should see the text in the page           Finance contacts
-    And wait until page contains                            Partner
+    And the user should see the text in the page            Partner
     And the user clicks the button/link                     link=Cheeseco
     Then the user should see the text in the page           Finance contact
     And the user selects the radio button                   financeContact     financeContact2
     And the user clicks the button/link                     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-    And the matching finance-contact-status is updated      project-details-finance    3    yes
+    And the matching status checkbox is updated             project-details-finance    3    yes
 
 
 Lead partner can change the Start Date
@@ -114,7 +114,7 @@ Lead partner can change the Start Date
     Then status of the start date should be Yes
 
 Lead partner can change the project manager
-    [Documentation]     INFUND-2616
+    [Documentation]     INFUND-2616, INFUND-2996
     [Tags]
     Given the user clicks the button/link    link=Project manager
     # The following two steps are currently commented until completion of the INFUND-2616 story, with the frontend validations
@@ -124,10 +124,10 @@ Lead partner can change the project manager
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page     test ten
     When the user clicks the button/link     link=Project manager
-    And the user sees that the radio button is selected    projectManager     27
-    And the user selects the radio button    projectManager       1
-    Then the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user should see the text in the page        Steve Smith
+    And the user selects the radio button                   projectManager     projectManager2
+    And the user clicks the button/link                     jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
+    And the matching status checkbox is updated      project-details    3    yes
 
 
 Lead partner can change the project address
@@ -229,11 +229,10 @@ the user should see a validation error
     sleep    300ms
     Then the user should see an error    ${ERROR1}
 
-the matching finance-contact-status is updated
+the matching status checkbox is updated
     [Arguments]    ${id}    ${COLUMN}    ${STATUS}
     the user should see the element    ${id}
     the user should see the element    jQuery=#${id} tr:nth-of-type(${COLUMN}) .${STATUS}
-
 
 status of the start date should be Yes
     Element Should Contain    id=start-date-status    Yes

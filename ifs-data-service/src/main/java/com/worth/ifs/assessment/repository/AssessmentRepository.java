@@ -15,11 +15,9 @@ import com.worth.ifs.assessment.domain.Assessment;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface AssessmentRepository extends PagingAndSortingRepository<Assessment, Long> {
-    Assessment findById(@Param("id") Long id);
+
     @Override
     Set<Assessment> findAll();
+
     Assessment findOneByProcessRoleId(Long processRoleId);
-    Integer countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatus(Long userId, Long competitionId,  String status);
-    Integer countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusNot(Long userId, Long competitionId, String status);
-    List<Assessment> findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(Long userId, Long competitionId, Set<String> status);
 }

@@ -96,6 +96,11 @@ public class ProjectController {
         return projectService.isSubmitAllowed(projectId).toGetResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/monitoring-officer", method = GET)
+    public RestResult<MonitoringOfficerResource> getMonitoringOfficer(@PathVariable("projectId") final Long projectId) {
+        return projectService.getMonitoringOfficer(projectId).toGetResponse();
+    }
+
 	@RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
                                                   @RequestBody MonitoringOfficerResource monitoringOfficerResource) {

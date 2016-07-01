@@ -13,9 +13,9 @@ import org.junit.Test;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static com.worth.ifs.assessment.security.AssessmentRules.isOwner;
-import static com.worth.ifs.assessment.security.AssessmentRules.userCanReadAssessment;
-import static com.worth.ifs.assessment.security.AssessmentRules.userCanUpdateAssessment;
+import static com.worth.ifs.assessment.security.AssessmentPermissionRules.isOwner;
+import static com.worth.ifs.assessment.security.AssessmentPermissionRules.userCanReadAssessment;
+import static com.worth.ifs.assessment.security.AssessmentPermissionRules.userCanUpdateAssessment;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -26,7 +26,7 @@ import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class AssessmentRulesTest {
+public class AssessmentPermissionRulesTest {
     private Assessment assessment;
     private UserResource applicant;
     private UserResource compadmin;

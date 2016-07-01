@@ -194,6 +194,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
     }
 
+    @Override
+    public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+        return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
+    }
 
     @Override
     public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
@@ -213,9 +217,23 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
 
+        return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
+            noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
+            existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
+        );
+    }
+
+    private ServiceResult<Void> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+        existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
+        existingMonitoringOfficer.setLastName(updateDetails.getLastName());
+        existingMonitoringOfficer.setEmail(updateDetails.getEmail());
+        existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
         MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
         monitoringOfficerRepository.save(monitoringOfficer);
-
         return serviceSuccess();
     }
 
@@ -223,6 +241,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndUserId(projectId, userId);
         return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
+    }
+
+    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
     private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {

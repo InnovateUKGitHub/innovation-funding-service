@@ -271,6 +271,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+            return null;
+        }
     }
 }
 

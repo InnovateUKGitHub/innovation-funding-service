@@ -21,7 +21,6 @@ import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
@@ -187,7 +186,6 @@ public class BaseUnitTest {
     public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
-    // TODO BO - remove assessorProcessRolesTemporary when Assessment is converted to DTO
     public List<ProcessRoleResource> assessorProcessRoleResources;
     public List<ProcessRoleResource> applicantRoles;
     public ApplicationFinanceResource applicationFinanceResource;
@@ -210,8 +208,6 @@ public class BaseUnitTest {
 
 
     private Random randomGenerator;
-    private FormInputResource formInput;
-    private FormInputTypeResource formInputType;
     public OrganisationTypeResource businessOrganisationTypeResource;
     public OrganisationTypeResource researchOrganisationTypeResource;
     public OrganisationTypeResource businessOrganisationType;
@@ -323,11 +319,7 @@ public class BaseUnitTest {
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
     }
 
-    public void setupCompetition(){
-        formInput = newFormInputResource().build();
-        formInputType = new FormInputTypeResource(1L, "textarea");
-        formInput.setFormInputType(formInputType.getId());
-
+    public void setupCompetition() {
         competitionResource = newCompetitionResource().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
                 withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
                 build();
@@ -337,7 +329,7 @@ public class BaseUnitTest {
         SectionResourceBuilder sectionResourceBuilder = newSectionResource().withCompetition(competitionResource.getId());
 
         QuestionResource q01Resource = questionResourceBuilder.with(id(1L)).with(name("Application details")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(3), FormInputResource::getId)).
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).
                         build();
         when(questionService.getById(q01Resource.getId())).thenReturn(q01Resource);
 
@@ -348,7 +340,7 @@ public class BaseUnitTest {
                 build();
 
         QuestionResource q10Resource = questionResourceBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).
                         build();
         when(questionService.getById(q10Resource.getId())).thenReturn(q10Resource);
 
@@ -359,20 +351,20 @@ public class BaseUnitTest {
                 build();
 
         QuestionResource q20Resource = questionResourceBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).
                         build();
         when(questionService.getById(q20Resource.getId())).thenReturn(q20Resource);
 
         QuestionResource q21Resource = questionResourceBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).build();
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
         when(questionService.getById(q21Resource.getId())).thenReturn(q21Resource);
 
         QuestionResource q22Resource = questionResourceBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).build();
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
         when(questionService.getById(q22Resource.getId())).thenReturn(q22Resource);
 
         QuestionResource q23Resource = questionResourceBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).build();
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
         when(questionService.getById(q23Resource.getId())).thenReturn(q23Resource);
 
         SectionResource sectionResource3 = sectionResourceBuilder.
@@ -383,19 +375,19 @@ public class BaseUnitTest {
 
 
         QuestionResource q30Resource = questionResourceBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).build();
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
         when(questionService.getById(q30Resource.getId())).thenReturn(q30Resource);
 
         QuestionResource q31Resource = questionResourceBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).build();
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
         when(questionService.getById(q31Resource.getId())).thenReturn(q31Resource);
 
         QuestionResource q32Resource = questionResourceBuilder.with(id(32L)).with(name("7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).build();
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
         when(questionService.getById(q32Resource.getId())).thenReturn(q32Resource);
 
         QuestionResource q33Resource = questionResourceBuilder.with(id(33L)).with(name("8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).withFormInputType(formInputType.getId()).build(1), FormInputResource::getId)).build();
+                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
         when(questionService.getById(q33Resource.getId())).thenReturn(q33Resource);
 
         SectionResource sectionResource4 = sectionResourceBuilder.
