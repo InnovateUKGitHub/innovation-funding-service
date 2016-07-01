@@ -25,7 +25,7 @@
 
 	<p class="extra-margin">
         <th:block th:text="${organisation.name}">ACME Limited</th:block> <br />
-        <th:block th:text="|Company no. ${organisation.companyHouseNumber}|">02423435</th:block>
+        <th:block th:if="${organisation.companyHouseNumber}" th:text="|Company no. ${organisation.companyHouseNumber}|">02423435</th:block>
 	</p>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" >
