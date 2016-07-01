@@ -5,7 +5,6 @@
     </head>
 
     <body class="assessment-details">
-        <div th:include="fragments/layout :: prototype-nav" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -20,14 +19,14 @@
 
             <form action="#" enctype="multipart/form-data" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-                <!--/div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <!--/* /div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         Invalid input provided
                     </h1>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                     </ul>
-                </div-->
+                </div */-->
 
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
