@@ -1,5 +1,21 @@
 package com.worth.ifs.application.transactional;
 
+import java.io.File;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -26,7 +42,11 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.mapper.FormInputMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationSource;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
@@ -34,21 +54,12 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
@@ -516,12 +527,16 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
                         .filter(Question::getMarkAsCompletedEnabled)
-                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccessObject()).count())
+                        .filter(Question::hasMultipleStatuses)
+                        .filter(q -> q.isMarkedAsCompleteForApplicationAndOrganisation(application, org.getId()))
+                        .count())
                 .sum();
 
         Long countSingleStatusQuestionsCompleted = questions.stream()
                 .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccessObject()).count();
+                .filter(q -> !q.hasMultipleStatuses())
+                .filter(q -> q.isMarkedAsCompleteForApplication(application))
+                .count();
 
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 

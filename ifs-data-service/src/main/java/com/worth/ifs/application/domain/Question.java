@@ -1,15 +1,30 @@
 package com.worth.ifs.application.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.form.domain.FormInput;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Question defines database relations and a model to use client side and server side.
@@ -150,6 +165,26 @@ public class Question {
     public Boolean isAssignEnabled() {
         // never return a null value.. it is enabled or disabled.
         return assignEnabled == null ? true : assignEnabled;
+    }
+
+    public Boolean isMarkedAsCompleteForApplication(Application application) {
+        List<QuestionStatus> questionStatuses = this.getQuestionStatuses().stream()
+            .filter(qs -> qs.getApplication().getId().equals(application.getId()))
+            .collect(toList());
+        Boolean res = Boolean.FALSE;
+        if (questionStatuses != null && !questionStatuses.isEmpty()) {
+            res = questionStatuses.get(0).getMarkedAsComplete();
+        }
+        return Boolean.TRUE.equals(res);
+    }
+
+    public Boolean isMarkedAsCompleteForApplicationAndOrganisation(Application application, Long organisationId){
+        return this.getQuestionStatuses().stream()
+            .filter(qs -> qs.getApplication().getId().equals(application.getId()))
+            .filter(qs -> organisationId.equals(qs.getMarkedAsCompleteBy().getOrganisation().getId()))
+            .map(QuestionStatus::getMarkedAsComplete)
+            .map(Boolean.TRUE::equals)
+            .reduce(Boolean.FALSE, (a , b) -> a || b);
     }
 
     public void setAssignEnabled(Boolean assignEnabled) {
