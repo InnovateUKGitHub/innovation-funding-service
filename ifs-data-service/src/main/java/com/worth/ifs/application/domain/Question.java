@@ -181,6 +181,7 @@ public class Question {
     public Boolean isMarkedAsCompleteForApplicationAndOrganisation(Application application, Long organisationId){
         return this.getQuestionStatuses().stream()
             .filter(qs -> qs.getApplication().getId().equals(application.getId()))
+            .filter(qs -> qs.getMarkedAsCompleteBy() != null)
             .filter(qs -> organisationId.equals(qs.getMarkedAsCompleteBy().getOrganisation().getId()))
             .map(QuestionStatus::getMarkedAsComplete)
             .map(Boolean.TRUE::equals)
