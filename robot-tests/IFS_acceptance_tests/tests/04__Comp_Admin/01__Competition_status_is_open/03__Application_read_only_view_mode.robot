@@ -106,6 +106,6 @@ the applicant edits the Subcontracting costs section
     focus    css=.app-submit-btn
 
 the user should see the correct finances change
-    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)    £129,059
+    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)           £129,059
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £129,059
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £2,000
