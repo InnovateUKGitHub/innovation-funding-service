@@ -126,7 +126,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
 
-        ApplicationResource  applicationResource = newApplicationResource().build();
+        ApplicationResource applicationResource = newApplicationResource().build();
 
         when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(Collections.singletonList(applicationStatus));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
