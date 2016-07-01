@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.service.ProjectRestService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
 import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
@@ -118,5 +120,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber) {
         return projectRestService.updateMonitoringOfficer(projectId, firstName, lastName, emailAddress, phoneNumber).toServiceResult();
+    }
+
+    @Override
+    public Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId) {
+        return projectRestService.getMonitoringOfficerForProject(projectId).toOptionalIfNotFound().
+                getSuccessObjectOrThrowException();
     }
 }

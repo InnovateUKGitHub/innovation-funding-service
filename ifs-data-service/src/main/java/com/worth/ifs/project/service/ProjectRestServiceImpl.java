@@ -74,4 +74,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         MonitoringOfficerResource monitoringOfficerData = new MonitoringOfficerResource(firstName, lastName, emailAddress, phoneNumber, projectId);
         return putWithRestResult(projectRestURL + "/" + projectId + "/monitoring-officer", monitoringOfficerData, Void.class);
     }
+
+    @Override
+    public RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/monitoring-officer", MonitoringOfficerResource.class);
+    }
 }

@@ -189,6 +189,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
     }
 
+    @Override
+    public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+        return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
+    }
 
     @Override
     public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {

@@ -11,6 +11,7 @@ import com.worth.ifs.controller.BindingResultTarget;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -58,7 +59,9 @@ public class ProjectMonitoringOfficerController {
     public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm();
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
+
+        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
         doViewMonitoringOfficer(model, projectId, form);
         return "project/monitoring-officer";
     }
@@ -83,6 +86,14 @@ public class ProjectMonitoringOfficerController {
 
     private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form) {
 
+        ProjectMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(projectId);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("form", form);
+
+        return "project/monitoring-officer";
+    }
+
+    private ProjectMonitoringOfficerViewModel populateMonitoringOfficerViewModel(Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -91,14 +102,9 @@ public class ProjectMonitoringOfficerController {
         List<String> partnerOrganisationNames = getPartnerOrganisationNames(projectId);
         String innovationArea = competition.getInnovationAreaName();
 
-        ProjectMonitoringOfficerViewModel viewModel = new ProjectMonitoringOfficerViewModel(projectResource.getName(),
+        return new ProjectMonitoringOfficerViewModel(projectResource.getName(),
                 innovationArea, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
                 partnerOrganisationNames, competitionSummary);
-
-        model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
-
-        return "project/monitoring-officer";
     }
 
     /**

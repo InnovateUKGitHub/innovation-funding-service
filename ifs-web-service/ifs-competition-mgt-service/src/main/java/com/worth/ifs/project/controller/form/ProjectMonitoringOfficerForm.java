@@ -1,8 +1,11 @@
 package com.worth.ifs.project.controller.form;
 
 import com.worth.ifs.controller.BaseBindingResultTarget;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import java.util.Optional;
 
 /**
  * Form to capture the posted details of the Monitoring Officer
@@ -24,6 +27,15 @@ public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
 
     // for spring form binding
     public ProjectMonitoringOfficerForm() {
+    }
+
+    public ProjectMonitoringOfficerForm(Optional<MonitoringOfficerResource> existingMonitoringOfficer) {
+        existingMonitoringOfficer.ifPresent(mo -> {
+            setFirstName(mo.getFirstName());
+            setLastName(mo.getLastName());
+            setEmailAddress(mo.getEmail());
+            setPhoneNumber(mo.getPhoneNumber());
+        });
     }
 
     public String getFirstName() {
