@@ -72,7 +72,6 @@
     </fieldset>
 
     <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
-        <h3 class="heading-medium no-margin-top">Confirm project location</h3>
         <p>
           <span th:unless="${#strings.isEmpty(model.registeredAddress?.addressLine1)}" th:remove="tag">
             <span th:text="${model.registeredAddress?.addressLine1}" /><br/>
