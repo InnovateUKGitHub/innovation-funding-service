@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div th:fragment="display-address(address)">
+  <div class="boxed extra-margin">
+      <h3 class="heading-medium no-margin-top">Confirm project location</h3>
+      <p>
+        <span th:unless="${#strings.isEmpty(address?.addressLine1)}" th:remove="tag">
+          <span th:text="${address?.addressLine1}" /><br/>
+        </span>
+        <span th:unless="${#strings.isEmpty(address?.addressLine2)}" th:remove="tag">
+          <span th:text="${address?.addressLine2}" /><br/>
+        </span>
+        <span th:unless="${#strings.isEmpty(address?.addressLine3)}" th:remove="tag">
+          <span th:text="${address?.addressLine3}" /><br/>
+        </span>
+        <span th:unless="${#strings.isEmpty(address?.town)}" th:remove="tag">
+          <span th:text="${address?.town}" /><br/>
+        </span>
+        <span th:unless="${#strings.isEmpty(address?.county)}" th:remove="tag">
+          <span th:text="${address?.county}" /><br/>
+        </span>
+        <span th:unless="${#strings.isEmpty(address?.postcode)}" th:remove="tag">
+          <span th:text="${address?.postcode}" /><br/>
+        </span>
+      </p>
+  </div>
+</div>
+
 <!-- ===========================Project setup select address=========================== -->
+
+
 
 <div th:fragment="select-address">
     <fieldset>
