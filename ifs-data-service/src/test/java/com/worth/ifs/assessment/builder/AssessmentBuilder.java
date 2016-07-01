@@ -1,15 +1,16 @@
 package com.worth.ifs.assessment.builder;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.function.BiConsumer;
-
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.resource.ProcessStates;
+
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -39,12 +40,16 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((id, assessment) -> setField("id", id, assessment), ids);
     }
 
-    public AssessmentBuilder withProcessState(String... processStates) {
-        return withArray((processState, assessment) -> assessment.setProcessStatus(processState), processStates);
+    public AssessmentBuilder withProcessEvent(ProcessEvent... processEvents) {
+        return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentBuilder withProcessRole(ProcessRole processRole) {
-        return with(assessment -> assessment.setProcessRole(processRole));
+    public AssessmentBuilder withProcessStatus(ProcessStates... processStatuss) {
+        return withArray((processStatus, object) -> setField("status", processStatus.getState(), object), processStatuss);
+    }
+
+    public AssessmentBuilder withLastModifiedDate(Calendar... lastModifiedDates) {
+        return withArray((lastModifiedDate, object) -> setField("lastModified", lastModifiedDate, object), lastModifiedDates);
     }
 
     public AssessmentBuilder withStartDate(LocalDate... startDates) {
@@ -59,16 +64,7 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((processOutcome, object) -> setField("processOutcomes", processOutcome, object), processOutcomes);
     }
 
-    public AssessmentBuilder withProcessStatus(ProcessStates... processStatuss) {
-        return withArray((processStatus, object) -> setField("status", processStatus.getState(), object), processStatuss);
-    }
-
-    public AssessmentBuilder withProcessEvent(ProcessEvent... processEvents) {
-        return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
-    }
-
     public AssessmentBuilder withProcessRole(ProcessRole... processRoles) {
         return withArray((processRole, object) -> setField("processRole", processRole, object), processRoles);
     }
-
 }
