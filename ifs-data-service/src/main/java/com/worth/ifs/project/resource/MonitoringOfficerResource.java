@@ -17,6 +17,17 @@ public class MonitoringOfficerResource {
 
     private Long project;
 
+    public MonitoringOfficerResource() {
+    }
+
+    public MonitoringOfficerResource(String firstName, String lastName, String email, String phoneNumber, Long project) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.project = project;
+    }
+
     public Long getId() {
         return id;
     }

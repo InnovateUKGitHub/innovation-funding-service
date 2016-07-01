@@ -10,6 +10,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.validator.ApplicationMarkAsCompleteValidator;
 import com.worth.ifs.validator.MinRowCountValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.transactional.ValidatorService;
@@ -111,6 +112,13 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
+    public BindingResult validationApplicationDetails(Application application){
+        DataBinder binder = new DataBinder(application);
+        binder.addValidators(new ApplicationMarkAsCompleteValidator());
+        binder.validate();
+        return binder.getBindingResult();
+    }
+
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         LOG.debug("VALIDATE SECTION " + section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
@@ -123,7 +131,7 @@ public class ValidationUtil {
         return validationMessages;
     }
 
-    private List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
+    public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
@@ -146,7 +154,7 @@ public class ValidationUtil {
                 validationMessages.add(new ValidationMessages(messageSource, formInput.getId(), bindingResult));
             }
         }
-        return null;
+        return validationMessages;
     }
 
     private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
