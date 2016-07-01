@@ -4,8 +4,10 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -62,4 +64,12 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Boolean> isSubmitAllowed(final Long projectId);
+
+    // TODO DW - add security
+    @NotSecured(value="", mustBeSecuredByOtherServices = false)
+    ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);
+
+    //TODO - Security will be added as part of another story
+    @NotSecured(value="", mustBeSecuredByOtherServices = false) // TODO - This needs to be changed once Security is added
+    ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource);
 }

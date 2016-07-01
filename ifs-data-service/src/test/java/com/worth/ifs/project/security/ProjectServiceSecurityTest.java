@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
@@ -257,6 +258,16 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
+            return null;
+        }
+		
+		@Override
+        public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
             return null;
         }
     }

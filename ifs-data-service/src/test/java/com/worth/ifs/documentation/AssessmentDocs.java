@@ -8,7 +8,6 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import java.time.LocalDate;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -33,5 +32,5 @@ public class AssessmentDocs {
             .withProcessOutcome(asList(1L, 2L))
             .withProcessStatus(AssessmentStates.OPEN)
             .withProcessEvent(ProcessEvent.ASSESSMENT)
-            .withProcessRole(newProcessRoleResource().build());
+            .withProcessRole(1L);
 }
