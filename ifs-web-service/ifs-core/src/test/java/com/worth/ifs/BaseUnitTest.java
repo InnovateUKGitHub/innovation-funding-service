@@ -11,6 +11,7 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -163,6 +164,8 @@ public class BaseUnitTest {
     public ProjectService projectService;
     @Mock
     public ProjectRestService projectRestService;
+    @Mock
+    public BankDetailsRestService bankDetailsRestService;
 
     @Spy
     @InjectMocks

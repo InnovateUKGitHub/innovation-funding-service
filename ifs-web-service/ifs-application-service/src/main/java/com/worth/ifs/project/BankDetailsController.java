@@ -35,6 +35,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static com.worth.ifs.project.BankDetailsUtils.getBankDetails;
 
 /**
  * This controller will handle all requests that are related to project bank details.
@@ -67,7 +68,7 @@ public class BankDetailsController {
                               @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId());
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
         BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
         if(bankDetailsResource != null && bankDetailsResource.getId() != null) {
             populateExitingBankDetailsInForm(bankDetailsResource, form);
@@ -83,7 +84,7 @@ public class BankDetailsController {
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId());
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(),bankDetailsRestService);
         BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
 
         if (hasNonAddressErrors(bindingResult)) {
@@ -138,7 +139,7 @@ public class BankDetailsController {
         form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId());
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult.getSuccessObject(), loggedInUser);
     }
 
@@ -150,7 +151,7 @@ public class BankDetailsController {
         form.getAddressForm().setSelectedPostcode(null);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResource = getBankDetails(projectId, organisationResource.getId());
+        RestResult<BankDetailsResource> bankDetailsResource = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
         return doViewBankDetails(model, form, project, bankDetailsResource.getSuccessObject(), loggedInUser);
     }
 
@@ -163,7 +164,7 @@ public class BankDetailsController {
         addressForm.setManualAddress(true);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId());
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult.getSuccessObject(), loggedInUser);
     }
 
@@ -201,10 +202,6 @@ public class BankDetailsController {
     private void processAddressLookupFields(BankDetailsForm form) {
         addAddressOptions(form);
         addSelectedAddress(form);
-    }
-
-    private RestResult<BankDetailsResource> getBankDetails(Long projectId, Long organisationId) {
-        return bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationId);
     }
 
     private void populateExitingBankDetailsInForm(BankDetailsResource bankDetails, BankDetailsForm bankDetailsForm){
