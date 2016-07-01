@@ -39,6 +39,22 @@ public class AssessmentFeedbackServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
+    public ServiceResult<Void> createAssessmentFeedback(final AssessmentFeedbackResource assessmentFeedback) {
+        assessmentFeedbackRepository.save(assessmentFeedbackMapper.mapToDomain(assessmentFeedback));
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> updateAssessmentFeedback(final Long assessmentFeedbackId, final AssessmentFeedbackResource assessmentFeedback) {
+        return find(assessmentFeedbackRepository.findOne(assessmentFeedbackId), notFoundError(AssessmentFeedback.class, assessmentFeedbackId)).andOnSuccess(found -> {
+            found.setFeedback(assessmentFeedback.getFeedback());
+            found.setScore(assessmentFeedback.getScore());
+            assessmentFeedbackRepository.save(found);
+            return serviceSuccess();
+        }).andOnSuccessReturnVoid();
+    }
+
+    @Override
     public ServiceResult<Void> updateFeedbackValue(final Long assessmentId, final Long questionId, final String value) {
         final AssessmentFeedbackResource assessmentFeedback = getOrCreateAssessmentFeedback(assessmentId, questionId).getSuccessObjectOrThrowException();
         assessmentFeedback.setFeedback(value);

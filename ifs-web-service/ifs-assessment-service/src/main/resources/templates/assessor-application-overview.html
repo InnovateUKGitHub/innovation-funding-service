@@ -23,10 +23,8 @@
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
 
-                <div th:unless="${section.name == 'Finances'}" th:remove="tag">
-                    <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
-                    <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
-                </div>
+              <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
+              <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
                         <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication})"></div>
@@ -44,6 +42,15 @@
                     </div>
                 </ul>
             </section>
+        </div>
+        <div th:unless="${#lists.isEmpty(appendices)}" th:remove="tag">
+            <h2 class="heading-medium">Appendices</h2>
+            <div th:each="appendix : ${appendices}" th:remove="tag">
+                <div class="form-group download">
+                    <h3 class="heading-small no-margin" th:text="${appendix.title}">View project management appendix:</h3>
+                    <a th:href="${appendix.getDownloadURL()}" th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">Project-plan.pdf (161.96 KB)</a>
+                </div>
+            </div>
         </div>
     </form>
 

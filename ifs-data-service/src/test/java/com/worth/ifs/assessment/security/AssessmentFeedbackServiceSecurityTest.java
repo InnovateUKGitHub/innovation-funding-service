@@ -38,6 +38,16 @@ public class AssessmentFeedbackServiceSecurityTest extends BaseServiceSecurityTe
         }
 
         @Override
+        public ServiceResult<Void> createAssessmentFeedback(AssessmentFeedbackResource assessmentFeedback) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateAssessmentFeedback(Long assessmentFeedbackId, AssessmentFeedbackResource assessmentFeedback) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> updateFeedbackValue(Long assessmentId, Long questionId, String value) {
             return null;
         }

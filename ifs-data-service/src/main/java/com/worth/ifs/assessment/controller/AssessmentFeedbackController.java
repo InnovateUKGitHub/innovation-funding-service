@@ -28,6 +28,16 @@ public class AssessmentFeedbackController {
         return assessmentFeedbackService.getAssessmentFeedbackByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public RestResult<Void> createAssessmentFeedback(@RequestBody final AssessmentFeedbackResource assessmentFeedback) {
+        return assessmentFeedbackService.createAssessmentFeedback(assessmentFeedback).toPostCreateResponse();
+    }
+
+    @RequestMapping(value = "/{assessmentFeedbackId}", method = RequestMethod.PUT)
+    public RestResult<Void> updateAssessmentFeedback(@PathVariable("assessmentFeedbackId") final Long assessmentFeedbackId, @RequestBody final AssessmentFeedbackResource assessmentFeedback) {
+        return assessmentFeedbackService.updateAssessmentFeedback(assessmentFeedbackId, assessmentFeedback).toPutResponse();
+    }
+
     @RequestMapping(value = "/assessment/{assessmentId}/question/{questionId}/feedback-value", method = RequestMethod.POST)
     public RestResult<Void> updateFeedbackValue(@PathVariable("assessmentId") final Long assessmentId, @PathVariable("questionId") final Long questionId, @RequestParam("value") final String value) {
         return assessmentFeedbackService.updateFeedbackValue(assessmentId, questionId, value).toPostResponse();

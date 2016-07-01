@@ -40,7 +40,7 @@ public class AssessmentFeedbackServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getAllAssessmentFeedback() throws Exception {
+    public void testGetAllAssessmentFeedback() throws Exception {
         final AssessmentFeedback assessmentFeedback1 = newAssessmentFeedback().build();
         final AssessmentFeedback assessmentFeedback2 = newAssessmentFeedback().build();
 
@@ -66,7 +66,7 @@ public class AssessmentFeedbackServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getAssessmentFeedbackByAssessmentAndQuestion() throws Exception {
+    public void testGetAssessmentFeedbackByAssessmentAndQuestion() throws Exception {
         final AssessmentFeedback assessmentFeedback = newAssessmentFeedback().build();
 
         final AssessmentFeedbackResource expected = newAssessmentFeedbackResource()
@@ -85,7 +85,7 @@ public class AssessmentFeedbackServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getAssessmentFeedbackByAssessmentAndQuestion_notExists() throws Exception {
+    public void testGetAssessmentFeedbackByAssessmentAndQuestion_notExists() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
 
@@ -98,7 +98,80 @@ public class AssessmentFeedbackServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void updateFeedbackValue() throws Exception {
+    public void testCreateAssessmentFeedback() throws Exception {
+        final Long assessmentId = 1L;
+        final Long questionId = 2L;
+        final String value = "Blah";
+        final Integer score = 10;
+
+        final AssessmentFeedbackResource assessmentFeedback = newAssessmentFeedbackResource()
+                .with(id(null))
+                .withAssessment(assessmentId)
+                .withFeedback(value)
+                .withScore(score)
+                .withQuestion(questionId)
+                .build();
+
+        final ArgumentCaptor<AssessmentFeedback> argument = ArgumentCaptor.forClass(AssessmentFeedback.class);
+
+        final ServiceResult<Void> result = assessmentFeedbackService.createAssessmentFeedback(assessmentFeedback);
+        assertTrue(result.isSuccess());
+
+        verify(assessmentFeedbackRepositoryMock, times(1)).save(argument.capture());
+
+        final AssessmentFeedback saved = argument.getValue();
+        assertNull(saved.getId());
+        assertEquals(assessmentId, saved.getAssessment().getId());
+        assertEquals(value, saved.getFeedback());
+        assertEquals(score, saved.getScore());
+        assertEquals(questionId, saved.getQuestion().getId());
+    }
+
+    @Test
+    public void testUpdateAssessmentFeedback() throws Exception {
+        final Long assessmentId = 1L;
+        final Long questionId = 2L;
+        final Long assessmentFeedbackId = 3L;
+        final String value = "Blah";
+        final String oldValue = "Old feedback";
+        final Integer score = 10;
+        final Integer oldScore = 5;
+
+        final AssessmentFeedback existingAssessmentFeedback = newAssessmentFeedback()
+                .with(id(assessmentFeedbackId))
+                .withAssessment(newAssessment().with(id(assessmentId)).build())
+                .withFeedback(oldValue)
+                .withScore(oldScore)
+                .withQuestion(newQuestion().with(id(questionId)).build())
+                .build();
+
+        final AssessmentFeedbackResource newAssessmentFeedback = newAssessmentFeedbackResource()
+                .withId(assessmentFeedbackId)
+                .withAssessment(assessmentId)
+                .withFeedback(value)
+                .withScore(score)
+                .withQuestion(questionId)
+                .build();
+
+        final ArgumentCaptor<AssessmentFeedback> argument = ArgumentCaptor.forClass(AssessmentFeedback.class);
+
+        when(assessmentFeedbackRepositoryMock.findOne(assessmentFeedbackId)).thenReturn(existingAssessmentFeedback);
+
+        final ServiceResult<Void> result = assessmentFeedbackService.updateAssessmentFeedback(assessmentFeedbackId, newAssessmentFeedback);
+        assertTrue(result.isSuccess());
+
+        verify(assessmentFeedbackRepositoryMock, times(1)).save(argument.capture());
+
+        final AssessmentFeedback saved = argument.getValue();
+        assertEquals(assessmentFeedbackId, saved.getId());
+        assertEquals(assessmentId, saved.getAssessment().getId());
+        assertEquals(value, saved.getFeedback());
+        assertEquals(score, saved.getScore());
+        assertEquals(questionId, saved.getQuestion().getId());
+    }
+
+    @Test
+    public void testUpdateFeedbackValue() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final String value = "Blah";
@@ -131,7 +204,7 @@ public class AssessmentFeedbackServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void updateFeedbackValue_notExists() throws Exception {
+    public void testUpdateFeedbackValue_notExists() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final String value = "Blah";
@@ -151,7 +224,7 @@ public class AssessmentFeedbackServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void updateScore() throws Exception {
+    public void testUpdateScore() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final String value = "Blah";
@@ -184,7 +257,7 @@ public class AssessmentFeedbackServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void updateScore_notExists() throws Exception {
+    public void testUpdateScore_notExists() throws Exception {
         final Long assessmentId = 1L;
         final Long questionId = 2L;
         final Integer score = 10;
