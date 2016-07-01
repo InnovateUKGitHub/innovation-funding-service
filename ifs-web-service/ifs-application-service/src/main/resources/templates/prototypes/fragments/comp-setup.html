@@ -1228,7 +1228,12 @@
     
     <form>
 
-        <div class="collapsible section-overview">
+        <ul class="list-overview">
+
+            <li><h3 class="heading-small">Application details</h3></li>
+            <li><h3 class="heading-small">Project summary</h3></li>
+            <li><h3 class="heading-small">Public description</h3></li>
+            <li><h3 class="heading-small">Scope</h3></li>
             
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
 
@@ -1250,7 +1255,7 @@
             
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
 
-        </div>
+        </ul>
         
          <div class="extra-margin">
             <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6" th:remove="tag" />
@@ -1341,83 +1346,128 @@
 <!-- =================Section: application questions=========================== -->
 
 <div th:fragment="prototype-application-question">
-    <h2 th:text="${questionNo+'. '+questionTitle}">
-                <!-- <div class="section-status section-incomplete">Incomplete</div> -->
-    </h2>
-                
-    <div class="question extra-margin">
-
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
-                <span class="form-label-bold">Question title</span>
-            </label>
-            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
-                <span class="form-label-bold">Competition subtitle</span>
-            </label>
-            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
-                <span class="form-label-bold">Question guidance title</span>
-            </label>
-            <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
-        </div>
-
-        <div class="form-group">
-            <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
-            <div class="textarea-wrapped "> 
-                <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
-                <span class="form-label-bold">Max word count</span>
-            </label>
-            <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
-        </div>
-
-        <div class="grid-row">
-             <div class="column-half">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Is the answer scored?</legend>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
-                        <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
-                    Yes
-                    </label>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
-                         <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
-                    No
-                    </label>
-                </fieldset>
-            </div>
-
-
-            <div class="column-half">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Allow appendix?</legend>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
-                        <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
-                    Yes
-                    </label>
-                    <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
-                         <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
-                    No
-                    </label>
-                </fieldset>
-            </div>
-
-        </div>
-    </div>
     
-    <div class="alignright">
-        <a href="#" class="button button-large">Save and close</a>
-    </div>
+    <li>
+
+        <h3 class="heading-small" th:text="${questionNo+'. '+questionTitle}">
+                    <!-- <div class="section-status section-incomplete">Incomplete</div> -->
+        </h3>
+
+        <th:block th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">
+
+            <div class="alignright">
+                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="button button-secondary">Edit</a>
+            </div>
+
+            <div class="extra-margin-bottom">
+
+                <h3 class="heading-small">Question title</h3>
+                <p>What is the business opportunity this project addresses?</p>
+
+                <h3 class="heading-small">Question subtitle</h3>
+                <p>None</p>
+
+                <h3 class="heading-small">Guidance title</h3>
+                <p>What should I include in the business opportunity section?</p>
+
+                <h3 class="heading-small">Guidance</h3>
+                <p>You should describe:</p>
+                <ul class="list-bullet">
+                    <li>the business opportunity you have identified and how you plan to take advantage of it</li>
+                    <li>the customer needs you have identified and how your project will meet them</li>
+                    <li>the challenges you expect to face and how you will overcome them</li>
+                </ul>
+
+                <h3 class="heading-small">Words</h3>
+                <p>400</p>
+
+                <h3 class="heading-small">Appendix</h3>
+                <p>No</p>
+
+            </div>
+            
+
+        </th:block>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'edit-'+questionNo}">
+                    
+            <div class="question extra-margin">
+
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
+                        <span class="form-label-bold">Question title</span>
+                    </label>
+                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
+                        <span class="form-label-bold">Competition subtitle</span>
+                    </label>
+                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
+                        <span class="form-label-bold">Question guidance title</span>
+                    </label>
+                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
+                    <div class="textarea-wrapped "> 
+                        <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
+                        <span class="form-label-bold">Max word count</span>
+                    </label>
+                    <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
+                </div>
+
+                <div class="grid-row">
+                     <div class="column-half">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Is the answer scored?</legend>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
+                                <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                            Yes
+                            </label>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
+                                 <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
+                            No
+                            </label>
+                        </fieldset>
+                    </div>
+
+
+                    <div class="column-half">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Allow appendix?</legend>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
+                                <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                            Yes
+                            </label>
+                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
+                                 <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
+                            No
+                            </label>
+                        </fieldset>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="alignright">
+                <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="button button-large">Save and close</a>
+            </div>
+
+        </th:block>
+
+    </li>
 
 </div>
 

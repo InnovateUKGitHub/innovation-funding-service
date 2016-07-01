@@ -74,10 +74,10 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testFindByApplicationId() throws Exception {
         Set<OrganisationResource> organisations = controller.findByApplicationId(1L).getSuccessObject();
-        assertEquals("There should be 5 organisation in this application", 5, organisations.size());
+        assertEquals("There should be 4 organisation in this application", 4, organisations.size());
 
-        OrganisationResource organisation = controller.findById(2L).getSuccessObject();
-        assertTrue("One of the organisations should be Worth Internet Systems", simpleMap(organisations, OrganisationResource::getId).contains(organisation.getId()));
+        OrganisationResource organisation = controller.findById(3L).getSuccessObject();
+        assertTrue("One of the organisations should be Empire Ltd", simpleMap(organisations, OrganisationResource::getId).contains(organisation.getId()));
     }
 
     private OrganisationResource createOrganisation(){
