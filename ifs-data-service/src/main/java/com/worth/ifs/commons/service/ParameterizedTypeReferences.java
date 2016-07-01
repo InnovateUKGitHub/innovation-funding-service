@@ -5,9 +5,10 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.ResponseResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -61,6 +62,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<AssessmentFeedbackResource>> assessmentFeedbackResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentFeedbackResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
         return new ParameterizedTypeReference<List<ProcessRoleResource>>() {};
     }
@@ -73,6 +78,14 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<CategoryResource>> categoryResourceListType() {
+        return new ParameterizedTypeReference<List<CategoryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionTypeResource>> competitionTypeResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionTypeResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<QuestionStatusResource>> questionStatusResourceListType() {
         return new ParameterizedTypeReference<List<QuestionStatusResource>>() {};
     }
@@ -81,16 +94,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<FormInputResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<ResponseResource>> responseResourceListType() {
-        return new ParameterizedTypeReference<List<ResponseResource>>() {};
-    }
-
     public static ParameterizedTypeReference<List<QuestionResource>> questionResourceListType() {
         return new ParameterizedTypeReference<List<QuestionResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceListType() {
-        return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<FormInputResponseResource>> formInputResponseListType() {

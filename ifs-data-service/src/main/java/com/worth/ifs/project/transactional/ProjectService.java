@@ -1,11 +1,14 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -13,6 +16,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +25,7 @@ import java.util.Map;
  */
 public interface ProjectService {
 
-    @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getProjectById(@P("projectId") final Long projectId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -45,14 +49,24 @@ public interface ProjectService {
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressType addressType, AddressResource addressResource);
+    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(final Long userId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
-    @PostAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date);
+
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
+    ServiceResult<Boolean> isSubmitAllowed(final Long projectId);
+	
+	//TODO - Security will be added as part of another story
+    @NotSecured(value="", mustBeSecuredByOtherServices = false) // TODO - This needs to be changed once Security is added
+    ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource);
 }

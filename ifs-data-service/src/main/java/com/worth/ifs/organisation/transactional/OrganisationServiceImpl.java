@@ -1,9 +1,10 @@
 package com.worth.ifs.organisation.transactional;
 
 import com.worth.ifs.address.domain.Address;
-import com.worth.ifs.address.resource.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Academic;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -11,10 +12,10 @@ import com.worth.ifs.organisation.repository.AcademicRepository;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -76,9 +77,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, AddressResource addressResource) {
+    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
+            AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
             return organisationMapper.mapToResource(updatedOrganisation);
@@ -94,7 +96,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
                 .map(a -> new OrganisationSearchResult(a.getId().toString(), a.getName()))
                 .collect(Collectors.toList());
 
-        ServiceResult organisationResults;
+        ServiceResult<List<OrganisationSearchResult>> organisationResults;
         if (organisations.isEmpty()) {
             organisationResults = serviceFailure(notFoundError(Academic.class, organisationName));
         } else {
@@ -107,7 +109,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final Long searchOrganisationId) {
         Academic academic = academicRepository.findById(searchOrganisationId);
 
-        ServiceResult organisationResults;
+        ServiceResult<OrganisationSearchResult> organisationResults;
         if (academic == null) {
             organisationResults = serviceFailure(notFoundError(Academic.class, searchOrganisationId));
         } else {

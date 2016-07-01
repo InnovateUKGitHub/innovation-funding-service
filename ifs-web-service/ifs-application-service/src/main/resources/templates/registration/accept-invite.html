@@ -13,9 +13,7 @@
 
     <div class="hgroup">
         <h1 class="heading-xlarge no-margin-bottom">Join an application</h1>
-
-        <p>You have been invited to join a new application into the competition '<span th:text="${invite.competitionName}" />'.<br/>
-            Sign up to a new account, or sign in to an existing account to continue.</p>
+        <p>You have been invited to join a new application into the competition '<span th:text="${invite.competitionName}" />'.
     </div>
 
     <div class="grid-row">
@@ -37,7 +35,7 @@
                 <a th:href="@{${createAccountLink}}" class="button" value="create-account" type="submit">Create</a>
             </div>
             <div th:if="${emailAddressRegistered}">
-                <h1 class="heading-large">We found a user account with the invited email address</h1>
+                <h1 class="heading-large">We've found an existing user account with the invited email address</h1>
                 <p>Please sign in with your existing account.</p>
                 <p><a href="/accept-invite-authenticated/confirm-invited-organisation">Click here to sign in</a></p>
             </div>

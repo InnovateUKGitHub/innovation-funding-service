@@ -129,9 +129,8 @@ Partner cannot invite others to other organisations
 
 Partner who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath    Email    Pending
+    [Tags]    HappyPath    Email
     [Setup]    Log in as user    &{lead_applicant_credentials}
-    # Pending due to INFUND-3266
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary

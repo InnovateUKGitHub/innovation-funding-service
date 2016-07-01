@@ -4,6 +4,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -57,6 +57,6 @@ public class InviteOrganisationPermissionRules {
     }
 
     private boolean hasRoleOnApplication(final UserRoleType userRoleType, final UserResource user, final Long applicationId) {
-        return checkRole(user, applicationId, userRoleType, processRoleRepository);
+        return SecurityRuleUtil.checkProcessRole(user, applicationId, userRoleType, processRoleRepository);
     }
 }

@@ -15,6 +15,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
@@ -50,6 +51,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -103,7 +105,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
         return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
     }
-    
+
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
         Application application = new Application();
         application.setName(applicationName);
@@ -121,10 +123,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
         Role role = roles.get(0);
 
-        List<ProcessRole> usersProcessRoles = user.getProcessRoles();
-        Organisation userOrganisation = usersProcessRoles.size()!=0
-                ? usersProcessRoles.get(0).getOrganisation()
-                : user.getOrganisations().get(0);
+        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
 
         ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
@@ -134,10 +133,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setProcessRoles(processRoles);
         application.setCompetition(competition);
 
-        Application createdApplication = applicationRepository.save(application);
+        applicationRepository.save(application);
         processRoleRepository.save(processRole);
 
-        return serviceSuccess(applicationMapper.mapToResource(createdApplication));
+        return serviceSuccess(applicationMapper.mapToResource(application));
     }
 
     @Override
@@ -147,24 +146,27 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
         long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
 
-        FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
+        return getOpenApplication(applicationId).andOnSuccess(application -> {
+            FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
-        // Removing and replacing if file already exists here
-        if (existingResponse != null && existingResponse.getFileEntry() != null) {
-            FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
-            final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);;
-            if(deleteResult.isFailure()) {
-                return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
+            // Removing and replacing if file already exists here
+            if (existingResponse != null && existingResponse.getFileEntry() != null) {
+                FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+                final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);
+                ;
+                if (deleteResult.isFailure()) {
+                    return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
+                }
             }
-        }
 
-        return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile ->
-        	createFormInputResponseFileUpload(successfulFile, existingResponse, processRoleId, applicationId, formInputId, formInputResponseFile)
-        );
+            return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile ->
+                            createFormInputResponseFileUpload(successfulFile, existingResponse, processRoleId, applicationId, formInputId, formInputResponseFile)
+            );
+        });
     }
-    
+
     private ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile, FormInputResponse existingResponse, long processRoleId, long applicationId, long formInputId, FormInputResponseFileEntryResource formInputResponseFile) {
-    	FileEntry fileEntry = successfulFile.getValue();
+        FileEntry fileEntry = successfulFile.getValue();
 
         if (existingResponse != null) {
 
@@ -197,42 +199,45 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
             FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
             FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
-
             return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturn(updatedFile ->
-                    Pair.of(updatedFile.getKey(), existingFormInputResource)
+                            Pair.of(updatedFile.getKey(), existingFormInputResource)
             );
         });
     }
 
     @Override
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
-
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
-                getFormInputResponseFileUpload(fileEntry);
-
-        return existingFileResult.andOnSuccess(existingFile -> {
-
-            FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getKey();
-            Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
-
-            FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
-            if(formInput != null) {
-                boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
-                return fileService.deleteFile(fileEntryId).
-                        andOnSuccess(deletedFile -> {
-                            if (questionHasMultipleStatuses)
-                                return getFormInputResponse(formInputFileEntryResource.getCompoundId());
-                            else
-                                return getFormInputResponseForQuestionAssignee(formInputFileEntryResource.getCompoundId());
-                        }).
-                        andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
-            } else {
-                return serviceFailure(notFoundError(FormInput.class, formInputFileEntryResource.getCompoundId().getFormInputId()));
-            }
-        });
+        return getOpenApplication(fileEntry.getApplicationId()).andOnSuccess(application -> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(fileEntry));
     }
 
-    private boolean questionHasMultipleStatuses(@NotNull FormInput formInput){
+    private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
+
+            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
+                    getFormInputResponseFileUpload(fileEntry);
+
+            return existingFileResult.andOnSuccess(existingFile -> {
+
+                FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getKey();
+                Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
+
+                FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
+                if (formInput != null) {
+                    boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
+                    return fileService.deleteFile(fileEntryId).
+                            andOnSuccess(deletedFile -> {
+                                if (questionHasMultipleStatuses)
+                                    return getFormInputResponse(formInputFileEntryResource.getCompoundId());
+                                else
+                                    return getFormInputResponseForQuestionAssignee(formInputFileEntryResource.getCompoundId());
+                            }).
+                            andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
+                } else {
+                    return serviceFailure(notFoundError(FormInput.class, formInputFileEntryResource.getCompoundId().getFormInputId()));
+                }
+            });
+    }
+
+    private boolean questionHasMultipleStatuses(@NotNull FormInput formInput) {
         Question question = formInput.getQuestion();
         return question.hasMultipleStatuses();
     }
@@ -240,22 +245,22 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
         final FormInput formInput = formInputRepository.findOne(fileEntry.getFormInputId());
-        if(formInput == null){
+        if (formInput == null) {
             return serviceFailure(notFoundError(FormInput.class, fileEntry.getFormInputId()));
         }
 
         boolean hasMultipleStatuses = questionHasMultipleStatuses(formInput);
 
         ServiceResult<FormInputResponse> formInputResponse;
-        if(hasMultipleStatuses){
+        if (hasMultipleStatuses) {
             formInputResponse = getFormInputResponse(fileEntry);
         } else {
             formInputResponse = getFormInputResponseForQuestionAssignee(fileEntry);
         }
         return formInputResponse.
                 andOnSuccess(fir -> fileService.getFileByFileEntryId(fir.getFileEntry().getId()).
-                andOnSuccessReturn(inputStreamSupplier -> Pair.of(formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry), inputStreamSupplier)
-        ));
+                        andOnSuccessReturn(inputStreamSupplier -> Pair.of(formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry), inputStreamSupplier)
+                        ));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
@@ -277,21 +282,22 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
         Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
         return find(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(
-                fileEntry.getApplicationId(),
-                fileEntry.getProcessRoleId(),
-                fileEntry.getFormInputId()),
+                        fileEntry.getApplicationId(),
+                        fileEntry.getProcessRoleId(),
+                        fileEntry.getFormInputId()),
                 formInputResponseNotFoundError);
     }
 
     /**
      * Use this method for finding a form input response when a question has single status (shared across application)
+     *
      * @param fileEntry - in this case the FormInputResponseFileEntryId will contain the id of person to whom the question is assigned.
      * @return
      */
     private ServiceResult<FormInputResponse> getFormInputResponseForQuestionAssignee(FormInputResponseFileEntryId fileEntry) {
         Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
         List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getFormInputId());
-        if(formInputResponses != null && !formInputResponses.isEmpty()){
+        if (formInputResponses != null && !formInputResponses.isEmpty()) {
             return serviceSuccess(formInputResponses.get(0));
         }
         return serviceFailure(formInputResponseNotFoundError);
@@ -319,6 +325,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
+        if (!applicationBelongsToOpenCompetition(id)) {
+            return serviceFailure(COMPETITION_NOT_OPEN);
+        }
 
         return getApplication(id).andOnSuccessReturn(existingApplication -> {
 
@@ -332,7 +341,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, LocalDateTime date) {
-        return getApplication(id).andOnSuccessReturn(existingApplication -> {
+        return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
@@ -344,15 +353,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
 
         return getProgressPercentageBigDecimalByApplicationId(applicationId).andOnSuccessReturn(percentage -> {
-        	CompletedPercentageResource resource = new CompletedPercentageResource();
-        	resource.setCompletedPercentage(percentage);
+            CompletedPercentageResource resource = new CompletedPercentageResource();
+            resource.setCompletedPercentage(percentage);
             return resource;
         });
     }
 
     @Override
     public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
-                                                         final Long statusId) {
+                                                                      final Long statusId) {
         return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
             application.setApplicationStatus(applicationStatus);
             applicationRepository.save(application);
@@ -361,7 +370,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> sendNotificationApplicationSubmitted(Long applicationId){
+    public ServiceResult<Void> sendNotificationApplicationSubmitted(Long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             NotificationSource from = systemNotificationSource;
             NotificationTarget to = new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
@@ -381,8 +390,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
-                                                                             final Long userId,
-                                                                             final UserRoleType role) {
+                                                                                            final Long userId,
+                                                                                            final UserRoleType role) {
         List<Application> allApps = applicationRepository.findAll();
         List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
                 applicationContainsUserRole(app.getProcessRoles(), userId, role));
@@ -402,9 +411,52 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> findByProcessRole(final Long id){
+    public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
+            final Long competitionId,
+            final Long userId,
+            final String applicationName) {
+        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) ->
+                        createApplicationByApplicationNameForUserAndCompetition(applicationName, user, competition)
+        );
+    }
+
+    private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserAndCompetition(String applicationName, User user, Competition competition) {
+        Application application = new Application();
+        application.setName(applicationName);
+        LocalDate currentDate = null;
+        application.setStartDate(currentDate);
+
+        String name = ApplicationStatusConstants.CREATED.getName();
+
+        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+        ApplicationStatus applicationStatus = applicationStatusList.get(0);
+
+        application.setApplicationStatus(applicationStatus);
+        application.setDurationInMonths(3L);
+
+        List<Role> roles = roleRepository.findByName("leadapplicant");
+        Role role = roles.get(0);
+
+        Organisation userOrganisation = user.getOrganisations().get(0);
+
+        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+
+        application.setProcessRoles(processRoles);
+        application.setCompetition(competition);
+
+        Application createdApplication = applicationRepository.save(application);
+        processRoleRepository.save(processRole);
+
+        return serviceSuccess(applicationMapper.mapToResource(createdApplication));
+    }
+
+    @Override
+    public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole ->
-            applicationMapper.mapToResource(processRole.getApplication())
+                        applicationMapper.mapToResource(processRole.getApplication())
         );
     }
 
@@ -412,35 +464,35 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
         return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
-            sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
-                Competition competition = application.getCompetition();
-                BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
+                        sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
+                            Competition competition = application.getCompetition();
+                            BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
 
-                boolean readyForSubmit = false;
-                if (allSectionsComplete &&
-                        progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                        researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
-                    readyForSubmit = true;
-                }
+                            boolean readyForSubmit = false;
+                            if (allSectionsComplete &&
+                                    progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
+                                    researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
+                                readyForSubmit = true;
+                            }
 
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put(READY_FOR_SUBMIT, readyForSubmit);
-                node.put(PROGRESS, progressPercentage);
-                node.put(RESEARCH_PARTICIPATION, researchParticipation);
-                node.put(RESEARCH_PARTICIPATION_VALID, researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0);
-                node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
-                return node;
-            })
+                            ObjectMapper mapper = new ObjectMapper();
+                            ObjectNode node = mapper.createObjectNode();
+                            node.put(READY_FOR_SUBMIT, readyForSubmit);
+                            node.put(PROGRESS, progressPercentage);
+                            node.put(RESEARCH_PARTICIPATION, researchParticipation);
+                            node.put(RESEARCH_PARTICIPATION_VALID, researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0);
+                            node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
+                            return node;
+                        })
         );
     }
-    
-	
-	@Override
-	public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
-		List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
-		return serviceSuccess(applicationResults);
-	}
+
+
+    @Override
+    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
+        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
+        return serviceSuccess(applicationResults);
+    }
 
     // TODO DW - INFUND-1555 - deal with rest results
     private ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
@@ -482,7 +534,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         if (questions.isEmpty()) {
             return BigDecimal.ZERO;
-        } else if (totalQuestions.compareTo(countCompleted) == 0){
+        } else if (totalQuestions.compareTo(countCompleted) == 0) {
             return BigDecimal.valueOf(100).setScale(2); // make sure there is no result like 100.0000000001 because of rounding issues.
         } else {
             BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
@@ -491,8 +543,16 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             return result;
         }
     }
-    
+
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
         return simpleMap(filtered, application -> applicationMapper.mapToResource(application));
+    }
+
+    private boolean applicationBelongsToOpenCompetition(Long applicationId) {
+        Application application = applicationRepository.findOne(applicationId);
+        if (application != null && application.getCompetition() != null) {
+            return CompetitionResource.Status.OPEN.equals(application.getCompetition().getCompetitionStatus());
+        }
+        return true;
     }
 }

@@ -1,5 +1,12 @@
 package com.worth.ifs.application.transactional;
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
+
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.domain.Application;
@@ -10,6 +17,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
@@ -21,17 +29,11 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
@@ -54,14 +56,23 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link ApplicationServiceImpl}
  */
 public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
+
+    private Application openApplication;
 
     @Override
     protected ApplicationService supplyServiceUnderTest() {
@@ -99,6 +110,10 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
         existingFormInputResponses = Arrays.asList(existingFormInputResponse);
         unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        openApplication = newApplication().withCompetition(openCompetition).build();
+
+        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
     }
 
     @Test
@@ -163,7 +178,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
         when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
-        when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
+        when(applicationRepositoryMock.findOne(456L)).thenReturn(openApplication);
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -202,7 +217,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
-        when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
+        when(applicationRepositoryMock.findOne(456L)).thenReturn(openApplication);
 
         when(fileServiceMock.getFileByFileEntryId(987L)).thenReturn(serviceSuccess(inputStreamSupplier));
 

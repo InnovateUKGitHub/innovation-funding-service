@@ -15,6 +15,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
+Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
 Force Tags        Finances
 Default Tags
@@ -23,27 +24,29 @@ Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/2/form/section/7
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/2/form/section/8
-${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}    ${SERVER}/application/7/form/section/8
-${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/section/7
-${OVERVIEW_MARK_AS_COMPLETE}    ${SERVER}/application/7
 
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
+    ...
+    ...    This test case still use the old application after the refactoring. We need to add an extra collaborator in the newly created application for this.
     [Tags]
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    [Teardown]    Log out as user
+    [Teardown]    The user closes the browser
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
+    ...
+    ...
+    ...    This test case still use the old application after the refactoring
     [Tags]
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
@@ -51,7 +54,7 @@ Calculations for the first collaborator
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
-    [Teardown]    Log out as user
+    [Teardown]    The user closes the browser
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927
@@ -60,9 +63,10 @@ Red warning should show when the finances are incomplete
     ...
     ...    INFUND-446
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
-    Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
-    When the user clicks the button/link    jQuery=button:contains("Edit")
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Finances overview
     Then the red warning should be visible
     And the user should see the element    css=.warning-alert
     And the user should see the text in the page    The following organisations have not marked their finances as complete:
@@ -74,38 +78,43 @@ Green check should show when the finances are complete
     ...
     ...    INFUND-446
     [Tags]    HappyPath
-    Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
-    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
-    Then the user should be redirected to the correct page    ${OVERVIEW_MARK_AS_COMPLETE}
-    And the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    And both green checks should be visible
+    [Setup]    Make the finances ready for mark as complete
+    When the user marks the finances as complete
+    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    And the user clicks the button/link    link=Finances overview
+    Then Green check should be visible
+    [Teardown]    The user closes the browser
 
-Alert should show If the research participation of the academic partner is too high
+Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{collaborator2_credentials}
-    When the user navigates to the page    ${your_finances_url_application_2}
-    And the user enters text to a text field    id=incurred-staff    1000000000
+    [Tags]    HappyPath    Email
+    [Setup]    Log in create a new invite application invite academic collaborators and accept the invite
+    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    And The user navigates to the academic application finances
+    When the user enters text to a text field    id=incurred-staff    1000000000
     And Guest user log-in    &{lead_applicant_credentials}
-    And the user navigates to the page    ${FINANCES_OVERVIEW_URL_APPLICATION_2}
+    And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
-    And the user navigates to the page    ${APPLICATION_2_SUMMARY_URL}
+    And the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=Review & submit
     And the user clicks the button/link    jquery=button:contains("Finances Summary")
     Then the user should see the text in the page    The participation levels of this project are not within the required range
-    [Teardown]    Academics partner enters a valid resaerch participation value
+    [Teardown]
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{collaborator1_credentials}
-    When the first collaborator edits financial details to bring down the research participation level
-    And Guest user log-in    &{lead_applicant_credentials}
-    And the user navigates to the page    ${FINANCES_OVERVIEW_URL_APPLICATION_2}
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When Lead enters a valid research participation value
+    And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are within the required range
-    And the user navigates to the page    ${APPLICATION_2_SUMMARY_URL}
+    And the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link=Review & submit
     And the user clicks the button/link    jquery=button:contains("Finances Summary")
     Then the user should see the text in the page    The participation levels of this project are within the required range
-    [Teardown]    the user closes the browser
+    [Teardown]
 
 *** Keywords ***
 the finance Project cost breakdown calculations should be correct
@@ -136,28 +145,23 @@ the contribution to project and funding sought should be 0 and not a negative nu
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £0
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £0
 
-both green checks should be visible
+Green check should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 
 the red warning should be visible
-    the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    When the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Finances overview
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/warning-icon"]
 
-The first collaborator edits financial details to bring down the research participation level
-    the user navigates to the page    ${your_finances_url_application_2}
+Lead enters a valid research participation value
+    When The user navigates to the academic application finances
     the user clicks the button/link    jQuery=button:contains("Labour")
-    the user should see the element    name=add_cost
+    the user should see the element     name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
-    the user should see the element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
-    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
-    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
-    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
-    Sleep    300ms
-    focus    css=.app-submit-btn
-
-Academics partner enters a valid resaerch participation value
-    guest user log-in    &{collaborator2_credentials}
-    the user navigates to the page    ${your_finances_url_application_2}
-    the user enters text to a text field    id=incurred-staff    1000
-    the user closes the browser
+    the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
+    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
+    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
+    mouse out    css=input
+    sleep     500ms

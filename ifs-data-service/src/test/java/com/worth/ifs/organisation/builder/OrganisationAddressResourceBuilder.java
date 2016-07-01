@@ -1,16 +1,16 @@
 package com.worth.ifs.organisation.builder;
 
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressTypeResource;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.address.resource.AddressType;
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 public class OrganisationAddressResourceBuilder extends BaseBuilder<OrganisationAddressResource, OrganisationAddressResourceBuilder> {
     private OrganisationAddressResourceBuilder(List<BiConsumer<Integer, OrganisationAddressResource>> multiActions) {
@@ -31,8 +31,8 @@ public class OrganisationAddressResourceBuilder extends BaseBuilder<Organisation
         return new OrganisationAddressResource();
     }
     
-    public OrganisationAddressResourceBuilder withAddressType(AddressType... addressTypes) {
-        return withArray((addressType, orgAddress) -> setField("addressType", addressType, orgAddress), addressTypes);
+    public OrganisationAddressResourceBuilder withAddressType(AddressTypeResource... addressTypesResource) {
+        return withArray((addressType, orgAddress) -> setField("addressType", addressType, orgAddress), addressTypesResource);
     }
     
     public OrganisationAddressResourceBuilder withAddress(AddressResource... addresses) {
