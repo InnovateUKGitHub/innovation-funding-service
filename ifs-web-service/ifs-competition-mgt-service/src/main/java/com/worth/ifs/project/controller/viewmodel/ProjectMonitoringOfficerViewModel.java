@@ -13,18 +13,18 @@ public class ProjectMonitoringOfficerViewModel {
 
     private String projectTitle;
     private String area;
-    private AddressResource primaryAddress;
     private LocalDate targetProjectStartDate;
     private String projectManagerName;
     private List<String> partnerOrganisationNames;
     private CompetitionSummaryResource competitionSummary;
     private boolean existingMonitoringOfficer;
     private boolean editMode;
+    private List<String> primaryAddressLines;
 
     public ProjectMonitoringOfficerViewModel(String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames, CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer, boolean editMode) {
         this.projectTitle = projectTitle;
         this.area = area;
-        this.primaryAddress = primaryAddress;
+        this.primaryAddressLines = primaryAddress.getNonEmptyLines();
         this.targetProjectStartDate = targetProjectStartDate;
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;
@@ -41,10 +41,6 @@ public class ProjectMonitoringOfficerViewModel {
         return area;
     }
 
-    public AddressResource getPrimaryAddress() {
-        return primaryAddress;
-    }
-
     public LocalDate getTargetProjectStartDate() {
         return targetProjectStartDate;
     }
@@ -59,6 +55,10 @@ public class ProjectMonitoringOfficerViewModel {
 
     public CompetitionSummaryResource getCompetitionSummary() {
         return competitionSummary;
+    }
+
+    public List<String> getPrimaryAddressLines() {
+        return primaryAddressLines;
     }
 
     public boolean isReadOnly() {
