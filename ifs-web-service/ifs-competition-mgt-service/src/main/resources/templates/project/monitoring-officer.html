@@ -23,14 +23,7 @@
 		</div>
 	</div>
 
-	<!--<div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />-->
-
-
-
-
-	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-
-	<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
+	<th:block th:if="${model.displayMonitoringOfficerAssignedMessage}">
 
 		<div class="success-alert">
 			<h2 class="heading-small no-margin-top">A Monitoring Officer has been assigned.</h2>
@@ -41,7 +34,7 @@
 
 	<div class="column-half">
 		<h2 class="heading-large">Monitoring Officer</h2>
-		<form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post" th:with="readonly=false">
+		<form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}">
 			<fieldset>
 				<legend class="visuallyhidden">
 					Monitoring Officer
@@ -78,7 +71,13 @@
                            id="phone-number" th:field="*{phoneNumber}" />
 				</div>
 
-                <button type="submit" class="button">Assign Monitoring Officer</button>
+                <a th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
+                    Change Monitoring Officer
+                </a>
+
+                <button type="submit" class="button" th:if="${model.displayAssignMonitoringOfficerLink}">
+                    Assign Monitoring Officer
+                </button>
 
 				<div class="modal-assign-mo" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 					<button class="js-close close" aria-label="Close Popup">X</button>

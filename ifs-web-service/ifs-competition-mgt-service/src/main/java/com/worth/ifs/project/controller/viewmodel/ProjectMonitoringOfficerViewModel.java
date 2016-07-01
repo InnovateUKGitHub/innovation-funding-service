@@ -18,8 +18,10 @@ public class ProjectMonitoringOfficerViewModel {
     private String projectManagerName;
     private List<String> partnerOrganisationNames;
     private CompetitionSummaryResource competitionSummary;
+    private boolean existingMonitoringOfficer;
+    private boolean editMode;
 
-    public ProjectMonitoringOfficerViewModel(String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames, CompetitionSummaryResource competitionSummary) {
+    public ProjectMonitoringOfficerViewModel(String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames, CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer, boolean editMode) {
         this.projectTitle = projectTitle;
         this.area = area;
         this.primaryAddress = primaryAddress;
@@ -27,6 +29,8 @@ public class ProjectMonitoringOfficerViewModel {
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.competitionSummary = competitionSummary;
+        this.existingMonitoringOfficer = existingMonitoringOfficer;
+        this.editMode = editMode;
     }
 
     public String getProjectTitle() {
@@ -55,5 +59,29 @@ public class ProjectMonitoringOfficerViewModel {
 
     public CompetitionSummaryResource getCompetitionSummary() {
         return competitionSummary;
+    }
+
+    public boolean isReadOnly() {
+        return !editMode;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public boolean isExistingMonitoringOfficer() {
+        return existingMonitoringOfficer;
+    }
+
+    public boolean isDisplayMonitoringOfficerAssignedMessage() {
+        return existingMonitoringOfficer && isReadOnly();
+    }
+
+    public boolean isDisplayChangeMonitoringOfficerLink() {
+        return isReadOnly();
+    }
+
+    public boolean isDisplayAssignMonitoringOfficerLink() {
+        return isEditMode();
     }
 }
