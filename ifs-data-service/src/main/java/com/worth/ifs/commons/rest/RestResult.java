@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.commons.service.*;
+import com.worth.ifs.commons.service.BaseEitherBackedResult;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -186,6 +189,28 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return handleSuccessOrFailure(
                 failure -> serviceFailure(getFailure().getErrors()),
                 success -> serviceSuccess(success));
+    }
+
+    /**
+     * Switches this RestResult to be a success case if we encountered a Not Found that was an acceptable case.
+     * Additionally the result is returned as an Optional T rather than a T as the calling code will be assuming that
+     * they may or may not be getting a result back from this call.
+     *
+     * If this RestResult is a failure for another reason, the returned RestResult will contain the same failures.
+     *
+     * @return
+     */
+    public RestResult<Optional<T>> toOptionalIfNotFound() {
+        return handleSuccessOrFailure(
+                failure -> {
+                    if (NOT_FOUND.equals(failure.getStatusCode())) {
+                        return restSuccess(Optional.empty());
+                    } else {
+                        return (RestResult<Optional<T>>) this;
+                    }
+                },
+                success -> restSuccess(getOptionalSuccessObject())
+        );
     }
 
     public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {

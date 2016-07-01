@@ -362,10 +362,6 @@
 <div th:fragment="section-eligibility">
     <h2>Step 3: Eligibility Criteria</h2>
 
-    <div class="panel-indent">
-        INTRO TEXT REQUIRED
-    </div>
-
     <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-3-edit">
