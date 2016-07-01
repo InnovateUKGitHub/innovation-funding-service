@@ -358,7 +358,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1))
+                .andExpect(model().attributeErrorCount("form", 2))
                 .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
                 .andReturn();
     }

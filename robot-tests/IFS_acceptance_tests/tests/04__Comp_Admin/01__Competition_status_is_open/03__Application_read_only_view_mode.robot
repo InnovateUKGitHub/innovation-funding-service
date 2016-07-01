@@ -49,6 +49,16 @@ Comp admin should not be able to edit the finances and should view the detailed 
     And the user should see the text in the page    Funding breakdown
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
+    Then Logout as user
+    When Log in as user    &{collaborator1_credentials}
+    Then the user navigates to the page    ${YOUR_FINANCES_URL}
+    And the applicant edits the Subcontracting costs section
+    And the user reloads the page
+    And Logout as user
+    When Log in as user    &{Comp_admin1_credentials}
+    And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    And the user clicks the button/link    jQuery=button:contains("Finances Summary")
+    Then the user should see the correct finances change
 
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
@@ -83,3 +93,19 @@ the finance summary calculations should be correct
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £127,059
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+
+the applicant edits the Subcontracting costs section
+    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
+    the user should see the text in the page    Subcontractor name
+    Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    2000
+    input text    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
+    input text    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
+    input text    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
+    Mouse Out    css=input
+    focus    css=.app-submit-btn
+
+the user should see the correct finances change
+    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)           £129,059
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £129,059
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £2,000
