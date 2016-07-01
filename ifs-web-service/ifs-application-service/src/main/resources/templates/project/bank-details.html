@@ -30,39 +30,41 @@
 	</p>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails.sortCode == null ? false : true}">
-    <div class="form-group">
+    <div class="form-group" th:classappend="${#fields.hasErrors('accountNumber') ? 'error' : ''}">
       <label for="bank-acc-number">
         <span class="form-label-bold">Account number</span>
         <span class="form-hint">For example: 1548965</span>
       </label>
       <!-- add th:field -->
-      <input type="text" required="required"  th:readonly="${readonly}" maxlength="8" minlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
+      <input type="text" th:errorclass="field-error" required="required"  th:readonly="${readonly}" maxlength="8" minlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
     </div>
 
-    <div class="form-group" >
+    <div class="form-group"  th:classappend="${#fields.hasErrors('sortCode') ? 'error' : ''}">
       <label for="bank-sort-code">
         <span class="form-label-bold">Sort code</span>
         <span class="form-hint">For example: 311212</span>
       </label>
-      <input type="text" required="required" th:readonly="${readonly}" maxlength="6" minlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
+      <input type="text" th:errorclass="field-error" required="required" th:readonly="${readonly}" maxlength="6" minlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
     </div>
 
-        <div class="form-group" >
-            <fieldset>
+    <div class="form-group" th:unless="${readonly}">
+        <fieldset>
+            <h2 class="heading-medium">Billing address</h2>
+            <legend>
+              <span class="visuallyhidden">Billing address</span>
+            </legend>
+            <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+            <div th:unless="${readonly}" th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
+        </fieldset>
+    </div>
+    <div th:if="${readonly}">
+      <h2 class="heading-medium">Billing address</h2>
+      <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+      <div th:include="project/fragments :: display-address(address=${bankDetails.organisationAddress.address})" th:remove="tag"/>
+    </div>
 
-                <h2 class="heading-medium">Billing address</h2>
-                <legend>
-                  <span class="visuallyhidden">Billing address</span>
-                </legend>
-                <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
-                <div th:unless="${readonly}" th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
-                <div th:if="${readonly}" th:include="project/fragments :: display-address(address=${bankDetails.organisationAddress.address})" th:with="form=${form}" th:remove="tag"/>
-
-            </fieldset>
-        </div>
-
-        <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
-        <a href="#page-with-confirm" th:unless="${readonly}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</a>
+    <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
+    <a href="#page-with-confirm" th:unless="${readonly}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</a>
 
 	</form>
 
