@@ -83,6 +83,32 @@
     margin-bottom: 30px;
 }
 
+/*-------- Comp setup editing questions view -------------*/
+
+.list-overview{
+    &.application-questions{
+        .heading-medium{
+            margin: 0.5em 0 0.4em 0;
+        }
+        .button{
+            margin-top: 10px;
+        }
+        .question{
+            margin: 30px 0 0 20px;
+
+            & + .alignright{
+                margin-bottom: 60px;
+            }
+        }
+        .grid-row{
+            h3{
+                padding-top: 5px;
+            }
+        }
+    }
+}
+
+
 
 /*-------- Companies House results panel example -------------*/
 
