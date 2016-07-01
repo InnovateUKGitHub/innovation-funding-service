@@ -118,10 +118,9 @@
 		<h3 class="heading-medium no-margin">Primary address</h3>
 		<p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
 		<p>
-			TODO Algate Solutions<br />
-			TODO 21 Ballygowen Road<br />
-			TODO Bristol<br />
-			TODO BS2 1RF
+            <span th:each="addressLine : ${model.primaryAddressLines}" th:remove="tag">
+                <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+            </span>
 		</p>
 
 		<h3 class="heading-medium no-margin">Target project start date</h3>
