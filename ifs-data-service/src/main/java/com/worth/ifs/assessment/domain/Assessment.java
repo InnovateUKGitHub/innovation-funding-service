@@ -1,11 +1,10 @@
 package com.worth.ifs.assessment.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.workflow.resource.OutcomeType;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.OutcomeType;
 
 import javax.persistence.Entity;
 

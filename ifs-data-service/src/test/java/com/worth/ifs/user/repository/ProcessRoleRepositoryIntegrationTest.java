@@ -25,18 +25,18 @@ public class ProcessRoleRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     public void test_findByUserIdAndRoleAndApplicationId() {
 
-        long userId = 3L;
-        long applicationId = 4L;
-        String roleName = UserRoleType.ASSESSOR.getName();
+        long userId = 2L;
+        long applicationId = 1L;
+        String roleName = UserRoleType.COLLABORATOR.getName();
 
         Role role = roleRepository.findByName(roleName).stream().findFirst().get();
-        List<ProcessRole> assessorProcessRoles = repository.findByUserIdAndRoleAndApplicationId(userId, role, applicationId);
+        List<ProcessRole> processRoles = repository.findByUserIdAndRoleAndApplicationId(userId, role, applicationId);
 
-        assertEquals(1, assessorProcessRoles.size());
+        assertEquals(1, processRoles.size());
 
-        ProcessRole assessorProcessRole = assessorProcessRoles.stream().findFirst().get();
-        assertEquals(roleName, assessorProcessRole.getRole().getName());
-        assertEquals(Long.valueOf(applicationId), assessorProcessRole.getApplication().getId());
-        assertEquals(Long.valueOf(userId), assessorProcessRole.getUser().getId());
+        ProcessRole processRole = processRoles.stream().findFirst().get();
+        assertEquals(roleName, processRole.getRole().getName());
+        assertEquals(Long.valueOf(applicationId), processRole.getApplication().getId());
+        assertEquals(Long.valueOf(userId), processRole.getUser().getId());
     }
 }

@@ -18,6 +18,8 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
+import com.worth.ifs.assessment.domain.AssessmentFeedback;
+import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.competition.domain.Competition;
@@ -32,6 +34,7 @@ import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.token.domain.Token;
@@ -57,6 +60,8 @@ public class POJOTest {
     private List<Class<?>> classesToTest = Arrays.asList(
             Alert.class,
             AlertResource.class,
+            AssessmentFeedback.class,
+            AssessmentFeedbackResource.class,
             Invite.class,
             Address.class,
             OrganisationType.class,
@@ -81,7 +86,8 @@ public class POJOTest {
             ProjectUser.class,
             ProjectUserResource.class,
             AddressType.class,
-            AddressTypeResource.class
+            AddressTypeResource.class,
+            MonitoringOfficerResource.class
     );
 
     @Before
