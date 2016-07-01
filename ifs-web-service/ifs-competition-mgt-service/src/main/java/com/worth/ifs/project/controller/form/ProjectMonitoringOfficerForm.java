@@ -1,12 +1,13 @@
 package com.worth.ifs.project.controller.form;
 
+import com.worth.ifs.controller.BaseBindingResultTarget;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Form to capture the posted details of the Monitoring Officer
  */
-public class ProjectMonitoringOfficerForm {
+public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "Please provide a first name")
     private String firstName;

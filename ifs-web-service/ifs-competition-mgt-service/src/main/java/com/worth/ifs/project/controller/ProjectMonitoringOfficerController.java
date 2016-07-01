@@ -5,7 +5,9 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.controller.BindingResultTarget;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
@@ -25,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -51,8 +55,33 @@ public class ProjectMonitoringOfficerController {
     private ApplicationSummaryService applicationSummaryService;
 
     @RequestMapping(value = "/{projectId}/monitoring-officer", method = RequestMethod.GET)
-    public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
+    public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm();
+        doViewMonitoringOfficer(model, projectId, form);
+        return "project/monitoring-officer";
+    }
+
+    @RequestMapping(value = "/{projectId}/monitoring-officer", method = RequestMethod.POST)
+    public String updateMonitoringOfficerDetails(Model model,
+                                       @PathVariable("projectId") final Long projectId,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
+                                       BindingResult bindingResult,
+                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> doViewMonitoringOfficer(model, projectId, form);
+
+        if (bindingResult.hasErrors()) {
+            form.setBindingResult(bindingResult);
+            return failureView.get();
+        }
+
+        ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(), form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
+        return handleErrorsOrRedirectToMonitoringOfficerViewTemporarily("", projectId, model, form, bindingResult, updateResult, failureView);
+    }
+
+    private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
@@ -67,30 +96,37 @@ public class ProjectMonitoringOfficerController {
                 partnerOrganisationNames, competitionSummary);
 
         model.addAttribute("model", viewModel);
-        model.addAttribute("form", new ProjectMonitoringOfficerForm());
+        model.addAttribute("form", form);
+
         return "project/monitoring-officer";
     }
 
-    @RequestMapping(value = "/{projectId}/monitoring-officer", method = RequestMethod.POST)
-    public String updateMonitoringOfficerDetails(Model model,
-                                       @PathVariable("projectId") final Long projectId,
-                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
-                                       BindingResult bindingResult,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    /**
+     * "Temporarily" because the final target page to redirect to after submission has not yet been built
+     */
+    private String handleErrorsOrRedirectToMonitoringOfficerViewTemporarily(
+            String fieldName, long projectId, Model model,
+            BindingResultTarget form, BindingResult bindingResult,
+            ServiceResult<?> result,
+            Supplier<String> viewSupplier) {
 
-//        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
-//
-//        if (bindingResult.hasErrors()) {
-//            form.setBindingResult(bindingResult);
-//            return failureView.get();
-//        }
-//
-//        ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
-//        return handleErrorsOrRedirectToProjectOverview("financeContact", projectId, model, form, bindingResult, updateResult, failureView);
-        return "project/monitoring-officer";
+        if (result.isFailure()) {
+            bindAnyErrorsToField(result, fieldName, bindingResult, form);
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return viewSupplier.get();
+        }
+
+        return redirectToMonitoringOfficerViewTemporarily(projectId);
     }
 
-    private String getProjectManagerName(@PathVariable("projectId") Long projectId, ProjectResource projectResource) {
+    /**
+     * "Temporarily" because the final target page to redirect to after submission has not yet been built
+     */
+    private String redirectToMonitoringOfficerViewTemporarily(long projectId) {
+        return "redirect:/project/" + projectId + "/monitoring-officer";
+    }
+
+    private String getProjectManagerName(Long projectId, ProjectResource projectResource) {
 
         Long projectManagerId = projectResource.getProjectManager();
 
@@ -103,7 +139,7 @@ public class ProjectMonitoringOfficerController {
         return projectManager.map(ProjectUserResource::getRoleName).orElse("");
     }
 
-    private List<String> getPartnerOrganisationNames(@PathVariable("projectId") Long projectId) {
+    private List<String> getPartnerOrganisationNames(Long projectId) {
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         return simpleMap(partnerOrganisations, OrganisationResource::getName);
     }

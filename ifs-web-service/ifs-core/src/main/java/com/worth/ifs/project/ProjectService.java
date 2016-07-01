@@ -38,4 +38,6 @@ public interface ProjectService {
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     OrganisationResource getLeadOrganisation(Long projectId);
+
+    ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
 }

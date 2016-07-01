@@ -114,4 +114,9 @@ public class ProjectServiceImpl implements ProjectService {
 
         return organisationResultsCombined.getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber) {
+        return projectRestService.updateMonitoringOfficer(projectId, firstName, lastName, emailAddress, phoneNumber).toServiceResult();
+    }
 }
