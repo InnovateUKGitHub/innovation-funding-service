@@ -36,7 +36,7 @@ User can navigate to the competition setup form
 
 Initial details server-side validations
     [Documentation]    INFUND-2982
-    [Tags]     Pending
+    [Tags]    Pending
     # Pending due to INFUND-3768
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please select a competition executive
@@ -67,7 +67,7 @@ Initial details client-side validations
     Then the user should not see the text in the page    Please select a innovation area
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should not see the text in the page    Please select a competition type
-    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
+    When the user selects the option from the drop-down menu    Competition Technologist One    id=LeadTechnologistUserId
     Then the user should not see the text in the page    Please select a lead technologist
     When the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
@@ -145,7 +145,6 @@ Eligibility server-side validations
     And the user should see the text in the page      Please select a lead applicant type
 
 
-
 Eligibility client-side validations
     [Documentation]     INFUND-2986, INFUND-2988
     [Tags]
@@ -164,7 +163,6 @@ Eligibility client-side validations
     And the user should not see the text in the page     Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
     And the user enters text to a text field            id=streamName     Test stream name
-
 
 
 Eligibility information can be saved and the stream info shows correctly
