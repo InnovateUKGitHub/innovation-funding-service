@@ -47,7 +47,7 @@
            th:id="${id}"
            th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
            th:field="*{formInput[__${id}__]}"
-           th:attrappend="${attributes}"
+           th:attrappend="${attributes != null}?${attributes}"
            th:classappend="${cssClass}"
            th:placeholder="${placeholder}"
             />
