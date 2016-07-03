@@ -18,7 +18,7 @@
         <h1 class="heading-xlarge">Assessment overview</h1>
     </div>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="assesment-overview">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="assessment-overview">
 
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
@@ -27,14 +27,14 @@
               <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
-                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication})"></div>
+                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication}, assessmentId=${assessmentId})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
                     <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}"  th:if="${childSection.id == 8}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="'/assessment/'+${currentApplication.id}+'/question/'+${childSection.id}"
+                                    <a th:href="'/assessment/'+${assessmentId}+'/question/'+${childSection.id}"
                                        th:text="${childSection.name}" />
                                 </h3>
                             </div>

@@ -32,6 +32,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -89,10 +90,14 @@ public class AssessmentOverviewControllerTest  extends BaseControllerMockMVCTest
 
     @Test
     public void testAssessmentDetails() throws Exception {
-        AssessmentResource assessment = AssessmentResourceBuilder.newAssessmentResource().withId(1L).build();
+        AssessmentResource assessment = AssessmentResourceBuilder.newAssessmentResource().withId(1L).withProcessRole(0L).build();
         ProcessRoleResource processRole = ProcessRoleResourceBuilder.newProcessRoleResource().withApplicationId(1L).build();
         processRole.setId(0L);
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withId(1L).build();
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
+                .withId(1L)
+                .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
+                .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
+                .build();
         AssessmentFeedbackResource assessmentFeedback = AssessmentFeedbackResourceBuilder.newAssessmentFeedbackResource().withId(1L).withQuestion(1L).withAssessment(1L).build();
         List<AssessmentFeedbackResource> assessmentFeedbackList = new ArrayList<>();
         assessmentFeedbackList.add(assessmentFeedback);
@@ -105,7 +110,7 @@ public class AssessmentOverviewControllerTest  extends BaseControllerMockMVCTest
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
-        when(processRoleService.getById(assessment.getId())).thenReturn(settable(processRole));
+        when(processRoleService.getById(assessment.getProcessRole())).thenReturn(settable(processRole));
         when(assessmentFeedbackService.getAllAssessmentFeedback(assessment.getId())).thenReturn(assessmentFeedbackList);
         Map<Long,AssessmentFeedbackResource> feedbackMap = new HashMap<>();
         feedbackMap.put(1L,assessmentFeedback);
