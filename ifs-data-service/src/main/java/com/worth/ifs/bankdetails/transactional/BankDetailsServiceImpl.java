@@ -6,13 +6,16 @@ import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -58,6 +61,10 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     @Override
     public ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId) {
         BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        return serviceSuccess(bankDetailsMapper.mapToResource(bankDetails));
+        if(bankDetails != null) {
+            return serviceSuccess(bankDetailsMapper.mapToResource(bankDetails));
+        } else {
+            return serviceFailure(new Error("Bank details don't exist", HttpStatus.NOT_FOUND));
+        }
     }
 }

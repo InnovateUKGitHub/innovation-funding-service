@@ -29,7 +29,7 @@
         <th:block th:if="${organisation.companyHouseNumber}" th:text="|Company no. ${organisation.companyHouseNumber}|">02423435</th:block>
 	</p>
 
-    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails.sortCode == null ? false : true}">
+    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
     <div class="form-group" th:classappend="${#fields.hasErrors('accountNumber') ? 'error' : ''}">
       <label for="bank-acc-number">
         <span class="form-label-bold">Account number</span>
@@ -65,7 +65,7 @@
     <div th:if="${readonly}">
       <h2 class="heading-medium">Billing address</h2>
       <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
-      <div th:include="project/fragments :: display-address(address=${bankDetails.organisationAddress.address})" th:remove="tag"/>
+      <div th:include="project/fragments :: display-address(address=${bankDetails?.organisationAddress.address})" th:remove="tag"/>
     </div>
 
     <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />

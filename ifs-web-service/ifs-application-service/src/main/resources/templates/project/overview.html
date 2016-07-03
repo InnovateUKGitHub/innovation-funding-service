@@ -61,7 +61,7 @@
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
-      <li th:unless="${project.submittedDate == null}" th:classappend="${bankDetails.id == null ? 'current' : 'complete'}">
+      <li th:unless="${project.submittedDate == null}" th:classappend="${bankDetails == null ? 'current' : 'complete'}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">

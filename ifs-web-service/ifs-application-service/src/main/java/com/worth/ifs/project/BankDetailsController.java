@@ -69,11 +69,11 @@ public class BankDetailsController {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
-        BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
-        if(bankDetailsResource != null && bankDetailsResource.getId() != null) {
+        if(bankDetailsResourceRestResult.isSuccess()) {
+            BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
             populateExitingBankDetailsInForm(bankDetailsResource, form);
         }
-        return doViewBankDetails(model, form, projectResource, bankDetailsResource, loggedInUser);
+        return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -85,12 +85,11 @@ public class BankDetailsController {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(),bankDetailsRestService);
-        BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
 
         if (hasNonAddressErrors(bindingResult)) {
             form.setBindingResult(bindingResult);
             form.setObjectErrors(bindingResult.getAllErrors());
-            return doViewBankDetails(model, form, projectResource, bankDetailsResource, loggedInUser);
+            return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
         }
         OrganisationAddressResource organisationAddressResource = null;
         switch (form.getAddressType()) {
@@ -106,7 +105,7 @@ public class BankDetailsController {
                 if (hasManualAddressErrors(bindingResult)) {
                     form.setBindingResult(bindingResult);
                     form.setObjectErrors(bindingResult.getAllErrors());
-                    return doViewBankDetails(model, form, projectResource, bankDetailsResource, loggedInUser);
+                    return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
                 }
                 form.getAddressForm().setTriedToSave(true);
                 AddressResource newAddressResource = form.getAddressForm().getSelectedPostcode();
@@ -116,7 +115,7 @@ public class BankDetailsController {
                 organisationAddressResource = null;
                 break;
         }
-        bankDetailsResource = buildBankDetailsFrom(projectId, organisationResource.getId(), organisationAddressResource, form);
+        BankDetailsResource bankDetailsResource = buildBankDetailsFrom(projectId, organisationResource.getId(), organisationAddressResource, form);
         ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
         return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> bankDetails(model, projectId, loggedInUser, form));
     }
@@ -140,7 +139,7 @@ public class BankDetailsController {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
-        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult.getSuccessObject(), loggedInUser);
+        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
     }
 
     @RequestMapping(params = SELECT_ADDRESS, method = RequestMethod.POST)
@@ -151,8 +150,8 @@ public class BankDetailsController {
         form.getAddressForm().setSelectedPostcode(null);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResource = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
-        return doViewBankDetails(model, form, project, bankDetailsResource.getSuccessObject(), loggedInUser);
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
+        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
     }
 
     @RequestMapping(params = MANUAL_ADDRESS, method = RequestMethod.POST)
@@ -165,24 +164,27 @@ public class BankDetailsController {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
-        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult.getSuccessObject(), loggedInUser);
+        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
     }
 
-    private String doViewBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource, BankDetailsResource bankDetailsResource, UserResource loggedInUser) {
-        populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResource);
+    private String doViewBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource, RestResult<BankDetailsResource> bankDetailsResourceRestResult, UserResource loggedInUser) {
+        populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult);
         processAddressLookupFields(form);
         return "project/bank-details";
     }
 
-    private void populateBankDetailsModel(Model model, BankDetailsForm form, UserResource loggedInUser, ProjectResource project, BankDetailsResource bankDetails){
+    private void populateBankDetailsModel(Model model, BankDetailsForm form, UserResource loggedInUser, ProjectResource project, RestResult<BankDetailsResource> bankDetailsResourceRestResult){
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId());
         BankDetailsViewModel bankDetailsViewModel = loadDataIntoModelResource(project, organisationResource);
+
+        if(bankDetailsResourceRestResult.isSuccess()){
+            model.addAttribute("bankDetails", bankDetailsResourceRestResult.getSuccessObject());
+        }
 
         model.addAttribute("project", project);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("organisation", organisationResource);
         model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute("bankDetails", bankDetails);
         model.addAttribute("model", bankDetailsViewModel);
     }
 

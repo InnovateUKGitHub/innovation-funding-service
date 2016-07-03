@@ -46,13 +46,15 @@ public class ProjectController {
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
-        BankDetailsResource bankDetails = bankDetailsResourceRestResult.getSuccessObject();
+        if(bankDetailsResourceRestResult.isSuccess()) {
+            BankDetailsResource bankDetails = bankDetailsResourceRestResult.getSuccessObject();
+            model.addAttribute("bankDetails", bankDetails);
+        }
 
         model.addAttribute("project", projectResource);
         model.addAttribute("app", applicationResource);
         model.addAttribute("competition", competitionResource);
         model.addAttribute("isFunded", true); // TODO: INFUND-3709 - Some partners don't need this
-        model.addAttribute("bankDetails", bankDetails);
 
         return "project/overview";
     }
