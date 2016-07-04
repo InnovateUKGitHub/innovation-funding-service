@@ -45,69 +45,24 @@
     <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
         <h3 class="heading-medium no-margin-top">Confirm bank address</h3>
         <p>
-          <span th:unless="${#strings.isEmpty(model.registeredAddress?.addressLine1)}" th:remove="tag">
-            <span th:text="${model.registeredAddress?.addressLine1}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.registeredAddress?.addressLine2)}" th:remove="tag">
-            <span th:text="${model.registeredAddress?.addressLine2}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.registeredAddress?.addressLine3)}" th:remove="tag">
-            <span th:text="${model.registeredAddress?.addressLine3}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.registeredAddress?.town)}" th:remove="tag">
-            <span th:text="${model.registeredAddress?.town}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.registeredAddress?.county)}" th:remove="tag">
-            <span th:text="${model.registeredAddress?.county}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.registeredAddress?.postcode)}" th:remove="tag">
-            <span th:text="${model.registeredAddress?.postcode}" /><br/>
+          <span th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}" th:remove="tag">
+              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
           </span>
         </p>
     </div>
     <div id="operatingAddress" class="boxed extra-margin" th:if="${model.operatingAddress}">
         <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm banking address')}">LOCATION TITLE</h3>
         <p>
-          <span th:unless="${#strings.isEmpty(model.operatingAddress?.addressLine1)}" th:remove="tag">
-            <span th:text="${model.operatingAddress?.addressLine1}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.operatingAddress?.addressLine2)}" th:remove="tag">
-            <span th:text="${model.operatingAddress?.addressLine2}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.operatingAddress?.addressLine3)}" th:remove="tag">
-            <span th:text="${model.operatingAddress?.addressLine3}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.operatingAddress?.town)}" th:remove="tag">
-            <span th:text="${model.operatingAddress?.town}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.operatingAddress?.county)}" th:remove="tag">
-            <span th:text="${model.operatingAddress?.county}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.operatingAddress?.postcode)}" th:remove="tag">
-            <span th:text="${model.operatingAddress?.postcode}" /><br/>
+          <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
+              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
           </span>
         </p>
     </div>
     <div id="bankAddress" class="boxed extra-margin" th:if="${model.bankAddress}">
         <h3 class="heading-medium no-margin-top">Confirm banking address</h3>
         <p>
-          <span th:unless="${#strings.isEmpty(model.bankAddress?.addressLine1)}" th:remove="tag">
-            <span th:text="${model.bankAddress?.addressLine1}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.bankAddress?.addressLine2)}" th:remove="tag">
-            <span th:text="${model.bankAddress?.addressLine2}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.bankAddress?.addressLine3)}" th:remove="tag">
-            <span th:text="${model.bankAddress?.addressLine3}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.bankAddress?.town)}" th:remove="tag">
-            <span th:text="${model.bankAddress?.town}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.bankAddress?.county)}" th:remove="tag">
-            <span th:text="${model.bankAddress?.county}" /><br/>
-          </span>
-          <span th:unless="${#strings.isEmpty(model.bankAddress?.postcode)}" th:remove="tag">
-            <span th:text="${model.bankAddress?.postcode}" /><br/>
+          <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
+              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
           </span>
         </p>
     </div>
