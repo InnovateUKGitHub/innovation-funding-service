@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
@@ -19,11 +21,14 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
@@ -141,5 +146,25 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isOk())
                 .andReturn();
+    }
+
+    @Test
+    public void saveMonitoringOfficer() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withProject(projectId).build();
+
+        when(projectServiceMock.saveMonitoringOfficer(anyLong(), any())).thenReturn(serviceSuccess());
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isOk());
+
+        verify(projectServiceMock).saveMonitoringOfficer(anyLong(), any());
+
     }
 }

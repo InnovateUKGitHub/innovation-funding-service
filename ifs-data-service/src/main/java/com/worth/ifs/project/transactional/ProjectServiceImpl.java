@@ -203,7 +203,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
-        if (projectId != monitoringOfficerResource.getProject()) {
+        if (!projectId.equals(monitoringOfficerResource.getProject())) {
             return serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
         } else {
             return serviceSuccess();

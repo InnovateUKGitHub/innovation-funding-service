@@ -97,7 +97,7 @@ public class ProjectController {
 
 	@RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
-                                                  @RequestBody MonitoringOfficerResource monitoringOfficerResource) {
+                                                  @RequestBody final MonitoringOfficerResource monitoringOfficerResource) {
 
         return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource).toPutResponse();
     }
