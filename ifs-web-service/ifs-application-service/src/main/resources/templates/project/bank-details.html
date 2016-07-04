@@ -65,7 +65,16 @@
     <div th:if="${readonly}">
       <h2 class="heading-medium">Billing address</h2>
       <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
-      <div th:include="project/fragments :: display-address(address=${bankDetails?.organisationAddress.address})" th:remove="tag"/>
+
+      <div class="boxed extra-margin">
+          <h3 class="heading-medium no-margin-top" th:unless="readonly">Confirm project location</h3>
+          <p th:if="${bankDetails?.organisationAddress.address}" >
+            <th:block th:each="addressLine : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
+                <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+            </th:block>
+          </p>
+      </div>
+
     </div>
 
     <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />

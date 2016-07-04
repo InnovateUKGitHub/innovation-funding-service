@@ -17,6 +17,10 @@ IFS.modal = (function(){
             jQuery('body').on('click','.js-close',function(){
               IFS.modal.closeModal();
             });
+            //when submitting a form turns out invalid 
+            jQuery('body').on('ifsInvalid',function(){
+              IFS.modal.closeModal();
+            });
             jQuery(document).keyup(function(e) {
               if (e.keyCode === 27){
                 IFS.modal.closeModal();
