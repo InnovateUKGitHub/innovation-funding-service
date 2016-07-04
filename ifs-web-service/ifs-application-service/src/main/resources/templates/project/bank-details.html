@@ -78,7 +78,7 @@
     </div>
 
     <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
-    <a href="#page-with-confirm" th:unless="${readonly}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</a>
+    <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}" th:unless="${readonly}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
 
 	</form>
 

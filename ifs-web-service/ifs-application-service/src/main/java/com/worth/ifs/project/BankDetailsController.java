@@ -120,6 +120,24 @@ public class BankDetailsController {
         return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> bankDetails(model, projectId, loggedInUser, form));
     }
 
+    @RequestMapping(value = "/confirm", method = RequestMethod.POST)
+    public String confirmBankDetails(Model model,
+                                    @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
+                                    BindingResult bindingResult,
+                                    @PathVariable("projectId") final Long projectId,
+                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(),bankDetailsRestService);
+
+        if (hasNonAddressErrors(bindingResult)) {
+            form.setBindingResult(bindingResult);
+            form.setObjectErrors(bindingResult.getAllErrors());
+            return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
+        }
+        return doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
+    }
+
     private boolean hasNonAddressErrors(BindingResult bindingResult){
         return bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains("addressForm"))).count() > 0;
     }
@@ -171,6 +189,11 @@ public class BankDetailsController {
         populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult);
         processAddressLookupFields(form);
         return "project/bank-details";
+    }
+    private String doViewConfirmBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource, RestResult<BankDetailsResource> bankDetailsResourceRestResult, UserResource loggedInUser) {
+        populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult);
+        processAddressLookupFields(form);
+        return "project/bank-details-confirm";
     }
 
     private void populateBankDetailsModel(Model model, BankDetailsForm form, UserResource loggedInUser, ProjectResource project, RestResult<BankDetailsResource> bankDetailsResourceRestResult){
