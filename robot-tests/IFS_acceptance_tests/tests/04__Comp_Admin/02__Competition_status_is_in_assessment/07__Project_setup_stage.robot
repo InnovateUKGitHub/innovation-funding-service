@@ -91,7 +91,7 @@ Partner nominates a finance contact
     And the user selects the radio button                   financeContact     financeContact1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-    And the matching finance-contact-status is updated      project-details-finance    1    yes
+    And the matching status checkbox is updated             project-details-finance    1    yes
     Then Logout as user
     When Log in as user                                     pete.tom@egg.com    Passw0rd
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
@@ -155,35 +155,22 @@ Lead partner can change the project address
     When the user clicks the button/link     jQuery=.button:contains("Save")
     Then the user should see the text in the page    You need to select a project address before you can continue
     When the user selects the radio button    addressType    ADD_NEW
-   # And the user sees that the radio button is selected    addressType    ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
-<<<<<<< HEAD
-    And The user should see the element    name=search-address
-    And the user clicks the button/link      name=search-address
-  #  Then the user should see the dropdown option selected    id=addressForm.selectedPostcodeIndex    1
-=======
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
->>>>>>> b442cb6c540ec5adf00e59491a91966f539cbe71
     Then the user should see the element    css=#select-address-block
-   # Then the user should see the element     id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block > button
     And the address fields should be filled
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user should see the address data
     When the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
-  #  And the user sees that the radio button is selected    addressType    REGISTERED
-    Then the user should see the text in the page   1 Cheese Road
-    And the user should see the text in the page    Bath
-  #  And the user should see the text in the page    Avon
-    And the user should see the text in the page    BA1 5LR
-    And the user clicks the button/link     jQuery=.button:contains("Save")
-    And the user should see the address data
+    And the user clicks the button/link       jQuery=.button:contains("Save")
+    Then the user should see the text in the page       	1 Cheese Road, Bath, BA1 5LR
 
 Project details submission flow
     [Documentation]     INFUND-3467
-    [Tags]    pending
+    [Tags]
     When The user should not see the element    xpath=//span[contains(text(), 'No')]
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     Then the applicant clicks the submit button in the modal
@@ -193,9 +180,15 @@ Project details submission flow
 
 Project details submitted is read only
     [Documentation]     INFUND-3467
-    [Tags]    pending
-    When the user clicks the button/link    link=Project details
-    Then the user should not see the element    xpath=//span[contains(text(), 'No')]
+    [Tags]
+    When the user clicks the button/link       link=Project details
+    Then The user should not see the element   xpath=//span[contains(text(), 'No')]
+    And The user should not see the element    link=Start date
+    And The user should not see the element    link=Project address
+    And The user should not see the element    link=Project manager
+    And The user should not see the element    link=Ludlow
+    And The user should not see the element    link=EGGS
+    And The user should not see the element    link=Cheeseco
 
 Non-lead partner cannot change any project details
     [Documentation]     INFUND-2619
@@ -310,5 +303,3 @@ the applicant clicks the submit button in the modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=button:contains("Submit")
-  #  the user clicks the button/link    css=button[name="submit-app-details"]
-  #  the user clicks the button/link    jQuery=button:contains("X")
