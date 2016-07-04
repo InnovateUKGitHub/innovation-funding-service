@@ -104,6 +104,7 @@ IFS.formValidation = (function(){
           //will only work on html5 validation browsers
           jQuery('form:not([novalidate]) input').on('invalid',function(){
             jQuery(this).trigger('change');
+            jQuery('body').trigger('ifsInvalid');
           });
           IFS.formValidation.betterMinLengthSupport();
         },
