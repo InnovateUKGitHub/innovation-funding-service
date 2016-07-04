@@ -1,6 +1,7 @@
 package com.worth.ifs.address.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Length;
@@ -8,6 +9,9 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
+import static java.util.Arrays.asList;
 
 public class AddressResource {
     private Long id;
@@ -121,6 +125,12 @@ public class AddressResource {
 
     public void setOrganisations(List<Long> organisations) {
         this.organisations = organisations;
+    }
+
+    @JsonIgnore
+    public List<String> getNonEmptyLines() {
+        List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, postcode);
+        return simpleFilterNot(lines, StringUtils::isEmpty);
     }
 
     @Override
