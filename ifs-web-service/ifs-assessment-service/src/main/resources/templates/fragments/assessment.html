@@ -22,7 +22,7 @@
         <legend class="visuallyhidden">Question score</legend> 
         <div class="form-group">
         <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
-        <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
+        <select class="form-control width-medium" th:field="*{score}" id="assessor-question-score">
             <option value="">Set score</option>
             <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" th:selected="${val == score}">1</option>
         </select> / 10

@@ -5,6 +5,8 @@
 </head>
 <body class="assessment assessment-overview">
 
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:include="fragments/modals :: reject-assesment-modal" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
 <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
@@ -54,8 +56,18 @@
         </div>
     </form>
 
-    <div class="alignright-button">
+    <div class="alignright">
+        <a class="button large" href="#">Review assesment</a>
    </div>
+
+   <details>
+     <summary><span class="summary">Unable to assess this application?</span></summary>
+     <div class="panel-indent">
+        <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
+        <button data-js-modal="reject-assesment-modal" class="buttonlink">Reject this application</button>
+     </div>
+   </details>
+
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>

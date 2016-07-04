@@ -4,29 +4,29 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.question.shortName) ? 'Assessment' : model.question.shortName}" th:remove="tag" />
     </head>
 
-    <body class="assessment-details">
+    <body class="assessment assessment-question">
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${model.application},linkTitle='Assessment Overview',linkClass='link-back',linkUrl=@{/{id}(id=${currentApplication.id})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${model.application},linkTitle='Back to assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
 
             <div class="page-title">
                 <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${model.competition})" th:remove="tag" />
                 <h1 class="heading-xlarge" th:text="${model.question.shortName}" />
             </div>
 
-            <form action="#" enctype="multipart/form-data" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-                <!--/div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <!--/* /div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         Invalid input provided
                     </h1>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                     </ul>
-                </div-->
+                </div */-->
 
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
@@ -64,7 +64,7 @@
                                 </details>
 
                                 <div class="textarea-wrapped word-count">
-                                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" th:text="*{value}" aria-hidden="true"></textarea>
+                                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" th:field="*{value}" aria-hidden="true"></textarea>
 
                                     <div class="textarea-footer">
                                         <span class="count-label">

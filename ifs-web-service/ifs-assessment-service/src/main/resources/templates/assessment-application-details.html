@@ -4,14 +4,14 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.question.shortName) ? 'Assessment' : model.question.shortName}" th:remove="tag" />
     </head>
 
-    <body class="assessment-details">
+    <body class="assessment assessment-details">
         <div th:include="fragments/layout :: prototype-nav" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${model.application},linkTitle='Assessment Overview',linkClass='link-back',linkUrl=@{/{id}(id=${currentApplication.id})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${model.application},linkTitle='Back to assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
 
             <div class="page-title">
                 <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${model.competition})" th:remove="tag" />
@@ -20,7 +20,9 @@
 
             <div th:include="fragments/assessment :: application_details (currentApplication=${model.application}, applicationOrganisations=${applicationOrganisations}, pendingOrganisationNames=${pendingOrganisationNames}, leadOrganisation=${leadOrganisation})" th:remove="tag" />
 
-            <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
+                <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
+            </form>
 
             <ul class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
                 <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
