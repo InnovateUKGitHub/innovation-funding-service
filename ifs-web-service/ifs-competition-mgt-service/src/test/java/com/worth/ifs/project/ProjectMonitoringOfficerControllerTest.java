@@ -227,6 +227,44 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("1234567890", form.getPhoneNumber());
     }
 
+    @Test
+    public void testEditMonitoringOfficerPageWithNoExistingMonitoringOfficer() throws Exception {
+
+        ProjectResource project = newProjectResource().
+                withId(projectId).
+                withName("My Project").
+                withApplication(applicationId).
+                withProjectManager(999L).
+                withAddress(projectAddress).
+                withTargetStartDate(LocalDate.of(2017, 01, 05)).
+                build();
+
+        boolean existingMonitoringOfficer = false;
+
+        setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
+
+        MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer/edit")).
+                andExpect(view().name("project/monitoring-officer")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+
+        // assert the various flags are correct for helping to drive what's visible on the page
+        assertFalse(model.isExistingMonitoringOfficer());
+        assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
+        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertFalse(model.isDisplayChangeMonitoringOfficerLink());
+        assertTrue(model.isEditMode());
+        assertFalse(model.isReadOnly());
+
+        // assert the form for the MO details is not prepopulated
+        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        assertNull(form.getFirstName());
+        assertNull(form.getLastName());
+        assertNull(form.getEmailAddress());
+        assertNull(form.getPhoneNumber());
+    }
 
     @Override
     protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
