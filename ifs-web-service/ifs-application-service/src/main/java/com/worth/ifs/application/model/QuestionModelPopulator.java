@@ -125,16 +125,9 @@ public class QuestionModelPopulator {
 
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
         Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
-        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
-
-        if(!allReadOnly) {
-            Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
-            allReadOnly = questionStatuses.size() > 0 &&
-                    (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
-        }
 
         model.addAttribute("markedAsComplete", completedDetails);
-        model.addAttribute("allReadOnly", allReadOnly);
+        model.addAttribute("allReadOnly", calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails));
 
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
@@ -145,6 +138,16 @@ public class QuestionModelPopulator {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation);
+    }
+
+    private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
+        if(competition.getCompetitionStatus().equals(CompetitionResource.Status.OPEN)) {
+            Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
+            return questionStatuses.size() > 0 &&
+                    (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
+        } else {
+            return true;
+        }
     }
 
     private void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
