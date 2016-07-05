@@ -43,6 +43,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	@Mock
 	private ApplicationSummaryPageMapper applicationSummaryPageMapper;
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void findByCompetitionNoSortWillSortById() throws Exception {
 
@@ -341,6 +342,131 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	}
 	
 	@Test
+	public void findByCompetitionSortByLeadApplicant() throws Exception {
+
+		Application app1 = mock(Application.class);
+		Application app2 = mock(Application.class);
+		List<Application> applications = Arrays.asList(app1, app2);
+		
+		ApplicationSummaryResource sum1 = sumLeadApplicant("b");
+		ApplicationSummaryResource sum2 = sumLeadApplicant("a");
+		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
+		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
+		
+		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(2, result.getSuccessObject().getContent().size());
+		assertEquals(sum2, result.getSuccessObject().getContent().get(0));
+		assertEquals(sum1, result.getSuccessObject().getContent().get(1));
+		assertEquals(20, result.getSuccessObject().getSize());
+		assertEquals(2, result.getSuccessObject().getTotalElements());
+		assertEquals(1, result.getSuccessObject().getTotalPages());
+	}
+	
+	@Test
+	public void findByCompetitionSortByLeadSameLeadApplicantWillSortById() throws Exception {
+
+		Application app1 = mock(Application.class);
+		Application app2 = mock(Application.class);
+		List<Application> applications = Arrays.asList(app1, app2);
+		
+		ApplicationSummaryResource sum1 = sumLeadApplicant("a", 2L);
+		ApplicationSummaryResource sum2 = sumLeadApplicant("a", 1L);
+		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
+		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
+		
+		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(2, result.getSuccessObject().getContent().size());
+		assertEquals(sum2, result.getSuccessObject().getContent().get(0));
+		assertEquals(sum1, result.getSuccessObject().getContent().get(1));
+		assertEquals(20, result.getSuccessObject().getSize());
+		assertEquals(2, result.getSuccessObject().getTotalElements());
+		assertEquals(1, result.getSuccessObject().getTotalPages());
+	}
+	
+	@Test
+	public void findByCompetitionSortByLeadApplicantNotFirstPage() throws Exception {
+
+		List<Application> applications = new ArrayList<>();
+		for(int i = 0; i < 22; i++) {
+			Application app = mock(Application.class);
+			applications.add(app);
+			ApplicationSummaryResource sum = sumLeadApplicant("a" + String.format("%02d", i));
+			when(applicationSummaryMapper.mapToResource(app)).thenReturn(sum);
+		}
+		
+		Collections.reverse(applications);
+		
+		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 1, 20);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(1, result.getSuccessObject().getNumber());
+		assertEquals(2, result.getSuccessObject().getContent().size());
+		assertEquals("a20", result.getSuccessObject().getContent().get(0).getLeadApplicant());
+		assertEquals("a21", result.getSuccessObject().getContent().get(1).getLeadApplicant());
+		assertEquals(20, result.getSuccessObject().getSize());
+		assertEquals(22, result.getSuccessObject().getTotalElements());
+		assertEquals(2, result.getSuccessObject().getTotalPages());
+	}
+	
+	@Test
+	public void findByCompetitionSortByLeadApplicantHandlesNullLeadApplicants() throws Exception {
+
+		Application app1 = mock(Application.class);
+		Application app2 = mock(Application.class);
+		List<Application> applications = Arrays.asList(app1, app2);
+		
+		ApplicationSummaryResource sum1 = sumLeadApplicant(null);
+		ApplicationSummaryResource sum2 = sumLeadApplicant(null);
+		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
+		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
+		
+		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20);
+		
+		assertEquals(2, result.getSuccessObject().getContent().size());
+		assertEquals(sum1, result.getSuccessObject().getContent().get(0));
+		assertEquals(sum2, result.getSuccessObject().getContent().get(1));
+	}
+	
+	@Test
+	public void findByCompetitionSortByLeadApplicantHandlesNullAndNotNullLead() throws Exception {
+
+		Application app1 = mock(Application.class);
+		Application app2 = mock(Application.class);
+		Application app3 = mock(Application.class);
+		List<Application> applications = Arrays.asList(app1, app2, app3);
+		
+		ApplicationSummaryResource sum1 = sumLeadApplicant(null);
+		ApplicationSummaryResource sum2 = sumLeadApplicant("a");
+		ApplicationSummaryResource sum3 = sumLeadApplicant(null);
+		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
+		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
+		when(applicationSummaryMapper.mapToResource(app3)).thenReturn(sum3);
+		
+		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
+		
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20);
+		
+		assertEquals(3, result.getSuccessObject().getContent().size());
+		assertEquals(sum1, result.getSuccessObject().getContent().get(0));
+		assertEquals(sum3, result.getSuccessObject().getContent().get(1));
+		assertEquals(sum2, result.getSuccessObject().getContent().get(2));
+	}
+	
+	@Test
 	public void findByCompetitionNotSubmittedApplications() throws Exception {
 
 		Application app1 = mock(Application.class);
@@ -410,6 +536,18 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	
 	private ApplicationSummaryResource sumLead(String lead, Long id) {
 		ApplicationSummaryResource res = sumLead(lead);
+		res.setId(id);
+		return res;
+	}
+	
+	private ApplicationSummaryResource sumLeadApplicant(String leadApplicant) {
+		ApplicationSummaryResource res = new ApplicationSummaryResource();
+		res.setLeadApplicant(leadApplicant);
+		return res;
+	}
+	
+	private ApplicationSummaryResource sumLeadApplicant(String leadApplicant, Long id) {
+		ApplicationSummaryResource res = sumLeadApplicant(leadApplicant);
 		res.setId(id);
 		return res;
 	}

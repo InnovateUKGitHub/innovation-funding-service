@@ -1,9 +1,20 @@
 package com.worth.ifs.project.form;
 
-public class FinanceContactForm {
+import com.worth.ifs.controller.BaseBindingResultTarget;
+
+import javax.validation.constraints.NotNull;
+
+public class FinanceContactForm  extends BaseBindingResultTarget {
+
+	@NotNull(message = "You need to select a Finance Contact before you can continue")
 	private Long financeContact;
+
 	private Long organisation;
-	
+
+	// for spring form binding
+	public FinanceContactForm() {
+	}
+
 	public Long getFinanceContact() {
 		return financeContact;
 	}

@@ -97,6 +97,29 @@
     </div>
 </div>
 
+<!-- Assesment reject modal  -->
+<div th:fragment="reject-assesment-modal">
+		<div class="reject-assesment-modal" role="dialog" aria-hidden="true">
+	      <form action="#">
+					<div th:include="fragments/modals :: close-button" th:remove="tag" />
+					<div class="form-group">
+	            <label class="form-label" for="reject-reason">Please let us know why you are rejecting this application</label>
+	            <select class="form-control" required="required" id="reject-reason" name="decisionReason">
+	                <option value="none">Please select one reason</option>
+	                <option value="conflict-of-interest">Conflict of interest</option>
+	                <option value="not-my-area-of-interest">Not my area of expertise</option>
+	                <option value="too-many-assessments">Too many assessments</option>
+	            </select>
+	        </div>
+	        <div class="form-group">
+	            <label class="form-label" for="rejection-observations">Please provide some more information</label>
+	            <textarea class="form-control width-full" rows="4" name="observations" id="rejection-observations"></textarea>
+	        </div>
+					<button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+	    </form>
+		</div>
+</div>
+
 <!-- save project details -->
 <div th:fragment="modal-project-details">
 	<div class="modal-project-details" role="dialog" aria-hidden="true">
@@ -108,9 +131,9 @@
 					<div class="column-half">
 							<button type="button" class="js-close button buttonlink large">Cancel</button>
 					</div>
-					<div class="column-half alignright-button">
-						<a href="/prototypes/1588-project-status?stage=level2" class="button large">Submit</a>
-					</div>
-				</div>
+					<form class="column-half alignright-button"  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+						<button class="button large" name="submit-app-details" >Submit</button>
+					</form>
+			</div>
 	</div>
 </div>

@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
@@ -18,6 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,6 +249,26 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         @Override
         public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
             return serviceSuccess(newProjectUserResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<Void> saveProjectSubmitDateTime(Long id, LocalDateTime date) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
+            return null;
+        }
+		
+		@Override
+        public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+            return null;
         }
     }
 }

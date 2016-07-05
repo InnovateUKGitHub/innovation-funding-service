@@ -1,5 +1,6 @@
 package com.worth.ifs.application.mapper;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -54,6 +55,7 @@ public class ApplicationSummaryMapperTest {
 	
 	@Before
 	public void setUp() {
+		clearUniqueIds();
 		when(fundingDecisionMapper.mapToResource(FundingDecisionStatus.FUNDED)).thenReturn(FundingDecision.FUNDED);
 		
 		ApplicationStatus openStatus = new ApplicationStatus(ApplicationStatusConstants.OPEN.getId(), ApplicationStatusConstants.OPEN.getName());

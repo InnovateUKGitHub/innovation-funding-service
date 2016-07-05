@@ -40,37 +40,37 @@ import static java.util.Collections.singletonList;
 @Component
 public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPopulator {
     @Autowired
-    FormInputResponseService formInputResponseService;
+    private FormInputResponseService formInputResponseService;
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @Autowired
-    SectionService sectionService;
+    private SectionService sectionService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
 
     @Autowired
-    OrganisationRestService organisationRestService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
-    FormInputService formInputService;
+    private FormInputService formInputService;
 
     @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     @Autowired
-    FinanceOverviewModelManager financeOverviewModelManager;
+    private FinanceOverviewModelManager financeOverviewModelManager;
 
     @Autowired
-    FinanceHandler financeHandler;
+    private FinanceHandler financeHandler;
 
     @Override
     public void populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
@@ -83,12 +83,15 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
+        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
+
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("currentSectionId", section.getId());
         model.addAttribute("currentSection", section);
         model.addAttribute("hasFinanceSection", true);
         model.addAttribute("financeSectionId", section.getId());
+        model.addAttribute("allReadOnly", allReadOnly);
         model.addAttribute("form", form);
     }
 
@@ -245,10 +248,6 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
-    }
-
-    private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
-        return simpleFilter(list, s -> type.equals(s.getType()));
     }
 
     private void addSectionDetails(Model model, SectionResource currentSection, List<FormInputResource> inputs) {

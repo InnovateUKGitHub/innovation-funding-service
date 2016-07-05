@@ -1,6 +1,7 @@
 ##user created
 
 rebel_project.xml
+**/rebel-remote.xml
 nbijl.xml
 .bundle/config
 
@@ -30,6 +31,7 @@ ifs-web-service/idea-support/
 **/application-*.properties
 !**/application-local.properties
 !**/application-integration-test.properties
+!**/docker-build.gradle
 
 # Created with help from https://www.gitignore.io
 
@@ -94,6 +96,8 @@ robot-tests/test_counting
 robot-tests/benchmarking_report.txt
 robot-tests/ubuntu-vm-headless/logs
 jmeter/jmeter.log
+**/docker/shibImages/*
+!**/docker/shibImages/PUT_SHIB_IMAGE_HERE.txt
 
 
 classes/

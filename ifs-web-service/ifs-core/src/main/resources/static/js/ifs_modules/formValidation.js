@@ -1,3 +1,7 @@
+
+
+
+
 IFS.formValidation = (function(){
     "use strict";
     var s;
@@ -8,11 +12,11 @@ IFS.formValidation = (function(){
                 messageInvalid : 'This field should be a number'
             },
             min : {
-                fields: '[min]',
+                fields: '[min]:not([data-date])',
                 messageInvalid : 'This field should be %min% or higher'
             },
             max : {
-                fields: '[max]',
+                fields: '[max]:not([data-date])',
                 messageInvalid : 'This field should be %max% or lower'
             },
             passwordEqual: {
@@ -30,8 +34,7 @@ IFS.formValidation = (function(){
                   lowercase : 'Password must contain at least one lower case letter',
                   uppercase : 'Password must contain at least one upper case letter',
                   number : 'Password must contain at least one number',
-                  firstname : 'Password should not contain your first name',
-                  lastname : 'Password should not contain your last name',
+                  name : 'Password should not contain either your first or last name',
                   organisation : 'Password should not contain your organisation name'
                 }
             },
@@ -40,7 +43,7 @@ IFS.formValidation = (function(){
                 messageInvalid : "Please enter a valid email address"
             },
             required : {
-                fields: '[required]',
+                fields: '[required]:not([data-date])',
                 messageInvalid : "This field cannot be left blank"
             },
             minlength : {
@@ -68,27 +71,41 @@ IFS.formValidation = (function(){
         init : function(){
             s = this.settings;
             s.html5validationMode =  IFS.formValidation.checkHTML5validationMode();
-            //bind the checks if password and retyped password are equal
-            jQuery('body').on('change keyup', s.passwordEqual.field1+','+s.passwordEqual.field2, function(e){
-                switch(e.type){
-                    case 'keyup':
-                      clearTimeout(window.IFS.formValidation_timer);
-                      window.IFS.formValidation_timer = setTimeout(function(){IFS.formValidation.checkEqualPasswords(true);}, s.typeTimeout);
-                      break;
-                    default:
-                      IFS.formValidation.checkEqualPasswords(true);
-                }
-            });
-            jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this),true);});
-            jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this),true);});
-            jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this),true);});
-            jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this),true);});
-            jQuery('body').on('change', s.max.fields , function(){IFS.formValidation.checkMax(jQuery(this),true);});
-            jQuery('body').on('blur change',s.required.fields,function(){ IFS.formValidation.checkRequired(jQuery(this),true); });
-            jQuery('body').on('change',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this),true); });
-            jQuery('body').on('change',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this),true); });
-            jQuery('body').on('change',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this),true); });
-            jQuery('body').on('change',s.date.fields,function(){  IFS.formValidation.checkDate(jQuery(this),true); });
+            IFS.formValidation.initValidation();
+        },
+        initValidation : function(){
+          //bind the checks if password and retyped password are equal
+          jQuery('body').on('change keyup ifsValidate', s.passwordEqual.field1+','+s.passwordEqual.field2, function(e){
+              switch(e.type){
+                  case 'keyup':
+                    clearTimeout(window.IFS.formValidation_timer);
+                    window.IFS.formValidation_timer = setTimeout(function(){IFS.formValidation.checkEqualPasswords(true);}, s.typeTimeout);
+                    break;
+                  default:
+                    IFS.formValidation.checkEqualPasswords(true);
+              }
+          });
+          jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this),true);});
+          jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this),true);});
+          jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this),true);});
+          jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this),true);});
+          jQuery('body').on('change', s.max.fields , function(){IFS.formValidation.checkMax(jQuery(this),true);});
+          jQuery('body').on('blur change',s.required.fields,function(){ IFS.formValidation.checkRequired(jQuery(this),true); });
+          jQuery('body').on('change',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this),true); });
+          jQuery('body').on('change',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this),true); });
+          jQuery('body').on('change',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this),true); });
+          jQuery('body').on('change',s.date.fields,function(){  IFS.formValidation.checkDate(jQuery(this),true); });
+
+          //set data attribute on date fields
+          //which has the combined value of the dates
+          //and also makes sure that other vaidation doesn't get triggered
+          jQuery(s.date.fields).attr('data-date','');
+
+          //will only work on html5 validation browsers
+          jQuery('form:not([novalidate]) input').on('invalid',function(){
+            jQuery(this).trigger('change');
+          });
+
         },
         checkEqualPasswords : function(showMessage){
             var pw1 = jQuery(s.passwordEqual.field1);
@@ -146,19 +163,17 @@ IFS.formValidation = (function(){
                   if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.number); }
               }
 
-              var nameCheck = ['firstname','lastname'];
-              jQuery(nameCheck).each(function(index,value){
-                var name = jQuery(s.passwordPolicy.fields[value]).val();
-                if(name.replace(' ','').length){
-                  if(password.toLowerCase().indexOf(name.toLowerCase()) > -1){
-                    if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid[value]);}
-                    confirmsToPasswordPolicy = false;
-                  }
-                  else {
-                      if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid[value]);}
-                  }
+              var firstname = jQuery(s.passwordPolicy.fields.firstname).val();
+              var lastname = jQuery(s.passwordPolicy.fields.lastname).val();
+              if(firstname.replace(' ','').length || lastname.replace(' ','').length){
+                if((password.toLowerCase().indexOf(firstname.toLowerCase()) > -1) || (password.toLowerCase().indexOf(lastname.toLowerCase()) > -1)){
+                  if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.name);}
+                  confirmsToPasswordPolicy = false;
                 }
-              });
+                else {
+                    if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.name);}
+                }
+              }
             }
             return confirmsToPasswordPolicy;
         },
@@ -268,24 +283,29 @@ IFS.formValidation = (function(){
         },
         checkRequired : function(field,showMessage){
             var errorMessage = IFS.formValidation.getErrorMessage(field,'required');
-            if(field.is(':checkbox')){
-               if(!field.prop('checked')){
-                 if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
-                 return false;
-               }
-               else {
-                 if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
-                 return true;
-               }
-            }
-            else {
-              if(field.val().length === 0){
-                if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
-                return false;
+            if(field.val() !== null){
+              if(field.is(':checkbox,:radio')){
+                 var name = field.attr("name");
+                 if(typeof(name) !== 'undefined'){
+                   if(jQuery('[name="'+name+'"]:checked').length === 0){
+                     if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                     return false;
+                   }
+                   else {
+                     if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                     return true;
+                   }
+                 }
               }
               else {
-                if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
-                return true;
+                if(field.val().length === 0){
+                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                  return false;
+                }
+                else {
+                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                  return true;
+                }
               }
             }
         },
@@ -394,6 +414,7 @@ IFS.formValidation = (function(){
         setInvalid : function(field,message){
             var formGroup = field.closest('.form-group');
             if(formGroup){
+                if(s.html5validationMode){ field[0].setCustomValidity(message);}
                 field.addClass('field-error');
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
                 var errorEl = formGroup.find('.error-message:contains("'+message+'")');
@@ -418,6 +439,7 @@ IFS.formValidation = (function(){
                if(formGroup.find('.error-message').length === 0){
                    formGroup.removeClass('error');
                    field.removeClass('field-error');
+                   if(s.html5validationMode){ field[0].setCustomValidity('');}
                }
             }
             if(jQuery('.error-summary-list li:contains('+message+')').length){

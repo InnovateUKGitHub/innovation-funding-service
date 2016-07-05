@@ -388,6 +388,18 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> simpleFindFirst(List<T> list, Predicate<T> filterFn) {
+        return simpleFilter(list, filterFn).stream().findFirst();
+    }
+
+    /**
      * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
      * joinString
      *
