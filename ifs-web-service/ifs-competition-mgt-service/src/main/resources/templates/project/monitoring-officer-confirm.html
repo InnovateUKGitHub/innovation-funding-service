@@ -23,7 +23,7 @@
 		</div>
 	</div>
 
-    <form th:action="${#ifsUtil.contextPath(#httpServletRequest)} + '/project/' + ${projectId} + '/monitoring-officer/assign'" method="post" th:object="${form}">
+    <form th:action="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" method="post" th:object="${form}">
         <div class="page-title">
             <h1 class="heading-xlarge no-margin">Assign Monitoring Officer</h1>
         </div>
