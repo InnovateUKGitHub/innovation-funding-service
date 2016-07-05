@@ -9,5 +9,4 @@ import java.util.List;
 public interface InviteOrganisationRepository extends PagingAndSortingRepository<InviteOrganisation, Long> {
     List<InviteOrganisation> findByInvitesApplicationId(@Param("applicationId") Long applicationId);
     List<InviteOrganisation> findByOrganisationId(@Param("organisationId") Long organisationId);
-    List<InviteOrganisation> findByOrganisationIdAndInvitesApplicationId(@Param("organisationId") Long organisationId, @Param("applicationId") Long applicationId);
 }

@@ -217,7 +217,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             inviteOrganisations.add(inviteOrganisation);
         }
 
-        return serviceSuccess(Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations)));
+        if(inviteOrganisations.size() > 0) {
+           return serviceSuccess(Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations)));
+        } else {
+            return serviceSuccess(new HashSet());
+        }
 
     }
 
