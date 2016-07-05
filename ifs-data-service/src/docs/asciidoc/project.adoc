@@ -90,6 +90,18 @@ include::{snippets}/project/get-project-users/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/get-project-users/curl-request.adoc[]
 
+=== Save Monitoring Officer
+==== Request
+include::{snippets}/project/save-monitoring-officer/http-request.adoc[]
+include::{snippets}/project/save-monitoring-officer/path-parameters.adoc[]
+include::{snippets}/project/save-monitoring-officer/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/save-monitoring-officer/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/save-monitoring-officer/curl-request.adoc[]
+
 === Is Submit Allowed
 ==== Success
 ===== Request

@@ -134,21 +134,23 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertEquals(isAllowed, result.getSuccessObject());
     }
 
-    //@Test
+    @Test
     public void testUpdateMonitoringOfficer(){
 
+        Long projectId = 1L;
+
         MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withId(1L)
-                .withProject(1L)
+                .withId(null)
+                .withProject(projectId)
                 .withFirstName("abc")
                 .withLastName("xyz")
                 .withEmail("abc.xyz@gmail.com")
                 .withPhoneNumber("078323455")
                 .build();
 
-        setupPutWithRestResultExpectations(projectRestURL + "/1/monitoring-officer", monitoringOfficerResource, OK);
+        setupPutWithRestResultExpectations(projectRestURL + "/" + projectId + "/monitoring-officer", monitoringOfficerResource, OK);
 
-        RestResult<Void> result = service.updateMonitoringOfficer(1L, "abc", "xyz", "abc.xyz@gmail.com", "078323455");
+        RestResult<Void> result = service.updateMonitoringOfficer(projectId, "abc", "xyz", "abc.xyz@gmail.com", "078323455");
 
         assertTrue(result.isSuccess());
 

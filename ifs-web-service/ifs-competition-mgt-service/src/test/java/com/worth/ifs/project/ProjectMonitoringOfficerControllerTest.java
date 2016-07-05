@@ -103,7 +103,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
-        assertProjectDetailsPrepoulatedOk(model);
+        assertProjectDetailsPrepopulatedOk(model);
 
         // assert the various flags are correct for helping to drive what's visible on the page
         assertTrue(model.isExistingMonitoringOfficer());
@@ -134,7 +134,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
-        assertProjectDetailsPrepoulatedOk(model);
+        assertProjectDetailsPrepopulatedOk(model);
 
         // assert the various flags are correct for helping to drive what's visible on the page
         assertFalse(model.isExistingMonitoringOfficer());
@@ -165,7 +165,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
-        assertProjectDetailsPrepoulatedOk(model);
+        assertProjectDetailsPrepopulatedOk(model);
 
         // assert the various flags are correct for helping to drive what's visible on the page
         assertTrue(model.isExistingMonitoringOfficer());
@@ -196,7 +196,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
-        assertProjectDetailsPrepoulatedOk(model);
+        assertProjectDetailsPrepopulatedOk(model);
 
         // assert the various flags are correct for helping to drive what's visible on the page
         assertFalse(model.isExistingMonitoringOfficer());
@@ -229,10 +229,56 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
-        assertProjectDetailsPrepoulatedOk(model);
+        assertProjectDetailsPrepopulatedOk(model);
 
         // assert the form for the MO details have been pre-populated ok
         assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(modelMap);
+    }
+
+
+
+    @Test
+    public void testConfirmMonitoringOfficerButBindingErrorOccurs() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+
+        when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        setupViewMonitoringOfficerTestExpectations(project, false);
+
+        MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/confirm").
+                param("firstName", "").
+                param("lastName", "").
+                param("emailAddress", "asdf").
+                param("phoneNumber", "")).
+                andExpect(view().name("project/monitoring-officer")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+
+        // assert the project details are correct
+        assertProjectDetailsPrepopulatedOk(model);
+
+        // assert the various flags are correct for helping to drive what's visible on the page
+        assertFalse(model.isExistingMonitoringOfficer());
+        assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
+        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertFalse(model.isDisplayChangeMonitoringOfficerLink());
+        assertTrue(model.isEditMode());
+        assertFalse(model.isReadOnly());
+
+        // assert the form for the MO details have been retained from the ones in error
+        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        assertEquals("", form.getFirstName());
+        assertEquals("", form.getLastName());
+        assertEquals("asdf", form.getEmailAddress());
+        assertEquals("", form.getPhoneNumber());
+
+        assertEquals(4, form.getBindingResult().getFieldErrorCount());
+        assertEquals("NotEmpty", form.getBindingResult().getFieldError("firstName").getCode());
+        assertEquals("NotEmpty", form.getBindingResult().getFieldError("lastName").getCode());
+        assertEquals("Email", form.getBindingResult().getFieldError("emailAddress").getCode());
+        assertEquals("NotEmpty", form.getBindingResult().getFieldError("phoneNumber").getCode());
     }
 
     @Test
@@ -251,20 +297,20 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testAssignMonitoringOfficerButErrorOccurs() throws Exception {
+    public void testAssignMonitoringOfficerButDataLayerErrorOccurs() throws Exception {
 
         ProjectResource project = projectBuilder.build();
 
         ServiceResult<Void> failureResponse = serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
 
-        when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(failureResponse);
+        when(projectService.updateMonitoringOfficer(123L, "First2", "Last2", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
-                param("firstName", "First").
-                param("lastName", "Last").
-                param("emailAddress", "asdf@asdf.com").
-                param("phoneNumber", "1234567890")).
+                param("firstName", "First2").
+                param("lastName", "Last2").
+                param("emailAddress", "asdf2@asdf.com").
+                param("phoneNumber", "0987654321")).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -272,15 +318,70 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
-        assertProjectDetailsPrepoulatedOk(model);
+        assertProjectDetailsPrepopulatedOk(model);
 
-        // assert the form for the MO details have been pre-populated ok
-        assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(modelMap);
+        // assert the various flags are correct for helping to drive what's visible on the page
+        assertFalse(model.isExistingMonitoringOfficer());
+        assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
+        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertFalse(model.isDisplayChangeMonitoringOfficerLink());
+        assertTrue(model.isEditMode());
+        assertFalse(model.isReadOnly());
 
+        // assert the form for the MO details have been retained from the ones that resulted in error
         ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        assertEquals("First2", form.getFirstName());
+        assertEquals("Last2", form.getLastName());
+        assertEquals("asdf2@asdf.com", form.getEmailAddress());
+        assertEquals("0987654321", form.getPhoneNumber());
+
         assertEquals(1, form.getObjectErrors().size());
         assertEquals(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED.getErrorKey(),
                 form.getObjectErrors().get(0).getCode());
+    }
+
+    @Test
+    public void testAssignMonitoringOfficerButBindingErrorOccurs() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+
+        when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        setupViewMonitoringOfficerTestExpectations(project, false);
+
+        MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
+                param("firstName", "").
+                param("lastName", "").
+                param("emailAddress", "asdf").
+                param("phoneNumber", "")).
+                andExpect(view().name("project/monitoring-officer")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+
+        // assert the project details are correct
+        assertProjectDetailsPrepopulatedOk(model);
+
+        // assert the various flags are correct for helping to drive what's visible on the page
+        assertFalse(model.isExistingMonitoringOfficer());
+        assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
+        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertFalse(model.isDisplayChangeMonitoringOfficerLink());
+        assertTrue(model.isEditMode());
+        assertFalse(model.isReadOnly());
+
+        // assert the form for the MO details have been retained from the ones in error
+        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        assertEquals("", form.getFirstName());
+        assertEquals("", form.getLastName());
+        assertEquals("asdf", form.getEmailAddress());
+        assertEquals("", form.getPhoneNumber());
+
+        assertEquals(4, form.getBindingResult().getFieldErrorCount());
+        assertEquals("NotEmpty", form.getBindingResult().getFieldError("firstName").getCode());
+        assertEquals("NotEmpty", form.getBindingResult().getFieldError("lastName").getCode());
+        assertEquals("Email", form.getBindingResult().getFieldError("emailAddress").getCode());
+        assertEquals("NotEmpty", form.getBindingResult().getFieldError("phoneNumber").getCode());
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
@@ -311,7 +412,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(processRoleService.findProcessRolesByApplicationId(project.getApplication())).thenReturn(processRoles);
     }
 
-    private void assertProjectDetailsPrepoulatedOk(ProjectMonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(ProjectMonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectTitle());
         assertEquals(competitionSummary, model.getCompetitionSummary());
