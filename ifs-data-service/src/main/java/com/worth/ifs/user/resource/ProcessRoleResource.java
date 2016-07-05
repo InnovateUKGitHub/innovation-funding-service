@@ -2,9 +2,6 @@ package com.worth.ifs.user.resource;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProcessRoleResource {
     private Long id;
     private Long user;
@@ -13,7 +10,6 @@ public class ProcessRoleResource {
     private Long role;
     private String roleName;
     private Long organisation;
-    private List<Long> responses = new ArrayList<>();
 
     public ProcessRoleResource(){
     	// no-arg constructor
@@ -77,14 +73,6 @@ public class ProcessRoleResource {
 
     public void setOrganisation(Long organisation) {
         this.organisation = organisation;
-    }
-
-    public List<Long> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(List<Long> responses) {
-        this.responses = responses;
     }
 
     public void setId(Long id) {

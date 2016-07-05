@@ -1,8 +1,14 @@
 package com.worth.ifs.project.form;
 
-public class ProjectManagerForm {
+import com.worth.ifs.controller.BaseBindingResultTarget;
+
+import javax.validation.constraints.NotNull;
+
+public class ProjectManagerForm  extends BaseBindingResultTarget {
+
+    @NotNull(message = "You need to select a Project Manager before you can continue")
 	private Long projectManager;
-	
+
 	public Long getProjectManager() {
 		return projectManager;
 	}
@@ -10,5 +16,4 @@ public class ProjectManagerForm {
 	public void setProjectManager(Long projectManager) {
 		this.projectManager = projectManager;
 	}
-
 }

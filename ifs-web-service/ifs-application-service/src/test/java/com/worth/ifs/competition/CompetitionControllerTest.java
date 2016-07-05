@@ -3,7 +3,6 @@ package com.worth.ifs.competition;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
@@ -19,11 +18,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     @Override
     protected CompetitionController supplyControllerUnderTest() {
         return new CompetitionController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
     }
 
     @Test

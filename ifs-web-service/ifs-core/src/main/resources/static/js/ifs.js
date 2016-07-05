@@ -50,18 +50,11 @@ var IFSLoader = {
   'app-summary' : {
 	init : function(){ IFS.application_summary.init(); }
   },
-  'assessment-details' : {
-    init : function(){ IFS.assesment_feedback_page.init(); }
-  },
-  'assessment-submit-review' : {
-    init : function(){ IFS.assesment_submit_review_page.init(); }
-  },
   'app-invite': {
     init : function(){ IFS.invites.init(); }
   },
   'competition-management': {
     init : function(){ IFS.competition_management.init(); }
-
   }
 };
 

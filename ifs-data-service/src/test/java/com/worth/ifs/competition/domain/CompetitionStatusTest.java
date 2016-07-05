@@ -1,16 +1,16 @@
 package com.worth.ifs.competition.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDateTime;
-
+import com.worth.ifs.competition.domain.Competition.DateProvider;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.worth.ifs.competition.domain.Competition.DateProvider;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import java.time.LocalDateTime;
+
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CompetitionStatusTest {
 
@@ -32,6 +32,7 @@ public class CompetitionStatusTest {
     	when(dateProvider.provideDate()).thenReturn(currentDate);
     	
     	competition = new Competition();
+        competition.setStatus(COMPETITION_SETUP_FINISHED);
     	competition.setDateProvider(dateProvider);
     }
     
@@ -177,6 +178,16 @@ public class CompetitionStatusTest {
     	competition.setAssessorFeedbackDate(currentDate);
 
         assertEquals(CompetitionResource.Status.PROJECT_SETUP, competition.getCompetitionStatus());
+    }
+
+    /**
+     * By default the competition status of a new competition should be COMPETITION_SETUP. When this state is finished, the status is changed to
+     * COMPETITION_SETUP_FINISHED, then the other statusses are used.
+     */
+    @Test
+    public void competitionStatusProjectSetupForNewCompetition(){
+        Competition newCompetition = new Competition();
+        assertEquals(CompetitionResource.Status.COMPETITION_SETUP, newCompetition.getCompetitionStatus());
     }
     
 }

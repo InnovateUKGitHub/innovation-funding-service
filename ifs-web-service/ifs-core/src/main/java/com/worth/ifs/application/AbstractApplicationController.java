@@ -69,9 +69,6 @@ public abstract class AbstractApplicationController extends BaseController {
     protected MessageSource messageSource;
 
     @Autowired
-    protected ResponseService responseService;
-
-    @Autowired
     protected FormInputResponseService formInputResponseService;
 
     @Autowired

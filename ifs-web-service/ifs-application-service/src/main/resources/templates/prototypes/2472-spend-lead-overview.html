@@ -29,9 +29,9 @@
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<h2 class="heading-medium">Profile spend</h2>
-		<p>All Spend Profiles have been submitted to Innovate UK and the Monitoring officer assigned to this application. You may view the submitted spend profiles.</p>
+		<p>All spend profiles have been submitted to Innovate UK and the Monitoring Officer assigned to this application. You may view the submitted spend profiles.</p>
 		
-		<a href="/prototypes/1592-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
+		<a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
 
 	</div>
 
@@ -50,10 +50,10 @@
 			<tbody>
 				<tr>
 					<td th:unless="${param.status != null and param.status[0] == 'MarkedComplete'}">
-						<a th:href="${param.status != null and param.status[0] == 'Submitted' ? '/prototypes/1592-spend?status=Submitted':'/prototypes/1592-spend'}">Aptrans Ltd (Lead)</a>
+						<a th:href="${param.status != null and param.status[0] == 'Submitted' ? '/prototypes/3100-spend?status=Submitted':'/prototypes/3100-spend'}">Aptrans Ltd (Lead)</a>
 					</td>
 					<td th:unless="${param.status == null or param.status[0] != 'MarkedComplete'}">
-						<a href="/prototypes/1592-spend?status=MarkedComplete">Aptrans Ltd (Lead)</a>
+						<a href="/prototypes/3100-spend?status=MarkedComplete">Aptrans Ltd (Lead)</a>
 					</td>
 					<td th:unless="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'MarkedComplete'}">
 						In progress
@@ -66,7 +66,7 @@
 				</tr>
 				<tr>
 					<td>
-						<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead&#38;task=reviewPartner">Biotech Corp</a>
+						<a href="/prototypes/3100-spend?status=Submitted&#38;user=nonLead&#38;task=reviewPartner">Biotech Corp</a>
 					</td>
 					<td>
 						<span class="yes">Complete</span>
@@ -91,7 +91,7 @@
 
 		<p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must make sure they fit the timelines of your project plan.</p>
 
-		<a href="/prototypes/1592-spend?task=reviewProject" class="button">Review and submit total project profile spend</a>
+		<a href="/prototypes/3100-spend?task=reviewProject" class="button">Review and submit total project profile spend</a>
 
 	</div>
 

@@ -114,8 +114,8 @@ the user unselects the checkbox
     Page Should Contain    BETA
 
 the user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+    [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -221,7 +221,6 @@ The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
     Page Should Not Contain    Error
-    #Page Should Not Contain    error    # commented this out because it caused a test failure
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
@@ -330,9 +329,9 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
-    log    ${ACCEPT_INVITE}
-    go to    ${ACCEPT_INVITE}
+    ${IFS_LINK}=    Get From List    ${LINK}    1
+    log    ${IFS_LINK}
+    go to    ${IFS_LINK}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
@@ -432,7 +431,7 @@ the user cannot login with their new details
     Input Text    id=username    ${email}
     Input Password    id=password    ${password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user cannot login with either password
@@ -440,13 +439,13 @@ the user cannot login with either password
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${incorrect_password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 we create a new user

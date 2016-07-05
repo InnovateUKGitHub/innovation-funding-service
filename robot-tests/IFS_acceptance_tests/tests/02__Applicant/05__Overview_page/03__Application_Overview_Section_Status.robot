@@ -18,6 +18,7 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 Green check shows after marking a question as complete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
+    [Setup]     the user marks the finance section as not complete
     When The user navigates to the overview page of the Robot test application
     And none of the sections are marked as complete
     And the user clicks the button/link    link=4. Economic benefit
@@ -46,6 +47,13 @@ Green check shows when finances are marked as complete
     ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
 
 *** Keywords ***
+
+the user marks the finance section as not complete
+    The user navigates to the overview page of the Robot test application
+    the user clicks the button/link    link=Your finances
+    the user clicks the button/link    jQuery=button:contains("Edit")
+
+
 none of the sections are marked as complete
     the user should not see the element    css=.complete
 

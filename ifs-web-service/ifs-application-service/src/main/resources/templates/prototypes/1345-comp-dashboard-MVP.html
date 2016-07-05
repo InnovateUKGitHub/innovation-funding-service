@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 	<div th:if="${param.filterStatus != null}" th:remove="tag">
 		<style>
@@ -61,7 +61,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div class="grid-row">
 		<div class="column-half">
 			<h1 class="heading-large">Competitions</h1>
@@ -75,7 +75,7 @@
 	</div>
 
 	<div class="search-filters">
-		
+
 		<form action="/prototypes/1345-comp-dashboard-MVP" method="GET">
 
 			<h2 class="heading-medium no-margin">Filter competitions</h2>
@@ -84,11 +84,11 @@
 				<div class="column-third">
 					<label class="form-label" for="filterStatus">Status</label>
 					<select class="form-control" id="filterStatus" name="filterStatus">
-						
+
 						<option th:if="${param.filterStatus != null}" th:remove="tag">
 							<option th:text="${param.filterStatus[0]}" selected="selected">TEST</option>
 						</option>
-						
+
 						<option th:if="${param.filterStatus == null}" th:remove="tag">
 							<option selected="selected">---</option>
 						</option>
@@ -100,8 +100,8 @@
 						<option value="Funders panel">Funders panel</option>
 						<option value="Assessor feedback">Assessor feedback</option>
 						<option value="Draft">In preparation</option>
-						<option value="Ready">Ready to open</option> 
-						
+						<option value="Ready">Ready to open</option>
+
 						<!-- <option value="project-set-up">Project set-up</option>
 						<option value="complete">Complete</option> -->
 					</select>
@@ -113,7 +113,7 @@
 						<option th:if="${param.filterCompType != null}" th:remove="tag">
 							<option th:text="${param.filterCompType[0]}" selected="selected">TEST</option>
 						</option>
-						
+
 						<option th:if="${param.filterCompType == null}" th:remove="tag">
 							<option selected="selected">---</option>
 						</option>
@@ -127,11 +127,11 @@
 				<div class="column-third">
 					<label class="form-label" for="filterInnovationArea">Innovation area</label>
 					<select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
-						
+
 						<option th:if="${param.filterInnovationArea != null}" th:remove="tag">
 							<option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
 						</option>
-						
+
 						<option th:if="${param.filterInnovationArea == null}" th:remove="tag">
 							<option selected="selected">---</option>
 						</option>
@@ -156,22 +156,22 @@
 	</div>
 
 
-	<div class="grid-row sorting">
+	<div class="grid-row">
 		<div class="column-two-thirds">
-			
+
 			<div th:if="${param.filterStatus != null and param.filterCompType[0] == '---' and param.filterInnovationArea[0] == '---'}" th:remove="tag">
-				
-				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p> 
+
+				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
 
 			</div>
 
 			<div th:if="${param.filterStatus != null and param.filterCompType[0] != '---' and param.filterInnovationArea[0] == '---'}" th:remove="tag">
-				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p> 
+				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
 
 			</div>
 
 			<div th:if="${param.filterStatus != null and param.filterCompType[0] != '---' and param.filterInnovationArea[0] != '---'}" th:remove="tag">
-				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> with innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p> 
+				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> with innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
 			</div>
 
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
@@ -192,117 +192,142 @@
 		</div>
 	</div>
 
+
 	<ul class="comp-list">
-		<li class="status comp-status-draft">
-			<div class="comp-details">
+		<li class="comp-status-draft">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=draft">Solving problems with data</a></h3>
 				<p>Ref number: 14060000</p>
 			</div>
-			<p class="status">
-				In preparation
-			</p>
+      <div class="column-third">
+        <p class="status">
+  				In preparation
+  			</p>
+    </div>
 		</li>
-		<li class="status comp-status-ready">
-			<div class="comp-details">
+		<li class="comp-status-ready">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=ready">Connected digital additive manufacturing</a></h3>
 				<p>Ref number: 14060001</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				Ready to open
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-closed">
-			<div class="comp-details">
+		<li class="comp-status-closed">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Portable renewable energy generation</a></h3>
 				<p>Ref number: 14060004</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				Closed
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-assess">
-			<div class="comp-details">
+		<li class="comp-status-assess">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Managing energy on marine vessels</a></h3>
 				<p>Ref number: 14060002</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				In assessment
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-panel">
-			<div class="comp-details">
+		<li class="comp-status-panel">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=fundingPanel">Energy catalyst</a></h3>
 				<p>Ref number: 14060003</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				Funders panel
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-open">
-			<div class="comp-details">
+		<li class="comp-status-open">
+			<div class="column-two-thirds">
 				<h3 class="heading-small">The management and use of Biofuels</h3>
 				<p>Ref number: 14060001</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				Open
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-open">
-			<div class="comp-details">
+		<li class="comp-status-open">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard">Technology inspired</a></h3>
 				<p>Ref number: 14060005</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				Open
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-feedback">
-			<div class="comp-details">
+		<li class="comp-status-feedback">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Finding value in complex biological data</a></h3>
 				<p>Ref number: 14060006</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				Assessor feedback
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-assess">
-			<div class="comp-details">
+		<li class="comp-status-assess">
+			<div class="column-two-thirds">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Childcare provision for parents</a></h3>
 				<p>Ref number: 14060007</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				In assessment
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-assess">
-			<div class="comp-details">
+		<li class="comp-status-assess">
+			<div class="column-two-thirds">
 				<h3 class="heading-small">Driving UK Capability and Economic Impact through Low Carbon Propulsion Technologies</h3>
 				<p>Ref number: 14060008</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				In assessment
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-assess">
-			<div class="comp-details">
+		<li class="comp-status-assess">
+			<div class="column-two-thirds">
 				<h3 class="heading-small">Game-changing technologies for aerospace</h3>
 				<p>Ref number: 14060009</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				In assessment
 			</p>
+    </div>
 		</li>
-		<li class="status comp-status-assess">
-			<div class="comp-details">
+		<li class="comp-status-assess">
+			<div class="column-two-thirds">
 				<h3 class="heading-small">Solving problems with data</h3>
 				<p>Ref number: 14060010</p>
 			</div>
-			<p class="status">
+      <div class="column-third">
+      <p class="status">
 				In assessment
 			</p>
+    </div>
 		</li>
 	</ul>
-	
+
 	<div th:if="${param.filterStatus == null}" th:remove="tag">
 
 		<ul class="pagination">

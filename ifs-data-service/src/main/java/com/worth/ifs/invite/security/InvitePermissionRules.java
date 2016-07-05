@@ -3,18 +3,17 @@ package com.worth.ifs.invite.security;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
-import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
-import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
+import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 
 /**
@@ -28,8 +27,6 @@ public class InvitePermissionRules {
     private ProcessRoleRepository processRoleRepository;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private InviteRepository inviteRepository;
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
@@ -69,7 +66,7 @@ public class InvitePermissionRules {
         final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
             long organisationId = inviteOrganisation.getOrganisation().getId();
-            final boolean isCollaborator = checkRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
+            final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
             return isCollaborator;
         }
         return false;
@@ -79,7 +76,7 @@ public class InvitePermissionRules {
         if (invite.getApplication() != null && invite.getInviteOrganisation() != null) {
             final InviteOrganisation inviteOrganisation = inviteOrganisationRepository.findOne(invite.getInviteOrganisation());
             if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
-                return checkRole(user, invite.getApplication(), inviteOrganisation.getOrganisation().getId(), COLLABORATOR, roleRepository, processRoleRepository);
+                return checkProcessRole(user, invite.getApplication(), inviteOrganisation.getOrganisation().getId(), COLLABORATOR, roleRepository, processRoleRepository);
             }
         }
         return false;
@@ -87,10 +84,10 @@ public class InvitePermissionRules {
 
     private boolean isLeadForInvite(final Invite invite, final UserResource user) {
         final long applicationId = invite.getApplication().getId();
-        return checkRole(user, invite.getApplication().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(user, invite.getApplication().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean isLeadForInvite(final InviteResource invite, final UserResource user) {
-        return checkRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 }

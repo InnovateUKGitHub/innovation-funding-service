@@ -41,7 +41,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Assign monitoring officer'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Assign Monitoring Officer'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
@@ -61,11 +61,11 @@
 		
 		
 		<div class="column-half">
-			<h2 class="heading-large">Monitoring officer</h2>
-			<form action="GET">
+			<h2 class="heading-large">Monitoring Officer</h2>
+			<form>
 				<fieldset>
 					<legend class="visuallyhidden">
-						Monitoring officer
+						Monitoring Officer
 					</legend>
 					<div class="form-group">
 						<label class="form-label" for="first-name">
@@ -103,9 +103,9 @@
 					<input type="hidden" id="status" name="status" value="setup" />
 
 
-					<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign monitoring officer</a>
+					<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign Monitoring Officer</a>
 
-					<a href="/prototypes/1576-assign-mo" th:unless="${param.status == null or param.status[0] != 'edit'}">Change monitoring officer</a>
+					<a href="/prototypes/1576-assign-mo" th:unless="${param.status == null or param.status[0] != 'edit'}">Change Monitoring Officer</a>
 
 
 
@@ -114,9 +114,9 @@
 				        <button class="js-close close" aria-label="Close Popup">X</button>
 				        <div>
 							
-							<h2 class="heading-medium no-margin">Assign Monitoring officer</h2>
+							<h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
 
-							<p>This will now notify the Project manager and the Monitoring officer of this appointment. The monitoring officer will be visible to all members of the consortium.</p>
+							<p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
 
 							<hr />
 				            
@@ -126,7 +126,7 @@
 				            	</div>
 				            	<div class="column-half alignright-button">
 				            		<input type="hidden" id="stage" name="stage" value="1" />
-				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring officer</button>
+				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring Officer</button>
 				            	</div>
 				            </div>
 
@@ -155,11 +155,11 @@
 			</p>
 
 			<h3 class="heading-medium no-margin">Target project start date</h3>
-			<p class="form-hint">Planned Start date for the project.</p>
+			<p class="form-hint">Planned start date for the project.</p>
 			<p>1st January 2017</p>
 
-			<h3 class="heading-medium no-margin">Project manager</h3>
-			<p class="form-hint">Project manager for the project, designated by the lead organisation.</p>
+			<h3 class="heading-medium no-margin">Project Manager</h3>
+			<p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
 			<p>David Smith</p>
 
 			<h3 class="heading-medium no-margin">Project partners</h3>

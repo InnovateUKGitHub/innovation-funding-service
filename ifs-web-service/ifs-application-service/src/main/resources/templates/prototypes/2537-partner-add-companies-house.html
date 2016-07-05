@@ -17,22 +17,16 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Link your organisation to Companies House'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Provide companies house details'})" th:remove="tag" />
 
-	<p class="form-hint icon-info-small-blue">Updating your company details will update them for all members of your company linked to you.</p>
-
-	<h2 class="heading-medium no-margin-bottom">Nomensa</h2>
-	<p class="form-hint">Company name entered during account creation</p>
+	<p class="form-hint icon-info-small-blue">Updating your company details will update them for all members of your company.</p>
 
 	<div th:include="prototypes/fragments/applicant-view :: prototype-companies-house-lookup" th:with="status='projectSetup'" th:remove="tag" th:class="extra-margin" />
 
-
-	<h3 class="heading-medium no-margin-bottom">Not registered yet?</h3>
-	<p><a href="#">Register with Companies House</a></p>
+	<h3 class="heading-small no-margin-bottom">Not registered yet?</h3>
+	<p><a rel="external" href="https://www.gov.uk/topic/company-registration-filing/starting-company" target="_blank">Register with Companies House</a></p>
 	<p>You will not be funded until you have registered with Companies House</p>
 
-
-	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

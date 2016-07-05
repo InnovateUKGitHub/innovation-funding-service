@@ -3,6 +3,7 @@ package com.worth.ifs.project.controller;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
@@ -11,10 +12,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -75,5 +78,27 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}/project-users", method = GET)
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/setApplicationDetailsSubmitted", method = POST)
+    public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
+        return projectService.saveProjectSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
+    public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
+        return projectService.isSubmitAllowed(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/monitoring-officer", method = GET)
+    public RestResult<MonitoringOfficerResource> getMonitoringOfficer(@PathVariable("projectId") final Long projectId) {
+        return projectService.getMonitoringOfficer(projectId).toGetResponse();
+    }
+
+	@RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
+    public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
+                                                  @RequestBody MonitoringOfficerResource monitoringOfficerResource) {
+
+        return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource).toPutResponse();
     }
 }
