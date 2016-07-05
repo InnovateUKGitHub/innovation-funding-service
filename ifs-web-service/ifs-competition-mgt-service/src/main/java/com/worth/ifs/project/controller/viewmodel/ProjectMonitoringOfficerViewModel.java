@@ -6,6 +6,8 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 /**
  * View model to back the Monitoring Officer page
  */
@@ -26,7 +28,7 @@ public class ProjectMonitoringOfficerViewModel {
         this.projectId = projectId;
         this.projectTitle = projectTitle;
         this.area = area;
-        this.primaryAddressLines = primaryAddress.getNonEmptyLines();
+        this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLines() : emptyList();
         this.targetProjectStartDate = targetProjectStartDate;
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;
