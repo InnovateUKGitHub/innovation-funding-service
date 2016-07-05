@@ -77,43 +77,45 @@ Duration field client side
 
 Application details server side
     [Documentation]    INFUND-2843
+    [Tags]    Pending
     Given the user should see the text in the page    Application details
     When the user enters text to a text field         id=application_details-title    ${EMPTY}
-    Then the user enters text to a text field         id=application_details-duration    ${EMPTY}
-    And  the user enters text to a text field         id=application_details-startdate_day    ${EMPTY}
-    And  the user enters text to a text field         id=application_details-startdate_month    ${EMPTY}
-    And  the user enters text to a text field         id=application_details-startdate_year    ${EMPTY}
+    Then the user enters text to a text field         id=application_details-startdate_day    ${EMPTY}
+    And the user enters text to a text field          id=application_details-startdate_month    ${EMPTY}
+    And the user enters text to a text field          id=application_details-startdate_year    ${EMPTY}
+    And the field is empty                            id=application_details-duration
     When the user clicks the button/link              jQuery=button:contains("Mark as complete")
     Then the user should see the text in the page     Please enter the full title of the project
     And the user should see the text in the page      Please enter a future date
-    And the user should see the text in the page      Please enter a valid value
+    And the user should see the text in the page      Your project should last between 1 and 36 months
     And the user should see the element               css=.error-summary-list
 
-#Empty text area
+Empty text area
+    [Documentation]    -INFUND-43
+    [Tags]
+    Given the user should see the text in the page    Application details
+    Then the user clicks the button/link               css=.pagination-part-title
+    When the applicant clears the text area of the "Project Summary"
+    Then the applicant should get a validation error message    Please enter some text
 
 
 *** Keywords ***
-#the applicant inserts an input
-#    [Arguments]    ${FIELD}    ${INPUT}
-#    Clear Element Text    ${FIELD}
-#    Input Text    ${FIELD}    ${INPUT}
-#    focus    jQuery=button:contains("Save and")
-
 the field is empty
     [Arguments]    ${EMPTY_FIELD}
     Clear Element Text    ${EMPTY_FIELD}
 
 the applicant should not see the validation error any more
     Focus    css=.app-submit-btn
-    the user should not see the element   css=.error-message
+    run keyword and ignore error  mouse out  css=input
+    wait until element is not visible    css=.error-message
 
 the applicant inserts a valid date
     Clear Element Text    id=application_details-startdate_day
     Input Text            id=application_details-startdate_day    20
-    Clear Element Text    id=application_details-startdate_year
-    Input Text            id=application_details-startdate_year    2020
     Clear Element Text    id=application_details-startdate_month
     Input Text            id=application_details-startdate_month    11
+    Clear Element Text    id=application_details-startdate_year
+    Input Text            id=application_details-startdate_year    2020
 
 the applicant inserts an invalid date
     Clear Element Text    id=application_details-startdate_day
@@ -127,12 +129,12 @@ the applicant inserts valid year
     Clear Element Text    id=application_details-startdate_year
     Input Text    id=application_details-startdate_year    2018
 
-#the applicant clears the text area of the "Project Summary"
-#    Clear Element Text    css=#form-input-11 .editor
-#    Press Key    css=#form-input-11 .editor    \\8
-#    Focus    css=.app-submit-btn
-#    Comment    Click Element    css=.fa-bold
-#    Sleep    300ms
+the applicant clears the text area of the "Project Summary"
+    Clear Element Text    css=#form-input-11 .editor
+    Press Key    css=#form-input-11 .editor    \\8
+    Focus    css=.app-submit-btn
+    Comment    Click Element    css=.fa-bold
+    Sleep    300ms
 
 the applicant clears the application title field
     Clear Element Text    id=application_details-title
