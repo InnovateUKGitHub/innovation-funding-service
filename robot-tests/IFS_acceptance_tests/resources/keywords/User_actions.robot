@@ -329,9 +329,9 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
-    log    ${ACCEPT_INVITE}
-    go to    ${ACCEPT_INVITE}
+    ${IFS_LINK}=    Get From List    ${LINK}    1
+    log    ${IFS_LINK}
+    go to    ${IFS_LINK}
     Capture Page Screenshot
     Delete All Emails
     close mailbox

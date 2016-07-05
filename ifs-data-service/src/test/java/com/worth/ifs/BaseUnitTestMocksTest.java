@@ -47,8 +47,10 @@ import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
+import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
@@ -139,6 +141,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SectionRepository sectionRepositoryMock;
+
+    @Mock
+    protected MonitoringOfficerRepository monitoringOfficerRepository;
+
+    @Mock
+    protected MonitoringOfficerMapper monitoringOfficerMapper;
 
     @Mock
     protected ApplicationService applicationServiceMock;

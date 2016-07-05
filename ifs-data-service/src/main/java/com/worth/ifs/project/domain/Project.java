@@ -81,6 +81,10 @@ public class Project {
         return getOnlyElement(matchingUser);
     }
 
+    public boolean isProjectDetailsSubmitted() {
+        return submittedDate != null;
+    }
+
     public Long getId() {
         return id;
     }
