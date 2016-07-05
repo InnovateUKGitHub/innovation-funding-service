@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.BaseControllerMockMVCTest;
+import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.controller.ProjectMonitoringOfficerController;
 import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
@@ -35,6 +36,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
@@ -70,17 +72,18 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
     private CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().build();
 
+    ProjectResourceBuilder projectBuilder = newProjectResource().
+            withId(projectId).
+            withName("My Project").
+            withApplication(applicationId).
+            withProjectManager(999L).
+            withAddress(projectAddress).
+            withTargetStartDate(LocalDate.of(2017, 01, 05));
+
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
 
-        ProjectResource project = newProjectResource().
-                withId(projectId).
-                withName("My Project").
-                withApplication(applicationId).
-                withProjectManager(999L).
-                withAddress(projectAddress).
-                withTargetStartDate(LocalDate.of(2017, 01, 05)).
-                build();
+        ProjectResource project = projectBuilder.build();
 
         boolean existingMonitoringOfficer = true;
 
@@ -142,14 +145,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficer() throws Exception {
 
-        ProjectResource project = newProjectResource().
-                withId(projectId).
-                withName("My Project").
-                withApplication(applicationId).
-                withProjectManager(999L).
-                withAddress(projectAddress).
-                withTargetStartDate(LocalDate.of(2017, 01, 05)).
-                build();
+        ProjectResource project = projectBuilder.build();
 
         boolean existingMonitoringOfficer = false;
 
@@ -181,14 +177,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testEditMonitoringOfficerPage() throws Exception {
 
-        ProjectResource project = newProjectResource().
-                withId(projectId).
-                withName("My Project").
-                withApplication(applicationId).
-                withProjectManager(999L).
-                withAddress(projectAddress).
-                withTargetStartDate(LocalDate.of(2017, 01, 05)).
-                build();
+        ProjectResource project = projectBuilder.build();
 
         boolean existingMonitoringOfficer = true;
 
@@ -230,14 +219,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testEditMonitoringOfficerPageWithNoExistingMonitoringOfficer() throws Exception {
 
-        ProjectResource project = newProjectResource().
-                withId(projectId).
-                withName("My Project").
-                withApplication(applicationId).
-                withProjectManager(999L).
-                withAddress(projectAddress).
-                withTargetStartDate(LocalDate.of(2017, 01, 05)).
-                build();
+        ProjectResource project = projectBuilder.build();
 
         boolean existingMonitoringOfficer = false;
 
@@ -264,6 +246,31 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertNull(form.getLastName());
         assertNull(form.getEmailAddress());
         assertNull(form.getPhoneNumber());
+    }
+
+    @Test
+    public void testConfirmMonitoringOfficer() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+
+        setupViewMonitoringOfficerTestExpectations(project, false);
+
+        MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/confirm").
+                    param("firstName", "First").
+                    param("lastName", "Last").
+                    param("emailAddress", "asdf@asdf.com").
+                    param("phoneNumber", "1234567890")).
+                andExpect(view().name("project/monitoring-officer-confirm")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+
+        // assert the form for the MO details have been pre-populated ok
+        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        assertEquals("First", form.getFirstName());
+        assertEquals("Last", form.getLastName());
+        assertEquals("asdf@asdf.com", form.getEmailAddress());
+        assertEquals("1234567890", form.getPhoneNumber());
     }
 
     @Override
