@@ -79,7 +79,13 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION("The organisation finance contact must be present on the project for the specified organisation", BAD_REQUEST),
     PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION("The organisation finance contact must be a partner on the project for the specified organisation", BAD_REQUEST),
     PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE("All project details must be completed before submission", BAD_REQUEST),
-	PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE("The project id in the url must match the project id in the Monitoring Officer Resource request body", BAD_REQUEST)
+	PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE("The project id in the url must match the project id in the Monitoring Officer Resource request body", BAD_REQUEST),
+
+    /**
+     * Bank details
+     */
+    BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS("Project details must be submitted before bank details", BAD_REQUEST),
+    BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION("Bank details don't exist on project {0} for organisation {1}", NOT_FOUND)
     ;
 
     private ErrorTemplate errorTemplate;

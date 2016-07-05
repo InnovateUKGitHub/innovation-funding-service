@@ -22,6 +22,8 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.transactional.AssessmentFeedbackService;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
+import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
+import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.category.mapper.CategoryLinkMapper;
 import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
@@ -46,6 +48,7 @@ import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.mapper.ProjectMapper;
+import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
@@ -240,6 +243,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectMapper projectMapperMock;
 
     @Mock
+    protected ProjectUserMapper projectUserMapperMock;
+
+    @Mock
     protected ProjectRepository projectRepositoryMock;
 
     @Mock
@@ -262,6 +268,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CategoryLinkMapper categoryLinkMapperMock;
+
+    @Mock
+    protected BankDetailsMapper bankDetailsMapperMock;
+
+    @Mock
+    protected BankDetailsRepository bankDetailsRepositoryMock;
 
     @Before
     public void setupMockInjection() {

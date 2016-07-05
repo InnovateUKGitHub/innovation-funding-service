@@ -4,23 +4,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class BankDetailsResource {
 
     private Long id;
 
+    @NotBlank
     @Pattern(regexp="\\d{6}")
     private String sortCode;
 
+    @NotBlank
     @Pattern(regexp="\\d{8}")
     private String accountNumber;
 
+    @NotNull
     private Long project;
 
+    @NotNull
     private OrganisationAddressResource organisationAddress;
 
+    @NotNull
     private Long organisation;
 
     public Long getId() {
