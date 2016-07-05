@@ -22,25 +22,21 @@
 			<div th:include="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" th:remove="tag" />
 		</div>
 	</div>
+	<hr/>
 
     <form th:action="${#ifsUtil.contextPath(#httpServletRequest)} + '/project/' + ${projectId} + '/monitoring-officer/assign'" method="post" th:object="${form}">
-        <div class="page-title">
-            <h1 class="heading-xlarge no-margin">Assign Monitoring Officer</h1>
-        </div>
+				<input type="hidden" th:field="*{firstName}" />
+				<input type="hidden" th:field="*{lastName}" />
+				<input type="hidden" th:field="*{emailAddress}" />
+				<input type="hidden" th:field="*{phoneNumber}" />
+
+				<h2 class="heading-large">Assign Monitoring Officer</h2>
         <p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
-
-        <input type="hidden" th:field="*{firstName}" />
-        <input type="hidden" th:field="*{lastName}" />
-        <input type="hidden" th:field="*{emailAddress}" />
-        <input type="hidden" th:field="*{phoneNumber}" />
-
         <button class="button large" name="submit-app-details">Assign Monitoring Officer</button>
     </form>
 
 	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
-
-
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
