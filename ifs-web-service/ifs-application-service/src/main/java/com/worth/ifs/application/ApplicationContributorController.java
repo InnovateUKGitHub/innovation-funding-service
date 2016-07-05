@@ -178,8 +178,7 @@ public class ApplicationContributorController{
 
                     contributorsForm.merge(contributorsFormCookie);
                     validator.validate(contributorsForm, bindingResult);
-                    validateUniqueApplicantNames(contributorsForm, bindingResult, application, leadApplicant);
-                    validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
+                    validateUniqueEmailsAndApplicantNames(contributorsForm, bindingResult, application, leadApplicant);
                 } else {
                     contributorsForm.merge(contributorsFormCookie);
                 }
@@ -222,8 +221,7 @@ public class ApplicationContributorController{
             contributorsForm.setTriedToSave(true);
             validator.validate(contributorsForm, bindingResult);
             UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
-            validateUniqueApplicantNames(contributorsForm, bindingResult, application, leadApplicant);
-            validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
+            validateUniqueEmailsAndApplicantNames(contributorsForm, bindingResult, application, leadApplicant);
             validatePermissionToInvite(contributorsForm, bindingResult, application, leadApplicant, request);
 
             if (!bindingResult.hasErrors()) {
@@ -308,15 +306,24 @@ public class ApplicationContributorController{
     }
 
     /**
-     * Check if e-mail addresses entered, are unique within this application's invites.
+     * Check if e-mail addresses and applicant name entered, are unique within this application's invites.
      */
-    private void validateUniqueEmails(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
+    private void validateUniqueEmailsAndApplicantNames(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
         Set<String> savedEmails = getSavedEmailAddresses(application);
+        Set<String> savedNames = getSavedApplicantNames(application);
         savedEmails.add(leadApplicant.getEmail());
+        savedNames.add(leadApplicant.getName());
         contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {
+            FieldError fieldError = null;
+
             if(!savedEmails.add(i.getEmail())){
-                // Could not add the element, so its a duplicate.
-                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
+                fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
+            }
+            if(!savedNames.add(i.getPersonName())){
+                fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].personName", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getPersonName(), false, new String[]{"NotUnique"}, null, "You have already added this applicant name.");
+            }
+
+            if(fieldError != null) {
                 bindingResult.addError(fieldError);
             }
         }));
@@ -327,21 +334,6 @@ public class ApplicationContributorController{
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
         return savedEmails;
-    }
-
-    /**
-     * Check if applicant names entered, are unique within this application's invites.
-     */
-    private void validateUniqueApplicantNames(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
-        Set<String> savedNames = getSavedApplicantNames(application);
-        savedNames.add(leadApplicant.getName());
-        contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {
-            if(!savedNames.add(i.getPersonName())){
-                // Could not add the element, so its a duplicate.
-                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].personName", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getPersonName(), false, new String[]{"NotUnique"}, null, "You have already added this applicant name.");
-                bindingResult.addError(fieldError);
-            }
-        }));
     }
 
     private Set<String> getSavedApplicantNames(ApplicationResource application) {
