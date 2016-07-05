@@ -125,8 +125,13 @@ public class QuestionModelPopulator {
 
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
         Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
-        Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
-        boolean allReadOnly = questionStatuses.size() > 0  && (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
+        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
+
+        if(!allReadOnly) {
+            Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
+            allReadOnly = questionStatuses.size() > 0 &&
+                    (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
+        }
 
         model.addAttribute("markedAsComplete", completedDetails);
         model.addAttribute("allReadOnly", allReadOnly);
