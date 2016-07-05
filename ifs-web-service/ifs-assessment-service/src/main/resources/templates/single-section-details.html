@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<ul th:fragment="sectionDetails (question, responses, section, sectionQuestions, currentApplication)" th:remove="tag">
+<ul th:fragment="sectionDetails (question, responses, section, sectionQuestions, currentApplication, assessmentId)" th:remove="tag">
     <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
         <li class="grid-row section"
             th:id="'form-input-'+${question.getId()}">
                 <div class="column-two-thirds">
                     <h3 class="heading-small">
-                        <a th:href="'/assessment/'+${currentApplication.id}+'/question/'+${question.id}"
+                        <a th:href="'/assessment/'+${assessmentId}+'/question/'+${question.id}"
                            th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
                     </h3>
                 </div>

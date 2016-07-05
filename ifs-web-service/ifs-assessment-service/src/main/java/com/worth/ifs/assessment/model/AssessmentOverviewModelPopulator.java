@@ -93,8 +93,9 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        model.addAttribute(("daysLeftPercentage"),competition.getAssessmentDaysLeftPercentage());
-        model.addAttribute(("daysLeft"),competition.getAssessmentDaysLeft());
+        model.addAttribute("daysLeftPercentage",competition.getAssessmentDaysLeftPercentage());
+        model.addAttribute("daysLeft",competition.getAssessmentDaysLeft());
+        model.addAttribute("assessmentId",assessmentId);
 
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(application.getId());
         addAppendices(application.getId(), responses, model);
@@ -157,7 +158,7 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private Future<ProcessRoleResource> getProcessRoleForAssessment(final AssessmentResource assessment) {
-        return processRoleService.getById(assessment.getId());
+        return processRoleService.getById(assessment.getProcessRole());
     }
 
     private Long getApplicationIdForProcessRole(final Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {

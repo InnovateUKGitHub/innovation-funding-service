@@ -64,15 +64,18 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final CsrfToken token = tokenService.generateToken();
 
-        // Add the CsrfToken as an attribute of the request as expected by org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor#getExtraHiddenFields(javax.servlet.http.HttpServletRequest)
-        request.setAttribute(CsrfToken.class.getName(), token);
+        // Set the token to be used in subsequent requests
+        if (!isResourceRequest(request)) {
+            // Add the CsrfToken as an attribute of the request as expected by org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor#getExtraHiddenFields(javax.servlet.http.HttpServletRequest)
+            request.setAttribute(CsrfToken.class.getName(), token);
 
-        // Not all pages have a Thymeleaf form on them.
-        // To cater for javascript clients making ajax calls that need to supply the CSRF token as a header parameter, set the token in the response as a cookie.
-        // The cookie can then be the preferred location for finding the current CSRF token in javascript, over relying on a searching for a Thymeleaf form in the DOM.
-        setTokenAsCookie(response, token);
+            // Not all pages have a Thymeleaf form on them.
+            // To cater for javascript clients making ajax calls that need to supply the CSRF token as a header parameter, set the token in the response as a cookie.
+            // The cookie can then be the preferred location for finding the current CSRF token in javascript, over relying on a searching for a Thymeleaf form in the DOM.
+            setTokenAsCookie(response, token);
+        }
 
-        // Check if CSRF protection should be applied to the request
+        // Check if CSRF protection should be applied to this request
         if (!requireCsrfProtectionMatcher.matches(request)) {
             filterChain.doFilter(request, response);
             return;
@@ -88,6 +91,16 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isResourceRequest(final HttpServletRequest request) {
+        final String uri = request.getRequestURI();
+        return uri.contains("/js/") ||
+                uri.contains("/css/") ||
+                uri.contains("/images/") ||
+                uri.contains("/favicon.ico") ||
+                uri.contains("/prototypes") ||
+                uri.contains("/error");
     }
 
     private void setTokenAsCookie(final HttpServletResponse response, final CsrfToken token) {

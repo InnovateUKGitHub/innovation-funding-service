@@ -217,7 +217,7 @@ Other costs server side
 Funding level client side
     Given the user selects a radio button
     And the user enters text to a text field    id=cost-financegrantclaim    -1
-    Then the user gets the expected validation errors    This field should be 1% or higher    This field should be 1% or higher
+    Then the user gets the expected validation errors    This field should be 0% or higher    This field should be 0% or higher
     And the user enters text to a text field    id=cost-financegrantclaim    61
     Then the user gets the expected validation errors    This field should be 60% or lower    This field should be 60% or lower
     And the user enters text to a text field    id=cost-financegrantclaim    ${EMPTY}

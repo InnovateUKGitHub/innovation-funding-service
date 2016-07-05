@@ -3,7 +3,9 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -26,8 +28,9 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     String questionRestURL = "/question";
 
     @Override
-    public RestResult<Void> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
-        return putWithRestResult(questionRestURL + "/markAsComplete/" + questionId + "/" + applicationId + "/" + markedAsCompleteById, Void.class);
+    public RestResult<List<ValidationMessages>> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
+        return putWithRestResult(questionRestURL + "/markAsComplete/" + questionId + "/" + applicationId + "/" + markedAsCompleteById, new ParameterizedTypeReference<List<ValidationMessages>>() {
+        });
     }
 
     @Override

@@ -15,14 +15,12 @@ Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 Empty project title field
     [Documentation]    -INFUND-43
     [Tags]
-    # pending INFUND-2707
     When the applicant clears the application title field
     Then The applicant should get a validation error message    Please enter the full title of the project.
 
 Invalid date (Year)
     [Documentation]    -INFUND-43
     [Tags]    HappyPath
-    # pending INFUND-2707
     And the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error message    Please enter a future date
     And the field is empty    id=application_details-startdate_year
@@ -33,7 +31,6 @@ Invalid date (Year)
 Invalid date (day)
     [Documentation]    -INFUND-43
     [Tags]
-    # pending INFUND-2707
     And the applicant inserts an input    id=application_details-startdate_day    32
     And the applicant should get a validation error message    Please enter a valid date
     And the applicant inserts an input    id=application_details-startdate_day    0
@@ -48,7 +45,6 @@ Invalid date (day)
 Invalid date (month)
     [Documentation]    -INFUND-43
     [Tags]
-    # pending INFUND-2707
     And the applicant inserts an input    id=application_details-startdate_month    0
     And the applicant should get a validation error message    Please enter a valid date
     When the applicant inserts an input    id=application_details-startdate_month    13
@@ -63,11 +59,10 @@ Invalid date (month)
 Invalid duration field
     [Documentation]    -INFUND-43
     [Tags]
-    # pending INFUND-2707
     And the applicant inserts an input    id=application_details-duration    0
-    And the applicant should get a validation error message    Please enter a valid duration
+    And the applicant should get a validation error message    Your project should last between 1 and 36 months
     When the applicant inserts an input    id=application_details-duration    -1
-    And the applicant should get a validation error message    Please enter a valid duration
+    And the applicant should get a validation error message    Your project should last between 1 and 36 months
     And the field is empty    id=application_details-duration
     Then the applicant should get a validation error message    This field should be a number
     And the applicant inserts an input    id=application_details-duration    15
@@ -76,9 +71,9 @@ Invalid duration field
 Empty text area
     [Documentation]    -INFUND-43
     [Tags]
-    # pending INFUND-2707
     When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error message    Please enter some text
+
 
 *** Keywords ***
 the applicant inserts an input

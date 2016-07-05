@@ -146,7 +146,8 @@ Special Projecct Finance role
 
 Special Project Finance role (email step)
     [Documentation]    INFUND-2609
-    [Tags]    Email
+    [Tags]    Email     Pending
+    # Pending ongoing work on the project finance role
     [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
