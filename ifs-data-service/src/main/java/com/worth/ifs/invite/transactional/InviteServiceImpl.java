@@ -41,6 +41,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
@@ -199,12 +200,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-        return findByApplicationId(applicationId).andOnSuccessReturn(invites -> {
+        Set<InviteOrganisation> inviteOrganisations = new HashSet();
 
-            List<Long> inviteOrganisationIds = invites.stream().map(i -> i.getInviteOrganisation().getId()).collect(Collectors.toList());
-            Iterable<InviteOrganisation> inviteOrganisations = inviteOrganisationRepository.findByOrganisationIdAndInvitesApplicationId(inviteOrganisationIds.get(0),applicationId);
-            return Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations));
-        });
+        for(InviteOrganisation inviteOrganisation : inviteOrganisationRepository.findByInvitesApplicationId(applicationId)) {
+            List<Invite> invitesFiltered = inviteOrganisation.getInvites().stream().filter(invite -> invite.getApplication().getId().equals(applicationId)).collect(Collectors.toList());
+            inviteOrganisation.setInvites(invitesFiltered);
+            inviteOrganisations.add(inviteOrganisation);
+        }
+
+        return serviceSuccess(Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations)));
+
     }
 
     @Override
