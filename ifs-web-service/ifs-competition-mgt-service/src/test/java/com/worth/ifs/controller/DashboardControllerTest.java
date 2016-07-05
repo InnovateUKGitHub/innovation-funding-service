@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import com.worth.ifs.competition.controller.DashboardController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.worth.ifs.competitionsetup.service.CompetitionSetupServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,11 +24,11 @@ import org.springframework.ui.Model;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.controller.form.competitionsetup.AdditionalInfoForm;
-import com.worth.ifs.controller.form.competitionsetup.CompetitionSetupForm;
-import com.worth.ifs.service.competitionsetup.formpopulator.CompetitionSetupFormPopulator;
-import com.worth.ifs.service.competitionsetup.modelpopulator.CompetitionSetupSectionModelPopulator;
-import com.worth.ifs.service.competitionsetup.sectionupdaters.CompetitionSetupSectionSaver;
+import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
+import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
+import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
