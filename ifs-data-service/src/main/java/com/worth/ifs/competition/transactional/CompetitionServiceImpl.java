@@ -1,5 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 import java.util.List;
@@ -43,6 +45,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         Competition competition = competitionRepository.findById(id);
+        if(competition == null) {
+            return serviceFailure(notFoundError(Competition.class, id));
+        }
+
         addCategories(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
     }
