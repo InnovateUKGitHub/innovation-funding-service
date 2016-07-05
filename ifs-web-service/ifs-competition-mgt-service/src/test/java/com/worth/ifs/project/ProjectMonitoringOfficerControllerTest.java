@@ -178,6 +178,55 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertNull(form.getPhoneNumber());
     }
 
+    @Test
+    public void testEditMonitoringOfficerPage() throws Exception {
+
+        ProjectResource project = newProjectResource().
+                withId(projectId).
+                withName("My Project").
+                withApplication(applicationId).
+                withProjectManager(999L).
+                withAddress(projectAddress).
+                withTargetStartDate(LocalDate.of(2017, 01, 05)).
+                build();
+
+        boolean existingMonitoringOfficer = true;
+
+        setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
+
+        MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer/edit")).
+                andExpect(view().name("project/monitoring-officer")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+
+        // assert the project details are correct
+        assertEquals(Long.valueOf(123), model.getProjectId());
+        assertEquals("My Project", model.getProjectTitle());
+        assertEquals(competitionSummary, model.getCompetitionSummary());
+        assertEquals("Some Area", competition.getInnovationAreaName());
+        assertEquals("Dave Smith", model.getProjectManagerName());
+        assertEquals(asList("Line 1", "Line 3", "Line 4", "Line 5"), model.getPrimaryAddressLines());
+        assertEquals(asList("Partner Org 1", "Partner Org 2"), model.getPartnerOrganisationNames());
+        assertEquals(LocalDate.of(2017, 01, 05), model.getTargetProjectStartDate());
+
+        // assert the various flags are correct for helping to drive what's visible on the page
+        assertTrue(model.isExistingMonitoringOfficer());
+        assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
+        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertFalse(model.isDisplayChangeMonitoringOfficerLink());
+        assertTrue(model.isEditMode());
+        assertFalse(model.isReadOnly());
+
+        // assert the form for the MO details have been pre-populated ok
+        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        assertEquals("First", form.getFirstName());
+        assertEquals("Last", form.getLastName());
+        assertEquals("asdf@asdf.com", form.getEmailAddress());
+        assertEquals("1234567890", form.getPhoneNumber());
+    }
+
 
     @Override
     protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
