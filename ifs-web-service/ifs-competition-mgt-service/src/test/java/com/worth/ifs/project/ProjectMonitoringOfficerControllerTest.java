@@ -32,37 +32,46 @@ import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRo
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
 
+    private long projectId = 123L;
+    private long applicationId = 456L;
+    private long competitionId = 789L;
+
+    private MonitoringOfficerResource mo = newMonitoringOfficerResource().
+            withFirstName("First").
+            withLastName("Last").
+            withEmail("asdf@asdf.com").
+            withPhoneNumber("1234567890").
+            build();
+
+    private AddressResource projectAddress = newAddressResource().
+            withAddressLine1("Line 1").
+            withAddressLine2().
+            withAddressLine3("Line 3").
+            withTown("Line 4").
+            withCounty("Line 5").
+            withPostcode("").
+            build();
+
+    private ApplicationResource application = newApplicationResource().
+            withId(applicationId).
+            withCompetition(competitionId).
+            build();
+
+    private CompetitionResource competition = newCompetitionResource().
+            withInnovationAreaName("Some Area").
+            build();
+
+    private CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().build();
+
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
-
-        long projectId = 123L;
-        long applicationId = 456L;
-        long competitionId = 789L;
-
-        MonitoringOfficerResource mo = newMonitoringOfficerResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("asdf@asdf.com").
-                withPhoneNumber("1234567890").
-                build();
-
-        AddressResource projectAddress = newAddressResource().
-                withAddressLine1("Line 1").
-                withAddressLine2(null).
-                withAddressLine3("Line 3").
-                withTown("Line 4").
-                withCounty("Line 5").
-                withPostcode("").
-                build();
 
         ProjectResource project = newProjectResource().
                 withId(projectId).
@@ -73,31 +82,9 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 withTargetStartDate(LocalDate.of(2017, 01, 05)).
                 build();
 
-        ApplicationResource application = newApplicationResource().
-                withId(applicationId).
-                withCompetition(competitionId).
-                build();
+        boolean existingMonitoringOfficer = true;
 
-        CompetitionResource competition = newCompetitionResource().
-                withInnovationAreaName("Some Area").
-                build();
-
-        CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().build();
-
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.of(mo));
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(applicationService.getById(applicationId)).thenReturn(application);
-        when(competitionService.getById(competitionId)).thenReturn(competition);
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummary);
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
-
-        RoleResource projectManagerRole = newRoleResource().withType(PROJECT_MANAGER).build();
-
-        // TODO DW - Project Manager needs to be a Project User rather than a ProcessRole
-        List<ProcessRoleResource> processRoles = newProcessRoleResource().with(id(999L)).withUserName("Dave Smith").
-                withRole(projectManagerRole).build(1);
-
-        when(processRoleService.findProcessRolesByApplicationId(project.getApplication())).thenReturn(processRoles);
+        setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
@@ -131,6 +118,66 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("asdf@asdf.com", form.getEmailAddress());
         assertEquals("1234567890", form.getPhoneNumber());
     }
+
+    private void setupViewMonitoringOfficerTestExpectations(ProjectResource project, boolean existingMonitoringOfficer) {
+
+        Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
+        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummary);
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
+
+        RoleResource projectManagerRole = newRoleResource().withType(PROJECT_MANAGER).build();
+
+        // TODO DW - Project Manager needs to be a Project User rather than a ProcessRole
+        List<ProcessRoleResource> processRoles = newProcessRoleResource().with(id(999L)).withUserName("Dave Smith").
+                withRole(projectManagerRole).build(1);
+
+        when(processRoleService.findProcessRolesByApplicationId(project.getApplication())).thenReturn(processRoles);
+    }
+
+    @Test
+    public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficer() throws Exception {
+
+        ProjectResource project = newProjectResource().
+                withId(projectId).
+                withName("My Project").
+                withApplication(applicationId).
+                withProjectManager(999L).
+                withAddress(projectAddress).
+                withTargetStartDate(LocalDate.of(2017, 01, 05)).
+                build();
+
+        boolean existingMonitoringOfficer = false;
+
+        setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
+
+        MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
+                andExpect(view().name("project/monitoring-officer")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+
+        // assert the various flags are correct for helping to drive what's visible on the page
+        assertFalse(model.isExistingMonitoringOfficer());
+        assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
+        assertFalse(model.isDisplayAssignMonitoringOfficerLink());
+        assertTrue(model.isDisplayChangeMonitoringOfficerLink());
+        assertFalse(model.isEditMode());
+        assertTrue(model.isReadOnly());
+
+        // assert the form for the MO details is not prepopulated
+        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        assertNull(form.getFirstName());
+        assertNull(form.getLastName());
+        assertNull(form.getEmailAddress());
+        assertNull(form.getPhoneNumber());
+    }
+
 
     @Override
     protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
