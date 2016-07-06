@@ -3,6 +3,7 @@ package com.worth.ifs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.rest.ErrorControllerAdvice;
 import com.worth.ifs.rest.RestResultHandlingHttpMessageConverter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -68,6 +69,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(newListOfConvertersArray)
+                .setControllerAdvice(new ErrorControllerAdvice())
                 .apply(documentationConfiguration(this.restDocumentation)
                         .uris()
                         .withScheme("http")
