@@ -4,7 +4,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
 import java.util.List;
 import java.util.function.Function;
@@ -25,19 +24,11 @@ public class ControllerValidationHandler {
         this.bindingResult = bindingResult;
     }
 
-    public ControllerValidationHandler addErrorsAsFieldErrors(ErrorHolder errors, String field) {
-        return addErrorsAsObjectErrors(errors, fixedFieldNameErrorMapper(field));
+    public ControllerValidationHandler addAnyErrors(ErrorHolder errors, ErrorToObjectErrorConverter converter) {
+        return addAnyErrors(errors.getErrors(), converter);
     }
 
-    public ControllerValidationHandler addErrorsAsFieldErrors(ErrorHolder errors) {
-        return addErrorsAsObjectErrors(errors, errorKeyAsFieldNameErrorMapper);
-    }
-
-    private ControllerValidationHandler addErrorsAsObjectErrors(ErrorHolder errors, Function<Error, ? extends ObjectError> errorToObjectErrorFn) {
-        return addErrorsAsObjectErrors(errors.getErrors(), errorToObjectErrorFn);
-    }
-
-    private ControllerValidationHandler addErrorsAsObjectErrors(List<Error> errors, Function<Error, ? extends ObjectError> errorToObjectErrorFn) {
+    private ControllerValidationHandler addAnyErrors(List<Error> errors, ErrorToObjectErrorConverter errorToObjectErrorFn) {
         errors.forEach(e -> bindingResult.addError(errorToObjectErrorFn.apply(e)));
         return this;
     }
@@ -47,6 +38,14 @@ public class ControllerValidationHandler {
         return this;
     }
 
+    /**
+     * If there are currently errors, fail immediately invoking the given failureHandler.  Otehrwise, continue to process
+     * the successHandler.  Assumption is that we would normally be returning view names from the given suppliers.
+     *
+     * @param failureHandler
+     * @param successHandler
+     * @return
+     */
     public String failOnErrorsOrSucceed(Supplier<String> failureHandler, Supplier<String> successHandler) {
 
         if (hasErrors()) {
@@ -64,10 +63,6 @@ public class ControllerValidationHandler {
 
     public boolean hasErrors() {
         return bindingResult.hasErrors();
-    }
-
-    private Function<Error, FieldError> fixedFieldNameErrorMapper(String field) {
-        return e -> new FieldError("", field, e.getErrorMessage());
     }
 
     public static ControllerValidationHandler newBindingResultHandler(BindingResult bindingResult) {

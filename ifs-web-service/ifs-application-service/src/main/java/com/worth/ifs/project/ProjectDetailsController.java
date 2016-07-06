@@ -256,7 +256,7 @@ public class ProjectDetailsController {
 
         return updateResult.handleSuccessOrFailure(
                 failure -> {
-                    controllerValidationHandler.addErrorsAsFieldErrors(failure, "");
+                    controllerValidationHandler.addAnyErrorsAsFieldErrors(failure, "");
                     return viewAddress(model, form, projectId);
                 },
                 success -> redirectToProjectDetails(projectId));
@@ -432,7 +432,7 @@ public class ProjectDetailsController {
             ServiceResult<?> result,
             Supplier<String> failureViewSupplier) {
 
-        return controllerValidationHandler.addErrorsAsFieldErrors(result, fieldName).
+        return controllerValidationHandler.addAnyErrorsAsFieldErrors(result, fieldName).
                 failOnErrorsOrSucceed(failureViewSupplier, () -> redirectToProjectDetails(projectId));
     }
 
