@@ -3,6 +3,8 @@ package com.worth.ifs.project.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
@@ -130,5 +132,48 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
 
         assertEquals(isAllowed, result.getSuccessObject());
+    }
+
+    @Test
+    public void testUpdateMonitoringOfficer(){
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(projectId)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        setupPutWithRestResultExpectations(projectRestURL + "/" + projectId + "/monitoring-officer", monitoringOfficerResource, OK);
+
+        RestResult<Void> result = service.updateMonitoringOfficer(projectId, "abc", "xyz", "abc.xyz@gmail.com", "078323455");
+
+        assertTrue(result.isSuccess());
+
+    }
+
+    @Test
+    public void testGetMonitoringOfficerForProject(){
+
+        MonitoringOfficerResource expectedMonitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        setupGetWithRestResultExpectations(projectRestURL + "/1/monitoring-officer", MonitoringOfficerResource.class, expectedMonitoringOfficerResource);
+
+        RestResult<MonitoringOfficerResource> result = service.getMonitoringOfficerForProject(1L);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(expectedMonitoringOfficerResource, result.getSuccessObject());
+
     }
 }

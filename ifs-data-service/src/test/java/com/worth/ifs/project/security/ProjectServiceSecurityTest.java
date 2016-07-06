@@ -26,6 +26,7 @@ import java.util.Map;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -183,6 +184,31 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(() -> service.getProjectUsers(123L), () -> {
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).compAdminsCanViewProjects(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetMonitoringOfficer() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getMonitoringOfficer(123L), () -> {
+            verify(projectPermissionRules).compAdminsCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verify(projectPermissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testSaveMonitoringOfficer() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
+            verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }

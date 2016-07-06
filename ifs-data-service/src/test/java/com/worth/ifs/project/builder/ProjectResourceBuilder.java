@@ -38,12 +38,16 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((id, project) -> setField("id", id, project), ids);
     }
 
-    public ProjectResourceBuilder withName(String name){
-        return with((project) -> project.setName(name));
+    public ProjectResourceBuilder withName(String... name){
+        return withArray((n, project) -> project.setName(n), name);
     }
 
     public ProjectResourceBuilder withApplication(ApplicationResource applicationResource){
         return with(project -> project.setApplication(applicationResource.getId()));
+    }
+
+    public ProjectResourceBuilder withApplication(Long... application){
+        return withArray((applicationId, project) -> project.setApplication(applicationId), application);
     }
 
     public ProjectResourceBuilder withTargetStartDate(LocalDate... dates) {

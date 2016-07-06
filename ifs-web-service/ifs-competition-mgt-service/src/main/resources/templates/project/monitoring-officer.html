@@ -3,7 +3,8 @@
 <head>
 	<div th:include="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" th:remove="tag" />
 </head>
-<body class="competition-management application-overview">
+<body class="competition-management assign-mo">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -23,141 +24,125 @@
 		</div>
 	</div>
 
-	<th:block th:if="${model.displayMonitoringOfficerAssignedMessage}">
+	<hr/>
 
+	<th:block th:if="${model.displayMonitoringOfficerAssignedMessage}">
 		<div class="success-alert">
 			<h2 class="heading-small no-margin-top">A Monitoring Officer has been assigned.</h2>
 		</div>
-
 	</th:block>
 
-
 	<div class="column-half">
+	<h2 class="heading-large">Monitoring Officer</h2>
+	<form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}"
+		  th:object="${form}" method="post" th:with="readonly=${model.readOnly}">
+		<fieldset>
+						<div class="form-group">
+			<legend>
+						<span class="visuallyhidden">Monitoring Officer</span>
+			</legend>
 
-        <h2 class="heading-large">Monitoring Officer</h2>
-        <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}">
-            <div class="form-group" th:classappend="${#fields.hasAnyErrors() ? 'error' : ''}">
-                <fieldset>
-                    <legend class="visuallyhidden">
-                        Monitoring Officer
-                    </legend>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('firstName') ? 'error' : ''}">
-                        <div th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
-                            <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
-                        </div>
-                        <label class="form-label" for="first-name">
-                            <span class="form-label-bold">First name</span>
-                        </label>
-                        <input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
-                               id="first-name" th:field="*{firstName}" />
-                    </div>
+						<div class="form-group" th:classappend="${#fields.hasErrors('firstName') ? 'error' : ''}">
+							<label class="form-label" for="firstName">
+								<span class="form-label-bold">First name</span>
+								<th:block th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
+										<span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+								</th:block>
+							</label>
+							<input type="text" th:errorclass="field-error" required="required" data-required-errormessage="Please provide a first name" class="form-control width-full" th:readonly="${readonly}" th:field="*{firstName}" />
+						</div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('lastName') ? 'error' : ''}">
-                        <div th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
-                            <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-                        </div>
-                        <label class="form-label" th:for="lastName">
-                            <span class="form-label-bold">Last name</span>
-                        </label>
-                        <input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
-                               id="last-name" th:field="*{lastName}" />
-                    </div>
+						  <div class="form-group" th:classappend="${#fields.hasErrors('lastName') ? 'error' : ''}">
+							  <label class="form-label" th:for="lastName">
+								  <span class="form-label-bold">Last name</span>
+											<th:block th:if="${#fields.hasErrors('lastName')}">
+													<span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+											</th:block>
+							  </label>
+							  <input type="text"  th:errorclass="field-error" required="required" data-required-errormessage="Please provide a last name"  class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
+						  </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress') ? 'error' : ''}">
-                        <div th:if="${#fields.hasErrors('emailAddress')}" th:remove="tag">
-                            <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}" />
-                        </div>
-                        <label class="form-label" for="email">
-                            <span class="form-label-bold">Email</span>
-                        </label>
-                        <input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
-                               id="email" th:field="*{emailAddress}" />
-                    </div>
+						  <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress') ? 'error' : ''}">
+							  <label class="form-label" for="emailAddress">
+								  <span class="form-label-bold">Email</span>
+											<th:block th:if="${#fields.hasErrors('emailAddress')}">
+													<span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}" />
+											</th:block>
+							  </label>
+							  <input type="email" th:errorclass="field-error" required="required" data-required-errormessage="Please provide an email address" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
+						  </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber') ? 'error' : ''}">
-                        <div th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
-                            <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
-                        </div>
-                        <label class="form-label" for="phone-number">
-                            <span class="form-label-bold">Phone number</span>
-                        </label>
-                        <input type="text" class="form-control width-full" th:readonly="${readonly}" th:disabled="${readonly}"
-                               id="phone-number" th:field="*{phoneNumber}" />
-                    </div>
+						  <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber') ? 'error' : ''}">
+							  <label class="form-label" for="phoneNumber">
+								  <span class="form-label-bold">Phone number</span>
+									<th:block th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
+											<span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+									</th:block>
+							  </label>
+							  <input type="tel" th:errorclass="field-error" required="required" data-required-errormessage="Please provide a phone number" class="form-control" th:readonly="${readonly}" th:field="*{phoneNumber}" />
+						  </div>
 
-                    <a th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
-                        Change Monitoring Officer
-                    </a>
+						  <a th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
+							  Change Monitoring Officer
+						  </a>
 
-                    <button type="submit" class="button" th:if="${model.displayAssignMonitoringOfficerLink}">
-                        Assign Monitoring Officer
-                    </button>
+						  <button data-js-modal="modal-assign-mo" type="submit" class="button" th:if="${model.displayAssignMonitoringOfficerLink}">
+							  Assign Monitoring Officer
+						  </button>
 
-                    <div class="modal-assign-mo" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-                        <button class="js-close close" aria-label="Close Popup">X</button>
-                        <div>
-
-                            <h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
-
-                            <p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
-
-                            <hr />
-
-                            <div class="grid-row extra-margin">
-                                <div class="column-half">
-                                    <a href="/prototypes/1576-assign-mo">Cancel</a>
-                                </div>
-                                <div class="column-half alignright-button">
-                                    <input type="hidden" id="stage" name="stage" value="1" />
-                                    <button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring Officer</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </fieldset>
-            </div>
-        </form>
+							<div th:include="fragments/modals :: modal-assign-mo" th:remove="tag"/>
+					</div>
+        </fieldset>
+    </form>
 	</div>
 	<div class="column-half">
-
 		<h2 class="heading-large">Supporting information</h2>
 
-		<h3 class="heading-medium no-margin">Project title</h3>
-		<p th:text="${model.projectTitle}">Technology inspired</p>
+		<th:block th:if="${model.projectTitle}">
+			<h3 class="heading-medium no-margin">Project title</h3>
+			<p th:text="${model.projectTitle}">Technology inspired</p>
+		</th:block>
 
-		<h3 class="heading-medium no-margin">Area</h3>
-		<p th:text="${model.area}">Technology</p>
+		<th:block th:if="${model.area}">
+			<h3 class="heading-medium no-margin">Area</h3>
+			<p th:text="${model.area}">Technology</p>
+		</th:block>
 
-		<h3 class="heading-medium no-margin">Primary address</h3>
-		<p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
-		<p>
-            <span th:each="addressLine : ${model.primaryAddressLines}" th:remove="tag">
-                <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-            </span>
-		</p>
+		<th:block th:if="${model.primaryAddressLines}">
+			<h3 class="heading-medium no-margin">Primary address</h3>
+			<p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
+			<p>
+				<span th:each="addressLine : ${model.primaryAddressLines}" th:remove="tag">
+					<span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+				</span>
+			</p>
+		</th:block>
 
-		<h3 class="heading-medium no-margin">Target project start date</h3>
-		<p class="form-hint">Planned start date for the project.</p>
-		<p th:text="${#temporals.format(model.targetProjectStartDate, 'dd MMM yyyy')}">1st January 2017</p>
+		<th:block th:if="${model.targetProjectStartDate}">
+			<h3 class="heading-medium no-margin">Target project start date</h3>
+			<p class="form-hint">Planned start date for the project.</p>
+			<p th:if="${model.targetProjectStartDate}">
+				<th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
+	 			<th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
+			</p>
+		</th:block>
 
-		<h3 class="heading-medium no-margin">Project Manager</h3>
-		<p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
-		<p th:text="${model.projectManagerName}">David Smith</p>
+		<th:block th:if="${model.projectManagerName}">
+			<h3 class="heading-medium no-margin">Project Manager</h3>
+			<p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
+			<p th:text="${model.projectManagerName}">David Smith</p>
+		</th:block>
 
-		<h3 class="heading-medium no-margin">Project partners</h3>
-
-		<ul class="list-bullet">
-			<li th:each="organisationName : ${model.partnerOrganisationNames}" th:text="${organisationName}">Company A (Lead)</li>
-		</ul>
+		<th:block th:if="${model.partnerOrganisationNames}">
+			<h3 class="heading-medium no-margin">Project partners</h3>
+			<ul class="list-bullet">
+				<li th:each="organisationName : ${model.partnerOrganisationNames}" th:text="${organisationName}">Company A (Lead)</li>
+			</ul>
+		</th:block>
 
 	</div>
-
 	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
-
-
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />

@@ -1,41 +1,30 @@
 package com.worth.ifs.controller;
 
-import static java.util.Arrays.asList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.application.service.ApplicationFundingDecisionService;
 import com.worth.ifs.competition.controller.FundingDecisionController;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.application.service.ApplicationFundingDecisionService;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<FundingDecisionController> {
 
-	public static final Long COMPETITION_ID = Long.valueOf(123L);
-    
 	@Override
 	protected FundingDecisionController supplyControllerUnderTest() {
 		return new FundingDecisionController();
@@ -43,9 +32,6 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
 	
     @Mock
     private ApplicationFundingDecisionService applicationFundingDecisionService;
-    
-    @Mock
-    private ApplicationSummaryService applicationSummaryService;
     
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
