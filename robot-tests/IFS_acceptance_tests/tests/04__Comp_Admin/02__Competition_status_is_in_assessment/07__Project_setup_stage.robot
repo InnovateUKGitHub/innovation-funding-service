@@ -135,9 +135,8 @@ Lead partner can change the project manager
     [Documentation]     INFUND-2616, INFUND-2996
     [Tags]
     Given the user clicks the button/link    link=Project manager
-    # The following two steps are currently commented until completion of the INFUND-2616 story, with the frontend validations
-    # When the user clicks the button/link    jQuery=.button:contains("Save")
-    # Then the user should see a validation error     Please choose a project manager
+    When the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should see a validation error     You need to select a Project Manager before you can continue
     When the user selects the radio button      projectManager        27
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page     test ten
@@ -261,7 +260,6 @@ Unsuccessful applicant can download the uploaded feedback
 *** Keywords ***
 the user should see a validation error
     [Arguments]    ${ERROR1}
-    Mouse Out    id=projectStartDate_year
     Focus    jQuery=button:contains("Save")
     sleep    300ms
     Then the user should see an error    ${ERROR1}
