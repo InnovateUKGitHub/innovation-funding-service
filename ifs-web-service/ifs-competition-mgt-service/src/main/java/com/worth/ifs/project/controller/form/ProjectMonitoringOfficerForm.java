@@ -5,6 +5,7 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import java.util.Optional;
 
 /**
@@ -23,6 +24,7 @@ public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
     private String emailAddress;
 
     @NotEmpty(message = "Please provide a phone number")
+    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
     private String phoneNumber;
 
     // for spring form binding

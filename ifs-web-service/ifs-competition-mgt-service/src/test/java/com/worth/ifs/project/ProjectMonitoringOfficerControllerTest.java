@@ -352,7 +352,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 param("firstName", "").
                 param("lastName", "").
                 param("emailAddress", "asdf").
-                param("phoneNumber", "")).
+                param("phoneNumber", "ADFS")).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -375,13 +375,13 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
-        assertEquals("", form.getPhoneNumber());
+        assertEquals("ADFS", form.getPhoneNumber());
 
         assertEquals(4, form.getBindingResult().getFieldErrorCount());
         assertEquals("NotEmpty", form.getBindingResult().getFieldError("firstName").getCode());
         assertEquals("NotEmpty", form.getBindingResult().getFieldError("lastName").getCode());
         assertEquals("Email", form.getBindingResult().getFieldError("emailAddress").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("phoneNumber").getCode());
+        assertEquals("Pattern", form.getBindingResult().getFieldError("phoneNumber").getCode());
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
