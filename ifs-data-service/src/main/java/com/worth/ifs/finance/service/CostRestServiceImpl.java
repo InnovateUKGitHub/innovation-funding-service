@@ -25,6 +25,11 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     public RestResult<CostItem> add(Long applicationFinanceId, Long questionId, CostItem costItem) {
         return postWithRestResult(costRestURL + "/add/" + applicationFinanceId + "/" + questionId, costItem, CostItem.class);
     }
+    
+    @Override
+    public RestResult<CostItem> addWithoutPersisting(Long applicationFinanceId, Long questionId) {
+        return postWithRestResult(costRestURL + "/add-without-persisting/" + applicationFinanceId + "/" + questionId, CostItem.class);
+    }
 
     @Override
     public RestResult<List<CostItem>> getCosts(Long applicationFinanceId) {

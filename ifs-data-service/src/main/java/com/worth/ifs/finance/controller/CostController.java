@@ -37,6 +37,13 @@ public class CostController {
             @RequestBody(required=false) final CostItem newCostItem) {
         return costService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
     }
+    
+    @RequestMapping("/add-without-persisting/{applicationFinanceId}/{questionId}")
+    public RestResult<CostItem> addWithoutPersisting(
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId,
+            @PathVariable("questionId") final Long questionId) {
+        return costService.addCostWithoutPersisting(applicationFinanceId, questionId).toPostCreateResponse();
+    }
 
     @RequestMapping("/{id}")
     public RestResult<CostItem> get(@PathVariable("id") final Long id) {

@@ -133,6 +133,17 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             })
         );
     }
+    
+    @Override
+    public ServiceResult<CostItem> addCostWithoutPersisting(final Long applicationFinanceId, final Long questionId) {
+        return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) ->
+            getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application -> {
+                OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+                Cost cost = new Cost(applicationFinance, question);
+                return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+            })
+        );
+    }
 
 
     @Override

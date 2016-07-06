@@ -42,4 +42,9 @@ public class CostServiceImpl implements CostService {
     public CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem) {
         return costRestService.add(applicationFinanceId, questionId, costItem).getSuccessObjectOrThrowException();
     }
+    
+    @Override
+    public CostItem addWithoutPersisting(Long applicationFinanceId, Long questionId) {
+        return costRestService.addWithoutPersisting(applicationFinanceId, questionId).getSuccessObjectOrThrowException();
+    }
 }

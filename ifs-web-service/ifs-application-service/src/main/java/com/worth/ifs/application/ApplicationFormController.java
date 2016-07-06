@@ -321,7 +321,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        return financeHandler.getFinanceFormHandler(organisationType).addCost(applicationId, user.getId(), questionId);
+        return financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
     }
 
     private void saveApplicationForm(ApplicationResource application,

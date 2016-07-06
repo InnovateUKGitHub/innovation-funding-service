@@ -22,19 +22,19 @@ public class Cost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
-    String item;
+    private String item;
 
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
-    String description;
+    private String description;
 
     Integer quantity;
-    BigDecimal cost;
+    private BigDecimal cost;
 
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
-    String name;
+    private String name;
 
     @OneToMany(mappedBy="cost")
     private List<CostValue> costValues = new ArrayList<>();

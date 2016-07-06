@@ -385,6 +385,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         public ServiceResult<ApplicationFinanceResource> addCost(ApplicationFinanceResourceId applicationFinanceResourceId) {
             return null;
         }
+        
+        @Override
+		public ServiceResult<CostItem> addCostWithoutPersisting(Long applicationFinanceId, Long questionId) {
+			return null;
+		}
 
         @Override
         public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
@@ -430,6 +435,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinance) {
             return null;
         }
+
     }
 }
 

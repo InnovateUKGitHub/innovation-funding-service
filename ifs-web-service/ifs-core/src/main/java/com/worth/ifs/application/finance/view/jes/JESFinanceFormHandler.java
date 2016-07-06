@@ -222,4 +222,10 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         // not to be implemented, can't add extra rows of finance to the JES form
         throw new NotImplementedException("Can't add extra rows of finance to the JES form");
     }
+
+	@Override
+	public CostItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
+		// not to be implemented, can't add extra rows of finance to the JES form
+        throw new NotImplementedException("Can't add extra rows of finance to the JES form");
+	}
 }

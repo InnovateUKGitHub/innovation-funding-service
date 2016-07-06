@@ -15,4 +15,5 @@ public interface CostService {
     RestResult<ValidationMessages> update(CostItem costItem);
     void delete(Long costId);
     CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem);
+    CostItem addWithoutPersisting(Long applicationFinanceId, Long questionId);
 }

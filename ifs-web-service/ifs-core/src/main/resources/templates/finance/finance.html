@@ -162,7 +162,7 @@
                 <input type="text"
                        class="form-control width-full"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-role]}')} ? field-error : ''"
-                       th:name="${type +'-role-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-role-' + question.id : type +'-role-' + question.id + '-' + cost.id}"
                        th:id="${'cost-labour-'+cost.id+'-role'}"
                        th:value="${cost.getRole()}"
                        th:readonly="${complete == 'complete'}"

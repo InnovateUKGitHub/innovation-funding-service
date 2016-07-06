@@ -43,6 +43,9 @@ public interface CostService {
     @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<CostItem> addCost(@P("applicationFinanceId") Long applicationFinanceId, Long questionId, CostItem newCostItem);
 
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
+    ServiceResult<CostItem> addCostWithoutPersisting(@P("applicationFinanceId") Long applicationFinanceId, Long questionId);
+    
     @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'UPDATE')")
     ServiceResult<CostItem> updateCost(@P("costId")Long costId, CostItem newCostItem);
 

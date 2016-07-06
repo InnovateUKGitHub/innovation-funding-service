@@ -108,6 +108,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         return costService.add(applicationFinance.getId(), questionId, null);
     }
+    
+    @Override
+    public CostItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
+        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+        return costService.addWithoutPersisting(applicationFinance.getId(), questionId);
+    }
 
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
         Map<String, String[]> requestParams = request.getParameterMap();
