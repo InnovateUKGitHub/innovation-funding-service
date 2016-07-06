@@ -2,6 +2,7 @@
 Documentation     -INFUND-888 As an applicant I want to be able to manually add an unverified company as part of registration as I am not yet registered with Companies House so that I can enter a competition as a Start-up company
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -15,7 +16,7 @@ ${organisation_name}    Top of the Popps
 *** Test Cases ***
 Not in Companies House company link
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House    HappyPath
+    [Tags]    Applicant    HappyPath
     Given the user navigates to the page    ${find_org_on_company_house_url}
     And the user should see the text in the page    Not on Companies House?
     When the user clicks the button/link    name=not-in-company-house
@@ -24,7 +25,7 @@ Not in Companies House company link
 
 The address can be manually added and this persists on refresh
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House
+    [Tags]
     When the user clicks the button/link    name=manual-address
     Then the user should see the text in the page    Street
     And the user should see the text in the page    Town
@@ -35,7 +36,7 @@ The address can be manually added and this persists on refresh
 
 The address can be manually added and the details pass to the confirmation page
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House
+    [Tags]
     When the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    The East Wing
     And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine2    Popple Manor
     And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
@@ -51,4 +52,3 @@ The address can be manually added and the details pass to the confirmation page
     And the user should see the text in the page    POPPS123
 
 *** Keywords ***
-
