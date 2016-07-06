@@ -17,6 +17,7 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.RoleResource;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -274,11 +275,12 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("asdf", form.getEmailAddress());
         assertEquals("", form.getPhoneNumber());
 
-        assertEquals(4, form.getBindingResult().getFieldErrorCount());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("lastName").getCode());
-        assertEquals("Email", form.getBindingResult().getFieldError("emailAddress").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("phoneNumber").getCode());
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
+        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+        assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
+        assertEquals("Pattern", bindingResult.getFieldError("phoneNumber").getCode());
     }
 
     @Test
@@ -352,7 +354,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 param("firstName", "").
                 param("lastName", "").
                 param("emailAddress", "asdf").
-                param("phoneNumber", "")).
+                param("phoneNumber", "ADFS")).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -375,13 +377,15 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
-        assertEquals("", form.getPhoneNumber());
+        assertEquals("ADFS", form.getPhoneNumber());
 
-        assertEquals(4, form.getBindingResult().getFieldErrorCount());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("lastName").getCode());
-        assertEquals("Email", form.getBindingResult().getFieldError("emailAddress").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("phoneNumber").getCode());
+        BindingResult bindingResult = form.getBindingResult();
+
+        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
+        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+        assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
+        assertEquals("Pattern", bindingResult.getFieldError("phoneNumber").getCode());
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
