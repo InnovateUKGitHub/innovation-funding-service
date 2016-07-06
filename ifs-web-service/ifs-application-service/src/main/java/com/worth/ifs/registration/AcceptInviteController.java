@@ -13,6 +13,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.registration.service.RegistrationService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
@@ -47,6 +48,8 @@ public class AcceptInviteController extends BaseController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Autowired
     private OrganisationService organisationService;
+    @Autowired
+    private RegistrationService registrationService;
 
     @Autowired
     public void setValidator(Validator validator) {
@@ -98,7 +101,7 @@ public class AcceptInviteController extends BaseController {
 
             UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
             if (loggedInUser != null) {
-                if (AcceptInviteAuthenticatedController.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
+                if (registrationService.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
                     return "registration/accept-invite-failure";
                 }else{
                     CookieUtil.saveToCookie(response, INVITE_HASH, hash);
