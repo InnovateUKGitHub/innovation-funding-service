@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,9 +32,9 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#sectionId, 'com.worth.ifs.application.resource.SectionResource', 'READ')")
     ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_COMPLETE')")
     ServiceResult<List<ValidationMessages>> markSectionAsComplete(Long sectionId,
-                                                                  Long applicationId,
+                                                                  @P("applicationId") final Long id,
                                                                   Long markedAsCompleteById);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
