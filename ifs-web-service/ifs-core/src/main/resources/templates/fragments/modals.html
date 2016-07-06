@@ -120,6 +120,26 @@
 		</div>
 </div>
 
+<!-- save monotiring officer -->
+
+<div th:fragment="modal-assign-mo">
+	<div class="modal-assign-mo" role="dialog" aria-hidden="true">
+		<div th:include="fragments/modals :: close-button" th:remove="tag" />
+			<h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
+			<p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
+			<hr />
+			<div class="grid-row extra-margin">
+					<div class="column-half">
+							<button type="button" class="js-close buttonlink large">Cancel</button>
+					</div>
+					<div class="column-half alignright-button">
+							<input type="hidden" id="stage" name="stage" value="1" />
+							<button th:formaction="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" class="button">Assign Monitoring Officer</button>
+					</div>
+			</div>
+	</div>
+</div>
+
 <!-- save project details -->
 <div th:fragment="modal-project-details">
 	<div class="modal-project-details" role="dialog" aria-hidden="true">

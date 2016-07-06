@@ -3,7 +3,7 @@ package com.worth.ifs.project.domain;
 import javax.persistence.*;
 
 /**
- * Created by bronnyl on 6/27/16.
+ * Represents Monitoring Officer
  */
 @Entity
 public class MonitoringOfficer {

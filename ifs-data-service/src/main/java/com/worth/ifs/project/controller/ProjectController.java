@@ -11,13 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -97,7 +96,7 @@ public class ProjectController {
 
 	@RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
-                                                  @RequestBody MonitoringOfficerResource monitoringOfficerResource) {
+                                                  @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
 
         return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource).toPutResponse();
     }
