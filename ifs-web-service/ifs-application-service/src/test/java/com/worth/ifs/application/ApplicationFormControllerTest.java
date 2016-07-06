@@ -456,7 +456,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
      public void testSaveFormElementApplicationDuration() throws Exception {
-        String value = "123";
+        String value = "35";
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
