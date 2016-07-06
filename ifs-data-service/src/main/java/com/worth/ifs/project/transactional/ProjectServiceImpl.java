@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -198,16 +197,27 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
+            andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
             andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
     }
 
     private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
-        if (projectId != monitoringOfficerResource.getProject()) {
+        if (!projectId.equals(monitoringOfficerResource.getProject())) {
             return serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
         } else {
             return serviceSuccess();
         }
+    }
+
+    private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
+
+        return getProject(projectId).andOnSuccess(project -> {
+           if (!project.isProjectDetailsSubmitted()) {
+               return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+           }
+            return serviceSuccess();
+        });
     }
 
     private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {

@@ -5,20 +5,27 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
+import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
@@ -386,6 +393,143 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSaveMOWithDiffProjectIdInURLAndMOResource() {
+
+        Long projectid = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withProject(3L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+
+        String errorKey = result.getFailure().getErrors().get(0).getErrorKey();
+        Assert.assertEquals(CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE.name(), errorKey);
+    }
+
+    @Test
+    public void testSaveMOWhenProjectDetailsNotYetSubmitted() {
+
+        Long projectid = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        Project projectInDB = newProject().withId(1L).build();
+
+        when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+
+        String errorKey = result.getFailure().getErrors().get(0).getErrorKey();
+        Assert.assertEquals(CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED.name(), errorKey);
+    }
+
+    @Test
+    public void testSaveMOWhenMOExistsForAProject() {
+
+        Long projectid = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+
+        // Set this to different values, so that we can assert that it gets updated
+        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+                .withFirstName("def")
+                .withLastName("klm")
+                .withEmail("def.klm@gmail.com")
+                .withPhoneNumber("079237439")
+                .build();
+
+
+        Project projectInDB = newProject().withId(1L).withSubmittedDate(LocalDateTime.now()).build();
+
+        when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
+
+        when(monitoringOfficerRepository.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
+
+        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+
+        // Assert that the MO in DB is updated with the correct values from MO Resource
+        Assert.assertEquals("First name of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getFirstName(), monitoringOfficerResource.getFirstName());
+        Assert.assertEquals("Last name of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getLastName(), monitoringOfficerResource.getLastName());
+        Assert.assertEquals("Email of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getEmail(), monitoringOfficerResource.getEmail());
+        Assert.assertEquals("Phone number of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getPhoneNumber(), monitoringOfficerResource.getPhoneNumber());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSaveMOWhenMODoesNotExistForAProject() {
+
+        Long projectid = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        Project projectInDB = newProject().withId(1L).withSubmittedDate(LocalDateTime.now()).build();
+
+        when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
+
+        when(monitoringOfficerRepository.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
+
+        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetMonitoringOfficerWhenMODoesNotExistInDB() {
+
+        Long projectid = 1L;
+
+        ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
+
+        String errorKey = result.getFailure().getErrors().get(0).getErrorKey();
+        Assert.assertEquals(CommonFailureKeys.GENERAL_NOT_FOUND.name(), errorKey);
+    }
+
+    @Test
+    public void testGetMonitoringOfficerWhenMOExistsInDB() {
+
+        Long projectid = 1L;
+
+        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+                .withFirstName("def")
+                .withLastName("klm")
+                .withEmail("def.klm@gmail.com")
+                .withPhoneNumber("079237439")
+                .build();
+
+        when(monitoringOfficerRepository.findOneByProjectId(projectid)).thenReturn(monitoringOfficerInDB);
+
+        ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
+
+        assertTrue(result.isSuccess());
+
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {
