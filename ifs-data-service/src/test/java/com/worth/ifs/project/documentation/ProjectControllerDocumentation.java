@@ -2,6 +2,7 @@ package com.worth.ifs.project.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
@@ -212,6 +213,72 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                     ),
                     responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
                 ));
+    }
+
+    @Test
+    public void saveMoWithDiffProjectIdInUrlAndMoResource() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(3L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE)));
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
+                        ),
+                        requestFields(monitoringOfficerResourceFields)
+                ));
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMoWhenProjectDetailsNotYetSubmitted() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(projectId)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
+                        ),
+                        requestFields(monitoringOfficerResourceFields)
+                ));
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
     }
 
     @Test
