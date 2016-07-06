@@ -2,10 +2,16 @@ package com.worth.ifs.commons.error.exception;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 public class ForbiddenActionException extends IFSRuntimeException {
 
     public ForbiddenActionException() {
     	// no-arg constructor
+    }
+
+    public ForbiddenActionException(String message) {
+        super(message, emptyList());
     }
 
     public ForbiddenActionException(List<Object> arguments) {
