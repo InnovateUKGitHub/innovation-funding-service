@@ -309,21 +309,19 @@ public class ApplicationContributorController{
      * Check if e-mail addresses and applicant name entered, are unique within this application's invites.
      */
     private void validateUniqueEmailsAndApplicantNames(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
-        contributorsForm.getOrganisations().forEach(organisation -> {
-            Integer organisationIndex = contributorsForm.getOrganisations().indexOf(organisation);
-            checkInvitesForUniques(application, leadApplicant, organisationIndex, organisation, bindingResult);
-        });
-    }
-
-    private void checkInvitesForUniques(ApplicationResource application, UserResource leadApplicant, Integer organisationIndex, OrganisationInviteForm organisation, BindingResult bindingResult) {
         Set<String> savedEmails = getSavedEmailAddresses(application, leadApplicant);
         Set<String> savedNames = getSavedApplicantNames(application, leadApplicant);
 
-        for(InviteeForm invitee : organisation.getInvites()) {
-            Integer inviteIndex = organisation.getInvites().indexOf(invitee);
 
-            savedEmails = checkInviteForUniqueEmails(savedEmails, inviteIndex, invitee, organisationIndex, organisation, bindingResult);
-            savedNames = checkInviteForUniqueApplicantNames(savedNames, inviteIndex, invitee, organisationIndex, organisation, bindingResult);
+        for(OrganisationInviteForm organisation : contributorsForm.getOrganisations()) {
+            Integer organisationIndex = contributorsForm.getOrganisations().indexOf(organisation);
+
+            for(InviteeForm invitee : organisation.getInvites()) {
+                Integer inviteIndex = organisation.getInvites().indexOf(invitee);
+
+                savedEmails = checkInviteForUniqueEmails(savedEmails, inviteIndex, invitee, organisationIndex, organisation, bindingResult);
+                savedNames = checkInviteForUniqueApplicantNames(savedNames, inviteIndex, invitee, organisationIndex, organisation, bindingResult);
+            }
         }
     }
 
