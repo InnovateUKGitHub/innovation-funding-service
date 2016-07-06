@@ -23,7 +23,6 @@ public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
     @Email(message = "Please provide a valid email address")
     private String emailAddress;
 
-    @NotEmpty(message = "Please provide a phone number")
     @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
     private String phoneNumber;
 

@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
-import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,14 +21,14 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
@@ -122,7 +123,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(post("/project/{projectId}/address", 456L)
                 .param("leadOrganisationId", "123")
                 .param("addressType", OrganisationAddressType.REGISTERED.name())
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(addressResource)))
             .andExpect(status().isOk())
             .andExpect(content().string(""));
@@ -177,11 +178,42 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .contentType(APPLICATION_JSON)
+                .content(toJson(monitoringOfficerResource)))
                 .andExpect(status().isOk());
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMonitoringOfficerWithBindExceptions() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(projectId)
+                .withFirstName("")
+                .withLastName("")
+                .withEmail("abc")
+                .withPhoneNumber("hello")
+                .build();
+
+        Error firstNameError = new Error("NotEmpty", "Please enter a first name", singletonList("firstName"), BAD_REQUEST);
+        Error lastNameError = new Error("NotEmpty", "Please enter a last name", singletonList("lastName"), BAD_REQUEST);
+        Error emailError = new Error("Email", "Please enter a valid email address", singletonList("email"), BAD_REQUEST);
+        Error phoneNumberError = new Error("Pattern", "Please enter a valid phone number", singletonList("phoneNumber"), BAD_REQUEST);
+
+        RestErrorResponse expectedErrors = new RestErrorResponse(asList(firstNameError, lastNameError, emailError, phoneNumberError));
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(monitoringOfficerResource)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(toJson(expectedErrors)));
+
+        verify(projectServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
     }
 }
