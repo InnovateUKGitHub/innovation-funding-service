@@ -1,8 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 
 import java.util.List;
@@ -12,29 +10,26 @@ import java.util.List;
  * , application and competitions
  */
 public class AssessmentSummaryViewModel {
-    private List<QuestionResource> listOfQuestionResource;
-    private List<AssessmentFeedbackResource> listOfAssessmentFeedbackResource;
+
+    private List<QuestionWithFeedbackHelper> listOfQuestionWithFeedback;
     private ApplicationResource application;
     private CompetitionResource competition;
 
-    public AssessmentSummaryViewModel(List<QuestionResource> listOfQuestionResource, List<AssessmentFeedbackResource> listOfAssessmentFeedback, ApplicationResource application, CompetitionResource competition) {
-        this.listOfQuestionResource = listOfQuestionResource;
-        this.listOfAssessmentFeedbackResource = listOfAssessmentFeedback;
+    public AssessmentSummaryViewModel(List<QuestionWithFeedbackHelper> listOfQuestionWithFeedback, ApplicationResource application, CompetitionResource competition) {
+        this.listOfQuestionWithFeedback = listOfQuestionWithFeedback;
         this.application = application;
         this.competition = competition;
     }
 
 
-    public List<QuestionResource> getQuestionResource(){
-        return this.listOfQuestionResource;
-    }
-    public List<AssessmentFeedbackResource> getAssessmentFeedbackResource(){
-        return this.listOfAssessmentFeedbackResource;
-    }
-    public ApplicationResource getApplicationResource(){
+     public List<QuestionWithFeedbackHelper> getListOfQuestionWithFeedback() {
+          return listOfQuestionWithFeedback;
+      }
+
+     public ApplicationResource getApplicationResource(){
         return this.application;
-    }
-    public CompetitionResource getCompetitionResource(){
+      }
+      public CompetitionResource getCompetitionResource(){
         return this.competition;
     }
 }

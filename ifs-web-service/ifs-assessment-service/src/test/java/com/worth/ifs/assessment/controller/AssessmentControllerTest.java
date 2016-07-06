@@ -71,14 +71,14 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         when(applicationService.getById(processRoleResource.getApplication())).thenReturn(applicationResource);
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 
-        final MvcResult result = mockMvc.perform(get("/assessment/summary/{assessmentId}",ASSESSMENT_ID))
+        final MvcResult result = mockMvc.perform(get("/assessment/{assessmentId}/summary",ASSESSMENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessor-application-summary"))
                 .andReturn();
         AssessmentSummaryViewModel model = (AssessmentSummaryViewModel)result.getModelAndView().getModel().get("model");
-        Assert.assertTrue(model.getQuestionResource().size()==2);
-        Assert.assertTrue(model.getAssessmentFeedbackResource().size()==2);
+
+        Assert.assertTrue(model.getListOfQuestionWithFeedback().size()==2);
         Assert.assertTrue(model.getApplicationResource().equals(applicationResource));
         Assert.assertTrue(model.getCompetitionResource().equals(competitionResource));
 
