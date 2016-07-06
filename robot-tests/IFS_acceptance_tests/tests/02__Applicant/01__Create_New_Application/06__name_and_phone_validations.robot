@@ -4,6 +4,7 @@ Documentation     -INFUND-885: As an applicant I want to be able to submit a use
 ...               -INFUND-886:As an applicant I want the system to recognise an existing user profile if I try to create a new account with matching details so that I am prevented from creating a new duplicate profile
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -83,9 +84,7 @@ Phone number too short
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters
 
 *** Keywords ***
-
-
 the user submits their information
-    the user selects the checkbox   termsAndConditions
+    the user selects the checkbox    termsAndConditions
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Submit Form

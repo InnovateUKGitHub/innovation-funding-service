@@ -2,6 +2,7 @@
 Documentation     INFUND-890 : As an applicant I want to use UK postcode lookup function to look up and enter my business address details as they won't necessarily be the same as the address held by Companies House, so that the system has accurate record of my contact details
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -27,7 +28,7 @@ Enter Valid Postcode and see the results in the dropdown
 
 Empty Postcode field
     [Documentation]    INFUND-890
-    [Tags]    Postcode
+    [Tags]
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -49,9 +50,9 @@ Same Operating address
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox       id=address-same
+    And the user selects the checkbox    id=address-same
     Then the user should not see the element    id=manual-company-input
-    And the user unselects the checkbox     id=address-same
+    And the user unselects the checkbox    id=address-same
     And the user should see the element    id=manual-company-input
 
 *** Keywords ***
