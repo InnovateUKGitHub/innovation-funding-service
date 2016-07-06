@@ -40,10 +40,10 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
     }
 
     public <R> S withArray(BiConsumer<R, T> amendFunction, R[] values) {
-        if (values == null || values.length == 0) {
-            throw new IllegalArgumentException("values array should contain at least one value");
-        }
-        return with((i, t) -> amendFunction.accept(values[Math.min(values.length - 1, i)], t));
+        return with((i, t) -> {
+            R nextValue = values != null && values.length > 0 ? values[Math.min(values.length - 1, i)] : null;
+            amendFunction.accept(nextValue, t);
+        });
     }
 
     /**

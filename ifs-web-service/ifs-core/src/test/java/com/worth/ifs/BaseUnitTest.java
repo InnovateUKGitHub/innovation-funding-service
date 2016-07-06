@@ -162,6 +162,8 @@ public class BaseUnitTest {
     public ProjectService projectService;
     @Mock
     public ProjectRestService projectRestService;
+    @Mock
+    public ApplicationSummaryService applicationSummaryService;
 
     @Spy
     @InjectMocks

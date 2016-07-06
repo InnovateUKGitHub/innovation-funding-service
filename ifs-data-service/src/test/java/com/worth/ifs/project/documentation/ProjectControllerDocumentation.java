@@ -1,11 +1,15 @@
 package com.worth.ifs.project.documentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.controller.ProjectController;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -17,6 +21,7 @@ import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -28,9 +33,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -205,6 +212,38 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                     ),
                     responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
                 ));
+    }
+
+    @Test
+    public void saveMonitoringOfficer() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(projectId)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
+                        ),
+                        requestFields(monitoringOfficerResourceFields)
+                ));
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
     }
 
     @Test

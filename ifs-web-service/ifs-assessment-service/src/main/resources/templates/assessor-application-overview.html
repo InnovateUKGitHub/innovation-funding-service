@@ -36,7 +36,7 @@
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}"  th:if="${childSection.id == 8}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="'/assessment/'+${assessmentId}+'/question/'+${childSection.id}"
+                                    <a href="#"
                                        th:text="${childSection.name}" />
                                 </h3>
                             </div>
@@ -56,8 +56,8 @@
         </div>
     </form>
 
-    <div class="alignright extra-margin">
-        <a class="button large" href="#">Review assesment</a>
+    <div class="alignright">
+        <a class="button large" href="#">Review assessment</a>
    </div>
 
    <details>
