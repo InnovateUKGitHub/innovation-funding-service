@@ -8,7 +8,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.ControllerValidationHandler;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -42,7 +43,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/project/{projectId}/monitoring-officer")
 public class ProjectMonitoringOfficerController {
 
-    static final String FORM_ATTR_NAME = "form";
+    private static final String FORM_ATTR_NAME = "form";
 
 	@Autowired
     private ProjectService projectService;
@@ -79,14 +80,14 @@ public class ProjectMonitoringOfficerController {
     public String confirmMonitoringOfficerDetails(Model model,
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
-                                       ControllerValidationHandler validationHandler,
+                                       ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
-        return validationHandler.andFailNowOrSucceed(failureView, () -> {
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
             doViewMonitoringOfficer(model, projectId, form, false, false);
             return "project/monitoring-officer-confirm";
         });
@@ -96,16 +97,20 @@ public class ProjectMonitoringOfficerController {
     public String updateMonitoringOfficerDetails(Model model,
                                                  @PathVariable("projectId") final Long projectId,
                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
-                                                 ControllerValidationHandler validationHandler,
+                                                 ValidationHandler validationHandler,
                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
-        return validationHandler.andFailNowOrSucceed(failureView, () -> {
-            ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(), form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
-            return handleErrorsOrRedirectToMonitoringOfficerViewTemporarily("", projectId, validationHandler, updateResult, failureView);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(),
+                    form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
+
+            return validationHandler.addAnyErrors(updateResult, toField("")).
+                    failNowOrSucceedWith(failureView, () -> redirectToMonitoringOfficerViewTemporarily(projectId));
         });
     }
 
@@ -156,17 +161,6 @@ public class ProjectMonitoringOfficerController {
         return new ProjectMonitoringOfficerViewModel(projectId, projectResource.getName(),
                 innovationArea, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
                 partnerOrganisationNames, competitionSummary, existingMonitoringOfficer, editMode);
-    }
-
-    /**
-     * "Temporarily" because the final target page to redirect to after submission has not yet been built
-     */
-    private String handleErrorsOrRedirectToMonitoringOfficerViewTemporarily(
-            String fieldName, long projectId, ControllerValidationHandler validationHandler,
-            ServiceResult<?> result, Supplier<String> failureView) {
-
-        return validationHandler.addAnyErrorsAsFieldErrors(result, fieldName).
-                failOnErrorsOrSucceed(failureView, () -> redirectToMonitoringOfficerViewTemporarily(projectId));
     }
 
     /**
