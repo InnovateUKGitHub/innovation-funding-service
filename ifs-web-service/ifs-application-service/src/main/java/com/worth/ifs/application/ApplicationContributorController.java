@@ -309,37 +309,75 @@ public class ApplicationContributorController{
      * Check if e-mail addresses and applicant name entered, are unique within this application's invites.
      */
     private void validateUniqueEmailsAndApplicantNames(@ModelAttribute ContributorsForm contributorsForm, BindingResult bindingResult, ApplicationResource application, UserResource leadApplicant) {
-        Set<String> savedEmails = getSavedEmailAddresses(application);
-        Set<String> savedNames = getSavedApplicantNames(application);
-        savedEmails.add(leadApplicant.getEmail());
-        savedNames.add(leadApplicant.getName());
-        contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {
-            FieldError fieldError = null;
-
-            if(!savedEmails.add(i.getEmail())){
-                fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
-            }
-            if(!savedNames.add(i.getPersonName())){
-                fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].personName", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getPersonName(), false, new String[]{"NotUnique"}, null, "You have already added this applicant name.");
-            }
-
-            if(fieldError != null) {
-                bindingResult.addError(fieldError);
-            }
-        }));
+        contributorsForm.getOrganisations().forEach(organisation -> {
+            Integer organisationIndex = contributorsForm.getOrganisations().indexOf(organisation);
+            checkInvitesForUniques(application, leadApplicant, organisationIndex, organisation, bindingResult);
+        });
     }
 
-    private Set<String> getSavedEmailAddresses(ApplicationResource application) {
-        Set<String> savedEmails = new TreeSet<>();
-        List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
-        savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
+    private void checkInvitesForUniques(ApplicationResource application, UserResource leadApplicant, Integer organisationIndex, OrganisationInviteForm organisation, BindingResult bindingResult) {
+        Set<String> savedEmails = getSavedEmailAddresses(application, leadApplicant);
+        Set<String> savedNames = getSavedApplicantNames(application, leadApplicant);
+
+        for(InviteeForm invitee : organisation.getInvites()) {
+            Integer inviteIndex = organisation.getInvites().indexOf(invitee);
+
+            savedEmails = checkInviteForUniqueEmails(savedEmails, inviteIndex, invitee, organisationIndex, organisation, bindingResult);
+            savedNames = checkInviteForUniqueApplicantNames(savedNames, inviteIndex, invitee, organisationIndex, organisation, bindingResult);
+        }
+    }
+
+    private Set<String> checkInviteForUniqueApplicantNames(Set<String> savedNames, Integer inviteIndex, InviteeForm invitee, Integer organisationIndex, OrganisationInviteForm organisation, BindingResult bindingResult) {
+        if (!savedNames.add(invitee.getPersonName())) {
+            bindingResult.addError(
+                    createNotUniqueFieldError(
+                            String.format("organisations[%d].invites[%d].personName", organisationIndex, inviteIndex),
+                            invitee.getPersonName(),
+                            "You have already added this applicant name.")
+            );
+        }
+
+        return savedNames;
+    }
+
+    private Set<String> checkInviteForUniqueEmails(Set<String> savedEmails, Integer inviteIndex, InviteeForm invitee, Integer organisationIndex, OrganisationInviteForm organisation, BindingResult bindingResult) {
+        if (!savedEmails.add(invitee.getEmail())) {
+            bindingResult.addError(
+                    createNotUniqueFieldError(
+                            String.format("organisations[%d].invites[%d].email", organisationIndex, inviteIndex),
+                            invitee.getEmail(),
+                            "You have already added this email address.")
+            );
+        }
+
         return savedEmails;
     }
 
-    private Set<String> getSavedApplicantNames(ApplicationResource application) {
+    private FieldError createNotUniqueFieldError(String field, String value, String message) {
+        FieldError fieldError = new FieldError("contributorsForm",
+                field,
+                value,
+                false,
+                new String[]{"NotUnique"},
+                null,
+                message);
+
+        return fieldError;
+    }
+
+    private Set<String> getSavedEmailAddresses(ApplicationResource application, UserResource leadApplicant) {
+        Set<String> savedEmails = new TreeSet<>();
+        List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
+        savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
+        savedEmails.add(leadApplicant.getEmail());
+        return savedEmails;
+    }
+
+    private Set<String> getSavedApplicantNames(ApplicationResource application, UserResource leadApplicant) {
         Set<String> savedNames = new TreeSet<>();
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedNames.add(i.getName())));
+        savedNames.add(leadApplicant.getName());
         return savedNames;
     }
 
