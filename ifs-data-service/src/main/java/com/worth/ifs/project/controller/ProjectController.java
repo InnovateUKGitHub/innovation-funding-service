@@ -114,7 +114,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/bank-details", method = POST)
     public RestResult<Void> updateBanksDetail(@PathVariable("projectId") final Long projectId,
-                                              @RequestBody BankDetailsResource bankDetailsResource){
+                                              @RequestBody @Valid final BankDetailsResource bankDetailsResource){
         return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
     }
 

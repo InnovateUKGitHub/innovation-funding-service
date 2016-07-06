@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 
 public class ProjectDetailsAddressViewModelForm  extends BaseBindingResultTarget {
     @NotNull(message = "You need to select a project address before you can continue")
-
     private OrganisationAddressType addressType;
+
     @Valid
     private AddressForm addressForm = new AddressForm();
 

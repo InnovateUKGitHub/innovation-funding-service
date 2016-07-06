@@ -24,6 +24,7 @@ import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.category.mapper.CategoryLinkMapper;
 import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
@@ -282,6 +283,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected BankDetailsRepository bankDetailsRepositoryMock;
+
+    @Mock
+    protected BankDetailsService bankDetailsServiceMock;
 
     @Before
     public void setupMockInjection() {
