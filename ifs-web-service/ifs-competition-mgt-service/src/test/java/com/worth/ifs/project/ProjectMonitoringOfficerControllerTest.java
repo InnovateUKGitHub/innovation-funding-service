@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,6 +45,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
@@ -85,7 +87,8 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
             withApplication(applicationId).
             withProjectManager(999L).
             withAddress(projectAddress).
-            withTargetStartDate(LocalDate.of(2017, 01, 05));
+            withTargetStartDate(LocalDate.of(2017, 01, 05)).
+            withSubmittedDate(LocalDateTime.of(2016, 07, 04, 11, 2));
 
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
@@ -150,6 +153,18 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Test
+    public void testViewMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(get("/project/123/monitoring-officer")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testEditMonitoringOfficerPage() throws Exception {
 
         ProjectResource project = projectBuilder.build();
@@ -209,6 +224,18 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         // assert the form for the MO details is not prepopulated
         assertMonitoringOfficerFormNotPrepopulated(modelMap);
+    }
+
+    @Test
+    public void testEditMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(get("/project/123/monitoring-officer/edit")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
     }
 
     @Test
@@ -284,7 +311,25 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Test
+    public void testConfirmMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(post("/project/123/monitoring-officer/confirm").
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@asdf.com").
+                param("phoneNumber", "12345")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testAssignMonitoringOfficer() throws Exception {
+
+        when(projectService.getById(123L)).thenReturn(projectBuilder.build());
 
         when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
 
@@ -340,6 +385,22 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals(1, form.getObjectErrors().size());
         assertEquals(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED.getErrorKey(),
                 form.getObjectErrors().get(0).getCode());
+    }
+
+    @Test
+    public void testAssignMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(post("/project/123/monitoring-officer/assign").
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@asdf.com").
+                param("phoneNumber", "12345")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
     }
 
     @Test
