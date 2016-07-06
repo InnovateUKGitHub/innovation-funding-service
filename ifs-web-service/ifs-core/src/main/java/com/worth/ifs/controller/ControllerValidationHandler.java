@@ -46,7 +46,7 @@ public class ControllerValidationHandler {
      * @param successHandler
      * @return
      */
-    public String failOnErrorsOrSucceed(Supplier<String> failureHandler, Supplier<String> successHandler) {
+    public String andFailNowOrSucceed(Supplier<String> failureHandler, Supplier<String> successHandler) {
 
         if (hasErrors()) {
 

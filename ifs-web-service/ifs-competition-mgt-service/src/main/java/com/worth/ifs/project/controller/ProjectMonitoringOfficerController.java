@@ -86,7 +86,7 @@ public class ProjectMonitoringOfficerController {
 
         Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
-        return validationHandler.failOnErrorsOrSucceed(failureView, () -> {
+        return validationHandler.andFailNowOrSucceed(failureView, () -> {
             doViewMonitoringOfficer(model, projectId, form, false, false);
             return "project/monitoring-officer-confirm";
         });
@@ -103,7 +103,7 @@ public class ProjectMonitoringOfficerController {
 
         Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
-        return validationHandler.failOnErrorsOrSucceed(failureView, () -> {
+        return validationHandler.andFailNowOrSucceed(failureView, () -> {
             ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(), form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
             return handleErrorsOrRedirectToMonitoringOfficerViewTemporarily("", projectId, validationHandler, updateResult, failureView);
         });

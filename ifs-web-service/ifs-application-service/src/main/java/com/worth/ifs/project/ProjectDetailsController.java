@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.*;
 
@@ -135,7 +136,7 @@ public class ProjectDetailsController {
             return doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
         };
 
-        return controllerValidationHandler.failOnErrorsOrSucceed(failureView, () -> {
+        return controllerValidationHandler.andFailNowOrSucceed(failureView, () -> {
             ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
             return handleErrorsOrRedirectToProjectOverview("financeContact", projectId, controllerValidationHandler, updateResult, failureView);
         });
@@ -159,7 +160,7 @@ public class ProjectDetailsController {
             return doViewProjectManager(model, projectId, loggedInUser, form);
         };
 
-        return controllerValidationHandler.failOnErrorsOrSucceed(failureView, () -> {
+        return controllerValidationHandler.andFailNowOrSucceed(failureView, () -> {
             ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, form.getProjectManager());
             return handleErrorsOrRedirectToProjectOverview("projectManager", projectId, controllerValidationHandler, updateResult, failureView);
         });
@@ -190,7 +191,7 @@ public class ProjectDetailsController {
             return viewStartDate(model, projectId, form, loggedInUser);
         };
 
-        return controllerValidationHandler.failOnErrorsOrSucceed(failureView, () -> {
+        return controllerValidationHandler.andFailNowOrSucceed(failureView, () -> {
             ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
             return handleErrorsOrRedirectToProjectOverview("projectStartDate", projectId, controllerValidationHandler, updateResult, failureView);
         });
@@ -256,7 +257,7 @@ public class ProjectDetailsController {
 
         return updateResult.handleSuccessOrFailure(
                 failure -> {
-                    controllerValidationHandler.addAnyErrorsAsFieldErrors(failure, "");
+                    controllerValidationHandler.addAnyErrors(failure, toField(""));
                     return viewAddress(model, form, projectId);
                 },
                 success -> redirectToProjectDetails(projectId));
@@ -432,8 +433,8 @@ public class ProjectDetailsController {
             ServiceResult<?> result,
             Supplier<String> failureViewSupplier) {
 
-        return controllerValidationHandler.addAnyErrorsAsFieldErrors(result, fieldName).
-                failOnErrorsOrSucceed(failureViewSupplier, () -> redirectToProjectDetails(projectId));
+        return controllerValidationHandler.addAnyErrors(result, toField(fieldName)).
+                andFailNowOrSucceed(failureViewSupplier, () -> redirectToProjectDetails(projectId));
     }
 
     private String redirectToProjectDetails(long projectId) {
