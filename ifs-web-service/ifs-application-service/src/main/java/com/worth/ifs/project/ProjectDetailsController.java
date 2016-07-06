@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,6 +50,7 @@ import static com.worth.ifs.util.CollectionFunctions.*;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController {
+
     static final String FORM_ATTR_NAME = "form";
     private static final String MANUAL_ADDRESS = "manual-address";
     private static final String SEARCH_ADDRESS = "search-address";
@@ -129,7 +131,7 @@ public class ProjectDetailsController {
     public String updateFinanceContact(Model model,
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
-                                       ValidationHandler validationHandler,
+                                       @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
@@ -154,7 +156,8 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
     public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm form,
-                                       ValidationHandler validationHandler, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                       @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, form);
 
@@ -185,7 +188,7 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
-                                  ValidationHandler validationHandler,
+                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                   Model model,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -220,7 +223,7 @@ public class ProjectDetailsController {
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
     public String updateAddress(Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
-                                ValidationHandler validationHandler,
+                                @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                 @PathVariable("projectId") final Long projectId) {
 
         ProjectResource projectResource = projectService.getById(projectId);

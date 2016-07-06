@@ -1,7 +1,6 @@
 package com.worth.ifs.config;
 
-import com.worth.ifs.controller.ControllerValidationHandlerMethodArgumentResolver;
-import com.worth.ifs.controller.ControllerValidationHandlerServletModelAttributeMethodProcessor;
+import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import com.worth.ifs.interceptors.AlertMessageHandlerInterceptor;
 import com.worth.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
@@ -16,14 +15,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor;
 import org.springframework.web.servlet.resource.ContentVersionStrategy;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import java.util.List;
 import java.util.Locale;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Configuration
 public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
@@ -67,22 +63,13 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         super.addResourceHandlers(registry);
     }
 
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         super.addArgumentResolvers(argumentResolvers);
-        argumentResolvers.add(new ControllerValidationHandlerMethodArgumentResolver());
-        swapInControllerValidationHandlerResolver(argumentResolvers);
+        argumentResolvers.add(new ValidationHandlerMethodArgumentResolver());
     }
 
-    private void swapInControllerValidationHandlerResolver(List<HandlerMethodArgumentResolver> argumentResolvers) {
-
-        List<HandlerMethodArgumentResolver> existingModelAttributeResolvers =
-                simpleFilter(argumentResolvers, r -> ServletModelAttributeMethodProcessor.class.isAssignableFrom(r.getClass()));
-
-        argumentResolvers.removeAll(existingModelAttributeResolvers);
-        argumentResolvers.add(new ControllerValidationHandlerServletModelAttributeMethodProcessor(false));
-        argumentResolvers.add(new ControllerValidationHandlerServletModelAttributeMethodProcessor(true));
-    }
 
     /**
      * Resources are cached in every environment other than when running locally during development.

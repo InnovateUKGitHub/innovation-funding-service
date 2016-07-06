@@ -21,6 +21,7 @@ import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,10 +79,10 @@ public class ProjectMonitoringOfficerController {
 
     @RequestMapping(value = "/confirm", method = POST)
     public String confirmMonitoringOfficerDetails(Model model,
-                                       @PathVariable("projectId") final Long projectId,
-                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
-                                       ValidationHandler validationHandler,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                                  @PathVariable("projectId") final Long projectId,
+                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
+                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
@@ -97,7 +98,7 @@ public class ProjectMonitoringOfficerController {
     public String updateMonitoringOfficerDetails(Model model,
                                                  @PathVariable("projectId") final Long projectId,
                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
-                                                 ValidationHandler validationHandler,
+                                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);

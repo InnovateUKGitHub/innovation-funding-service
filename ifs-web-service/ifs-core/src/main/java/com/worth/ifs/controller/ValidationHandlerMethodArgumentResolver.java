@@ -26,19 +26,19 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.ArrayList;
 
-import static com.worth.ifs.controller.ControllerValidationHandler.newBindingResultHandler;
+import static com.worth.ifs.controller.ValidationHandler.newBindingResultHandler;
 
 /**
  * Wraps a BindingResult in a helper that provides consistent ways to work with API validation as well as front-end
  * validation and binding errors.  The developer is able to add one of these as a method parameter after a
  * @ModelAttribute parameter that would classically have BindingErrors associated with it
  */
-public class ControllerValidationHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class ValidationHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> paramType = parameter.getParameterType();
-		return ControllerValidationHandler.class.isAssignableFrom(paramType);
+		return ValidationHandler.class.isAssignableFrom(paramType);
 	}
 
 	@Override
@@ -54,27 +54,27 @@ public class ControllerValidationHandlerMethodArgumentResolver implements Handle
 
             if (lastKey.startsWith(BindingResult.MODEL_KEY_PREFIX)) {
 
-                // create a new ControllerValidationHandler that wraps a BindingResult
+                // create a new ValidationHandler that wraps a BindingResult
                 BindingResult bindingResult = (BindingResult) model.get(lastKey);
-                ControllerValidationHandler controllerValidationHandler = newBindingResultHandler(bindingResult);
+                ValidationHandler validationHandler = newBindingResultHandler(bindingResult);
 
                 // if the BindingResult was targeting a @ModelAttribute that is also a BindingResultTarget,
-                // get this ControllerValidationHandler to automatically set any errors it'll encounter on the
+                // get this ValidationHandler to automatically set any errors it'll encounter on the
                 // BindingResultTarget upon error
                 int secondToLastIndex = model.size() - 2;
                 String secondToLastKey = new ArrayList<>(model.keySet()).get(secondToLastIndex);
                 Object bindingResultTarget = model.get(secondToLastKey);
 
                 if (bindingResultTarget instanceof BindingResultTarget) {
-                    controllerValidationHandler.setBindingResultTarget((BindingResultTarget) bindingResultTarget);
+                    validationHandler.setBindingResultTarget((BindingResultTarget) bindingResultTarget);
                 }
 
-                return controllerValidationHandler;
+                return validationHandler;
 			}
 		}
 
 		throw new IllegalStateException(
-				"A ControllerValidationHandler argument is expected to be declared immediately after a BindingResult " +
+				"A ValidationHandler argument is expected to be declared immediately after a BindingResult " +
 						"for a model attribute to which they apply, or the model attribute itself: " + parameter.getMethod());
 	}
 

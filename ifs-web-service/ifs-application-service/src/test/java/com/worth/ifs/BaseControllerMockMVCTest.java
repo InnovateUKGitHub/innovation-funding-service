@@ -3,9 +3,8 @@ package com.worth.ifs;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.controller.ControllerModelAttributeAdvice;
-import com.worth.ifs.controller.ControllerValidationHandlerMethodArgumentResolver;
-import com.worth.ifs.controller.ControllerValidationHandlerServletModelAttributeMethodProcessor;
 import com.worth.ifs.controller.CustomFormBindingControllerAdvice;
+import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.UserResource;
@@ -22,24 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.HandlerMethodArgumentResolverComposite;
-import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
-import org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 /**
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
@@ -81,30 +69,12 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .setLocaleResolver(localeResolver)
                 .setHandlerExceptionResolvers(createExceptionResolver(environment, messageSource))
                 .setCustomArgumentResolvers(
-                        new ControllerValidationHandlerMethodArgumentResolver()
+                        new ValidationHandlerMethodArgumentResolver()
                 )
                 .setViewResolvers(viewResolver())
                 .build();
 
-        swapInCustomModelAttributeResolvers(mockMvc);
         return mockMvc;
-    }
-
-    private static void swapInCustomModelAttributeResolvers(MockMvc mockMvc) {
-
-        List<HandlerAdapter> defaultHandlerAdapters = (List<HandlerAdapter>) getField(getField(mockMvc, "servlet"), "handlerAdapters");
-
-        RequestMappingHandlerAdapter requestMappingHandlerAdapter = (RequestMappingHandlerAdapter) defaultHandlerAdapters.stream().filter(handler -> handler instanceof RequestMappingHandlerAdapter).collect(toList()).get(0);
-        HandlerMethodArgumentResolverComposite originalCompositeArgumentResolver = (HandlerMethodArgumentResolverComposite) ReflectionTestUtils.getField(requestMappingHandlerAdapter, "argumentResolvers");
-        List<HandlerMethodArgumentResolver> originalResolvers = new ArrayList<>(originalCompositeArgumentResolver.getResolvers());
-
-        List<HandlerMethodArgumentResolver> originalResolversWithoutModelAttributeResolvers =
-                simpleFilterNot(originalResolvers, r -> ServletModelAttributeMethodProcessor.class.isAssignableFrom(r.getClass()));
-
-        originalResolversWithoutModelAttributeResolvers.add(new ControllerValidationHandlerServletModelAttributeMethodProcessor(false));
-        originalResolversWithoutModelAttributeResolvers.add(new ControllerValidationHandlerServletModelAttributeMethodProcessor(true));
-
-        ReflectionTestUtils.setField(originalCompositeArgumentResolver, "argumentResolvers", originalResolversWithoutModelAttributeResolvers);
     }
 
     private static ControllerModelAttributeAdvice modelAttributeAdvice(Supplier<UserResource> loggedInUserSupplier) {
