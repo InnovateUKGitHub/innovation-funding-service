@@ -102,19 +102,18 @@ Business organisation (partner accepts invitation)
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
-Partner should be able to log-in and see the new company name throughout the application
+Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
     [Tags]    Email
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
-    [Teardown]    Logout as user
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
     [Tags]    Email
-    Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
+    #Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=View team members and add collaborators
@@ -127,7 +126,7 @@ Partner cannot invite others to other organisations
     Then the user cannot invite another person to a different organisation
     [Teardown]    the user closes the browser
 
-Partner who accepted the invite should be visible in the assign list
+Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
     [Tags]    HappyPath    Email
     [Setup]    Log in as user    &{lead_applicant_credentials}
@@ -138,7 +137,7 @@ Partner who accepted the invite should be visible in the assign list
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
     [Teardown]    Logout as user
 
-Partners are not editable
+Lead should not be able to edit Partners
     [Documentation]    INFUND-929
     [Tags]
     Given guest user log-in    &{lead_applicant_credentials}
@@ -149,7 +148,7 @@ Partners are not editable
     Then the user should see the text in the page    Manage Contributors
     And the invited collaborators are not editable
 
-The Lead applicant invites a non registered user in the same organisation
+Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928
     ...
     ...    INFUND-1463
@@ -169,7 +168,7 @@ The Lead applicant invites a non registered user in the same organisation
     And the user should see the text in the page    View and manage your contributors and partners in the application
     [Teardown]    the user closes the browser
 
-The user should not create new org but should follow the create account flow
+Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
@@ -227,12 +226,6 @@ the applicant cannot assign to pending invitees
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
     Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
-
-the lead applicant logs out
-    Logout as user
-
-the lead applicant logs back in
-    guest user log-in    &{lead_applicant_credentials}
 
 the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}

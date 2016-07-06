@@ -82,7 +82,7 @@ Collaborator should see the review button instead of the review and submit
     And the user should not see the element    jQuery=.button:contains("Submit application")
     [Teardown]
 
-The question is enabled on the summary page for the assignee
+Collaborator should b able to edit the assigned question
     [Documentation]    INFUND-2302
     ...
     ...    This test depends on the previous test suite to run first
@@ -226,20 +226,6 @@ the collaborator edits the 'public description' question
 the question should contain the correct status/name
     [Arguments]    ${ELEMENT}    ${STATUS}
     Element Should Contain    ${ELEMENT}    ${STATUS}
-
-the user assigns the question to Jessica Doe
-    the applicant assigns the question to the collaborator    css=#form-input-6 .editor    testtest    Jessica Doe
-    the user reloads the page
-
-the user assigns the question to the lead applicant
-    the user reloads the page
-    the user clicks the button/link    name=assign_question
-    the user reloads the page
-
-user navigates to the finances of the collaboration application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Invite robot test application
-    And the user clicks the button/link    link=Your finances
 
 Collaborator should be able to edit finances again
     close browser

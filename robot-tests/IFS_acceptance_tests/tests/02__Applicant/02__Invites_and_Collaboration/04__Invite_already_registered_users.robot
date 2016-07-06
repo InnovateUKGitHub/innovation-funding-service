@@ -15,7 +15,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 
 *** Test Cases ***
-The invited user should does not follow the registration flow again
+The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]
     [Setup]    Delete the emails from both test mailboxes
