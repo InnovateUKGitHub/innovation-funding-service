@@ -132,6 +132,10 @@ table{
 			@extend %icon-tick;
 			background-position: 50% 50%;
 		}
+		&.rejected{
+			@extend  %icon-cross;
+			background-position: 50% 50%;
+		}
 		&.action{
 			//background: $red;
 			@extend  %icon-assigned-to-me;
@@ -235,6 +239,10 @@ table{
 	th, td{
 		box-sizing: border-box;
 		height: 60px;
+	}
+
+	th[scope='col']{
+		min-width: 7em;
 	}
 
 	input{
@@ -384,12 +392,65 @@ table{
 
 /*----- Remove help links for comp admin / internal pages ----*/
 .comp-assessors,
-.comp-dashboard{
+.comp-dashboard,
+.comp-setup
+{
 	.user-feedback{
 		display: none;
 
 		& + p{
 			display: none;
+		}
+	}
+}
+
+/*----- Comp dashboard tables styling----*/
+
+.comp-dashboard{
+	
+	.list-overview{
+
+		display: table;
+		width: 100%;
+		min-width: $site-width;
+
+		li {
+	    	display: table-row; 
+	    	width: 100%;
+			
+			&:first-child{
+				h3, p{
+					border-top: 1px solid $border-colour;
+				}
+			}
+
+		}
+
+		li h3,
+		li p{
+	    	display: table-cell;
+	    	padding: 0.5em 0;
+	        border-bottom: 1px solid $border-colour;
+		}
+
+
+
+		li h3{
+		    width: 40%;
+		}
+
+		li p{
+		    width: 20%;
+		    color: $secondary-text-colour;
+		}
+
+		li p + p{
+			width: 25%;
+		}
+
+		li p + p + p{
+		    text-align: right;
+		    width: 20%;
 		}
 	}
 }

@@ -18,13 +18,15 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Funding'})" th:remove="tag" />
 
-    <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p> 
+    <p class="form-hint">Please review the answer provided and score the answer out of 10 points. <br />
+        You should review the <a href="/prototypes/984-assessor-finances-summary">project finances</a> when scoring this question
+    </p> 
 
 	<form action="#" method="post">
 			
-            <div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+           <!--  <div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
 
-            <div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />    
+            <div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />  -->   
         
         <div class="form-group">
 

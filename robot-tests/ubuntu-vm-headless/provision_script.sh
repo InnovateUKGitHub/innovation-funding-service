@@ -7,7 +7,7 @@ echo "# Updating package repository"
 sudo apt-get -y update
 
 echo "# Installing xvfb"
-sudo apt-get -y install xvfb
+sudo apt-get install xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
 
 echo "# Installing python-wxgtk2.8"
 sudo apt-get -y install python-wxgtk2.8
@@ -18,8 +18,8 @@ sudo apt-get -y install python-pip
 echo "# Installing robotframework"
 sudo pip install robotframework
 
-echo "# Installing version 2.48.0 of selenium"
-sudo pip install selenium==2.48.0
+echo "# Installing version 2.53.0 of selenium"
+sudo pip install selenium==2.53.0
 
 echo "# Installing robotframework-selenium2library version 1.7.4"
 sudo pip install robotframework-selenium2library==1.7.4
@@ -30,9 +30,9 @@ sudo pip install robotframework-ride
 echo "# Installing terminal"
 sudo apt-get -y install gnome-terminal
 
-echo "# Installing firefox version build_43.0.4-0ubuntu1_amd64"
-wget http://vorboss.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_43.0.4-0ubuntu1_amd64.deb
-sudo dpkg -i firefox-mozilla-build_43.0.4-0ubuntu1_amd64.deb
+echo "# Installing firefox version build_46.0.1-0ubuntu1_amd64"
+wget http://vorboss.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_46.0.1-0ubuntu1_amd64.deb
+sudo dpkg -i firefox-mozilla-build_46.0.1-0ubuntu1_amd64.deb
 
 echo "# Installing xvfb library"
 pip install robotframework-xvfb
@@ -50,4 +50,3 @@ echo "# Installing ftplibrary"
 pip install robotframework-ftplibrary
 
 #fi
-

@@ -217,7 +217,7 @@ Other costs server side
 Funding level client side
     Given the user selects a radio button
     And the user enters text to a text field    id=cost-financegrantclaim    -1
-    Then the user gets the expected validation errors    This field should be 1% or higher    This field should be 1% or higher
+    Then the user gets the expected validation errors    This field should be 0% or higher    This field should be 0% or higher
     And the user enters text to a text field    id=cost-financegrantclaim    61
     Then the user gets the expected validation errors    This field should be 60% or lower    This field should be 60% or lower
     And the user enters text to a text field    id=cost-financegrantclaim    ${EMPTY}
@@ -244,7 +244,7 @@ Mark as complete with empty other funding row should be impossible
     #Then the user should see an error    You should provide at least 1 source of other funding
 
 Other funding client side
-    [Setup]    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
     and the user should see an error    This field should be 1 or higher
@@ -276,15 +276,9 @@ Select NO and mark as complete should be possible
     ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
 
 *** Keywords ***
-the user marks the finances as complete
-    #Sleep    300ms
-    Focus    jQuery=button:contains("Mark all as complete")
-    click element    jQuery=button:contains("Mark all as complete")
-    #Sleep    300ms
-
 user selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    Select Radio Button    ${RADIO_BUTTON}    ${SELECTION}
+    the user selects the radio button    ${RADIO_BUTTON}    ${SELECTION}
     focus    css=.app-submit-btn
 
 the field with the wrong input should be saved
@@ -296,8 +290,7 @@ the user reloads the page with validation errors
     Mouse Out    css=input
     Focus    jQuery=button:contains("Mark all as complete")
     sleep    300ms
-    Reload Page
-    Run Keyword And Ignore Error    Confirm Action
+    the user reloads the page
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
@@ -323,4 +316,4 @@ The user gets the expected validation errors
     And the user should see an error    ${ERROR2}
 
 the user selects a radio button
-    Select Radio Button    financePosition-organisationSize    MEDIUM
+    the user selects the radio button    financePosition-organisationSize    MEDIUM

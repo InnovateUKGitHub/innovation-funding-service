@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project setup'}, ${'Project details'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<h2 class="heading-medium">Aptrans Ltd finances</h2>
+	<p>Query any of the project costs with the finance contact at the organisation.</p>
+	
+	<a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery'}" class="button button-large">Post a new query</a>
+	
+	<th:block th:if="${param.action != null and param.action[0] == 'newQuery'}">
+	
+		<form class="extra-margin" th:action="@{${#httpServletRequest.requestURI}}" method="post">
+
+			<fieldset>
+				
+				<legend class="heading-medium">Post new query</legend>
+
+				<div class="form-group">
+					<label for="section" class="form-label-bold">Section</label>
+					<select name="section" id="section" class="form-control">
+						<option value="All sections">All sections</option>
+						<option value="Labour">Labour</option>
+						<option value="Admin support costs">Admin support costs</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="query" class="form-label-bold">Query</label>
+					<textarea name="query" id="query" cols="30" rows="10" class="width-full" required="required"></textarea>
+				</div>
+
+			</fieldset>
+
+			<fieldset>
+				<div class="upload-section">
+					<legend class="heading-small no-margin">Upload supporting documentation</legend>
+					<p class="form-hint">Any supporting documentation that you upload will be uploaded to the document library, and will be viewed by Innovate UK</p>
+
+					<input type="file" name="file" id="file" class="inputfile" />
+					<label for="file" class="button-secondary extra-margin">+ Upload</label>
+				</div>
+			</fieldset>
+
+			<input type="hidden" id="action" name="action" value="postQuery" />
+
+			<div class="grid-row">
+				<div class="column-half"><a th:href="${#httpServletRequest.requestURI + '?action=cancelQuery'}">Cancel</a></div>
+				<div class="column-half alignright"><button class="button button-large no-margin">Post query</button></div>
+			</div>
+		</form>
+
+	</th:block>
+
+	<th:block th:if="${param.action != null and param.action[0] == 'postQuery' or param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'newResponse'}">
+		<h2 class="heading-medium" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h2>
+		
+		<p><strong>Innovate UK - Finance team</strong> 26/06/2016 17:55</p>
+
+		<div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('query') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">
+		</div>
+
+		<form method="post" th:action="${#httpServletRequest.requestURI}">
+			<input type="hidden" id="section" name="section" th:value="${#httpServletRequest.getParameter('section')}" />
+			<input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
+			<input type="hidden" id="action" name="action" value="showResponse" />
+			<hr />
+			<button>Show example response from the applicant</button>
+		</form>
+	
+	</th:block>
+
+
+	<th:block th:if="${param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'postResponse' or param.action != null and param.action[0] == 'Response'}">
+		<div class="panel-indent">
+			<p><strong>Steve Smith - Empire </strong> <span th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</span></p>
+			<p>We have always used Francois. He is related to the director of the company. &pound;150k equates to 150 days.</p>
+		</div>
+
+		<div class="panel-indent" th:if="${param.action != null and param.action[0] == 'postResponse'}">
+			<p><strong>Innovate UK - Finance team </strong> <span th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</span></p>
+			<div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('response') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">
+		</div>
+			<h4 class="heading-small">Supporting document</h4>
+			<p><a href="#">Report1.doc</a></p>
+		</div>
+
+		<form method="post" th:action="${#httpServletRequest.requestURI}">
+			<input type="hidden" id="section" name="section" th:value="${#httpServletRequest.getParameter('section')}" />
+			<input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
+			<input type="hidden" id="action" name="action" value="newResponse" />
+			<hr />
+			<button class="button button-secondary">Respond</button>
+		</form>
+	</th:block>
+
+
+	<th:block th:if="${param.action != null and param.action[0] == 'newResponse'}">
+	
+		<form class="extra-margin" th:action="@{${#httpServletRequest.requestURI}}" method="post">
+
+			<fieldset>
+				
+				<legend class="heading-medium">Respond to query</legend>
+
+				<div class="form-group">
+					<label for="response" class="form-label-bold">Response</label>
+					<textarea name="response" id="response" cols="30" rows="10" class="width-full" required="required"></textarea>
+				</div>
+
+			</fieldset>
+
+			<fieldset>
+				<div class="upload-section">
+					<legend class="heading-small no-margin">Upload supporting documentation</legend>
+					<p class="form-hint">Any supporting documentation that you upload will be uploaded to the document library, and will be viewed by Innovate UK</p>
+
+					<input type="file" name="file" id="file" class="inputfile" />
+					<label for="file" class="button-secondary extra-margin">+ Upload</label>
+				</div>
+			</fieldset>
+
+			<input type="hidden" id="section" name="section" th:value="${#httpServletRequest.getParameter('section')}" />
+			<input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
+			<input type="hidden" id="action" name="action" value="postResponse" />	
+
+			<div class="grid-row">
+				<div class="column-half"><a th:href="${#httpServletRequest.requestURI}">Cancel</a></div>
+				<div class="column-half alignright"><button class="button button-large no-margin">Post response</button></div>
+			</div>
+		</form>
+
+	</th:block>
+	
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

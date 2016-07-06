@@ -35,6 +35,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 // TODO DW - INFUND-1555 - handle rest results
+/**
+ * This controller will handle all requests that are related to the application collaborators and invites.
+ */
+
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
 public class ApplicationContributorController{
@@ -219,7 +223,7 @@ public class ApplicationContributorController{
             UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
             validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
             validatePermissionToInvite(contributorsForm, bindingResult, application, leadApplicant, request);
-            
+
             if (!bindingResult.hasErrors()) {
                 saveContributors(applicationId, contributorsForm, response);
                 // empty cookie, since the invites are saved.
@@ -265,7 +269,7 @@ public class ApplicationContributorController{
 	}
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
-        contributorsForm.getOrganisations().forEach((invite) -> saveContributor(invite, applicationId, response));
+        contributorsForm.getOrganisations().forEach(invite -> saveContributor(invite, applicationId, response));
     }
     
     private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {

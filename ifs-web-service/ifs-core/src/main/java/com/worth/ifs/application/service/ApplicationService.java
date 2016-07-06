@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +23,5 @@ public interface ApplicationService {
     Map<Long, Integer> getProgress(Long userId);
     int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
+    OrganisationResource getLeadOrganisation(Long applicationId);
 }

@@ -15,7 +15,6 @@ import org.mapstruct.Mapper;
         SectionMapper.class,
         CompetitionMapper.class,
         QuestionStatusMapper.class,
-        ResponseMapper.class,
         FormInputMapper.class,
         CostMapper.class
     }

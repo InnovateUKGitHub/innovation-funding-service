@@ -79,6 +79,7 @@ the user should be redirected to the correct page without error checking
 
 the user reloads the page
     Reload Page
+    run keyword and ignore error    confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -113,8 +114,28 @@ the user unselects the checkbox
     Page Should Contain    BETA
 
 the user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+    [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+the user sees that the radio button is selected
+    [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
+    Radio Button Should Be Set To    ${RADIO_BUTTON}    ${SELECTION}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -200,7 +221,6 @@ The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
     Page Should Not Contain    Error
-    #Page Should Not Contain    error    # commented this out because it caused a test failure
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
@@ -218,7 +238,7 @@ the user should not see an error in the page
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error-message
+    wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
@@ -237,8 +257,8 @@ The user should not see the element
 
 The user should get an error page
     [Arguments]    ${ERROR_TEXT}
-    Page should contain element    css=.error
-    Page should contain    ${ERROR_TEXT}
+    wait until page contains element    css=.error
+    wait until page contains    ${ERROR_TEXT}
 
 The user should see the browser notification
     [Arguments]    ${MESSAGE}
@@ -260,6 +280,7 @@ The applicant assigns the question to the collaborator
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
+    Wait Until Element Is Not Visible    css=div.event-alert
     The user clicks the button/link    css=.assign-button
     The user clicks the button/link    jQuery=button:contains("${NAME}")
     Reload Page
@@ -308,9 +329,9 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
-    log    ${ACCEPT_INVITE}
-    go to    ${ACCEPT_INVITE}
+    ${IFS_LINK}=    Get From List    ${LINK}    1
+    log    ${IFS_LINK}
+    go to    ${IFS_LINK}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
@@ -410,7 +431,7 @@ the user cannot login with their new details
     Input Text    id=username    ${email}
     Input Password    id=password    ${password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user cannot login with either password
@@ -418,13 +439,13 @@ the user cannot login with either password
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${incorrect_password}
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
 
 we create a new user
@@ -446,7 +467,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
     The guest user clicks the log-in button
-    user closes the browser
+    the user closes the browser
 
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -475,7 +496,7 @@ the lead applicant invites a registered user
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
-    User closes the browser
+    the user closes the browser
     The guest user opens the browser
 
 Open mailbox and verify the content

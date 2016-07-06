@@ -17,7 +17,7 @@
                 <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>    
                 <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>  
             </div> 
-            <div class="column-third">
+            <div class="column-third" th:unless="${subheading == 'createComp'}">
                 <h2 class="heading-small comp-status-label">
 
                     <div th:if="${param.status == null}" th:remove="tag">
@@ -54,9 +54,8 @@
 
                 </h2>  
             </div>
+            
         </div>
-  
-
 
     </div>
 </div>

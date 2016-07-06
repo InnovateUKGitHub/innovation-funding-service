@@ -69,9 +69,6 @@ public abstract class AbstractApplicationController extends BaseController {
     protected MessageSource messageSource;
 
     @Autowired
-    protected ResponseService responseService;
-
-    @Autowired
     protected FormInputResponseService formInputResponseService;
 
     @Autowired
@@ -386,7 +383,7 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    protected void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 

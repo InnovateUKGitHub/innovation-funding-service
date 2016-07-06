@@ -15,6 +15,8 @@ public class QuestionResource {
     private String name;
     private String shortName;
     private String description;
+    private String assessorGuidanceQuestion;
+    private String assessorGuidanceAnswer;
     private final List<Long> formInputs = new ArrayList<>();
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
@@ -25,7 +27,6 @@ public class QuestionResource {
     private String assessorConfirmationQuestion;
     private Long competition;
     private Long section;
-    private List<Long> responses;
     private List<Long> questionStatuses;
     private List<Long> costs;
     private String questionNumber;
@@ -50,12 +51,24 @@ public class QuestionResource {
         return this.description;
     }
 
-    public List<Long> getQuestionStatuses() {
-        return this.questionStatuses;
+    public String getAssessorGuidanceQuestion() {
+        return assessorGuidanceQuestion;
     }
 
-    public List<Long> getResponses() {
-        return this.responses;
+    public void setAssessorGuidanceQuestion(String assessorGuidanceQuestion) {
+        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
+    }
+
+    public String getAssessorGuidanceAnswer() {
+        return assessorGuidanceAnswer;
+    }
+
+    public void setAssessorGuidanceAnswer(String assessorGuidanceAnswer) {
+        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
+    }
+
+    public List<Long> getQuestionStatuses() {
+        return this.questionStatuses;
     }
 
     public Long getCompetition() {
@@ -64,10 +77,6 @@ public class QuestionResource {
 
     public Long getSection() {
         return this.section;
-    }
-
-    public void setResponses(List<Long> responses) {
-        this.responses = responses;
     }
 
     public void setQuestionStatuses(List<Long> questionStatusIds) {
@@ -111,14 +120,6 @@ public class QuestionResource {
         return this.priority;
     }
 
-    public boolean getNeedingAssessorScore() {
-        return this.needingAssessorScore;
-    }
-
-    public boolean getNeedingAssessorFeedback() {
-        return this.needingAssessorFeedback;
-    }
-
     public String getAssessorConfirmationQuestion() {
         return this.assessorConfirmationQuestion;
     }
@@ -137,61 +138,6 @@ public class QuestionResource {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        if (o == this) {
-            return true;
-        }
-        if (o.getClass() != this.getClass()) {
-            return false;
-        }
-        QuestionResource question = (QuestionResource) o;
-        return new EqualsBuilder()
-            .append(this.id, question.id)
-            .append(this.name, question.name)
-            .append(this.description, question.description)
-            .append(this.formInputs, question.formInputs)
-            .append(this.markAsCompletedEnabled, question.markAsCompletedEnabled)
-            .append(this.assignEnabled, question.assignEnabled)
-            .append(this.multipleStatuses, question.multipleStatuses)
-            .append(this.priority, question.priority)
-            .append(this.needingAssessorScore, question.needingAssessorScore)
-            .append(this.needingAssessorFeedback, question.needingAssessorFeedback)
-            .append(this.assessorConfirmationQuestion, question.assessorConfirmationQuestion)
-            .append(this.competition, question.competition)
-            .append(this.responses, question.responses)
-            .append(this.questionStatuses, question.questionStatuses)
-            .append(this.costs, question.costs)
-            .append(this.questionNumber, question.questionNumber)
-            .isEquals();
-
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(this.id)
-            .append(this.name)
-            .append(this.description)
-            .append(this.formInputs)
-            .append(this.markAsCompletedEnabled)
-            .append(this.assignEnabled)
-            .append(this.multipleStatuses)
-            .append(this.priority)
-            .append(this.needingAssessorScore)
-            .append(this.needingAssessorFeedback)
-            .append(this.assessorConfirmationQuestion)
-            .append(this.competition)
-            .append(this.responses)
-            .append(this.questionStatuses)
-            .append(this.costs)
-            .append(this.questionNumber)
-            .toHashCode();
-    }
-
-    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
@@ -200,12 +146,20 @@ public class QuestionResource {
         return this.assignEnabled;
     }
 
-    public boolean isNeedingAssessorScore() {
-        return this.needingAssessorScore;
+    public boolean isNeedingAssessorFeedback() {
+        return needingAssessorFeedback;
     }
 
-    public boolean isNeedingAssessorFeedback() {
-        return this.needingAssessorFeedback;
+    public void setNeedingAssessorFeedback(boolean needingAssessorFeedback) {
+        this.needingAssessorFeedback = needingAssessorFeedback;
+    }
+
+    public boolean isNeedingAssessorScore() {
+        return needingAssessorScore;
+    }
+
+    public void setNeedingAssessorScore(boolean needingAssessorScore) {
+        this.needingAssessorScore = needingAssessorScore;
     }
 
     public void setId(Long id) {
@@ -228,14 +182,6 @@ public class QuestionResource {
         this.priority = priority;
     }
 
-    public void setNeedingAssessorScore(boolean needingAssessorScore) {
-        this.needingAssessorScore = needingAssessorScore;
-    }
-
-    public void setNeedingAssessorFeedback(boolean needingAssessorFeedback) {
-        this.needingAssessorFeedback = needingAssessorFeedback;
-    }
-
     public void setAssessorConfirmationQuestion(String assessorConfirmationQuestion) {
         this.assessorConfirmationQuestion = assessorConfirmationQuestion;
     }
@@ -254,5 +200,65 @@ public class QuestionResource {
 
     public void setQuestionNumber(String questionNumber) {
         this.questionNumber = questionNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        QuestionResource that = (QuestionResource) o;
+
+        return new EqualsBuilder()
+                .append(needingAssessorScore, that.needingAssessorScore)
+                .append(needingAssessorFeedback, that.needingAssessorFeedback)
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(shortName, that.shortName)
+                .append(description, that.description)
+                .append(assessorGuidanceQuestion, that.assessorGuidanceQuestion)
+                .append(assessorGuidanceAnswer, that.assessorGuidanceAnswer)
+                .append(formInputs, that.formInputs)
+                .append(markAsCompletedEnabled, that.markAsCompletedEnabled)
+                .append(assignEnabled, that.assignEnabled)
+                .append(multipleStatuses, that.multipleStatuses)
+                .append(priority, that.priority)
+                .append(assessorConfirmationQuestion, that.assessorConfirmationQuestion)
+                .append(competition, that.competition)
+                .append(section, that.section)
+                .append(questionStatuses, that.questionStatuses)
+                .append(costs, that.costs)
+                .append(questionNumber, that.questionNumber)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(shortName)
+                .append(description)
+                .append(assessorGuidanceQuestion)
+                .append(assessorGuidanceAnswer)
+                .append(formInputs)
+                .append(markAsCompletedEnabled)
+                .append(assignEnabled)
+                .append(multipleStatuses)
+                .append(priority)
+                .append(needingAssessorScore)
+                .append(needingAssessorFeedback)
+                .append(assessorConfirmationQuestion)
+                .append(competition)
+                .append(section)
+                .append(questionStatuses)
+                .append(costs)
+                .append(questionNumber)
+                .toHashCode();
     }
 }

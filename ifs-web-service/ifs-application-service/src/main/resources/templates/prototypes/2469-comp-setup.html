@@ -14,22 +14,30 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
+    
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'All competitions' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'14060010:  A newly created competition'}, ${'Competition setup'}, ${'Create new competition'})" th:remove="tag" />
+	<div class="hgroup" th:unless="${param.section != null}">
+		<h1 class="heading-xlarge">
+			Competition setup
+		</h1>
+		<h2 class="heading-medium" id="compMainTitle" style="display: none">
+			Connected digital additive manufacturing
+		</h2>
+	</div>
 
 	<div th:include="prototypes/fragments/comp-setup :: prototype-comp-setup-navigation" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 
-	<div class="grid-row constrain-width">
+	<div class="extra-margin">
 
-		<div class="column-one">
+		<div th:include="prototypes/fragments/comp-setup :: ${'prototype-section-'+ (param.section == null ? 'index-page' : param.section[0])}" th:remove="tag"/>
 
-			<div th:include="prototypes/fragments/comp-setup :: ${'prototype-section-'+ (param.section == null ? 'essential' : param.section[0])}" th:remove="tag"/>
-
+		<div class="extra-margin" th:if="${param.section != null}">
+			<a th:href="${#httpServletRequest.requestURI}" class="button button-secondary">Return to setup overview</a>
 		</div>
 
 
@@ -66,7 +74,8 @@
 
 	    var sectionId = $_GET('sectionId'),
 			status = $_GET('status'),
-			compType = $_GET('compType');
+			compType = $_GET('compType'),
+			compStatus = $_GET('compStatus');
 
 
 		if(compType == 'Programme' || compType == 'Managed services'){
@@ -84,33 +93,74 @@
 
 		//Of the available tabs check which section has been 'done'
 
-		
-		for(i = 1; i < jQuery(".inline-nav li").length+1; i++) {
+		var sectionCount = 0;
+		var sectionNumber = jQuery(".list-overview li").length+1; // count number of sections based on tab;e
+
+		for(i = 1; i < sectionNumber; i++) {
 			
 			if(sectionId == i && status == 'done'){
-				localStorage.setItem('section'+i, 'section-'+i+'-complete');		
+
+				localStorage.setItem('section'+i, 'section-'+i+'-complete');
+
 			}else if (sectionId == i && status == 'edit'){
+
 				localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
+
+			}else if (compStatus == 'ready'){ // set all tabs to done, if the comp is ready to open
+
+				localStorage.setItem('section'+i, 'section-'+i+'-complete'); 
+			
+			}else if (compStatus == 'draft'){ // In draft mode show some that some tabs aren't complete yet
+
+				if (i <= 3){
+					localStorage.setItem('section'+i, 'section-'+i+'-complete');
+				}else{
+					localStorage.setItem('section'+i, 'section-'+i+'-not-complete');
+				}
 			}
+
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
 				jQuery('#section-'+i).addClass('marked-as-complete');
+				
+				jQuery('#section-'+i+'-done').show();
+				jQuery('#section-'+i+'-edit').hide();
 
-				/*var querystring = "status=done";
-
-				jQuery('#section-'+i+' a').each(function(){
-					var href = jQuery(this).attr('href');
-					alert(href);
-					 href += (href.match(/\?/) ? '&' : '?') + querystring; // change last '?' to '#' if need
-					 jQuery(this).attr('href', href);
-				});*/
+				sectionCount ++;
 
 			}else{
 				jQuery('#section-'+i).removeClass('marked-as-complete');
-			}
-		} 
-			
 
+				jQuery('#section-'+i+'-done').hide();
+				jQuery('#section-'+i+'-edit').show();
+
+			}
+
+		} 
+
+		if(localStorage.getItem('section1') == 'section-1-complete'){
+			jQuery('#compMainTitle').show();
+		}else{
+			jQuery('#compMainTitle').hide();
+		}
+
+		//alert(sectionCount+1 +' test'+sectionNumber);
+
+		if(sectionCount+1 == sectionNumber){ // Check that all tabs are complete, then change state of CTA
+			jQuery('#compStatus').text('In preparation');
+			jQuery('#compCTA').text('Save as ready to open');
+			jQuery('#compCTA').attr('href','/prototypes/3115-comp-dashboard?section=upcoming&comp=saveOpen');
+
+			/*if(compStatus == 'ready'){
+				jQuery('#compStatus').text('Ready to open');
+				jQuery('#compCTA').hide();
+			}*/
+		
+		}else{
+			jQuery('#compStatus').text('In preparation');
+			jQuery('#compCTA').text('Save as in preparation');
+			jQuery('#compCTA').attr('href','/prototypes/3115-comp-dashboard?section=upcoming&comp=saveDraft');
+		}
 
 
 
@@ -201,7 +251,34 @@
 
 		});
 
+		function pad (str, max) {
+		  str = str.toString();
+		  return str.length < max ? pad("0" + str, max) : str;
+		}
 
+		jQuery('#row-3-year').on('blur',function(e){
+
+			if(jQuery('#row-3-year').val() != '' && jQuery('#row-3-month').val() != '' && jQuery('#row-3-day').val() != ''){
+				
+				for(i = 3; i < 15; i++) {
+
+					jQuery('#row-'+i+'-weekday').text('Tues');
+					jQuery('#row-'+i+'-day').val('01');
+					jQuery('#row-'+i+'-month').val(pad(i-1, 2));
+					jQuery('#row-'+i+'-year').val('2017');
+
+				}
+
+				jQuery('#row-2-weekday').text('Tues');
+				jQuery('#row-2-day').val('15');
+				jQuery('#row-2-month').val('01');
+				jQuery('#row-2-year').val('2017');
+
+
+
+			}
+
+		});
 
 	});
 	// ]]>

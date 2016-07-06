@@ -693,11 +693,11 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateSmallOrganisationSizeZeroValue() {
+    public void testValidationGrantClaimUpdateSmallOrganisationSizeNegativeValue() {
 
         assertEquals(OrganisationSize.SMALL, applicationFinance.getOrganisationSize());
 
-        grantClaim.setGrantClaimPercentage(0);
+        grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -710,7 +710,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertThat(messages.getErrors(), contains(
                 allOf(
                         hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is(""))
+                        hasProperty("errorMessage", is("This field should be 0% or higher"))
                 )
         ));
     }
@@ -758,12 +758,12 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateMediumOrganisationSizeZeroValue() {
+    public void testValidationGrantClaimUpdateMediumOrganisationSizeNegativeValue() {
 
         applicationFinance.setOrganisationSize(OrganisationSize.MEDIUM);
 
         assertEquals(OrganisationSize.MEDIUM, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(0);
+        grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -776,7 +776,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertThat(messages.getErrors(), contains(
                 allOf(
                         hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is(""))
+                        hasProperty("errorMessage", is("This field should be 0% or higher"))
                 )
         ));
     }
@@ -824,12 +824,12 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateLargeOrganisationSizeZeroValue() {
+    public void testValidationGrantClaimUpdateLargeOrganisationSizeNegativeValue() {
 
         applicationFinance.setOrganisationSize(OrganisationSize.LARGE);
 
         assertEquals(OrganisationSize.LARGE, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(0);
+        grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
@@ -842,7 +842,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertThat(messages.getErrors(), contains(
                 allOf(
                         hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is(""))
+                        hasProperty("errorMessage", is("This field should be 0% or higher"))
                 )
         ));
     }

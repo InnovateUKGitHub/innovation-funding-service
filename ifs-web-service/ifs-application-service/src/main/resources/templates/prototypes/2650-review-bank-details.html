@@ -29,8 +29,11 @@
 		
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 	<p th:unless="${param.status != null and param.status[0] == 'accepted'}">The following bank account details have been submitted to Innovate UK by Aptrans Ltd for use during the project Technology Inspired, awaiting internal review from Innovate UK</p>
+	
 
-	<p th:unless="${param.status == null or param.status[0] != 'accepted'}" >The following bank account details have been accepted for use by <strong>Aptrans Ltd</strong> during the project <strong>Machine Learning In Robots (10294856)</strong></p>
+	<div class="success-alert" th:unless="${param.status == null or param.status[0] != 'accepted'}">
+		<h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+	</div>
 
 	<h2 class="heading-medium">Finance contact</h2>
 

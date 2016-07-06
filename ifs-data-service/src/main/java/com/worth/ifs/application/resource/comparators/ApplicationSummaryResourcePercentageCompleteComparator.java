@@ -10,13 +10,13 @@ import java.util.Comparator;
 public class ApplicationSummaryResourcePercentageCompleteComparator extends DualFieldComparator<Integer, Long> implements Comparator<ApplicationSummaryResource> {
 
 	@Override
-	public int compare(ApplicationSummaryResource o1, ApplicationSummaryResource o2) {
+	public int compare(ApplicationSummaryResource resource1, ApplicationSummaryResource resource2) {
 		
-		Integer o1Lead = o1.getCompletedPercentage();
-		Integer o2Lead = o2.getCompletedPercentage();
+		Integer o1Lead = resource1.getCompletedPercentage();
+		Integer o2Lead = resource2.getCompletedPercentage();
 		
-		Long o1Id = o1.getId();
-		Long o2Id = o2.getId();
+		Long o1Id = resource1.getId();
+		Long o2Id = resource2.getId();
 		
 		return compare(o2Lead, o1Lead, o1Id, o2Id);
 	}

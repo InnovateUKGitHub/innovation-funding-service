@@ -9,14 +9,17 @@ import com.openpojo.validation.rule.impl.*;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.alert.domain.Alert;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
+import com.worth.ifs.assessment.domain.AssessmentFeedback;
+import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.competition.domain.Competition;
@@ -30,7 +33,10 @@ import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -44,7 +50,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 32;
+    private static final int EXPECTED_RESOURCES = 34;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -54,6 +60,8 @@ public class POJOTest {
     private List<Class<?>> classesToTest = Arrays.asList(
             Alert.class,
             AlertResource.class,
+            AssessmentFeedback.class,
+            AssessmentFeedbackResource.class,
             Invite.class,
             Address.class,
             OrganisationType.class,
@@ -66,7 +74,6 @@ public class POJOTest {
             OrganisationAddress.class,
             CostValue.class,
             Token.class,
-            AssessorFeedback.class,
             InviteOrganisation.class,
             Section.class,
             ApplicationFinance.class,
@@ -75,7 +82,12 @@ public class POJOTest {
             UpdateUserResource.class,
             CompetitionSummaryResource.class,
             Project.class,
-            ProjectResource.class
+            ProjectResource.class,
+            ProjectUser.class,
+            ProjectUserResource.class,
+            AddressType.class,
+            AddressTypeResource.class,
+            MonitoringOfficerResource.class
     );
 
     @Before

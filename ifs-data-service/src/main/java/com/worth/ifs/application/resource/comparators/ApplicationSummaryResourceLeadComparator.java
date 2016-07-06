@@ -10,13 +10,13 @@ import java.util.Comparator;
 public class ApplicationSummaryResourceLeadComparator extends DualFieldComparator<String, Long> implements Comparator<ApplicationSummaryResource> {
 
 	@Override
-	public int compare(ApplicationSummaryResource o1, ApplicationSummaryResource o2) {
+	public int compare(ApplicationSummaryResource resource1, ApplicationSummaryResource resource2) {
 		
-		String o1Lead = o1.getLead();
-		String o2Lead = o2.getLead();
+		String o1Lead = resource1.getLead();
+		String o2Lead = resource2.getLead();
 		
-		Long o1Id = o1.getId();
-		Long o2Id = o2.getId();
+		Long o1Id = resource1.getId();
+		Long o2Id = resource2.getId();
 		
 		return compare(o1Lead, o2Lead, o1Id, o2Id);
 	}

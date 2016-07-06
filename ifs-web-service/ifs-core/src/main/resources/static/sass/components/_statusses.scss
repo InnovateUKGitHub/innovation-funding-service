@@ -245,3 +245,13 @@ Status is displayed in the collapsible header area.
    }
 
 }
+
+//compadmin
+
+.inline-nav{
+	.marked-as-complete{
+		@extend %mark-done-right;
+		background-position: 100% 0%;
+		background-size: 20px;
+	}
+}

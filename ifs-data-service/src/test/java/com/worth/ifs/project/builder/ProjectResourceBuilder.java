@@ -1,9 +1,12 @@
 package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -35,19 +38,35 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((id, project) -> setField("id", id, project), ids);
     }
 
+    public ProjectResourceBuilder withName(String name){
+        return with((project) -> project.setName(name));
+    }
+
+    public ProjectResourceBuilder withApplication(ApplicationResource applicationResource){
+        return with(project -> project.setApplication(applicationResource.getId()));
+    }
+
     public ProjectResourceBuilder withTargetStartDate(LocalDate... dates) {
         return withArray((date, project) -> project.setTargetStartDate(date), dates);
     }
 
-    public ProjectResourceBuilder withAddress(Long name) {
-        return with(project -> project.setAddress(name));
+    public ProjectResourceBuilder withAddress(AddressResource address) {
+        return with(project -> project.setAddress(address));
     }
 
     public ProjectResourceBuilder withProjectManager(Long projectManager) {
         return with(project -> project.setProjectManager(projectManager));
     }
 
+    public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
+        return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
+    }
+
     public ProjectResourceBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
+    }
+
+    public ProjectResourceBuilder withSubmittedDate(LocalDateTime... submittedDates){
+        return withArray((submittedDate, project) -> project.setSubmittedDate(submittedDate), submittedDates);
     }
 }

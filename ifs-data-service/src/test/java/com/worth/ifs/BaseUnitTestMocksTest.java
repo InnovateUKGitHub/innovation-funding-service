@@ -1,16 +1,33 @@
 package com.worth.ifs;
 
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.repository.AddressRepository;
+import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
+import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.alert.mapper.AlertMapper;
 import com.worth.ifs.alert.repository.AlertRepository;
 import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.*;
-import com.worth.ifs.application.transactional.*;
+import com.worth.ifs.application.transactional.ApplicationFundingService;
+import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.AssessorFeedbackService;
+import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.assessment.mapper.AssessmentFeedbackMapper;
+import com.worth.ifs.assessment.mapper.AssessmentMapper;
+import com.worth.ifs.assessment.repository.AssessmentFeedbackRepository;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.transactional.AssessmentFeedbackService;
+import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
+import com.worth.ifs.category.mapper.CategoryLinkMapper;
+import com.worth.ifs.category.mapper.CategoryMapper;
+import com.worth.ifs.category.repository.CategoryLinkRepository;
+import com.worth.ifs.category.repository.CategoryRepository;
+import com.worth.ifs.category.transactional.CategoryLinkService;
+import com.worth.ifs.category.transactional.CategoryService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -26,9 +43,11 @@ import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
@@ -59,9 +78,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AlertMapper alertMapperMock;
 
     @Mock
-    protected ResponseService responseServiceMock;
-
-    @Mock
     protected AddressRepository addressRepositoryMock;
 
     @Mock
@@ -75,6 +91,18 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock    
     protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
+
+    @Mock
+    protected AssessmentMapper assessmentMapperMock;
+
+    @Mock
+    protected AssessmentService assessmentServiceMock;
+
+    @Mock
+    protected AssessmentFeedbackMapper assessmentFeedbackMapperMock;
+
+    @Mock
+    protected AssessmentFeedbackService assessmentFeedbackServiceMock;
 
     @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
@@ -93,9 +121,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
-
-    @Mock
-    protected ResponseRepository responseRepositoryMock;
 
     @Mock
     protected CompetitionRepository competitionRepositoryMock;
@@ -146,6 +171,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AddressLookupService addressLookupServiceMock;
 
     @Mock
+    protected AddressService addressService;
+
+    @Mock
     protected OrganisationService organisationServiceMock;
 
     @Mock
@@ -156,6 +184,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    protected AssessmentFeedbackRepository assessmentFeedbackRepositoryMock;
 
     @Mock
     protected RegistrationService registrationServiceMock;
@@ -191,6 +222,15 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FileEntryMapper fileEntryMapperMock;
 
     @Mock
+    protected AddressMapper addressMapperMock;
+
+    @Mock
+    protected AddressTypeRepository addressTypeRepositoryMock;
+
+    @Mock
+    protected OrganisationAddressRepository organisationAddressRepositoryMock;
+
+    @Mock
     protected AssessorFeedbackService assessorFeedbackServiceMock;
 
     @Mock
@@ -201,6 +241,27 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectRepository projectRepositoryMock;
+
+    @Mock
+    protected ProjectUserRepository projectUserRepositoryMock;
+
+    @Mock
+    protected CategoryService categoryServiceMock;
+
+    @Mock
+    protected CategoryRepository categoryRepositoryMock;
+
+    @Mock
+    protected CategoryMapper categoryMapperMock;
+
+    @Mock
+    protected CategoryLinkService categoryLinkServiceMock;
+
+    @Mock
+    protected CategoryLinkRepository categoryLinkRepositoryMock;
+
+    @Mock
+    protected CategoryLinkMapper categoryLinkMapperMock;
 
     @Before
     public void setupMockInjection() {

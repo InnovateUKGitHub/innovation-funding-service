@@ -3,19 +3,24 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.Future;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -86,7 +91,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void markAsCompleteTest() {
-        setupPutWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", Void.class, null, null);
+        setupPutWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", validationMessagesListType(), null, null, HttpStatus.OK);
         assertTrue(service.markAsComplete(1L, 2L, 3L).isSuccess());
     }
 

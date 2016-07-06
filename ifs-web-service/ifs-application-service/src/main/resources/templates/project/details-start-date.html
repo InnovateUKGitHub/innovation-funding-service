@@ -11,14 +11,14 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectNumber})}"  th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}"  th:remove="tag" />
 
     <div class="page-title">
       <p class="subtitle" th:text="${model.projectNumber} + ': ' + ${model.projectName} "/>
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 
-    <form  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
 
     <fieldset>
       <h2 class="heading-medium">Target project start date</h2>
@@ -30,7 +30,7 @@
           </div>
         </legend>
         <p>Please select the date you want the project to start. Projects must start on the first day of a month.</p>
-        <p><strong>Please remember the project can start only when</strong></p>
+        <p><strong>Please remember the project can start only when:</strong></p>
 
         <ul class="list-bullet">
             <li>you have provided the documents we need</li>
@@ -38,7 +38,7 @@
             <li>you have received, signed and returned the grant offer letter on behalf of the project</li>
         </ul>
         <p>Please consider the above information when selecting your target start date. The above processes must be complete before your project can begin.</p>
-        <p>If required the start date can be changed later.</p>
+        <p>If required, the start date can be changed later.</p>
 
         <div th:include="question-type/form-elements :: form-dateinput (id=${'projectStartDate'}, field=${'projectStartDate'}, dayReadonly=true)" th:remove="tag" />
         <h3 class="heading-medium">Project duration</h3>

@@ -39,6 +39,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     FILES_FILE_QUARANTINED("The file has been quarantined by the virus scanner", FORBIDDEN),
 
     /**
+     * Competitions
+     */
+
+    COMPETITION_NOT_OPEN("The competition this application belongs to is no longer open for application submissions", BAD_REQUEST),
+
+    /**
      * Notifications
      */
     NOTIFICATIONS_UNABLE_TO_SEND_SINGLE("The notification could not be sent", INTERNAL_SERVER_ERROR),
@@ -69,6 +75,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH("The Project Start Date must start on the first day of the month", BAD_REQUEST),
     PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE("The Project Start Date must start in the future", BAD_REQUEST),
+    PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION("The Project Manager must be a member of the lead partner organisation", BAD_REQUEST),
+    PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION("The organisation finance contact must be present on the project for the specified organisation", BAD_REQUEST),
+    PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION("The organisation finance contact must be a partner on the project for the specified organisation", BAD_REQUEST),
+    PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE("All project details must be completed before submission", BAD_REQUEST),
+	PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE("The project id in the url must match the project id in the Monitoring Officer Resource request body", BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;

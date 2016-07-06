@@ -32,19 +32,19 @@ public class SecurityRuleUtil {
     }
 
 
-    public static boolean checkRole(final UserResource user,
-                              final Long applicationId,
-                              final Long organisationId,
-                              final UserRoleType userRoleType,
-                              final RoleRepository roleRepository,
-                              final ProcessRoleRepository processRoleRepository) {
+    public static boolean checkProcessRole(final UserResource user,
+                                           final Long applicationId,
+                                           final Long organisationId,
+                                           final UserRoleType userRoleType,
+                                           final RoleRepository roleRepository,
+                                           final ProcessRoleRepository processRoleRepository) {
         final List<Role> roles = roleRepository.findByName(userRoleType.getName());
         final Role role = roles.get(0);
         final ProcessRole processRole = processRoleRepository.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(user.getId(), role.getId(), applicationId, organisationId);
         return processRole != null;
     }
 
-    public static boolean checkRole(final UserResource user, final Long applicationId, UserRoleType userRoleType, final ProcessRoleRepository processRoleRepository) {
+    public static boolean checkProcessRole(final UserResource user, final Long applicationId, UserRoleType userRoleType, final ProcessRoleRepository processRoleRepository) {
         final ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
         return processRole != null && processRole.getRole().getName().equals(userRoleType.getName());
     }
