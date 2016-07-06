@@ -2,6 +2,7 @@
 Documentation     -INFUND-885: As an applicant I want to be able to submit a username (email address) and password combination to create a new profile so I can log into the system
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -138,5 +139,5 @@ the user cannot login with the invalid email
     Page Should Contain    Please enter a valid e-mail address
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work

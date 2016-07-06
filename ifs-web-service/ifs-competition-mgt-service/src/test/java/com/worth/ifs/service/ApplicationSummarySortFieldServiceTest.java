@@ -7,7 +7,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.worth.ifs.service.ApplicationSummarySortFieldService;
+import com.worth.ifs.competition.service.ApplicationSummarySortFieldService;
 
 public class ApplicationSummarySortFieldServiceTest {
 	private ApplicationSummarySortFieldService service;
@@ -19,7 +19,7 @@ public class ApplicationSummarySortFieldServiceTest {
 	
 	@Test
 	public void testOpenCompetitionAllowedFields() {
-		Arrays.asList("percentageComplete", "id", "lead", "name").stream().forEach(field -> {
+		Arrays.asList("percentageComplete", "id", "lead", "name", "leadApplicant").stream().forEach(field -> {
 			String result = service.sortFieldForOpenCompetition(field);
 			assertEquals(field, result);
 		});

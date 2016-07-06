@@ -1,5 +1,9 @@
 package com.worth.ifs.application.security;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.ApplicationStatusBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -11,12 +15,9 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.junit.Test;
 import org.mockito.InjectMocks;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -24,7 +25,9 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

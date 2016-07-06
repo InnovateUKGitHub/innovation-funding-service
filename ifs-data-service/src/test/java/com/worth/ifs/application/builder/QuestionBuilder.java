@@ -3,7 +3,6 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
@@ -32,13 +31,10 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return new QuestionBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedNames("Section "))
+                .withNeedingAssessorFeedback(true)
                 .withNeedingAssessorScore(true)
                 .withPriority(0)
                 .withQuestionNumber("1");
-    }
-
-    public QuestionBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
-        return with(question -> setField("needingAssessorScore", needingAssessorScore, question));
     }
 
     public QuestionBuilder withQuestionNumber(String value) {
@@ -81,6 +77,22 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
+    public QuestionBuilder withNeedingAssessorFeedback(Boolean... needingAssessorFeedbacks) {
+        return withArray((needingAssessorFeedback, object) -> setField("needingAssessorFeedback", needingAssessorFeedback, object), needingAssessorFeedbacks);
+    }
+
+    public QuestionBuilder withNeedingAssessorScore(Boolean... needingAssessorScores) {
+        return withArray((needingAssessorScore, object) -> setField("needingAssessorScore", needingAssessorScore, object), needingAssessorScores);
+    }
+
+    public QuestionBuilder withAssessorGuidanceQuestion(String... assessorGuidanceQuestions) {
+        return withArray((assessorGuidanceQuestion, object) -> setField("assessorGuidanceQuestion", assessorGuidanceQuestion, object), assessorGuidanceQuestions);
+    }
+
+    public QuestionBuilder withAssessorGuidanceAnswer(String... assessorGuidanceAnswers) {
+        return withArray((assessorGuidanceAnswer, object) -> setField("assessorGuidanceAnswer", assessorGuidanceAnswer, object), assessorGuidanceAnswers);
+    }
+
     public QuestionBuilder withAssessorConfirmationQuestion(String... assessorConfirmationQuestions) {
         return withArray((assessorConfirmationQuestion, object) -> setField("assessorConfirmationQuestion", assessorConfirmationQuestion, object), assessorConfirmationQuestions);
     }
@@ -95,10 +107,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
 
     public QuestionBuilder withMultipleStatuses(Boolean... multipleStatuses) {
         return withArray((multipleStatus, object) -> setField("multipleStatuses", multipleStatus, object), multipleStatuses);
-    }
-
-    public QuestionBuilder withResponses(List<Response>... responses) {
-        return withArray((response, object) -> setField("responses", response, object), responses);
     }
 
     public QuestionBuilder withQuestionStatuses(List<QuestionStatus>... questionStatuses) {

@@ -4,13 +4,24 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
@@ -21,7 +32,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.category.domain.Category;
+import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.LeadApplicantType;
+import com.worth.ifs.user.domain.User;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -34,11 +50,13 @@ public class Competition {
 	
     public CompetitionResource.Status getCompetitionStatus() {
         LocalDateTime today = dateProvider.provideDate();
-        if(getStartDate().isAfter(today)){
+        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)){
+            return status;
+        }else if(getStartDate() == null || getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
-        }else if(getEndDate().isAfter(today)){
+        }else if(getEndDate() != null && getEndDate().isAfter(today)){
             return CompetitionResource.Status.OPEN;
-        }else if(getAssessmentEndDate().isAfter(today)){
+        }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
             return CompetitionResource.Status.IN_ASSESSMENT;
         }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
         	return CompetitionResource.Status.FUNDERS_PANEL;
@@ -80,11 +98,60 @@ public class Competition {
 	@DateTimeFormat
     private LocalDateTime assessorFeedbackDate;
 
+    @Enumerated(EnumType.STRING)
+    private CompetitionResource.Status status;
+
+    @ManyToOne
+    @JoinColumn(name="competitionTypeId", referencedColumnName="id")
+    private CompetitionType competitionType;
+
+    @OneToMany(mappedBy = "competition")
+    private List<Milestone> milestones;
+
+    @ManyToOne
+    @JoinColumn(name="executiveUserId", referencedColumnName="id")
+    private User executive;
+
+    @ManyToOne
+    @JoinColumn(name="leadTechnologistUserId", referencedColumnName="id")
+    private User leadTechnologist;
+
+    private String pafCode;
+    private String budgetCode;
+    private String code;
+
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 
+    @Transient
+    private Category innovationSector;
+    @Transient
+    private Category innovationArea;
+    @Transient
+    private Set<Category> researchCategories;
+
+    private String activityCode;
+    private String innovateBudget;
+    private String coFunders;
+    private String coFundersBudget;
+
+    private boolean multiStream;
+    private String streamName;
+    @Enumerated(EnumType.STRING)
+    private CollaborationLevel collaborationLevel;
+    @Enumerated(EnumType.STRING)
+    private LeadApplicantType leadApplicantType;
+    
+    @ElementCollection
+    @JoinTable(name="competition_setup_status", joinColumns=@JoinColumn(name="competition_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @MapKeyColumn (name="section")
+    @Column(name="status")
+    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
+    
     public Competition() {
     	// no-arg constructor
+        status = CompetitionResource.Status.COMPETITION_SETUP;
     }
     public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -95,6 +162,7 @@ public class Competition {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -102,6 +170,7 @@ public class Competition {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
 
 
@@ -266,12 +335,167 @@ public class Competition {
 	protected void setDateProvider(DateProvider dateProvider) {
 		this.dateProvider = dateProvider;
 	}
-	
+
+    public CompetitionResource.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(CompetitionResource.Status status) {
+        this.status = status;
+    }
+
     protected static class DateProvider {
     	public LocalDateTime provideDate() {
     		return LocalDateTime.now();
     	}
     }
 
+    public User getExecutive() {
+        return executive;
+    }
+
+    public void setExecutive(User executive) {
+        this.executive = executive;
+    }
+
+    public User getLeadTechnologist() {
+        return leadTechnologist;
+    }
+
+    public void setLeadTechnologist(User leadTechnologist) {
+        this.leadTechnologist = leadTechnologist;
+    }
+
+    public String getPafCode() {
+        return pafCode;
+    }
+
+    public void setPafCode(String pafCode) {
+        this.pafCode = pafCode;
+    }
+
+    public String getBudgetCode() {
+        return budgetCode;
+    }
+
+    public void setBudgetCode(String budgetCode) {
+        this.budgetCode = budgetCode;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public CompetitionType getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(CompetitionType competitionType) {
+        this.competitionType = competitionType;
+    }
+
+    public Category getInnovationSector() {
+        return innovationSector;
+    }
+
+    public void setInnovationSector(Category innovationSector) {
+        this.innovationSector = innovationSector;
+    }
+
+    public Category getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(Category innovationArea) {
+        this.innovationArea = innovationArea;
+    }
+    
+    public Set<Category> getResearchCategories() {
+		return researchCategories;
+	}
+    
+    public void setResearchCategories(Set<Category> researchCategories) {
+		this.researchCategories = researchCategories;
+	}
+
+    public List<Milestone> getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(List<Milestone> milestones) {
+        this.milestones = milestones;
+    }
+    
+    public boolean isMultiStream() {
+		return multiStream;
+	}
+    
+    public void setMultiStream(boolean multiStream) {
+		this.multiStream = multiStream;
+	}
+    
+    public String getStreamName() {
+		return streamName;
+	}
+    
+    public void setStreamName(String streamName) {
+		this.streamName = streamName;
+	}
+    
+    public CollaborationLevel getCollaborationLevel() {
+		return collaborationLevel;
+	}
+    
+    public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
+		this.collaborationLevel = collaborationLevel;
+	}
+    
+    public LeadApplicantType getLeadApplicantType() {
+		return leadApplicantType;
+	}
+    
+    public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
+		this.leadApplicantType = leadApplicantType;
+	}
+    
+    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
+		return sectionSetupStatus;
+	}
+
+    public String getActivityCode() {
+        return activityCode;
+    }
+
+    public void setActivityCode(String activityCode) {
+        this.activityCode = activityCode;
+    }
+
+    public String getInnovateBudget() {
+        return innovateBudget;
+    }
+
+    public void setInnovateBudget(String innovateBudget) {
+        this.innovateBudget = innovateBudget;
+    }
+
+    public String getCoFunders() {
+        return coFunders;
+    }
+
+    public void setCoFunders(String coFunders) {
+        this.coFunders = coFunders;
+    }
+
+    public String getCoFundersBudget() {
+        return coFundersBudget;
+    }
+
+    public void setCoFundersBudget(String coFundersBudget) {
+        this.coFundersBudget = coFundersBudget;
+    }
 }
 

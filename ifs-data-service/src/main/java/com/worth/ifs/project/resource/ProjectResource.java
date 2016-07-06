@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.AddressResource;
 
 import javax.validation.constraints.Digits;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
@@ -17,12 +18,18 @@ public class ProjectResource {
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
+    private LocalDateTime submittedDate;
     private List<Long> projectUsers;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
     private Long projectManager;
+
+    @JsonIgnore
+    public boolean isProjectDetailsSubmitted(){
+        return submittedDate != null;
+    }
 
     public Long getId() {
         return id;
@@ -91,5 +98,13 @@ public class ProjectResource {
 
     public void setApplication(Long application) {
         this.application = application;
+    }
+
+    public LocalDateTime getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
     }
 }

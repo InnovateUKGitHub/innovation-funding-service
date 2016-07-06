@@ -1,6 +1,16 @@
 package com.worth.ifs.user.service;
 
-import static java.lang.String.format;
+import com.worth.ifs.application.UserApplicationRole;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,17 +18,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import static java.lang.String.format;
 
-import com.worth.ifs.application.UserApplicationRole;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
 
 /**
  * This class contains methods to retrieve and store {@link UserResource} related data,
@@ -101,6 +102,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
         return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber);
+    }
+
+    @Override
+    public List<UserResource> findUserByType(UserRoleType type) {
+        return userRestService.findByUserRoleType(type).getSuccessObjectOrThrowException();
     }
 
     @Override

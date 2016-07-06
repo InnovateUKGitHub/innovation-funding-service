@@ -10,17 +10,18 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.UserDocs.userResourceFields;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -73,6 +74,23 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         ),
                         requestFields(userResourceFields),
                         responseFields(userResourceFields)
+                ));
+    }
+
+    @Test
+    public void findByRole() throws Exception {
+
+        final UserResource userResource = newUserResource().build();
+        when(userServiceMock.findByProcessRole(eq(COMP_TECHNOLOGIST))).thenReturn(serviceSuccess(asList(userResource, userResource)));
+
+        mockMvc.perform(get("/user/findByRole/{userRoleName}", COMP_TECHNOLOGIST.getName()))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("userRoleName").description("The name of the role to get the users by.")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("list of users with the selected role")
+                        )
                 ));
     }
 

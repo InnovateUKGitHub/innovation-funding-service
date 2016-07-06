@@ -1,6 +1,5 @@
 package com.worth.ifs.form.service;
 
-import com.worth.ifs.application.service.ResponseRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,7 @@ import java.util.List;
 
 /**
  * This class contains methods to retrieve and store {@link FormInputResource} related data,
- * through the RestService {@link ResponseRestService}.
+ * through the RestService {@link FormInputRestService}.
  */
 @Service
 public class FormInputServiceImpl implements FormInputService {

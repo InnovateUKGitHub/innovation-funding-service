@@ -39,7 +39,7 @@ The guest user opens the browser
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
-
+    Set Selenium Timeout        10
 TestTeardown User closes the browser
     Run keyword if      '${REMOTE_URL}' != ''        Get Sauce Labs Test Report
     Close any open browsers
@@ -49,7 +49,7 @@ The user closes the browser
     Close any open browsers
 
 Logout as user
-    the user clicks the button/link     link=Logout
+    the user clicks the button/link     link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
     run keyword and ignore error        confirm action
 

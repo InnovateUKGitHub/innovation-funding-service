@@ -1,11 +1,17 @@
 package com.worth.ifs.address.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
+import static java.util.Arrays.asList;
 
 public class AddressResource {
     private Long id;
@@ -119,5 +125,45 @@ public class AddressResource {
 
     public void setOrganisations(List<Long> organisations) {
         this.organisations = organisations;
+    }
+
+    @JsonIgnore
+    public List<String> getNonEmptyLines() {
+        List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, postcode);
+        return simpleFilterNot(lines, StringUtils::isEmpty);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AddressResource that = (AddressResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(addressLine1, that.addressLine1)
+                .append(addressLine2, that.addressLine2)
+                .append(addressLine3, that.addressLine3)
+                .append(town, that.town)
+                .append(county, that.county)
+                .append(postcode, that.postcode)
+                .append(organisations, that.organisations)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(addressLine1)
+                .append(addressLine2)
+                .append(addressLine3)
+                .append(town)
+                .append(county)
+                .append(postcode)
+                .append(organisations)
+                .toHashCode();
     }
 }

@@ -6,10 +6,9 @@
         <fieldset>
             <h2 class="heading-medium">Innovate UK funding</h2>
             <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
-            <p>Innovate UK is the new name for the Technology Strategy Board (TSB)</p>
+            <p>Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
 
-            <p>To receive Innovate UK funding, your academic organisation must apply for funding through the JeS system. To gain a better understanding of the
-                Je-S equirements and process please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a></p>
+            <p>To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a>.</p>
 
             <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
                 application will not be submitted into this competition.</p>
@@ -22,7 +21,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')}? 'error'">
                 <label class="form-label" for="tsb-ref">
           		    		<span class="form-label-bold">TSB reference</span>
-                      <span class="form-hint">This number is found at the top of your proposal output</span>
+                      <span class="form-hint">This number is found at the top of your Je-S form</span>
                       <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.tsbReference?.id})" th:remove="tag" />
                 </label>
                 <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference"
@@ -35,11 +34,11 @@
         <fieldset class="academic">
             <h2 class="heading-medium no-margin">Financial resources</h2>
             <legend class="visuallyhidden">Financial resources</legend>
-            <p>Please enter the following costs from the TSB Contribution column</p>
+            <p>Please enter the following costs from the summary of resources section on your Je-S form</p>
 
             <div class="grid-row">
                 <div class="column-third"><strong>Directly incurred</strong></div>
-                <div class="column-two-thirds"><strong>TSB Contribution</strong></div>
+                <div class="column-two-thirds"><strong>TSB Contribution (please refer to the TSB contribution column)</strong></div>
             </div>
             <hr class="underline"/>
 
@@ -286,6 +285,6 @@
          name='jes-upload',
          downloadURL='/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download',
          readonly=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}">
-    <div th:include="question-type/types :: fileupload" th:remove="tag"/>
+    <div th:include="question-type/types :: fileupload" th:with="removeName='remove_finance_document'" th:remove="tag"/>
 </div>
 </html>

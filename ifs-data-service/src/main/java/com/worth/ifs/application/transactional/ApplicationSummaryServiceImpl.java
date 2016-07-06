@@ -1,14 +1,18 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.application.resource.comparators.*;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Arrays.asList;
+
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,14 +20,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Arrays.asList;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceGrantRequestedComparator;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadApplicantComparator;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadComparator;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceNumberOfPartnersComparator;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourcePercentageCompleteComparator;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceTotalProjectCostComparator;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
 
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
@@ -48,6 +58,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	
 	private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS = new HashMap<String, Comparator<ApplicationSummaryResource>>(){{
 		put("lead", new ApplicationSummaryResourceLeadComparator());
+		put("leadApplicant", new ApplicationSummaryResourceLeadApplicantComparator());
 		put("percentageComplete", new ApplicationSummaryResourcePercentageCompleteComparator());
 		put("numberOfPartners", new ApplicationSummaryResourceNumberOfPartnersComparator());
 		put("grantRequested", new ApplicationSummaryResourceGrantRequestedComparator());
@@ -135,7 +146,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 
 	private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {
-		return !FIELDS_NOT_SORTABLE_IN_DB.stream().anyMatch((field) -> field.equals(sortBy));
+		return !FIELDS_NOT_SORTABLE_IN_DB.stream().anyMatch(field -> field.equals(sortBy));
 	}
 
 	private String[] getApplicationSummarySortField(String sortBy) {

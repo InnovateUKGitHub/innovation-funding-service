@@ -72,6 +72,7 @@
          downloadURL='/application/' + ${currentApplication.id} + '/form/question/' + ${question.id} + '/forminput/' + ${formInput.id} + '/download',
          compManagementDownloadURL=${currentApplication.id} + '/forminput/' + ${formInput.id} + '/download',
          filename=${responses?.get(formInput.getId())?.getFilename()},
+         removeName=${removeName != null}? ${removeName} : 'remove_uploaded_file',
          readonly=${readonly} or
                 ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or
                 ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
@@ -89,7 +90,7 @@
                 <a th:unless="${isCompManagementDownload}" th:href="@{${downloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
             </div>
             <div th:unless="${readonly}" class="alignright" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
-                <button class="button-secondary no-margin-right" type="submit" name="remove_uploaded_file">Remove</button>
+                <button class="button-secondary no-margin-right" type="submit" th:name="${removeName}">Remove</button>
             </div>
         </div>
         <div th:unless="${!#strings.isEmpty(filename)}">
@@ -143,8 +144,10 @@
         	               </legend>
 
         	            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" th:remove="tag" /><br/>
-        	            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths',readonly=${readonly})" th:remove="tag" />
         	        </div>
+                    <div class="form-group">
+                      <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths',readonly=${readonly})" th:remove="tag" />
+                    </div>
         	      </fieldset>
               </div>
                 <div class="form-group">

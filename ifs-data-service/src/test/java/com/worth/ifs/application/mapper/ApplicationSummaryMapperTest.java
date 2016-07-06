@@ -1,5 +1,6 @@
 package com.worth.ifs.application.mapper;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -54,6 +55,7 @@ public class ApplicationSummaryMapperTest {
 	
 	@Before
 	public void setUp() {
+		clearUniqueIds();
 		when(fundingDecisionMapper.mapToResource(FundingDecisionStatus.FUNDED)).thenReturn(FundingDecision.FUNDED);
 		
 		ApplicationStatus openStatus = new ApplicationStatus(ApplicationStatusConstants.OPEN.getId(), ApplicationStatusConstants.OPEN.getName());
@@ -96,6 +98,7 @@ public class ApplicationSummaryMapperTest {
 		assertEquals("In Progress", result.getStatus());
 		assertEquals(Integer.valueOf(66), result.getCompletedPercentage());
 		assertEquals("leadorg", result.getLead());
+		assertEquals("User 1", result.getLeadApplicant());
 		assertEquals(Integer.valueOf(2), result.getNumberOfPartners());
 		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
 		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());

@@ -21,21 +21,23 @@ public class ProjectDetailsViewModel {
 
     private ProjectResource project;
     private UserResource currentUser;
-    private Long currentOrganisation;
+    private List<Long> usersPartnerOrganisations;
     private List<OrganisationResource> partnerOrganisations;
     private ApplicationResource app;
     private CompetitionResource competition;
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
+    private boolean userLeadPartner;
 
-    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, Long currentOrganisation, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition) {
+    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, List<Long> usersPartnerOrganisations, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner) {
         this.project = project;
         this.currentUser = currentUser;
-        this.currentOrganisation = currentOrganisation;
+        this.usersPartnerOrganisations = usersPartnerOrganisations;
         this.partnerOrganisations = partnerOrganisations;
         this.app = app;
         this.competition = competition;
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
+        this.userLeadPartner = userIsLeadPartner;
     }
 
     public ProjectResource getProject() {
@@ -44,10 +46,6 @@ public class ProjectDetailsViewModel {
 
     public UserResource getCurrentUser() {
         return currentUser;
-    }
-
-    public Long getCurrentOrganisation() {
-        return currentOrganisation;
     }
 
     public List<OrganisationResource> getPartnerOrganisations() {
@@ -64,5 +62,13 @@ public class ProjectDetailsViewModel {
 
     public ProjectUserResource getFinanceContactForPartnerOrganisation(Long organisationId) {
         return financeContactsByOrganisationId.get(organisationId);
+    }
+
+    public boolean isUserLeadPartner() {
+        return userLeadPartner;
+    }
+
+    public boolean isUserPartnerInOrganisation(Long organisationId) {
+        return usersPartnerOrganisations.contains(organisationId);
     }
 }

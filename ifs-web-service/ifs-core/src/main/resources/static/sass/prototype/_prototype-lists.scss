@@ -1,5 +1,5 @@
 .list-overview{
-	
+
 	margin-left: 0;
     padding: 0;
     list-style-type: none;
@@ -8,9 +8,15 @@
     	border-bottom: 1px solid $border-colour;
 
         &:first-child{
-           border-top: 1px solid $border-colour; 
+           border-top: 1px solid $border-colour;
         }
     }*/
+
+    .list-bullet{
+        li{
+            border: none;
+        }
+    }
 
     .grid-row{
     	//overflow: auto;
@@ -40,13 +46,13 @@
 
     .assigned-to-me{
     	.grid-row{
-    		//border-left: 5px solid $light-blue; 
+    		//border-left: 5px solid $light-blue;
     		//@extend %icon-assigned;
     	}
     }
 
     .assign-container{
-    	
+
     	font-size: 14px;
 
     	.assign-team{
@@ -77,6 +83,32 @@
     margin-bottom: 30px;
 }
 
+/*-------- Comp setup editing questions view -------------*/
+
+.list-overview{ 
+    &.application-questions{
+        .heading-medium{
+            margin: 0.5em 0 0.4em 0;
+        }
+        .button{
+            margin-top: 10px;
+        }
+        .question{
+            margin: 30px 0 0 20px;
+
+            & + .alignright{
+                margin-bottom: 60px;
+            }
+        }
+        .grid-row{
+            h3{
+                padding-top: 5px; 
+            }
+        }
+    }
+}
+
+
 
 /*-------- Companies House results panel example -------------*/
 
@@ -99,7 +131,7 @@ li.type-company{
         display: block;
         float: left;
         width: 50%;
-        max-width: 250px; 
+        max-width: 250px;
         margin-bottom: 0.5em;
 
         @include media-down(tablet) {
@@ -197,42 +229,10 @@ li.type-company{
     }
 }
 
-.comp-list{
-    li{
-        border-top: 1px solid $secondary-text-colour;
-        color: $text-colour;
-        overflow: auto;
-        
-        &:first-child{
-            border-top: none;
-        }
-
-        .comp-details{
-            @extend .column-two-thirds;
-        }
-
-        p{
-            color: $secondary-text-colour;
-            font-weight: bold;
-        }
-
-        .status{
-            @extend .column-third;
-            float: right;
-            background: $panel-colour;
-            padding: 12px;
-            text-align: center;
-            margin-top: 1.2em;
-            font-weight: bold;
-        }
-
-    }
-}
-
 /*----- Application progress lists ----*/
 
 .application-progress-list{
-    
+
     > li{
         background: url(../images/charts/offer-status-default.png) no-repeat;
         overflow: auto;
@@ -251,7 +251,7 @@ li.type-company{
             margin-bottom: 10px;
 
             .heading-medium{
-                margin: 0; 
+                margin: 0;
             }
 
             &:before{

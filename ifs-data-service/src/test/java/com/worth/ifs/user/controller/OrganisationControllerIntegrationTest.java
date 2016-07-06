@@ -2,15 +2,13 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.address.domain.Address;
-import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.user.resource.OrganisationSize;
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.user.domain.OrganisationType;
-import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +28,6 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
     @Autowired
     private AddressRepository addressRepository;
-
-    @Autowired
-    private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     private static final String companyHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
@@ -82,10 +74,10 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testFindByApplicationId() throws Exception {
         Set<OrganisationResource> organisations = controller.findByApplicationId(1L).getSuccessObject();
-        assertEquals("There should be 5 organisation in this application", 5, organisations.size());
+        assertEquals("There should be 4 organisation in this application", 4, organisations.size());
 
-        OrganisationResource organisation = controller.findById(2L).getSuccessObject();
-        assertTrue("One of the organisations should be Worth Internet Systems", simpleMap(organisations, OrganisationResource::getId).contains(organisation.getId()));
+        OrganisationResource organisation = controller.findById(3L).getSuccessObject();
+        assertTrue("One of the organisations should be Empire Ltd", simpleMap(organisations, OrganisationResource::getId).contains(organisation.getId()));
     }
 
     private OrganisationResource createOrganisation(){
@@ -143,7 +135,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         OrganisationResource organisationResource = createOrganisation();
 
         AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
-        controller.addAddress(organisationResource.getId(), AddressType.OPERATING, addressResource);
+        controller.addAddress(organisationResource.getId(), OrganisationAddressType.OPERATING, addressResource);
 
         flushAndClearSession();
 

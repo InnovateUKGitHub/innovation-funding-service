@@ -1,32 +1,44 @@
 package com.worth.ifs.project.documentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.controller.ProjectController;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -201,5 +213,151 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                     ),
                     responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
                 ));
+    }
+
+    @Test
+    public void saveMoWithDiffProjectIdInUrlAndMoResource() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(3L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE)));
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
+                        ),
+                        requestFields(monitoringOfficerResourceFields)
+                ));
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMoWhenProjectDetailsNotYetSubmitted() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(projectId)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
+                        ),
+                        requestFields(monitoringOfficerResourceFields)
+                ));
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMonitoringOfficer() throws Exception {
+
+        Long projectId = 1L;
+
+        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(projectId)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
+                        ),
+                        requestFields(monitoringOfficerResourceFields)
+                ));
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void setApplicationDetailsSubmittedDateButDetailsNotFilledIn() throws Exception {
+        when(projectServiceMock.saveProjectSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
+                .andExpect(status().isBadRequest())
+                .andDo(this.document.snippets(
+                    pathParameters(
+                        parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                    )));
+    }
+
+    @Test
+    public void setApplicationDetailsSubmittedDate() throws Exception {
+        when(projectServiceMock.saveProjectSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        )));
+    }
+
+    @Test
+    public void isSubmitAllowedReturnsFalseWhenDetailsNotProvided() throws Exception {
+        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
+    }
+
+    @Test
+    public void isSubmitAllowed() throws Exception {
+        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
     }
 }

@@ -1,5 +1,6 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.mapper.QuestionMapper;
@@ -10,10 +11,12 @@ import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.validator.util.ValidationUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,27 +64,29 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Autowired
     private QuestionMapper questionMapper;
 
+    @Autowired
+    private ValidationUtil validationUtil;
+
     @Override
     public ServiceResult<QuestionResource> getQuestionById(final Long id) {
         return getQuestionResource(id);
     }
 
     @Override
-    public ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
+    public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                               final Long markedAsCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
     }
 
     @Override
-    public ServiceResult<Void> markAsInComplete(final QuestionApplicationCompositeId ids,
+    public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                 final Long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false);
     }
 
     @Override
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
-
-        return find(getQuestion(ids.questionId), application(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+        return find(getQuestion(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
 
             QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
 
@@ -229,8 +234,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
-        List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+	public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
+    	List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
         List<QuestionStatusResource> resources = simpleMap(statuses, questionStatusMapper::mapToResource);
         return serviceSuccess(resources);
     }
@@ -273,33 +278,37 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
 
-    private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
+    private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
+                -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete));
+    }
 
-        return find(processRole(processRoleId), application(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
-            QuestionStatus questionStatus = null;
+    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, Long processRoleId, boolean markAsComplete){
 
-            if (question.hasMultipleStatuses()) {
-                //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
-                List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, markedAsCompleteBy.getOrganisation().getId());
-                Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
-                        .map(m -> getQuestionStatusByMarkedAsCompleteId(question, applicationId, m.getId()))
-                        .filter(m -> m != null)
-                        .findFirst();
-                questionStatus = optionalQuestionStatus.orElse(null);
-            } else {
-                questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
-            }
+        QuestionStatus questionStatus = null;
 
-            if (questionStatus == null) {
-                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-            } else if (markAsComplete) {
-                questionStatus.markAsComplete();
-            } else {
-                questionStatus.markAsInComplete();
-            }
-            questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
-        });
+        if (question.hasMultipleStatuses()) {
+            //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
+            List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(application.getId(), markedAsCompleteBy.getOrganisation().getId());
+            Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
+                    .map(m -> getQuestionStatusByMarkedAsCompleteId(question, application.getId(), m.getId()))
+                    .filter(m -> m != null)
+                    .findFirst();
+            questionStatus = optionalQuestionStatus.orElse(null);
+        } else {
+            questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
+        }
+        List<ValidationMessages> applicationIsValid = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
+
+        if (questionStatus == null) {
+            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
+        } else if (markAsComplete) {
+            questionStatus.markAsComplete();
+        } else {
+            questionStatus.markAsInComplete();
+        }
+        questionStatusRepository.save(questionStatus);
+        return serviceSuccess(applicationIsValid);
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
@@ -308,7 +317,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
         return null;
-
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {

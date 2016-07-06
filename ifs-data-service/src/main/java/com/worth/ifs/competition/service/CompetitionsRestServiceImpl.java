@@ -4,13 +4,17 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -20,10 +24,10 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competit
 @Service
 public class CompetitionsRestServiceImpl extends BaseRestService implements CompetitionsRestService {
 
-    private String competitionsRestURL = "/competition";
-
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(CompetitionsRestServiceImpl.class);
+    private String competitionsRestURL = "/competition";
+    private String competitionsTypesRestURL = "/competition-type";
 
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
@@ -34,4 +38,37 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }
+
+    @Override
+    public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
+        return getWithRestResult(competitionsTypesRestURL + "/findAll", competitionTypeResourceListType());
+    }
+
+    @Override
+    public RestResult<CompetitionResource> create() {
+        return postWithRestResult(competitionsRestURL + "", CompetitionResource.class);
+    }
+
+
+    @Override
+    public RestResult<Void> update(CompetitionResource competition) {
+        return putWithRestResult(competitionsRestURL + "/" + competition.getId(), competition, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
+        return getWithRestResult(String.format("%s/sectionStatus/complete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
+        return getWithRestResult(String.format("%s/sectionStatus/incomplete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
+    }
+
+    @Override
+    public RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
+        String url = String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId);
+        return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), openingDate, String.class);
+    }
+
 }

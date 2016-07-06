@@ -13,7 +13,7 @@
   <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}"  th:remove="tag"></div>
 
-	<form action="#" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+	<form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" >
 
 		<fieldset>
 
