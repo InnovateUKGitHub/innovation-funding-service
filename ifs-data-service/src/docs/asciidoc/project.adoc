@@ -90,41 +90,25 @@ include::{snippets}/project/get-project-users/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/get-project-users/curl-request.adoc[]
 
-=== Save Monitoring Officer when project id in url does not match the project id in Monitoring Officer resource
-==== Request
-include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/http-request.adoc[]
-include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/path-parameters.adoc[]
-include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/request-fields.adoc[]
-
-==== Response
-include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/curl-request.adoc[]
-
-=== Save Monitoring Officer when project details are not yet submitted
-==== Request
-include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-request.adoc[]
-include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/path-parameters.adoc[]
-include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/request-fields.adoc[]
-
-==== Response
-include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/curl-request.adoc[]
-
 === Save Monitoring Officer
-==== Request
+==== Success
+===== Request
 include::{snippets}/project/save-monitoring-officer/http-request.adoc[]
 include::{snippets}/project/save-monitoring-officer/path-parameters.adoc[]
 include::{snippets}/project/save-monitoring-officer/request-fields.adoc[]
 
-==== Response
+===== Response
 include::{snippets}/project/save-monitoring-officer/http-response.adoc[]
 
-==== Curl Example
+===== Curl Example
 include::{snippets}/project/save-monitoring-officer/curl-request.adoc[]
+
+==== Failure cases
+===== Save Monitoring Officer when project id in url does not match the project id in Monitoring Officer resource
+include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/http-response.adoc[]
+
+==== Save Monitoring Officer when project details are not yet submitted
+include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-response.adoc[]
 
 === Is Submit Allowed
 ==== Success
