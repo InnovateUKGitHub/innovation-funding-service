@@ -57,7 +57,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
     private String POSTCODE_LOOKUP = "CH64 3RU";
-    private String POSTCODE_LOOKUP_URL_ENCODED = "CH64%203RU";
+    private String POSTCODE_LOOKUP_URL_ENCODED = "CH64+3RU";
     private OrganisationResource organisationResource;
     private Cookie organisationTypeBusiness;
     private Cookie organisationForm;
@@ -162,12 +162,12 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/find-organisation/%s", POSTCODE_LOOKUP_URL_ENCODED)));
 
-        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/find-organisation/%s", POSTCODE_LOOKUP))
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/find-organisation/?orgSearchName=%s", POSTCODE_LOOKUP))
                     .cookie(organisationTypeBusiness)
                     .cookie(organisationForm))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
-                .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))));
+                    .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                    .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
+                    .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))));
     }
 
     @Test
@@ -203,7 +203,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/find-organisation/%s/0", POSTCODE_LOOKUP_URL_ENCODED)));
 
-        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/find-organisation/%s/0", POSTCODE_LOOKUP))
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/find-organisation?orgSearchName=%s", POSTCODE_LOOKUP))
                 .cookie(organisationTypeBusiness)
                 .cookie(organisationForm)
         )
@@ -244,7 +244,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                         .cookie(organisationTypeBusiness)
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation/"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation?orgSearchName="));
     }
 
     @Test

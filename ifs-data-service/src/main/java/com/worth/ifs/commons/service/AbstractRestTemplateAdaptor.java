@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
@@ -56,6 +57,10 @@ public abstract class AbstractRestTemplateAdaptor {
         return getRestTemplate().exchange(path, GET, jsonEntity(null), c);
     }
 
+    @RestCacheResult
+    public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, Map<String, ?> variables) {
+        return getRestTemplate().exchange(path, GET, jsonEntity(null), c, variables);
+    }
     @RestCacheResult
     public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
         return getRestTemplate().exchange(path, GET, new HttpEntity<Object>(null, headers), c);

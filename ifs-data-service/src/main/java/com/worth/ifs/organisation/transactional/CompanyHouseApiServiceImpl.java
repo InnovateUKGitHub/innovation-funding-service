@@ -41,6 +41,12 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
     private static final int SEARCH_ITEMS_MAX = 10;
 
+    private static final String COMPANY_HOUSE_SEARCH_PATH = "search/companies?items_per_page={items_per_page}&q={q}";
+
+    private static final String SEARCH_WORD_KEY = "q";
+
+    private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
+
     @Autowired
     @Qualifier("companyhouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
@@ -53,9 +59,8 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
             e.printStackTrace();
         }
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
-
-            // encoded in the web-services.
-            JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class);
+             // encoded in the web-services.
+            JsonNode companiesResources = restGet(COMPANY_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
             JsonNode companyItems = companiesResources.path("items");
             List<OrganisationSearchResult> results = new ArrayList<>();
             companyItems.forEach(i -> results.add(companySearchMapper(i)));
@@ -75,6 +80,33 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
     protected <T> T restGet(String path, Class<T> c) {
         return adaptor.restGetEntity(companyHouseUrl + path, c).getBody();
+    }
+
+    /**
+     * Method to the pass query variable separately rather than passing as part of the path.
+     * This allows the proper encoding of the query values by the default URLComponentBuild used by the
+     * Rest Template.
+     *
+     * @param path - URL path
+     * @param c - Return class type
+     * @param <T> - Return data type from the method
+     * @return
+     */
+    protected <T> T restGet(String path, Class<T> c, Map<String, Object> variables) {
+        return adaptor.restGetEntity(companyHouseUrl + path, c, variables).getBody();
+    }
+
+    /**
+     * Method to build the query variable map. The keys in the map must match the
+     * keys defined in the URL path 'COMPANY_HOUSE_SEARCH_PATH'.
+     * @param searchWord
+     * @return {@link Map}
+     */
+    private Map<String, Object> companySearchUrlVariables(String searchWord) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(ITEMS_PER_PAGE_KEY, SEARCH_ITEMS_MAX);
+        variables.put(SEARCH_WORD_KEY, searchWord);
+        return variables;
     }
 
     private OrganisationSearchResult companyProfileMapper(JsonNode jsonNode) {
