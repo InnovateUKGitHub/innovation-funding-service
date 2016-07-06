@@ -14,12 +14,16 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
+import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
+import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -63,6 +67,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ProjectMapper projectMapper;
 
     @Autowired
+    private MonitoringOfficerMapper monitoringOfficerMapper;
+
+    @Autowired
     private ApplicationRepository applicationRepository;
 
     @Autowired
@@ -76,6 +83,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private AddressTypeRepository addressTypeRepository;
+
+    @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
@@ -176,6 +186,64 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
+    }
+
+    @Override
+    public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+        return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+
+        return validateMonitoringOfficer(projectId, monitoringOfficerResource).
+            andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
+            andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
+    }
+
+    private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+
+        if (!projectId.equals(monitoringOfficerResource.getProject())) {
+            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
+        } else {
+            return serviceSuccess();
+        }
+    }
+
+    private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
+
+        return getProject(projectId).andOnSuccess(project -> {
+           if (!project.isProjectDetailsSubmitted()) {
+               return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+           }
+            return serviceSuccess();
+        });
+    }
+
+    private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
+
+        return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
+            noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
+            existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
+        );
+    }
+
+    private ServiceResult<Void> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+        existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
+        existingMonitoringOfficer.setLastName(updateDetails.getLastName());
+        existingMonitoringOfficer.setEmail(updateDetails.getEmail());
+        existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
+        MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
+        monitoringOfficerRepository.save(monitoringOfficer);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
     private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {

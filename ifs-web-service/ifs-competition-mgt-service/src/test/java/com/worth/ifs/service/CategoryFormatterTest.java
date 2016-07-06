@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import com.worth.ifs.competition.service.CategoryFormatter;
 import org.junit.Before;
 import org.junit.Test;
 

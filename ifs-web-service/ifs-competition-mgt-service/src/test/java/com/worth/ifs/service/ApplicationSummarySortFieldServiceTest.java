@@ -7,7 +7,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.worth.ifs.service.ApplicationSummarySortFieldService;
+import com.worth.ifs.competition.service.ApplicationSummarySortFieldService;
 
 public class ApplicationSummarySortFieldServiceTest {
 	private ApplicationSummarySortFieldService service;

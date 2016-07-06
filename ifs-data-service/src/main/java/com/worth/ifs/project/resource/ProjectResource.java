@@ -26,6 +26,11 @@ public class ProjectResource {
 
     private Long projectManager;
 
+    @JsonIgnore
+    public boolean isProjectDetailsSubmitted(){
+        return submittedDate != null;
+    }
+
     public Long getId() {
         return id;
     }

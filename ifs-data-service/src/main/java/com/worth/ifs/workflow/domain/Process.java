@@ -8,7 +8,6 @@ import org.hibernate.annotations.CascadeType;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -58,6 +57,14 @@ public abstract class Process {
         this(event, status);
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Calendar getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Calendar lastModified) {
+        this.lastModified = lastModified;
     }
 
     public LocalDate getStartDate() {
