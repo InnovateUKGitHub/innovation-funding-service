@@ -40,6 +40,10 @@ public class AssessmentNavigationViewModel {
         return nextQuestion.isPresent() ? nextQuestion.map(QuestionResource::getShortName).get() : StringUtils.EMPTY;
     }
 
+    public String getOverviewUrl() {
+        return format("/%s", assessmentId);
+    }
+
     private String getNavigationUrl(final QuestionResource question) {
         return format("/%s/question/%s", assessmentId, question.getId());
     }

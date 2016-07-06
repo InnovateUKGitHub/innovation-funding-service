@@ -154,4 +154,61 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, user));
     }
+
+    @Test
+    public void testCompAdminsCanViewMonitoringOfficersOnProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
+                assertTrue(rules.compAdminsCanViewMonitoringOfficersForAnyProject(project, user));
+            } else {
+                assertFalse(rules.compAdminsCanViewMonitoringOfficersForAnyProject(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjects() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        Role partnerRole = newRole().build();
+        List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
+
+        assertTrue(rules.partnersCanViewMonitoringOfficersOnTheirProjects(project, user));
+    }
+
+    @Test
+    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjectsButUserNotPartner() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        Role partnerRole = newRole().build();
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(emptyList());
+
+        assertFalse(rules.partnersCanViewMonitoringOfficersOnTheirProjects(project, user));
+    }
+
+    @Test
+    public void testCompAdminsCanEditMonitoringOfficersOnProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
+                assertTrue(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
+            } else {
+                assertFalse(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
+            }
+        });
+    }
 }

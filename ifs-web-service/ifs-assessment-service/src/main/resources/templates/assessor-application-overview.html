@@ -5,39 +5,38 @@
 </head>
 <body class="assessment assessment-overview">
 
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:include="fragments/modals :: reject-assesment-modal" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
 <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor-comp-dashboard}"  th:remove="tag"></div>
-
+    <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${currentCompetition.id})},daysPercentage=${daysLeftPercentage},daysLeft=${daysLeft}"  th:remove="tag"></div>
 
     <div class="page-title">
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
         <h1 class="heading-xlarge">Assessment overview</h1>
     </div>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="assesment-overview">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="assessment-overview">
 
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
 
-                <div th:unless="${section.name == 'Finances'}" th:remove="tag">
-                    <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
-                    <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
-                </div>
+              <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
+              <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
-                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication})"></div>
+                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication}, assessmentId=${assessmentId})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
                     <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}"  th:if="${childSection.id == 8}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="'/assessment/'+${currentApplication.id}+'/question/'+${childSection.id}"
+                                    <a href="#"
                                        th:text="${childSection.name}" />
                                 </h3>
                             </div>
@@ -46,10 +45,29 @@
                 </ul>
             </section>
         </div>
+        <div th:unless="${#lists.isEmpty(appendices)}" th:remove="tag">
+            <h2 class="heading-medium">Appendices</h2>
+            <div th:each="appendix : ${appendices}" th:remove="tag">
+                <div class="form-group download">
+                    <h3 class="heading-small no-margin" th:text="${appendix.title}">View project management appendix:</h3>
+                    <a th:href="${appendix.getDownloadURL()}" th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">Project-plan.pdf (161.96 KB)</a>
+                </div>
+            </div>
+        </div>
     </form>
 
-    <div class="alignright-button">
+    <div class="alignright">
+        <a class="button large" href="#">Review assessment</a>
    </div>
+
+   <details>
+     <summary><span class="summary">Unable to assess this application?</span></summary>
+     <div class="panel-indent">
+        <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
+        <button data-js-modal="reject-assesment-modal" class="buttonlink">Reject this application</button>
+     </div>
+   </details>
+
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>
