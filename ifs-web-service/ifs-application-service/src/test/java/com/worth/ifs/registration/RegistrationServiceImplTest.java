@@ -2,42 +2,24 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.registration.service.RegistrationService;
 import com.worth.ifs.registration.service.RegistrationServiceImpl;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserRestService;
-import com.worth.ifs.user.service.UserService;
-import com.worth.ifs.user.service.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.AdditionalMatchers.or;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 
