@@ -3,7 +3,6 @@ package com.worth.ifs.form.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -16,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 public class FormInputResponseControllerIntegrationTest extends BaseControllerIntegrationTest<FormInputResponseController> {
 
@@ -90,7 +89,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
         assertThat(errors.getErrors(), hasSize(1));
-        assertThat(errors.getErrors(), hasItem(new Error("value", "Please enter some text", NOT_ACCEPTABLE)));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", "Please enter some text")));
     }
 
     @Test
@@ -112,7 +111,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
         assertThat(errors.getErrors(), hasSize(1));
-        assertThat(errors.getErrors(), hasItem(new Error("value", "Maximum word count exceeded", NOT_ACCEPTABLE)));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", "Maximum word count exceeded")));
     }
 
     @Test

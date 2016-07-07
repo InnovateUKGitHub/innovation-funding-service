@@ -17,16 +17,15 @@ import java.util.List;
 
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -200,17 +199,17 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withPhoneNumber("hello")
                 .build();
 
-        Error firstNameError = new Error("NotEmpty", "Please enter a first name", singletonList("firstName"), BAD_REQUEST);
-        Error lastNameError = new Error("NotEmpty", "Please enter a last name", singletonList("lastName"), BAD_REQUEST);
-        Error emailError = new Error("Email", "Please enter a valid email address", singletonList("email"), BAD_REQUEST);
-        Error phoneNumberError = new Error("Pattern", "Please enter a valid phone number", singletonList("phoneNumber"), BAD_REQUEST);
+        Error firstNameError = fieldError("firstName", "NotEmpty");
+        Error lastNameError = fieldError("lastName", "NotEmpty");
+        Error emailError = fieldError("email", "Email");
+        Error phoneNumberError = fieldError("phoneNumber", "Pattern");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(firstNameError, lastNameError, emailError, phoneNumberError));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(monitoringOfficerResource)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(expectedErrors)));
 
         verify(projectServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);

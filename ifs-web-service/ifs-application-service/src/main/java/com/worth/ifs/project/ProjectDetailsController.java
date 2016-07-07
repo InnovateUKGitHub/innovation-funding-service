@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toGlobal;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.*;
 
@@ -258,12 +259,13 @@ public class ProjectDetailsController {
                 newAddressResource = null;
                 break;
         }
+
         projectResource.setAddress(newAddressResource);
         ServiceResult<Void> updateResult = projectService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
 
         return updateResult.handleSuccessOrFailure(
                 failure -> {
-                    validationHandler.addAnyErrors(failure, toField(""));
+                    validationHandler.addAnyErrors(failure, toGlobal());
                     return viewAddress(model, form, projectId);
                 },
                 success -> redirectToProjectDetails(projectId));

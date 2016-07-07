@@ -12,6 +12,7 @@ import java.util.List;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 /**
  * A class for holding information about an error case, including a well-known key, a set of arguments that provide additional
@@ -107,7 +108,7 @@ public class Error implements Serializable {
     }
 
     public static Error fieldError(String fieldName, String messageOrCode, List<Object> arguments) {
-        Error error = new Error(messageOrCode, arguments, HttpStatus.NOT_ACCEPTABLE);
+        Error error = new Error(messageOrCode, arguments, NOT_ACCEPTABLE);
         error.fieldName = fieldName;
         return error;
     }

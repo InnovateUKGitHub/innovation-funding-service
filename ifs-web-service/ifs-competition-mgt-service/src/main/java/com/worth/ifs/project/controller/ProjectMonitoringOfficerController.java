@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.standardFieldErrorMappings;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toGlobal;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -111,7 +111,7 @@ public class ProjectMonitoringOfficerController {
             ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(),
                     form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
 
-            return validationHandler.addAnyErrors(updateResult, standardFieldErrorMappings(), toField("")).
+            return validationHandler.addAnyErrors(updateResult, standardFieldErrorMappings(), toGlobal()).
                     failNowOrSucceedWith(failureView, () -> redirectToMonitoringOfficerViewTemporarily(projectId));
         });
     }
