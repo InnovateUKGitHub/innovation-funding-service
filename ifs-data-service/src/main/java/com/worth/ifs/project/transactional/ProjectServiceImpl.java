@@ -53,6 +53,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -252,7 +253,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleIdAndUserId(projectId, partnerRole.getId(), userId);
-        return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
+        if(projectUser != null && projectUser.getOrganisation() != null) {
+            return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
+        } else {
+            return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
+        }
     }
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
@@ -360,10 +365,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
-    }
-
-    private ServiceResult<Address> getAddress(long addressId) {
-        return find(addressRepository.findOne(addressId), notFoundError(Address.class, addressId));
     }
 
     private ServiceResult<Project> getProjectByApplication(long applicationId){

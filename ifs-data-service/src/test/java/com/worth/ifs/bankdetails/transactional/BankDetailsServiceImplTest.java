@@ -36,20 +36,16 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private BankDetailsResource bankDetailsResource;
     private Project project;
     private Organisation organisation;
-    private OrganisationAddressResource organisationAddressResource;
-    private OrganisationAddress organisationAddress;
-    private AddressResource addressResource;
-    private Address address;
     private BankDetails bankDetails;
 
     @Before
     public void setUp(){
         organisation = newOrganisation().build();
         project = newProject().build();
-        addressResource = newAddressResource().build();
-        address = newAddress().build();
-        organisationAddressResource = newOrganisationAddressResource().withAddress(addressResource).build();
-        organisationAddress = newOrganisationAddress().build();
+        AddressResource addressResource = newAddressResource().build();
+        Address address = newAddress().build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddress(addressResource).build();
+        OrganisationAddress organisationAddress = newOrganisationAddress().build();
         bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganiationAddress(organisationAddressResource).build();
         bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganiationAddress(organisationAddress).build();
 

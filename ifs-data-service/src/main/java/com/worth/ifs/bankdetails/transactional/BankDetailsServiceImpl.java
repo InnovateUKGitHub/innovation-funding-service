@@ -13,7 +13,6 @@ import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,9 +40,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
     ProjectRepository projectRepository;
-
-    @Autowired
-    private ValidationUtil validationUtil;
 
     @Override
     public ServiceResult<BankDetailsResource> getById(Long id) {

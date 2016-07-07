@@ -97,7 +97,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testCreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
         try {
-            service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+            service.createProjectsFromFundingDecisions(new HashMap<>());
             Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour

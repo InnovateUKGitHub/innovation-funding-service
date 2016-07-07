@@ -7,7 +7,7 @@ import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinance;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @Component
 @PermissionRules
@@ -30,6 +30,6 @@ public class BankDetailsPermissionRules extends BasePermissionRules {
             value = "READ",
             description = "Project finance user can see all bank details on all projects")
     public boolean projectFinanceUsersCanSeeAllBankDetailsOnAllProjects(BankDetailsResource bankDetailsResource, UserResource user) {
-        return isProjectFinance(user);
+        return isProjectFinanceUser(user);
     }
 }

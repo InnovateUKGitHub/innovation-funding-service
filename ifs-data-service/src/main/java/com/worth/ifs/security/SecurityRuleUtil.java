@@ -17,7 +17,7 @@ public class SecurityRuleUtil {
         return hasRole(user, COMP_ADMIN);
     }
 
-    public static boolean isProjectFinance(UserResource user) {
+    public static boolean isProjectFinanceUser(UserResource user) {
         return hasRole(user, PROJECT_FINANCE);
     }
 
