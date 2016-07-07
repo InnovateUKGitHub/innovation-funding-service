@@ -113,6 +113,14 @@ public class Error implements Serializable {
         return error;
     }
 
+    public static Error globalError(String errorKey) {
+        return new Error(errorKey, NOT_ACCEPTABLE);
+    }
+
+    public static Error globalError(String errorKey, String messageOrCode) {
+        return new Error(errorKey, messageOrCode, NOT_ACCEPTABLE);
+    }
+
     public String getFieldName() {
         return fieldName;
     }

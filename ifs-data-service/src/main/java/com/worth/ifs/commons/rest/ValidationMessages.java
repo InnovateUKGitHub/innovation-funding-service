@@ -7,12 +7,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 /**
@@ -24,34 +29,23 @@ public class ValidationMessages implements ErrorHolder, Serializable {
     private Long objectId;
     private Set<Error> errors = new LinkedHashSet<>();
 
-    public ValidationMessages(MessageSource messageSource, Long objectId, BindingResult bindingResult) {
-        bindingResult.getFieldErrors().forEach(e -> {
-                    List<Object> args = asList();
-                    String errorMessage;
-                    try {
-                        errorMessage = messageSource.getMessage(e, Locale.UK);
-                    } catch (NoSuchMessageException ex) {
-                        errorMessage = e.getDefaultMessage();
-                    }
-                    if (errorMessage == null) {
-                        errorMessage = "";
-                    }
-                    Error error = fieldError(e.getField(), errorMessage, args);
-                    errors.add(error);
-                }
-        );
-
-        bindingResult.getGlobalErrors().forEach(e -> {
-                    Error error = new Error("", e.getDefaultMessage(), NOT_ACCEPTABLE);
-                    errors.add(error);
-                }
-        );
-        objectName = bindingResult.getObjectName();
-        this.objectId = objectId;
-    }
-
     public ValidationMessages() {
 
+    }
+
+    public ValidationMessages(MessageSource messageSource, Long objectId, BindingResult bindingResult) {
+
+        populateFromBindingResult(objectId, bindingResult, e -> {
+            try {
+                return messageSource.getMessage(e, Locale.UK);
+            } catch (NoSuchMessageException ex) {
+                return e.getDefaultMessage();
+            }
+        });
+    }
+
+    private ValidationMessages(BindingResult bindingResult) {
+        populateFromBindingResult(null, bindingResult, ObjectError::getDefaultMessage);
     }
 
     public ValidationMessages(Error... errors) {
@@ -62,14 +56,26 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         this.errors.addAll(errors);
     }
 
+    public ValidationMessages(String objectName) {
+        this(objectName, null, emptyList());
+    }
+
     public ValidationMessages(String objectName, Long objectId, List<Error> errors) {
         this.objectName = objectName;
         this.objectId = objectId;
         this.errors.addAll(errors);
     }
 
-    public boolean hasErrorWithKey(String key) {
-        return errors.stream().anyMatch(e -> e.getErrorKey().equals(key));
+    public boolean hasErrorWithKey(Object key) {
+        return errors.stream().anyMatch(e -> e.getErrorKey().equals(key + ""));
+    }
+
+    public boolean hasFieldErrors(String fieldName) {
+        return errors.stream().anyMatch(e -> fieldName.equals(e.getFieldName()));
+    }
+
+    public List<Error> getFieldErrors(String fieldName) {
+        return simpleFilter(errors, e -> fieldName.equals(e.getFieldName()));
     }
 
     public String getObjectName() {
@@ -121,6 +127,31 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
     public static ValidationMessages noErrors() {
         return new ValidationMessages();
+    }
+
+    public static ValidationMessages fromBindingResult(BindingResult bindingResult) {
+        return new ValidationMessages(bindingResult);
+    }
+
+    public static ValidationMessages collectValidationMessages(List<ValidationMessages> messages) {
+        ValidationMessages combined = new ValidationMessages();
+        combined.addAll(messages);
+        return combined;
+    }
+
+    private void populateFromBindingResult(Long objectId, BindingResult bindingResult, Function<ObjectError, String> messageResolver) {
+
+        errors.addAll(simpleMap(bindingResult.getFieldErrors(), e -> {
+            String errorMessage = messageResolver.apply(e);
+            return fieldError(e.getField(), errorMessage);
+        }));
+
+        errors.addAll(simpleMap(bindingResult.getGlobalErrors(), e ->
+            new Error("", e.getDefaultMessage(), NOT_ACCEPTABLE)
+        ));
+
+        objectName = bindingResult.getObjectName();
+        this.objectId = objectId;
     }
 
     @Override
