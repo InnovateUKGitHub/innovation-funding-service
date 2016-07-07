@@ -63,16 +63,7 @@
                                     <div class="panel-indent" ifs:utext="${model.question.assessorGuidanceAnswer}" />
                                 </details>
 
-                                <div class="textarea-wrapped word-count">
-                                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" th:field="*{value}" aria-hidden="true"></textarea>
-
-                                    <div class="textarea-footer">
-                                        <span class="count-label">
-                                            <span class="count-message">Words remaining:</span>
-                                            <span class="count-down positive" aria-live="polite">349</span>
-                                        </span>
-                                    </div>
-                                </div>
+                                <div th:include="fragments/assessment :: assessment-form-textarea-wordcount (id=${model.question.id}, name=${inputName}, value=*{value}, readonly=false, maxWords=${350})" th:remove="tag" />
                             </div>
                         </div>
                     </fieldset>

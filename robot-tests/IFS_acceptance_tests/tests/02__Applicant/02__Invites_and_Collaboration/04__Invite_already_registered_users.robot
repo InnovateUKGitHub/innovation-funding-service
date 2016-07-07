@@ -13,10 +13,9 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${INVITE_COLLABORATORS_PAGE_APPL1}    ${SERVER}application/1/contributors/invite
 
 *** Test Cases ***
-The invited registered user should redirect to the correct page
+The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]
     [Setup]    Delete the emails from both test mailboxes
@@ -55,17 +54,16 @@ When this user edits the name this should be changed in the View team page
     And the user enters profile details
     Then the user should see the change in the view team members page
 
-
 *** Keywords ***
 the user enters profile details
     Wait Until Element Is Visible    id=title
-    Input Text    id=firstName    New
-    Input Text    id=lastName    Name
+    Input Text    id=firstName    Dennis
+    Input Text    id=lastName    Bergkamp
     Click Element    css=[name="create-account"]
 
 the user should see the change in the view team members page
     click element    link=My dashboard
     click element    xpath=//*[@id="content"]/div[2]/section[1]/ul/li[2]/div/div[1]/h3/a
     click element    link=View team members and add collaborators
-    Page Should Contain Element    link= New Name
+    Page Should Contain Element    link= Dennis Bergkamp
     Capture Page Screenshot

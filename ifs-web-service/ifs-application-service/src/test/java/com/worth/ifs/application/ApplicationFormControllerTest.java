@@ -371,7 +371,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("submit-section", "Save")
                         .param("assign_question", questionId + "_" + loggedInUser.getId())
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/"+sectionId+"**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "assignedQuestion"))
                 .andReturn();
@@ -454,7 +454,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
      public void testSaveFormElementApplicationDuration() throws Exception {
-        String value = "123";
+        String value = "35";
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(

@@ -129,6 +129,23 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
+    public void testInviteContributorsPostDuplicatePerson() throws Exception {
+        mockMvc.perform(
+                post(inviteUrl)
+                        .param("organisations[0].organisationName", "Empire Ltd")
+                        .param("organisations[0].organisationId", "1")
+                        .param("organisations[0].invites[0].personName", "Nico Bijl")
+                        .param("organisations[0].invites[0].email", "nico@worth.systems")
+                        .param("organisations[0].invites[1].personName", "Nico Bijl")
+                        .param("organisations[0].invites[1].email", "nico@worth.systems")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}"))
+                .andExpect(view().name(redirectUrl));
+    }
+
+    @Test
     public void testInviteContributorsPostInvalidPerson() throws Exception {
         mockMvc.perform(
                 post(inviteUrl)
@@ -196,7 +213,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     @Test
     public void testNonLeadCannotInviteToOtherOrganisation() throws Exception {
     	
-    	this.setupUserInvite("user@email.com", 3L);
+    	this.setupUserInvite("name", "user@email.com", 3L);
     	this.loginNonLeadUser("user@email.com");
     	
         mockMvc.perform(
@@ -220,7 +237,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 	@Test
     public void testNonLeadCanInviteToTheirOwnOrganisation() throws Exception {
     	
-		this.setupUserInvite("user@email.com", 2L);
+		this.setupUserInvite("name", "user@email.com", 2L);
 		this.loginNonLeadUser("user@email.com");
     	
         mockMvc.perform(
@@ -366,10 +383,10 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     	loginUser(user);
 	}
 	
-    private void setupUserInvite(String email, Long organisationId) {
+    private void setupUserInvite(String name, String email, Long organisationId) {
     	InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
     	inviteOrgResource.setOrganisation(organisationId);
-    	inviteOrgResource.setInviteResources(Arrays.asList(new InviteResource(null, null, email, null, null, null, null)));
+    	inviteOrgResource.setInviteResources(Arrays.asList(new InviteResource(null, name, email, null, null, null, null)));
     	when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(Arrays.asList(inviteOrgResource)));
 	}
 
