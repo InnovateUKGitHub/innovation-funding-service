@@ -108,7 +108,7 @@ public class Error implements Serializable {
     }
 
     public static Error fieldError(String fieldName, String messageOrCode, List<Object> arguments) {
-        Error error = new Error(messageOrCode, arguments, NOT_ACCEPTABLE);
+        Error error = new Error(messageOrCode, messageOrCode, arguments, NOT_ACCEPTABLE);
         error.fieldName = fieldName;
         return error;
     }

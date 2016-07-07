@@ -436,7 +436,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                             e.toString();
                             if (validationMessage.getObjectName().equals("target")) {
                                 if (StringUtils.hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage()));
+                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getErrorMessage()));
                                 }
                             }
                         }));
@@ -474,7 +474,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .forEach(e -> {
                     if (validationMessage.getObjectName().equals("costItem")) {
                         if (StringUtils.hasText(e.getErrorKey())) {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage()));
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getErrorMessage()));
                         } else {
                             toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage()));
                         }
@@ -526,10 +526,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .filter(x -> x.getId().equals(sectionId))
                 .findFirst()
                 .get();
-    }
-
-    private void logSaveQuestionResponsesFieldErrors(Map<Long, List<String>> errors) {
-        errors.forEach((k, errorsList) -> LOG.debug(String.format("Field Error on save: %s  / ", k)));
     }
 
     private List<ValidationMessages> markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, ValidationMessages errorsSoFar) {
