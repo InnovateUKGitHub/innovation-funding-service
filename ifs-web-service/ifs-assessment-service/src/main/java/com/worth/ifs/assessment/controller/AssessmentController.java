@@ -61,8 +61,7 @@ public class AssessmentController {
         listOfQuestionResource.stream().sorted(new Comparator<QuestionResource>() {
             @Override
             public int compare(QuestionResource question1, QuestionResource question2) {
-               int test = question1.getQuestionNumber().compareTo(question2.getQuestionNumber());
-                return test;
+               return question1.getQuestionNumber().compareTo(question2.getQuestionNumber());
             }
         }).forEach(questionResource -> {
             AssessmentFeedbackResource assessmentFeedback = listOfAssessmentFeedback.stream().filter(assessmentFeedbackResource -> assessmentFeedbackResource.getQuestion() == questionResource.getId()).findAny().get();
