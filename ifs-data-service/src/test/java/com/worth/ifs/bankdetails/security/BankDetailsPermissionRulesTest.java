@@ -20,6 +20,7 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -31,23 +32,28 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
         return new BankDetailsPermissionRules();
     }
 
-    UserResource user;
-    ProjectResource project;
-    Role partnerRole;
-    List<ProjectUser> partnerProjectUser;
-    OrganisationResource organisationResource;
-    BankDetailsResource bankDetailsResource;
+    private UserResource user;
+    private UserResource projectFinanceUser;
+    private ProjectResource project;
+    private Role partnerRole;
+    private Role projectFinanceRole;
+    private List<ProjectUser> partnerProjectUser;
+    private OrganisationResource organisationResource;
+    private BankDetailsResource bankDetailsResource;
 
     @Before
     public void setUp(){
         user = newUserResource().build();
+        projectFinanceUser = newUserResource().build();
         project = newProjectResource().build();
         partnerRole = newRole().build();
+        projectFinanceRole = newRole().build();
         partnerProjectUser = newProjectUser().build(1);
         organisationResource = newOrganisationResource().build();
         bankDetailsResource = newBankDetailsResource().withOrganisation(organisationResource.getId()).withProject(project.getId()).build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(roleRepositoryMock.findOneByName(PROJECT_FINANCE.getName())).thenReturn(projectFinanceRole);
     }
 
     @Test
@@ -88,5 +94,12 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), user.getId(), organisationResource.getId(), partnerRole.getId())).thenReturn(null);
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanSeeAllBankDetailsForAllOrganisations(){
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), projectFinanceUser.getId(), projectFinanceRole.getId())).thenReturn(partnerProjectUser);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), projectFinanceUser.getId(), organisationResource.getId(), projectFinanceRole.getId())).thenReturn(partnerProjectUser.get(0));
+        rules.projectFinanceUsersCanSeeAllBankDetailsOnAllProjects(bankDetailsResource, user);
     }
 }
