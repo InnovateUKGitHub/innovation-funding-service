@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -101,7 +102,11 @@ public class AcceptInviteController extends BaseController {
 
             UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
             if (loggedInUser != null) {
-                if (registrationService.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
+                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
+
+                if (failureMessages.size() > 0){
+                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
+
                     return "registration/accept-invite-failure";
                 }else{
                     CookieUtil.saveToCookie(response, INVITE_HASH, hash);

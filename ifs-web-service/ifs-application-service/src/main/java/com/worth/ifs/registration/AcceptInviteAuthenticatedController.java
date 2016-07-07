@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -56,7 +57,10 @@ public class AcceptInviteAuthenticatedController extends BaseController{
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
-                if (registrationService.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)){
+                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
+
+                if (failureMessages.size() > 0){
+                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
                     return "registration/accept-invite-failure";
                 }
                 OrganisationResource organisation = getUserOrInviteOrganisation(loggedInUser, inviteOrganisation);
@@ -89,7 +93,11 @@ public class AcceptInviteAuthenticatedController extends BaseController{
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
-                if (registrationService.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
+                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
+
+                if (failureMessages.size() > 0){
+                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
+
                     return "registration/accept-invite-failure";
                 }
                 inviteRestService.acceptInvite(hash, loggedInUser.getId()).getSuccessObjectOrThrowException();
