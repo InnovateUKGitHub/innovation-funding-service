@@ -2,6 +2,25 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 
+<!-- ======== Assessment - assessor feedback textarea and word count ======= -->
+<div th:fragment="assessment-form-textarea-wordcount (id, name, value, readonly, maxWords)">
+    <div class="textarea-wrapped word-count">
+        <textarea th:id="'form-textarea-'+${id}"
+              th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+              th:field="*{value}"
+              th:readonly="${readonly}"
+              th:attrappend="data-max_words=${maxWords != null}?@{${maxWords}}"
+              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
+              >
+        </textarea>
+
+        <div class="textarea-footer">
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${maxWords}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
+        </div>
+    </div>
+</div>
+
+
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
 <div th:fragment="assessment-header-sub">
     <div class="sub-header">
