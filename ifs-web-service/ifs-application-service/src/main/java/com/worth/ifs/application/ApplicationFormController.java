@@ -13,11 +13,9 @@ import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.*;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.ControllerValidationHandler;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.exception.BigDecimalNumberFormatException;
 import com.worth.ifs.exception.IntegerNumberFormatException;
@@ -45,6 +43,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -59,16 +58,12 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
-import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -112,14 +107,13 @@ public class ApplicationFormController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping(value = {QUESTION_URL + "{"+QUESTION_ID+"}", QUESTION_URL + "edit/{"+QUESTION_ID+"}"}, method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                               ControllerValidationHandler controllerValidationHandler, Model model,
+                               BindingResult bindingResult, Model model,
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
+        questionModelPopulator.populateModel(questionId, applicationId, user, model, form, bindingResult);
         organisationDetailsModelPopulator.populateModel(model, applicationId);
-        controllerValidationHandler.setBindingResultTarget(form);
         return APPLICATION_FORM;
     }
 
@@ -193,7 +187,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping(value = {QUESTION_URL + "{"+QUESTION_ID+"}", QUESTION_URL + "edit/{"+QUESTION_ID+"}"}, method = RequestMethod.POST)
     public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                                     ControllerValidationHandler controllerValidationHandler,
+                                     BindingResult bindingResult,
                                      Model model,
                                      @PathVariable(APPLICATION_ID) final Long applicationId,
                                      @PathVariable(QUESTION_ID) final Long questionId,
@@ -211,7 +205,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             } else {
                 LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
             }
-            return showQuestion(form, controllerValidationHandler, model, applicationId, questionId, request);
+            return showQuestion(form, bindingResult, model, applicationId, questionId, request);
         } else {
             QuestionResource question = questionService.getById(questionId);
             SectionResource section = sectionService.getSectionByQuestionId(questionId);
@@ -220,24 +214,24 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
 
-            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                /* Start save action */
-                ValidationMessages saveResults = saveApplicationForm(application, competition, form, applicationId, null, question, request, response);
-                controllerValidationHandler.addErrorsAsFieldErrors(saveResults);
-            }
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
+            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+                saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+            }
+
+            bindingResult = removeDuplicateFieldErrors(bindingResult);
+            form.setBindingResult(bindingResult);
+            form.setObjectErrors(bindingResult.getAllErrors());
+            model.addAttribute("form", form);
             /* End save action */
 
-            if (controllerValidationHandler.hasErrors()) {
-
-                controllerValidationHandler.setBindingResultTarget(form);
-                model.addAttribute("form", form);
-
+            if (bindingResult.hasErrors()) {
                 this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 model.addAttribute("currentUser", user);
@@ -258,8 +252,28 @@ public class ApplicationFormController extends AbstractApplicationController {
                         && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
     }
 
+    private BindingResult removeDuplicateFieldErrors(BindingResult bindingResult) {
+        BindingResult br = new BeanPropertyBindingResult(this, "form");
+        bindingResult.getFieldErrors().stream().distinct()
+                .filter(e -> {
+                    for (FieldError fieldError : br.getFieldErrors(e.getField())) {
+                        if(fieldError.getDefaultMessage().equals(e.getDefaultMessage())){
+                            return false;
+                        }else{
+                            return true;
+                        }
+                    }
+                    return true;
+                })
+                .forEach(e -> br.addError(e));
+        bindingResult.getGlobalErrors().stream().forEach(e -> br.addError(e));
+        bindingResult = br;
+        return bindingResult;
+    }
+
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
-        if (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
+        if (request.getParameter("submit-section") == null
+                && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
                 request.getParameter(MARK_SECTION_AS_INCOMPLETE) != null ||
                 request.getParameter(ADD_COST) != null ||
@@ -267,14 +281,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
-                request.getParameter(EDIT_QUESTION) != null) {
+                request.getParameter(EDIT_QUESTION) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
-            return "redirect:"+APPLICATION_BASE_URL + applicationId;
+            return "redirect:" + APPLICATION_BASE_URL + applicationId;
         }
     }
 
@@ -312,35 +326,34 @@ public class ApplicationFormController extends AbstractApplicationController {
         return financeHandler.getFinanceFormHandler(organisationType).addCost(applicationId, user.getId(), questionId);
     }
 
-    private ValidationMessages saveApplicationForm(ApplicationResource application,
+    private void saveApplicationForm(ApplicationResource application,
                                               CompetitionResource competition,
                                               ApplicationForm form,
                                               Long applicationId, Long sectionId, QuestionResource question,
                                               HttpServletRequest request,
-                                              HttpServletResponse response) {
-
+                                              HttpServletResponse response,
+                                              BindingResult bindingResult ) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
         // Check if action is mark as complete.  Check empty values if so, ignore otherwise. (INFUND-1222)
         Map<String, String[]> params = request.getParameterMap();
-        params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
         boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
 
-        ValidationMessages errors = new ValidationMessages();
-
+        Map<Long, List<String>> errors = new HashMap<>();
         // Prevent saving question when it's a unmark question request (INFUND-2936)
         if(!isMarkQuestionAsInCompleteRequest(params)) {
             if (question != null) {
-                errors.addAll(saveQuestionResponses(application, singletonList(question), user.getId(), processRole.getId(), request, ignoreEmpty));
+                errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
             } else {
                 SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
                 List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-                errors.addAll(saveQuestionResponses(application, questions, user.getId(), processRole.getId(), request, ignoreEmpty));
+                errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
             }
         }
 
-        errors.addAll(validateStartDate(request, form));
+        params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s => value %s", key, value[0])));
+        new ApplicationStartDateValidator().validate(request, bindingResult);
         setApplicationDetails(application, form.getApplication());
 
         if(userIsLeadApplicant(application, user.getId())) {
@@ -349,83 +362,116 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         if(!isMarkSectionAsIncompleteRequest(params)) {
             String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId));
+            Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+            financeErrors.forEach((k, errorsList) ->
+            errorsList.forEach(e -> addNonDuplicateFieldError(bindingResult, k, e)));
         }
 
         if(isMarkQuestionRequest(params)) {
-            errors.addAll(markApplicationQuestions(application, processRole.getId(), request, response, errors));
+            handleApplicationDetailsMarkCompletedRequest(application, request, response, bindingResult, processRole, errors);
+
         } else if(isMarkSectionRequest(params)){
-            errors.addAll(handleMarkSectionRequest(application, competition, sectionId, request, errors.hasErrors(), processRole));
+            handleMarkSectionRequest(application, competition, sectionId, request, response, bindingResult, processRole, errors);
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
-        return errors;
     }
 
-    private ValidationMessages validateStartDate(HttpServletRequest request, ApplicationForm form) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(form, "form");
-        new ApplicationStartDateValidator().validate(request, bindingResult);
-        List<Error> fieldErrors = simpleMap(bindingResult.getFieldErrors(), error -> fieldError(error.getField(), error.getDefaultMessage(), error.getArguments()));
-        return new ValidationMessages(fieldErrors);
-    }
-
-    private ValidationMessages handleMarkSectionRequest(ApplicationResource application, CompetitionResource competition, Long sectionId, HttpServletRequest request, boolean errorsExist, ProcessRoleResource processRole) {
-
-        if (errorsExist) {
-            return new ValidationMessages(fieldError("formInput[cost]", "application.validation.MarkAsCompleteFailed"));
+    private void handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.rejectValue("formInput[application]", "application.validation.MarkAsCompleteFailed");
         } else {
-            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
-            List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request);
-
-            if (!financeErrorsMark.isEmpty()) {
-                ValidationMessages errors = new ValidationMessages(fieldError("formInput[cost]", "application.validation.MarkAsCompleteFailed"));
-                ValidationMessages resolvedFinanceErrors = handleMarkSectionValidationMessages(financeErrorsMark);
-                errors.addAll(resolvedFinanceErrors);
-                return errors;
+            List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, response, errors);
+            if (applicationMessages != null && !applicationMessages.isEmpty()) {
+                bindingResult.rejectValue("formInput[application]", "application.validation.MarkAsCompleteFailed");
+                handleApplicationDetailsValidationMessages(bindingResult, applicationMessages);
             }
-
-            return noErrors();
         }
     }
 
-    private ValidationMessages handleMarkSectionValidationMessages(List<ValidationMessages> errors) {
+    private void handleApplicationDetailsValidationMessages(BindingResult bindingResult, List<ValidationMessages> applicationMessages) {
 
-        ValidationMessages resolvedErrors = new ValidationMessages();
+    applicationMessages.forEach(validationMessage ->
+        validationMessage.getErrors().stream()
+            .filter(Objects::nonNull)
+            .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+            .forEach(e -> {
+                        e.toString();
+                        if (validationMessage.getObjectName().equals("target")) {
+                            if (StringUtils.hasText(e.getErrorKey())) {
+                                addNonDuplicateFieldError(bindingResult, "formInput[application." + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
 
-        errors.forEach(validationMessage ->
+                            }
+                        }
+                    }));
+    }
+
+    private void handleMarkSectionRequest(ApplicationResource application, CompetitionResource competition, Long sectionId, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+        } else {
+            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request, response, errors);
+
+            if (financeErrorsMark != null && !financeErrorsMark.isEmpty()) {
+                bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
+                handleMarkSectionValidationMessages(bindingResult, financeErrorsMark);
+            }
+        }
+    }
+
+    private void handleMarkSectionValidationMessages(BindingResult bindingResult, List<ValidationMessages> financeErrorsMark) {
+        financeErrorsMark.forEach(validationMessage ->
             validationMessage.getErrors().stream()
                 .filter(Objects::nonNull)
                 .filter(e -> StringUtils.hasText(e.getErrorMessage()))
                 .forEach(e -> {
                     if (validationMessage.getObjectName().equals("costItem")) {
                         if (StringUtils.hasText(e.getErrorKey())) {
-                            resolvedErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage()));
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
                         } else {
-                            resolvedErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage()));
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage());
                         }
                     } else {
-                        resolvedErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage()));
+                        addNonDuplicateFieldError(bindingResult, "formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage());
                     }
                 })
         );
+    }
 
-        return resolvedErrors;
+    private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
+        if (bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0) {
+            boolean foundMessage = bindingResult.getFieldErrors(k).stream().anyMatch(fieldError -> fieldError.getDefaultMessage().equals(e));
+            if(!foundMessage){
+                bindingResult.rejectValue(k, e, e);
+            }
+        } else {
+            LOG.debug(String.format("add reject value 2 %s => %s ", k, e));
+            bindingResult.rejectValue(k, e, e);
+        }
     }
 
     private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,
                                                                SectionResource selectedSection,
                                                                Long processRoleId,
-                                                               HttpServletRequest request) {
+                                                               HttpServletRequest request,
+                                                               HttpServletResponse response,
+                                                               Map<Long, List<String>> errors) {
         Map<String, String[]> params = request.getParameterMap();
+
+        final Set<Long> allQuestions = sectionService.getQuestionsForSectionAndSubsections(selectedSection.getId());
+
+        List<QuestionResource> questions = simpleMap(allQuestions, questionService::getById);
 
         String action = params.containsKey(MARK_SECTION_AS_COMPLETE) ? MARK_AS_COMPLETE : MARK_AS_INCOMPLETE;
 
         if(action.equals(MARK_AS_COMPLETE)){
-            return sectionService.markAsComplete(selectedSection.getId(), application.getId(), processRoleId);
+            List<ValidationMessages> validationMessages = sectionService.markAsComplete(selectedSection.getId(), application.getId(), processRoleId);
+            return validationMessages;
         }else{
             sectionService.markAsInComplete(selectedSection.getId(), application.getId(), processRoleId);
-            return emptyList();
         }
+        return null;
     }
 
     private boolean isMarkQuestionRequest(@NotNull Map<String, String[]> params){
@@ -452,27 +498,46 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .get();
     }
 
-    private ValidationMessages saveQuestionResponses(ApplicationResource application, List<QuestionResource> questions,
+    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<QuestionResource> questions,
                                                           Long userId,
                                                           Long processRoleId,
+                                                          BindingResult bindingResult,
                                                           HttpServletRequest request,
                                                           boolean ignoreEmpty) {
-
-        return saveQuestionResponses(request, questions, userId, processRoleId, application.getId(), ignoreEmpty);
+        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId(), ignoreEmpty);
+        errors.forEach((k, errorsList) -> LOG.debug(String.format("Field Error on save: %s  / ", k)));
+        errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
+        return errors;
     }
 
-    private ValidationMessages markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, ValidationMessages errorsSoFar) {
-        Map<String, String[]> params = request.getParameterMap();
+    private List<ValidationMessages> markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
 
-        ValidationMessages errors = new ValidationMessages();
-        boolean marked = markQuestion(request, params, application.getId(), processRoleId, errors, errorsSoFar);
-
-        // if a question is marked as complete, don't show the field saved message.
-        if (!marked) {
-            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        if (processRoleId == null) {
+            return null;
         }
 
-        return errors;
+        Map<String, String[]> params = request.getParameterMap();
+
+        if (params.containsKey(MARK_AS_COMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
+
+            if (errors.containsKey(questionId) && !errors.get(questionId).isEmpty()) {
+                List<String> fieldErrors = errors.get(questionId);
+                fieldErrors.add("Please enter valid data before marking a question as complete.");
+            }
+            List<ValidationMessages> validationMessages = questionService.markAsComplete(questionId, application.getId(), processRoleId);
+            if (validationMessages != null && !validationMessages.isEmpty()) {
+                questionService.markAsInComplete(questionId, application.getId(), processRoleId);
+            }
+            else {
+                cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+            }
+            return validationMessages;
+        }else if (params.containsKey(MARK_AS_INCOMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
+            questionService.markAsInComplete(questionId, application.getId(), processRoleId);
+        }
+        return null;
     }
 
     /**
@@ -483,7 +548,6 @@ public class ApplicationFormController extends AbstractApplicationController {
     @RequestMapping(value = SECTION_URL + "{sectionId}", method = RequestMethod.POST)
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                         BindingResult bindingResult,
-                                        ControllerValidationHandler controllerValidationHandler,
                                         Model model,
                                         @PathVariable(APPLICATION_ID) final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
@@ -498,8 +562,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(LOG.isDebugEnabled())
             bindingResult.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
-        ValidationMessages saveResults = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response);
-        controllerValidationHandler.addErrorsAsFieldErrors(saveResults);
+        saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
 
         if(LOG.isDebugEnabled()){
             bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
@@ -529,33 +592,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long processRoleId, ValidationMessages errors, ValidationMessages errorsSoFar) {
-        if (processRoleId == null) {
-            return false;
-        }
 
-        if (params.containsKey(MARK_AS_COMPLETE)) {
-            String questionId = request.getParameter(MARK_AS_COMPLETE);
-
-            if (errorsSoFar.hasErrorWithKey("formInput[" + questionId + "]")) {
-                errors.addError(fieldError(questionId, "Please enter valid data before marking a question as complete."));
-                return false;
-            }
-
-            questionService.markAsComplete(Long.valueOf(questionId), applicationId, processRoleId);
-            return true;
-        }
-
-        if (params.containsKey(MARK_AS_INCOMPLETE)) {
-            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
-            questionService.markAsInComplete(questionId, applicationId, processRoleId);
-            return true;
-        }
-
-        return false;
-    }
-
-    private ValidationMessages saveQuestionResponses(HttpServletRequest request,
+    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request,
                                                           List<QuestionResource> questions,
                                                           Long userId,
                                                           Long processRoleId,
@@ -563,23 +601,22 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                           boolean ignoreEmpty) {
         final Map<String, String[]> params = request.getParameterMap();
 
-        ValidationMessages errors = new ValidationMessages();
+        Map<Long, List<String>> errorMap = new HashMap<>();
 
-        errors.addAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId, ignoreEmpty));
+        errorMap.putAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId, ignoreEmpty));
 
-        errors.addAll(saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
+        errorMap.putAll(saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
 
-        return errors;
+        return errorMap;
     }
 
-    private ValidationMessages saveNonFileUploadQuestions(List<QuestionResource> questions,
+    private Map<Long, List<String>> saveNonFileUploadQuestions(List<QuestionResource> questions,
                                                                Map<String, String[]> params,
                                                                HttpServletRequest request,
                                                                Long userId,
                                                                Long applicationId,
                                                                boolean ignoreEmpty) {
-        ValidationMessages validationMessages = new ValidationMessages();
-
+        Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                         .stream()
@@ -587,32 +624,33 @@ public class ApplicationFormController extends AbstractApplicationController {
                         .forEach(formInput -> {
                                     if (params.containsKey("formInput[" + formInput + "]")) {
                                         String value = request.getParameter("formInput[" + formInput + "]");
-                                        ValidationMessages errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
-                                        List<Error> rescopedErrors = simpleMap(errors.getErrors(), e -> fieldError("formInput[" + formInput + "]", e.getErrorMessage(), e.getArguments()));
-                                        validationMessages.addErrors(rescopedErrors);
+                                        List<String> errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
+                                        if (!errors.isEmpty()) {
+                                            LOG.info("save failed. " + question.getId());
+                                            errorMap.put(question.getId(), new ArrayList<>(errors));
+                                        }
                                     }
                                 }
                         )
                 );
-        return validationMessages;
+        return errorMap;
     }
 
-    private ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
+    private Map<Long, List<String>> saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                                  final Map<String, String[]> params,
                                                                  HttpServletRequest request,
                                                                  Long applicationId,
                                                                  Long processRoleId){
-        ValidationMessages errorMap = new ValidationMessages();
+        Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                         .stream()
                         .filter(formInput1 -> "fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()) && request instanceof StandardMultipartHttpServletRequest)
-                        .forEach(formInput -> errorMap.addAll(processFormInput(formInput, params, applicationId, processRoleId, request))));
+                        .forEach(formInput -> processFormInput(formInput, params, applicationId, processRoleId, request, errorMap)));
         return errorMap;
     }
 
-    private ValidationMessages processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request){
-
+    private void processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errorMap){
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
             formInputResponseService.removeFile(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
         } else {
@@ -627,25 +665,17 @@ public class ApplicationFormController extends AbstractApplicationController {
                             file.getSize(),
                             file.getOriginalFilename(),
                             file.getBytes());
-
                     if (result.isFailure()) {
-
-                        List<Error> errors = simpleMap(result.getFailure().getErrors(), e -> {
-                            String lookedUpMessage = MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale());
-                            return fieldError(formInputId + "", lookedUpMessage);
-                        });
-
-                        return new ValidationMessages(errors);
+                        errorMap.put(formInputId,
+                                result.getFailure().getErrors().stream()
+                                        .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                     }
-
                 } catch (IOException e) {
                 	LOG.error(e);
                     throw new UnableToReadUploadedFile();
                 }
             }
         }
-
-        return noErrors();
     }
 
     /**
@@ -690,67 +720,65 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                   @RequestParam("value") String value,
                                                   @PathVariable(APPLICATION_ID) Long applicationId,
                                                   HttpServletRequest request) {
+        List<String> errors = new ArrayList<>();
         try {
             String fieldName = request.getParameter("fieldName");
             LOG.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-            ValidationMessages validationMessages = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
+            errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
-            if (validationMessages.hasErrors()) {
-                return this.createJsonObjectNode(false, simpleMap(validationMessages.getErrors(), Error::getErrorMessage));
+            if (!errors.isEmpty()) {
+                return this.createJsonObjectNode(false, errors);
             } else {
                 return this.createJsonObjectNode(true, null);
             }
         } catch (Exception e) {
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-            String autosaveMessage = handleAutosaveException(e, ex);
-            return this.createJsonObjectNode(false, singletonList(autosaveMessage));
+            handleAutosaveException(errors, e, ex);
+            return this.createJsonObjectNode(false, errors);
         }
     }
 
-    private String handleAutosaveException(Exception e, AutosaveElementException ex) {
+    private void handleAutosaveException(List<String> errors, Exception e, AutosaveElementException ex) {
+        List<Object> args = new ArrayList<>();
+        args.add(ex.getErrorMessage());
         if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
-            return messageSource.getMessage(e.getMessage(), new Object[] {ex.getErrorMessage()}, Locale.UK);
+            errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
         }else{
             LOG.error("Got a exception on autosave : "+ e.getMessage());
             LOG.debug("Autosave exception: ", e);
-            return ex.getErrorMessage();
+            errors.add(ex.getErrorMessage());
         }
     }
 
-    private ValidationMessages storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
-
+    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+        List<String> errors = new ArrayList<>();
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
-            return this.saveApplicationDetails(applicationId, fieldName, value);
-        }
-
-        if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
+            errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
+        } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
             financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
-            return noErrors();
-        }
-
-        if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-
-            ValidationMessages fullFinanceValidationErrors = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
-
-            if(!fullFinanceValidationErrors.hasErrors()) {
+        } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
+            ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
+            if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
-                return noErrors();
-            } else {
+            }else{
                 String[] fieldNameParts = fieldName.split("-");
                 // fieldname = other_costs-description-34-219
-                // filter out the messages that are related to other fields.
-                Predicate<Error> onlyThisFieldCheck = e -> fieldNameParts[1].toLowerCase().contains(e.getErrorKey().toLowerCase());
-                List<Error> onlyThisFieldErrors = simpleFilter(fullFinanceValidationErrors.getErrors(), onlyThisFieldCheck);
-                return new ValidationMessages(onlyThisFieldErrors);
+                errors = validationMessages.getErrors()
+                        .stream()
+                        .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getErrorKey().toLowerCase())))
+                        .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
+                        .map(e -> e.getErrorMessage())
+                        .collect(Collectors.toList());
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
-            return formInputResponseService.save(userId, applicationId, formInputId, value, false);
+            errors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
         }
+        return errors;
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
@@ -765,62 +793,53 @@ public class ApplicationFormController extends AbstractApplicationController {
         return node;
     }
 
-    private ValidationMessages saveApplicationDetails(Long applicationId, String fieldName, String value) {
-
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
         ApplicationResource application = applicationService.getById(applicationId);
 
         if ("application.name".equals(fieldName)) {
             String trimmedValue = value.trim();
             if (StringUtils.isEmpty(trimmedValue)) {
-                return new ValidationMessages(fieldError("application.name", "Please enter the full title of the project"));
+                errors.add("Please enter the full title of the project");
             } else {
+
                 application.setName(trimmedValue);
                 applicationService.save(application);
-                return noErrors();
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            if (durationInMonth == null || durationInMonth < 1L) {
-                return new ValidationMessages(fieldError("application.durationInMonths", "Please enter a valid duration"));
+            if (durationInMonth == null || durationInMonth > 36L) {
+                errors.add("Please enter a valid duration between 1 and 36 months");
             } else {
                 application.setDurationInMonths(durationInMonth);
                 applicationService.save(application);
-                return noErrors();
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
-            return this.saveApplicationStartDate(application, fieldName, value);
-        } else {
-            return noErrors();
+            errors = this.saveApplicationStartDate(application, fieldName, value, errors);
+
         }
+        return errors;
     }
 
-    private ValidationMessages saveApplicationStartDate(ApplicationResource application, String fieldName, String value) {
-
-        ValidationMessages errors = new ValidationMessages();
-
+    private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value, List<String> errors) {
         LocalDate startDate = application.getStartDate();
-
-        if (fieldName.endsWith(".dayOfMonth")) {
-            startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
-        } else if (fieldName.endsWith(".monthValue")) {
-            startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
-        } else if (fieldName.endsWith(".year")) {
-            startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
-        } else if ("application.startDate".equals(fieldName)){
-            String[] parts = value.split("-");
-            startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
-        }
-
-        if (startDate.isBefore(LocalDate.now())) {
-            errors.addError(fieldError(fieldName, "Please enter a future date"));
-            application.setStartDate(null);
-            applicationService.save(application);
-        } else {
-            LOG.debug("Save startdate: "+ startDate.toString());
+            if (fieldName.endsWith(".dayOfMonth")) {
+                startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
+            } else if (fieldName.endsWith(".monthValue")) {
+                startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
+            } else if (fieldName.endsWith(".year")) {
+                startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+            } else if ("application.startDate".equals(fieldName)){
+                String[] parts = value.split("-");
+                startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
+            }
+            if (startDate.isBefore(LocalDate.now())) {
+                errors.add("Please enter a future date");
+                startDate = null;
+            }else{
+                LOG.debug("Save startdate: "+ startDate.toString());
+            }
             application.setStartDate(startDate);
             applicationService.save(application);
-        }
-
         return errors;
     }
 
