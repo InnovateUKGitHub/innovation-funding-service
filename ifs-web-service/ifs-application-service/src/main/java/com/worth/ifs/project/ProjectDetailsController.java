@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toGlobal;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.*;
 
@@ -265,7 +265,7 @@ public class ProjectDetailsController {
 
         return updateResult.handleSuccessOrFailure(
                 failure -> {
-                    validationHandler.addAnyErrors(failure, toGlobal());
+                    validationHandler.addAnyErrors(failure, asGlobalErrors());
                     return viewAddress(model, form, projectId);
                 },
                 success -> redirectToProjectDetails(projectId));
