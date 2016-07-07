@@ -111,13 +111,11 @@ public class OrganisationCreationController {
         return TEMPLATE_PATH + "/" + CREATE_ORGANISATION_TYPE;
     }
 
-    @RequestMapping(value = {"/" + FIND_ORGANISATION}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"}, method = RequestMethod.GET)
     public String createOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     String orgSearchName
-                                        ) {
+                                     HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
             return getRegistrationRedirectURL();
 
@@ -135,8 +133,8 @@ public class OrganisationCreationController {
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
         if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
-            OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
-        ){
+                OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
+                ){
             model.addAttribute("searchEnabled", true);
         }else{
             model.addAttribute("searchEnabled", false);
@@ -149,7 +147,7 @@ public class OrganisationCreationController {
         try{
             searchLabel = messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         }catch(NoSuchMessageException e){
-        	LOG.error(e);
+            LOG.error(e);
             searchLabel = messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
         return searchLabel;
@@ -228,10 +226,9 @@ public class OrganisationCreationController {
     private void searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm) {
         if (organisationForm.isOrganisationSearching()) {
             if (StringUtils.hasText(organisationForm.getOrganisationSearchName())) {
-                LOG.debug("Encoded Org Search name: " + encodeUrlParam(organisationForm.getOrganisationSearchName()));
                 List<OrganisationSearchResult> searchResults;
                 String encodedSearchString = encodeUrlParam(organisationForm.getOrganisationSearchName());
-                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(),encodedSearchString)
+                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), encodedSearchString)
                         .handleSuccessOrFailure(
                                 f -> new ArrayList<>(),
                                 s -> s
@@ -253,7 +250,7 @@ public class OrganisationCreationController {
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "?orgSearchName=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + escapePathVariable(organisationForm.getOrganisationSearchName());
     }
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
@@ -324,10 +321,10 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{postcode}/{selectedPostcodeIndex}"}, method = RequestMethod.GET)
     public String amendOrganisationAddressPostCode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                           Model model,
-                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
+                                                   Model model,
+                                                   @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
             return getRegistrationRedirectURL();
 
@@ -350,10 +347,10 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}/{postcode}"}, method = RequestMethod.GET)
     public String amendOrganisationAddressPostcode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                           Model model,
-                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
+                                                   Model model,
+                                                   @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
             return getRegistrationRedirectURL();
 
@@ -558,18 +555,18 @@ public class OrganisationCreationController {
             final OrganisationResource finalOrganisationResource = organisationResource;
 
             inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
-                    s -> 
-                        inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
-                                f -> restFailure(HttpStatus.NOT_FOUND),
-                                i -> {
-                                    if (i.getOrganisation() == null) {
-                                        i.setOrganisation(finalOrganisationResource.getId());
-                                        // Save the created organisation Id, so the next invitee does not have to..
-                                        return inviteOrganisationRestService.put(i);
+                    s ->
+                            inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
+                                    f -> restFailure(HttpStatus.NOT_FOUND),
+                                    i -> {
+                                        if (i.getOrganisation() == null) {
+                                            i.setOrganisation(finalOrganisationResource.getId());
+                                            // Save the created organisation Id, so the next invitee does not have to..
+                                            return inviteOrganisationRestService.put(i);
+                                        }
+                                        return restFailure(HttpStatus.ALREADY_REPORTED);
                                     }
-                                    return restFailure(HttpStatus.ALREADY_REPORTED);
-                                }
-                        )
+                            )
             );
         }
     }
@@ -584,9 +581,9 @@ public class OrganisationCreationController {
     }
 
     private String escapePathVariable(final String input){
-        return UrlEscapers.urlFormParameterEscaper().escape(input);
-
+        return UrlEscapers.urlPathSegmentEscaper().escape(input);
     }
+
 
     public String encodeUrlParam(final String input) {
         String encodedParam = "";
