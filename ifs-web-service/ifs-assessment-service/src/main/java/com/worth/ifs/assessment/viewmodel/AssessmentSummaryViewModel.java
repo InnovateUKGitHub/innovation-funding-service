@@ -14,11 +14,15 @@ public class AssessmentSummaryViewModel {
     private List<QuestionWithFeedbackHelper> listOfQuestionWithFeedback;
     private ApplicationResource application;
     private CompetitionResource competition;
+    private long assessmentId;
 
-    public AssessmentSummaryViewModel(List<QuestionWithFeedbackHelper> listOfQuestionWithFeedback, ApplicationResource application, CompetitionResource competition) {
+    private final int maxScore = 10;
+
+    public AssessmentSummaryViewModel(List<QuestionWithFeedbackHelper> listOfQuestionWithFeedback, ApplicationResource application, CompetitionResource competition, Long assessmentId) {
         this.listOfQuestionWithFeedback = listOfQuestionWithFeedback;
         this.application = application;
         this.competition = competition;
+        this.assessmentId = assessmentId;
     }
 
 
@@ -29,7 +33,17 @@ public class AssessmentSummaryViewModel {
      public ApplicationResource getApplicationResource(){
         return this.application;
       }
-      public CompetitionResource getCompetitionResource(){
+
+     public CompetitionResource getCompetitionResource(){
         return this.competition;
     }
+
+     public long getAssessmentId() {
+         return assessmentId;
+     }
+
+    public int getMaxScore() {
+        return maxScore;
+    }
+
 }

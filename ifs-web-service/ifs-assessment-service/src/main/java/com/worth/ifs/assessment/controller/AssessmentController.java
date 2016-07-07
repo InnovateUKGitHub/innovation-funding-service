@@ -61,11 +61,12 @@ public class AssessmentController {
         listOfQuestionResource.stream().sorted(new Comparator<QuestionResource>() {
             @Override
             public int compare(QuestionResource question1, QuestionResource question2) {
-               return question1.getId().compareTo(question2.getId());
+               int test = question1.getQuestionNumber().compareTo(question2.getQuestionNumber());
+                return test;
             }
         }).forEach(questionResource -> {
-            AssessmentFeedbackResource assessmentFeedback = listOfAssessmentFeedback.stream().filter(assessmentFeedbackResource -> assessmentFeedbackResource.getId() == questionResource.getId()).findAny().get();
-            QuestionWithFeedbackHelper questionWithFeedback = new QuestionWithFeedbackHelper(questionResource.getId(),questionResource.getName(),questionResource.getShortName(),questionResource.getDescription(),questionResource.getQuestionNumber(),assessmentFeedback.getFeedback(),assessmentFeedback.getScore());
+            AssessmentFeedbackResource assessmentFeedback = listOfAssessmentFeedback.stream().filter(assessmentFeedbackResource -> assessmentFeedbackResource.getQuestion() == questionResource.getId()).findAny().get();
+            QuestionWithFeedbackHelper questionWithFeedback = new QuestionWithFeedbackHelper(questionResource.getId(),questionResource.getShortName(),questionResource.getQuestionNumber(),assessmentFeedback.getFeedback(),assessmentFeedback.getScore());
             listOfQuestionWithFeedback.add(questionWithFeedback);
         });
 
@@ -75,7 +76,7 @@ public class AssessmentController {
         ApplicationResource application = applicationService.getById(processRole.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        return new AssessmentSummaryViewModel(listOfQuestionWithFeedback,application,competition);
+        return new AssessmentSummaryViewModel(listOfQuestionWithFeedback,application,competition,assessmentId);
 
     }
 

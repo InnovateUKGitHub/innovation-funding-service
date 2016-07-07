@@ -55,6 +55,11 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     public void testGetSummary() throws Exception{
         List<AssessmentFeedbackResource> listOfAssessmentFeedback = newAssessmentFeedbackResource().build(2);
         List<QuestionResource> listOfQuestion = newQuestionResource().build(2);
+        listOfQuestion.get(0).setQuestionNumber("1");
+        listOfQuestion.get(1).setQuestionNumber("2");
+        listOfAssessmentFeedback.get(0).setQuestion(listOfQuestion.get(0).getId());
+        listOfAssessmentFeedback.get(1).setQuestion(listOfQuestion.get(1).getId());
+
 
         final AssessmentResource assessmentResource = AssessmentResourceBuilder.newAssessmentResource().build();
         final ProcessRoleResource processRoleResource = ProcessRoleResourceBuilder.newProcessRoleResource().build();
@@ -81,8 +86,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         Assert.assertTrue(model.getListOfQuestionWithFeedback().size()==2);
         Assert.assertTrue(model.getApplicationResource().equals(applicationResource));
         Assert.assertTrue(model.getCompetitionResource().equals(competitionResource));
-
-
+        Assert.assertTrue(model.getMaxScore()==10);
+        Assert.assertTrue(model.getAssessmentId()==ASSESSMENT_ID);
     }
 
     @Override
