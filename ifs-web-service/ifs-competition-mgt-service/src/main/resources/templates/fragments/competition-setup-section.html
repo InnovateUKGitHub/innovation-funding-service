@@ -141,16 +141,16 @@
                 </p>
             </div>
 
-            <div th:class="${#fields.hasErrors('LeadTechnologistUserId')}? 'form-group error':'form-group'">
-                <label class="form-label" for="LeadTechnologistUserId">
+            <div th:class="${#fields.hasErrors('leadTechnologistUserId')}? 'form-group error':'form-group'">
+                <label class="form-label" for="leadTechnologistUserId">
                     <span class="form-label-bold">Competition Lead technologist</span>
-                    <span th:if="${#fields.hasErrors('LeadTechnologistUserId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('LeadTechnologistUserId')}" th:text="${err}" />
+                    <span th:if="${#fields.hasErrors('leadTechnologistUserId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('leadTechnologistUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" name="LeadTechnologistUserId" id="LeadTechnologistUserId" required="required" data-required-errormessage="Please select a lead technologist">
-                    <option value="" th:selected="${competitionSetupForm.LeadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.LeadTechnologistUserId == competitionLeadTechUser.id}">Lead technologist</option>
+                <select class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select a lead technologist">
+                    <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Lead technologist</option>
                 </select>
             </div>
 
@@ -195,7 +195,7 @@
                        th:field="${competitionSetupForm.competitionCode}"
                        required="required"
                        data-required-errormessage="Please generate a competition code"/>
-                <button class="button button-secondary" th:unless="${competitionSetupForm.competitionCode}" type="button" id="generate-code" th:value="${competition.id}">Generate competition code</button>
+                <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="button" id="generate-code" th:value="${competition.id}">Generate competition code</button>
             </div>
 
             <button class="button">Done</button>
@@ -211,7 +211,7 @@
                 <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>
 
                 <dt>Competition Lead technologist</dt>
-                <dd th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:if="${competitionLeadTechUser.id == competitionSetupForm.LeadTechnologistUserId}">Lead technologist</dd>
+                <dd th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:if="${competitionLeadTechUser.id == competitionSetupForm.leadTechnologistUserId}">Lead technologist</dd>
 
                 <dt>Competition title</dt>
                 <dd th:text="${competitionSetupForm.title}"></dd>
@@ -361,10 +361,6 @@
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <div th:fragment="section-eligibility">
     <h2>Step 3: Eligibility Criteria</h2>
-
-    <div class="panel-indent">
-        INTRO TEXT REQUIRED
-    </div>
 
     <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 

@@ -48,19 +48,17 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("validation.finance.select.organisation.size", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("validation.finance.select.organisation.size");
     }
     
-    @Test
+	@Test
     public void testBusinessNoSize() {
     	setUpOrgType(OrganisationTypeEnum.BUSINESS, null);
         claim.setGrantClaimPercentage(100);
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("validation.finance.select.organisation.size", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("validation.finance.select.organisation.size");
     }
     
     @Test
@@ -70,7 +68,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
     
     @Test
@@ -80,8 +78,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("org.hibernate.validator.constraints.NotBlank.message", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("org.hibernate.validator.constraints.NotBlank.message");
     }
     
     @Test
@@ -91,8 +88,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("org.hibernate.validator.constraints.NotBlank.message", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("org.hibernate.validator.constraints.NotBlank.message");
     }
     
     @Test
@@ -102,8 +98,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("org.hibernate.validator.constraints.NotBlank.message", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("org.hibernate.validator.constraints.NotBlank.message");
     }
     
     @Test
@@ -113,7 +108,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
     
     @Test
@@ -123,8 +118,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("Min", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("Min", "This field should be 0% or higher");
     }
     
     @Test
@@ -134,7 +128,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
     
     @Test
@@ -144,8 +138,27 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("Max", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("Max", "This field should be 100% or lower");
+    }
+    
+    @Test
+    public void testBusinessOverMaximumClaim() {
+    	setUpOrgType(OrganisationTypeEnum.BUSINESS, OrganisationSize.MEDIUM);
+        claim.setGrantClaimPercentage(61);
+        
+        validator.validate(claim, bindingResult);
+        
+        verifyError("Max", "This field should be 60% or lower");
+    }
+    
+    @Test
+    public void testAcademicOverMaximumClaim() {
+    	setUpOrgType(OrganisationTypeEnum.ACADEMIC, OrganisationSize.MEDIUM);
+        claim.setGrantClaimPercentage(61);
+        
+        validator.validate(claim, bindingResult);
+        
+        verifyError("Max", "This field should be 60% or lower");
     }
     
     @Test
@@ -155,7 +168,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
     
     @Test
@@ -165,8 +178,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("Min", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("Min", "This field should be 0% or higher");
     }
     
     @Test
@@ -176,8 +188,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("Min", bindingResult.getAllErrors().get(0).getCode());
+        verifyError("Min", "This field should be 0% or higher");
     }
     
     @Test
@@ -187,8 +198,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("org.hibernate.validator.constraints.NotBlank.message", bindingResult.getAllErrors().get(0).getCode());
+        verifyNoErrors();
     }
     
     @Test
@@ -198,8 +208,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertTrue(bindingResult.hasErrors());
-        assertEquals("org.hibernate.validator.constraints.NotBlank.message", bindingResult.getAllErrors().get(0).getCode());
+        verifyNoErrors();
     }
     
     @Test
@@ -209,7 +218,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
     
     @Test
@@ -219,7 +228,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
     
     @Test
@@ -229,7 +238,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
     
     @Test
@@ -239,8 +248,23 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        assertFalse(bindingResult.hasErrors());
+        verifyNoErrors();
     }
+    
+    private void verifyNoErrors() {
+    	assertFalse(bindingResult.hasErrors());
+    }
+    
+    private void verifyError(String errorCode) {
+    	verifyError(errorCode, null);
+	}
+    
+    private void verifyError(String errorCode, String defaultErrorMessage) {
+    	assertTrue(bindingResult.hasErrors());
+    	assertEquals(1, bindingResult.getAllErrors().size());
+        assertEquals(errorCode, bindingResult.getAllErrors().get(0).getCode());
+        assertEquals(defaultErrorMessage, bindingResult.getAllErrors().get(0).getDefaultMessage());
+	}
     
     private void setUpOrgType(OrganisationTypeEnum orgType, OrganisationSize organisationSize) {
     	OrganisationType organisationType = new OrganisationType();
@@ -255,5 +279,4 @@ public class GrantClaimValidatorTest {
     	when(costRepository.findOne(any(Long.class))).thenReturn(cost);
     }
     
-
 }

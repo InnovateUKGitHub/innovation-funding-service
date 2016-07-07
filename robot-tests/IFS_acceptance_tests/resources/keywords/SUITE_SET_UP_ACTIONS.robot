@@ -25,6 +25,58 @@ Log in create a new invite application invite academic collaborators and accept 
     ...    AND    Invite and accept the invitation
     ...    AND    the user closes the browser
 
+create new account for submitting and create new submit application and mark every section but one as complete
+    create new account for submitting
+    create new submit application
+    the user marks every section but one as complete
+
+
+create new account for submitting
+    Given the guest user opens the browser
+    And the user navigates to the page     ${competition_details_url}
+    And the user clicks the button/link      jQuery=.button:contains("Apply now")
+    And the user clicks the button/link      jQuery=.button:contains("Create account")
+    And the user clicks the button/link      jQuery=.button:contains("Create")
+    And the user enters text to a text field      id=organisationSearchName           Hive IT
+    And the user clicks the button/link       jQuery=.button:contains("Search")
+    And the user clicks the button/link      link=HIVE IT LIMITED
+    And the user selects the checkbox       useSearchResultAddress
+    And the user clicks the button/link      jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link       jQuery=.button:contains("Save")
+    And the user fills the create account form        Temur      Ketsbaia
+    And the user enters text to a text field           name=email         worth.email.test+submittest@gmail.com
+    And the user enters text to a text field           id=password         Passw0rd123
+    And the user enters text to a text field           id=retypedPassword      Passw0rd123
+    And the user submits the form
+    When the user opens the mailbox and verifies the email from
+    And the user clicks the button/link      jQuery=.button:contains("Sign in")
+    Then Guest user log-in    worth.email.test+submit@gmail.com    Passw0rd123
+
+
+the user marks every section but one as complete
+    the user clicks the button/link     link=Project summary
+    the user marks the section as complete     11
+    the user marks the section as complete     12
+    the user marks the section as complete     13
+    the user marks the section as complete     1
+    the user marks the section as complete     2
+    the user marks the section as complete     3
+    the user marks the section as complete     4
+    the user marks the section as complete     5
+    the user marks the section as complete     6
+    the user marks the section as complete     7
+    the user marks the section as complete     8
+    the user marks the section as complete     15
+    the user marks the section as complete     16
+    the user marks finances as complete
+
+the user marks the section as complete
+    [Arguments]    ${form-id}
+    Input Text     css=#form-input-${form-id} .editor    Entering text to allow valid mark as complete
+    the user clicks the button/link      name=mark_as_complete
+    the user clicks the button/link      css=.next
+
+
 Create new application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
@@ -34,6 +86,21 @@ Create new application with the same user
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Robot test application
+    And the user clicks the button/link    jQuery=button:contains("Save and return")
+
+
+create new submit application
+    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    And the user clicks the button/link    jQuery=.button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user clicks the button/link   jQuery=.button:contains("Sign in")
+    And the guest user inserts user email & password        worth.email.test+submittest@gmail.com      Passw0rd123
+    And the guest user clicks the log-in button
+    And the user selects the radio button    create-application    true
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    link=Application details
+    And the user enters text to a text field    id=application_details-title    Robot submit test application
     And the user clicks the button/link    jQuery=button:contains("Save and return")
 
 Create new invite application with the same user
@@ -120,10 +187,20 @@ The user navigates to the overview page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
 
+the user marks finances as complete
+    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    the user selects the radio button     financePosition-organisationSize    LARGE
+    the user enters text to a text field      id=cost-financegrantclaim    20
+    Focus    jQuery=button:contains("Mark all as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
+    Sleep    1s
+
+
 the user marks the finances as complete
     Focus    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
+
 
 Make the finances ready for mark as complete
     Applicant navigates to the finances of the Robot application

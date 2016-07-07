@@ -86,3 +86,4 @@ ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document dis
 ${TEST_MAILBOX_ONE}    worth.email.test@gmail.com
 ${TEST_MAILBOX_TWO}    worth.email.test.two@gmail.com
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
+${unsuccessful_login_message}       Your sign in was unsuccessful because of the following issue(s)

@@ -1,9 +1,11 @@
 package com.worth.ifs.invite.transactional;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -41,6 +43,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
@@ -179,6 +182,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
 
+        List<Error> errors = validateUniqueEmails(inviteOrganisationResource.getInviteResources());
+        if(errors.size() > 0) {
+            LOG.warn("Some double email addresses found");
+            return serviceFailure(errors);
+        }
+
+
         if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
             return serviceFailure(badRequestError("The Invite is not valid"));
         }
@@ -199,16 +209,32 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-        return findByApplicationId(applicationId).andOnSuccessReturn(invites -> {
+        Set<InviteOrganisation> inviteOrganisations = new HashSet();
 
-            List<Long> inviteOrganisationIds = invites.stream().map(i -> i.getInviteOrganisation().getId()).collect(Collectors.toList());
-            Iterable<InviteOrganisation> inviteOrganisations = inviteOrganisationRepository.findAll(inviteOrganisationIds);
-            return Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations));
-        });
+        for(InviteOrganisation inviteOrganisation : inviteOrganisationRepository.findByInvitesApplicationId(applicationId)) {
+            List<Invite> invitesFiltered = inviteOrganisation.getInvites().stream().filter(invite -> invite.getApplication().getId().equals(applicationId)).collect(Collectors.toList());
+            inviteOrganisation.setInvites(invitesFiltered);
+            inviteOrganisations.add(inviteOrganisation);
+        }
+
+        if(inviteOrganisations.size() > 0) {
+           return serviceSuccess(Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations)));
+        } else {
+            return serviceSuccess(new HashSet());
+        }
+
     }
 
     @Override
     public ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources) {
+
+        List<Error> errors = validateUniqueEmails(inviteResources);
+        if(errors.size() > 0) {
+            LOG.warn("Some double email addresses found");
+            return serviceFailure(errors);
+        }
+
+
         List<Invite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
         inviteRepository.save(invites);
         return serviceSuccess(sendInvites(invites));
@@ -273,6 +299,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {
+        LOG.debug("Invites found by application id: " + applicationId + " are: " + inviteRepository.findByApplicationId(applicationId).stream().count());
         return serviceSuccess(inviteRepository.findByApplicationId(applicationId));
     }
 
@@ -374,5 +401,64 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
 
         return true;
+    }
+
+
+    private List<Error> validateUniqueEmails(List<InviteResource> inviteResources) {
+        List<Error> errors = new ArrayList();
+        String errorMessage = "Invited emailaddress is already invited in this application";
+
+        Iterables.concat(findDuplicatesInResourceList(inviteResources),
+                inviteResources
+                        .stream()
+                        .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(false))
+                        .collect(Collectors.toList())
+        )
+                .forEach(inviteResource -> errors.add(new Error(inviteResource.getEmail(), errorMessage, HttpStatus.NOT_ACCEPTABLE)));
+
+        return errors;
+    }
+
+    private Boolean validateUniqueEmail(InviteResource inviteResource) {
+        if(inviteResource.getEmail() == null) {
+            return true;
+        }
+
+        Application application = applicationRepository.findOne(inviteResource.getApplication());
+
+        Set<String> savedEmails = getSavedEmailAddresses(inviteResource.getApplication());
+        if(application.getLeadApplicant() != null) {
+            savedEmails.add(application.getLeadApplicant().getEmail());
+        }
+
+        return !savedEmails.contains(inviteResource.getEmail());
+    }
+
+    private Set<String> getSavedEmailAddresses(Long applicationId) {
+        Set<String> savedEmails = new TreeSet<>();
+        List<InviteOrganisationResource> savedInvites = newArrayList();
+        savedInvites.addAll(getInvitesByApplication(applicationId).getSuccessObject());
+        savedInvites.forEach(s -> {
+                    if(s.getInviteResources() != null) {
+                        s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail()));
+                    }
+                });
+        return savedEmails;
+    }
+
+    private List<InviteResource> findDuplicatesInResourceList(List<InviteResource> resourceList) {
+        List<InviteResource> result = new ArrayList();
+        List<String> emails = resourceList.stream().map(inviteResource -> inviteResource.getEmail()).collect(Collectors.toList());
+        Integer currentIndex = 0;
+
+        for (String email : emails) {
+            if (emails.subList(currentIndex + 1, emails.size()).contains(email)) {
+                result.add(resourceList.get(currentIndex));
+            }
+            currentIndex++;
+        }
+
+        return result;
+
     }
 }

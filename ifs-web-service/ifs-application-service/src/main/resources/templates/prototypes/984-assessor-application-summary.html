@@ -216,7 +216,7 @@
                   </div>
 
                   
-                  <th:block th:if="${param.status != null and param.status[0] == 'complete'}">
+                  
                       <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
                       <fieldset class="inline">
                         <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
@@ -238,7 +238,7 @@
                           <div class="form-group">
                             
                             <label class="form-label form-label-bold" for="assessor-application-feedback-text">Your feedback
-                              <span class="form-hint">Please justify your decision by writing two or three sentences which will be returned to the applicant as feedback.</span>
+                              <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
                             </label>
                             
                             <div class="textarea-wrapped word-count">
@@ -258,7 +258,7 @@
                         <div class="form-group">
                           <div class="form-group">
                             
-                            <label class="form-label form-label-bold" for="assessor-application-comments-text">Do you have any comments about this application that you would like to share with Innovate UK? (Optional)
+                            <label class="form-label form-label-bold" for="assessor-application-comments-text">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                             </label>
                             
                             <div class="textarea-wrapped word-count">
@@ -276,7 +276,7 @@
                           </div>
                         </div>
                         <p class="icon-info">
-                          You'll still be able to make changes after this point.<br />All assessments need to be submitted through the dashboard.
+                          You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.
                         </p>
                         <div class="alignright">
                           <form>
@@ -285,7 +285,7 @@
                         </div>
                       </fieldset>
 
-                    </th:block>
+                 
                   
                   <!-- END OFHARDCODED PROTOTYPE HTML -->
                   <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

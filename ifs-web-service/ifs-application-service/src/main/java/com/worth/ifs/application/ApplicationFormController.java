@@ -214,14 +214,15 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
 
-            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                /* Start save action */
-                saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
-            }
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+            }
+
+            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+                saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
             }
 
             bindingResult = removeDuplicateFieldErrors(bindingResult);
@@ -271,7 +272,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
-        if (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
+        if (request.getParameter("submit-section") == null
+                && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
                 request.getParameter(MARK_SECTION_AS_INCOMPLETE) != null ||
                 request.getParameter(ADD_COST) != null ||
@@ -279,14 +281,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
-                request.getParameter(EDIT_QUESTION) != null) {
+                request.getParameter(EDIT_QUESTION) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
-            return "redirect:"+APPLICATION_BASE_URL + applicationId;
+            return "redirect:" + APPLICATION_BASE_URL + applicationId;
         }
     }
 
@@ -350,7 +352,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         }
 
-        params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
+        params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s => value %s", key, value[0])));
         new ApplicationStartDateValidator().validate(request, bindingResult);
         setApplicationDetails(application, form.getApplication());
 
@@ -366,12 +368,42 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         if(isMarkQuestionRequest(params)) {
-            markApplicationQuestions(application, processRole.getId(), request, response, errors);
+            handleApplicationDetailsMarkCompletedRequest(application, request, response, bindingResult, processRole, errors);
+
         } else if(isMarkSectionRequest(params)){
             handleMarkSectionRequest(application, competition, sectionId, request, response, bindingResult, processRole, errors);
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+    }
+
+    private void handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.rejectValue("formInput[application]", "application.validation.MarkAsCompleteFailed");
+        } else {
+            List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, response, errors);
+            if (applicationMessages != null && !applicationMessages.isEmpty()) {
+                bindingResult.rejectValue("formInput[application]", "application.validation.MarkAsCompleteFailed");
+                handleApplicationDetailsValidationMessages(bindingResult, applicationMessages);
+            }
+        }
+    }
+
+    private void handleApplicationDetailsValidationMessages(BindingResult bindingResult, List<ValidationMessages> applicationMessages) {
+
+    applicationMessages.forEach(validationMessage ->
+        validationMessage.getErrors().stream()
+            .filter(Objects::nonNull)
+            .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+            .forEach(e -> {
+                        e.toString();
+                        if (validationMessage.getObjectName().equals("target")) {
+                            if (StringUtils.hasText(e.getErrorKey())) {
+                                addNonDuplicateFieldError(bindingResult, "formInput[application." + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
+
+                            }
+                        }
+                    }));
     }
 
     private void handleMarkSectionRequest(ApplicationResource application, CompetitionResource competition, Long sectionId, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ProcessRoleResource processRole, Map<Long, List<String>> errors) {
@@ -478,15 +510,34 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errors;
     }
 
-    private void markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
+    private List<ValidationMessages> markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
+
+        if (processRoleId == null) {
+            return null;
+        }
+
         Map<String, String[]> params = request.getParameterMap();
 
-        boolean marked = markQuestion(request, params, application.getId(), processRoleId, errors);
+        if (params.containsKey(MARK_AS_COMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
 
-        // if a question is marked as complete, don't show the field saved message.
-        if (!marked) {
-            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+            if (errors.containsKey(questionId) && !errors.get(questionId).isEmpty()) {
+                List<String> fieldErrors = errors.get(questionId);
+                fieldErrors.add("Please enter valid data before marking a question as complete.");
+            }
+            List<ValidationMessages> validationMessages = questionService.markAsComplete(questionId, application.getId(), processRoleId);
+            if (validationMessages != null && !validationMessages.isEmpty()) {
+                questionService.markAsInComplete(questionId, application.getId(), processRoleId);
+            }
+            else {
+                cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+            }
+            return validationMessages;
+        }else if (params.containsKey(MARK_AS_INCOMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
+            questionService.markAsInComplete(questionId, application.getId(), processRoleId);
         }
+        return null;
     }
 
     /**
@@ -541,29 +592,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long processRoleId, Map<Long, List<String>> errors) {
-        if (processRoleId == null) {
-            return false;
-        }
-        boolean success = false;
-        if (params.containsKey(MARK_AS_COMPLETE)) {
-            Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
-
-            if (errors.containsKey(questionId) && !errors.get(questionId).isEmpty()) {
-                List<String> fieldErrors = errors.get(questionId);
-                fieldErrors.add("Please enter valid data before marking a question as complete.");
-            } else {
-                questionService.markAsComplete(questionId, applicationId, processRoleId);
-                success = true;
-            }
-        } else if (params.containsKey(MARK_AS_INCOMPLETE)) {
-            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
-            questionService.markAsInComplete(questionId, applicationId, processRoleId);
-            success = true;
-        }
-
-        return success;
-    }
 
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request,
                                                           List<QuestionResource> questions,
@@ -779,8 +807,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            if (durationInMonth == null || durationInMonth < 1L) {
-                errors.add("Please enter a valid duration");
+            if (durationInMonth == null || durationInMonth > 36L) {
+                errors.add("Please enter a valid duration between 1 and 36 months");
             } else {
                 application.setDurationInMonths(durationInMonth);
                 applicationService.save(application);

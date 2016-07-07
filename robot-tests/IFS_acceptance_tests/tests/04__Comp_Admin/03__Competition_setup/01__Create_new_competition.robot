@@ -36,6 +36,8 @@ User can navigate to the competition setup form
 
 Initial details server-side validations
     [Documentation]    INFUND-2982
+    [Tags]    Pending
+    # Pending due to INFUND-3768
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please select a competition executive
     And the user should see an error    Please enter a opening month
@@ -50,7 +52,7 @@ Initial details server-side validations
     And the user should see an error   Please enter a budget code
     And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
     # The following step has been commented out because it is
-    # Pending due to INFUND-
+    # Pending due to INFUND-3708
     # Then the user should see the text in the page    Please fill in a correct date before generating the competition code
 
 Initial details client-side validations
@@ -65,7 +67,7 @@ Initial details client-side validations
     Then the user should not see the text in the page    Please select a innovation area
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should not see the text in the page    Please select a competition type
-    When the user selects the option from the drop-down menu    Competition Technologist One    id=LeadTechnologistUserId
+    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
     Then the user should not see the text in the page    Please select a lead technologist
     When the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
@@ -90,6 +92,8 @@ The user should see the correct State aid status
 
 Competition code generation
     [Documentation]    INFUND-2984
+    [Tags]    Pending
+    # Pending due to INFUND-3768
     When the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2016
@@ -107,7 +111,6 @@ Additional information can be saved
     And the user enters text to a text field    id=coFunders        dolor
     When the user enters text to a text field   id=coFundersBudget    sit
     And the user clicks the button/link      jQuery=.button:contains("Done")
-    Then the user should see the element     css=.marked-as-complete
     And the user clicks the button/link      link=Initial Details
     And the user clicks the button/link      link=Additional Information
     Then the user should see the text in the page      lorem
@@ -121,7 +124,6 @@ Additional information can be edited again
     Given the user clicks the button/link      jQuery=.button:contains("Edit")
     And the user enters text to a text field      id=activityCode    amet
     And the user clicks the button/link      jQuery=.button:contains("Done")
-    Then the user should see the element     css=.marked-as-complete
     And the user clicks the button/link      link=Initial Details
     And the user clicks the button/link      link=Additional Information
     Then the user should see the text in the page      amet
@@ -151,9 +153,7 @@ Eligibility client-side validations
     And the user selects the checkbox        id=research-categories-34
     And the user selects the checkbox        id=research-categories-35
     And the user moves focus to a different part of the page
-    # the following step has been commented out because it is
-    # Pending due to INFUND-3707
-    # Then the user should not see the text in the page      Please select at least one research category
+    Then the user should not see the text in the page      Please select at least one research category
     And the user should see the text in the page       Please select a collaboration level
     And the user should see the text in the page       Please select a lead applicant type
     When the user selects the radio button     singleOrCollaborative       single
@@ -161,9 +161,8 @@ Eligibility client-side validations
     And the user selects the option from the drop-down menu    30%     name=researchParticipationAmountId
     Then the user should not see the text in the page   Please select a collaboration level
     And the user should not see the text in the page     Please select a lead applicant type
-    # the following step has been commented out because it is
-    # Pending due to INFUND-3707
-    # And the user should not see the text in the page    Please select at least one research category
+    And the user should not see the text in the page    Please select at least one research category
+    And the user enters text to a text field            id=streamName     Test stream name
 
 
 Eligibility information can be saved and the stream info shows correctly
