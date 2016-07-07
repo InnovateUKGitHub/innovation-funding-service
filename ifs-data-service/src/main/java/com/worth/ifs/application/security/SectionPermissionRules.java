@@ -27,4 +27,10 @@ public class SectionPermissionRules extends BasePermissionRules {
     public boolean onlyLeadApplicantCanMarkSectionAsComplete(ApplicationResource applicationResource, UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
     }
+
+    @PermissionRule(value = "MARK_SECTION_AS_INCOMPLETE", description = "Only lead Applicant can mark a section as incomplete")
+    public boolean onlyLeadApplicantCanMarkSectionAsInComplete(ApplicationResource applicationResource, UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
 }

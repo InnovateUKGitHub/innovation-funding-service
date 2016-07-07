@@ -37,9 +37,9 @@ public interface SectionService {
                                                                   @P("applicationId") final Long id,
                                                                   Long markedAsCompleteById);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_INCOMPLETE')")
     ServiceResult<Void> markSectionAsInComplete(Long sectionId,
-                                                Long applicationId,
+                                                @P("applicationId") final Long id,
                                                 Long markedAsInCompleteById);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")

@@ -38,6 +38,7 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         sectionPermissionRules = getMockPermissionRulesBean(SectionPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
+
     @Test
     public void testPermissionForMarkSectionAsComplete() {
         Long sectionId = 1L;
@@ -49,6 +50,19 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
                 () -> verify(sectionPermissionRules).onlyLeadApplicantCanMarkSectionAsComplete(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
+
+    @Test
+    public void testPermissionForMarkSectionAsInComplete() {
+        Long sectionId = 1L;
+        Long applicationId = 2L;
+        Long markedAsCompleteById = 3L;
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> service.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById),
+                () -> verify(sectionPermissionRules).onlyLeadApplicantCanMarkSectionAsInComplete(isA(ApplicationResource.class), isA(UserResource.class))
+        );
+    }
+
 
     @Override
     protected Class<? extends SectionService> getServiceClass() {
