@@ -29,7 +29,7 @@ public class RestFailuresToValidationErrorBindingUtils {
         return serviceResult;
     }
 
-    private static void addErrorsToForm(String fieldName, BindingResultTarget bindingResultTarget, BindingResult bindingResult, List<String> errorKeys) {
+    public static void addErrorsToForm(String fieldName, BindingResultTarget bindingResultTarget, BindingResult bindingResult, List<String> errorKeys) {
         registerValidationErrorsWithBindingResult(fieldName, bindingResult, errorKeys);
         bindingResultTarget.setBindingResult(bindingResult);
         bindingResultTarget.setObjectErrors(bindingResult.getAllErrors());

@@ -2,6 +2,7 @@ package com.worth.ifs.form.service;
 
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     }
 
     @Override
-    public List<String> save(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty) {
+    public ValidationMessages save(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty) {
         return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value, ignoreEmpty).getSuccessObjectOrThrowException();
     }
 
