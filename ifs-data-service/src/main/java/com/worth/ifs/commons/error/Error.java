@@ -20,6 +20,7 @@ import static java.util.Collections.emptyList;
 public class Error implements Serializable {
 
     private String errorKey;
+    private String fieldName;
     private List<Object> arguments;
     private String errorMessage;
 
@@ -98,29 +99,39 @@ public class Error implements Serializable {
     }
 
     public static Error fieldError(String fieldName, String messageOrCode) {
-        return new Error(fieldName, messageOrCode, HttpStatus.NOT_ACCEPTABLE);
-    }
-
-    public static Error fieldError(String fieldName, String messageOrCode, List<Object> arguments) {
-        return new Error(fieldName, messageOrCode, arguments, HttpStatus.NOT_ACCEPTABLE);
+        return fieldError(fieldName, messageOrCode, emptyList());
     }
 
     public static Error fieldError(String fieldName, String messageOrCode, Object... arguments) {
         return fieldError(fieldName, messageOrCode, asList(arguments));
     }
 
+    public static Error fieldError(String fieldName, String messageOrCode, List<Object> arguments) {
+        Error error = new Error(messageOrCode, arguments, HttpStatus.NOT_ACCEPTABLE);
+        error.fieldName = fieldName;
+        return error;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    @JsonIgnore
+    public boolean isFieldError() {
+        return fieldName != null;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Error error = (Error) o;
 
         return new EqualsBuilder()
                 .append(errorKey, error.errorKey)
+                .append(fieldName, error.fieldName)
                 .append(arguments, error.arguments)
                 .append(errorMessage, error.errorMessage)
                 .append(statusCode, error.statusCode)
@@ -131,16 +142,19 @@ public class Error implements Serializable {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(errorKey)
+                .append(fieldName)
                 .append(arguments)
                 .append(errorMessage)
                 .append(statusCode)
                 .toHashCode();
     }
 
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("errorKey", errorKey)
+                .append("fieldName", fieldName)
                 .append("arguments", arguments)
                 .append("errorMessage", errorMessage)
                 .append("statusCode", statusCode)

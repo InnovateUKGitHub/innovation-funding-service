@@ -438,15 +438,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertThat(messages.getErrors(), containsInAnyOrder(
                 allOf(
-                        hasProperty("errorKey", is("item")),
+                        hasProperty("fieldName", is("item")),
                         hasProperty("errorMessage", is("This field cannot be left blank"))
                 ),
                 allOf(
-                        hasProperty("errorKey", is("cost")),
+                        hasProperty("fieldName", is("cost")),
                         hasProperty("errorMessage", is("may not be null"))
                 ),
                 allOf(
-                        hasProperty("errorKey", is("quantity")),
+                        hasProperty("fieldName", is("quantity")),
                         hasProperty("errorMessage", is("may not be null"))
                 )
         ));

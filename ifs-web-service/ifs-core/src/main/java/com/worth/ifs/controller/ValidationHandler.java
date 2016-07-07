@@ -3,9 +3,15 @@ package com.worth.ifs.controller;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorHolder;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
 
 /**
  * A helper class that wraps the standard BindingResult and allows us to more easily work with the various mechanisms that
@@ -20,12 +26,19 @@ public class ValidationHandler {
         this.bindingResult = bindingResult;
     }
 
-    public ValidationHandler addAnyErrors(ErrorHolder errors, ErrorToObjectErrorConverter converter) {
-        return addAnyErrors(errors.getErrors(), converter);
+    public ValidationHandler addAnyErrors(ErrorHolder errors, ErrorToObjectErrorConverter... converters) {
+        return addAnyErrors(errors.getErrors(), converters);
     }
 
-    private ValidationHandler addAnyErrors(List<Error> errors, ErrorToObjectErrorConverter errorToObjectErrorFn) {
-        errors.forEach(e -> bindingResult.addError(errorToObjectErrorFn.apply(e)));
+    private ValidationHandler addAnyErrors(List<Error> errors, ErrorToObjectErrorConverter... errorToObjectErrorFns) {
+        errors.forEach(e -> {
+            List<Optional<ObjectError>> optionalConversionsForThisError = simpleMap(asList(errorToObjectErrorFns), converter -> converter.apply(e));
+            Optional<Optional<ObjectError>> successfullyConvertedErrorList = simpleFindFirst(optionalConversionsForThisError, Optional::isPresent);
+
+            if (successfullyConvertedErrorList.isPresent()) {
+                bindingResult.addError(successfullyConvertedErrorList.get().get());
+            }
+        });
         return this;
     }
 

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.standardFieldErrorMappings;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -110,7 +111,7 @@ public class ProjectMonitoringOfficerController {
             ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(),
                     form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
 
-            return validationHandler.addAnyErrors(updateResult, toField("")).
+            return validationHandler.addAnyErrors(updateResult, standardFieldErrorMappings(), toField("")).
                     failNowOrSucceedWith(failureView, () -> redirectToMonitoringOfficerViewTemporarily(projectId));
         });
     }
