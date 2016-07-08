@@ -790,33 +790,34 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     // TODO DW - ideally this would return a ValidationMessages with global errors in it
     private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
-        List<String> errors = new ArrayList<>();
+
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
-            errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
+            return this.saveApplicationDetails(applicationId, fieldName, value);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
             financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
+            return emptyList();
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
             ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
-            }else{
+                return emptyList();
+            } else {
                 String[] fieldNameParts = fieldName.split("-");
                 // fieldname = other_costs-description-34-219
-                errors = validationMessages.getErrors()
+                return validationMessages.getErrors()
                         .stream()
-                        .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getErrorKey().toLowerCase())))
-                        .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
+                        .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getFieldName().toLowerCase())))
+                        .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getFieldName().toLowerCase())) // filter out the messages that are related to other fields.
                         .map(e -> e.getErrorMessage())
                         .collect(Collectors.toList());
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             ValidationMessages saveErrors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
-            errors = simpleMap(saveErrors.getErrors(), Error::getErrorMessage);
+            return simpleMap(saveErrors.getErrors(), Error::getErrorMessage);
         }
-        return errors;
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
@@ -831,7 +832,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         return node;
     }
 
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value) {
+
+        List<String> errors = new ArrayList<>();
         ApplicationResource application = applicationService.getById(applicationId);
 
         if ("application.name".equals(fieldName)) {
