@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -62,7 +64,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("formInputId", formInputId);
         jsonObj.put("value", inputValue);
 
-        RestResult<List<String>> result = controller.saveQuestionResponse(jsonObj);
+        RestResult<ValidationMessages> result = controller.saveQuestionResponse(jsonObj);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(forbiddenError("This action is not permitted.")));
         setLoggedInUser(getSteveSmith());
@@ -85,9 +87,9 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("formInputId", 1);
         jsonObj.put("value", "");
 
-        List<String> errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
-        assertThat(errors, hasSize(1));
-        assertThat(errors, hasItem("Please enter some text"));
+        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
+        assertThat(errors.getErrors(), hasSize(1));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", "Please enter some text")));
     }
 
     @Test
@@ -107,9 +109,9 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         jsonObj.put("value", value);
 
-        List<String> errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
-        assertThat(errors, hasSize(1));
-        assertThat(errors, hasItem("Maximum word count exceeded"));
+        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
+        assertThat(errors.getErrors(), hasSize(1));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", "Maximum word count exceeded")));
     }
 
     @Test
@@ -124,7 +126,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("markedAsComplete", 1);
         jsonObj.put("value", "Some text value...");
 
-        List<String> errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
-        assertThat(errors, hasSize(0));
+        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
+        assertThat(errors.getErrors(), hasSize(0));
     }
 }
