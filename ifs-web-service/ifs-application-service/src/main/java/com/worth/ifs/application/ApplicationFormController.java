@@ -382,12 +382,12 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, response, errors);
             if (applicationMessages != null && !applicationMessages.isEmpty()) {
                 bindingResult.rejectValue("formInput[application]", "application.validation.MarkAsCompleteFailed");
-                handleApplicationDetailsValidationMessages(bindingResult, applicationMessages);
+                handleApplicationDetailsValidationMessages(bindingResult, applicationMessages, application);
             }
         }
     }
 
-    private void handleApplicationDetailsValidationMessages(BindingResult bindingResult, List<ValidationMessages> applicationMessages) {
+    private void handleApplicationDetailsValidationMessages(BindingResult bindingResult, List<ValidationMessages> applicationMessages, ApplicationResource application) {
 
     applicationMessages.forEach(validationMessage ->
         validationMessage.getErrors().stream()
@@ -398,6 +398,9 @@ public class ApplicationFormController extends AbstractApplicationController {
                         if (validationMessage.getObjectName().equals("target")) {
                             if (StringUtils.hasText(e.getErrorKey())) {
                                 addNonDuplicateFieldError(bindingResult, "formInput[application." + validationMessage.getObjectId() + "-" + e.getErrorKey() + "]", e.getErrorMessage());
+                                 if (e.getErrorKey().equals("durationInMonths")) {
+                                     application.setDurationInMonths(null);
+                                 }
 
                             }
                         }
@@ -805,7 +808,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            if (durationInMonth < 1 || durationInMonth > 36L) {
+            if (durationInMonth < 1L || durationInMonth > 36L) {
                 errors.add("Please enter a valid duration between 1 and 36 months");
                 application.setDurationInMonths(durationInMonth);
             } else {
