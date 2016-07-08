@@ -50,9 +50,9 @@ IFS.application.financeSpecifics = (function(){
         var mirrorElement = jQuery(s.administrationCostTotal.totalCostInHeaders);
 
         if(currentTotal && mirrorElement.length){
-          IFS.mirrorElements.updateElement(mirrorElement,currentTotal);
+          IFS.core.mirrorElements.updateElement(mirrorElement,currentTotal);
           jQuery(document).off('change',s.administrationCostTotal.allTotals).on('change',currentTotal,function(){
-              IFS.mirrorElements.updateElement(mirrorElement,this);
+              IFS.core.mirrorElements.updateElement(mirrorElement,this);
           });
         }
       },
