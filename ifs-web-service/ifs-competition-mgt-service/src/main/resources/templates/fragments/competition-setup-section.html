@@ -516,3 +516,106 @@
         </li>
     </ul>
 </div>
+
+<!-- =================Section: Milestones=========================== -->
+
+<div th:fragment="prototype-section-milestones">
+
+    <div class="hgroup extra-margin-bottom">
+        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
+        <h1 class="heading-xlarge no-margin">Milestones</h1>
+    </div>
+
+    <div class="panel-indent">
+        Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
+    </div>
+
+    <form>
+
+        <fieldset id="section-4-edit">
+
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 40%" id="milestone">Milestone</th>
+                    <th scope="col" style="width: 10%" id="weekday">Weekday</th>
+                    <th scope="col" style="width: 10%" id="day">Day</th>
+                    <th scope="col" style="width: 10%" id="month">Month</th>
+                    <th scope="col" style="width: 10%" id="year">Year</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, rowNo=1, type=readOnly" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
+                </tbody>
+            </table>
+
+        </fieldset>
+
+        <fieldset id="section-4-done">
+
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 40%" id="milestone">Milestone</th>
+                    <th scope="col" style="width: 10%" id="weekday">Weekday</th>
+                    <th scope="col" style="width: 10%" id="day">Day</th>
+                    <th scope="col" style="width: 10%" id="month">Month</th>
+                    <th scope="col" style="width: 10%" id="year">Year</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>1. Open date</td><td>Weds</td><td>01</td><td>01</td><td>2017</td></tr>
+                <tr><td>2. Briefing event</td><td>Tue</td><td>15</td><td>01</td><td>2017</td></tr>
+                <tr><td>3. Submission date</td><td>Tue</td><td>01</td><td>02</td><td>2017</td></tr>
+                <tr><td>4. Allocate assessors</td><td>Tue</td><td>01</td><td>03</td><td>2017</td></tr>
+                <tr><td>5. Assessor briefing</td><td>Tue</td><td>01</td><td>04</td><td>2017</td></tr>
+                <tr><td>6. Assessor accepts</td><td>Tue</td><td>01</td><td>05</td><td>2017</td></tr>
+                <tr><td>7. Assessor deadline</td><td>Tue</td><td>01</td><td>06</td><td>2017</td></tr>
+                <tr><td>8. Line draw</td><td>Tue</td><td>01</td><td>07</td><td>2017</td></tr>
+                <tr><td>9. Assessment panel</td><td>Tue</td><td>01</td><td>08</td><td>2017</td></tr>
+                <tr><td>10. Panel date</td><td>Tue</td><td>01</td><td>09</td><td>2017</td></tr>
+                <tr><td>11. Funders panel</td><td>Tue</td><td>01</td><td>10</td><td>2017</td></tr>
+                <tr><td>12. Notifications</td><td>Tue</td><td>01</td><td>11</td><td>2017</td></tr>
+                <tr><td>13. Release feedback</td><td>Tue</td><td>01</td><td>12</td><td>2017</td></tr>
+                </tbody>
+            </table>
+
+        </fieldset>
+
+
+
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4" th:remove="tag" />
+        </div>
+
+    </form>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part" th:href="@{'?section=eligibility'}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{'?section=application'}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Application questions</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
