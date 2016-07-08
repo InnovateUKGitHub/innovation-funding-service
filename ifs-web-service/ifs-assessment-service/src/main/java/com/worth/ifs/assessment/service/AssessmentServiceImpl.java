@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 
 /**
@@ -45,6 +46,6 @@ public class AssessmentServiceImpl implements AssessmentService {
         ProcessRoleResource processRoleResource = processRoleService.getById(this.getById(assessmentId).getProcessRole()).get();
         ApplicationResource applicationResource = applicationService.getById(processRoleResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        return questionService.findByCompetition(competitionResource.getId());
+        return questionService.findByCompetition(competitionResource.getId()).stream().filter(questionResource -> questionResource.getSection()==2).collect(Collectors.toList());
     }
 }

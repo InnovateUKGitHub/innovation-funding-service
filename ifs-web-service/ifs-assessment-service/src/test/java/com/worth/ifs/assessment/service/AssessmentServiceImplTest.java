@@ -28,6 +28,7 @@ import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentService> {
@@ -77,6 +78,7 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         final ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
         final CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
         final QuestionResource questionResource = QuestionResourceBuilder.newQuestionResource().build();
+        questionResource.setSection(2L);
 
         List<QuestionResource> expected = new ArrayList<>();
         expected.add(questionResource);
@@ -88,7 +90,7 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         when(questionService.findByCompetition(competitionResource.getId())).thenReturn(expected);
 
         final List<QuestionResource> response = service.getAllQuestionsById(assessmentId);
-        assertSame(expected, response);
+        assertTrue(expected.equals(response));
 
     }
 }
