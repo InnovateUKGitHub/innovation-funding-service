@@ -167,7 +167,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
+                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"fieldName\":null,\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
                 .andDo(
                         document(
                             "section/mark-as-complete-invalid",
@@ -182,6 +182,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                                     fieldWithPath("[0].objectName").description("name of the object type"),
                                     fieldWithPath("[0].objectId").description("identifier of the object, for example the Cost.id"),
                                     fieldWithPath("[0].errors").description("list of Error objects, containing the validation messages"),
+                                    fieldWithPath("[0].errors[0].fieldName").description("the name of the field that is invalid"),
                                     fieldWithPath("[0].errors[0].errorKey").description("the key to identity the type of validation message"),
                                     fieldWithPath("[0].errors[0].arguments").description("array of arguments used to validate this object"),
                                     fieldWithPath("[0].errors[0].errorMessage").description("The message describing the invalidate input and how to fix it")

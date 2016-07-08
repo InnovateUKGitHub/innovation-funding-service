@@ -37,4 +37,26 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Comp admins can view Monitoring Officers on any Project")
+    public boolean compAdminsCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Partners can view monitoring officers on Projects that they are partners on")
+    public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "ASSIGN_MONITORING_OFFICER",
+            description = "Comp admins can assign Monitoring Officers on any Project")
+    public boolean compAdminsCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
 }

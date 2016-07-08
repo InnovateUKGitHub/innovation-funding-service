@@ -162,6 +162,8 @@ public class BaseUnitTest {
     public ProjectService projectService;
     @Mock
     public ProjectRestService projectRestService;
+    @Mock
+    public ApplicationSummaryService applicationSummaryService;
 
     @Spy
     @InjectMocks
@@ -220,7 +222,7 @@ public class BaseUnitTest {
     ;
 
 
-    public InternalResourceViewResolver viewResolver() {
+    public static InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/resources");
         viewResolver.setSuffix(".html");

@@ -53,6 +53,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .addFilter(new CookieFlashMessageFilter())
                 .setLocaleResolver(localeResolver)
                 .setHandlerExceptionResolvers(createExceptionResolver())
+                .setCustomArgumentResolvers(new ValidationHandlerMethodArgumentResolver())
                 .setViewResolvers(viewResolver())
                 .build();
         

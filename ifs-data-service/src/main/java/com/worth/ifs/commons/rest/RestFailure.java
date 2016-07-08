@@ -2,6 +2,7 @@
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorHolder;
 import com.worth.ifs.commons.error.ErrorTemplate;
 import org.springframework.http.HttpStatus;
 
@@ -17,7 +18,7 @@ import static java.util.Collections.singletonList;
  * This class represents a failure encountered during a service call and can additionally contain 0 or more error
  * messages within it.
  */
-public class RestFailure {
+public class RestFailure implements ErrorHolder {
 
     private List<Error> errors;
     private HttpStatus specificStatusCode;
