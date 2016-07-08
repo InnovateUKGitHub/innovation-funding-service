@@ -2,8 +2,6 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.filter.ErrorHandlerFilter;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
@@ -14,10 +12,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 
+import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.any;
@@ -53,10 +51,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
         MockitoAnnotations.initMocks(this);
 
 
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationCreationController, new ErrorControllerAdvice())
-                .setViewResolvers(viewResolver())
-                .addFilter(new ErrorHandlerFilter())
-                .build();
+        mockMvc = setupMockMvc(applicationCreationController, () -> loggedInUser, env, messageSource);
 
         super.setup();
 
