@@ -710,6 +710,9 @@ public class ApplicationFormController extends AbstractApplicationController {
             LOG.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
+        else {
+            application.setDurationInMonths(null);
+        }
     }
 
     /**
