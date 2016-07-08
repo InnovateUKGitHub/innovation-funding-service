@@ -50,7 +50,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
                 put("ignoreEmpty", false);
 
         List<Error> returnedResponses = asList(new Error("A returned string", BAD_REQUEST), new Error("A returned string 2", BAD_REQUEST));
-        ValidationMessages validationMessages = new ValidationMessages(null, null, returnedResponses);
+        ValidationMessages validationMessages = new ValidationMessages(returnedResponses);
 
         setupPostWithRestResultExpectations(formInputResponseRestURL + "/saveQuestionResponse/", ValidationMessages.class, entityUpdates, validationMessages, OK);
 

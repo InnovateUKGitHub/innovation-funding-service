@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static java.util.Arrays.asList;
@@ -55,7 +56,7 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void test_save() {
 
-        ValidationMessages validation = new ValidationMessages(null, null, asList(new Error("value", "an error", NOT_ACCEPTABLE), new Error("value", "another error", NOT_ACCEPTABLE)));
+        ValidationMessages validation = new ValidationMessages(fieldError("value", "an error", NOT_ACCEPTABLE), fieldError("value", "another error", NOT_ACCEPTABLE)));
 
         when(restServiceMock.saveQuestionResponse(123L, 456L, 789L, "A new value", false)).
                 thenReturn(restSuccess(validation));

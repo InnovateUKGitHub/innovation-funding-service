@@ -17,7 +17,6 @@ import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 /**
@@ -53,16 +52,6 @@ public class ValidationMessages implements ErrorHolder, Serializable {
     }
 
     public ValidationMessages(List<Error> errors) {
-        this.errors.addAll(errors);
-    }
-
-    public ValidationMessages(String objectName) {
-        this(objectName, null, emptyList());
-    }
-
-    public ValidationMessages(String objectName, Long objectId, List<Error> errors) {
-        this.objectName = objectName;
-        this.objectId = objectId;
         this.errors.addAll(errors);
     }
 

@@ -99,24 +99,39 @@ public class Error implements Serializable {
         return errorMessage;
     }
 
+    /**
+     * A convenience method to create a field error
+     */
     public static Error fieldError(String fieldName, String messageOrCode) {
         return fieldError(fieldName, messageOrCode, emptyList());
     }
 
+    /**
+     * A convenience method to create a field error with arguments
+     */
     public static Error fieldError(String fieldName, String messageOrCode, Object... arguments) {
         return fieldError(fieldName, messageOrCode, asList(arguments));
     }
 
+    /**
+     * A convenience method to create a field error
+     */
     public static Error fieldError(String fieldName, String messageOrCode, List<Object> arguments) {
         Error error = new Error(messageOrCode, arguments, NOT_ACCEPTABLE);
         error.fieldName = fieldName;
         return error;
     }
 
+    /**
+     * A convenience method to create a global (non-field) error
+     */
     public static Error globalError(String errorKey) {
         return new Error(errorKey, NOT_ACCEPTABLE);
     }
 
+    /**
+     * A convenience method to create a global (non-field) error
+     */
     public static Error globalError(String errorKey, String messageOrCode) {
         return new Error(errorKey, messageOrCode, NOT_ACCEPTABLE);
     }
