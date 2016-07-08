@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -16,7 +17,6 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.stringsListType;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.form.domain.FormInputResponse}'s.
@@ -34,11 +34,11 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<String>> saveQuestionResponse(Long userId,
-                                                         Long applicationId,
-                                                         Long formInputId,
-                                                         String value,
-                                                         boolean ignoreEmpty) {
+    public RestResult<ValidationMessages> saveQuestionResponse(Long userId,
+                                                               Long applicationId,
+                                                               Long formInputId,
+                                                               String value,
+                                                               boolean ignoreEmpty) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("userId", userId);
@@ -46,7 +46,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
         node.put("ignoreEmpty", ignoreEmpty);
-        return postWithRestResult(formInputResponseRestURL + "/saveQuestionResponse/", node, stringsListType());
+        return postWithRestResult(formInputResponseRestURL + "/saveQuestionResponse/", node, ValidationMessages.class);
     }
 
     @Override

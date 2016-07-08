@@ -4,6 +4,7 @@ import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.controller.ControllerModelAttributeAdvice;
 import com.worth.ifs.controller.CustomFormBindingControllerAdvice;
+import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.UserResource;
@@ -11,6 +12,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.mockito.InjectMocks;
+import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -24,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHan
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 /**
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
@@ -44,46 +48,55 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         super.setup();
 
+        mockMvc = setupMockMvc(controller, () -> getLoggedInUser(), env, messageSource);
+
+        setLoggedInUser(loggedInUser);
+    }
+
+    public static <ControllerType> MockMvc setupMockMvc(ControllerType controller, Supplier<UserResource> loggedInUserSupplier, Environment environment, MessageSource messageSource) {
+
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
 
-        mockMvc = MockMvcBuilders
+        MockMvc mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)
                 .setControllerAdvice(
                         new ErrorControllerAdvice(),
                         new CustomFormBindingControllerAdvice(),
-                        modelAttributeAdvice()
+                        modelAttributeAdvice(loggedInUserSupplier)
                 )
                 .addFilter(new CookieFlashMessageFilter())
                 .setLocaleResolver(localeResolver)
-                .setHandlerExceptionResolvers(createExceptionResolver())
+                .setHandlerExceptionResolvers(createExceptionResolver(environment, messageSource))
+                .setCustomArgumentResolvers(
+                        new ValidationHandlerMethodArgumentResolver()
+                )
                 .setViewResolvers(viewResolver())
                 .build();
 
-        setLoggedInUser(loggedInUser);
-
+        return mockMvc;
     }
 
-    private ControllerModelAttributeAdvice modelAttributeAdvice() {
+    private static ControllerModelAttributeAdvice modelAttributeAdvice(Supplier<UserResource> loggedInUserSupplier) {
 
         ControllerModelAttributeAdvice modelAttributeAdvice = new ControllerModelAttributeAdvice();
 
         ReflectionTestUtils.setField(modelAttributeAdvice, "userAuthenticationService", new UserAuthenticationService() {
             @Override
             public Authentication getAuthentication(HttpServletRequest request) {
-                return new UserAuthentication(getLoggedInUser());
+                return new UserAuthentication(loggedInUserSupplier.get());
             }
 
             @Override
             public UserResource getAuthenticatedUser(HttpServletRequest request) {
-                return getLoggedInUser();
+                return loggedInUserSupplier.get();
             }
         });
 
         return modelAttributeAdvice;
     }
 
-    public ExceptionHandlerExceptionResolver createExceptionResolver() {
+    public static ExceptionHandlerExceptionResolver createExceptionResolver(Environment env, MessageSource messageSource) {
         ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
             protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
                 Method method = new ExceptionHandlerMethodResolver(ErrorControllerAdvice.class).resolveMethod(exception);

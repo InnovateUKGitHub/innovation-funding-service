@@ -1,20 +1,23 @@
 package com.worth.ifs.form.service;
 
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.form.resource.FormInputResponseResource;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import java.util.List;
+import java.util.Map;
+
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.form.resource.FormInputResponseResource;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 /**
  * Testing FormInputResponseServiceImpl and its interactions with its mock rest service.
@@ -53,10 +56,12 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void test_save() {
 
-        when(restServiceMock.saveQuestionResponse(123L, 456L, 789L, "A new value", false)).
-                thenReturn(restSuccess(asList("an error", "another error")));
+        ValidationMessages validation = new ValidationMessages(fieldError("value", "an error", NOT_ACCEPTABLE), fieldError("value", "another error", NOT_ACCEPTABLE)));
 
-        List<String> responses = service.save(123L, 456L, 789L, "A new value", false);
-        assertEquals(asList("an error", "another error"), responses);
+        when(restServiceMock.saveQuestionResponse(123L, 456L, 789L, "A new value", false)).
+                thenReturn(restSuccess(validation));
+
+        ValidationMessages responses = service.save(123L, 456L, 789L, "A new value", false);
+        assertEquals(validation, responses);
     }
 }

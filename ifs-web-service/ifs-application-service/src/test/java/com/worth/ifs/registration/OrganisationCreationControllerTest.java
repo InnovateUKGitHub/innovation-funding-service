@@ -5,7 +5,6 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -22,12 +21,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 
+import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
@@ -69,9 +68,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(organisationCreationController, new ErrorControllerAdvice())
-                .setViewResolvers(viewResolver())
-                .build();
+        mockMvc = setupMockMvc(organisationCreationController, () -> loggedInUser, env, messageSource);
 
         super.setup();
 
@@ -108,9 +105,13 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation"))
                 .andReturn().getResponse().getCookies();
 
-        assertEquals(1, cookies.length);
+        assertEquals(2, cookies.length);
         assertNotNull(cookies[0]);
-        assertEquals("{\"organisationType\":1}", cookies[0].getValue());
+        assertNotNull(cookies[1]);
+        assertEquals("flashMessage", cookies[0].getName());
+        assertEquals("", cookies[0].getValue());
+        assertEquals("organisationType", cookies[1].getName());
+        assertEquals("{\"organisationType\":1}", cookies[1].getValue());
     }
 
     @Test
