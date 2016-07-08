@@ -98,6 +98,8 @@ public class ProjectController {
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
 
-        return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource).toPutResponse();
+        return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
+                .andOnSuccess(() -> projectService.notifyMonitoringOfficer(monitoringOfficerResource))
+                .toPutResponse();
     }
 }

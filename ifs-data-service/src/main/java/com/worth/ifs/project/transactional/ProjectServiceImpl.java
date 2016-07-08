@@ -12,6 +12,11 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
@@ -32,6 +37,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
@@ -44,12 +50,15 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -86,6 +95,19 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
+    enum Notifications {
+        MONITORING_OFFICER_ASSIGNED,
+    }
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
@@ -199,6 +221,63 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
             andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
             andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
+    }
+
+    @Override
+    public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
+
+        Notification notification = createMonitoringOfficerAssignedNotification(monitoringOfficer);
+
+        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
+
+        return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult));
+    }
+
+
+    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer) {
+
+        NotificationTarget notificationTarget = createMonitoringOfficerAssignedNotificationTarget(monitoringOfficer);
+
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("dashboardUrl", webBaseUrl);
+
+        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments =
+                createArgsForMonitoringOfficerAssignedEmail(notificationTarget, monitoringOfficer);
+
+        return new Notification(systemNotificationSource, singletonList(notificationTarget),
+                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, notificationTargetSpecificArguments);
+
+    }
+
+    private NotificationTarget createMonitoringOfficerAssignedNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
+
+        String fullName = getMonitoringOfficerFullName(monitoringOfficer);
+
+        return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
+
+    }
+    private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
+
+        // At this stage, validation has already been done to ensure that first name and last name are not empty
+        return new StringBuilder()
+                .append(monitoringOfficer.getFirstName())
+                .append(" ")
+                .append(monitoringOfficer.getLastName())
+                .toString();
+    }
+
+    private Map<NotificationTarget, Map<String, Object>> createArgsForMonitoringOfficerAssignedEmail
+            (NotificationTarget notificationTarget, MonitoringOfficerResource monitoringOfficer) {
+
+        Project project = projectRepository.findOne(monitoringOfficer.getProject());
+
+        Map<String, Object> perNotificationTargetArguments = new HashMap<>();
+        perNotificationTargetArguments.put("projectName", project.getName());
+
+        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = new HashMap<>();
+        notificationTargetSpecificArguments.put(notificationTarget, perNotificationTargetArguments);
+
+        return notificationTargetSpecificArguments;
     }
 
     private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {

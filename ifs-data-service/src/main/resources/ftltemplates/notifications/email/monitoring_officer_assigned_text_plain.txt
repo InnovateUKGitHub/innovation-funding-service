@@ -1,0 +1,17 @@
+Dear ${notificationTarget.name},
+
+TODO - Change this template with the actual contents
+
+Once again, congratulations on the successful outcome of your application.
+
+Yours sincerely,
+
+Competitions Team
+Innovate UK
+
+North Star House
+North Star Avenue
+Swindon
+Wiltshire
+SN2 1JF
+© Crown copyright

@@ -7,6 +7,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -69,4 +70,8 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
     ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource);
+
+    //TODO - Add Security to this
+    @NotSecured(value = "", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
 }
