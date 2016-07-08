@@ -805,8 +805,9 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            if (durationInMonth == null || durationInMonth > 36L) {
+            if (durationInMonth < 1 || durationInMonth > 36L) {
                 errors.add("Please enter a valid duration between 1 and 36 months");
+                application.setDurationInMonths(durationInMonth);
             } else {
                 application.setDurationInMonths(durationInMonth);
                 applicationService.save(application);
