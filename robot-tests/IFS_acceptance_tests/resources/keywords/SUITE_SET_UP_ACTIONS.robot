@@ -25,7 +25,7 @@ Log in create a new invite application invite academic collaborators and accept 
     ...    AND    Invite and accept the invitation
     ...    AND    the user closes the browser
 
-create new account for submitting and create new submit application and mark every section but one as complete
+new account complete all but one
     create new account for submitting
     create new submit application
     the user marks every section but one as complete
@@ -42,11 +42,8 @@ create new account for submitting
     And the user selects the checkbox    useSearchResultAddress
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user fills the create account form    Temur    Ketsbaia
     And the user enters text to a text field    name=email    worth.email.test+submittest@gmail.com
-    And the user enters text to a text field    id=password    Passw0rd123
-    And the user enters text to a text field    id=retypedPassword    Passw0rd123
-    And the user submits the form
+    And the user fills the create account form    Temur    Ketsbaia
     When the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     Then Guest user log-in    worth.email.test+submit@gmail.com    Passw0rd123
