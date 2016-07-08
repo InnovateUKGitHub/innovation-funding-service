@@ -1,6 +1,5 @@
 package com.worth.ifs.registration;
 
-import com.google.common.net.UrlEscapers;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
@@ -581,17 +580,16 @@ public class OrganisationCreationController {
     }
 
     private String escapePathVariable(final String input){
-        return UrlEscapers.urlPathSegmentEscaper().escape(input);
+        return (input != null && !input.equals("\\")) ? encodeUrlParam(input) : "";
     }
 
 
-    public String encodeUrlParam(final String input) {
-        String encodedParam = "";
+    private String encodeUrlParam(final String input) {
         try {
-            encodedParam = UriUtils.encodeQueryParam(input,"UTF-8");
+            return UriUtils.encodeQueryParam(input,"UTF-8");
         } catch (UnsupportedEncodingException e) {
-            LOG.error("Unable to decode search string " + input, e);
+            LOG.error("Unable to encode search string " + input, e);
         }
-        return encodedParam;
+        return input;
     }
 }
