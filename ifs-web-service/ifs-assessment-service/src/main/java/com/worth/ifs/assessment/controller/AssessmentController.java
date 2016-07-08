@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * Exposes CRUD operations through a REST API to manage assessment related web data operations.
@@ -54,8 +55,9 @@ public class AssessmentController {
     }
 
     private AssessmentSummaryViewModel populateModel(Long assessmentId) throws ExecutionException, InterruptedException {
+        final long QUESTION_SECTION_ID =2L;
         List<AssessmentFeedbackResource> listOfAssessmentFeedback = assessmentFeedbackService.getAllAssessmentFeedback(assessmentId);
-        List<QuestionResource> listOfQuestionResource = assessmentService.getAllQuestionsById(assessmentId);
+        List<QuestionResource> listOfQuestionResource = assessmentService.getAllQuestionsById(assessmentId).stream().filter(questionResource -> questionResource.getSection()==QUESTION_SECTION_ID).collect(Collectors.toList());
         List<QuestionWithFeedbackHelper> listOfQuestionWithFeedback = new ArrayList<>();
 
         listOfQuestionResource.stream().sorted(new Comparator<QuestionResource>() {

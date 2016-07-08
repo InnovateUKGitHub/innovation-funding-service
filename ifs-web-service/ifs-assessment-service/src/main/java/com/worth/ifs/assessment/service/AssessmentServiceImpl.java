@@ -46,6 +46,6 @@ public class AssessmentServiceImpl implements AssessmentService {
         ProcessRoleResource processRoleResource = processRoleService.getById(this.getById(assessmentId).getProcessRole()).get();
         ApplicationResource applicationResource = applicationService.getById(processRoleResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        return questionService.findByCompetition(competitionResource.getId()).stream().filter(questionResource -> questionResource.getSection()==2).collect(Collectors.toList());
+        return questionService.findByCompetition(competitionResource.getId());
     }
 }
