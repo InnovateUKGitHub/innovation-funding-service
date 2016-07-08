@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 @PermissionRules
 public class SectionPermissionRules extends BasePermissionRules {
-
-
     @PermissionRule(value = "READ", description = "everyone can read sections")
     public boolean userCanReadSection(SectionResource section, UserResource user) {
         return true;
