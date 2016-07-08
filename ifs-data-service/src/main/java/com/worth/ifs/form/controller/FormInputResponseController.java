@@ -2,16 +2,17 @@ package com.worth.ifs.form.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputResponseCommand;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.transactional.FormInputService;
-import com.worth.ifs.validator.ValidatedResponse;
 import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -34,6 +35,9 @@ public class FormInputResponseController {
     @Autowired
     private ValidationUtil validationUtil;
 
+    @Autowired
+    private MessageSource messageSource;
+
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
@@ -47,17 +51,16 @@ public class FormInputResponseController {
     }
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
-    public RestResult<List<String>> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
+    public RestResult<ValidationMessages> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
 
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long formInputId = jsonObj.get("formInputId").asLong();
         JsonNode ignoreEmptyNode = jsonObj.get("ignoreEmpty");
-        Boolean ignoreEmpty;
-        ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
+        Boolean ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
-        ServiceResult<List<String>> result = formInputService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId,  userId, value)).andOnSuccessReturn(response -> {
+        ServiceResult<ValidationMessages> result = formInputService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId,  userId, value)).andOnSuccessReturn(response -> {
 
             BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
             if (bindingResult.hasErrors()) {
@@ -68,8 +71,7 @@ public class FormInputResponseController {
             formInputResponseRepository.save(response);
             LOG.debug("Single question saved!");
 
-            ValidatedResponse validatedResponse = new ValidatedResponse(bindingResult, response);
-            return validatedResponse.getAllErrors();
+            return new ValidationMessages(messageSource, null, bindingResult);
         });
 
         return result.toPutWithBodyResponse();
