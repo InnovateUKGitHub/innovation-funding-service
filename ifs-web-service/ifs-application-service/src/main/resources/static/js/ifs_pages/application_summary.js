@@ -1,4 +1,4 @@
-IFS.application_summary = (function(){
+IFS.application.application_summary = (function(){
     "use strict";
     var s;
     return {
@@ -8,8 +8,8 @@ IFS.application_summary = (function(){
         },
         init: function(){
           s =this.settings;
-          IFS.application_summary.handleChangeAgreeTermsCheckbox();
-          jQuery(document).on('change', s.checkbox, IFS.application_summary.handleChangeAgreeTermsCheckbox);
+          IFS.application.application_summary.handleChangeAgreeTermsCheckbox();
+          jQuery(document).on('change', s.checkbox, IFS.application.application_summary.handleChangeAgreeTermsCheckbox);
         },
         disableButton : function(){
           //add aria-disabled for the modal button and disabled styling
@@ -20,9 +20,9 @@ IFS.application_summary = (function(){
         },
         handleChangeAgreeTermsCheckbox: function() {
         	if(jQuery(s.checkbox).prop("checked")) {
-            IFS.application_summary.enableButton();
+            IFS.application.application_summary.enableButton();
         	} else {
-            IFS.application_summary.disableButton();
+            IFS.application.application_summary.disableButton();
         	}
         }
     };
