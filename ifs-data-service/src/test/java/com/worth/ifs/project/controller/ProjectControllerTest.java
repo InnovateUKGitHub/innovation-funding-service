@@ -20,17 +20,16 @@ import java.util.List;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -204,17 +203,17 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withPhoneNumber("hello")
                 .build();
 
-        Error firstNameError = new Error("NotEmpty", "Please enter a first name", singletonList("firstName"), BAD_REQUEST);
-        Error lastNameError = new Error("NotEmpty", "Please enter a last name", singletonList("lastName"), BAD_REQUEST);
-        Error emailError = new Error("Email", "Please enter a valid email address", singletonList("email"), BAD_REQUEST);
-        Error phoneNumberError = new Error("Pattern", "Please enter a valid phone number", singletonList("phoneNumber"), BAD_REQUEST);
+        Error firstNameError = fieldError("firstName", "NotEmpty");
+        Error lastNameError = fieldError("lastName", "NotEmpty");
+        Error emailError = fieldError("email", "Email");
+        Error phoneNumberError = fieldError("phoneNumber", "Pattern");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(firstNameError, lastNameError, emailError, phoneNumberError));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(monitoringOfficerResource)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(expectedErrors)));
 
         verify(projectServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);
@@ -252,20 +251,20 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
-        Error invalidSortCodeError = new Error("Pattern", "Please enter a valid 6 digit sort code", singletonList("sortCode"), BAD_REQUEST);
-        Error sortCodeNotProvided = new Error("NotBlank", "Sort code is mandatory", singletonList("sortCode"), BAD_REQUEST);
-        Error invalidAccountNumberError = new Error("Pattern", "Please enter a valid 8 digit account number", singletonList("accountNumber"), BAD_REQUEST);
-        Error accountNumberNotProvided = new Error("NotBlank", "Account number is mandatory", singletonList("accountNumber"), BAD_REQUEST);
-        Error organisationAddressNotProvided = new Error("NotNull", "Organisation Address is mandatory", singletonList("organisationAddress"), BAD_REQUEST);
-        Error organisationIdNotProvided = new Error("NotNull", "Organisation id is mandatory", singletonList("organisation"), BAD_REQUEST);
-        Error projectIdNotProvided = new Error("NotNull", "Project id is mandatory", singletonList("project"), BAD_REQUEST);
+        Error invalidSortCodeError = fieldError("sortCode", "Pattern");
+        Error sortCodeNotProvided = fieldError("sortCode", "NotBlank");
+        Error invalidAccountNumberError = fieldError("accountNumber","Pattern");
+        Error accountNumberNotProvided = fieldError("accountNumber", "NotBlank");
+        Error organisationAddressNotProvided = fieldError("organisationAddress","NotNull");
+        Error organisationIdNotProvided = fieldError("organisation","NotNull");
+        Error projectIdNotProvided = fieldError("project","NotNull");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
         mockMvc.perform(post("/project/{projectId}/bank-details", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(bankDetailsResource)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(expectedErrors)))
                 .andReturn();
 
@@ -276,7 +275,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(post("/project/{projectId}/bank-details", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(bankDetailsResource)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(expectedErrors)))
                 .andReturn();
     }
