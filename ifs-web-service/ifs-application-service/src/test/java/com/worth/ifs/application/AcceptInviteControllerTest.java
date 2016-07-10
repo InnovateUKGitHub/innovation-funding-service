@@ -1,7 +1,6 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.registration.AcceptInviteController;
 import org.junit.Before;
@@ -11,13 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
+import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,22 +37,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
 
         super.setup();
 
-        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-        localeResolver.setCookieDomain("domain");
-
-        final StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("exceptionHandler", ErrorControllerAdvice.class);
-
-        final WebMvcConfigurationSupport webMvcConfigurationSupport = new WebMvcConfigurationSupport();
-        webMvcConfigurationSupport.setApplicationContext(applicationContext);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(acceptInviteController, new ErrorControllerAdvice())
-                .setHandlerExceptionResolvers(webMvcConfigurationSupport.handlerExceptionResolver())
-                .setViewResolvers(viewResolver())
-                .setLocaleResolver(localeResolver)
-                .addFilters(new CookieFlashMessageFilter())
-                .build();
-
+        mockMvc = setupMockMvc(acceptInviteController, () -> loggedInUser, env, messageSource);
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -89,7 +70,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
                 .andExpect(view().name("registration/accept-invite-failure"));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testInviteEntryPageInvalid() throws Exception {
         mockMvc.perform(
                 get(String.format("/accept-invite/%s", INVALID_INVITE_HASH))

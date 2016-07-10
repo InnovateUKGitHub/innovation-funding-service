@@ -31,7 +31,7 @@ Academic organisations search
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Please enter valid characters
 
-Accept invitation flow as academic
+Accept invitation as academic
     [Documentation]    INFUND-1166
     ...
     ...    INFUND-917

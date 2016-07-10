@@ -7,6 +7,7 @@ import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.view.item.CostHandler;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
@@ -26,8 +27,14 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
@@ -46,10 +53,10 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     protected MessageSource messageSource;
 
-    public static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
+    public static final String REMOVE_FINANCE_DOCUMENT = "remove_uploaded_file";
 
     @Override
-    public Map<String, List<String>> update(HttpServletRequest request, Long userId, Long applicationId) {
+    public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId) {
         storeCostItems(request, userId, applicationId);
         return storeJESUpload(request, userId, applicationId);
     }
@@ -172,11 +179,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
     }
 
-    private Map<String, List<String>> storeJESUpload(HttpServletRequest request, Long userId, Long applicationId) {
-        final Map<String, String[]> params = request.getParameterMap();
-        
+    private ValidationMessages storeJESUpload(HttpServletRequest request, Long userId, Long applicationId) {
 
-        Map<String, List<String>> errorMap = new HashMap<>();
+        final Map<String, String[]> params = request.getParameterMap();
+
+
         if (params.containsKey(REMOVE_FINANCE_DOCUMENT)) {
         	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
@@ -191,11 +198,15 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                             file.getSize(),
                             file.getOriginalFilename(),
                             file.getBytes());
+
                     if (result.isFailure()) {
-                        errorMap.put("formInput[jes-upload]",
-                                result.getFailure().getErrors().stream()
-                                        .map(e ->
-                                                MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+
+                        List<Error> errors = simpleMap(result.getFailure().getErrors(), e -> {
+                            String lookedUpMessage = MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale());
+                            return fieldError("formInput[jes-upload]", lookedUpMessage);
+                        });
+
+                        return new ValidationMessages(errors);
                     }
                 } catch (IOException e) {
                 	LOG.error(e);
@@ -203,7 +214,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                 }
             }
         }
-        return errorMap;
+
+        return noErrors();
     }
 
     @Override

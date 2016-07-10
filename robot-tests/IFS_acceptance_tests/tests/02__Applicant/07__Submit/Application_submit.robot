@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation      -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
+Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
 ...
 ...
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
@@ -16,7 +16,7 @@ Documentation      -INFUND-172: As a lead applicant and I am on the application 
 ...
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
-Suite Setup       create new account for submitting and create new submit application and mark every section but one as complete
+Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -26,29 +26,25 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
-
-
 *** Test Cases ***
-
 Submit button disabled when the application is incomplete
-    [Documentation]     INFUND-195
-    [Tags]     Summary      Email
-    When the user clicks the button/link      jQuery=.button:contains("Review & submit")
+    [Documentation]    INFUND-195
+    [Tags]    Email
+    When the user clicks the button/link    jQuery=.button:contains("Review & submit")
     Then the submit button should be disabled
-    [Teardown]      the applicant marks the first section as complete
-
+    [Teardown]    the applicant marks the first section as complete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Summary    Pending     Email
-    # Pending due to INFUND-808 finance validation
-    Given the user clicks the button/link     link=Your finances
+    [Tags]    Email
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot submit test application
+    Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Edit")
-    And the user clicks the button/link     link=Dashboard
-    And the user clicks the button/link     jQuery=.button:contains("Review & submit")
+    And the user clicks the button/link    link= Application Overview
+    And the user clicks the button/link    jQuery=.button:contains("Review & submit")
     Then the submit button should be disabled
     [Teardown]    The user marks the finances as complete
-
 
 Submit flow (complete application)
     [Documentation]    INFUND-205
@@ -56,10 +52,10 @@ Submit flow (complete application)
     ...    INFUND-1887
     ...
     ...    INFUND-3107
-    [Tags]    Summary    HappyPath     Email
+    [Tags]    HappyPath    Email
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${SERVER}
-    And the user clicks the button/link     link=Robot submit test application
+    And the user clicks the button/link    link=Robot submit test application
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    summary
     Then the applicant accepts the terms and conditions
@@ -69,7 +65,6 @@ Submit flow (complete application)
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
 
-
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath
@@ -77,7 +72,7 @@ The applicant should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]     Email
+    [Tags]    Email
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot submit test application
     When the user clicks the button/link    Link=View application
@@ -86,7 +81,7 @@ Submitted application is read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]     Email
+    [Tags]    Email
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=Robot submit test application
@@ -111,14 +106,14 @@ the applicant clicks the submit button and the clicks cancel in the submit modal
 
 The user can check that the sections are read only
     the user navigates to the page    ${dashboard_url}
-    the user clicks the button/link   link=Robot submit test application
-    the user clicks the button/link   link=View application
-    the user clicks the button/link   css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
+    the user clicks the button/link    link=Robot submit test application
+    the user clicks the button/link    link=View application
+    the user clicks the button/link    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
     the user should not see the element    jQuery=button:contains("Edit")
     the user clicks the button/link    css=.section-overview section:nth-of-type(2) .collapsible:nth-of-type(10)
-    the user should not see the element      jQuery=.button:contains("Edit")
-    the user clicks the button/link   css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
-    the user should not see the element      jQuery=.button:contains("Edit")
+    the user should not see the element    jQuery=.button:contains("Edit")
+    the user clicks the button/link    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
+    the user should not see the element    jQuery=.button:contains("Edit")
 
 the user should get a confirmation email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
@@ -139,19 +134,21 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    id=agree-terms-page
 
 The user marks the finances as complete
-    Given the user clicks the button/link     link=Your finances
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot submit test application
+    Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Mark all as complete")
 
 the applicant marks the first section as complete
-    the user clicks the button/link      link=Application Overview
-    the user clicks the button/link     link=Application details
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application details
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    18
     Clear Element Text    id=application_details-startdate_year
     Input Text    id=application_details-startdate_year    2018
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    11
-    the user clicks the button/link     name=mark_as_complete
+    the user clicks the button/link    name=mark_as_complete
 
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")

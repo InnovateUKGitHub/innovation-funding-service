@@ -410,8 +410,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
-        String errorKey = result.getFailure().getErrors().get(0).getErrorKey();
-        Assert.assertEquals(CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE.name(), errorKey);
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
     }
 
     @Test
@@ -433,8 +432,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
-        String errorKey = result.getFailure().getErrors().get(0).getErrorKey();
-        Assert.assertEquals(CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED.name(), errorKey);
+        assertTrue(result.getFailure().is(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
     }
 
     @Test
