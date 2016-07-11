@@ -109,7 +109,7 @@ IFS.core.autoSave = (function(){
                         formTextareaSaveInfo.html('Saved!');
                         if(s.hideAjaxValidation === false){
                           jQuery.each(data.validation_errors, function(index, value){
-                              IFS.formValidation.setInvalid(field,value);
+                              IFS.core.formValidation.setInvalid(field,value);
                               serverSideValidationErrors.push(value);
                           });
                         }
@@ -129,7 +129,7 @@ IFS.core.autoSave = (function(){
                              var label = formGroup.find('label,legend').first();
                              if (label.length) {
                                serverSideValidationErrors.push(errorMessage);
-                               IFS.formValidation.setInvalid(field,errorMessage);
+                               IFS.core.formValidation.setInvalid(field,errorMessage);
                              }
                           }
                       } else {
@@ -142,7 +142,7 @@ IFS.core.autoSave = (function(){
                      var err = jQuery.parseJSON(xhr.responseText);
                      var errorMessage = err.error+' : '+err.message;
                      serverSideValidationErrors.push(errorMessage);
-                     IFS.formValidation.setInvalid(field,errorMessage);
+                     IFS.core.formValidation.setInvalid(field,errorMessage);
                      formTextareaSaveInfo.html('');
                  }
            }).complete(function(){
@@ -153,7 +153,7 @@ IFS.core.autoSave = (function(){
         },
         clearServerSideValidationErrors : function(field){
             for (var i = 0; i < serverSideValidationErrors.length; i++){
-                 IFS.formValidation.setValid(field,serverSideValidationErrors[i]);
+                 IFS.core.formValidation.setValid(field,serverSideValidationErrors[i]);
             }
         }
 
