@@ -16,7 +16,7 @@
 //For now this will suffice, if complexity increases we might look at a more complex loader like requireJs.
 //Please think before adding javascript, this project should work without any of this scripts.
 
-if(typeof(IFS) == 'undefined'){ var IFS = {};}
+if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.application = {};
 IFS.application.loadOrder = {
   common : {
