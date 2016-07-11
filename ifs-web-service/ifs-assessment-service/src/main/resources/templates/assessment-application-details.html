@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.question.shortName) ? 'Assessment' : model.question.shortName}" th:remove="tag" />
+        <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-details">
@@ -15,7 +15,7 @@
 
             <div class="page-title">
                 <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${model.competition})" th:remove="tag" />
-                <h1 class="heading-xlarge" th:text="${model.question.shortName}" />
+                <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
             <div th:include="fragments/assessment :: application_details (currentApplication=${model.application}, applicationOrganisations=${applicationOrganisations}, pendingOrganisationNames=${pendingOrganisationNames}, leadOrganisation=${leadOrganisation})" th:remove="tag" />

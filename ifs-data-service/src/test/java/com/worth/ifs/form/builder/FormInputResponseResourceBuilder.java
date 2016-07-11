@@ -54,6 +54,10 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return with(response -> response.setFilename(fileName));
     }
 
+    public FormInputResponseResourceBuilder withFilesizeBytes(Long filesizeBytes) {
+        return with(response -> response.setFilesizeBytes(filesizeBytes));
+    }
+
     public FormInputResponseResourceBuilder withFormInputMaxWordCount(Integer formInputMaxWordCount) {
         return with(response -> response.setFormInputMaxWordCount(formInputMaxWordCount));
     }
