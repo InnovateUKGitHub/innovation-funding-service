@@ -1,6 +1,6 @@
 //  Progressive collapsibles original code by @Heydonworks altered by Worth Systems
 //-----------------------------------------------------------------------------
-IFS.collapsible = (function(){
+IFS.core.collapsible = (function(){
   "use strict";
   var s; // private alias to settings
   var index=0;
@@ -13,16 +13,16 @@ IFS.collapsible = (function(){
             s = this.settings;
             //if this has to be more dynamicly updated in the future we can add a custom event
             jQuery(s.collapsibleEl).each(function(){
-              IFS.collapsible.initCollapsibleHTML(this);
+              IFS.core.collapsible.initCollapsibleHTML(this);
             });
             jQuery('body').on('click', '.collapsible > h2 >  [aria-controls], .collapsible > h3 >  [aria-controls]' , function(){
-              IFS.collapsible.toggleCollapsible(this);
+              IFS.core.collapsible.toggleCollapsible(this);
             });
       },
       initCollapsibleHTML  : function(el) {
           var inst = jQuery(el);
           var id = 'collapsible-'+index;   // create unique id for a11y relationship
-          var loadstate = IFS.collapsible.getLoadstateFromCookie(id);
+          var loadstate = IFS.core.collapsible.getLoadstateFromCookie(id);
           // wrap the content and make it focusable
           inst.nextUntil('h2,h3').wrapAll('<div id="'+ id +'" aria-hidden="'+!loadstate+'">');
           // Add the button inside the <h2> so both the heading and button semanics are read
@@ -36,7 +36,7 @@ IFS.collapsible = (function(){
           //toggle the current
           inst.attr('aria-expanded', state);
           panel.attr('aria-hidden', !state);
-          IFS.collapsible.setLoadStateInCookie(panel.attr('id'),state);
+          IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'),state);
       },
       getLoadstateFromCookie : function(index){
           if(typeof(Cookies.getJSON('collapsibleStates')) !== 'undefined'){

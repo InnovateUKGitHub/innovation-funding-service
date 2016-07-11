@@ -1,0 +1,24 @@
+// jshint ignore: start
+var gulp = require('gulp');
+var jshint = require('gulp-jshint');
+var uglify = require('gulp-uglify');
+var concat = require('gulp-concat');
+
+gulp.task('default',['js']);
+
+//build all js
+gulp.task('js',['application-js']);
+
+//concat and minify all the ifs files
+gulp.task('application-js', function () {
+   return gulp.src([
+      'js/ifsApplicationLoader.js',
+      'js/ifs_modules/*.js',
+      'js/ifs_pages/*.js',
+   		])
+      .pipe(jshint())
+      .pipe(jshint.reporter('default'))
+  	  .pipe(concat('application.min.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest('js/dest'))
+});

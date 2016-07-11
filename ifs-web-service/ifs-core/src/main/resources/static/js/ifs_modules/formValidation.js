@@ -1,8 +1,4 @@
-
-
-
-
-IFS.formValidation = (function(){
+IFS.core.formValidation = (function(){
     "use strict";
     var s;
     return {
@@ -70,31 +66,31 @@ IFS.formValidation = (function(){
         },
         init : function(){
             s = this.settings;
-            s.html5validationMode =  IFS.formValidation.checkHTML5validationMode();
-            IFS.formValidation.initValidation();
+            s.html5validationMode =  IFS.core.formValidation.checkHTML5validationMode();
+            IFS.core.formValidation.initValidation();
         },
         initValidation : function(){
           //bind the checks if password and retyped password are equal
           jQuery('body').on('change keyup ifsValidate', s.passwordEqual.field1+','+s.passwordEqual.field2, function(e){
               switch(e.type){
                   case 'keyup':
-                    clearTimeout(window.IFS.formValidation_timer);
-                    window.IFS.formValidation_timer = setTimeout(function(){IFS.formValidation.checkEqualPasswords(true);}, s.typeTimeout);
+                    clearTimeout(window.IFS.core.formValidation_timer);
+                    window.IFS.core.formValidation_timer = setTimeout(function(){IFS.core.formValidation.checkEqualPasswords(true);}, s.typeTimeout);
                     break;
                   default:
-                    IFS.formValidation.checkEqualPasswords(true);
+                    IFS.core.formValidation.checkEqualPasswords(true);
               }
           });
-          jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this),true);});
-          jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this),true);});
-          jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this),true);});
-          jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this),true);});
-          jQuery('body').on('change', s.max.fields , function(){IFS.formValidation.checkMax(jQuery(this),true);});
-          jQuery('body').on('blur change',s.required.fields,function(){ IFS.formValidation.checkRequired(jQuery(this),true); });
-          jQuery('body').on('change',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this),true); });
-          jQuery('body').on('change',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this),true); });
-          jQuery('body').on('change',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this),true); });
-          jQuery('body').on('change',s.date.fields,function(){  IFS.formValidation.checkDate(jQuery(this),true); });
+          jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.core.formValidation.checkPasswordPolicy(jQuery(this),true);});
+          jQuery('body').on('change', s.email.fields , function(){IFS.core.formValidation.checkEmail(jQuery(this),true);});
+          jQuery('body').on('change', s.number.fields , function(){IFS.core.formValidation.checkNumber(jQuery(this),true);});
+          jQuery('body').on('change', s.min.fields , function(){IFS.core.formValidation.checkMin(jQuery(this),true);});
+          jQuery('body').on('change', s.max.fields , function(){IFS.core.formValidation.checkMax(jQuery(this),true);});
+          jQuery('body').on('blur change',s.required.fields,function(){ IFS.core.formValidation.checkRequired(jQuery(this),true); });
+          jQuery('body').on('change',s.minlength.fields,function(){ IFS.core.formValidation.checkMinLength(jQuery(this),true); });
+          jQuery('body').on('change',s.maxlength.fields,function(){ IFS.core.formValidation.checkMaxLength(jQuery(this),true); });
+          jQuery('body').on('change',s.tel.fields,function(){ IFS.core.formValidation.checkTel(jQuery(this),true); });
+          jQuery('body').on('change',s.date.fields,function(){  IFS.core.formValidation.checkDate(jQuery(this),true); });
 
           //set data attribute on date fields
           //which has the combined value of the dates
@@ -110,21 +106,21 @@ IFS.formValidation = (function(){
         checkEqualPasswords : function(showMessage){
             var pw1 = jQuery(s.passwordEqual.field1);
             var pw2 = jQuery(s.passwordEqual.field2);
-            var errorMessage = IFS.formValidation.getErrorMessage(pw2,'passwordEqual');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(pw2,'passwordEqual');
 
             //if both are on the page and have content (.val)
             if(pw1.length && pw2.length && pw1.val().length && pw2.val().length){
                 if(pw1.val() == pw2.val()){
                     if(showMessage){
-                      IFS.formValidation.setValid(pw1,errorMessage);
-                      IFS.formValidation.setValid(pw2,errorMessage);
+                      IFS.core.formValidation.setValid(pw1,errorMessage);
+                      IFS.core.formValidation.setValid(pw2,errorMessage);
                     }
                     return true;
                 }
                 else {
                     if(showMessage){
-                      IFS.formValidation.setInvalid(pw1,errorMessage);
-                      IFS.formValidation.setInvalid(pw2,errorMessage);
+                      IFS.core.formValidation.setInvalid(pw1,errorMessage);
+                      IFS.core.formValidation.setInvalid(pw2,errorMessage);
                     }
                     return false;
                 }
@@ -138,40 +134,40 @@ IFS.formValidation = (function(){
             if(password.length){
               var uppercase = /(?=\S*?[A-Z])/;
               if(uppercase.test(password) === false){
-                  if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.uppercase); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.uppercase); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.uppercase); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.uppercase); }
               }
 
               var lowercase = /(?=\S*?[a-z])/;
               if(lowercase.test(password) === false){
-                  if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.lowercase); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.lowercase); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.lowercase); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.lowercase); }
               }
 
               var number = /(?=\S*?[0-9])/;
               if(number.test(password) === false){
-                  if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.number); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.number); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.number); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.number); }
               }
 
               var firstname = jQuery(s.passwordPolicy.fields.firstname).val();
               var lastname = jQuery(s.passwordPolicy.fields.lastname).val();
               if(firstname.replace(' ','').length || lastname.replace(' ','').length){
                 if((password.toLowerCase().indexOf(firstname.toLowerCase()) > -1) || (password.toLowerCase().indexOf(lastname.toLowerCase()) > -1)){
-                  if(showMessage){ IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.name);}
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.name);}
                   confirmsToPasswordPolicy = false;
                 }
                 else {
-                    if(showMessage){ IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.name);}
+                    if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.name);}
                 }
               }
             }
@@ -181,20 +177,20 @@ IFS.formValidation = (function(){
             //checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
             var email = field.val();
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'email');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'email');
 
             var validEmail = re.test(email);
             if(!validEmail){
-              if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage); }
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage); }
               return false;
             }
             else {
-              if(showMessage) { IFS.formValidation.setValid(field,errorMessage); }
+              if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage); }
               return true;
             }
         },
         checkNumber : function(field,showMessage){
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'number');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'number');
             //In modern browsers the number field doesn't allow text input
             //When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
             //An empty string is returned as true therefore
@@ -202,11 +198,11 @@ IFS.formValidation = (function(){
             if(s.html5validationMode){
                 var domField = field[0];
                 if(domField.validity.valid === false && domField.validity.badInput === true){
-                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage); }
+                  if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage); }
                   return false;
                 }
                 else {
-                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage); }
+                  if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage); }
                   return true;
                 }
             }
@@ -214,137 +210,137 @@ IFS.formValidation = (function(){
               //old browser mode
               //https://api.jquery.com/jQuery.isNumeric for what this checks
               if((field.val() > 0) && !jQuery.isNumeric(field.val())){
-                if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage); }
+                if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage); }
                 return false;
               }
               else{
-                if(showMessage) { IFS.formValidation.setValid(field,errorMessage); }
+                if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage); }
                 return true;
               }
             }
         },
         checkMax : function(field,showMessage){
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'max');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'max');
             if(s.html5validationMode){
                //html5 validation api
                var domField = field[0];
                if(domField.validity.rangeOverflow === true){
-                 if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                 if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
                  return false;
                }
                else {
-                 if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                 if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
                  return true;
                }
             }
             else {
               //classic mode
               var max = parseInt(field.attr('max'),10);
-              if(IFS.formValidation.checkNumber(field,true)){
+              if(IFS.core.formValidation.checkNumber(field,true)){
                 var fieldVal = parseInt(field.val(),10);
                 if(fieldVal > max){
-                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                  if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
                   return false;
                 }
                 else {
-                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                  if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
                   return true;
                 }
               }
             }
         },
         checkMin : function(field,showMessage){
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'min');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'min');
             if(s.html5validationMode){
               var domField = field[0];
               if(domField.validity.rangeUnderflow === true){
-                if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
                 return false;
               }
               else {
-                if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
                 return true;
               }
             }
             else {
               var min = parseInt(field.attr('min'),10);
-              if(IFS.formValidation.checkNumber(field)){
+              if(IFS.core.formValidation.checkNumber(field)){
                 var fieldVal = parseInt(field.val(),10);
                 if(fieldVal < min){
-                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                  if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
                   return false;
                 }
                 else {
-                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                  if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
                   return true;
                 }
               }
             }
         },
         checkRequired : function(field,showMessage){
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'required');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'required');
             if(field.val() !== null){
               if(field.is(':checkbox,:radio')){
                  var name = field.attr("name");
                  if(typeof(name) !== 'undefined'){
                    if(jQuery('[name="'+name+'"]:checked').length === 0){
-                     if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                     if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
                      return false;
                    }
                    else {
-                     if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                     if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
                      return true;
                    }
                  }
               }
               else {
                 if(field.val().length === 0){
-                  if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+                  if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
                   return false;
                 }
                 else {
-                  if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+                  if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
                   return true;
                 }
               }
             }
         },
         checkMinLength : function(field,showMessage){
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'minlength');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'minlength');
             var minlength = parseInt(field.attr('minlength'),10);
             if(field.val().length < minlength){
-              if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
               return false;
             }
             else {
-              if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+              if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
               return true;
             }
         },
         checkMaxLength : function(field,showMessage){
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'maxlength');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'maxlength');
             var maxlength = parseInt(field.attr('maxlength'),10);
             if(field.val().length > maxlength){
-              if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
               return false;
             }
             else {
-              if(showMessage) {IFS.formValidation.setValid(field,errorMessage);}
+              if(showMessage) {IFS.core.formValidation.setValid(field,errorMessage);}
               return true;
             }
         },
         checkTel : function(field,showMessage){
             var tel = field.val();
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'tel');
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'tel');
             var re = /^(?=.*[0-9])[- +()0-9]+$/;
             var validPhone = re.test(tel);
 
             if(!validPhone){
-              if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
               return false;
             }
             else {
-              if(showMessage) { IFS.formValidation.setValid(field,errorMessage);}
+              if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
               return true;
             }
         },
@@ -359,7 +355,7 @@ IFS.formValidation = (function(){
           var allFields = d.add(m).add(y);
           var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'));
           var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0));
-          var validNumbers = IFS.formValidation.checkNumber(d,false) && IFS.formValidation.checkNumber(m,false) && IFS.formValidation.checkNumber(y,false);
+          var validNumbers = IFS.core.formValidation.checkNumber(d,false) && IFS.core.formValidation.checkNumber(m,false) && IFS.core.formValidation.checkNumber(y,false);
 
           if(validNumbers && filledOut){
             var month = parseInt(m.val(),10);
@@ -368,29 +364,29 @@ IFS.formValidation = (function(){
             var date = new Date(year,month-1,day); //parse as date to check if it is a valid date
 
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
-                if(showMessage){ IFS.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
                 allFields.removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
 
                 if(dateGroup.hasClass("js-future-date")){
                   var now = new Date();
                   if(now < date){
-                    if(showMessage){ IFS.formValidation.setValid(allFields,s.date.messageInvalid.future); }
+                    if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.future); }
                     return true;
                   }
                   else {
-                    if(showMessage){ IFS.formValidation.setInvalid(allFields,s.date.messageInvalid.future); }
+                    if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.future); }
                     return false;
                   }
                 }
                 return true;
             } else {
-                if(showMessage){ IFS.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
                 allFields.addClass('js-autosave-disabled').attr('data-date','');
                 return false;
             }
           }
           else if (filledOut || fieldsVisited){
-                if(showMessage){ IFS.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
                 allFields.addClass('js-autosave-disabled').attr('data-date','');
                 return false;
           }

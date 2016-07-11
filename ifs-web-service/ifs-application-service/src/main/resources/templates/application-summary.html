@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'" th:remove="tag"/>
 </head>
-<body class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+<body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 <div th:if="${currentApplication.isOpen()}" th:include="fragments/modals ::modal-confirm-submit-application
     (messageTitle='This is your final chance to make changes to the application.',
