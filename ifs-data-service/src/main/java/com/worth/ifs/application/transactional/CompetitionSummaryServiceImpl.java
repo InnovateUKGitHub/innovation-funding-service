@@ -1,16 +1,15 @@
 package com.worth.ifs.application.transactional;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.transactional.BaseTransactionalService;
-
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
 import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
@@ -48,7 +47,6 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
 
 	private Long getApplicationInProgressCountByCompetitionId(Long competitionId) {
 		final List<Application> applications = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS);
-
         return countApplicationsByProgressFilter(applications, percentage -> percentage > 50);
 	}
 
