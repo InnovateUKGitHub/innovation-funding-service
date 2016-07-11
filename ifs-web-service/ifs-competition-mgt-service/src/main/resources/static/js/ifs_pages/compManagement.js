@@ -19,43 +19,43 @@ IFS.competition_management.various = (function(){
         },
         init: function(){
             s = this.settings;
-            IFS.competition_management.getWindowWidth();
-            IFS.competition_management.getMenuHeight();
-            IFS.competition_management.getContainerHeight();
-            IFS.competition_management.handleCompetitionCode();
+            IFS.competition_management.various.getWindowWidth();
+            IFS.competition_management.various.getMenuHeight();
+            IFS.competition_management.various.getContainerHeight();
+            IFS.competition_management.various.handleCompetitionCode();
 
             jQuery("body.competition-management.competition-setup").on('change','#competitionTypeId',function(){
-              IFS.competition_management.handleStateAid();
+              IFS.competition_management.various.handleStateAid();
           });
             jQuery("body.competition-management.competition-setup").on('change','[name="innovationSectorCategoryId"]',function(){
-              IFS.competition_management.handleInnovationSector();
+              IFS.competition_management.various.handleInnovationSector();
             });
 
-            jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.handleFundingDecisionSelectChange);
+            jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.various.handleFundingDecisionSelectChange);
 
-            IFS.competition_management.handleFundingDecisionEnableOrDisable();
-            IFS.competition_management.alterSubmitDecisionFormAction();
+            IFS.competition_management.various.handleFundingDecisionEnableOrDisable();
+            IFS.competition_management.various.alterSubmitDecisionFormAction();
 
-            if(IFS.competition_management.stickyEnabled()){
-                IFS.competition_management.getMenuWidth();
-                IFS.competition_management.getMenuOffset();
-                IFS.competition_management.getContainerOffset();
-                IFS.competition_management.menuPxToPercentage();
+            if(IFS.competition_management.various.stickyEnabled()){
+                IFS.competition_management.various.getMenuWidth();
+                IFS.competition_management.various.getMenuOffset();
+                IFS.competition_management.various.getContainerOffset();
+                IFS.competition_management.various.menuPxToPercentage();
             }
 
             jQuery(window).resize(function(){
               clearTimeout(resizeTimer);
               resizeTimer = setTimeout(function(){
-                IFS.competition_management.getMenuHeight();
-                IFS.competition_management.getMenuWidth();
-                IFS.competition_management.getContainerHeight();
-                IFS.competition_management.getWindowWidth();
-                IFS.competition_management.menuPxToPercentage();
-                IFS.competition_management.stickyScroll();
+                IFS.competition_management.various.getMenuHeight();
+                IFS.competition_management.various.getMenuWidth();
+                IFS.competition_management.various.getContainerHeight();
+                IFS.competition_management.various.getWindowWidth();
+                IFS.competition_management.various.menuPxToPercentage();
+                IFS.competition_management.various.stickyScroll();
               },250);
             });
             jQuery(document).scroll(function(){
-                IFS.competition_management.stickyScroll();
+                IFS.competition_management.various.stickyScroll();
             });
         },
         getWindowWidth: function(){
@@ -87,7 +87,7 @@ IFS.competition_management.various = (function(){
           calculatedValues.menuPercentage =  parseFloat((calculatedValues.menuWidth/calculatedValues.windowWidth)*100).toFixed(2);
         },
         stickyScroll : function(){
-          if(IFS.competition_management.stickyEnabled()){
+          if(IFS.competition_management.various.stickyEnabled()){
             var scroll = jQuery(document).scrollTop();
             if((calculatedValues.menuHeight+scroll) > (calculatedValues.containerHeight+calculatedValues.containerOffsetTop)){
                 var top = (calculatedValues.containerHeight+calculatedValues.containerOffsetTop)-calculatedValues.menuHeight;
@@ -140,20 +140,20 @@ IFS.competition_management.various = (function(){
          },
         handleFundingDecisionSelectChange: function(){
 
-        	IFS.competition_management.handleFundingDecisionEnableOrDisable();
+        	IFS.competition_management.various.handleFundingDecisionEnableOrDisable();
 
         	var element = jQuery(this);
         	var applicationId = element.attr('name');
         	var competitionId = element.attr('competition');
         	var value = element.val();
 
-        	IFS.competition_management.saveFundingDecision(competitionId, applicationId, value);
+        	IFS.competition_management.various.saveFundingDecision(competitionId, applicationId, value);
         },
         handleFundingDecisionEnableOrDisable: function() {
-        	if(IFS.competition_management.allSelectsDecided()){
-                IFS.competition_management.enableFundingDecisionButton();
+        	if(IFS.competition_management.various.allSelectsDecided()){
+                IFS.competition_management.various.enableFundingDecisionButton();
         	} else {
-                IFS.competition_management.disableFundingDecisonButton();
+                IFS.competition_management.various.disableFundingDecisonButton();
         	}
         },
         saveFundingDecision: function(competitionId, applicationId, value) {

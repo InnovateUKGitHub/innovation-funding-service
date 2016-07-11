@@ -25,6 +25,7 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
     @Mappings({
             @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount"),
             @Mapping(source = "fileEntry.name", target = "filename"),
+            @Mapping(source = "fileEntry.filesizeBytes", target = "filesizeBytes"),
             @Mapping(source = "updatedBy.user.id", target = "updatedByUser"),
             @Mapping(source = "updatedBy.user.name", target = "updatedByUserName")
 })
