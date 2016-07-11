@@ -148,11 +148,12 @@ Eligibility server-side validations
     [Tags]
     Given the user clicks the button/link    link=Eligibility
     And the user should see the text in the page    Stream
+    Given the user selects the radio button    multipleStream    yes
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Please select at least one research category
     And the user should see the text in the page    Please select a collaboration level
     And the user should see the text in the page    Please select a lead applicant type
-    And the user should see the text in the page    Please select a stream option
+    And the user should see the text in the page    A stream name is required
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986, INFUND-2988
@@ -170,6 +171,7 @@ Eligibility client-side validations
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
     And the user enters text to a text field    id=streamName    Test stream name
+    And the user moves focus to a different part of the page
     And the user should not see the text in the page    A stream name is required
 
 Eligibility information can be marked as done then edit again
@@ -184,7 +186,7 @@ Eligibility information can be marked as done then edit again
     And the user clicks the button/link    jQuery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Edit")
 
-The user can see the options for single and collaborative, lead applicant type, and streams
+Eligibility page should contain the correct options
     [Documentation]    INFUND-2989, INFUND-2990
     When the user should see the element    xpath=//input[@type='radio' and @name='multipleStream' and @value='yes']
     When the user should see the element    xpath=//input[@type='radio' and @name='multipleStream' and @value='no']
