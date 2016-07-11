@@ -1,4 +1,4 @@
-/* jshint strict: false, undef: true, unused: true */
+/* jshint strict: false, undef: true, unused: true  */
 
 
 //Dom based routing
@@ -15,7 +15,8 @@
 //
 //For now this will suffice, if complexity increases we might look at a more complex loader like requireJs.
 //Please think before adding javascript, this project should work without any of this scripts.
-if(typeof(IFS) == 'undefined'){ var IFS = {};}
+
+if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.core = {};
 IFS.core.loadOrder = {
   common : {

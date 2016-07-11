@@ -5,10 +5,13 @@ IFS.core.modal = (function(){
 
     return {
         settings : {
-            element: '[data-js-modal]'
+            element: '[data-js-modal]',
+            html5validationMode: {}
         },
         init : function(){
             s = this.settings;
+            s.html5validationMode =  IFS.core.formValidation.checkHTML5validationMode();
+
             IFS.core.modal.initButtonRole();
 
             jQuery('body').on('click',s.element,function(e){
@@ -33,19 +36,32 @@ IFS.core.modal = (function(){
             jQuery(s.element).attr({'role':'button','tabindex':'0'});
           }
         },
-        openModal : function(event,el){
+        checkForInputErrors : function(button){
+          var formValid = true;
+          if((button.closest('form:not([novalidate])').length) && (s.html5validationMode)){
+              var form = button.closest('form:not([novalidate])');
+              form[0].checkValidity();
+              if(form.find(':invalid').length){
+                 formValid = false;
+              }
+          }
+          return formValid;
+        },
+        openModal : function(event,button){
+            button = jQuery(button);
+            var formValid = IFS.core.modal.checkForInputErrors(button);
             var target = jQuery(event.target).attr('data-js-modal');
             target = jQuery('.'+target);
             if(target.length){
                 event.preventDefault();
-                if(jQuery(el).is('[aria-disabled="true"]') === false){
-                  IFS.core.modal.disableTabPage();
-                  target.add('.modal-overlay').attr('aria-hidden','false');
-                  //vertical center,old browser support so no fancy css stuff :(
-                  setTimeout(function(){
-                      var height = target.outerHeight();
-                      target.css({'margin-top':'-'+(height/2)+'px'});
-                  },50);
+                if((formValid) && (button.is('[aria-disabled="true"]') === false)){
+                    IFS.core.modal.disableTabPage();
+                    target.add('.modal-overlay').attr('aria-hidden','false');
+                    //vertical center,old browser support so no fancy css stuff :(
+                    setTimeout(function(){
+                        var height = target.outerHeight();
+                        target.css({'margin-top':'-'+(height/2)+'px'});
+                    },50);
                 }
             }
         },

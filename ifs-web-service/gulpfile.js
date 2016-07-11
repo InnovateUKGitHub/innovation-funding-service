@@ -19,3 +19,10 @@ gulp.task( 'css', function () {
         tasks:  [ 'css' ],
         }));
 });
+gulp.task( 'css:watch', function () {
+    // Find and run all gulpfiles under all subdirectories
+    gulp.src(gulpfiles)
+        .pipe(chug({
+        tasks:  [ 'css:watch' ],
+        }));
+});

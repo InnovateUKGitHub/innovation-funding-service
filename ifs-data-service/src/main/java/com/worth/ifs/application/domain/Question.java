@@ -22,7 +22,7 @@ public class Question {
     private String name;
     private String shortName;
 
-    @Column(length=5000)
+    @Column(length = 5000)
     private String description;
 
     private String assessorGuidanceQuestion;
@@ -45,26 +45,24 @@ public class Question {
     private boolean needingAssessorFeedback = false;
 
     @OneToMany
-    @JoinTable(name="question_form_input",
-            joinColumns={@JoinColumn(name="question_id", referencedColumnName="id")},
-            inverseJoinColumns={@JoinColumn(name="form_input_id", referencedColumnName="id")})
+    @JoinTable(name = "question_form_input",
+            joinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "form_input_id", referencedColumnName = "id")})
     @OrderColumn(name = "priority", nullable = false)
     private List<FormInput> formInputs = new ArrayList<>();
 
-    private String assessorConfirmationQuestion;
-
     @ManyToOne
-    @JoinColumn(name="competitionId", referencedColumnName="id")
+    @JoinColumn(name = "competitionId", referencedColumnName = "id")
     private Competition competition;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="sectionId", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionId", referencedColumnName = "id")
     private Section section;
 
-    @OneToMany(mappedBy="question")
+    @OneToMany(mappedBy = "question")
     private List<QuestionStatus> questionStatuses;
 
-    @OneToMany(mappedBy="question")
+    @OneToMany(mappedBy = "question")
     private List<Cost> costs;
 
     private String questionNumber;
@@ -160,10 +158,6 @@ public class Question {
         return priority;
     }
 
-    public String getAssessorConfirmationQuestion() {
-        return assessorConfirmationQuestion;
-    }
-
     public String getQuestionNumber() {
         return questionNumber;
     }
@@ -229,10 +223,6 @@ public class Question {
         this.formInputs = formInputs;
     }
 
-    public void setAssessorConfirmationQuestion(String assessorConfirmationQuestion) {
-        this.assessorConfirmationQuestion = assessorConfirmationQuestion;
-    }
-
     public void setCosts(List<Cost> costs) {
         this.costs = costs;
     }
@@ -267,7 +257,6 @@ public class Question {
                 .append(multipleStatuses, question.multipleStatuses)
                 .append(priority, question.priority)
                 .append(formInputs, question.formInputs)
-                .append(assessorConfirmationQuestion, question.assessorConfirmationQuestion)
                 .append(competition, question.competition)
                 .append(section, question.section)
                 .append(questionStatuses, question.questionStatuses)
@@ -292,7 +281,6 @@ public class Question {
                 .append(needingAssessorScore)
                 .append(needingAssessorFeedback)
                 .append(formInputs)
-                .append(assessorConfirmationQuestion)
                 .append(competition)
                 .append(section)
                 .append(questionStatuses)
