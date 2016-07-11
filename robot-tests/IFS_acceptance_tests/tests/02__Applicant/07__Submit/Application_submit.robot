@@ -1,7 +1,5 @@
 *** Settings ***
-Documentation     This test has been put last (with the 1.) because the other application tests depend on the application not being submitted.
-...
-...               -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
+Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
 ...
 ...
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
@@ -18,7 +16,7 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
-Suite Setup       Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
+Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -26,34 +24,25 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
-
-*** Variables ***
-${OVERVIEW_PAGE_APPLICATION_7}    ${SERVER}/application/7/
-${SUMMARY_PAGE_APPLICATION_7}    ${SERVER}/application/7/summary
-${SUBMITTED_PAGE_APPLICATION_7}    ${SERVER}/application/7/submit
-${FINANCE_SECTION_7}    ${SERVER}/application/7/form/section/7
-${PROJECT_SUMMARY_APPLICATION_7}    ${SERVER}/application/7/form/question/11
-${PUBLIC_DESCRIPTION_APPLICATION_7}    ${SERVER}/application/7/form/question/12
-${BUSINESS_OPPORTUNITY_APPLICATION_7}    ${SERVER}/application/7/form/question/1
-${POTENTIAL_MARKET_APPLICATION_7}    ${SERVER}/application/7/form/question/2
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
-    [Tags]    Summary
-    When the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}
-    And the applicant marks the first question as incomplete
-    Then the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}
-    And the submit button should be disabled
-    [Teardown]    the applicant marks the first question as complete
+    [Tags]    Email
+    When the user clicks the button/link    jQuery=.button:contains("Review & submit")
+    Then the submit button should be disabled
+    [Teardown]    the applicant marks the first section as complete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Summary    Pending
-    # Pending due to INFUND-808 finance validation
-    Given the user navigates to the page    ${FINANCE_SECTION_7}
+    [Tags]    Email
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot submit test application
+    Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Edit")
-    And the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}
+    And the user clicks the button/link    link= Application Overview
+    And the user clicks the button/link    jQuery=.button:contains("Review & submit")
     Then the submit button should be disabled
     [Teardown]    The user marks the finances as complete
 
@@ -63,16 +52,17 @@ Submit flow (complete application)
     ...    INFUND-1887
     ...
     ...    INFUND-3107
-    [Tags]    Summary    HappyPath
+    [Tags]    HappyPath    Email
     [Setup]    Delete the emails from both test mailboxes
-    Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
+    Given the user navigates to the page    ${SERVER}
+    And the user clicks the button/link    link=Robot submit test application
     When the user clicks the button/link    link=Review & submit
-    And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
+    And the user should be redirected to the correct page    summary
     Then the applicant accepts the terms and conditions
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page    ${SUBMITTED_PAGE_APPLICATION_7}
+    Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
 
 The applicant should get a confirmation email
@@ -82,31 +72,31 @@ The applicant should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]
+    [Tags]    Email
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    Link=Marking it as complete
+    And the user clicks the button/link    link=Robot submit test application
     When the user clicks the button/link    Link=View application
     And the user is on the page    summary
     Then the user can check that the sections are read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]
+    [Tags]    Email
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
-    And the user clicks the button/link    Link=Marking it as complete
+    And the user clicks the button/link    Link=Robot submit test application
     And the user should see the element    Link=View application
     And the user should see the element    Link=Print Application
     When the user clicks the button/link    Link=Print Application
-    Then the user should be redirected to the correct page without the usual headers    ${SERVER}/application/7/print
+    Then the user should be redirected to the correct page without the usual headers    print
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=input[value*="Yes, I want to submit my application"]
 
-the applicant marks the first question as incomplete
-    The user navigates to the page    ${PROJECT_SUMMARY_APPLICATION_7}
+the user marks the first section as incomplete
+    The user clicks the button/link    link=Project summary
     The user clicks the button/link    name=mark_as_incomplete
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
@@ -115,13 +105,15 @@ the applicant clicks the submit button and the clicks cancel in the submit modal
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 The user can check that the sections are read only
-    the user navigates to the page    ${PUBLIC_DESCRIPTION_APPLICATION_7}
-    the user should see the element    css=#form-input-12 .readonly
+    the user navigates to the page    ${dashboard_url}
+    the user clicks the button/link    link=Robot submit test application
+    the user clicks the button/link    link=View application
+    the user clicks the button/link    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
     the user should not see the element    jQuery=button:contains("Edit")
-    the user navigates to the page    ${BUSINESS_OPPORTUNITY_APPLICATION_7}
-    the user should see the element    css=#form-input-1 .readonly
-    the user navigates to the page    ${POTENTIAL_MARKET_APPLICATION_7}
-    the user should see the element    css=#form-input-2 .readonly
+    the user clicks the button/link    css=.section-overview section:nth-of-type(2) .collapsible:nth-of-type(10)
+    the user should not see the element    jQuery=.button:contains("Edit")
+    the user clicks the button/link    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
+    the user should not see the element    jQuery=.button:contains("Edit")
 
 the user should get a confirmation email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
@@ -142,17 +134,21 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    id=agree-terms-page
 
 The user marks the finances as complete
-    Given the user navigates to the page    ${FINANCE_SECTION_7}
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot submit test application
+    Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Mark all as complete")
 
-the applicant marks the first question as complete
-    The user navigates to the page    ${PROJECT_SUMMARY_APPLICATION_7}
-    focus    css=#form-input-11 .editor
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
-    focus    css=#form-input-11 .editor
-    Input Text    css=#form-input-11 .editor    Inputting text...
-    The user clicks the button/link    jQuery=button:contains("Mark as complete")
+the applicant marks the first section as complete
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application details
+    Clear Element Text    id=application_details-startdate_day
+    Input Text    id=application_details-startdate_day    18
+    Clear Element Text    id=application_details-startdate_year
+    Input Text    id=application_details-startdate_year    2018
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    11
+    the user clicks the button/link    name=mark_as_complete
 
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")

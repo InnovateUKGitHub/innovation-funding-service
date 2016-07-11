@@ -1,59 +1,49 @@
 package com.worth.ifs.application;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.List;
-
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.builder.QuestionStatusResourceBuilder;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.exception.ErrorControllerAdvice;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.Materials;
-
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.util.EnumMap;
+import java.util.HashSet;
+
+import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.service.Futures.settable;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.error.Error.globalError;
+import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -93,13 +83,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationFormController, new ErrorControllerAdvice())
-        //                .setHandlerExceptionResolvers(withExceptionControllerAdvice())
-                .setViewResolvers(viewResolver())
-                .addFilter(new CookieFlashMessageFilter())
-                .build();
-
         super.setup();
+
+        mockMvc = setupMockMvc(applicationFormController, () -> loggedInUser, env, messageSource);
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -117,10 +103,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         costId = Long.valueOf(1);
 
         // save actions should always succeed.
-        ArrayList<String> validationErrors = new ArrayList<>();
-        validationErrors.add("Please enter some text 123");
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(validationErrors);
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), eq(false))).thenReturn(new ArrayList<>());
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "Please enter some text 123")));
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
     }
 
     @Test
@@ -151,6 +135,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
+        when(competitionService.getById(anyLong())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         // just check if these pages are not throwing errors.
@@ -317,7 +302,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormSubmitGivesNoValidationErrorsIfNoQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(asList("Please enter some text"));
+        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(new ValidationMessages(globalError("Please enter some text")));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -332,7 +317,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormSubmitGivesNoValidationErrorsIfQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(asList("Please enter some text"));
+        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(new ValidationMessages(globalError("Please enter some text")));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -346,13 +331,10 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
 
-        ArrayList<String> validationErrors = new ArrayList<>();
-        validationErrors.add("Please enter some text");
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(validationErrors);
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(new ValidationMessages(globalError("Please enter some text", "Please enter some text")));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        Long userId = loggedInUser.getId();
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
@@ -373,7 +355,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("submit-section", "Save")
                         .param("assign_question", questionId + "_" + loggedInUser.getId())
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/"+sectionId+"**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "assignedQuestion"))
                 .andReturn();

@@ -1,7 +1,8 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.competition.controller.ApplicationManagementController;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.viewmodel.AssessorFeedbackViewModel;
+import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;

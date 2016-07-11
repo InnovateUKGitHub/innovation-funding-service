@@ -213,8 +213,8 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
-    Wait Until Element Is Visible    ${BUTTON}
     click element    ${BUTTON}
 
 The user should see the text in the page
@@ -329,9 +329,9 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
-    log    ${ACCEPT_INVITE}
-    go to    ${ACCEPT_INVITE}
+    ${IFS_LINK}=    Get From List    ${LINK}    1
+    log    ${IFS_LINK}
+    go to    ${IFS_LINK}
     Capture Page Screenshot
     Delete All Emails
     close mailbox

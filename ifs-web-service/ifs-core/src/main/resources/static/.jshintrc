@@ -3,5 +3,6 @@
   "strict" : true,
   "unused": true,
   "predef": [ "jQuery","setTimeout","clearTimeout","window","document","IFS","Modernizr","showdown","md","Cookies"],
-  "es3" : true
+  "esversion" : 3
+
 }

@@ -11,6 +11,7 @@ Documentation     INNFUND-669 As an applicant I want to create a new application
 ...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
 Suite Setup       Delete the emails from both test mailboxes
 Test Teardown     The user closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -146,8 +147,9 @@ Special Projecct Finance role
 
 Special Project Finance role (email step)
     [Documentation]    INFUND-2609
-    [Tags]    Email
+    [Tags]    Email    Pending
     [Setup]    The guest user opens the browser
+    # Pending ongoing work on the project finance role
     Given the user opens the mailbox and verifies the email from
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    worth.email.test+project.finance1@gmail.com    Passw0rd123
