@@ -71,8 +71,12 @@ public class AssessmentFinancesSummaryModelPopulator {
         final ApplicationResource application = getApplicationForAssessment(assessmentId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        addApplicationAndOrganisationDetails(application, competition, assessmentId, model);
+        addApplicationAndOrganisationDetails(application, model);
         addFinanceDetails(model, competition.getId(), application.getId());
+
+        model.addAttribute("assessmentId", assessmentId);
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
      }
 
     private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
@@ -95,20 +99,15 @@ public class AssessmentFinancesSummaryModelPopulator {
         return processRoleResource.get().getApplication();
     }
 
-    private void addApplicationAndOrganisationDetails(ApplicationResource application,
-                                           CompetitionResource competition, Long assessmentId,
-                                           Model model) {
+    private void addApplicationAndOrganisationDetails(ApplicationResource application, Model model) {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         addOrganisationDetails(model, userApplicationRoles);
-        addApplicationDetails(application, competition, assessmentId, model);
-
     }
 
     private void addOrganisationDetails(Model model,  List<ProcessRoleResource> userApplicationRoles) {
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
-        model.addAttribute("applicationOrganisations", organisations);
+        model.addAttribute("academicOrganisations", getAcademicOrganisations(getApplicationOrganisations(userApplicationRoles)));
+        model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
 
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
@@ -148,15 +147,6 @@ public class AssessmentFinancesSummaryModelPopulator {
                 .collect(Collectors.toCollection(supplier));
     }
 
-    private void addApplicationDetails(ApplicationResource application,
-                                       CompetitionResource competition,
-                                       Long assessmentId,
-                                       Model model) {
-
-        model.addAttribute("assessmentId", assessmentId);
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentCompetition", competition);
-    }
 
     public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
         addFinanceSections(competitionId, model);

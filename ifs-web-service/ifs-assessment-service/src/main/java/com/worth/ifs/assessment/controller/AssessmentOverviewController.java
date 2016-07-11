@@ -31,21 +31,21 @@ public class AssessmentOverviewController extends AbstractApplicationController 
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{processId}")
-    public String getOverview(Model model, AssessmentOverviewForm form, HttpServletResponse response, @PathVariable("processId") final Long processId,
+    @RequestMapping(method = RequestMethod.GET, value = "/{assessmentId}")
+    public String getOverview(Model model, AssessmentOverviewForm form, HttpServletResponse response, @PathVariable("assessmentId") final Long assessmentId,
                               HttpServletRequest request) throws InterruptedException, ExecutionException {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        assessmentOverviewModelPopulator.populateModel(processId, userId, form, model);
+        assessmentOverviewModelPopulator.populateModel(assessmentId, userId, form, model);
 
         return OVERVIEW;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{processId}/finances")
-    public String getFinancesSummary(Model model, HttpServletResponse response, @PathVariable("processId") final Long processId,
+    @RequestMapping(method = RequestMethod.GET, value = "/{assessmentId}/finances")
+    public String getFinancesSummary(Model model, HttpServletResponse response, @PathVariable("assessmentId") final Long assessmentId,
                               HttpServletRequest request) throws InterruptedException, ExecutionException {
 
-        assessmentFinancesSummaryModelPopulator.populateModel(processId, model);
+        assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model);
 
         return FINANCES_SUMMARY;
     }
