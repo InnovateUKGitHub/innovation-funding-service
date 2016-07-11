@@ -4,13 +4,10 @@ var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 
-gulp.task('default',['js']);
+gulp.task('default',['js','css']);
 
 //build all js
-gulp.task('js',['application-js']);
-
-//concat and minify all the ifs files
-gulp.task('application-js', function () {
+gulp.task('js', function () {
    return gulp.src([
       'js/ifsApplicationLoader.js',
       'js/ifs_modules/*.js',
@@ -22,3 +19,5 @@ gulp.task('application-js', function () {
       .pipe(uglify())
       .pipe(gulp.dest('js/dest'))
 });
+gulp.task('css', function () {});
+gulp.task('css:watch', function () {});

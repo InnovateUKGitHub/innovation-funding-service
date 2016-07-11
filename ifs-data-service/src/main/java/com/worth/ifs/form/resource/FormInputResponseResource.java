@@ -19,6 +19,7 @@ public class FormInputResponseResource {
     private Long application;
     private Long fileEntry;
     private String filename;
+    private Long filesizeBytes;
 
     public FormInputResponseResource() {
     	// no-arg constructor
@@ -144,5 +145,13 @@ public class FormInputResponseResource {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Long getFilesizeBytes() {
+        return filesizeBytes;
+    }
+
+    public void setFilesizeBytes(Long filesizeBytes) {
+        this.filesizeBytes = filesizeBytes;
     }
 }

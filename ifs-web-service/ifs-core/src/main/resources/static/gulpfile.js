@@ -50,6 +50,10 @@ gulp.task('css', function () {
     .pipe(gulp.dest('./css'));
 });
 
-gulp.task('watch', function () {
+gulp.task('css:watch', function () {
+  gulp.watch('./sass/**/*.scss', ['css']);
+});
+
+gulp.task('js:watch', function () {
    gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js']);
 });

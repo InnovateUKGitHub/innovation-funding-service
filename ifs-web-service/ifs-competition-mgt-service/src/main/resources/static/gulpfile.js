@@ -4,13 +4,10 @@ var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 
-gulp.task('default',['js']);
+gulp.task('default',['js','css']);
 
 //build all js
-gulp.task('js',['management-js']);
-
-//concat and minify all the ifs files
-gulp.task('management-js', function () {
+gulp.task('js', function () {
    return gulp.src([
       'js/ifsCompetitionManagementLoader.js',
       'js/ifs_pages/*.js',
@@ -21,3 +18,6 @@ gulp.task('management-js', function () {
       .pipe(uglify())
       .pipe(gulp.dest('js/dest'))
 });
+
+gulp.task('css', function () {});
+gulp.task('css:watch', function () {});
