@@ -71,7 +71,7 @@ public class QuestionModelPopulator {
     @Autowired
     private FormInputResponseService formInputResponseService;
 
-    public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form, final BindingResult bindingResult) {
+    public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form) {
         QuestionResource question = questionService.getById(questionId);
         List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
@@ -80,8 +80,6 @@ public class QuestionModelPopulator {
 
         addFormAttributes(application, competition, user, model, form,
             question, formInputs, userApplicationRoles);
-        form.setBindingResult(bindingResult);
-        form.setObjectErrors(bindingResult.getAllErrors());
     }
 
     private void addFormAttributes(ApplicationResource application,
