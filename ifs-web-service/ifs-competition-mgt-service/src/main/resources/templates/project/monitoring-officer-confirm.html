@@ -24,7 +24,7 @@
 	</div>
 	<hr/>
 
-    <form th:action="${#ifsUtil.contextPath(#httpServletRequest)} + '/project/' + ${projectId} + '/monitoring-officer/assign'" method="post" th:object="${form}">
+    <form th:action="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" method="post" th:object="${form}">
 				<input type="hidden" th:field="*{firstName}" />
 				<input type="hidden" th:field="*{lastName}" />
 				<input type="hidden" th:field="*{emailAddress}" />

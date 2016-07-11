@@ -214,14 +214,15 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
 
-            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                /* Start save action */
-                saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
-            }
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+            }
+
+            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+                saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
             }
 
             bindingResult = removeDuplicateFieldErrors(bindingResult);
@@ -271,7 +272,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
-        if (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
+        if (request.getParameter("submit-section") == null
+                && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
                 request.getParameter(MARK_SECTION_AS_INCOMPLETE) != null ||
                 request.getParameter(ADD_COST) != null ||
@@ -279,14 +281,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
-                request.getParameter(EDIT_QUESTION) != null) {
+                request.getParameter(EDIT_QUESTION) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
-            return "redirect:"+APPLICATION_BASE_URL + applicationId;
+            return "redirect:" + APPLICATION_BASE_URL + applicationId;
         }
     }
 
@@ -350,7 +352,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         }
 
-        params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
+        params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s => value %s", key, value[0])));
         new ApplicationStartDateValidator().validate(request, bindingResult);
         setApplicationDetails(application, form.getApplication());
 
@@ -805,7 +807,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            if (durationInMonth == null || durationInMonth < 36L) {
+            if (durationInMonth == null || durationInMonth > 36L) {
                 errors.add("Please enter a valid duration between 1 and 36 months");
             } else {
                 application.setDurationInMonths(durationInMonth);

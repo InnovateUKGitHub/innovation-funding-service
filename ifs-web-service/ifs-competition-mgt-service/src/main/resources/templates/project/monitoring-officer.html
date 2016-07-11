@@ -34,7 +34,7 @@
 
 	<div class="column-half">
 	<h2 class="heading-large">Monitoring Officer</h2>
-	<form th:action="${#ifsUtil.contextPath(#httpServletRequest)} + '/project/' + ${projectId} + '/monitoring-officer/confirm'"
+	<form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}"
 		  th:object="${form}" method="post" th:with="readonly=${model.readOnly}">
 		<fieldset>
 						<div class="form-group">

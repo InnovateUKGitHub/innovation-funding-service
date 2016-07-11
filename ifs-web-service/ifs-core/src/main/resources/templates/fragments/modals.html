@@ -134,7 +134,7 @@
 					</div>
 					<div class="column-half alignright-button">
 							<input type="hidden" id="stage" name="stage" value="1" />
-							<button th:formaction="${#ifsUtil.contextPath(#httpServletRequest)} + '/project/' + ${projectId} + '/monitoring-officer/assign'" class="button">Assign Monitoring Officer</button>
+							<button th:formaction="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" class="button">Assign Monitoring Officer</button>
 					</div>
 			</div>
 	</div>

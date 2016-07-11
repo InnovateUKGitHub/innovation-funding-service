@@ -17,8 +17,10 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.RoleResource;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,6 +45,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
@@ -84,7 +87,8 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
             withApplication(applicationId).
             withProjectManager(999L).
             withAddress(projectAddress).
-            withTargetStartDate(LocalDate.of(2017, 01, 05));
+            withTargetStartDate(LocalDate.of(2017, 01, 05)).
+            withSubmittedDate(LocalDateTime.of(2016, 07, 04, 11, 2));
 
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
@@ -149,6 +153,18 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Test
+    public void testViewMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(get("/project/123/monitoring-officer")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testEditMonitoringOfficerPage() throws Exception {
 
         ProjectResource project = projectBuilder.build();
@@ -208,6 +224,18 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         // assert the form for the MO details is not prepopulated
         assertMonitoringOfficerFormNotPrepopulated(modelMap);
+    }
+
+    @Test
+    public void testEditMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(get("/project/123/monitoring-officer/edit")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
     }
 
     @Test
@@ -274,15 +302,34 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("asdf", form.getEmailAddress());
         assertEquals("", form.getPhoneNumber());
 
-        assertEquals(4, form.getBindingResult().getFieldErrorCount());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("lastName").getCode());
-        assertEquals("Email", form.getBindingResult().getFieldError("emailAddress").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("phoneNumber").getCode());
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
+        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+        assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
+        assertEquals("Pattern", bindingResult.getFieldError("phoneNumber").getCode());
+    }
+
+    @Test
+    public void testConfirmMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(post("/project/123/monitoring-officer/confirm").
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@asdf.com").
+                param("phoneNumber", "12345")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
     }
 
     @Test
     public void testAssignMonitoringOfficer() throws Exception {
+
+        when(projectService.getById(123L)).thenReturn(projectBuilder.build());
 
         when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
 
@@ -341,6 +388,22 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Test
+    public void testAssignMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
+
+        when(projectService.getById(123L)).thenReturn(project);
+
+        mockMvc.perform(post("/project/123/monitoring-officer/assign").
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@asdf.com").
+                param("phoneNumber", "12345")).
+                andExpect(view().name("forbidden")).
+                andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testAssignMonitoringOfficerButBindingErrorOccurs() throws Exception {
 
         ProjectResource project = projectBuilder.build();
@@ -352,7 +415,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 param("firstName", "").
                 param("lastName", "").
                 param("emailAddress", "asdf").
-                param("phoneNumber", "")).
+                param("phoneNumber", "ADFS")).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -375,13 +438,15 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
-        assertEquals("", form.getPhoneNumber());
+        assertEquals("ADFS", form.getPhoneNumber());
 
-        assertEquals(4, form.getBindingResult().getFieldErrorCount());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("lastName").getCode());
-        assertEquals("Email", form.getBindingResult().getFieldError("emailAddress").getCode());
-        assertEquals("NotEmpty", form.getBindingResult().getFieldError("phoneNumber").getCode());
+        BindingResult bindingResult = form.getBindingResult();
+
+        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
+        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+        assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
+        assertEquals("Pattern", bindingResult.getFieldError("phoneNumber").getCode());
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {

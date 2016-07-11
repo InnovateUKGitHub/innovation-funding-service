@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.BindingResultTarget;
@@ -64,14 +65,16 @@ public class ProjectMonitoringOfficerController {
     public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return doViewMonitoringOfficer(model, projectId, false);
+        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
+        return viewMonitoringOfficerWithNewFormInViewMode(model, projectId);
     }
 
     @RequestMapping(value = "/edit", method = GET)
     public String editMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return doViewMonitoringOfficer(model, projectId, true);
+        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
+        return viewMonitoringOfficerWithNewFormInEditMode(model, projectId);
     }
 
     @RequestMapping(value = "/confirm", method = POST)
@@ -81,17 +84,18 @@ public class ProjectMonitoringOfficerController {
                                        BindingResult bindingResult,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewMonitoringOfficer(model, projectId, true, form, false);
+        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
+
+        Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
         if (bindingResult.hasErrors()) {
             form.setBindingResult(bindingResult);
             return failureView.get();
         }
 
-        doViewMonitoringOfficer(model, projectId, false, form, false);
+        doViewMonitoringOfficer(model, projectId, form, false, false);
         return "project/monitoring-officer-confirm";
     }
-
 
     @RequestMapping(value = "/assign", method = POST)
     public String updateMonitoringOfficerDetails(Model model,
@@ -100,7 +104,9 @@ public class ProjectMonitoringOfficerController {
                                                  BindingResult bindingResult,
                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewMonitoringOfficer(model, projectId, true, form, false);
+        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
+
+        Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
         if (bindingResult.hasErrors()) {
             form.setBindingResult(bindingResult);
@@ -111,14 +117,30 @@ public class ProjectMonitoringOfficerController {
         return handleErrorsOrRedirectToMonitoringOfficerViewTemporarily("", projectId, model, form, bindingResult, updateResult, failureView);
     }
 
+    private void checkInCorrectStateToUseMonitoringOfficerPage(@PathVariable("projectId") Long projectId) {
+        ProjectResource project = projectService.getById(projectId);
+
+        if (!project.isProjectDetailsSubmitted()) {
+            throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
+        }
+    }
+
+    private String viewMonitoringOfficerWithNewFormInViewMode(Model model, Long projectId) {
+        return doViewMonitoringOfficer(model, projectId, false);
+    }
+
+    private String viewMonitoringOfficerWithNewFormInEditMode(Model model, Long projectId) {
+        return doViewMonitoringOfficer(model, projectId, true);
+    }
+
+    private String viewMonitoringOfficerWithExistingForm(Model model, @PathVariable("projectId") Long projectId, @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form) {
+        return doViewMonitoringOfficer(model, projectId, form, true, false);
+    }
+
     private String doViewMonitoringOfficer(Model model, Long projectId, boolean editMode) {
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
         ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
-        return doViewMonitoringOfficer(model, projectId, editMode, form, existingMonitoringOfficer.isPresent());
-    }
-
-    private String doViewMonitoringOfficer(Model model, Long projectId, boolean editMode, ProjectMonitoringOfficerForm form, boolean existingMonitoringOfficer) {
-        return doViewMonitoringOfficer(model, projectId, form, editMode, existingMonitoringOfficer);
+        return doViewMonitoringOfficer(model, projectId, form, editMode, existingMonitoringOfficer.isPresent());
     }
 
     private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean editMode, boolean existingMonitoringOfficer) {
