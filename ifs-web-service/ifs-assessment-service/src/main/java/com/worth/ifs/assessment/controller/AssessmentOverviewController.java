@@ -2,8 +2,8 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.assessment.form.AssessmentOverviewForm;
+import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
-import com.worth.ifs.assessment.service.AssessmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,13 @@ public class AssessmentOverviewController extends AbstractApplicationController 
 
     private static final Log LOG = LogFactory.getLog(AssessmentOverviewController.class);
     private static final String OVERVIEW = "assessor-application-overview";
+    private static final String FINANCES_SUMMARY = "assessor-finances-summary";
 
     @Autowired
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
 
     @Autowired
-    private AssessmentService assessmentService;
+    private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/{processId}")
@@ -38,5 +39,14 @@ public class AssessmentOverviewController extends AbstractApplicationController 
         assessmentOverviewModelPopulator.populateModel(processId, userId, form, model);
 
         return OVERVIEW;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{processId}/finances")
+    public String getFinancesSummary(Model model, HttpServletResponse response, @PathVariable("processId") final Long processId,
+                              HttpServletRequest request) throws InterruptedException, ExecutionException {
+
+        assessmentFinancesSummaryModelPopulator.populateModel(processId, model);
+
+        return FINANCES_SUMMARY;
     }
 }
