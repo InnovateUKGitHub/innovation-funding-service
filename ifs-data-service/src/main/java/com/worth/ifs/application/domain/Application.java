@@ -50,7 +50,7 @@ public class Application {
     private Long durationInMonths; // in months
     @Min(0)
     @Max(100)
-    private BigDecimal completion = new BigDecimal("0");
+    private BigDecimal completion = BigDecimal.ZERO;
 
     @OneToMany(mappedBy="application")
     private List<ProcessRole> processRoles = new ArrayList<>();
