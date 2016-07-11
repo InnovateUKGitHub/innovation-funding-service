@@ -120,9 +120,9 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
         questionController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
 
-        response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
-        completedPercentage = response.getCompletedPercentage();
-        assertEquals(32.258064516, completedPercentage.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
+        CompletedPercentageResource response2  = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
+        BigDecimal completedPercentage2 = response2.getCompletedPercentage();
+        assertEquals(32.258064516, completedPercentage2.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
     }
 
     @Test
