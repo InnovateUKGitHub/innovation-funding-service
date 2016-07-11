@@ -45,6 +45,8 @@ public class AssessmentFeedbackModelPopulator {
     @Autowired
     private FormInputResponseService formInputResponseService;
 
+    private static final int FEEDBACK_WORDS_LIMIT = 350;
+
     public AssessmentFeedbackViewModel populateModel(final ApplicationResource application, final Long questionId, final AssessmentFeedbackResource assessmentFeedback) {
         final CompetitionResource competition = getCompetition(application.getCompetition());
         final QuestionResource question = getQuestion(questionId);
@@ -62,7 +64,7 @@ public class AssessmentFeedbackModelPopulator {
         Integer feedbackWordsRemaining = null;
 
         if (requireFeedback) {
-            feedbackWordsLimit = 350;
+            feedbackWordsLimit = FEEDBACK_WORDS_LIMIT;
             feedbackWordsRemaining = getFeedbackWordsRemaining(feedbackWordsLimit, assessmentFeedback);
         }
 
