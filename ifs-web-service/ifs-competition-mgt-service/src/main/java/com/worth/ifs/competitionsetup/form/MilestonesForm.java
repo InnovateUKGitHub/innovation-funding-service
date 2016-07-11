@@ -21,9 +21,13 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the date")
     private LocalDate assessorAccepts;
     @NotNull(message="Please enter the date")
+    private LocalDate assessorDeadline;
+    @NotNull(message="Please enter the date")
     private LocalDate lineDraw;
     @NotNull(message="Please enter the date")
     private LocalDate assessmentPanel;
+    @NotNull(message="Please enter the date")
+    private LocalDate panelDate;
     @NotNull(message="Please enter the date")
     private LocalDate fundersPanel;
     @NotNull(message="Please enter the date")
@@ -118,5 +122,21 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setReleaseFeedback(LocalDate releaseFeedback) {
         this.releaseFeedback = releaseFeedback;
+    }
+
+    public LocalDate getAssessorDeadline() {
+        return assessorDeadline;
+    }
+
+    public void setAssessorDeadline(LocalDate assessorDeadline) {
+        this.assessorDeadline = assessorDeadline;
+    }
+
+    public LocalDate getPanelDate() {
+        return panelDate;
+    }
+
+    public void setPanelDate(LocalDate panelDate) {
+        this.panelDate = panelDate;
     }
 }

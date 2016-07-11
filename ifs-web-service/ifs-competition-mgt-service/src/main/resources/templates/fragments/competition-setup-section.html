@@ -517,20 +517,19 @@
     </ul>
 </div>
 
-<!-- =================Section: Milestones=========================== -->
+<!-- =================Section: Milestones (4) =========================== -->
 
-<div th:fragment="prototype-section-milestones">
+<div th:fragment="section-milestones">
 
     <div class="hgroup extra-margin-bottom">
-        <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Milestones</h1>
+        <h2>Step 4: Milestones</h2>
     </div>
 
     <div class="panel-indent">
         Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
     </div>
 
-    <form>
+    <form th:action="@{(${editable} ? '' : 'milestones/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset id="section-4-edit">
 
@@ -545,7 +544,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, rowNo=1, type=readOnly" th:remove="tag"/>
+                <!--<div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, rowNo=1, type=readOnly" th:remove="tag"/>
                 <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
                 <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
                 <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
@@ -557,7 +556,7 @@
                 <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
                 <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
                 <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
-                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
+                <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>-->
                 </tbody>
             </table>
 
@@ -596,26 +595,53 @@
 
 
 
-        <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4" th:remove="tag" />
-        </div>
+        <!--<div class="extra-margin">-->
+            <!--<div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4" th:remove="tag" />-->
+        <!--</div>-->
 
     </form>
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{'?section=eligibility'}">
+            <a rel="prev" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{'?section=application'}">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='assessors')}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Application questions</span>
+                <span class="pagination-part-title">Assessors</span>
             </a>
         </li>
     </ul>
+</div>
+
+<!-- =============Section: Milestone table rows==================== -->
+
+<div th:fragment="prototype-section-milestones-row">
+
+    <tr>
+        <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
+
+        <th:block th:unless="${type=='readOnly'}">
+            <td th:id="${'row-'+rowNo + '-weekday'}">-</td>
+            <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
+            <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
+            <td><input type="text" class="form-control width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
+        </th:block>
+
+        <th:block th:if="${type=='readOnly'}">
+            <td>Weds</td>
+            <td>01</td>
+            <td>01</td>
+            <td>2017</td>
+        </th:block>
+
+    </tr>
+
 </div>
 
 
