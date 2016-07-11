@@ -20,3 +20,4 @@ gulp.task('js', function () {
       .pipe(gulp.dest('js/dest'))
 });
 gulp.task('css', function () {});
+gulp.task('css:watch', function () {});
