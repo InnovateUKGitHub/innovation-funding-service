@@ -1,7 +1,5 @@
-//Brent: Did some investigation what this does as it wasn't clear to me
-//Does Hide and show textarea and some basic data validation
-//Hide and show of form elements are already within the gov.uk js and client side validation is nice but we should cover that more generic.
-IFS.competition_management = (function(){
+//TODO: divide over multiple files with purposes
+IFS.competition_management.various = (function(){
     "use strict";
     var calculatedValues = {};
     var resizeTimer;

@@ -1,5 +1,5 @@
 //Innovation Funding Services javascript for calculating the finance fields
-IFS.finance = (function(){
+IFS.core.finance = (function(){
     "use strict";
     return {
          MathOperation : {
@@ -14,7 +14,7 @@ IFS.finance = (function(){
                 }
             },
             init : function(){
-                IFS.finance.bindCalculationActionToFields(); // Bind calculations
+                IFS.core.finance.bindCalculationActionToFields(); // Bind calculations
                 // Used for calculations
             },
             bindCalculationActionToFields : function(){
@@ -27,7 +27,7 @@ IFS.finance = (function(){
                           var fields = element.attr('data-calculation-fields');
 
                           jQuery(document).on('change updateFinances',fields,function(){
-                              IFS.finance.doMath(element,fields.split(','));
+                              IFS.core.finance.doMath(element,fields.split(','));
                           });
                           //we only want to bind a field once
                           element.attr('data-calculation-binded','');
@@ -40,7 +40,7 @@ IFS.finance = (function(){
                       jQuery('[data-calculation-fields]').each(function(){
                           var element = jQuery(this);
                           var fields = element.attr('data-calculation-fields');
-                          IFS.finance.doMath(element,fields.split(','));
+                          IFS.core.finance.doMath(element,fields.split(','));
                       });
                   }
                 });
@@ -71,12 +71,12 @@ IFS.finance = (function(){
                     else if(jQuery(field).length > 1){
                       //we use a selector with multiple inputs and get the value
                       jQuery.each(jQuery(field),function(index,field2){
-                          values.push(IFS.finance.getElementValue(field2));
+                          values.push(IFS.core.finance.getElementValue(field2));
                       });
                     }
                     else {
                       //we use a selector with one input
-                      values.push(IFS.finance.getElementValue(field));
+                      values.push(IFS.core.finance.getElementValue(field));
                     }
                 });
 
@@ -85,25 +85,25 @@ IFS.finance = (function(){
                     calculatedValue=values[0];
                 }
                 else {
-                    calculatedValue = IFS.finance.MathOperation[operation[0]](values[0],values[1]);
+                    calculatedValue = IFS.core.finance.MathOperation[operation[0]](values[0],values[1]);
                 }
                 //one operation and more values, all get the same operation
                 if((operation.length == 1) && (values.length > 2)) {
                     for (var i = 2; i < values.length; i++) {
                         //console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
-                        calculatedValue = IFS.finance.MathOperation[operation[0]](calculatedValue,values[i]);
+                        calculatedValue = IFS.core.finance.MathOperation[operation[0]](calculatedValue,values[i]);
                     }
                 }
                //multiple operations and multiple values
                 else if((operation.length > 1) && (values.length > 2)) {
                     for (var j = 1; j < operation.length; j++) {
                         //console.log('round:',i,operation[i],calculatedValue,values[i+1])
-                        calculatedValue = IFS.finance.MathOperation[operation[j]](calculatedValue,values[j+1]);
+                        calculatedValue = IFS.core.finance.MathOperation[operation[j]](calculatedValue,values[j+1]);
                     }
                 }
                 element.attr("data-calculation-rawvalue",calculatedValue);
 
-                var formatted = IFS.finance.formatCurrency(Math.round(calculatedValue));
+                var formatted = IFS.core.finance.formatCurrency(Math.round(calculatedValue));
                 if (element.is('input')) {
                   element.val(formatted);
                 } else {
