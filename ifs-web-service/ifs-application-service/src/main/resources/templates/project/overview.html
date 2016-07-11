@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.project.id}, projectName=${model.project.name})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
     <p class="form-hint">You need to complete the following steps before this project can begin.</p>
@@ -28,19 +28,19 @@
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">Successful application</h2>
-          <p>The application <strong th:text="${model.project.name}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competition.name}">Technology inspired</strong> competition</p>
+          <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
           <p class="linkbar">
-            <a th:href="@{/application/{id}/summary(id=${model.project.application})}" class="buttonlink">View application and feedback</a>
+            <a th:href="@{/application/{id}/summary(id=${model.applicationId})}" class="buttonlink">View application and feedback</a>
             <a href="#" class="buttonlink">View terms and conditions of grant offer</a>
           </p>
         </div>
       </li>
 
-      <li th:classappend="${model.project.submittedDate == null ? 'current' : 'complete'}">
+      <li th:classappend="${model.projectDetailsSubmitted ? 'current' : 'complete'}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:href="@{/project/{id}/details(id=${model.project.getId()})}" >Project details</a>
+            <a th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
           </h2>
           <p>Confirm the contact details, proposed start date and location of the project.</p>
         </div>

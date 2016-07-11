@@ -5,7 +5,7 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.viewmodel.ProjectStatusViewModel;
+import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping("/project")
-public class ProjectController {
+public class ProjectSetupStatusController {
 
     @Autowired
     private ProjectService projectService;
@@ -35,7 +35,7 @@ public class ProjectController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        model.addAttribute("model", new ProjectStatusViewModel(projectResource, applicationResource, competitionResource));
+        model.addAttribute("model", new ProjectSetupStatusViewModel(projectResource, competitionResource));
         return "project/overview";
     }
 }

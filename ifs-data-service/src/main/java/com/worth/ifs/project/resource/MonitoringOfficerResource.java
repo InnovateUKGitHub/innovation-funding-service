@@ -85,6 +85,10 @@ public class MonitoringOfficerResource {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
