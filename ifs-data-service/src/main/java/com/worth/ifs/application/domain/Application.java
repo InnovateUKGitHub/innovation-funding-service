@@ -236,6 +236,6 @@ public class Application {
     }
 
     public void setCompletion(final BigDecimal completion) {
-        this.completion = completion.setScale(0, BigDecimal.ROUND_DOWN);
+        this.completion = completion;
     }
 }

@@ -1,22 +1,9 @@
 package com.worth.ifs.application.controller;
 
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.worth.ifs.user.mapper.UserMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -28,7 +15,20 @@ import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.UserRoleType;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+
+import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @Rollback
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {

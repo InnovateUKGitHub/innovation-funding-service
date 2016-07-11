@@ -96,5 +96,6 @@ public interface ApplicationService {
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
 
     // TODO DW - INFUND-1555 - deal with rest results
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
 }
