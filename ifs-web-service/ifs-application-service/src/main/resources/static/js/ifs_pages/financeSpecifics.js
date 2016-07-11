@@ -1,6 +1,6 @@
 //very specific piece of code for having a organisation size change make adjustments to the max attribute for the funding level
 //After that we re-evaluate that value with the validation
-IFS.financeSpecifics = (function(){
+IFS.application.financeSpecifics = (function(){
     "use strict";
     var s;
     return {
@@ -27,21 +27,21 @@ IFS.financeSpecifics = (function(){
       },
       init : function(){
           s = this.settings;
-          IFS.financeSpecifics.initFunderOrgSizeFeedback();
-          IFS.financeSpecifics.initAdministrationCostTotal();
-          IFS.financeSpecifics.initOtherFunding();
+          IFS.application.financeSpecifics.initFunderOrgSizeFeedback();
+          IFS.application.financeSpecifics.initAdministrationCostTotal();
+          IFS.application.financeSpecifics.initOtherFunding();
       },
       initAdministrationCostTotal : function(){
         //if the radio button % labour changes,
         //the total displayed in the header also changes.
         //All the other totals will get reset to 0 pounds.
         jQuery(s.administrationCostTotal.adminSupportCosts+':checked').each(function(){
-          IFS.financeSpecifics.resetOtherAdministrationTotal(this);
-          IFS.financeSpecifics.placeRightAdministrationTotalInHeader(this);
+          IFS.application.financeSpecifics.resetOtherAdministrationTotal(this);
+          IFS.application.financeSpecifics.placeRightAdministrationTotalInHeader(this);
         });
         jQuery(document).on('change',s.administrationCostTotal.adminSupportCosts,function(){
-          IFS.financeSpecifics.resetOtherAdministrationTotal(this);
-          IFS.financeSpecifics.placeRightAdministrationTotalInHeader(this);
+          IFS.application.financeSpecifics.resetOtherAdministrationTotal(this);
+          IFS.application.financeSpecifics.placeRightAdministrationTotalInHeader(this);
         });
       },
       placeRightAdministrationTotalInHeader  : function(element){
@@ -50,9 +50,9 @@ IFS.financeSpecifics = (function(){
         var mirrorElement = jQuery(s.administrationCostTotal.totalCostInHeaders);
 
         if(currentTotal && mirrorElement.length){
-          IFS.mirrorElements.updateElement(mirrorElement,currentTotal);
+          IFS.core.mirrorElements.updateElement(mirrorElement,currentTotal);
           jQuery(document).off('change',s.administrationCostTotal.allTotals).on('change',currentTotal,function(){
-              IFS.mirrorElements.updateElement(mirrorElement,this);
+              IFS.core.mirrorElements.updateElement(mirrorElement,this);
           });
         }
       },
@@ -99,7 +99,7 @@ IFS.financeSpecifics = (function(){
         //make sure that the total gets updated on pressing yes, for more info INFUND-3196
         jQuery("#otherFundingShowHideToggle").on('change','[data-target] input[type="radio"]',function(){
             setTimeout(function(){
-              jQuery('[id*=fundingAmount]').trigger('updateFinances');              
+              jQuery('[id*=fundingAmount]').trigger('updateFinances');
             },0);
         });
       }
