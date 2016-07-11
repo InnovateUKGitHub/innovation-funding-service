@@ -48,4 +48,12 @@ public class ProjectSetupStatusViewModel {
     public boolean isProjectDetailsSubmitted() {
         return projectDetailsSubmitted;
     }
+
+    public boolean isMonitoringOfficerAssigned() {
+        return monitoringOfficerAssigned;
+    }
+
+    public String getMonitoringOfficerName() {
+        return monitoringOfficerName;
+    }
 }
