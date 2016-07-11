@@ -126,14 +126,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
     }
 
-    private boolean hasNonAddressErrors(BindingResult bindingResult){
-        return bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains("addressForm"))).count() > 0;
-    }
-
-    private boolean hasManualAddressErrors(BindingResult bindingResult){
-        return bindingResult.getFieldErrors().stream().filter(e -> e.getField().contains("addressForm")).count() > 0;
-    }
-
     @RequestMapping(params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
@@ -210,11 +202,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         bankDetailsResource.setOrganisation(organisationId);
         bankDetailsResource.setOrganisationAddress(organisationAddressResource);
         return bankDetailsResource;
-    }
-
-    private void processAddressLookupFields(BankDetailsForm form) {
-        addAddressOptions(form);
-        addSelectedAddress(form);
     }
 
     private void populateExitingBankDetailsInForm(BankDetailsResource bankDetails, BankDetailsForm bankDetailsForm){

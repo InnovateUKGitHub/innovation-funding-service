@@ -451,11 +451,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return projectDetailsAddressViewModel;
     }
 
-    private void processAddressLookupFields(ProjectDetailsAddressViewModelForm form) {
-        addAddressOptions(form);
-        addSelectedAddress(form);
-    }
-
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
 
         final Comparator<OrganisationResource> compareById =

@@ -10,6 +10,7 @@ import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,15 @@ public class AddressLookupBaseController {
     @Autowired
     private AddressRestService addressRestService;
 
+    void processAddressLookupFields(ProjectDetailsAddressViewModelForm form) {
+        addAddressOptions(form);
+        addSelectedAddress(form);
+    }
+
     /**
      * Get the list of postcode options, with the entered postcode. Add those results to the form.
      */
-    void addAddressOptions(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+    private void addAddressOptions(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
         if (StringUtils.hasText(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput())) {
             AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
             addressForm.setPostcodeOptions(searchPostcode(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput()));
@@ -38,7 +44,7 @@ public class AddressLookupBaseController {
     /**
      * if user has selected a address from the dropdown, get it from the list, and set it as selected.
      */
-    void addSelectedAddress(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+    private void addSelectedAddress(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
         AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
         if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
             addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
@@ -54,5 +60,13 @@ public class AddressLookupBaseController {
 
     Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
         return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
+    }
+
+    boolean hasNonAddressErrors(BindingResult bindingResult){
+        return bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains("addressForm"))).count() > 0;
+    }
+
+    boolean hasManualAddressErrors(BindingResult bindingResult){
+        return bindingResult.getFieldErrors().stream().filter(e -> e.getField().contains("addressForm")).count() > 0;
     }
 }
