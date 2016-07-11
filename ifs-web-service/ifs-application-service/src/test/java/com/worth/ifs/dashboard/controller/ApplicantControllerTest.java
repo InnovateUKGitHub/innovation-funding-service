@@ -12,11 +12,11 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 import java.util.List;
 
+import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.hamcrest.Matchers.hasSize;
@@ -40,9 +40,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(applicantController)
-                .setViewResolvers(viewResolver())
-                .build();
+        mockMvc = setupMockMvc(applicantController, () -> loggedInUser, env, messageSource);
 
         super.setup();
 

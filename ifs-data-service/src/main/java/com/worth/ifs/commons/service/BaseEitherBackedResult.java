@@ -1,5 +1,7 @@
 package com.worth.ifs.commons.service;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorHolder;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,13 +14,14 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.CollectionFunctions.nullSafe;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
  */
-public abstract class BaseEitherBackedResult<T, FailureType> implements FailingOrSucceedingResult<T, FailureType> {
+public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder> implements FailingOrSucceedingResult<T, FailureType> {
 
     private static final Log LOG = LogFactory.getLog(BaseEitherBackedResult.class);
 
@@ -149,6 +152,11 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return isRight() ? Optional.ofNullable(getRight()) : Optional.empty();
     }
 
+    @Override
+    public List<Error> getErrors() {
+        return isRight() ? emptyList() : getFailure().getErrors();
+    }
+
     // TODO DW - INFUND-1555 - remove "BACKWARDS COMPATIBILITY" method here (for "not found" nulls)
 
     /**
@@ -237,7 +245,7 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
      * @return
      */
     protected static <Item,
-            FailureType,
+            FailureType extends ErrorHolder,
             Result extends BaseEitherBackedResult<List<Item>, FailureType>,
             Input extends BaseEitherBackedResult<Item, FailureType>>
     Result aggregate(final List<Input> input,
@@ -265,7 +273,7 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     }
 
 
-    public static <T, FailureType, R extends BaseEitherBackedResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
+    public static <T, FailureType extends ErrorHolder, R extends BaseEitherBackedResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
         return results.stream().filter(result -> result.isSuccess() ? true : errorsFilter.test(result.getFailure())).collect(toList());
     }
 }

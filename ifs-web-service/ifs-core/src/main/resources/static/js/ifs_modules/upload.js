@@ -1,4 +1,4 @@
-IFS.upload = (function(){
+IFS.core.upload = (function(){
     "use strict";
      var s; // private alias to settings
     return {

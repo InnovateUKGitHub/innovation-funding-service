@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Project Manager'" th:remove="tag" />
 </head>
-<body class="project-detail project-manager">
+<body th:with="context='applicant'" class="project-detail project-manager">
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -17,10 +17,10 @@
     </div>
 
 
-    <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate">
+    <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}">
         <fieldset>
+          <h2 class="heading-medium">Project manager</h2>
           <div class="form-group" th:classappend="${#fields.hasErrors('projectManager') ? 'error' : ''}">
-              <h2 class="heading-medium">Project manager</h2>
               <legend>
                 <span class="visuallyhidden">Project manager</span>
                  <div th:if="${#fields.hasErrors('projectManager')}" th:remove="tag">
@@ -32,7 +32,7 @@
               <div class="extra-margin">
                 <div th:each="user : ${allUsers}" th:remove="tag">
                     <label th:for="${#ids.next('projectManager')}" class="block-label">
-                        <input type="radio" th:field="*{projectManager}" th:value="${user.user}" required="required"  />
+                        <input type="radio" th:field="*{projectManager}" th:value="${user.user}" required="required"  data-required-errormessage="You need to select a Project Manager before you can continue" />
                         <span th:text="${user.userName}" th:remove="tag"></span>
                     </label>
                 </div>

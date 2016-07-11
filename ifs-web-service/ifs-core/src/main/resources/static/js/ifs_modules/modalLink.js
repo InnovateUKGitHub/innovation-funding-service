@@ -1,5 +1,5 @@
 //If there is javascript it becomes a modal, if there is not a links to the original page.
-IFS.modal = (function(){
+IFS.core.modal = (function(){
     "use strict";
     var s; // private alias to settings
 
@@ -10,19 +10,19 @@ IFS.modal = (function(){
         },
         init : function(){
             s = this.settings;
-            s.html5validationMode =  IFS.formValidation.checkHTML5validationMode();
+            s.html5validationMode =  IFS.core.formValidation.checkHTML5validationMode();
 
-            IFS.modal.initButtonRole();
+            IFS.core.modal.initButtonRole();
 
             jQuery('body').on('click',s.element,function(e){
-              IFS.modal.openModal(e,this);
+              IFS.core.modal.openModal(e,this);
             });
             jQuery('body').on('click','.js-close',function(){
-              IFS.modal.closeModal();
+              IFS.core.modal.closeModal();
             });
             jQuery(document).keyup(function(e) {
               if (e.keyCode === 27){
-                IFS.modal.closeModal();
+                IFS.core.modal.closeModal();
               }
             });
         },
@@ -45,13 +45,13 @@ IFS.modal = (function(){
         },
         openModal : function(event,button){
             button = jQuery(button);
-            var formValid = IFS.modal.checkForInputErrors(button);
+            var formValid = IFS.core.modal.checkForInputErrors(button);
             var target = jQuery(event.target).attr('data-js-modal');
             target = jQuery('.'+target);
             if(target.length){
                 event.preventDefault();
                 if((formValid) && (button.is('[aria-disabled="true"]') === false)){
-                    IFS.modal.disableTabPage();
+                    IFS.core.modal.disableTabPage();
                     target.add('.modal-overlay').attr('aria-hidden','false');
                     //vertical center,old browser support so no fancy css stuff :(
                     setTimeout(function(){
@@ -81,7 +81,7 @@ IFS.modal = (function(){
             });
         },
         closeModal : function(){
-            IFS.modal.enableTabPage();
+            IFS.core.modal.enableTabPage();
             jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden','true');
         }
     };

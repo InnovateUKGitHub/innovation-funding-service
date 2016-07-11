@@ -1,4 +1,4 @@
-IFS.progressiveSelect = (function(){
+IFS.application.progressiveSelect = (function(){
     "use strict";
     var s;
     var index =0;
@@ -9,24 +9,24 @@ IFS.progressiveSelect = (function(){
         },
         init : function(){
             s = this.settings;
-            IFS.progressiveSelect.initDomChanges();
-            IFS.progressiveSelect.initEventHandlers();
+            IFS.application.progressiveSelect.initDomChanges();
+            IFS.application.progressiveSelect.initEventHandlers();
         },
         initEventHandlers : function (){
           jQuery(document).on('click',function(){
-              IFS.progressiveSelect.hideAll();
+              IFS.application.progressiveSelect.hideAll();
           });
           jQuery('body').on('click', '.assign-button [aria-controls]' , function(e){
             e.stopPropagation();
-            IFS.progressiveSelect.toggleDropdown(this);
+            IFS.application.progressiveSelect.toggleDropdown(this);
           });
         },
         initDomChanges : function(){
           jQuery(s.dropdownContainer).each(function(){
-            IFS.progressiveSelect.initDropDownHTML(this);
+            IFS.application.progressiveSelect.initDropDownHTML(this);
           });
           jQuery(s.selectEl).each(function(){
-            IFS.progressiveSelect.selectToListHTML(this);
+            IFS.application.progressiveSelect.selectToListHTML(this);
           });
         },
         selectToListHTML : function(el){
@@ -65,7 +65,7 @@ IFS.progressiveSelect = (function(){
             var dropdown = jQuery('#'+inst.attr('aria-controls'));
             var state = inst.attr('aria-expanded') === 'false' ? true : false;
 
-            IFS.progressiveSelect.hideAll();
+            IFS.application.progressiveSelect.hideAll();
             if(state){
               inst.attr('aria-expanded', 'true');
               dropdown.attr('aria-hidden', 'false');

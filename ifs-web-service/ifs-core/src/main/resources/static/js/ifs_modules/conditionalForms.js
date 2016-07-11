@@ -3,7 +3,7 @@
 //This code is a replacement for the GDS application.js code that was overly complex for what it did and didn't work on pageload
 //All behaviours and html are the same as the GDS html so no need to refactor html
 //Original logic: https://raw.githubusercontent.com/alphagov/govuk_elements/master/public/javascripts/application.js
-IFS.conditionalForms = (function(){
+IFS.core.conditionalForms = (function(){
     "use strict";
     return {
         init : function(){
@@ -21,11 +21,11 @@ IFS.conditionalForms = (function(){
                     var groupName = inputEl.attr('name');
                     // inputEl.attr('aria-controls',dataTarget);
                     //execute on pageload
-                    IFS.conditionalForms.toggleVisibility(inputEl,'#'+dataTarget,isInverted);
+                    IFS.core.conditionalForms.toggleVisibility(inputEl,'#'+dataTarget,isInverted);
 
                     //execute on click
                     jQuery('input[name="'+groupName+'"]').on('click',function(){
-                        IFS.conditionalForms.toggleVisibility(inputEl,'#'+dataTarget,isInverted);
+                        IFS.core.conditionalForms.toggleVisibility(inputEl,'#'+dataTarget,isInverted);
                     });
                 }
             });

@@ -2,6 +2,7 @@ package com.worth.ifs.form.service;
 
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.core.io.ByteArrayResource;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface FormInputResponseRestService {
     RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(Long applicationId);
-    RestResult<List<String>> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty);
+    RestResult<ValidationMessages> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty);
     RestResult<FileEntryResource> createFileEntry(long formInputId, long applicationId, long processRoleId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFileEntry(long formInputId, long applicationId, long processRoleId);
     RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId);
