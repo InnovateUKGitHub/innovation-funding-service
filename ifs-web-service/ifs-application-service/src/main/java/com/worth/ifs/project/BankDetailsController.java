@@ -3,7 +3,6 @@ package com.worth.ifs.project;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
@@ -20,7 +19,6 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -42,21 +38,13 @@ import static com.worth.ifs.project.BankDetailsUtils.getBankDetails;
  */
 @Controller
 @RequestMapping("/project/{projectId}/bank-details")
-public class BankDetailsController {
-
-    private static final String FORM_ATTR_NAME = "form";
-    private static final String MANUAL_ADDRESS = "manual-address";
-    private static final String SEARCH_ADDRESS = "search-address";
-    private static final String SELECT_ADDRESS = "select-address";
+public class BankDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private ProjectService projectService;
 
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
-
-    @Autowired
-    private AddressRestService addressRestService;
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
@@ -255,38 +243,6 @@ public class BankDetailsController {
         }
 
         return bankDetailsViewModel;
-    }
-
-    private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
-        return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
-    }
-
-    /**
-     * Get the list of postcode options, with the entered postcode. Add those results to the form.
-     */
-    private void addAddressOptions(BankDetailsForm bankDetailsForm) {
-        if (StringUtils.hasText(bankDetailsForm.getAddressForm().getPostcodeInput())) {
-            AddressForm addressForm = bankDetailsForm.getAddressForm();
-            addressForm.setPostcodeOptions(searchPostcode(bankDetailsForm.getAddressForm().getPostcodeInput()));
-            addressForm.setPostcodeInput(bankDetailsForm.getAddressForm().getPostcodeInput());
-        }
-    }
-
-    /**
-     * if user has selected a address from the dropdown, get it from the list, and set it as selected.
-     */
-    private void addSelectedAddress(BankDetailsForm bankDetailsForm) {
-        AddressForm addressForm = bankDetailsForm.getAddressForm();
-        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
-            addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
-        }
-    }
-
-    private List<AddressResource> searchPostcode(String postcodeInput) {
-        RestResult<List<AddressResource>> addressLookupRestResult = addressRestService.doLookup(postcodeInput);
-        return addressLookupRestResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(),
-                addresses -> addresses);
     }
 
     private String handleErrorsOrRedirectToProjectOverview(
