@@ -22,6 +22,7 @@ ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
 ${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
 ${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
+${Successful_Monitoring_Officer_Page}     ${server}/management/project/4/monitoring-officer
 
 *** Test Cases ***
 Partner can view the uploaded feedback
@@ -73,9 +74,9 @@ Lead partner can see the overview of the project details
     And the user should see the element    link=Project manager
     And the user should see the text in the page    Finance contacts
 
-Submit button is diabled if the deatils are not fully filled out
+Submit button is disabled if the details are not fully filled out
     [Documentation]    INFUND-3467
-    [Tags]    pending
+    [Tags]    Pending
     When the user should see the element    xpath=//span[contains(text(), 'No')]
     Then the submit button should be disabled
 
@@ -86,7 +87,7 @@ Partner nominates a finance contact
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
     And the user clicks the button/link                     link=Project details
     Then the user should see the text in the page           Finance contacts
-    And wait until page contains                            Partner
+    And the user should see the text in the page            Partner
     And the user clicks the button/link                     link=Ludlow
     And the user selects the radio button                   financeContact     financeContact1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
@@ -140,7 +141,6 @@ Lead partner can change the project manager
     When the user selects the radio button      projectManager        27
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page     test ten
-    When the user clicks the button/link     link=Project manager
     And the user selects the radio button                   projectManager     projectManager1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
@@ -256,6 +256,86 @@ Unsuccessful applicant can download the uploaded feedback
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
     [Teardown]    Remove File    ${valid_pdf}
+
+Comp admin can view the Supporting information details on MO page
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    Cheese is good
+   # And the user should see the text in the page (for "Area" message)
+    And the user should see the text in the page       	1 Cheese Road, Bath, BA1 5LR
+    And the user should see the text in the page    1st Oct 2020
+    And the user should see the text in the page    Steve Smith
+    And the user should see the text in the page    Cheeseco
+    And the user should see the text in the page    Ludlow
+    And the user should see the text in the page    EGGS
+
+Standard verification for email address
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    When the user enters text to a text field    id=emailAddress    ${EMPTY}
+    Then the user should see an error    Please enter your email
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_username}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_format}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${valid_email}
+    Then the user should see an error    Email address is already in use
+
+Standard verification for Phone number
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    When the user enters text to a text field    id=phoneNumber    ${EMPTY}
+    Then the user should see an error    Please enter a phone number
+    And the user enters text to a text field    id=phoneNumber    invalidphone
+    Then the user should see an error    Please enter a valid phone number
+    And the user enters text to a text field    id=phoneNumber    0123
+    Then the user should see an error    Input for your phone number has a minimum length of 8 characters
+
+MO details can be added and updated
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Then the user enters text to a text field    id=firstName    Pradha
+    And the user enters text to a text field    id=lastName    Muniraj
+    And the user enters text to a text field    id=emailAddress    pradha.muniraj@innovateuk.gov.uk
+    And the user enters text to a text field    id=phoneNumber    07438620303
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user reloads the page
+    Then the text should be visible
+
+MO details can be edited and updated
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Given the user clicks the button/link    link=Change Monitoring Officer
+    And the user enters text to a text field    id=firstName    Pradha
+    And the user enters text to a text field    id=lastName    Jagankumar
+    And the user enters text to a text field    id=emailAddress    pradha.raj@gmail.com
+    And the user enters text to a text field    id=phoneNumber    08549731414
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user reloads the page
+    Then the edited text should be visible
+
+MO details can be viewed on the page after editting
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    Pradha
+    And the user should see the text in the page    Jagankumar
+    And the user should see the text in the page    pradha.raj@gmail.com
+    And the user should see the text in the page    08549731414
 
 *** Keywords ***
 the user should see a validation error

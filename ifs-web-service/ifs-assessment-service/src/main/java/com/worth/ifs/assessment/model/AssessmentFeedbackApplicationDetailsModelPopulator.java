@@ -22,17 +22,9 @@ public class AssessmentFeedbackApplicationDetailsModelPopulator {
     private QuestionService questionService;
 
     public AssessmentFeedbackApplicationDetailsViewModel populateModel(final ApplicationResource application, final Long questionId) {
-        final CompetitionResource competition = getCompetition(application.getCompetition());
-        final QuestionResource question = getQuestion(questionId);
+        final CompetitionResource competition = competitionService.getById(application.getCompetition());
+        final QuestionResource question = questionService.getById(questionId);
         return new AssessmentFeedbackApplicationDetailsViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getShortName());
-    }
-
-    private CompetitionResource getCompetition(final Long competitionId) {
-        return competitionService.getById(competitionId);
-    }
-
-    private QuestionResource getQuestion(final Long questionId) {
-        return questionService.getById(questionId);
     }
 
 }

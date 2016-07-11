@@ -4,7 +4,7 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
     </head>
 
-    <body class="assessment assessment-details">
+    <body th:with="context='assessment'" class="assessment assessment-details">
         <div th:include="fragments/layout :: prototype-nav" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
