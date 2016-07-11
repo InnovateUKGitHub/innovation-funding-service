@@ -32,11 +32,16 @@ Clicking the Scope button expands the section
     When the user clicks the button/link    jQuery=button:contains("Scope")
     Then the Scope section should be expanded
 
+Mark as complete from the summary page
+    Given the user clicks the button/link    jQuery=button:contains("Project summary")
+    When the user clicks the button/link    jQuery=#form-input-11 button:contains("Mark as complete")
+    Then the Project summary question should be marked as complete
+    And The user should not see the element    jQuery=#form-input-11 button:contains("Mark as complete")
+
 Edit link navigates to the application form
     [Documentation]    INFUND-193
     [Tags]
-    Given the user clicks the button/link    jQuery=button:contains("Project summary")
-    When the user clicks the button/link    css=#form-input-11 .textarea-footer button.button
+    When the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
     Then the user redirects to the page    Please provide a short summary of your project    Project summary
 
 Application overview button
@@ -63,5 +68,8 @@ all the questions should be visible
     the user should see the element    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
 
 the Scope section should be expanded
-    the user should see the element     css=.section-overview > section:first-child .collapsible:nth-of-type(4) > h3 button[aria-expanded="true"]
-    the user should see the element     css=.section-overview > section:first-child .collapsible:nth-of-type(4) > div[aria-hidden="false"]
+    the user should see the element    css=.section-overview > section:first-child .collapsible:nth-of-type(4) > h3 button[aria-expanded="true"]
+    the user should see the element    css=.section-overview > section:first-child .collapsible:nth-of-type(4) > div[aria-hidden="false"]
+
+the Project summary question should be marked as complete
+    Element Should Contain    jQuery=button:contains("Project summary")    Complete
