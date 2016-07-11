@@ -8,6 +8,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2984: As a Competition Executive I want the competition code field in the 'Initial details' tab in competition setup to generate based on open date and number of competitions in that month
 ...
 ...               INFUND-2986 Create a Competition: Step 3: Eligibility
+...
+...               INFUND-3182 As a Competition Executive I want to the ability to save progress on each tab in competition setup.
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Comp admin
@@ -81,7 +83,7 @@ Initial details client-side validations
     Then the user should not see the error anymore    Please enter a budget code
     And the user should not see the text in the page    Please enter a PAF number
 
-The user should see the correct State aid status
+Initial details correct state aid status
     [Documentation]    INFUND-2982
     ...
     ...    INFUND-2983
@@ -96,7 +98,7 @@ The user should see the correct State aid status
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
 
-Competition code generation
+Initial details competition code generation
     [Documentation]    INFUND-2984
     [Tags]    Pending
     # pending INFUND-3957
@@ -108,6 +110,8 @@ Competition code generation
 
 Additional information can be saved
     [Documentation]    INFUND-2985
+    ...
+    ...    INFUND-3182
     Given the user clicks the button/link    link=Additional Information
     And the user should see the text in the page    Additional competition information
     When the user enters text to a text field    id=activityCode    lorem
@@ -115,6 +119,7 @@ Additional information can be saved
     And the user enters text to a text field    id=coFunders    dolor
     When the user enters text to a text field    id=coFundersBudget    sit
     And the user clicks the button/link    jQuery=.button:contains("Done")
+    And The user should not see the element    id=activityCode
     And the user clicks the button/link    link=Initial Details
     And the user clicks the button/link    link=Additional Information
     Then the user should see the text in the page    lorem
@@ -124,6 +129,8 @@ Additional information can be saved
 
 Additional information can be edited again
     [Documentation]    INFUND-2985
+    ...
+    ...    INFUND-3182
     Given the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=activityCode    amet
     And the user clicks the button/link    jQuery=.button:contains("Done")
@@ -145,6 +152,7 @@ Eligibility server-side validations
     Then the user should see the text in the page    Please select at least one research category
     And the user should see the text in the page    Please select a collaboration level
     And the user should see the text in the page    Please select a lead applicant type
+    And the user should see the text in the page    Please select a stream option
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986, INFUND-2988
@@ -154,23 +162,26 @@ Eligibility client-side validations
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
     And the user moves focus to a different part of the page
-    Then the user should not see the text in the page    Please select at least one research category
-    And the user should see the text in the page    Please select a collaboration level
-    And the user should see the text in the page    Please select a lead applicant type
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
     And the user selects the option from the drop-down menu    30%    name=researchParticipationAmountId
+    And the user moves focus to a different part of the page
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
     And the user enters text to a text field    id=streamName    Test stream name
+    And the user should not see the text in the page    A stream name is required
 
-Eligibility information can be saved and the stream info shows correctly
+Eligibility information can be marked as done then edit again
     [Documentation]    INFUND-3051
+    ...
+    ...    INFUND-3872
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Multiple Stream
-    And the user should see the text in the page    Yes
+    And The user should not see the element    id=streamName
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    And the user clicks the button/link    jQuery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Edit")
 
 The user can see the options for single and collaborative, lead applicant type, and streams
