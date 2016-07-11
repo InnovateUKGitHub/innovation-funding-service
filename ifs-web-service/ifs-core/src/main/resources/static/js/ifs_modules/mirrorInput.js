@@ -1,4 +1,4 @@
-IFS.mirrorElements = (function(){
+IFS.core.mirrorElements = (function(){
     "use strict";
     return {
         init : function(){
@@ -6,17 +6,17 @@ IFS.mirrorElements = (function(){
                 var element = jQuery(this);
                 var source = element.attr('data-mirror');
 
-                IFS.mirrorElements.updateElement(element,source);
-                IFS.mirrorElements.bindMirrorElement(element,source);
+                IFS.core.mirrorElements.updateElement(element,source);
+                IFS.core.mirrorElements.bindMirrorElement(element,source);
             });
         },
         bindMirrorElement : function(element,source){
             jQuery(document).on('change', source, function(){
-                  IFS.mirrorElements.updateElement(element,this);
+                  IFS.core.mirrorElements.updateElement(element,this);
             });
         },
         updateElement : function(element,source){
-            var sourceText = IFS.mirrorElements.getSourceText(source);
+            var sourceText = IFS.core.mirrorElements.getSourceText(source);
             if(element.is('input')){
               element.val(sourceText);
             }
