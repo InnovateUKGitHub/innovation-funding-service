@@ -387,7 +387,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         addApplicationDetails(application, competition, userId, section, model, form, userApplicationRoles, allSections);
 
         addSectionDetails(model, section);
-        model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
+        model.addAttribute("completedQuestionsPercentage", application.getCompletion());
     }
 
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,

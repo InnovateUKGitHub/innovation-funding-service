@@ -1,5 +1,26 @@
 package com.worth.ifs.application.domain;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -11,12 +32,6 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
-
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -33,6 +48,9 @@ public class Application {
     private LocalDateTime submittedDate;
     @Min(0)
     private Long durationInMonths; // in months
+    @Min(0)
+    @Max(100)
+    private BigDecimal completion = new BigDecimal("0");
 
     @OneToMany(mappedBy="application")
     private List<ProcessRole> processRoles = new ArrayList<>();
@@ -211,5 +229,13 @@ public class Application {
 
     public void setAssessorFeedbackFileEntry(FileEntry assessorFeedbackFileEntry) {
         this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
+    }
+
+    public BigDecimal getCompletion() {
+        return completion;
+    }
+
+    public void setCompletion(final BigDecimal completion) {
+        this.completion = completion.setScale(0, BigDecimal.ROUND_DOWN);
     }
 }
