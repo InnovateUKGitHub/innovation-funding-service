@@ -73,9 +73,9 @@ Lead partner can see the overview of the project details
     And the user should see the element    link=Project manager
     And the user should see the text in the page    Finance contacts
 
-Submit button is diabled if the deatils are not fully filled out
+Submit button is disabled if the details are not fully filled out
     [Documentation]    INFUND-3467
-    [Tags]    pending
+    [Tags]    Pending
     When the user should see the element    xpath=//span[contains(text(), 'No')]
     Then the submit button should be disabled
 
@@ -86,7 +86,7 @@ Partner nominates a finance contact
     Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
     And the user clicks the button/link                     link=Project details
     Then the user should see the text in the page           Finance contacts
-    And wait until page contains                            Partner
+    And the user should see the text in the page            Partner
     And the user clicks the button/link                     link=Ludlow
     And the user selects the radio button                   financeContact     financeContact1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
@@ -140,7 +140,6 @@ Lead partner can change the project manager
     When the user selects the radio button      projectManager        27
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page     test ten
-    When the user clicks the button/link     link=Project manager
     And the user selects the radio button                   projectManager     projectManager1
     And the user clicks the button/link                     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
