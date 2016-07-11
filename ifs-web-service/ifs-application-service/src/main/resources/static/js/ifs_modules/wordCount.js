@@ -1,6 +1,7 @@
-IFS.wordCount = (function(){
+IFS.application.wordCount = (function(){
     "use strict";
     var s;
+    var typeTimeout;
     return {
         settings : {
             wordcountEl : ".word-count textarea",
@@ -10,11 +11,11 @@ IFS.wordCount = (function(){
             s = this.settings;
             jQuery('body').on('change keyup', s.wordcountEl, function(e){
               if(e.type == 'keyup'){
-                clearTimeout(window.IFS.wordcount_timer);
-                window.IFS.wordcount_timer = setTimeout(function(){IFS.wordCount.updateWordCount(e.target); }, s.typeTimeout);
+                clearTimeout(typeTimeout);
+                typeTimeout = setTimeout(function(){IFS.application.wordCount.updateWordCount(e.target); }, s.typeTimeout);
               }
               else {
-                IFS.wordCount.updateWordCount(e.target);
+                IFS.application.wordCount.updateWordCount(e.target);
               }
              });
         },

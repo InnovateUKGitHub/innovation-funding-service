@@ -1,10 +1,10 @@
 // Handlers for single section refreshing when assigning questions to users on the Application Overview
 // dependency on ifs_collpasible
-IFS.application_page = (function(){
+IFS.application.application_page = (function(){
     "use strict";
     return {
         init: function(){
-            jQuery(document).on('click', 'form.application-overview [name="assign_question"]', IFS.application_page.handleAssignQuestionFragmentReload);
+            jQuery(document).on('click', 'form.application-overview [name="assign_question"]', IFS.application.application_page.handleAssignQuestionFragmentReload);
         },
          handleAssignQuestionFragmentReload : function(e) {
             var button = jQuery(this);
@@ -19,7 +19,7 @@ IFS.application_page = (function(){
               jQuery.ajaxProtected({
                     type: "POST",
                     beforeSend : function(){
-                        if(typeof(IFS.progressiveSelect.hideAll) == 'function'){ IFS.progressiveSelect.hideAll();  }
+                        if(typeof(IFS.application.progressiveSelect.hideAll) == 'function'){ IFS.application.progressiveSelect.hideAll();  }
                         sectionToUpdate.find('.assign-button').html('Assigning to <strong>'+button.text()+'</strong>...');
                         sectionToUpdate.find('img.section-status').remove();
                     },
@@ -29,11 +29,11 @@ IFS.application_page = (function(){
                       var htmlReplacement = jQuery('<div>' + data + '</div>');
                       var replacement = htmlReplacement.find('#' + questionId);
                       sectionToUpdate.replaceWith(replacement);
-                      if(typeof(IFS.progressiveSelect.initDropDownHTML) == 'function'){
+                      if(typeof(IFS.application.progressiveSelect.initDropDownHTML) == 'function'){
                         var dropdown = replacement.find(".assign-button");
                         var select =  replacement.find('select.prog-menu');
-                        IFS.progressiveSelect.initDropDownHTML(dropdown);
-                        IFS.progressiveSelect.selectToListHTML(select);
+                        IFS.application.progressiveSelect.initDropDownHTML(dropdown);
+                        IFS.application.progressiveSelect.selectToListHTML(select);
                       }
                     }
                 });
