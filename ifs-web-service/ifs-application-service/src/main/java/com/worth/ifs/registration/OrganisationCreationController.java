@@ -573,7 +573,8 @@ public class OrganisationCreationController {
 
 
     private List<AddressResource> searchPostcode(String postcodeInput) {
-        RestResult<List<AddressResource>>  addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        RestResult<List<AddressResource>>  addressLookupRestResult =
+                addressRestService.doLookup(escapePathVariable(postcodeInput));
         List<AddressResource> addressResourceList = addressLookupRestResult.handleSuccessOrFailure(
                 failure -> new ArrayList<>(),
                 addresses -> addresses);
