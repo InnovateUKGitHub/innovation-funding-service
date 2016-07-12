@@ -1,5 +1,6 @@
 package com.worth.ifs.project.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
@@ -85,6 +86,7 @@ public class MonitoringOfficerResource {
         this.phoneNumber = phoneNumber;
     }
 
+    @JsonIgnore
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }

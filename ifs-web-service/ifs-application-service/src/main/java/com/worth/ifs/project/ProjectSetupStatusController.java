@@ -33,7 +33,7 @@ public class ProjectSetupStatusController {
     private CompetitionService competitionService;
 	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
-    public String projectOverview(Model model, @PathVariable("projectId") final Long projectId) {
+    public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId) {
 
         model.addAttribute("model", getProjectSetupStatusViewModel(projectId));
         return "project/overview";
