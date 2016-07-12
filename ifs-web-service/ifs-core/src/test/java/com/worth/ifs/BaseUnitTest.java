@@ -505,16 +505,16 @@ public class BaseUnitTest {
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
 
-        ProcessRoleResource processRole1 = newProcessRoleResource().with(id(1L)).withApplicationId(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole2 = newProcessRoleResource().with(id(2L)).withApplicationId(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole3 = newProcessRoleResource().with(id(3L)).withApplicationId(applicationResources.get(2).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole4 = newProcessRoleResource().with(id(4L)).withApplicationId(applicationResources.get(3).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole5 = newProcessRoleResource().with(id(5L)).withApplicationId(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role2).withOrganisation(organisation2.getId()).build();
-        ProcessRoleResource processRole6 = newProcessRoleResource().with(id(6L)).withApplicationId(applicationResources.get(1).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole7 = newProcessRoleResource().with(id(7L)).withApplicationId(applicationResources.get(2).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole8 = newProcessRoleResource().with(id(8L)).withApplicationId(applicationResources.get(0).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole9 = newProcessRoleResource().with(id(9L)).withApplicationId(applicationResources.get(3).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole10 = newProcessRoleResource().with(id(10L)).withApplicationId(applicationResources.get(1).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation2.getId()).build();
+        ProcessRoleResource processRole1 = newProcessRoleResource().with(id(1L)).withApplication(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole2 = newProcessRoleResource().with(id(2L)).withApplication(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole3 = newProcessRoleResource().with(id(3L)).withApplication(applicationResources.get(2).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole4 = newProcessRoleResource().with(id(4L)).withApplication(applicationResources.get(3).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole5 = newProcessRoleResource().with(id(5L)).withApplication(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role2).withOrganisation(organisation2.getId()).build();
+        ProcessRoleResource processRole6 = newProcessRoleResource().with(id(6L)).withApplication(applicationResources.get(1).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole7 = newProcessRoleResource().with(id(7L)).withApplication(applicationResources.get(2).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole8 = newProcessRoleResource().with(id(8L)).withApplication(applicationResources.get(0).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole9 = newProcessRoleResource().with(id(9L)).withApplication(applicationResources.get(3).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole10 = newProcessRoleResource().with(id(10L)).withApplication(applicationResources.get(1).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation2.getId()).build();
 
         assessorProcessRoleResources = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);
