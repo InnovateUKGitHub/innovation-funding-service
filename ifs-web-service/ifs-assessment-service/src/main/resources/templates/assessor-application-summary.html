@@ -23,13 +23,13 @@
                     <tbody>
                         <tr>
                             <th>Question</th>
-                            <td th:each="question,iteration : ${model.questions}">
+                            <td th:each="question : ${model.questions}">
                                 <a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" th:text="${question.getDisplayLabelShort()}" />
                             </td>
                         </tr>
                         <tr>
                             <th>Score</th>
-                            <td th:each="question,iteration : ${model.questions}">
+                            <td th:each="question : ${model.questions}">
                                 <span th:text="${question.values.get('SCORE')}" th:remove="tag" />
                             </td>
                         </tr>

@@ -108,12 +108,8 @@
 
         <div class="section-score">
             Score:
-            <div th:if="${question.values.get('SCORE') != null}" th:remove="tag">
-                <span th:text="${question.values.get('SCORE')}" th:remove="tag" />/<span th:text="${question.getScorePossible()}" th:remove="tag" />
-            </div>
-            <div th:if="${question.values.get('SCORE') == null}" th:remove="tag">
-                N/A
-            </div>
+            <span th:text="|${question.values.get('SCORE')}/${question.getScorePossible()}|" th:if="${question.values.get('SCORE')}" th:remove="tag" />
+<span th:unless="${question.values.get('SCORE')}" th:remove="tag">N/A</span>
         </div>
     </h2>
     <div class="question">
