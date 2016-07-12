@@ -7,8 +7,6 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.user.resource.OrganisationSize;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -136,43 +134,5 @@ public class Organisation {
 
     public void setOrganisationType(OrganisationType organisationType) {
         this.organisationType = organisationType;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Organisation that = (Organisation) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(name, that.name)
-                .append(companyHouseNumber, that.companyHouseNumber)
-                .append(organisationSize, that.organisationSize)
-                .append(organisationType, that.organisationType)
-                .append(processRoles, that.processRoles)
-                .append(applicationFinances, that.applicationFinances)
-                .append(users, that.users)
-                .append(addresses, that.addresses)
-                .append(inviteOrganisations, that.inviteOrganisations)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .append(companyHouseNumber)
-                .append(organisationSize)
-                .append(organisationType)
-                .append(processRoles)
-                .append(applicationFinances)
-                .append(users)
-                .append(addresses)
-                .append(inviteOrganisations)
-                .toHashCode();
     }
 }

@@ -17,33 +17,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Arrays.asList;
 
 @Service
 public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
-    BankDetailsMapper bankDetailsMapper;
+    private BankDetailsMapper bankDetailsMapper;
 
     @Autowired
-    BankDetailsRepository bankDetailsRepository;
+    private BankDetailsRepository bankDetailsRepository;
 
     @Autowired
-    OrganisationAddressRepository organisationAddressRepository;
+    private OrganisationAddressRepository organisationAddressRepository;
 
     @Autowired
-    AddressRepository addressRepository;
+    private AddressRepository addressRepository;
 
     @Autowired
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
 
     @Override
     public ServiceResult<BankDetailsResource> getById(Long id) {
-        return serviceSuccess(bankDetailsMapper.mapToResource(bankDetailsRepository.findOne(id)));
+        return find(bankDetailsRepository.findOne(id), notFoundError(BankDetails.class, id)).
+                andOnSuccessReturn(bankDetailsMapper::mapToResource);
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import static com.worth.ifs.project.BankDetailsUtils.getBankDetails;
+import java.util.Optional;
 
 /**
  * This controller will handle all requests that are related to a project.
@@ -45,10 +44,9 @@ public class ProjectController {
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(), bankDetailsRestService);
-        if(bankDetailsResourceRestResult.isSuccess()) {
-            BankDetailsResource bankDetails = bankDetailsResourceRestResult.getSuccessObject();
-            model.addAttribute("bankDetails", bankDetails);
+        Optional<BankDetailsResource> bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).toOptionalIfNotFound().getSuccessObject();
+        if(bankDetailsResource.isPresent()) {
+            model.addAttribute("bankDetails", bankDetailsResource.get());
         }
 
         model.addAttribute("project", projectResource);
