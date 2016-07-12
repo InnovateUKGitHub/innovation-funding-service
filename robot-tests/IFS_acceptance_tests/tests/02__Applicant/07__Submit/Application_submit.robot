@@ -116,7 +116,7 @@ The user can check that the sections are read only
     the user should not see the element    jQuery=.button:contains("Edit")
 
 the user should get a confirmation email
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}

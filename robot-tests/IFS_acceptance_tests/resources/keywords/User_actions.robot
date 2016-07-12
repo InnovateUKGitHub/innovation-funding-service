@@ -309,6 +309,21 @@ The element should be disabled
     Element Should Be Disabled    ${ELEMENT}
 
 the user opens the mailbox and verifies the email from
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+
+the user opens the mailbox and verifies the email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
@@ -322,8 +337,9 @@ the user opens the mailbox and verifies the email from
     Delete All Emails
     close mailbox
 
+
 the user opens the mailbox and accepts the invitation to collaborate
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
@@ -362,10 +378,10 @@ the user cannot see the option to upload a file on the page
     the user should not see the text in the page    Upload
 
 Delete the emails from both test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     Delete All Emails
     close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
     Delete All Emails
     close mailbox
 
@@ -500,9 +516,9 @@ the lead applicant invites a registered user
     The guest user opens the browser
 
 Open mailbox and verify the content
-    [Arguments]    ${USER}    ${CONTENT}
+    [Arguments]    ${USER}   ${PASSWORD}   ${CONTENT}
     [Documentation]    This Keyword checks the content of the 1st email in a given inbox
-    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
     ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
     Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
