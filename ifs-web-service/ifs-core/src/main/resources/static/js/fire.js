@@ -1,5 +1,5 @@
-/* jshint strict: false, undef: true, unused: true */
-
+/* jshint strict: false, undef: false, unused: false */
+/* globals -IFS */
 
 //Dom based routing
 //------------------
@@ -16,58 +16,32 @@
 //For now this will suffice, if complexity increases we might look at a more complex loader like requireJs.
 //Please think before adding javascript, this project should work without any of this scripts.
 
-var IFSLoader = {
-  common : {
-    init : function(){
-      IFS.collapsible.init();
-      IFS.conditionalForms.init();
-      IFS.wordCount.init();
-      IFS.editor.init();
-      IFS.formValidation.init();
-    },
-    finalize : function(){
-      IFS.progressiveSelect.init();
-      IFS.pieChart.init();
-      IFS.modal.init();
-      IFS.upload.init();
-      IFS.autoSubmitForm.init();
 
-    }
-  },
-  'app-form' : {
-    init : function(){
-      IFS.mirrorElements.init();
-      IFS.unsavedChanges.init();
-      IFS.autoSave.init();
-      IFS.finance.init();
-      IFS.repeatableRows.init();
-      IFS.financeSpecifics.init();
-    }
-  },
-  'app-details' : {
-    init : function(){ IFS.application_page.init(); }
-  },
-  'app-summary' : {
-	init : function(){ IFS.application_summary.init(); }
-  },
-  'app-invite': {
-    init : function(){ IFS.invites.init(); }
-  },
-  'competition-management': {
-    init : function(){ IFS.competition_management.init(); }
-  }
-};
+if (!Object.keys){
+  Object.keys = function(obj) {
+      if (obj !== Object(obj))
+          throw new TypeError('Object.keys called on a non-object');
+      var k = [], p;
+      for (p in obj) if (Object.prototype.hasOwnProperty.call(obj, p)) k.push(p);
+          return k;
+  };
+}
 
 //util for kicking it off.
 var UTIL = (function(){
   "use strict";
   return {
       fire : function(func,funcname, args){
-        var namespace = IFSLoader;  // indicate your obj literal namespace here
-        funcname = (funcname === undefined) ? 'init' : funcname;
-        if (func !== '' && namespace[func] && typeof namespace[func][funcname] == 'function'){
-          namespace[func][funcname](args);
-        }
+        var keys = Object.keys(IFS);
+        jQuery.each(keys,function(){
+            if(typeof(IFS[this].loadOrder) !== 'undefined'){
+              var namespace = IFS[this].loadOrder;  // indicate your obj literal namespace here
+              funcname = (funcname === undefined) ? 'init' : funcname;
+              if (func !== '' && namespace[func] && typeof namespace[func][funcname] == 'function'){
+                namespace[func][funcname](args);
+              }
+            }
+        });
       },
       loadEvents : function(){
         var bodyId = document.body.id;
@@ -81,10 +55,8 @@ var UTIL = (function(){
         UTIL.fire('common','finalize');
       }
   };
-
 })();
 // kick it all off here
-
 jQuery(document).ready(function(){
     UTIL.loadEvents();
 });

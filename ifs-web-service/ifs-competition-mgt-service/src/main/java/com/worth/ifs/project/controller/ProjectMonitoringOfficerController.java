@@ -8,7 +8,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -44,7 +45,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/project/{projectId}/monitoring-officer")
 public class ProjectMonitoringOfficerController {
 
-    static final String FORM_ATTR_NAME = "form";
+    private static final String FORM_ATTR_NAME = "form";
 
 	@Autowired
     private ProjectService projectService;
@@ -79,45 +80,43 @@ public class ProjectMonitoringOfficerController {
 
     @RequestMapping(value = "/confirm", method = POST)
     public String confirmMonitoringOfficerDetails(Model model,
-                                       @PathVariable("projectId") final Long projectId,
-                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
-                                       BindingResult bindingResult,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                                  @PathVariable("projectId") final Long projectId,
+                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
+                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
-        if (bindingResult.hasErrors()) {
-            form.setBindingResult(bindingResult);
-            return failureView.get();
-        }
-
-        doViewMonitoringOfficer(model, projectId, form, false, false);
-        return "project/monitoring-officer-confirm";
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            doViewMonitoringOfficer(model, projectId, form, false, false);
+            return "project/monitoring-officer-confirm";
+        });
     }
 
     @RequestMapping(value = "/assign", method = POST)
     public String updateMonitoringOfficerDetails(Model model,
                                                  @PathVariable("projectId") final Long projectId,
                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
-                                                 BindingResult bindingResult,
+                                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
 
-        if (bindingResult.hasErrors()) {
-            form.setBindingResult(bindingResult);
-            return failureView.get();
-        }
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-        ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(), form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
-        return handleErrorsOrRedirectToMonitoringOfficerViewTemporarily("", projectId, model, form, bindingResult, updateResult, failureView);
+            ServiceResult<Void> updateResult = projectService.updateMonitoringOfficer(projectId, form.getFirstName(),
+                    form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
+
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> redirectToMonitoringOfficerViewTemporarily(projectId));
+        });
     }
 
-    private void checkInCorrectStateToUseMonitoringOfficerPage(@PathVariable("projectId") Long projectId) {
+    private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
 
         if (!project.isProjectDetailsSubmitted()) {
@@ -133,7 +132,7 @@ public class ProjectMonitoringOfficerController {
         return doViewMonitoringOfficer(model, projectId, true);
     }
 
-    private String viewMonitoringOfficerWithExistingForm(Model model, @PathVariable("projectId") Long projectId, @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form) {
+    private String viewMonitoringOfficerWithExistingForm(Model model, Long projectId, ProjectMonitoringOfficerForm form) {
         return doViewMonitoringOfficer(model, projectId, form, true, false);
     }
 
@@ -164,24 +163,6 @@ public class ProjectMonitoringOfficerController {
         return new ProjectMonitoringOfficerViewModel(projectId, projectResource.getName(),
                 innovationArea, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
                 partnerOrganisationNames, competitionSummary, existingMonitoringOfficer, editMode);
-    }
-
-    /**
-     * "Temporarily" because the final target page to redirect to after submission has not yet been built
-     */
-    private String handleErrorsOrRedirectToMonitoringOfficerViewTemporarily(
-            String fieldName, long projectId, Model model,
-            BindingResultTarget form, BindingResult bindingResult,
-            ServiceResult<?> result,
-            Supplier<String> viewSupplier) {
-
-        if (result.isFailure()) {
-            bindAnyErrorsToField(result, fieldName, bindingResult, form);
-            model.addAttribute(FORM_ATTR_NAME, form);
-            return viewSupplier.get();
-        }
-
-        return redirectToMonitoringOfficerViewTemporarily(projectId);
     }
 
     /**

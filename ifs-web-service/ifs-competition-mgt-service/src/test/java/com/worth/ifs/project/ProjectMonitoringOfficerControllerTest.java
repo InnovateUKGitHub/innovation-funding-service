@@ -155,7 +155,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testViewMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
 
         when(projectService.getById(123L)).thenReturn(project);
 
@@ -229,7 +229,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testEditMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
 
         when(projectService.getById(123L)).thenReturn(project);
 
@@ -313,7 +313,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testConfirmMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
 
         when(projectService.getById(123L)).thenReturn(project);
 
@@ -390,7 +390,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testAssignMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate(null).build();
+        ProjectResource project = projectBuilder.withSubmittedDate().build();
 
         when(projectService.getById(123L)).thenReturn(project);
 

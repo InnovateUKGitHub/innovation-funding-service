@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
 </head>
-<body class="project-detail">
+<body th:with="context='applicant'" class="project-detail">
 
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
 <div th:include="fragments/modals :: modal-project-details" th:remove="tag" />
