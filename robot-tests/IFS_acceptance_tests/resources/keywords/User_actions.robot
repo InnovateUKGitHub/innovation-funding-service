@@ -238,6 +238,9 @@ the user should not see an error in the page
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
+    Run Keyword And Ignore Error    Mouse Out    css=input
+    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    sleep    300ms
     wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
