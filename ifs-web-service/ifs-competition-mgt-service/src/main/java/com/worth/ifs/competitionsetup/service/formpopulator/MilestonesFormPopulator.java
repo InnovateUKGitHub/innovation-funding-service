@@ -27,20 +27,59 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 		//temporary date
 		LocalDate currentDate = LocalDate.now();
 
-		//JH @todo null check on dates compResource
-		competitionSetupForm.setOpenDate(currentDate);
-		competitionSetupForm.setBriefingEvent(currentDate);
-		competitionSetupForm.setSubmissionDate(currentDate);
-		competitionSetupForm.setAllocateAssessors(currentDate);
-		competitionSetupForm.setAssessorBriefing(currentDate);
-		competitionSetupForm.setAssessorAccepts(currentDate);
-		competitionSetupForm.setAssessorDeadline(currentDate);
-		competitionSetupForm.setLineDraw(currentDate);
-		competitionSetupForm.setAssessmentPanel(currentDate);
-		competitionSetupForm.setPanelDate(currentDate);
-		competitionSetupForm.setFundersPanel(currentDate);
-		competitionSetupForm.setNotifications(currentDate);
-		competitionSetupForm.setReleaseFeedback(currentDate);
+		//JH @todo null check on getDates from Repo
+		competitionSetupForm.setOpenDateDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setOpenDateMonth(currentDate.getMonthValue());
+		competitionSetupForm.setOpenDateYear(currentDate.getYear());
+
+		competitionSetupForm.setBriefingEventDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setBriefingEventMonth(currentDate.getMonthValue());
+		competitionSetupForm.setBriefingEventYear(currentDate.getYear());
+
+		competitionSetupForm.setSubmissionDateDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setSubmissionDateMonth(currentDate.getMonthValue());
+		competitionSetupForm.setSubmissionDateYear(currentDate.getYear());
+
+		competitionSetupForm.setAllocateAssessorsDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setAllocateAssessorsMonth(currentDate.getMonthValue());
+		competitionSetupForm.setAllocateAssessorsYear(currentDate.getYear());
+
+		competitionSetupForm.setAssessorBriefingDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setAssessorBriefingMonth(currentDate.getMonthValue());
+		competitionSetupForm.setAssessorBriefingYear(currentDate.getYear());
+
+		competitionSetupForm.setAssessorAcceptsDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setAssessorAcceptsMonth(currentDate.getMonthValue());
+		competitionSetupForm.setAssessorAcceptsYear(currentDate.getYear());
+
+		competitionSetupForm.setAssessorDeadlineDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setAssessorDeadlineMonth(currentDate.getMonthValue());
+		competitionSetupForm.setAssessorDeadlineYear(currentDate.getYear());
+
+		competitionSetupForm.setLineDrawDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setLineDrawMonth(currentDate.getMonthValue());
+		competitionSetupForm.setLineDrawYear(currentDate.getYear());
+
+		competitionSetupForm.setAssessmentPanelDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setAssessmentPanelMonth(currentDate.getMonthValue());
+		competitionSetupForm.setAssessmentPanelYear(currentDate.getYear());
+
+		competitionSetupForm.setPanelDateDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setPanelDateMonth(currentDate.getMonthValue());
+		competitionSetupForm.setPanelDateYear(currentDate.getYear());
+
+		competitionSetupForm.setFundersPanelDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setFundersPanelMonth(currentDate.getMonthValue());
+		competitionSetupForm.setFundersPanelYear(currentDate.getYear());
+
+		competitionSetupForm.setNotificationsDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setNotificationsMonth(currentDate.getMonthValue());
+		competitionSetupForm.setNotificationsYear(currentDate.getYear());
+
+		competitionSetupForm.setReleaseFeedbackDay(currentDate.getDayOfMonth());
+		competitionSetupForm.setReleaseFeedbackMonth(currentDate.getMonthValue());
+		competitionSetupForm.setReleaseFeedbackYear(currentDate.getYear());
+
 
 		return competitionSetupForm;
 	}
