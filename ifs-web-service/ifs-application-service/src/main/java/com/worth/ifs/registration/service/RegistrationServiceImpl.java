@@ -18,11 +18,11 @@ import java.util.Map;
 public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
 
     @Override
     public Map<String, String> getInvalidInviteMessages(UserResource loggedInUser, InviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
-        Map<String, String> modelAttributes = new HashMap();
+        Map<String, String> modelAttributes = new HashMap<>();
 
         if (!inviteResource.getEmail().equals(loggedInUser.getEmail())) {
             // Invite is for different emailaddress then current logged in user.
