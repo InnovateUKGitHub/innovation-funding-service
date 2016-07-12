@@ -48,6 +48,7 @@ import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
@@ -262,7 +263,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     private void initializeInvitee(Invite invite, User user) {
         Application application = invite.getApplication();
-        Role role = roleRepository.findOneByName("collaborator");
+        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application, role, organisation);
         processRoleRepository.save(processRole);
