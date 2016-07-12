@@ -1,6 +1,7 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
+
 public class AddressLookupBaseController {
     public static final String FORM_ATTR_NAME = "form";
     static final String MANUAL_ADDRESS = "manual-address";
@@ -28,6 +31,42 @@ public class AddressLookupBaseController {
     void processAddressLookupFields(ProjectDetailsAddressViewModelForm form) {
         addAddressOptions(form);
         addSelectedAddress(form);
+    }
+
+    Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
+        return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
+    }
+
+    boolean hasBindingErrors(ProjectDetailsAddressViewModelForm form, BindingResult bindingResult){
+        boolean hasBindingErrors = false;
+        if(existingAddressSelected(form.getAddressType()) && hasNonAddressErrors(bindingResult)) {
+            hasBindingErrors = true;
+        } else if (!existingAddressSelected(form.getAddressType()) && hasManualAddressErrors(bindingResult)) {
+            hasBindingErrors = true;
+        }
+        return hasBindingErrors;
+    }
+
+    OrganisationAddressResource getOrganisationAddressResourceOrNull(
+            ProjectDetailsAddressViewModelForm form,
+            OrganisationResource organisationResource,
+            OrganisationAddressType addressTypeToUseForNewAddress){
+        OrganisationAddressResource organisationAddressResource = null;
+        if(existingAddressSelected(form.getAddressType())){
+            Optional<OrganisationAddressResource> organisationAddress = getAddress(organisationResource, form.getAddressType());
+            if (organisationAddress.isPresent()) {
+                organisationAddressResource = organisationAddress.get();
+            }
+        } else {
+            form.getAddressForm().setTriedToSave(true);
+            AddressResource newAddressResource = form.getAddressForm().getSelectedPostcode();
+            organisationAddressResource = new OrganisationAddressResource(organisationResource, newAddressResource, new AddressTypeResource((long)addressTypeToUseForNewAddress.ordinal(), addressTypeToUseForNewAddress.name()));
+        }
+        return organisationAddressResource;
+    }
+
+    boolean hasNonAddressErrors(BindingResult bindingResult){
+        return bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains("addressForm"))).count() > 0;
     }
 
     /**
@@ -58,15 +97,11 @@ public class AddressLookupBaseController {
                 addresses -> addresses);
     }
 
-    Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
-        return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
-    }
-
-    boolean hasNonAddressErrors(BindingResult bindingResult){
-        return bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains("addressForm"))).count() > 0;
-    }
-
-    boolean hasManualAddressErrors(BindingResult bindingResult){
+    private boolean hasManualAddressErrors(BindingResult bindingResult){
         return bindingResult.getFieldErrors().stream().filter(e -> e.getField().contains("addressForm")).count() > 0;
+    }
+
+    private boolean existingAddressSelected(OrganisationAddressType organisationAddressType){
+        return organisationAddressType != null && organisationAddressType != ADD_NEW;
     }
 }

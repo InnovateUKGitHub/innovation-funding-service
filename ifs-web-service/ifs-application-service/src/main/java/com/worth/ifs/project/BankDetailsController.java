@@ -1,7 +1,5 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
@@ -74,36 +72,15 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = getBankDetails(projectId, organisationResource.getId(),bankDetailsRestService);
 
-        if (hasNonAddressErrors(bindingResult)) {
+        if(hasBindingErrors(form, bindingResult)){
             form.setBindingResult(bindingResult);
             form.setObjectErrors(bindingResult.getAllErrors());
             return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
         }
-        OrganisationAddressResource organisationAddressResource = null;
-        switch (form.getAddressType()) {
-            case REGISTERED:
-            case OPERATING:
-            case BANK_DETAILS:
-                Optional<OrganisationAddressResource> organisationAddress = getAddress(organisationResource, form.getAddressType());
-                if (organisationAddress.isPresent()) {
-                    organisationAddressResource = organisationAddress.get();
-                }
-                break;
-            case ADD_NEW:
-                if (hasManualAddressErrors(bindingResult)) {
-                    form.setBindingResult(bindingResult);
-                    form.setObjectErrors(bindingResult.getAllErrors());
-                    return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
-                }
-                form.getAddressForm().setTriedToSave(true);
-                AddressResource newAddressResource = form.getAddressForm().getSelectedPostcode();
-                organisationAddressResource = new OrganisationAddressResource(organisationResource, newAddressResource, new AddressTypeResource((long)BANK_DETAILS.ordinal(), BANK_DETAILS.name()));
-                break;
-            default:
-                organisationAddressResource = null;
-                break;
-        }
-        BankDetailsResource bankDetailsResource = buildBankDetailsFrom(projectId, organisationResource.getId(), organisationAddressResource, form);
+
+        OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
+
+        BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource.getId(), organisationAddressResource, form);
         ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
         return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> bankDetails(model, projectId, loggedInUser, form));
     }
@@ -191,7 +168,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         model.addAttribute("model", bankDetailsViewModel);
     }
 
-    private BankDetailsResource buildBankDetailsFrom(Long projectId,
+    private BankDetailsResource buildBankDetailsResource(Long projectId,
                                                      Long organisationId,
                                                      OrganisationAddressResource organisationAddressResource,
                                                      BankDetailsForm form){
