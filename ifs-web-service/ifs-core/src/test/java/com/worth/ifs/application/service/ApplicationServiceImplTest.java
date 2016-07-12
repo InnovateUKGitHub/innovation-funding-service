@@ -1,5 +1,21 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+import java.util.Map;
+
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.service.CompetitionsRestService;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
@@ -9,22 +25,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.service.CompetitionsRestService;
 
 public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationService> {
 
@@ -176,7 +176,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationRestService.getCompleteQuestionsPercentage(applicationId)).thenReturn(settable(restSuccess(20.5d)));
 
         // somehow the progress is rounded, because we use a long as the return type.
-        Assert.assertEquals(20, service.getCompleteQuestionsPercentage(applicationId).get().intValue());
+        Assert.assertEquals(20, service.getCompleteQuestionsPercentage(applicationId).intValue());
     }
 
     @Test
