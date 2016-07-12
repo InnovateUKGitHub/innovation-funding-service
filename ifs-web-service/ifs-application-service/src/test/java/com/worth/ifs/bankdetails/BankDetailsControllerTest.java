@@ -74,7 +74,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource projectResource = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource().
-                withId(null).
+                withId(null). // This is null to signal it is a new bank detail resource that doesn't exist in DB yet.
                 withSortCode("123456").
                 withAccountNumber("12345678").
                 withOrganiationAddress(organisationAddressResource).
