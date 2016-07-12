@@ -12,6 +12,10 @@ import org.springframework.util.StringUtils;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
 
+/**
+ * This service manages submitted fields that are not previously persisted.
+ * It removes empty fields and groups them for associating each group as a cost.
+ */
 @Service
 public class UnsavedFieldsManager {
 
