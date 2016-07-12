@@ -226,7 +226,7 @@ else
     postcodeLookUpImplemented='YES'
 fi
 sendMailLocally=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsSendMailLocally'  | cut -d "=" -f2 | sed 's/"//g'`
-if [ $sendMailLocally = 'false' ]
+if [ $sendMailLocally='false' ]
 then
     echo "Sending mail locally not implemented"
     unset localMailSendingImplemented
@@ -234,20 +234,20 @@ else
     echo "Sending mail locally is implemented. The tests will expect emails to be sent out to all whitelisted recipients. Please take care not to spam anyone!"
     localMailSendingImplemented='YES'
 fi
-testMailboxOneExists=`sed '/^\#/d' dev-build.gradle | grep 'testMailboxOne'`
-if [ "$testMailboxOneExists" ] = '' ]
+testMailboxOneExists=`sed '/^\#/d' dev-build.gradle | grep 'ifsTestMailboxOne'`
+if [ "$testMailboxOneExists" ]
 then
-    echo "We're going to use the normal test mailboxes, please be aware that you may get email collisions if someone else is running at the same time!"
-    testMailboxOne = 'worth.email.test'
-    testMailboxTwo = 'worth.email.test.two'
-    testMailboxOnePassword = 'testtest1'
-    testMailboxTwoPassword = 'testtest1'
-else
     echo "It looks like you've configured your own test mailboxes, so using those. If you see connection errors, remember to allow less secure access!"
     testMailboxOne=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailOne'  | cut -d "=" -f2 | sed 's/"//g' | cut -d "@" -f1`
     testMailboxTwo=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailTwo'  | cut -d "=" -f2 | sed 's/"//g' | cut -d "@" -f1`
     testMailboxOnePassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailPasswordOne'  | cut -d "=" -f2 | sed 's/"//g'`
     testMailboxTwoPassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailPasswordTwo'  | cut -d "=" -f2 | sed 's/"//g'`
+else
+    echo "We're going to use the normal test mailboxes, please be aware that you may get email collisions if someone else is running at the same time!"
+    testMailboxOne='worth.email.test'
+    testMailboxTwo='worth.email.test.two'
+    testMailboxOnePassword='testtest1'
+    testMailboxTwoPassword='testtest1'
 fi
 cd ../ifs-web-service
 webServiceCodeDir=`pwd`
@@ -275,6 +275,8 @@ unset happyPath
 useXvfb=true
 unset remoteRun
 unset startServersInDebugMode
+unset testMailboxOneExists
+
 
 browser="Firefox"
 
