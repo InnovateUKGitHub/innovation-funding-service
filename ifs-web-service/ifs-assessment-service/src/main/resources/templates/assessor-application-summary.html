@@ -48,19 +48,19 @@
 
             <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
 
-            <form>
-            <!--form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate"-->
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+
                 <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
                 <fieldset class="inline">
                     <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
                     <div class="form-group">
-                        <label class="block-label" for="assessor-question-confirmation-yes">
-                            <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
+                        <label class="block-label" for="assessor-funding-confirmation-yes">
+                            <input id="assessor-funding-confirmation-yes" type="radio" name="fundingConfirmation" value="Yes" />
                             Yes
                         </label>
-                        <label class="block-label" for="assessor-question-confirmation-no">
-                            <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
+                        <label class="block-label" for="assessor-funding-confirmation-no">
+                            <input id="assessor-funding-confirmation-no" type="radio" name="fundingConfirmation" value="No" />
                             No
                         </label>
                     </div>
@@ -69,23 +69,22 @@
                 <fieldset>
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="form-group">
-                        <div class="form-group">
-                            <label class="form-label form-label-bold" for="assessor-application-feedback-text">
-                                Your feedback
-                                <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
-                            </label>
+                        <label class="form-label form-label-bold" for="assessor-application-feedback-text">
+                            Your feedback
+                            <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                        </label>
 
-                            <div class="textarea-wrapped word-count">
-                                <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-feedback-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
-                                <div class="textarea-footer">
-                                    <span class="count-label">
-                                        <span class="count-message">Words remaining:</span>
-                                        <span class="count-down positive" aria-live="polite">349</span>
-                                    </span>
-                                </div>
+                        <div class="textarea-wrapped word-count">
+                            <textarea th:field="*{feedback}" rows="3" cols="60" data-max_words="350" aria-hidden="true"></textarea>
+                            <div class="textarea-footer">
+                                <span class="count-label">
+                                    <span class="count-message">Words remaining:</span>
+                                    <span class="count-down positive" aria-live="polite">349</span>
+                                </span>
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="form-group">
                             <label class="form-label form-label-bold" for="assessor-application-comments-text">
@@ -93,7 +92,7 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-comments-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
+                                <textarea th:field="*{comments}" rows="3" cols="60" data-max_words="350" aria-hidden="true"></textarea>
                                 <div class="textarea-footer">
                                     <span class="count-label">
                                         <span class="count-message">Words remaining:</span>
