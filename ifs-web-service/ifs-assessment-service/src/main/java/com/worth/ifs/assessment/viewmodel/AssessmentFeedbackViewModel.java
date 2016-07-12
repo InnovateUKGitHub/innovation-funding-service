@@ -1,61 +1,140 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 
-import java.util.List;
-import java.util.Map;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 /**
  * Holder of model attributes for the feedback given as part of the assessment journey to a question for an application.
  */
 public class AssessmentFeedbackViewModel {
 
+    private final long daysLeft;
+    private final long daysLeftPercentage;
     private final CompetitionResource competition;
     private final ApplicationResource application;
-    private final QuestionResource question;
-    private final List<FormInputResource> questionFormInputs;
-    private final Map<Long, String> questionFormInputResponses;
+    private final Long questionId;
+    private final String questionNumber;
+    private final String questionShortName;
+    private final String questionName;
+    private final String questionResponse;
+    private final boolean requireScore;
+    private final boolean requireFeedback;
+    private final boolean requireCategory;
+    private final boolean requireScopeConfirmation;
+    private final String assessorGuidanceQuestion;
+    private final String assessorGuidanceAnswer;
+    private final Integer feedbackWordsLimit;
+    private final Integer feedbackWordsRemaining;
+    private final boolean appendixExists;
+    private final FileDetailsViewModel appendixDetails;
 
-    public AssessmentFeedbackViewModel(CompetitionResource competition, ApplicationResource application, QuestionResource question, List<FormInputResource> questionFormInputs, Map<Long, String> questionFormInputResponses) {
-        this.competition = competition;
-        this.application = application;
-        this.question = question;
-        this.questionFormInputs = questionFormInputs;
-        this.questionFormInputResponses = questionFormInputResponses;
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining) {
+        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, questionResponse, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, assessorGuidanceQuestion, assessorGuidanceAnswer, feedbackWordsLimit, feedbackWordsRemaining, false, null);
     }
 
-    public ApplicationResource getApplication() {
-        return application;
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining, boolean appendixExists, FileDetailsViewModel appendixDetails) {
+        this.daysLeft = daysLeft;
+        this.daysLeftPercentage = daysLeftPercentage;
+        this.competition = competition;
+        this.application = application;
+        this.questionId = questionId;
+        this.questionNumber = questionNumber;
+        this.questionShortName = questionShortName;
+        this.questionName = questionName;
+        this.questionResponse = questionResponse;
+        this.requireScore = requireScore;
+        this.requireFeedback = requireFeedback;
+        this.requireCategory = requireCategory;
+        this.requireScopeConfirmation = requireScopeConfirmation;
+        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
+        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
+        this.feedbackWordsLimit = feedbackWordsLimit;
+        this.feedbackWordsRemaining = feedbackWordsRemaining;
+        this.appendixExists = appendixExists;
+        this.appendixDetails = appendixDetails;
+    }
+
+    public long getDaysLeft() {
+        return daysLeft;
+    }
+
+    public long getDaysLeftPercentage() {
+        return daysLeftPercentage;
     }
 
     public CompetitionResource getCompetition() {
         return competition;
     }
 
-    public QuestionResource getQuestion() {
-        return question;
+    public ApplicationResource getApplication() {
+        return application;
     }
 
-    public List<FormInputResource> getQuestionFormInputs() {
-        return questionFormInputs;
+    public Long getQuestionId() {
+        return questionId;
     }
 
-    public Map<Long, String> getQuestionFormInputResponses() {
-        return questionFormInputResponses;
+    public String getQuestionNumber() {
+        return questionNumber;
     }
 
-    public boolean isFeedbackRequired() {
-        return question.isNeedingAssessorFeedback();
+    public String getQuestionShortName() {
+        return questionShortName;
     }
 
-    public long getDaysLeftPercentage() {
-        return competition.getAssessmentDaysLeftPercentage();
+    public String getQuestionName() {
+        return questionName;
     }
 
-    public long getDaysLeft() {
-        return competition.getAssessmentDaysLeft();
+    public String getQuestionResponse() {
+        return questionResponse;
+    }
+
+    public boolean isRequireScore() {
+        return requireScore;
+    }
+
+    public boolean isRequireFeedback() {
+        return requireFeedback;
+    }
+
+    public boolean isRequireCategory() {
+        return requireCategory;
+    }
+
+    public boolean isRequireScopeConfirmation() {
+        return requireScopeConfirmation;
+    }
+
+    public String getAssessorGuidanceQuestion() {
+        return assessorGuidanceQuestion;
+    }
+
+    public String getAssessorGuidanceAnswer() {
+        return assessorGuidanceAnswer;
+    }
+
+    public Integer getFeedbackWordsLimit() {
+        return feedbackWordsLimit;
+    }
+
+    public Integer getFeedbackWordsRemaining() {
+        return feedbackWordsRemaining;
+    }
+
+    public boolean isAppendixExists() {
+        return appendixExists;
+    }
+
+    public FileDetailsViewModel getAppendixDetails() {
+        return appendixDetails;
+    }
+
+    public String getAppendixFileDescription() {
+        return format("View %s appendix", lowerCase(getQuestionShortName()));
     }
 }

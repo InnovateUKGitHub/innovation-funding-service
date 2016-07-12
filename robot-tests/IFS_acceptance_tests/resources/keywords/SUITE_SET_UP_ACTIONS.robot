@@ -67,7 +67,10 @@ the user marks every section but one as complete
 
 the user marks the section as complete
     [Arguments]    ${form-id}
+    Wait Until Element Is Visible    css=#form-input-${form-id} .editor
     Input Text    css=#form-input-${form-id} .editor    Entering text to allow valid mark as complete
+    Mouse Out    css=#form-input-${form-id} .editor
+    sleep    200ms
     the user clicks the button/link    name=mark_as_complete
     the user clicks the button/link    css=.next
 

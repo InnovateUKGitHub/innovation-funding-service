@@ -1,5 +1,5 @@
 // save the current form state, so we can warn the user if he leaves the page without saving.
-IFS.unsavedChanges = (function(){
+IFS.core.unsavedChanges = (function(){
     "use strict";
     var s;
     return {
@@ -8,11 +8,11 @@ IFS.unsavedChanges = (function(){
         },
         init : function(){
             s = this.settings;
-            IFS.unsavedChanges.initUnsavedChangesWarning();
-            IFS.unsavedChanges.updateSerializedFormState();
+            IFS.core.unsavedChanges.initUnsavedChangesWarning();
+            IFS.core.unsavedChanges.updateSerializedFormState();
 
             jQuery('body').on('updateSerializedFormState',function(){
-                IFS.unsavedChanges.updateSerializedFormState();
+                IFS.core.unsavedChanges.updateSerializedFormState();
             });
         },
         updateSerializedFormState : function(){

@@ -1,5 +1,5 @@
 /*jshint multistr: true */
-IFS.invites = (function(){
+IFS.application.invites = (function(){
     "use strict";
     var s;
     return {
@@ -14,23 +14,23 @@ IFS.invites = (function(){
       init : function(){
           s = this.settings;
           jQuery('body').on('change',s.inputs, function(){
-              IFS.invites.saveToCookie();
+              IFS.application.invites.saveToCookie();
           });
           jQuery('body').on('click',s.addRow, function(e){
-              IFS.invites.addRow(e);
+              IFS.application.invites.addRow(e);
           });
           jQuery('body').on('click',s.removeRow, function(e){
-              IFS.invites.removeRow(e);
+              IFS.application.invites.removeRow(e);
           });
           jQuery('body').on('click',s.addOrg, function(e){
-              IFS.invites.addOrg(e);
+              IFS.application.invites.addOrg(e);
           });
           jQuery('body').on('keyup',s.partnerName, function(e){
-            IFS.invites.parterNameInHeader(e.target);
+            IFS.application.invites.parterNameInHeader(e.target);
           });
           //fill out once at pageload
           jQuery(s.partnerName).each(function(){
-              IFS.invites.parterNameInHeader(this);
+              IFS.application.invites.parterNameInHeader(this);
           });
       },
       saveToCookie : function(){
@@ -61,7 +61,7 @@ IFS.invites = (function(){
                       </tr>';
           orgContainer.find('tbody').append(html);
           jQuery('[id="organisations'+orgId+'.invites'+rowId+'.personName"]').focus();
-          IFS.invites.saveToCookie();
+          IFS.application.invites.saveToCookie();
       },
       addOrg : function(e){
         e.preventDefault();
@@ -100,7 +100,7 @@ IFS.invites = (function(){
 
           currentOrgs.last().after(html);
           jQuery('[id="organisations'+orgId+'.organisationName"]').focus();
-          IFS.invites.saveToCookie();
+          IFS.application.invites.saveToCookie();
       },
       recountRows : function(){
           jQuery('[data-invite-org]').each(function(orgId,orgEl){
@@ -121,7 +121,7 @@ IFS.invites = (function(){
                     });
                 });
           });
-          IFS.invites.saveToCookie();
+          IFS.application.invites.saveToCookie();
       },
       removeRow : function(e){
           e.preventDefault();
@@ -133,7 +133,7 @@ IFS.invites = (function(){
           else {
             button.closest('tr').remove();
           }
-          IFS.invites.recountRows();
+          IFS.application.invites.recountRows();
       },
       parterNameInHeader : function(element){
           var input = jQuery(element);
