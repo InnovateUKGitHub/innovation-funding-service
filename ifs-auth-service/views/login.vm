@@ -20,7 +20,7 @@
 ## custom - arbitrary object injected by deployer
 ##
 #set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
-#set ($resourcesDomain = $rpContext.getRelyingPartyId()) 
+#set ($resourcesDomain = $rpContext.getRelyingPartyId())
 #set ($username = $authenticationContext.getSubcontext('net.shibboleth.idp.authn.context.UsernamePasswordContext', true).getUsername())
 #set ($passwordEnabled = false)
 #if (!$passwordPrincipals or $passwordPrincipals.isEmpty() or $authenticationContext.isAcceptable($passwordPrincipals))
@@ -71,7 +71,7 @@
       <div id="global-cookie-message">
           <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
       </div>
-      
+
     <header role="banner" id="global-header">
         <div class="header-wrapper">
             <div class="header-global">
@@ -217,11 +217,17 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script>window.jQuery || document.write(unescape("%3Cscript src='$resourcesDomain/js/vendor/jquery/jquery-1.12.2.min.js' type='text/javascript'%3E%3C/script%3E"))</script>
 
-    <script src="$resourcesDomain/js/dest/govuk.min.js" type="text/javascript"></script>
-    <script src="$resourcesDomain/js/namespace.js" type="text/javascript"></script>
+    <script src="$resourcesDomain/js/vendor/govuk/govuk-template.js" type="text/javascript"></script>
+
+    <script src="$resourcesDomain/js/dest/vendor.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        if(typeof(IFS) == 'undefined'){
+          var IFS = { core: {}};
+        }
+    </script>
     <script src="$resourcesDomain/js/ifs_modules/formValidation.js" type="text/javascript"></script>
     <script type="text/javascript">
-        IFS.formValidation.init();
+        IFS.core.formValidation.init();
     </script>
     <script>
         jQuery(document).ready(function(){
@@ -235,20 +241,20 @@
                 }
             });
 
-            jQuery.ajax({ 
-                url: '$resourcesDomain/alert/findAllVisibleByType/MAINTENANCE', 
+            jQuery.ajax({
+                url: '$resourcesDomain/alert/findAllVisibleByType/MAINTENANCE',
                 method: 'GET'
             }).done(function(data) {
                 if (data.length) {
                     jQuery('#global-cookie-message').after('<div id="global-alert-message"/>');
-                    jQuery.each(data, function(index, value) { 
-                        jQuery('#global-alert-message').append('<div class="event-alert event-warning no-animation"><p><span>' + 
-                          value.message + 
+                    jQuery.each(data, function(index, value) {
+                        jQuery('#global-alert-message').append('<div class="event-alert event-warning no-animation"><p><span>' +
+                          value.message +
                           '</span></p></div>');
                     });
                 }
             });
         });
-    </script> 
+    </script>
     </body>
 </html>

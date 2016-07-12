@@ -77,7 +77,6 @@ Duration field client side
 
 Application details server side
     [Documentation]    INFUND-2843
-    [Tags]    Pending
     Given the user should see the text in the page    Application details
     When the user enters text to a text field         id=application_details-title    ${EMPTY}
     Then the user enters text to a text field         id=application_details-startdate_day    ${EMPTY}

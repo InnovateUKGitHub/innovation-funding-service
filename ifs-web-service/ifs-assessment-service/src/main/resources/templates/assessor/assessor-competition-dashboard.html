@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="app-dashboard">
+<body th:with="context='assessment'" class="app-dashboard">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -23,7 +23,7 @@
     <div class="grid-row">
         <div class="column-two-thirds competition details">
             <ul class="no-bullet">
-                <li><strong>Compeititon:</strong> Technology Inspired (CRD3359)</li>
+                <li><strong>Competiton:</strong> Technology Inspired (CRD3359)</li>
                 <li><strong>Lead Technologist:</strong> Mike Biddle</li>
                 <li><strong>Funding body:</strong> Innovate UK</li>
                 <li><strong>Accept applications deadline:</strong> Noon Wednesday 20th April 2016</li>

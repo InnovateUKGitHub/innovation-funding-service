@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorHolder;
 import com.worth.ifs.commons.error.ErrorTemplate;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import static java.util.Arrays.asList;
  * This class represents a failure encountered during a service call and can additionally contain 0 or more error
  * messages within it.
  */
-public class ServiceFailure {
+public class ServiceFailure implements ErrorHolder {
 
     private List<Error> errors;
     private Throwable cause;
