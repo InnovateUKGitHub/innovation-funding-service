@@ -565,29 +565,4 @@ public final class CollectionFunctions {
         return flattenLists(furtherPermutations);
     }
 
-    public static class OptionalWrapper<T> {
-
-        private Optional<T> optional;
-
-        private OptionalWrapper(Optional<T> optional) {
-            this.optional = optional;
-        }
-
-        public void orElse(Runnable ifEmptyFn) {
-            optional.orElseGet(() -> {
-                ifEmptyFn.run();
-                return null;
-            });
-        }
-    }
-
-    public static <T> OptionalWrapper<T> ifPresent(Optional<T> optional, Consumer<T> consumer) {
-
-        OptionalWrapper<T> wrapper = new OptionalWrapper<>(optional);
-
-        return optional.map(t -> {
-            consumer.accept(t);
-            return wrapper;
-        }).orElse(wrapper);
-    }
 }
