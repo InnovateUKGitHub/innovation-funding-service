@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Eligibility'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<h2 class="heading-medium">Finances overview</h2>
+
+	<div class="table-overflow">
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Total costs</th>
+					<th scope="col">% grant</th>
+					<th scope="col">Funding sought</th>
+					<th scope="col">Other public sector funding</th>
+					<th scope="col">Contribution to project</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>&pound;286,283</td>
+					<td>55%</td>
+					<td>&pound;180,399</td>
+					<td>20,000</td>
+					<td>&pound;85,885</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="extra-margin">
+		<a href="#">Change % grant</a>
+	</div>
+
+	<form>
+
+		<h3 class="heading-medium">Project finance overview</h3>
+
+		<p>These finances where initially submitted at the application stage. All changes made to the finances are will be viewable by the applicants as soon as the changes are saved.</p>
+
+		<p>All changes must be discussed with the applicant, by raising queries through IFS, before they are made.</p>
+
+		<a href="#">Review all changes to project finances</a>
+
+		<div class="collapsible section-overview extra-margin">
+	        
+	       	<h2>Labour
+		       <span data-mirror="#section-total-1">&pound; 126,207</span> <span class="section-percentage">50%</span>
+	       	</h2>
+				
+			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:remove="tag" />
+
+	    	<h2>Administration support costs
+	    		<span data-mirror="#section-total-2">&pound; 0</span> <span class="section-percentage">20%</span>
+	       	</h2>
+
+			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:remove="tag" />
+
+			<h2>Materials
+		        <span data-mirror="#section-total-3">&pound; 8,600</span> <span class="section-percentage">10%</span>
+	       	</h2>
+
+			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-materials" th:remove="tag" />
+	    	
+	    	<h2>Capital usage
+		        <span data-mirror="#section-total-4">&pound; 0</span> <span class="section-percentage">0%</span>
+	       	</h2>
+
+			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-capital" th:remove="tag" />
+	    	
+	    	<h2>Subcontracting costs
+		        <span data-mirror="#section-total-5">&pound; 150,000</span> <span class="section-percentage">20%</span>
+	       	</h2>
+
+			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:remove="tag" />
+	    
+	    	<h2>Travel &amp; subsistence
+		        <span data-mirror="#section-total-6">&pound; 0</span> <span class="section-percentage">0%</span>
+	       	</h2>
+			
+			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-travel" th:remove="tag" />
+
+	    	<h2>Other costs
+				<span data-mirror="#section-total-3">&pound; 0</span> <span class="section-percentage">0%</span>
+	       	</h2>
+
+			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-other" th:remove="tag" />
+
+	    </div>
+
+		<div class="grid-row total-cost">
+	        <div class="column-half">
+	            <span class="heading-medium">Total project costs</span>
+	        </div>
+	        <div class="column-half alignright">
+	            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="£ 286,283" />
+	        </div>
+	    </div>
+
+	    <h3 class="heading-medium">Other funding</h3>
+
+	    <div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:remove="tag" />
+
+
+	    <div class="extra-margin">
+	    	<a href="#" class="button button-secondary">Queries</a>
+	    </div>
+
+	    <h3 class="heading-medium">Approve eligible costs</h3>
+	    <p>After any required alterations have been made, eligable costs should be approved.</p>
+	    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+
+	    <div class="form-group">
+	    	<label class="block-label" for="costs-reviewed">
+		      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
+		     	These funding costs have been reviewed and are acceptable
+		    </label>
+	    </div>
+
+	    <input class="button" type="submit" value="Approve eligible costs" />
+	
+	</form>
+
+	<hr />
+
+	<div class="extra-margin">
+		<a href="/prototypes/1199-project-finances" class="button button-secondary">Save and return to finance checks</a>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery('input#admin-support-radio-1').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").show();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-2').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").show();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-3').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").show();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-4').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").show();
+		}
+	});
+
+	// ]]>
+</script>
+</body>
+</html>
