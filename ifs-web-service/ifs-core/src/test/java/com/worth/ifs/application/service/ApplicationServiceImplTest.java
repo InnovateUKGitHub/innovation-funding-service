@@ -1,25 +1,26 @@
 package com.worth.ifs.application.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static java.math.BigDecimal.ZERO;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -55,16 +56,17 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         List<ApplicationResource> applications = newApplicationResource()
         		.withId(1L, 2L, 3L, 4L, 5L, 6L)
         		.withApplicationStatus(ApplicationStatusConstants.CREATED.getId(),
-				        				ApplicationStatusConstants.OPEN.getId(),
-				        				ApplicationStatusConstants.OPEN.getId(),
-				        				ApplicationStatusConstants.SUBMITTED.getId(),
-				        				ApplicationStatusConstants.SUBMITTED.getId(),
-				        				ApplicationStatusConstants.SUBMITTED.getId())
-        		.withCompetition(openCompetition.getId(),
-		        				openCompetition.getId(),
-		        				inAssessmentCompetition.getId(),
-		        				inAssessmentCompetition.getId(),
-		        				fundersPanelCompetition.getId(),
+                        ApplicationStatusConstants.OPEN.getId(),
+                        ApplicationStatusConstants.OPEN.getId(),
+                        ApplicationStatusConstants.SUBMITTED.getId(),
+                        ApplicationStatusConstants.SUBMITTED.getId(),
+                        ApplicationStatusConstants.SUBMITTED.getId())
+                .withCompletion(ZERO, new BigDecimal("20.50"), ZERO, ZERO, ZERO, ZERO)
+                .withCompetition(openCompetition.getId(),
+                        openCompetition.getId(),
+                        inAssessmentCompetition.getId(),
+                        inAssessmentCompetition.getId(),
+                        fundersPanelCompetition.getId(),
 		        				closedCompetition.getId())
         		.build(6);
 
@@ -74,13 +76,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(competitionsRestService.getCompetitionById(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
 
     	when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
- 
-    	when(applicationRestService.getCompleteQuestionsPercentage(1L)).thenReturn(settable(restSuccess(0d)));
-        when(applicationRestService.getCompleteQuestionsPercentage(2L)).thenReturn(settable(restSuccess(20.5d)));
-        when(applicationRestService.getCompleteQuestionsPercentage(3L)).thenReturn(settable(restSuccess(0d)));
-        when(applicationRestService.getCompleteQuestionsPercentage(4L)).thenReturn(settable(restSuccess(0d)));
-        when(applicationRestService.getCompleteQuestionsPercentage(5L)).thenReturn(settable(restSuccess(0d)));
-        when(applicationRestService.getCompleteQuestionsPercentage(6L)).thenReturn(settable(restSuccess(0d)));
     }
 
     @Override
@@ -154,7 +149,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testGetProgressNull() throws Exception {
+    public void testGetProgressZero() throws Exception {
     	Long applicationId = 7L;
         
         Map<Long, Integer> progress = service.getProgress(userId);
