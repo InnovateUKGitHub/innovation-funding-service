@@ -91,11 +91,47 @@
         <div class="column-half">
             <h3 class="heading-small">Project timescales</h3>
             <p>Project start date:<br/>
-            <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
+            <span th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
             </p>
-            <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+            <p>Duration:<br/><span th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
         </div>
     </div>
 </div>
+
+
+<!-- ======== Assessment - assessor summary section ======= -->
+<div th:fragment="assessment-summary-section (question)">
+    <h2>
+        <span th:text="${question.getDisplayLabel()}" />
+        <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
+        <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
+
+        <div class="section-score">
+            Score:
+            <span th:text="|${question.values.get('SCORE')}/${question.getScorePossible()}|" th:if="${question.values.get('SCORE')}" th:remove="tag" />
+<span th:unless="${question.values.get('SCORE')}" th:remove="tag">N/A</span>
+        </div>
+    </h2>
+    <div class="question">
+        <div class="form-group">
+            <p th:text="${question.values.get('FEEDBACK')}" />
+            <p><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}">Return to this question in the application</a></p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ======== Assessment - assessor summary total score ======= -->
+<div th:fragment="assessment-summary-total-score(totalGiven, totalPossible, totalPercentage)">
+    <div class="extra-margin alignright">
+        <p class="no-margin">
+            <strong>Total: <span th:text="${totalGiven}" th:remove="tag">0</span>/<span th:text="${totalPossible}" th:remove="tag">100</span></strong>
+        </p>
+        <p>
+            <strong><span th:text="${totalPercentage}+'%'" th:remove="tag">0%</span></strong>
+        </p>
+    </div>
+</div>
+
 
 </html>
