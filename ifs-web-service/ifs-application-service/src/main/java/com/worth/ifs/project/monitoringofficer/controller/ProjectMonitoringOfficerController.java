@@ -5,6 +5,7 @@ import com.worth.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOffice
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 /**
  * Controller for the Partners' assigned Monitoring Officer page
  */
+@Controller
 @RequestMapping("/project/{projectId}/monitoring-officer")
 public class ProjectMonitoringOfficerController {
 
