@@ -29,7 +29,7 @@ Academic organisations search
     Then the user should see the text in the page    No results found.
     When the user enters text to a text field    id=organisationSearchName    !!
     And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see the text in the page    Please enter valid characters
+    Then the user should see the text in the page    No results found.
 
 Accept invitation as academic
     [Documentation]    INFUND-1166
