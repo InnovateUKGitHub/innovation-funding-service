@@ -319,7 +319,7 @@ public class OrganisationCreationController {
         return null;
     }
 
-    @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{postcode}/{selectedPostcodeIndex}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{selectedPostcodeIndex}"}, method = RequestMethod.GET)
     public String amendOrganisationAddressPostCode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
@@ -345,10 +345,11 @@ public class OrganisationCreationController {
         }
     }
 
-    @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}/{postcode}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}/search-postcode"}, method = RequestMethod.GET)
     public String amendOrganisationAddressPostcode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                                   @RequestParam(value="searchTerm", required=false) String searchTerm,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
@@ -399,9 +400,9 @@ public class OrganisationCreationController {
 
         if (!referer.contains(FIND_ORGANISATION)) {
             if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()), organisationForm.getAddressForm().getSelectedPostcodeIndex());
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
+                return String.format("redirect:%s/%s/%s/search-postcode?searchTerm=%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId())) {
                 return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId());
             } else {
