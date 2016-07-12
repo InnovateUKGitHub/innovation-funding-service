@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  th:remove="tag"></div>
 </head>
-<body class="assessment assessment-overview">
+<body th:with="context='assessment'" class="assessment assessment-overview">
 
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 <div th:include="fragments/modals :: reject-assesment-modal" th:remove="tag" />

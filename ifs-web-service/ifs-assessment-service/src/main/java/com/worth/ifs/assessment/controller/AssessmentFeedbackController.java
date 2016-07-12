@@ -6,20 +6,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.assessment.form.AssessmentFeedbackForm;
+import com.worth.ifs.assessment.model.AssessmentFeedbackApplicationDetailsModelPopulator;
+import com.worth.ifs.assessment.model.AssessmentFeedbackModelPopulator;
+import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentFeedbackService;
 import com.worth.ifs.assessment.service.AssessmentService;
-import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsModel;
-import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
-import com.worth.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +26,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
-import static com.worth.ifs.commons.rest.RestResult.aggregate;
-import static com.worth.ifs.util.CollectionFunctions.flattenLists;
-import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static java.util.Arrays.asList;
 
 @Controller
@@ -53,6 +43,15 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
 
     @Autowired
     private AssessmentFeedbackService assessmentFeedbackService;
+
+    @Autowired
+    private AssessmentFeedbackModelPopulator assessmentFeedbackModelPopulator;
+
+    @Autowired
+    private AssessmentFeedbackApplicationDetailsModelPopulator assessmentFeedbackApplicationDetailsModelPopulator;
+
+    @Autowired
+    private AssessmentFeedbackNavigationModelPopulator assessmentFeedbackNavigationModelPopulator;
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
@@ -73,8 +72,8 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         form.setValue(assessmentFeedback.getFeedback());
 
         final ApplicationResource application = getApplicationForAssessment(assessmentId);
-        model.addAttribute("model", populateQuestionModel(application, questionId));
-        model.addAttribute("navigation", populateNavigation(assessmentId, questionId));
+        model.addAttribute("model", assessmentFeedbackModelPopulator.populateModel(application, questionId, assessmentFeedback));
+        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
 
         return QUESTION;
     }
@@ -128,29 +127,11 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
 
     private String getApplicationDetails(final Model model, final Long assessmentId, final Long questionId) throws InterruptedException, ExecutionException {
         final ApplicationResource application = getApplicationForAssessment(assessmentId);
-        model.addAttribute("model", populateApplicationDetailsModel(application, questionId));
-        model.addAttribute("navigation", populateNavigation(assessmentId, questionId));
+        model.addAttribute("model", assessmentFeedbackApplicationDetailsModelPopulator.populateModel(application, questionId));
+        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
         organisationDetailsModelPopulator.populateModel(model, application.getId());
 
         return APPLICATION_DETAILS;
-    }
-
-    private AssessmentFeedbackViewModel populateQuestionModel(final ApplicationResource application, final Long questionId) {
-        final CompetitionResource competition = getCompetition(application.getCompetition());
-        final QuestionResource question = getQuestion(questionId);
-        final List<FormInputResource> questionFormInputs = getQuestionFormInputs(questionId);
-        final Map<Long, String> questionFormInputResponses = getQuestionFormInputResponsesAsMap(getQuestionFormInputResponses(application.getId(), questionFormInputs));
-        return new AssessmentFeedbackViewModel(competition, application, question, questionFormInputs, questionFormInputResponses);
-    }
-
-    private AssessmentFeedbackApplicationDetailsModel populateApplicationDetailsModel(final ApplicationResource application, final Long questionId) {
-        final CompetitionResource competition = getCompetition(application.getCompetition());
-        final QuestionResource question = getQuestion(questionId);
-        return new AssessmentFeedbackApplicationDetailsModel(competition, application, question);
-    }
-
-    private AssessmentNavigationViewModel populateNavigation(final Long assessmentId, final Long questionId) {
-        return new AssessmentNavigationViewModel(assessmentId, getPreviousQuestion(questionId), getNextQuestion(questionId));
     }
 
     private AssessmentResource getAssessment(final Long assessmentId) {
@@ -159,34 +140,6 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
 
     private ApplicationResource getApplication(final Long applicationId) {
         return applicationService.getById(applicationId);
-    }
-
-    private CompetitionResource getCompetition(final Long competitionId) {
-        return competitionService.getById(competitionId);
-    }
-
-    private QuestionResource getQuestion(final Long questionId) {
-        return questionService.getById(questionId);
-    }
-
-    private List<FormInputResource> getQuestionFormInputs(final Long questionId) {
-        return formInputService.findByQuestion(questionId);
-    }
-
-    private List<FormInputResponseResource> getQuestionFormInputResponses(final Long applicationId, final List<FormInputResource> formInputs) {
-        final RestResult<List<List<FormInputResponseResource>>> questionFormInputResponses = aggregate(formInputs
-                .stream()
-                .map(formInput -> formInputResponseService.getByFormInputIdAndApplication(formInput.getId(), applicationId))
-                .collect(Collectors.toList()));
-        return flattenLists(questionFormInputResponses.getSuccessObjectOrThrowException());
-    }
-
-    private Map<Long, String> getQuestionFormInputResponsesAsMap(final List<FormInputResponseResource> formInputResponses) {
-        return simpleToMap(
-                formInputResponses,
-                response -> response.getFormInput(),
-                FormInputResponseResource::getValue
-        );
     }
 
     private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
@@ -201,12 +154,8 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         return processRoleResource.get().getApplication();
     }
 
-    private Optional<QuestionResource> getPreviousQuestion(final Long questionId) {
-        return questionService.getPreviousQuestion(questionId);
-    }
-
-    private Optional<QuestionResource> getNextQuestion(final Long questionId) {
-        return questionService.getNextQuestion(questionId);
+    private List<FormInputResource> getQuestionFormInputs(final Long questionId) {
+        return formInputService.findByQuestion(questionId);
     }
 
     private AssessmentFeedbackResource getAssessmentFeedbackForQuestion(final Long assessmentId, final Long questionId) {
