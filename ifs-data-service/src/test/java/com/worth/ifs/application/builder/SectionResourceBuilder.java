@@ -31,15 +31,6 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
         return with(section -> section.setQuestions(questions));
     }
 
-    @Override
-    public List<SectionResource> build(int numberToBuild) {
-
-        // build the sections, and then apply any back refs if necessary
-        List<SectionResource> sections = super.build(numberToBuild);
-
-        return sections;
-    }
-
     public SectionResourceBuilder withQuestionSets(List<List<Long>> questionSets) {
         return withList(questionSets, (questions, section) -> section.setQuestions(questions));
     }

@@ -4,8 +4,9 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * A base class from which concrete builders can extend
@@ -75,8 +76,9 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         return (List) IntStream.range(0, numberToBuild).mapToObj(i -> {
             T newElement = createInitial();
             amendActions.forEach(a -> a.accept(i, newElement));
+            postProcess(i, newElement);
             return newElement;
-        }).collect(Collectors.toList());
+        }).collect(toList());
     }
 
     @Override
@@ -88,6 +90,14 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
     public T[] buildArray(int numberToBuild, Class<T> clazz) {
         build(numberToBuild);
         return build(numberToBuild).toArray((T[]) Array.newInstance(clazz, numberToBuild));
+    }
+
+    /**
+     * Give subclasses of this BaseBuilder the chance to post-process any built instances prior to returning them.
+     * An example of post-processing them could be adding Hibernate-style backlinks to objects within the new instance
+     */
+    protected void postProcess(int index, T instance) {
+        // by default, do nothing
     }
 
     protected abstract S createNewBuilderWithActions(List<BiConsumer<Integer, T>> actions);

@@ -4,7 +4,7 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.project.domain.ProjectUser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,10 +47,6 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((add, project) -> project.setAddress(add), address);
     }
 
-    public ProjectBuilder withProjectManager(ProcessRole... projectManager) {
-        return withArray((processRole, project) -> project.setProjectManager(processRole), projectManager);
-    }
-
     public ProjectBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
     }
@@ -59,7 +55,20 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((app, project) -> project.setApplication(app), application);
     }
 
+    public ProjectBuilder withProjectUsers(List<ProjectUser>... projectUsers){
+        return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
+    }
+
     public ProjectBuilder withSubmittedDate(LocalDateTime... submittedDate){
         return withArray((subDate, project) -> project.setSubmittedDate(subDate), submittedDate);
+    }
+
+    @Override
+    protected void postProcess(int index, Project project) {
+
+        // add Hibernate-style backlinks to the Project Users
+        project.getProjectUsers().forEach(pu -> {
+            pu.setProject(project);
+        });
     }
 }

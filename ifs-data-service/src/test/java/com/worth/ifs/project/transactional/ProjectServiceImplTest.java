@@ -19,7 +19,6 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,9 +31,7 @@ import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
-import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
-import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -48,7 +45,6 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -64,33 +60,52 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
 	private Application application;
 	private Organisation organisation;
-	private Role role;
-	private User user;
-	private ProcessRole processRole;
+	private Role leadApplicantRole;
+    private Role projectManagerRole;
+    private Role partnerRole;
+    private User user;
+	private ProcessRole leadApplicantProcessRole;
+    private ProjectUser leadPartnerProjectUser;
 	private Project project;
 
 	@Before
 	public void setUp() {
-		organisation = newOrganisation().build();
-    	role = newRole().
-    			withType(UserRoleType.LEADAPPLICANT).
-    			build();
+
+        organisation = newOrganisation().build();
+
+        leadApplicantRole = newRole(LEADAPPLICANT).build();
+        projectManagerRole = newRole(PROJECT_MANAGER).build();
+        partnerRole = newRole(PARTNER).build();
+
     	user = newUser().
     			withid(userId).
     			build();
-    	processRole = newProcessRole().
+
+    	leadApplicantProcessRole = newProcessRole().
     			withOrganisation(organisation).
-    			withRole(role).
+    			withRole(leadApplicantRole).
     			withUser(user).
     			build();
+
+        leadPartnerProjectUser = newProjectUser().
+                withOrganisation(organisation).
+                withRole(partnerRole).
+                withUser(user).
+                build();
+
     	application = newApplication().
 				withId(applicationId).
-	            withProcessRoles(processRole).
+	            withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
-    	project = newProject().withId(projectId).withApplication(application).build();
+
+    	project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withProjectUsers(singletonList(leadPartnerProjectUser)).
+                build();
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -107,7 +122,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Project savedProject = newProject().build();
 
-        when(roleRepositoryMock.findByName(PARTNER.getName())).thenReturn(singletonList(partnerRole));
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication(application);
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
@@ -124,15 +139,57 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
         assertFalse(result.isSuccess());
-        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
     }
     
     @Test
     public void testValidProjectManagerProvided() {
 
+        when(roleRepositoryMock.findOneByName(PROJECT_MANAGER.getName())).thenReturn(projectManagerRole);
+
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isSuccess());
-        assertEquals(processRole, project.getProjectManager());
+
+        ProjectUser expectedProjectManager = newProjectUser().
+                withId().
+                withProject(project).
+                withOrganisation(organisation).
+                withRole(projectManagerRole).
+                withUser(user).
+                build();
+
+        assertEquals(expectedProjectManager, project.getProjectUsers().get(project.getProjectUsers().size() - 1));
+    }
+
+    @Test
+    public void testValidProjectManagerProvidedWithExistingProjectManager() {
+
+        User differentUser = newUser().build();
+        Organisation differentOrganisation = newOrganisation().build();
+
+        @SuppressWarnings("unused")
+        ProjectUser existingProjenullctManager = newProjectUser().
+                withId(456L).
+                withProject(project).
+                withRole(projectManagerRole).
+                withOrganisation(differentOrganisation).
+                withUser(differentUser).
+                build();
+
+        when(roleRepositoryMock.findOneByName(PROJECT_MANAGER.getName())).thenReturn(projectManagerRole);
+
+        ServiceResult<Void> result = service.setProjectManager(projectId, userId);
+        assertTrue(result.isSuccess());
+
+        ProjectUser expectedProjectManager = newProjectUser().
+                withId(456L).
+                withProject(project).
+                withOrganisation(organisation).
+                withRole(projectManagerRole).
+                withUser(user).
+                build();
+
+        assertEquals(expectedProjectManager, project.getProjectUsers().get(project.getProjectUsers().size() - 1));
     }
 
     @Test
@@ -217,7 +274,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(roleRepositoryMock.findByName(FINANCE_CONTACT.getName())).thenReturn(singletonList(financeContactRole));
+        when(roleRepositoryMock.findOneByName(FINANCE_CONTACT.getName())).thenReturn(financeContactRole);
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
 
@@ -249,7 +306,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(financeContactRole).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(roleRepositoryMock.findByName(FINANCE_CONTACT.getName())).thenReturn(singletonList(financeContactRole));
+        when(roleRepositoryMock.findOneByName(FINANCE_CONTACT.getName())).thenReturn(financeContactRole);
 
         List<ProjectUser> existingFinanceContactForOrganisation = simpleFilter(project.getProjectUsers(), projectUser ->
                 projectUser.getOrganisation().equals(organisation) &&
@@ -538,7 +595,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             assertEquals(application.getName(), project.getName());
             assertEquals(application.getDurationInMonths(), project.getDurationInMonths());
             assertEquals(application.getStartDate(), project.getTargetStartDate());
-            assertNull(project.getProjectManager());
+            assertFalse(project.getProjectUsers().isEmpty());
             assertNull(project.getAddress());
 
             List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);

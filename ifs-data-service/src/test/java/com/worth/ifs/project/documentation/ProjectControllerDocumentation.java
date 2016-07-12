@@ -147,7 +147,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long project1Id = 1L;
         Long projectManagerId = 8L;
 
-        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
 
         mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
                 .andExpect(status().isBadRequest())

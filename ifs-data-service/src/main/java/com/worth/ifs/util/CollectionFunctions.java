@@ -191,6 +191,25 @@ public final class CollectionFunctions {
     }
 
     /**
+     * Return the one and only element in the given list, or empty if none exists
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> getOnlyElementOrEmpty(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return Optional.empty();
+        }
+
+        if (list.size() > 1) {
+            throw new IllegalArgumentException("More than one element was available in list " + list + ", so cannot return only element");
+        }
+
+        return Optional.of(list.get(0));
+    }
+
+    /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      *
      * @param list
@@ -508,18 +527,15 @@ public final class CollectionFunctions {
      * @return
      */
     public static <T> BinaryOperator<T> nullSafe(final BinaryOperator<T> notNullSafe) {
-        return new BinaryOperator<T>() {
-            @Override
-            public T apply(T t1, T t2) {
-                if (t1 != null && t2 != null) {
-                    return notNullSafe.apply(t1, t2);
-                } else if (t1 != null) {
-                    return t1;
-                } else if (t2 != null) {
-                    return t2;
-                }
-                return null;
+        return (t1, t2) -> {
+            if (t1 != null && t2 != null) {
+                return notNullSafe.apply(t1, t2);
+            } else if (t1 != null) {
+                return t1;
+            } else if (t2 != null) {
+                return t2;
             }
+            return null;
         };
     }
 
@@ -547,5 +563,31 @@ public final class CollectionFunctions {
 
         List<List<List<T>>> furtherPermutations = mapWithIndex(remainingWords, (i, remainingWord) -> findPermutations(newPermutationStringSoFar, remainingWord, removeElement(remainingWords, i)));
         return flattenLists(furtherPermutations);
+    }
+
+    public static class OptionalWrapper<T> {
+
+        private Optional<T> optional;
+
+        private OptionalWrapper(Optional<T> optional) {
+            this.optional = optional;
+        }
+
+        public void orElse(Runnable ifEmptyFn) {
+            optional.orElseGet(() -> {
+                ifEmptyFn.run();
+                return null;
+            });
+        }
+    }
+
+    public static <T> OptionalWrapper<T> ifPresent(Optional<T> optional, Consumer<T> consumer) {
+
+        OptionalWrapper<T> wrapper = new OptionalWrapper<>(optional);
+
+        return optional.map(t -> {
+            consumer.accept(t);
+            return wrapper;
+        }).orElse(wrapper);
     }
 }

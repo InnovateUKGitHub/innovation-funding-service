@@ -24,8 +24,6 @@ public class ProjectResource {
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
-    private Long projectManager;
-
     @JsonIgnore
     public boolean isProjectDetailsSubmitted(){
         return submittedDate != null;
@@ -61,14 +59,6 @@ public class ProjectResource {
 
     public void setDurationInMonths(Long durationInMonths) {
         this.durationInMonths = durationInMonths;
-    }
-
-    public Long getProjectManager() {
-        return projectManager;
-    }
-
-    public void setProjectManager(Long projectManager) {
-        this.projectManager = projectManager;
     }
 
     public String getName() {

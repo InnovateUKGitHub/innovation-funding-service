@@ -6,17 +6,14 @@ import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
                 AddressMapper.class,
-                ProcessRoleMapper.class,
                 ApplicationMapper.class,
-                ProjectUserMapper.class,
-                ProcessRoleMapper.class
+                ProjectUserMapper.class
         }
 )
 public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource, Long> {
