@@ -222,7 +222,8 @@
                         />
             </td>
             <td rowspan="2" class="rowspan" th:unless="${complete == 'complete'}">
-                <button type="submit"
+                <button th:unless="${cost.id == null}"
+                        type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
                         th:value="${cost.id}"
@@ -464,7 +465,8 @@
                         />
             </td>
             <td class="alignright remove" th:unless="${complete == 'complete'}">
-                <button type="submit"
+                <button th:unless="${cost.id == null}"
+                        type="submit"
                         name="remove_cost"
                         th:value="${cost.id}"
                         th:class="'buttonlink js-remove-row'"
@@ -634,7 +636,8 @@
                        />
             </div>
 
-            <button type="submit"
+            <button th:unless="${cost.id == null}"
+                    type="submit"
                     name="remove_cost"
                     class="buttonlink js-remove-row"
                     th:value="${cost.id}"
@@ -733,7 +736,7 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
                        />
             </div>
-            <button th:unless="${complete == 'complete'}" type="submit"
+            <button th:unless="${(complete == 'complete') or (cost.id == null)}" type="submit"
                     name="remove_cost"
                     class="buttonlink js-remove-row"
                     th:value="${cost.id}"
@@ -854,7 +857,8 @@
                        th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
             </td>
             <td th:unless="${complete == 'complete'}">
-                <button type="submit"
+                <button th:unless="${cost.id == null}"
+                        type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
                         th:value="${cost.id}"
@@ -930,7 +934,8 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"  />
             </td>
             <td th:unless="${complete == 'complete'}">
-                <button type="submit"
+                <button th:unless="${cost.id == null}"
+                        type="submit"
                         class="buttonlink js-remove-row"
                         name="remove_cost"
                         th:value="${cost.id}"
@@ -1082,7 +1087,8 @@
                        />
             </td>
             <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-                <button type="submit"
+                <button th:unless="${cost.id == null}"
+                        type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
                         th:value="${cost.id}"

@@ -32,6 +32,10 @@ public class OverheadsHandler extends CostHandler {
             }
         }
 
+        if(id == null && customRate == null && rateType == null) {
+        	return null;
+        }
+        
         return createOverHead(id, rateType, customRate);
     }
 

@@ -87,7 +87,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
-        return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        if(costItem != null) {
+        	return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        } else {
+        	return new ValidationMessages();
+        }
     }
 
     private FinanceFormField getCostFormField(String costTypeKey, String value) {

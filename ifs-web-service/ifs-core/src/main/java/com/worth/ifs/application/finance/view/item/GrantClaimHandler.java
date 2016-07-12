@@ -20,6 +20,9 @@ public class GrantClaimHandler extends CostHandler {
             grantClaimPercentage = NumberUtils.getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
         }
 
+        if(id == null && grantClaimPercentage == null) {
+        	return null;
+        }
         return new GrantClaim(id, grantClaimPercentage);
     }
 

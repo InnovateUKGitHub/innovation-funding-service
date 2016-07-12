@@ -46,6 +46,10 @@ public class LabourCostHandler extends CostHandler {
                 }
             }
         }
+        
+        if(id == null && grossAnnualSalary == null && role == null && labourDays == null && description == null && key == null) {
+        	return null;
+        }
         return new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
     }
 }

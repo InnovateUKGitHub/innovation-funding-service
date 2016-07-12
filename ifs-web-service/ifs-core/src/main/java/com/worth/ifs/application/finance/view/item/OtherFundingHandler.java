@@ -46,6 +46,10 @@ public class OtherFundingHandler extends CostHandler {
             }
         }
 
+        if(id == null && otherPublicFunding == null && fundingSource == null && securedDate == null && fundingAmount == null) {
+        	return null;
+        }
+        
         return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
     }
 }

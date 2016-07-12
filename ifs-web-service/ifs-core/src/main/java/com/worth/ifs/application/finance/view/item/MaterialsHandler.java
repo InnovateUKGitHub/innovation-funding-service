@@ -38,6 +38,9 @@ public class MaterialsHandler extends CostHandler {
             }
         }
 
+        if(id == null && item == null && cost == null && quantity == null) {
+        	return null;
+        }
         return new Materials(id, item, cost, quantity);
     }
 }

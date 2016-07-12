@@ -38,6 +38,10 @@ public class TravelCostHandler extends CostHandler {
                 }
             }
         }
+        
+        if(id == null && costPerItem == null && item == null && quantity == null) {
+        	return null;
+        }
         return new TravelCost(id, item, costPerItem, quantity);
     }
 }

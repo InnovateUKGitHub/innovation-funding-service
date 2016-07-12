@@ -33,6 +33,10 @@ public class OtherCostHandler extends CostHandler {
                 }
             }
         }
+        
+        if(id == null && description == null && cost == null) {
+        	return null;
+        }
         return new OtherCost(id, description, cost);
     }
 }

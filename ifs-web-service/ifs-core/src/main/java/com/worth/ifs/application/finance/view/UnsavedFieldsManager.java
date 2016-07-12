@@ -8,14 +8,18 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
 
 @Service
-public class FieldSeparator {
+public class UnsavedFieldsManager {
 
     public List<List<FinanceFormField>> separateFields(List<FinanceFormField> fields) {
-    	 Map<String,List<FinanceFormField>> grouped = fields.stream().collect(Collectors.groupingBy(f -> f.getFieldName()));
+    	
+    	 Map<String,List<FinanceFormField>> grouped = fields.stream()
+    			 .filter(f -> !(StringUtils.isEmpty(f.getValue())))
+    			 .collect(Collectors.groupingBy(f -> f.getFieldName()));
     	 
     	 List<List<FinanceFormField>> result = new ArrayList<>();
     	 
