@@ -72,7 +72,7 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         form.setValue(assessmentFeedback.getFeedback());
 
         final ApplicationResource application = getApplicationForAssessment(assessmentId);
-        model.addAttribute("model", assessmentFeedbackModelPopulator.populateModel(application, questionId));
+        model.addAttribute("model", assessmentFeedbackModelPopulator.populateModel(application, questionId, assessmentFeedback));
         model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
 
         return QUESTION;
