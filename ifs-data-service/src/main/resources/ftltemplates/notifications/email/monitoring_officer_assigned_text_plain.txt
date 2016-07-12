@@ -1,3 +1,5 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
 The Project ${projectName} has been assigned to you, and the applicants have been informed, please make contact with them to review the details of the project.
@@ -13,10 +15,4 @@ You should have been informed of this appointment before receiving this email, i
 
 Competitions Team
 Innovate UK
-
-North Star House
-North Star Avenue
-Swindon
-Wiltshire
-SN2 1JF
-© Crown copyright
+</@layout.defaultPlainText>
