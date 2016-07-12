@@ -3,7 +3,6 @@ package com.worth.ifs.competitionsetup.form;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 /**
  * Form for the milestones competition setup section.
@@ -19,6 +18,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the open date")
     @Range(min=1900, max=9000, message= "Please enter a open year")
     private Integer openDateYear;
+    private String openDateDayOfWeek;
 
 
     @NotNull(message="Please enter a briefing event")
@@ -30,6 +30,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the briefing date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer briefingEventYear;
+    private String briefingEventDayOfWeek;
 
     @NotNull(message="Please enter the submission date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -40,9 +41,10 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the submission date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer submissionDateYear;
+    private String submissionDateDayOfWeek;
 
 
-    @NotNull(message="Please enter the alocate accessors date")
+    @NotNull(message="Please enter the allocate accessors date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer allocateAssessorsDay;
     @NotNull(message="Please enter the alocate accessors date")
@@ -51,6 +53,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the alocate accessors date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer allocateAssessorsYear;
+    private String allocateAssessorsDayOfWeek;
 
     @NotNull(message="Please enter the assessor briefing date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -61,6 +64,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the assessor briefing date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer assessorBriefingYear;
+    private String assessorBriefingDayOfWeek;
 
     @NotNull(message="Please enter the assessor accepts date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -71,6 +75,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the assessor accepts date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer assessorAcceptsYear;
+    private String assessorAcceptsDayOfWeek;
 
     @NotNull(message="Please enter the assessor deadline date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -81,7 +86,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the assessor deadline date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer assessorDeadlineYear;
-
+    private String assessorDeadlineDayOfWeek;
 
     @NotNull(message="Please enter the line draw date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -92,6 +97,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the line draw date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer lineDrawYear;
+    private String lineDrawDayOfWeek;
 
     @NotNull(message="Please enter the assesment panel date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -102,6 +108,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the assesment panel date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer assessmentPanelYear;
+    private String assessmentPanelDayOfWeek;
 
     @NotNull(message="Please enter the panel date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -112,6 +119,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the panel date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer panelDateYear;
+    private String panelDateDayOfWeek;
 
     @NotNull(message="Please enter the funders date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -122,6 +130,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the funders date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer fundersPanelYear;
+    private String fundersPanelDayOfWeek;
 
     @NotNull(message="Please enter the notifications date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -132,6 +141,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the notifications date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer notificationsYear;
+    private String notificationsDayOfWeek;
 
     @NotNull(message="Please enter the release feedback date")
     @Range(min=1, max=31, message= "Please enter a opening day")
@@ -142,7 +152,7 @@ public class MilestonesForm extends CompetitionSetupForm {
     @NotNull(message="Please enter the release feedback date")
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer releaseFeedbackYear;
-
+    private String releaseFeedbackDayOfWeek;
 
     public Integer getAssessorAcceptsMonth() {
         return assessorAcceptsMonth;
@@ -454,5 +464,109 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setReleaseFeedbackYear(Integer releaseFeedbackYear) {
         this.releaseFeedbackYear = releaseFeedbackYear;
+    }
+
+    public String getOpenDateDayOfWeek() {
+        return openDateDayOfWeek;
+    }
+
+    public String getBriefingEventDayOfWeek() {
+        return briefingEventDayOfWeek;
+    }
+
+    public String getSubmissionDateDayOfWeek() {
+        return submissionDateDayOfWeek;
+    }
+
+    public String getAllocateAssessorsDayOfWeek() {
+        return allocateAssessorsDayOfWeek;
+    }
+
+    public String getAssessorBriefingDayOfWeek() {
+        return assessorBriefingDayOfWeek;
+    }
+
+    public String getAssessorAcceptsDayOfWeek() {
+        return assessorAcceptsDayOfWeek;
+    }
+
+    public String getAssessorDeadlineDayOfWeek() {
+        return assessorDeadlineDayOfWeek;
+    }
+
+    public String getLineDrawDayOfWeek() {
+        return lineDrawDayOfWeek;
+    }
+
+    public String getAssessmentPanelDayOfWeek() {
+        return assessmentPanelDayOfWeek;
+    }
+
+    public String getPanelDateDayOfWeek() {
+        return panelDateDayOfWeek;
+    }
+
+    public String getFundersPanelDayOfWeek() {
+        return fundersPanelDayOfWeek;
+    }
+
+    public String getNotificationsDayOfWeek() {
+        return notificationsDayOfWeek;
+    }
+
+    public String getReleaseFeedbackDayOfWeek() {
+        return releaseFeedbackDayOfWeek;
+    }
+
+    public void setOpenDateDayOfWeek(String openDateDayOfWeek) {
+        this.openDateDayOfWeek = openDateDayOfWeek;
+    }
+
+    public void setBriefingEventDayOfWeek(String briefingEventDayOfWeek) {
+        this.briefingEventDayOfWeek = briefingEventDayOfWeek;
+    }
+
+    public void setSubmissionDateDayOfWeek(String submissionDateDayOfWeek) {
+        this.submissionDateDayOfWeek = submissionDateDayOfWeek;
+    }
+
+    public void setAllocateAssessorsDayOfWeek(String allocateAssessorsDayOfWeek) {
+        this.allocateAssessorsDayOfWeek = allocateAssessorsDayOfWeek;
+    }
+
+    public void setAssessorBriefingDayOfWeek(String assessorBriefingDayOfWeek) {
+        this.assessorBriefingDayOfWeek = assessorBriefingDayOfWeek;
+    }
+
+    public void setAssessorAcceptsDayOfWeek(String assessorAcceptsDayOfWeek) {
+        this.assessorAcceptsDayOfWeek = assessorAcceptsDayOfWeek;
+    }
+
+    public void setAssessorDeadlineDayOfWeek(String assessorDeadlineDayOfWeek) {
+        this.assessorDeadlineDayOfWeek = assessorDeadlineDayOfWeek;
+    }
+
+    public void setLineDrawDayOfWeek(String lineDrawDayOfWeek) {
+        this.lineDrawDayOfWeek = lineDrawDayOfWeek;
+    }
+
+    public void setAssessmentPanelDayOfWeek(String assessmentPanelDayOfWeek) {
+        this.assessmentPanelDayOfWeek = assessmentPanelDayOfWeek;
+    }
+
+    public void setPanelDateDayOfWeek(String panelDateDayOfWeek) {
+        this.panelDateDayOfWeek = panelDateDayOfWeek;
+    }
+
+    public void setFundersPanelDayOfWeek(String fundersPanelDayOfWeek) {
+        this.fundersPanelDayOfWeek = fundersPanelDayOfWeek;
+    }
+
+    public void setNotificationsDayOfWeek(String notificationsDayOfWeek) {
+        this.notificationsDayOfWeek = notificationsDayOfWeek;
+    }
+
+    public void setReleaseFeedbackDayOfWeek(String releaseFeedbackDayOfWeek) {
+        this.releaseFeedbackDayOfWeek = releaseFeedbackDayOfWeek;
     }
 }

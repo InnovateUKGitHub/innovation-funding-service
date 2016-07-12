@@ -548,7 +548,8 @@
                 <tbody>
 
                 <!-- 1. Open date -->
-                <tr><td>1. Open date</td><td>Wed</td>
+                <tr><td>1. Open date</td>
+                    <td th:text="${competitionSetupForm.openDateDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('openDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -569,7 +570,8 @@
                                th:field="${competitionSetupForm.openDateYear}" /></td></tr>
 
                 <!-- 2. Briefing event -->
-                <tr><td>2. Briefing event</td><td>Wed</td>
+                <tr><td>2. Briefing event</td>
+                    <td th:text="${competitionSetupForm.briefingEventDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('briefingEventDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -590,7 +592,8 @@
                                th:field="${competitionSetupForm.briefingEventYear}" /></td></tr>
 
                 <!-- 3. Submission date -->
-                <tr><td>3. Submission date</td><td>Wed</td>
+                <tr><td>3. Submission date</td>
+                    <td th:text="${competitionSetupForm.submissionDateDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('submissionDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -611,7 +614,8 @@
                                th:field="${competitionSetupForm.submissionDateYear}" /></td></tr>
 
                 <!-- 4. Allocate accessors -->
-                <tr><td>4. Allocate accessors</td><td>Wed</td>
+                <tr><td>4. Allocate accessors</td>
+                    <td th:text="${competitionSetupForm.allocateAssessorsDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('allocateAssessorsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -632,7 +636,8 @@
                                th:field="${competitionSetupForm.allocateAssessorsYear}" /></td></tr>
 
                 <!-- 5. Assessor briefing -->
-                <tr><td>5. Assessor briefing</td><td>Wed</td>
+                <tr><td>5. Assessor briefing</td>
+                    <td th:text="${competitionSetupForm.assessorBriefingDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('assessorBriefingDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -653,7 +658,8 @@
                                th:field="${competitionSetupForm.assessorBriefingYear}" /></td></tr>
 
                 <!-- 6. Assessor accepts -->
-                <tr><td>6. Assessor accepts</td><td>Wed</td>
+                <tr><td>6. Assessor accepts</td>
+                    <td th:text="${competitionSetupForm.assessorAcceptsDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('assessorAcceptsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -674,7 +680,8 @@
                                th:field="${competitionSetupForm.assessorAcceptsYear}" /></td></tr>
 
                 <!-- 7. Assessor deadline -->
-                <tr><td>7. Assessor deadline</td><td>Wed</td>
+                <tr><td>7. Assessor deadline</td>
+                    <td th:text="${competitionSetupForm.assessorDeadlineDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('assessorDeadlineDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -695,7 +702,8 @@
                                th:field="${competitionSetupForm.assessorDeadlineYear}" /></td></tr>
 
                 <!-- 8. Line draw -->
-                <tr><td>8. Line draw</td><td>Wed</td>
+                <tr><td>8. Line draw</td>
+                    <td th:text="${competitionSetupForm.lineDrawDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('lineDrawDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -716,7 +724,8 @@
                                th:field="${competitionSetupForm.lineDrawYear}" /></td></tr>
 
                 <!-- 9. Assessment panel -->
-                <tr><td>9. Assessment panel</td><td>Wed</td>
+                <tr><td>9. Assessment panel</td>
+                    <td th:text="${competitionSetupForm.assessmentPanelDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('assessmentPanelDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -737,7 +746,8 @@
                                th:field="${competitionSetupForm.assessmentPanelYear}" /></td></tr>
 
                 <!-- 10. Panel date -->
-                <tr><td>10. Panel date</td><td>Wed</td>
+                <tr><td>10. Panel date</td>
+                    <td th:text="${competitionSetupForm.panelDateDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('panelDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -758,7 +768,8 @@
                                th:field="${competitionSetupForm.panelDateYear}" /></td></tr>
 
                 <!-- 11. Funders panel -->
-                <tr><td>11. Funders panel</td><td>Wed</td>
+                <tr><td>11. Funders panel</td>
+                    <td th:text="${competitionSetupForm.fundersPanelDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('fundersPanelDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -779,7 +790,8 @@
                                th:field="${competitionSetupForm.fundersPanelYear}" /></td></tr>
 
                 <!-- 12. Notifications -->
-                <tr><td>12. Notifications</td><td>Wed</td>
+                <tr><td>12. Notifications</td>
+                    <td th:text="${competitionSetupForm.notificationsDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('notificationsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -800,7 +812,8 @@
                                th:field="${competitionSetupForm.notificationsYear}" /></td></tr>
 
                 <!-- 13. Release feedback -->
-                <tr><td>13. Release feedback</td><td>Wed</td>
+                <tr><td>13. Release feedback</td>
+                    <td th:text="${competitionSetupForm.releaseFeedbackDayOfWeek}" />
                     <td><input th:class="${#fields.hasErrors('releaseFeedbackDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
@@ -841,77 +854,90 @@
                 <tbody>
 
                 <!-- 1. Open date -->
-                <tr><td>1. Open date</td><td>Wed</td>
+                <tr><td>1. Open date</td>
+                    <td th:text="${competitionSetupForm.openDateDayOfWeek}" />
                     <td th:text="${competitionSetupForm.openDateDay}" />
                     <td th:text="${competitionSetupForm.openDateMonth}" />
                     <td th:text="${competitionSetupForm.openDateYear}" /></tr>
                 <!-- 2. Briefing event -->
-                <tr><td>2. Briefing event</td><td>Wed</td>
+                <tr><td>2. Briefing event</td>
+                    <td th:text="${competitionSetupForm.briefingEventDayOfWeek}" />
                     <td th:text="${competitionSetupForm.briefingEventDay}" />
                     <td th:text="${competitionSetupForm.briefingEventMonth}" />
                     <td th:text="${competitionSetupForm.briefingEventYear}" /></tr>
                 <!-- 3. Submission date -->
-                <tr><td>3. Submission date</td><td>Wed</td>
+                <tr><td>3. Submission date</td>
+                    <td th:text="${competitionSetupForm.submissionDateDayOfWeek}" />
                     <td th:text="${competitionSetupForm.submissionDateDay}" />
                     <td th:text="${competitionSetupForm.submissionDateMonth}" />
                     <td th:text="${competitionSetupForm.submissionDateYear}" /></tr>
 
                 <!-- 4. Allocate accessors -->
-                <tr><td>4. Allocate accessors</td><td>Wed</td>
+                <tr><td>4. Allocate accessors</td>
+                    <td th:text="${competitionSetupForm.allocateAssessorsDayOfWeek}" />
                     <td th:text="${competitionSetupForm.allocateAssessorsDay}" />
                     <td th:text="${competitionSetupForm.allocateAssessorsMonth}" />
                     <td th:text="${competitionSetupForm.allocateAssessorsYear}" /></tr>
 
                 <!-- 5. Assessor briefing -->
-                <tr><td>5. Assessor briefing</td><td>Wed</td>
+                <tr><td>5. Assessor briefing</td>
+                    <td th:text="${competitionSetupForm.assessorBriefingDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessorBriefingDay}" />
                     <td th:text="${competitionSetupForm.assessorBriefingMonth}" />
                     <td th:text="${competitionSetupForm.assessorBriefingYear}" /></tr>
 
                 <!-- 6. Assessor accepts -->
-                <tr><td>6. Assessor accepts</td><td>Wed</td>
+                <tr><td>6. Assessor accepts</td>
+                    <td th:text="${competitionSetupForm.assessorAcceptsDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessorAcceptsDay}" />
                     <td th:text="${competitionSetupForm.assessorAcceptsMonth}" />
                     <td th:text="${competitionSetupForm.assessorAcceptsYear}" /></tr>
 
                 <!-- 7. Assessor deadline -->
-                <tr><td>7. Assessor deadline</td><td>Wed</td>
+                <tr><td>7. Assessor deadline</td>
+                    <td th:text="${competitionSetupForm.assessorDeadlineDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessorDeadlineDay}" />
                     <td th:text="${competitionSetupForm.assessorDeadlineMonth}" />
                     <td th:text="${competitionSetupForm.assessorDeadlineYear}" /></tr>
 
                 <!-- 8. Line draw -->
-                <tr><td>8. Line draw</td><td>Wed</td>
+                <tr><td>8. Line draw</td>
+                    <td th:text="${competitionSetupForm.lineDrawDayOfWeek}" />
                     <td th:text="${competitionSetupForm.lineDrawDay}" />
                     <td th:text="${competitionSetupForm.lineDrawMonth}" />
                     <td th:text="${competitionSetupForm.lineDrawYear}" /></tr>
 
                 <!-- 9. Assessment panel -->
-                <tr><td>9. Assessment panel</td><td>Wed</td>
+                <tr><td>9. Assessment panel</td>
+                    <td th:text="${competitionSetupForm.assessmentPanelDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessmentPanelDay}" />
                     <td th:text="${competitionSetupForm.assessmentPanelMonth}" />
                     <td th:text="${competitionSetupForm.assessmentPanelYear}" /></tr>
 
                 <!-- 10. Panel date -->
-                <tr><td>10. Panel date</td><td>Wed</td>
+                <tr><td>10. Panel date</td>
+                    <td th:text="${competitionSetupForm.panelDateDayOfWeek}" />
                     <td th:text="${competitionSetupForm.panelDateDay}" />
                     <td th:text="${competitionSetupForm.panelDateMonth}" />
                     <td th:text="${competitionSetupForm.panelDateYear}" /></tr>
 
                 <!-- 11. Funders panel -->
-                <tr><td>11. Funders panel</td><td>Wed</td>
+                <tr><td>11. Funders panel</td>
+                    <td th:text="${competitionSetupForm.fundersPanelDayOfWeek}" />
                     <td th:text="${competitionSetupForm.fundersPanelDay}" />
                     <td th:text="${competitionSetupForm.fundersPanelMonth}" />
                     <td th:text="${competitionSetupForm.fundersPanelYear}" /></tr>
 
                 <!-- 12. Notifications -->
-                <tr><td>12. Notifications</td><td>Wed</td>
+                <tr><td>12. Notifications</td>
+                    <td th:text="${competitionSetupForm.notificationsDayOfWeek}" />
                     <td th:text="${competitionSetupForm.notificationsDay}" />
                     <td th:text="${competitionSetupForm.notificationsMonth}" />
                     <td th:text="${competitionSetupForm.notificationsYear}" /></tr>
 
                 <!-- 13. Release feedback -->
-                <tr><td>13. Release feedback</td><td>Wed</td>
+                <tr><td>13. Release feedback</td>
+                    <td th:text="${competitionSetupForm.releaseFeedbackDayOfWeek}" />
                     <td th:text="${competitionSetupForm.releaseFeedbackDay}" />
                     <td th:text="${competitionSetupForm.releaseFeedbackMonth}" />
                     <td th:text="${competitionSetupForm.releaseFeedbackYear}" /></tr>
