@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;

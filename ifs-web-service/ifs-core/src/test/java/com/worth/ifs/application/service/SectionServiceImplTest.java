@@ -1,24 +1,5 @@
 package com.worth.ifs.application.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.builder.QuestionResourceBuilder;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.competition.builder.CompetitionBuilder;
-import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.service.FormInputService;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -28,6 +9,24 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.builder.QuestionResourceBuilder;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.SectionType;
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.service.FormInputService;
+
 
 public class SectionServiceImplTest extends BaseUnitTestMocksTest {
 
@@ -35,11 +34,11 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private SectionService service = new SectionServiceImpl();
     @Mock
-    SectionRestService sectionRestService;
+    private SectionRestService sectionRestService;
     @Mock
-    QuestionService questionService;
+    private QuestionService questionService;
     @Mock
-    FormInputService formInputService;
+    private FormInputService formInputService;
 
     private SectionResource parentSection;
     private SectionResource childSection1;
@@ -50,7 +49,6 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     public void setUp() {
         super.setUp();
 
-        ArrayList<SectionResource> sections = new ArrayList<>();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         parentSection = newSectionResource().withId(10L).withCompetition(competition.getId()).build();
         childSection1 = newSectionResource().withId(20L).withCompetition(competition.getId()).withParentSection(parentSection.getId()).build();
@@ -90,5 +88,36 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(2, childSection1.getQuestions().size());
         service.removeSectionsQuestionsWithType(parentSection, "empty");
         assertEquals(1, childSection1.getQuestions().size());
+    }
+    
+    @Test
+    public void testGetSectionsByType() {
+    	SectionResource section = newSectionResource().build();
+    	when(sectionRestService.getSectionsByCompetitionIdAndType(1L, SectionType.FINANCE)).thenReturn(restSuccess(asList(section)));
+    	
+    	List<SectionResource> result = service.getSectionsForCompetitionByType(1L, SectionType.FINANCE);
+    	
+    	assertEquals(1, result.size());
+    	assertEquals(section, result.get(0));
+    }
+    
+    @Test
+    public void testGetFinanceSection() {
+    	SectionResource section = newSectionResource().build();
+    	when(sectionRestService.getSectionsByCompetitionIdAndType(1L, SectionType.FINANCE)).thenReturn(restSuccess(asList(section)));
+    	
+    	SectionResource result = service.getFinanceSection(1L);
+    	
+    	assertEquals(section, result);
+    }
+    
+    @Test
+    public void testGetOrganisationFinanceSection() {
+    	SectionResource section = newSectionResource().build();
+    	when(sectionRestService.getSectionsByCompetitionIdAndType(1L, SectionType.ORGANISATION_FINANCES)).thenReturn(restSuccess(asList(section)));
+    	
+    	SectionResource result = service.getOrganisationFinanceSection(1L);
+    	
+    	assertEquals(section, result);
     }
 }

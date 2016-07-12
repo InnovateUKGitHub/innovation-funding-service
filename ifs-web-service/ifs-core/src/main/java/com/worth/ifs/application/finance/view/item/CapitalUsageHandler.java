@@ -52,6 +52,19 @@ public class CapitalUsageHandler extends CostHandler {
         if(id == null && deprecation == null && description == null && existing == null && npv == null && residualValue == null && utilisation == null) {
         	return null;
         }
+        
+        if(npv == null) {
+        	npv = BigDecimal.ZERO;
+        }
+        
+        if(residualValue == null) {
+        	residualValue = BigDecimal.ZERO;
+        }
+        
+        if(utilisation == null) {
+        	utilisation = 0;
+        }
+        
         return new CapitalUsage(id, deprecation, description, existing,
                 npv, residualValue, utilisation);
     }

@@ -65,7 +65,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
 
-        final Map questionAssignees = new HashMap<Long, QuestionStatusResource>();
+        final Map<Long, QuestionStatusResource> questionAssignees = new HashMap<>();
 
         for(QuestionStatusResource questionStatusResource : questionStatusResources){
             questionAssignees.put(questionStatusResource.getQuestion(), questionStatusResource);

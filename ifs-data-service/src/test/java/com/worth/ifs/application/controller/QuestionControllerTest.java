@@ -1,34 +1,29 @@
 package com.worth.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.competition.domain.Competition;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
-import org.mockito.Mock;
-
-import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionController> {
-    private final Log log = LogFactory.getLog(getClass());
+import java.util.List;
 
-    @Mock
-    protected SectionController sectionController;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
+import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.competition.domain.Competition;
+
+public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionController> {
 
     @Mock
     protected QuestionService questionService;
@@ -86,4 +81,17 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(previousSectionQuestion)))
                 .andExpect(status().isOk());
     }
+    
+    @Test
+    public void getQuestionsBySectionIdAndTypeTest() throws Exception {
+        List<QuestionResource> questions = newQuestionResource().build(2);
+
+        when(questionService.getQuestionsBySectionIdAndType(1L, QuestionType.COST)).thenReturn(serviceSuccess(questions));
+
+        mockMvc.perform(get("/question/getQuestionsBySectionIdAndType/1/COST"))
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(questions)))
+                .andExpect(status().isOk());
+    }
+    
+    
 }
