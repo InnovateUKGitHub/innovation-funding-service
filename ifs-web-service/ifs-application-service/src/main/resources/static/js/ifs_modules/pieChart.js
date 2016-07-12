@@ -1,6 +1,6 @@
-//Based upon Lea verou's SVG pie, adjusted with jquery and modernizr for more legacy support
+//Based upon Lea verou's SVG pie, adjusted with jquery for more legacy support
 //http://www.smashingmagazine.com/2015/07/designing-simple-pie-charts-with-css/
-IFS.pieChart = (function(){
+IFS.application.pieChart = (function(){
     "use strict";
      var s; // private alias to settings
 
@@ -10,10 +10,10 @@ IFS.pieChart = (function(){
         },
         init : function(){
             s = this.settings;
-            if(Modernizr.svg && Modernizr.inlinesvg){
-                jQuery(s.pieElement).each(function() {
-                		IFS.pieChart.pieSVG(this);
-                });
+            if (document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1")) {
+              jQuery(s.pieElement).each(function() {
+                  IFS.application.pieChart.pieSVG(this);
+              });
             }
         },
         pieSVG : function(pie){
