@@ -66,7 +66,7 @@ Lead applicant can download a pdf file
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]
-    [Setup]    Guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -114,7 +114,7 @@ Questions can be assigned with appendices
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
     [Tags]
-    [Setup]    Guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
