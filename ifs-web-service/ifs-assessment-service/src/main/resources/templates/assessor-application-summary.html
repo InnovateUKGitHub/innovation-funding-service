@@ -37,14 +37,7 @@
                 </table>
             </div>
 
-            <div class="extra-margin alignright">
-                <p class="no-margin">
-                    <strong>Total: <span th:text="${model.totalScoreGiven}" th:remove="tag">0</span>/<span th:text="${model.totalScorePossible}" th:remove="tag">100</span></strong>
-                </p>
-                <p>
-                    <strong><span th:text="${model.totalScorePercentage}+'%'" th:remove="tag">0%</span></strong>
-                </p>
-            </div>
+            <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">
@@ -53,14 +46,7 @@
                 </div>
             </div>
 
-            <div class="extra-margin alignright">
-                <p class="no-margin">
-                    <strong>Total: <span th:text="${model.totalScoreGiven}" th:remove="tag">0</span>/<span th:text="${model.totalScorePossible}" th:remove="tag">100</span></strong>
-                </p>
-                <p>
-                    <strong><span th:text="${model.totalScorePercentage}+'%'" th:remove="tag">0%</span></strong>
-                </p>
-            </div>
+            <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
 
             <form>
             <!--form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate"-->
