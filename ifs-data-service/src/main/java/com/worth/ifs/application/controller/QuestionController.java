@@ -3,17 +3,18 @@ package com.worth.ifs.application.controller;
 import java.util.List;
 import java.util.Set;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.commons.rest.RestResult;
-
-import com.worth.ifs.commons.rest.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 
 
 /**
@@ -97,5 +98,10 @@ public class QuestionController {
     @RequestMapping("/getQuestionByFormInputType/{formInputType}")
     public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("formInputType") final String formInputType) {
         return questionService.getQuestionResourceByFormInputType(formInputType).toGetResponse();
+    }
+    
+    @RequestMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")
+    public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(@PathVariable("sectionId") final Long sectionId, @PathVariable("type") QuestionType type) {
+    	return questionService.getQuestionsBySectionIdAndType(sectionId, type).toGetResponse();
     }
 }

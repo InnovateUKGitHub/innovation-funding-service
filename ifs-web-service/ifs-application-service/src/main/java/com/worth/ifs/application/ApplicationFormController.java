@@ -1,9 +1,60 @@
 package com.worth.ifs.application;
 
+import static com.worth.ifs.application.resource.SectionType.FINANCE;
+import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StringMultipartFileEditor;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
@@ -12,7 +63,11 @@ import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
-import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -31,39 +86,6 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
-import org.springframework.web.multipart.support.StringMultipartFileEditor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.application.resource.SectionType.FINANCE;
-import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -71,7 +93,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @Controller
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form")
 public class ApplicationFormController extends AbstractApplicationController {
-
 
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
 
@@ -716,27 +737,32 @@ public class ApplicationFormController extends AbstractApplicationController {
      */
     @ProfileExecution
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
-    public @ResponseBody JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
+    @ResponseBody
+    public JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                                                   @RequestParam("value") String value,
                                                   @PathVariable(APPLICATION_ID) Long applicationId,
                                                   HttpServletRequest request) {
         List<String> errors = new ArrayList<>();
+        Long fieldId = null;
         try {
             String fieldName = request.getParameter("fieldName");
             LOG.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-            errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
+            StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
+            errors = storeFieldResult.getErrors();
+            fieldId = storeFieldResult.getFieldId();
+            
             if (!errors.isEmpty()) {
-                return this.createJsonObjectNode(false, errors);
+                return this.createJsonObjectNode(false, errors, fieldId);
             } else {
-                return this.createJsonObjectNode(true, null);
+                return this.createJsonObjectNode(true, null, fieldId);
             }
         } catch (Exception e) {
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             handleAutosaveException(errors, e, ex);
-            return this.createJsonObjectNode(false, errors);
+            return this.createJsonObjectNode(false, errors, fieldId);
         }
     }
 
@@ -752,36 +778,45 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
-        List<String> errors = new ArrayList<>();
+    private StoreFieldResult storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
-            errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
+        	// this does not need id
+        	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
+        	return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
             financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
+            return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
             ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
+            
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
+                if(validationMessages == null) {
+                	return new StoreFieldResult();
+                } else {
+                	return new StoreFieldResult(validationMessages.getObjectId());
+                }
             }else{
                 String[] fieldNameParts = fieldName.split("-");
                 // fieldname = other_costs-description-34-219
-                errors = validationMessages.getErrors()
+                List<String> errors = validationMessages.getErrors()
                         .stream()
                         .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getErrorKey().toLowerCase())))
                         .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
                         .map(e -> e.getErrorMessage())
                         .collect(Collectors.toList());
+                return new StoreFieldResult(validationMessages.getObjectId(), errors);
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
-            errors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
+            List<String> errors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
+            return new StoreFieldResult(errors);
         }
-        return errors;
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+    private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
@@ -790,10 +825,17 @@ public class ApplicationFormController extends AbstractApplicationController {
             errors.stream().forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
         }
+        
+        if(fieldId != null) {
+        	node.set("field_id", new LongNode(fieldId));
+        }
         return node;
     }
 
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value) {
+    	
+    	List<String> errors = new ArrayList<>();
+    	
         ApplicationResource application = applicationService.getById(applicationId);
 
         if ("application.name".equals(fieldName)) {
@@ -814,32 +856,32 @@ public class ApplicationFormController extends AbstractApplicationController {
                 applicationService.save(application);
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
-            errors = this.saveApplicationStartDate(application, fieldName, value, errors);
-
+            errors = this.saveApplicationStartDate(application, fieldName, value);
         }
         return errors;
     }
 
-    private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value, List<String> errors) {
-        LocalDate startDate = application.getStartDate();
-            if (fieldName.endsWith(".dayOfMonth")) {
-                startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
-            } else if (fieldName.endsWith(".monthValue")) {
-                startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
-            } else if (fieldName.endsWith(".year")) {
-                startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
-            } else if ("application.startDate".equals(fieldName)){
-                String[] parts = value.split("-");
-                startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
-            }
-            if (startDate.isBefore(LocalDate.now())) {
-                errors.add("Please enter a future date");
-                startDate = null;
-            }else{
-                LOG.debug("Save startdate: "+ startDate.toString());
-            }
-            application.setStartDate(startDate);
-            applicationService.save(application);
+    private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value) {
+    	List<String> errors = new ArrayList<>();
+    	LocalDate startDate = application.getStartDate();
+        if (fieldName.endsWith(".dayOfMonth")) {
+            startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
+        } else if (fieldName.endsWith(".monthValue")) {
+            startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
+        } else if (fieldName.endsWith(".year")) {
+            startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+        } else if ("application.startDate".equals(fieldName)){
+            String[] parts = value.split("-");
+            startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
+        }
+        if (startDate.isBefore(LocalDate.now())) {
+            errors.add("Please enter a future date");
+            startDate = null;
+        }else{
+            LOG.debug("Save startdate: "+ startDate.toString());
+        }
+        application.setStartDate(startDate);
+        applicationService.save(application);
         return errors;
     }
 
@@ -852,5 +894,35 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, final Model model, final ApplicationForm form) {
         organisationDetailsModelPopulator.populateModel(model, application.getId());
         addApplicationAndSections(application, competition, userId, section, Optional.empty(), model, form);
+    }
+    
+    private static class StoreFieldResult {
+    	private Long fieldId;
+    	private List<String> errors = new ArrayList<>();
+    	
+    	public StoreFieldResult() {
+    	}
+    	
+    	
+    	public StoreFieldResult(Long fieldId) {
+    		this.fieldId = fieldId;
+    	}
+    	
+    	public StoreFieldResult(List<String> errors) {
+    		this.errors = errors;
+    	}
+    	
+    	public StoreFieldResult(Long fieldId, List<String> errors) {
+    		this.fieldId = fieldId;
+    		this.errors = errors;
+    	}
+    	
+    	public List<String> getErrors() {
+			return errors;
+		}
+    	
+    	public Long getFieldId() {
+			return fieldId;
+		}
     }
 }

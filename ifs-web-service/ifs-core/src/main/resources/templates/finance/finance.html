@@ -177,7 +177,7 @@
                 <input type="number"
                        class="form-control width-full"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+cost.id+'-grossAnnualSalary]}')} ? field-error : ''"
-                       th:name="${type +'-grossAnnualSalary-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-grossAnnualSalary-' + question.id : type +'-grossAnnualSalary-' + question.id + '-' + cost.id}"
                        th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
                        th:readonly="${complete == 'complete'}"
                        ifs:nonZeroValue="${cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : '0'}"
@@ -198,7 +198,7 @@
                        data-calculation-operations="/"
                        readonly="readonly"
                        th:id="${'cost-labour-'+cost.id+'-labourRate'}"
-                       th:name="${type + '-labourRate-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-labourRate-' + question.id : type +'-labourRate-' + question.id + '-' + cost.id}"
                        th:value="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
                        maxlength="255" />
             </td>
@@ -212,7 +212,7 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+cost.id+'-labourDays]}')} ? field-error : ''"
                        th:readonly="${complete == 'complete'}"
                        th:id="${'cost-labour-'+cost.id+'-labourDays'}"
-                       th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-labourDays-' + question.id : type +'-labourDays-' + question.id + '-' + cost.id}"
                        ifs:nonZeroValue="${cost.labourDays}"
                        placeholder="0"
                        required="required"
@@ -404,7 +404,7 @@
                 </label>
                 <input type="text"
                        class="form-control width-full"
-                       th:name="${type +'-item-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-item-' + question.id : type +'-item-' + question.id + '-' + cost.id}"
                        th:id="${'cost-materials-'+cost.id+'-item'}"
                        th:value="${cost.getItem()}"
                        th:readonly="${complete == 'complete'}"
@@ -419,7 +419,7 @@
               </label>
                 <input type="number"
                        class="form-control width-full"
-                       th:name="${type +'-quantity-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-quantity-' + question.id : type +'-quantity-' + question.id + '-' + cost.id}"
                        th:id="${'cost-materials-'+cost.id+'-quantity'}"
                        placeholder="0"
                        ifs:nonZeroValue="${cost.getQuantity()}"
@@ -438,7 +438,7 @@
                 </label>
                 <input type="number"
                        class="form-control width-full"
-                       th:name="${type +'-cost-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-cost-' + question.id : type +'-cost-' + question.id + '-' + cost.id}"
                        th:id="${'cost-materials-'+cost.id+'-cost'}"
                        ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
                        th:readonly="${complete == 'complete'}"
@@ -516,7 +516,7 @@
                     <label class="block-label">
                         <input th:id="${'cost-capital_usage-'+cost.id+'-existing_0'}"
                                type="radio"
-                               th:name="${type +'-existing-' + question.id + '-' + cost.id}"
+                               th:name="${(cost.id == null) ? type +'-existing-' + question.id : type +'-existing-' + question.id + '-' + cost.id}"
                                value="New"
                                required="required"
                                th:checked="${cost.existing == 'New'}"
@@ -527,7 +527,7 @@
                     <label class="block-label">
                         <input th:id="${'cost-capital_usage-'+cost.id+'-existing_1'}"
                                type="radio"
-                               th:name="${type +'-existing-' + question.id + '-' + cost.id}"
+                               th:name="${(cost.id == null) ? type +'-existing-' + question.id : type +'-existing-' + question.id + '-' + cost.id}"
                                value="Existing"
                                required="required"
                                th:checked="${cost.existing == 'Existing'}"
@@ -546,7 +546,7 @@
                 <input  type="number"
                         th:id="${'cost-capital_usage-'+cost.id+'-deprecation_period'}"
                         class="form-control form-finances-capital-usage-depreciation"
-                        th:name="${type +'-deprecation-' + question.id + '-' +  cost.id}"
+                        th:name="${(cost.id == null) ? type +'-deprecation-' + question.id : type +'-deprecation-' + question.id + '-' + cost.id}"
                         ifs:nonZeroValue="${cost.deprecation}"
                         th:readonly="${complete == 'complete'}"
                         placeholder="0"
@@ -567,7 +567,7 @@
                         type="number"
                         th:id="${'cost-capital_usage-'+cost.id+'-npv'}"
                         class="form-control form-finances-capital-usage-npv"
-                        th:name="${type +'-npv-' + question.id + '-' + cost.id}"
+                        th:name="${(cost.id == null) ? type +'-npv-' + question.id : type +'-npv-' + question.id + '-' + cost.id}"
                         ifs:nonZeroValue="${cost.npv != null ? #numbers.formatDecimal(cost.npv,0,0) : '0'}"
                         th:readonly="${complete == 'complete'}"
                         placeholder="0"
@@ -588,7 +588,7 @@
                         type="number"
                         th:id="${'cost-capital_usage-'+cost.id+'-residual_value'}"
                         class="form-control form-finances-capital-usage-residual-value"
-                        th:name="${type +'-residualValue-' + question.id + '-' + cost.id}"
+                        th:name="${(cost.id == null) ? type +'-residualValue-' + question.id : type +'-residualValue-' + question.id + '-' + cost.id}"
                         ifs:nonZeroValue="${#numbers.formatDecimal(cost.residualValue,0,0)}"
                         th:readonly="${complete == 'complete'}"
                         placeholder="0"
@@ -607,7 +607,7 @@
                 <input type="number"
                        th:id="${'cost-capital_usage-'+cost.id+'-utilisation'}"
                        class="form-control form-finances-capital-usage-utilisation"
-                       th:name="${type +'-utilisation-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-utilisation-' + question.id : type +'-utilisation-' + question.id + '-' + cost.id}"
                        ifs:nonZeroValue="${cost.utilisation}"
                        th:readonly="${complete == 'complete'}"
                        placeholder="0"
@@ -680,7 +680,7 @@
                     <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-name'})" th:remove="tag" />
                 </label>
                 <input type="text"
-                       th:name="${type +'-name-' + question.id + '-' +cost.id}"
+                       th:name="${(cost.id == null) ? type +'-name-' + question.id : type +'-name-' + question.id + '-' + cost.id}"
                        class="form-control form-finances-subcontracting-company"
                        th:id="${'cost-subcontracting-'+cost.id+'-name'}"
                        th:value="${cost.name}"
@@ -695,7 +695,7 @@
                     <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-country'})" th:remove="tag" />
                 </label>
                 <input type="text"
-                       th:name="${type +'-country-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-country-' + question.id : type +'-country-' + question.id + '-' + cost.id}"
                        class="form-control"
                        th:id="${'cost-subcontracting-'+cost.id+'-country'}"
                        th:value="${cost.country}"
@@ -721,7 +721,7 @@
                   </label>
                 <input type="number"
                        class="form-control"
-                       th:name="${type +'-subcontractingCost-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-subcontractingCost-' + question.id : type +'-subcontractingCost-' + question.id + '-' + cost.id}"
                        th:id="${'cost-subcontracting-'+cost.id+'-subcontractingCost'}"
                        ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
                        th:readonly="${complete == 'complete'}"
@@ -795,7 +795,7 @@
                       <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-item'})" th:remove="tag" />
                 </label>
                 <input type="text"
-                       th:name="${type +'-item-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-item-' + question.id : type +'-item-' + question.id + '-' + cost.id}"
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-item'}"
                        th:value="${cost.getItem()}"
@@ -810,7 +810,7 @@
                       <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-quantity'})" th:remove="tag" />
                 </label>
                 <input type="number"
-                       th:name="${type +'-quantity-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-quantity-' + question.id : type +'-quantity-' + question.id + '-' + cost.id}"
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-quantity'}"
                        ifs:nonZeroValue="${cost.getQuantity()}"
@@ -828,7 +828,7 @@
                       <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-cost'})" th:remove="tag" />
                 </label>
                 <input type="number"
-                       th:name="${type +'-cost-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-cost-' + question.id : type +'-cost-' + question.id + '-' + cost.id}"
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-cost'}"
                        ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
@@ -917,7 +917,7 @@
                 </label>
                 <input
                        type="number"
-                       th:name="${type +'-otherCost-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-otherCost-' + question.id : type +'-otherCost-' + question.id + '-' + cost.id}"
                        class="form-control"
                        th:id="${'cost-'+type+'-'+cost.id+'-otherCost'}"
                        ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
@@ -1036,7 +1036,7 @@
                 </label>
                 <input type="text"
                        th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                       th:name="${type +'-fundingSource-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-fundingSource-' + question.id : type +'-fundingSource-' + question.id + '-' + cost.id}"
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-source'}"
                        th:value="${cost.fundingSource}"
@@ -1052,7 +1052,7 @@
                 </label>
                 <input type="text"
                        th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                       th:name="${type +'-securedDate-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-securedDate-' + question.id : type +'-securedDate-' + question.id + '-' + cost.id}"
                        class="form-control width-medium"
                        th:id="${'cost-'+type+'-'+cost.id+'-date'}"
                        placeholder="MM-YYYY"
@@ -1070,7 +1070,7 @@
                 <input class="form-control width-medium"
                        type="number"
                        th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                       th:name="${type +'-fundingAmount-' + question.id + '-' + cost.id}"
+                       th:name="${(cost.id == null) ? type +'-fundingAmount-' + question.id : type +'-fundingAmount-' + question.id + '-' + cost.id}"
                        th:id="${'cost-'+type+'-'+cost.id+'-fundingAmount'}"
                        ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingAmount]}')} ? 'field-error' : ''"

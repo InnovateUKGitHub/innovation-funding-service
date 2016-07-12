@@ -77,7 +77,10 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         addApplicationAndSections(application, competition, user.getId(), section, model, form, allSections);
-        addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), user, model, form);
+        
+        List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
+        
+        addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
         addNavigation(section, application.getId(), model);
 
         form.setBindingResult(bindingResult);
@@ -280,12 +283,12 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
         addSectionDetails(model, section, inputs);
     }
 
-    private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
+    private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
         Model model, ApplicationForm form) {
 
         financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
 
         model.addAttribute("currentUser", user);
     }

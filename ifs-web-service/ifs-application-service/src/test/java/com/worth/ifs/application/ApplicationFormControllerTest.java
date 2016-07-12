@@ -50,7 +50,7 @@ import com.worth.ifs.finance.resource.cost.Materials;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations="classpath:application.properties")
-public class ApplicationFormControllerTest  extends BaseUnitTest {
+public class ApplicationFormControllerTest extends BaseUnitTest {
 
     @InjectMocks
     private ApplicationFormController applicationFormController;

@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.security.QuestionPermissionRules;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -207,6 +208,11 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId) {
             return null;
         }
+
+		@Override
+		public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
+			return null;
+		}
     }
 }
 

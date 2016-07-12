@@ -126,7 +126,8 @@ public class ApplicationController extends AbstractApplicationController {
         } else if (params.containsKey(MARK_AS_COMPLETE)) {
             Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
             if (markQuestionCompleteId != null) {
-                questionService.markAsComplete(markQuestionCompleteId, applicationId, user.getId());
+                ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+                questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
             }
         }
 
@@ -250,8 +251,8 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     private String doAssignQuestionAndReturnSectionFragment(Model model,
-                                                            @PathVariable("applicationId") Long applicationId,
-                                                            @RequestParam("sectionId") Optional<Long> sectionId,
+                                                            Long applicationId,
+                                                            Optional<Long> sectionId,
                                                             HttpServletRequest request,
                                                             HttpServletResponse response,
                                                             ApplicationForm form) {

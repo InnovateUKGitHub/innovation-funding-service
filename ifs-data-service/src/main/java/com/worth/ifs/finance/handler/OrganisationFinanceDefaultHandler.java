@@ -30,19 +30,19 @@ import java.util.Map;
 @Component
 public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHandler {
     private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
-    EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
+    private EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @Autowired
-    CostRepository costRepository;
+    private CostRepository costRepository;
 
     @Autowired
-    CostFieldRepository costFieldRepository;
+    private CostFieldRepository costFieldRepository;
 
     @Autowired
-    AutowireCapableBeanFactory beanFactory;
+    private AutowireCapableBeanFactory beanFactory;
 
     @Override
     public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType){

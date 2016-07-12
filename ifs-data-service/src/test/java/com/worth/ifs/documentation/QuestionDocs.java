@@ -27,7 +27,9 @@ public class QuestionDocs {
             fieldWithPath("questionNumber").description("number of the question"),
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
             fieldWithPath("competition").description("Id of the competition"),
-            fieldWithPath("costs").description("List of ids of the costs related to the finance questions").optional()
+            fieldWithPath("costs").description("List of ids of the costs related to the finance questions").optional(),
+            fieldWithPath("type").description("The type of question")
+
     };
 
     public static final QuestionResourceBuilder questionBuilder = newQuestionResource()

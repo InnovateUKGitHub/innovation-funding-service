@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements FinanceFormHandler {
     private static final Log LOG = LogFactory.getLog(DefaultFinanceFormHandler.class);
 
-
-
     @Autowired
     private CostService costService;
 
@@ -44,6 +42,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+    
+    @Autowired
+    private FieldSeparator fieldSeparator;
 
     @Override
     public Map<String, List<String>> update(HttpServletRequest request, Long userId, Long applicationId) {
@@ -63,7 +64,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     }
 
     private void getAndStoreCostitems(HttpServletRequest request, Map<String, List<String>> errors) {
-        List<Either<CostItem, ValidationMessages>> costItems = getCostItems(request);
+        List<Either<CostItem, ValidationMessages>> costItems = getCostItems(request.getParameterMap());
         List<ValidationMessages> invalidItems = costItems.stream().filter(e -> e.isRight()).map(e -> e.getRight()).collect(Collectors.toList());
         invalidItems.forEach(validationMessages ->
                 validationMessages.getErrors().stream().forEach(e -> {
@@ -162,16 +163,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
     }
 
-    private List<Either<CostItem, ValidationMessages>> getCostItems(HttpServletRequest request) {
-        return mapRequestParametersToCostItems(request);
-    }
-
-    private List<Either<CostItem, ValidationMessages>> mapRequestParametersToCostItems(HttpServletRequest request) {
-        List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
+    private List<Either<CostItem, ValidationMessages>> getCostItems(Map<String, String[]> params) {
+    	List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
         for (CostType costType : CostType.values()) {
-            List<String> costTypeKeys = request.getParameterMap().keySet().stream().
+            List<String> costTypeKeys = params.keySet().stream().
                     filter(k -> k.startsWith(costType.getType() + "-")).collect(Collectors.toList());
-            Map<Long, List<FinanceFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
+            Map<Long, List<FinanceFormField>> costFieldMap = getCostDataRows(params, costTypeKeys);
             List<Either<CostItem, ValidationMessages>> costItemsForType = getCostItems(costFieldMap, costType);
             costItems.addAll(costItemsForType);
         }
@@ -182,24 +179,38 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     /**
      * Retrieve the complete cost item data row, so everything is together
      */
-    private Map<Long, List<FinanceFormField>> getCostDataRows(HttpServletRequest request, List<String> costTypeKeys) {
+    private Map<Long, List<FinanceFormField>> getCostDataRows(Map<String, String[]> params, List<String> costTypeKeys) {
         // make sure that we have the fields together acting on one cost
         Map<Long, List<FinanceFormField>> costKeyMap = new HashMap<>();
         for (String costTypeKey : costTypeKeys) {
-            String value = request.getParameter(costTypeKey);
+            String[] valueArray = params.get(costTypeKey);
+            String value;
+            if(valueArray.length > 0) {
+            	 value = valueArray[0];
+            } else {
+            	continue;
+            }
             FinanceFormField financeFormField = getCostFormField(costTypeKey, value);
-            if (financeFormField == null)
+            if (financeFormField == null) {
                 continue;
+            }
 
+            Long id;
             if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
-                Long id = Long.valueOf(financeFormField.getId());
-                if (costKeyMap.containsKey(id)) {
-                    costKeyMap.get(id).add(financeFormField);
-                } else {
-                    List<FinanceFormField> costKeyValues = new ArrayList<>();
-                    costKeyValues.add(financeFormField);
-                    costKeyMap.put(id, costKeyValues);
-                }
+                id = Long.valueOf(financeFormField.getId());
+            } else {
+            	if(StringUtils.isEmpty(financeFormField.getValue())) {
+            		continue;
+            	}
+            	id = -1L;
+            }
+            
+            if (costKeyMap.containsKey(id)) {
+                costKeyMap.get(id).add(financeFormField);
+            } else {
+                List<FinanceFormField> costKeyValues = new ArrayList<>();
+                costKeyValues.add(financeFormField);
+                costKeyMap.put(id, costKeyValues);
             }
         }
         return costKeyMap;
@@ -219,11 +230,27 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         // create new cost items
         for (Map.Entry<Long, List<FinanceFormField>> entry : costFieldMap.entrySet()) {
             try{
-                CostItem costItem = costHandler.toCostItem(entry.getKey(), entry.getValue());
-                if (costItem != null) {
-                    Either<CostItem, ValidationMessages> either = Either.left(costItem);
-                    costItems.add(either);
-                }
+            	Long id = entry.getKey();
+            	List<FinanceFormField> fields = entry.getValue();
+            	
+            	if(id == -1L) {
+            		List<List<FinanceFormField>> fieldsSeparated = fieldSeparator.separateFields(fields);
+            		for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
+            			CostItem costItem = costHandler.toCostItem(null, fieldGroup);
+                        if (costItem != null) {
+                        	//TODO create new cost item
+                            Either<CostItem, ValidationMessages> either = Either.left(costItem);
+                            costItems.add(either);
+                        }
+            		}
+            	} else {
+            		CostItem costItem = costHandler.toCostItem(id, fields);
+                    if (costItem != null) {
+                        Either<CostItem, ValidationMessages> either = Either.left(costItem);
+                        costItems.add(either);
+                    }
+            	}
+                
             }catch(NumberFormatException e){
                 ValidationMessages validationMessages = getValidationMessageFromException(entry, e);
                 Either<CostItem, ValidationMessages> either = Either.right(validationMessages);
@@ -233,7 +260,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         return costItems;
     }
 
-    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
+	private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
         CostType costType = CostType.fromString(financeFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
@@ -285,7 +312,10 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     private ValidationMessages storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         if (costItem.getId().equals(0L)) {
-            addCostItem(costItem, userId, applicationId, question);
+            Long objectId = addCostItem(costItem, userId, applicationId, question);
+            ValidationMessages validationMessages = new ValidationMessages();
+            validationMessages.setObjectId(objectId);
+            return validationMessages;
         } else {
             RestResult<ValidationMessages> messages = costService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccessObject();
@@ -299,16 +329,17 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                 return messages.getSuccessObject();
             }
         }
-        return null;
     }
 
-    private void addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private Long addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            costService.add(applicationFinanceResource.getId(), questionId, costItem);
+            CostItem added = costService.add(applicationFinanceResource.getId(), questionId, costItem);
+            return added.getId();
         }
+        return null;
     }
 
     private Map<Long, ValidationMessages> storeCostItems(List<CostItem> costItems) {

@@ -97,8 +97,19 @@ IFS.autoSave = (function(){
                 // set the form-saved-state
                 jQuery('body').trigger('updateSerializedFormState');
 
-                 //save message
+                 
                 if(data.success == 'true'){
+                	
+                	// set field_id on field name
+                	if(data.field_id !== null) {
+                    	var name = field.attr('name');
+                    	var nameDashSplit = name.split('-');
+                    	if (nameDashSplit.length < 4) {
+                    		field.attr('name', name + '-' + data.field_id);
+                    	}
+                	}
+                	
+                	//save message
                     setTimeout(function(){
                         IFS.autoSave.clearServerSideValidationErrors(field);
                         formTextareaSaveInfo.html('Saved!');

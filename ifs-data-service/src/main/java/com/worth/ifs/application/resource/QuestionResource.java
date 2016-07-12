@@ -30,6 +30,7 @@ public class QuestionResource {
     private List<Long> questionStatuses;
     private List<Long> costs;
     private String questionNumber;
+    private QuestionType type;
 
     public QuestionResource() {
         //default constructor
@@ -201,6 +202,14 @@ public class QuestionResource {
     public void setQuestionNumber(String questionNumber) {
         this.questionNumber = questionNumber;
     }
+    
+    public QuestionType getType() {
+		return type;
+	}
+    
+    public void setType(QuestionType type) {
+		this.type = type;
+	}
 
     @Override
     public boolean equals(Object o) {

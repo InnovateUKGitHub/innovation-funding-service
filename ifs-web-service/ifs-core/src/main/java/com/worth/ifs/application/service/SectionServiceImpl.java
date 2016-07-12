@@ -163,5 +163,28 @@ public class SectionServiceImpl implements SectionService {
 	public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
 		return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccessObjectOrThrowException();
 	}
+    
+    @Override
+	public SectionResource getFinanceSection(Long competitionId) {
+    	return getSingleSectionByType(competitionId, SectionType.FINANCE);
+
+	}
+    
+    @Override
+	public SectionResource getOrganisationFinanceSection(Long competitionId) {
+    	return getSingleSectionByType(competitionId, SectionType.ORGANISATION_FINANCES);
+	}
+    
+	private SectionResource getSingleSectionByType(Long competitionId, SectionType type) {
+    	List<SectionResource> sections = getSectionsForCompetitionByType(competitionId, type);
+    	if(sections.isEmpty()) {
+    		LOG.error("no " + type + " section found for competition " + competitionId);
+    		return null;
+    	}
+    	if(sections.size() > 1) {
+    		LOG.warn("multiple " + type + " sections found for competition " + competitionId);
+    	}
+    	return sections.get(0);
+	}
 
 }
