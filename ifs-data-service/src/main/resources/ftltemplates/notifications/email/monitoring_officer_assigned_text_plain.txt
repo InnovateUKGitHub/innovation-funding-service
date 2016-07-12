@@ -2,7 +2,8 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-The Project ${projectName} has been assigned to you, and the applicants have been informed, please make contact with them to review the details of the project.
+The project ${projectName} has been assigned to you. The lead organisation has been informed.
+Please make contact with the lead organisation to review the project details.
 
 Lead
 ${leadOrganisation}
@@ -11,7 +12,7 @@ Project manager
 ${projectManagerName}
 ${projectManagerEmail}
 
-You should have been informed of this appointment before receiving this email, if this is not the case or you have any further queries regarding this appointment please contact Innovate UK.
+If you were not aware of this appointment or you have any queries, please contact Innovate UK.
 
 Competitions Team
 Innovate UK
