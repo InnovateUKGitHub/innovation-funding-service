@@ -100,9 +100,8 @@ IFS.core.formValidation = (function(){
           //will only work on html5 validation browsers
           jQuery('form:not([novalidate]) input').on('invalid',function(){
             jQuery(this).trigger('change');
-            jQuery('body').trigger('ifsInvalid');
           });
-          IFS.formValidation.betterMinLengthSupport();
+          IFS.core.formValidation.betterMinLengthSupport();
         },
         checkEqualPasswords : function(showMessage){
             var pw1 = jQuery(s.passwordEqual.field1);
