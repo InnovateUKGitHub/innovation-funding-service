@@ -238,14 +238,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         NotificationTarget notificationTarget = createMonitoringOfficerAssignedNotificationTarget(monitoringOfficer);
 
-        Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("dashboardUrl", webBaseUrl);
-
-        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments =
-                createArgsForMonitoringOfficerAssignedEmail(notificationTarget, monitoringOfficer);
+        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer);
 
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
-                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, notificationTargetSpecificArguments);
+                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, Collections.EMPTY_MAP);
 
     }
 
@@ -259,25 +255,23 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
 
         // At this stage, validation has already been done to ensure that first name and last name are not empty
-        return new StringBuilder()
-                .append(monitoringOfficer.getFirstName())
-                .append(" ")
-                .append(monitoringOfficer.getLastName())
-                .toString();
+        return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
     }
 
-    private Map<NotificationTarget, Map<String, Object>> createArgsForMonitoringOfficerAssignedEmail
-            (NotificationTarget notificationTarget, MonitoringOfficerResource monitoringOfficer) {
+    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer) {
 
         Project project = projectRepository.findOne(monitoringOfficer.getProject());
+        User projectManager = project.getProjectManager().getUser();
 
-        Map<String, Object> perNotificationTargetArguments = new HashMap<>();
-        perNotificationTargetArguments.put("projectName", project.getName());
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("dashboardUrl", webBaseUrl);
+        globalArguments.put("projectName", project.getName());
+        globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
+        globalArguments.put("projectManagerName", projectManager.getFirstName() + " " + projectManager.getLastName());
+        globalArguments.put("projectManagerEmail", projectManager.getEmail());
 
-        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = new HashMap<>();
-        notificationTargetSpecificArguments.put(notificationTarget, perNotificationTargetArguments);
+        return globalArguments;
 
-        return notificationTargetSpecificArguments;
     }
 
     private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {

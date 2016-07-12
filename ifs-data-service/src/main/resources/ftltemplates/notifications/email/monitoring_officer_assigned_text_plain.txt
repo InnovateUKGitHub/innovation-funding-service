@@ -1,10 +1,15 @@
 Dear ${notificationTarget.name},
 
-TODO - Change this template with the actual contents
+The Project ${projectName} has been assigned to you, and the applicants have been informed, please make contact with them to review the details of the project.
 
-Once again, congratulations on the successful outcome of your application.
+Lead
+${leadOrganisation}
 
-Yours sincerely,
+Project manager
+${projectManagerName}
+${projectManagerEmail}
+
+You should have been informed of this appointment before receiving this email, if this is not the case or you have any further queries regarding this appointment please contact Innovate UK.
 
 Competitions Team
 Innovate UK
