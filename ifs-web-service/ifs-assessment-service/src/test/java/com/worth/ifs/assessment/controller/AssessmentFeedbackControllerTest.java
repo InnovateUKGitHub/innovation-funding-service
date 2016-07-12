@@ -96,7 +96,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         final Long expectedNextQuestionId = 21L;
         final CompetitionResource expectedCompetition = competitionResource;
         final ApplicationResource expectedApplication = simpleToMap(applications, ApplicationResource::getId).get(APPLICATION_ID);
-        final String expectedValue = "Blah";
+        final String expectedValue = "Lorem ipsum dolor sit amet.";
         final Integer expectedScore = 10;
         final AssessmentFeedbackForm expectedForm = new AssessmentFeedbackForm(expectedValue, expectedScore, null, null);
         final AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, of(questionResources.get(expectedPreviousQuestionId)), of(questionResources.get(expectedNextQuestionId)));
@@ -133,6 +133,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertFalse(model.isRequireScopeConfirmation());
         assertEquals("Guidance for assessing blah", model.getAssessorGuidanceQuestion());
         assertEquals("Your answer should be based upon the following...", model.getAssessorGuidanceAnswer());
+        assertEquals(new Integer(350), model.getFeedbackWordsLimit());
+        assertEquals(new Integer(345), model.getFeedbackWordsRemaining());
         assertFalse(model.isAppendixExists());
         assertNull(model.getAppendixDetails());
 
