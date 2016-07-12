@@ -3,7 +3,7 @@
 
 
 <!-- ======== Assessment - assessor feedback textarea and word count ======= -->
-<div th:fragment="assessment-form-textarea-wordcount (id, name, value, readonly, maxWords)">
+<div th:fragment="assessment-form-textarea-wordcount (id, name, value, readonly, maxWords, currentWordsLeft)">
     <div class="textarea-wrapped word-count">
         <textarea th:id="'form-textarea-'+${id}"
               th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
@@ -15,7 +15,7 @@
         </textarea>
 
         <div class="textarea-footer">
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${maxWords}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${maxWords}, currentWordsLeft=${currentWordsLeft})" th:remove="tag"/>
         </div>
     </div>
 </div>

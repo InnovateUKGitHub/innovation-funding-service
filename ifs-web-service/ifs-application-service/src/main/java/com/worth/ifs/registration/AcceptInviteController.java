@@ -1,5 +1,20 @@
 package com.worth.ifs.registration;
 
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.worth.ifs.BaseController;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
@@ -13,22 +28,10 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.registration.service.RegistrationService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
@@ -38,20 +41,16 @@ public class AcceptInviteController extends BaseController {
     public static final String INVITE_HASH = "invite_hash";
     public static final String ORGANISATION_TYPE = "organisationType";
     private static final Log LOG = LogFactory.getLog(AcceptInviteController.class);
-    private Validator validator;
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationService;
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Autowired
     private OrganisationService organisationService;
-
     @Autowired
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
+    private RegistrationService registrationService;
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String inviteEntryPage(
@@ -92,13 +91,17 @@ public class AcceptInviteController extends BaseController {
         return "redirect:/login";
     }
 
-    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, InviteResource inviteResource, RestResult existingUserSearch, InviteOrganisationResource inviteOrganisation) {
+    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, InviteResource inviteResource, RestResult<Void> existingUserSearch, InviteOrganisationResource inviteOrganisation) {
         if (existingUserSearch.isSuccess()) {
             model.addAttribute("emailAddressRegistered", "true");
 
             UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
             if (loggedInUser != null) {
-                if (AcceptInviteAuthenticatedController.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
+                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
+
+                if (failureMessages.size() > 0){
+                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
+
                     return "registration/accept-invite-failure";
                 }else{
                     CookieUtil.saveToCookie(response, INVITE_HASH, hash);

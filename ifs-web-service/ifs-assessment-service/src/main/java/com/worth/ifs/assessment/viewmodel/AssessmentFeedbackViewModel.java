@@ -27,14 +27,16 @@ public class AssessmentFeedbackViewModel {
     private final boolean requireScopeConfirmation;
     private final String assessorGuidanceQuestion;
     private final String assessorGuidanceAnswer;
+    private final Integer feedbackWordsLimit;
+    private final Integer feedbackWordsRemaining;
     private final boolean appendixExists;
     private final FileDetailsViewModel appendixDetails;
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer) {
-        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, questionResponse, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, assessorGuidanceQuestion, assessorGuidanceAnswer, false, null);
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining) {
+        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, questionResponse, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, assessorGuidanceQuestion, assessorGuidanceAnswer, feedbackWordsLimit, feedbackWordsRemaining, false, null);
     }
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, boolean appendixExists, FileDetailsViewModel appendixDetails) {
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining, boolean appendixExists, FileDetailsViewModel appendixDetails) {
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.competition = competition;
@@ -50,6 +52,8 @@ public class AssessmentFeedbackViewModel {
         this.requireScopeConfirmation = requireScopeConfirmation;
         this.assessorGuidanceQuestion = assessorGuidanceQuestion;
         this.assessorGuidanceAnswer = assessorGuidanceAnswer;
+        this.feedbackWordsLimit = feedbackWordsLimit;
+        this.feedbackWordsRemaining = feedbackWordsRemaining;
         this.appendixExists = appendixExists;
         this.appendixDetails = appendixDetails;
     }
@@ -112,6 +116,14 @@ public class AssessmentFeedbackViewModel {
 
     public String getAssessorGuidanceAnswer() {
         return assessorGuidanceAnswer;
+    }
+
+    public Integer getFeedbackWordsLimit() {
+        return feedbackWordsLimit;
+    }
+
+    public Integer getFeedbackWordsRemaining() {
+        return feedbackWordsRemaining;
     }
 
     public boolean isAppendixExists() {
