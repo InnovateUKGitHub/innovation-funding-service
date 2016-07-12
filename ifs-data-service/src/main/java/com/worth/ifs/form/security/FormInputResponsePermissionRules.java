@@ -60,7 +60,7 @@ public class FormInputResponsePermissionRules {
 
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they assess")
     public boolean assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
-        final boolean isAssessor = checkRoleForApplicationAndOrganisation(user, response, ASSESSOR);
+        final boolean isAssessor = checkProcessRole(user, response.getApplication(), ASSESSOR, processRoleRepository);
         return isAssessor;
     }
 

@@ -25,13 +25,13 @@
 $is-ie: false !default;
 $mobile-ie6: true !default;
 
-@-ms-viewport {
-  width: device-width;
-}
-
-@-o-viewport {
-  width: device-width;
-}
+// @-ms-viewport {
+//   width: device-width;
+// }
+//
+// @-o-viewport {
+//   width: device-width;
+// }
 
 @mixin media($size: false, $max-width: false, $min-width: false, $ignore-for-ie: false) {
   @if $is-ie and ($ignore-for-ie == false) {
