@@ -1,11 +1,13 @@
 package com.worth.ifs.project.resource;
 
+import com.worth.ifs.commons.validation.ValidationConstants;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class MonitoringOfficerResource {
 
@@ -17,10 +19,16 @@ public class MonitoringOfficerResource {
     @NotEmpty(message = "Please enter a last name")
     private String lastName;
 
-    @NotEmpty(message = "Please enter an email address")
-    @Email(message = "Please enter a valid email address")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
+    @NotEmpty(message = "Please enter your email")
+    @Size(max = 256, message = "Your email address has a maximum length of 256 characters")
     private String email;
 
+    @NotEmpty(message = "Please enter a phone number")
+    @Size.List ({
+            @Size(min=8, message="Input for your phone number has a minimum length of 8 characters"),
+            @Size(max=20, message="Input for your phone number has a maximum length of 20 characters")
+    })
     @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
     private String phoneNumber;
 
