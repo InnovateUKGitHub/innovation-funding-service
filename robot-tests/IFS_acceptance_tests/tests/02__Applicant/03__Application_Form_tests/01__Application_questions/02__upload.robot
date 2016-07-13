@@ -118,7 +118,6 @@ Collaborators can view a file when the question is assigned
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    And the user reloads the page
     And the user should see the element    link=${valid_pdf}
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -161,7 +160,7 @@ Appendices available only for the correct questions
     the user cannot see the option to upload a file on the question    link=2. Potential market
     the user cannot see the option to upload a file on the question    link=3. Project exploitation
     the user cannot see the option to upload a file on the question    link=4. Economic benefit
-   # the user can see the option to upload a file on the question    link=6. Innovation [Have commented this for implementing INFUND-3007 by Pradha]
+    # the user can see the option to upload a file on the question    link=6. Innovation [Have commented this for implementing INFUND-3007 by Pradha]
     the user cannot see the option to upload a file on the question    link=7. Risks
     the user can see the option to upload a file on the question    link=8. Project team
     the user cannot see the option to upload a file on the question    link=9. Funding
