@@ -78,7 +78,7 @@ Valid login as Project Finance role
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath    Pending
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
@@ -90,7 +90,7 @@ Reset password
 
 Reset password validations
     [Documentation]    INFUND-1889
-    [Tags]     Email
+    [Tags]     Email    Pending
     When the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
     And the user clicks the button/link    jQuery=input[value*="Save password"]
@@ -98,7 +98,7 @@ Reset password validations
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath    Pending
     [Setup]    Clear the login fields
     When the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    Passw0rdnew
