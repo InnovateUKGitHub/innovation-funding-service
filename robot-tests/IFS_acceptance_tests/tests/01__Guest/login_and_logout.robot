@@ -48,19 +48,17 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor    HappyPath    Pending
-    # Pending until Assessor Journey is completed
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And the user should be logged-in as an Assessor
     [Teardown]    Logout as user
 
 Valid login as Comp Admin
     [Documentation]    INFUND-2130
-    [Tags]
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -76,7 +74,6 @@ Valid login as Project Finance role
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
     # note that I haven't used error checking on this redirect as this page will currently produce an error
-    # in sprint 9 PS we have created the role, which redirects to a page which will be created in sprint 10 PS
     # at that point this can be changed to include error checking
 
 Reset password

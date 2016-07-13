@@ -164,7 +164,7 @@ the user should see the dropdown option selected
 the user submits the form
     Submit Form
     Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
+    Page Should Not Contain Button    something went wrong
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
