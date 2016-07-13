@@ -27,7 +27,7 @@
   </div>
   <div class="grid-container constrain-width">
     <div class="page-title">
-        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+        <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag"/>
         <h1 class="heading-xlarge no-margin">Application Overview</h1>
     </div>
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" class="form-serialize-js section-overview">

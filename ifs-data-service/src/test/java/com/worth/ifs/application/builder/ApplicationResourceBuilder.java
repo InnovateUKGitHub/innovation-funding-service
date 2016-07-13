@@ -1,18 +1,20 @@
 package com.worth.ifs.application.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource, ApplicationResourceBuilder> {
 
@@ -87,5 +89,9 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
 
     public ApplicationResourceBuilder withAssessorFeedbackFileEntry(Long... assessorFeedbackFileEntryId) {
         return withArray((fileEntryId, application) -> application.setAssessorFeedbackFileEntry(fileEntryId), assessorFeedbackFileEntryId);
+    }
+
+    public ApplicationResourceBuilder withCompletion(final BigDecimal... bigDecimals) {
+        return withArray((completion, application) -> setField("completion", completion, application), bigDecimals);
     }
 }

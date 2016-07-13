@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" th:remove="tag" />
 
     <div class="page-title">
-              <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+              <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
               <h1 class="heading-xlarge">Application status</h1>
     </div>
 
