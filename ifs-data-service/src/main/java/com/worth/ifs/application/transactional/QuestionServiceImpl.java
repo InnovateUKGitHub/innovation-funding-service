@@ -1,5 +1,14 @@
 package com.worth.ifs.application.transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
@@ -16,20 +25,13 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.validator.util.ValidationUtil;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.validator.util.ValidationUtil;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -54,6 +56,9 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @Autowired
     private FormInputTypeService formInputTypeService;
@@ -307,7 +312,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         } else {
             questionStatus.markAsInComplete();
         }
+
         questionStatusRepository.save(questionStatus);
+        BigDecimal completion = applicationService.getProgressPercentageBigDecimalByApplicationId(application.getId()).getSuccessObject();
+        application.setCompletion(completion);
+        applicationRepository.save(application);
+
         return serviceSuccess(applicationIsValid);
     }
 

@@ -42,11 +42,11 @@ create new account for submitting
     And the user selects the checkbox    useSearchResultAddress
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters text to a text field    name=email    worth.email.test+submittest@gmail.com
+    And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
     When the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    Then Guest user log-in    worth.email.test+submit@gmail.com    Passw0rd123
+    Then Guest user log-in    ${test_mailbox_one}+submit@gmail.com    Passw0rd123
 
 the user marks every section but one as complete
     the user clicks the button/link    link=Project summary
@@ -90,7 +90,7 @@ create new submit application
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    worth.email.test+submittest@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -130,7 +130,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Academic Test
     Input Text    name=organisations[1].invites[0].personName    Arsene Wenger
-    Input Text    name=organisations[1].invites[0].email    worth.email.test+academictest@gmail.com
+    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+academictest@gmail.com
     focus    jquery=button:contains("Save Changes")
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     And the user closes the browser
@@ -156,7 +156,7 @@ Invite and accept the invitation
     And the user fills the create account form    Arsene    Wenger
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
 
 Applicant navigates to the finances of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}

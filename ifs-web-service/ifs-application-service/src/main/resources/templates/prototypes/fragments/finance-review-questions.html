@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- ===========================Question - other funding  =========================== --> 
+
+<div th:fragment="finance-question-other-funding">
+	<fieldset>
+		<legend class="visuallyhidden">Other funding</legend>
+		<table>
+			<thead>
+				<tr>
+					<th scope="col" id="other-source">Source of funding</th>
+					<th scope="col" id="other-date">Date secured</th>
+					<th scope="col" id="other-amount" class="alignright">Funding amount (&pound;)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width: 50%">
+						<input type="text" id="other-row-1-source" name="other-row-1-source" class="form-control width-full" value="NERC" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-source" />
+					</td>
+					<td>
+						<input type="text" id="other-row-1-date-month" name="other-row-1-date-month" class="form-control width-small" value="09" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-date" />
+
+						<input type="text" id="other-row-1-date-year" name="other-row-1-date-year" class="form-control width-small" value="2016" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" />
+					</td>
+					<td class="alignright numeric">
+						<input type="text" id="other-row-1-source" name="other-row-1-source" class="form-control width-medium" value="20,000" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-amount" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="grid-row total-cost">
+	        <div class="column-half">
+	            <span class="heading-medium">Total other funding</span>
+	        </div>
+	        <div class="column-half alignright">
+	            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;20,000" />
+	        </div>
+	    </div>
+	</fieldset>
+</div>
+
+<!-- ===========================Question - labour  =========================== --> 
+
+<div th:fragment="finance-question-labour">
+	<fieldset>
+		<legend class="visuallyhidden">Labour</legend>
+		<table>
+			<tbody>
+				<tr>
+					<th class="width-large">
+						<label class="form-label" for="working-days">Working days per year</label>
+					</th>
+					<td>
+						<input type="text" class="width-small form-control" id="working-days" name="working-days" value="232" th:readonly="${param.status == null or param.status[0] == 'save-labour'}" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id="labour-costs-table">
+			<thead>
+				<tr>
+					<th scope="col" id="labour-role">Role within project</th>
+					<th scope="col" id="labour-gross-salary" class="numeric">Gross Annual Salary</th>
+					<th scope="col" id="labour-rate" class="numeric">Rate (&pound;/day)</th>
+					<th scope="col" id="labour-days-spent" class="numeric">Days to be spent by all staff at this grade</th>
+					<th scope="col" id="labour-total-costs" class="numeric">Total costs</th>
+					<th th:unless="${param.status != null and param.status[0] != 'edit-labour'}">&nbsp;</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td style="width: 30%">
+						<input type="text" id="other-row-1-source" name="other-row-1-source" class="form-control width-full" value="Manager" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}"  aria-labelledby="labour-role" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-1-gross-salary" name="labour-row-1-gross-salary" class="form-control width-medium" value="&pound;50,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-gross-salary" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-1-rate" name="labour-row-1-rate" class="form-control width-small" value="&pound;216" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-rate" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-1-days-spent" name="labour-row-1-days-spent" class="form-control width-small" value="168" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-days-spent" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-1-total-costs" name="labour-row-1-total-costs" class="form-control width-medium" value="&pound;36,207" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-total-costs" />
+					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'edit-labour'}">
+						<a href="#">Remove</a>
+					</td>
+				</tr>
+
+				<tr>
+					<td style="width: 30%">
+						<input type="text" id="labour-row-2-role" name="labour-row-2-role" class="form-control width-full" value="Engineer" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-role" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-2-gross-salary" name="labour-row-2-gross-salary" class="form-control width-medium" value="&pound;30,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-gross-salary" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-2-rate" name="labour-row-2-rate" class="form-control width-small" value="&pound;129" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-rate" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-2-days-spent" name="labour-row-2-days-spent" class="form-control width-small" value="696" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-days-spent" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="labour-row-2-total-costs" name="labour-row-2-total-costs" class="form-control width-medium" value="&pound;90,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-total-costs" />
+					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'edit-labour'}">
+						<a href="#">Remove</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div class="grid-row total-cost">
+	        <div class="column-half">
+	            <span class="heading-medium">Total labour costs</span>
+	        </div>
+	        <div class="column-half alignright">
+	        	<input type="text" class="heading-medium width-full alignright" value="&pound;126,207" readonly="redaonly" />
+	        </div>
+	    </div>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit-labour'}">
+			<div class="alignright extra-margin-bottom">
+				<a href="#">Add another role</a>
+			</div>
+		</th:block>
+
+		<div class="alignright">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-labour'}">
+				<a th:href="@{'?status=edit-labour'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-labour'}">
+				<a th:href="@{'?status=save-labour'}" class="button">Save</a>
+			</th:block>
+		</div>
+
+	</fieldset>
+
+</div>
+
+
+
+<!-- ===========================Question - admin support  =========================== --> 
+
+<div th:fragment="finance-question-admin-support">
+	
+	<fieldset class="extra-margin">
+		<legend class="visuallyhidden">Admin support</legend>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit-admin'}">
+
+			<div class="form-block">
+				<label class="block-label" for="admin-support-radio-1">
+					<input id="admin-support-radio-1" type="radio" name="admin-support-radio-group" value="No admin funding" />
+					No administration support funding
+				</label>
+				<label class="block-label" for="admin-support-radio-2">
+					<input id="admin-support-radio-2" type="radio" name="admin-support-radio-group" value="20%" checked="checked" />
+					20% of labour costs
+				</label>
+				<label class="block-label" for="admin-support-radio-3">
+					<input id="admin-support-radio-3" type="radio" name="admin-support-radio-group" value="Custom" />
+					Custom administration support cost
+				</label>
+				<label class="block-label" for="admin-support-radio-4">
+					<input id="admin-support-radio-4" type="radio" name="admin-support-radio-group" value="Special rate" />
+					Special rate agreed with Innovate UK
+				</label>
+			</div>
+
+		</th:block>
+
+	</fieldset>
+
+	<fieldset>
+		
+		<legend class="visuallyhidden">Support details</legend>
+
+		<div id="admin-support-1">
+			<h3 class="heading-medium">No Administration support cost funding</h3>
+		</div>
+
+		<div id="admin-support-2">
+			<h3 class="heading-medium">20% of labour costs</h3>
+			<div class="grid-row total-cost">
+		        <div class="column-half">
+		            <span class="heading-medium">Total administration support cost</span>
+		        </div>
+		        <div class="column-half alignright">
+		            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;20,000" />
+		        </div>
+		    </div>
+		</div>
+
+
+		<div id="admin-support-3">
+			<h3 class="heading-medium">Custom administration support costs</h3>
+			<div class="alignright">
+				<label>
+					Rate calculated (%)
+					<input type="number" id="admin-support-custom" name="admin-support-custom" class="form-control width-medium alignright" value="" />
+				</label>
+			</div>
+			<div class="grid-row total-cost extra-margin">
+		        <div class="column-half">
+		            <span class="heading-medium">Total administration support cost</span>
+		        </div>
+		        <div class="column-half alignright">
+		            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;20,000" />
+		        </div>
+		    </div>
+
+		</div>
+
+		<div id="admin-support-4">
+			<h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
+			<div class="alignright">
+				<label>
+					Rate agreed with Innovate UK (%)
+					<input type="number" id="admin-support-special" name="admin-support-special" class="form-control width-medium alignright" value="£ 0" />
+				</label>
+			</div>
+			<div class="grid-row total-cost extra-margin">
+		        <div class="column-half">
+		            <span class="heading-medium">Total administration support cost</span>
+		        </div>
+		        <div class="column-half alignright">
+		            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;20,000" />
+		        </div>
+		    </div>
+		</div>
+
+		<div class="alignright">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-admin'}">
+				<a th:href="@{'?status=edit-admin'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-admin'}">
+				<a th:href="@{'?status=save-admin'}" class="button">Save</a>
+			</th:block>
+		</div>
+
+	</fieldset>
+
+
+
+</div>
+
+<!-- ===========================Question - admin support  =========================== --> 
+
+<div th:fragment="finance-question-materials">
+	<fieldset class="extra-margin">
+		<legend class="visuallyhidden">Materials</legend>
+		
+		<table id="materials-costs-table">
+			<thead>
+				<tr>
+					<th scope="col" id="material-item">Item</th>
+					<th scope="col" id="material-quantity" class="numeric">Quantity</th>
+					<th scope="col" id="material-cost" class="numeric">Cost per item</th>
+					<th scope="col" id="material-total-costs" class="numeric">Total costs</th>
+					<th th:unless="${param.status != null and param.status[0] != 'edit-materials'}">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width: 30%">
+						<input type="text" id="material-row-1-item" name="material-row-1-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Powder" aria-labelledby="material-item" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-1-quantity" name="material-row-1-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="20" aria-labelledby="quantity" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-1-cost" name="material-row-1-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;100" aria-labelledby="cost" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-1-total-costs" name="material-row-1-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;2000" aria-labelledby="material-total-costs" />
+					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
+						<a href="#">Remove</a>
+					</td>
+				</tr>
+
+				<tr>
+					<td style="width: 30%">
+						<input type="text" id="material-row-1-item" name="material-row-2-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Powder" aria-labelledby="material-item" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-2-quantity" name="material-row-2-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="6" aria-labelledby="quantity" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-2-cost" name="material-row-2-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;600" aria-labelledby="cost" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-2-total-costs" name="material-row-2-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3600" aria-labelledby="material-total-costs" />
+					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
+						<a href="#">Remove</a>
+					</td>
+				</tr>
+
+				<tr>
+					<td style="width: 30%">
+						<input type="text" id="material-row-1-item" name="material-row-3-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Valves" aria-labelledby="material-item" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-3-quantity" name="material-row-3-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="12" aria-labelledby="quantity" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-3-cost" name="material-row-3-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;250" aria-labelledby="cost" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="material-row-3-total-costs" name="material-row-3-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3000" aria-labelledby="material-total-costs" />
+					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
+						<a href="#">Remove</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="grid-row total-cost">
+	        <div class="column-half">
+	            <span class="heading-medium">Total materials costs</span>
+	        </div>
+	        <div class="column-half alignright">
+	        	<input type="text" class="heading-medium width-full alignright" value="&pound;8,600" readonly="redaonly" />
+	        </div>
+	    </div>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit-materials'}">
+			<div class="alignright extra-margin-bottom">
+				<a href="#">Add another item</a>
+			</div>
+		</th:block>
+
+		<div class="alignright">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-materials'}">
+				<a th:href="@{'?status=edit-materials'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-materials'}">
+				<a th:href="@{'?status=save-materials'}" class="button">Save</a>
+			</th:block>
+		</div>
+
+	</fieldset>
+	
+</div>
+
+
+
+
+
+
+</html>

@@ -9,6 +9,7 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -96,7 +97,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testCreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
         try {
-            service.createProjectsFromFundingDecisions(new HashMap<Long, FundingDecision>());
+            service.createProjectsFromFundingDecisions(new HashMap<>());
             Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -293,6 +294,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
+        public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
+            return null;
+        }
+		
+		
+		@Override
         public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
             return null;
         }

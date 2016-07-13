@@ -59,6 +59,9 @@ IFS.core.modal = (function(){
                         target.css({'margin-top':'-'+(height/2)+'px'});
                     },50);
                 }
+                else if (!formValid) {
+                    button.closest('form:not([novalidate])').find('input:invalid').first().focus();
+                }
             }
         },
         disableTabPage : function(){

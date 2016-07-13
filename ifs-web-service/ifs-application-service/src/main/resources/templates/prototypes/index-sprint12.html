@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint12'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 11</h1>
+
+			<section>
+				
+				<h2 class="heading-medium">Internal user - project set up</h2>
+
+				<ul class="list-bullet">
+					
+					<li>
+						<h3 class="heading-small">INFUND-1199</h3>
+						<p>As an internal user I want to access the finances or other details for each project </p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/1199-project-finances">INFUND-3800</a> Create a view that allows applicants to view the overall project
+							</li>
+							<li>
+								<a href="#">INFUND-3989</a> Create a view of the overall finances for the project including all partners
+							</li>
+						</ul>
+					</li>
+
+					<li>
+						<h3 class="heading-small">INFUND-1581</h3>
+						<p>As an internal team member (project finance)  I need to review each partners project costs for eligibility</p>
+
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/1581-project-eligibility">INFUND-3802</a> Create a view that allows an individual partners costs to be reviewed
+							</li>
+							<li>
+								<a href="#">INFUND-3982</a> Create a view showing eligibility when it has been approved
+							</li>
+							<li>
+								<a href="#">INFUND-3983</a> Create a view showing the changes to finances from application
+							</li>
+						</ul>
+					</li>
+						
+				</ul>
+
+			</section>
+
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>
