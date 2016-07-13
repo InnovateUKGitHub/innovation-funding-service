@@ -17,14 +17,14 @@ ${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/2/details
 *** Test Cases ***
 Competition brief link
     [Documentation]    INFUND-2448
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then the user should see the element    link=full competition brief
 
 Non logged in users see the Apply now button
     [Documentation]    INFUND-921
-    [Tags]    Applicant
+    [Tags]    Applicant    HappyPath
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then the user should see the element    jQuery=.button:contains('Apply now')
 

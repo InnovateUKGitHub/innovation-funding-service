@@ -17,12 +17,14 @@ ${What we ask you}    ${SERVER}/competition/1/info/what-we-ask-you
 *** Test Cases ***
 User goes to the Eligibility page
     [Documentation]    INFUND-1859
+    [Tags]    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     Then the user should be redirected to the correct page    ${ELIGIBILITY}
 
 User can navigate to the Before you apply pages
     [Documentation]    INFUND-1859
+    [Tags]    HappyPath
     When the user clicks the button/link    Link=Using the new online Innovation Funding Service
     Then the user should be redirected to the correct page    ${Before you apply}
     And the user should see the text in the page    This innovation funding service is an online service run by Innovate UK.
