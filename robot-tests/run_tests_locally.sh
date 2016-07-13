@@ -226,7 +226,7 @@ else
     postcodeLookUpImplemented='YES'
 fi
 sendMailLocally=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsSendMailLocally'  | cut -d "=" -f2 | sed 's/"//g'`
-if [ $sendMailLocally='false' ]
+if [ $sendMailLocally = 'false' ]
 then
     echo "Sending mail locally not implemented"
     unset localMailSendingImplemented
