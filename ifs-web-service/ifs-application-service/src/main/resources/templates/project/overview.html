@@ -54,19 +54,19 @@
         </div>
       </li>
       <!--/* ========================= Bank Details ========================= */-->
-      <li th:unless="${project.projectDetailsSubmitted}">
+      <li th:unless="${model.projectDetailsSubmitted}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">Bank details</h2>
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
-      <li th:if="${project.projectDetailsSubmitted}" th:classappend="${bankDetails == null ? 'current' : 'complete'}">
+      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'current' : 'complete'}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${isFunded}" th:href="@{/project/{id}/bank-details(id=${project.getId()})}">Bank details</a>
-            <th:block th:unless="${isFunded}">Bank details (not required)</th:block>
+            <a th:if="${model.funded}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
+            <th:block th:unless="${model.funded}">Bank details (not required)</th:block>
           </h2>
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>

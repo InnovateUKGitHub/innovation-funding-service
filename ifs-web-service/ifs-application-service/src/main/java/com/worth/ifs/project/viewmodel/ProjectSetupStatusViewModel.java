@@ -1,5 +1,6 @@
 package com.worth.ifs.project.viewmodel;
 
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -18,8 +19,10 @@ public class ProjectSetupStatusViewModel {
     private boolean projectDetailsSubmitted;
     private boolean monitoringOfficerAssigned;
     private String monitoringOfficerName;
+    private BankDetailsResource bankDetails;
+    private boolean isFunded;
 
-    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource) {
+    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource, Optional<BankDetailsResource> bankDetails, boolean isFunded) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
@@ -27,6 +30,8 @@ public class ProjectSetupStatusViewModel {
         this.projectDetailsSubmitted = project.isProjectDetailsSubmitted();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
+        this.bankDetails = bankDetails.orElse(null);
+        this.isFunded = isFunded;
     }
 
     public Long getProjectId() {
@@ -55,5 +60,13 @@ public class ProjectSetupStatusViewModel {
 
     public String getMonitoringOfficerName() {
         return monitoringOfficerName;
+    }
+
+    public BankDetailsResource getBankDetails() {
+        return bankDetails;
+    }
+
+    public boolean isFunded() {
+        return isFunded;
     }
 }
