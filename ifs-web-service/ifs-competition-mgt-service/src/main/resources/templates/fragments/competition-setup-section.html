@@ -41,6 +41,8 @@
                           <input th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
+                                 min="1"
+                                 max="31"
                                  required="required"
                                  data-required-errormessage="Please enter a opening day"
                                  th:field="${competitionSetupForm.openingDateDay}" />
@@ -53,6 +55,8 @@
                           <input th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="MM"
+                                 min="1"
+                                 max="12"
                                  required="required"
                                  data-required-errormessage="Please enter a opening month"
                                  th:field="${competitionSetupForm.openingDateMonth}" />
@@ -548,299 +552,455 @@
                 <tbody>
 
                 <!-- 1. Open date -->
-                <tr><td>1. Open date</td>
-                    <td th:text="${competitionSetupForm.openDateDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('openDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>1. Open date</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.openDateDayOfWeek}" />
+                    <td class="day">
+                               <input th:class="${#fields.hasErrors('openDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a open date"
-                               th:field="${competitionSetupForm.openDateDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('openDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.openDateDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('openDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a open month"
-                               th:field="${competitionSetupForm.openDateMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('openDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.openDateMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('openDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a open year"
-                               th:field="${competitionSetupForm.openDateYear}" /></td></tr>
+                               th:field="${competitionSetupForm.openDateYear}" />
+                    </td>
+                </tr>
 
                 <!-- 2. Briefing event -->
-                <tr><td>2. Briefing event</td>
-                    <td th:text="${competitionSetupForm.briefingEventDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('briefingEventDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>2. Briefing event</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.briefingEventDayOfWeek}" />
+                    <td class="day">
+                              <input th:class="${#fields.hasErrors('briefingEventDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a briefing event"
-                               th:field="${competitionSetupForm.briefingEventDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('briefingEventMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.briefingEventDay}" />
+                    </td>
+                    <td class="month">
+                              <input th:class="${#fields.hasErrors('briefingEventMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a briefing event"
-                               th:field="${competitionSetupForm.briefingEventMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('briefingEventYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.briefingEventMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('briefingEventYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a briefing event"
-                               th:field="${competitionSetupForm.briefingEventYear}" /></td></tr>
+                               th:field="${competitionSetupForm.briefingEventYear}" />
+                    </td>
+                </tr>
 
                 <!-- 3. Submission date -->
-                <tr><td>3. Submission date</td>
-                    <td th:text="${competitionSetupForm.submissionDateDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('submissionDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>3. Submission date</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.submissionDateDayOfWeek}" />
+                    <td class="day">
+                               <input th:class="${#fields.hasErrors('submissionDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a submission date"
-                               th:field="${competitionSetupForm.submissionDateDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('submissionDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.submissionDateDay}" />
+                    </td>
+                    <td class="month">
+                              <input th:class="${#fields.hasErrors('submissionDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a submission month"
-                               th:field="${competitionSetupForm.submissionDateMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('submissionDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.submissionDateMonth}" />
+                    </td>
+                    <td class="year">
+                              <input th:class="${#fields.hasErrors('submissionDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a submission year"
-                               th:field="${competitionSetupForm.submissionDateYear}" /></td></tr>
+                               th:field="${competitionSetupForm.submissionDateYear}" />
+                    </td>
+                </tr>
 
                 <!-- 4. Allocate accessors -->
-                <tr><td>4. Allocate accessors</td>
-                    <td th:text="${competitionSetupForm.allocateAssessorsDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('allocateAssessorsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>4. Allocate accessors</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.allocateAssessorsDayOfWeek}" />
+                    <td class="day">
+                               <input th:class="${#fields.hasErrors('allocateAssessorsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter an allocate assessors"
-                               th:field="${competitionSetupForm.allocateAssessorsDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('allocateAssessorsMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.allocateAssessorsDay}" />
+                    </td>
+                    <td class="month">
+                                <input th:class="${#fields.hasErrors('allocateAssessorsMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter an allocate accessors"
-                               th:field="${competitionSetupForm.allocateAssessorsMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('allocateAssessorsYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.allocateAssessorsMonth}" />
+                    </td>
+                    <td class="year">
+                              <input th:class="${#fields.hasErrors('allocateAssessorsYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter an allocate assessors"
-                               th:field="${competitionSetupForm.allocateAssessorsYear}" /></td></tr>
+                               th:field="${competitionSetupForm.allocateAssessorsYear}" />
+                    </td>
+                </tr>
 
                 <!-- 5. Assessor briefing -->
-                <tr><td>5. Assessor briefing</td>
-                    <td th:text="${competitionSetupForm.assessorBriefingDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('assessorBriefingDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>5. Assessor briefing</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.assessorBriefingDayOfWeek}" />
+                    <td class="day">
+                                <input th:class="${#fields.hasErrors('assessorBriefingDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter an assessor briefing"
-                               th:field="${competitionSetupForm.assessorBriefingDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessorBriefingMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessorBriefingDay}" />
+                    </td>
+                    <td class="month">
+                              <input th:class="${#fields.hasErrors('assessorBriefingMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter an assessor briefing"
-                               th:field="${competitionSetupForm.assessorBriefingMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessorBriefingYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessorBriefingMonth}" />
+                    </td>
+                    <td class="year">
+                              <input th:class="${#fields.hasErrors('assessorBriefingYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter an assessor briefing"
-                               th:field="${competitionSetupForm.assessorBriefingYear}" /></td></tr>
+                               th:field="${competitionSetupForm.assessorBriefingYear}" />
+                    </td>
+                </tr>
 
                 <!-- 6. Assessor accepts -->
-                <tr><td>6. Assessor accepts</td>
-                    <td th:text="${competitionSetupForm.assessorAcceptsDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('assessorAcceptsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>6. Assessor accepts</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.assessorAcceptsDayOfWeek}" />
+                    <td class="day">
+                              <input th:class="${#fields.hasErrors('assessorAcceptsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter an assessor accepts"
-                               th:field="${competitionSetupForm.assessorAcceptsDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessorAcceptsMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessorAcceptsDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('assessorAcceptsMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter an assessor accepts"
-                               th:field="${competitionSetupForm.assessorAcceptsMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessorAcceptsYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessorAcceptsMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('assessorAcceptsYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter an assessor accepts"
-                               th:field="${competitionSetupForm.assessorAcceptsYear}" /></td></tr>
+                               th:field="${competitionSetupForm.assessorAcceptsYear}" />
+                    </td>
+                </tr>
 
                 <!-- 7. Assessor deadline -->
-                <tr><td>7. Assessor deadline</td>
-                    <td th:text="${competitionSetupForm.assessorDeadlineDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('assessorDeadlineDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>7. Assessor deadline</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.assessorDeadlineDayOfWeek}" />
+                    <td class="day">
+                              <input th:class="${#fields.hasErrors('assessorDeadlineDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter an assessor deadline"
-                               th:field="${competitionSetupForm.assessorDeadlineDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessorDeadlineMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessorDeadlineDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('assessorDeadlineMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter an assessor deadline"
-                               th:field="${competitionSetupForm.assessorDeadlineMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessorDeadlineYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessorDeadlineMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('assessorDeadlineYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter an assessor deadline"
-                               th:field="${competitionSetupForm.assessorDeadlineYear}" /></td></tr>
+                               th:field="${competitionSetupForm.assessorDeadlineYear}" />
+                    </td>
+                </tr>
 
                 <!-- 8. Line draw -->
-                <tr><td>8. Line draw</td>
-                    <td th:text="${competitionSetupForm.lineDrawDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('lineDrawDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>8. Line draw</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.lineDrawDayOfWeek}" />
+                    <td class="day">
+                              <input th:class="${#fields.hasErrors('lineDrawDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a line draw"
-                               th:field="${competitionSetupForm.lineDrawDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('lineDrawMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.lineDrawDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('lineDrawMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a line draw"
-                               th:field="${competitionSetupForm.lineDrawMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('lineDrawYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.lineDrawMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('lineDrawYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a line draw"
-                               th:field="${competitionSetupForm.lineDrawYear}" /></td></tr>
+                               th:field="${competitionSetupForm.lineDrawYear}" />
+                    </td>
+                </tr>
 
                 <!-- 9. Assessment panel -->
-                <tr><td>9. Assessment panel</td>
-                    <td th:text="${competitionSetupForm.assessmentPanelDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('assessmentPanelDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>9. Assessment panel</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.assessmentPanelDayOfWeek}" />
+                    <td class="day">
+                              <input th:class="${#fields.hasErrors('assessmentPanelDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter an assessment panel"
-                               th:field="${competitionSetupForm.assessmentPanelDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessmentPanelMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessmentPanelDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('assessmentPanelMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter an assessment panel"
-                               th:field="${competitionSetupForm.assessmentPanelMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('assessmentPanelYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.assessmentPanelMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('assessmentPanelYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter an assessment panel"
-                               th:field="${competitionSetupForm.assessmentPanelYear}" /></td></tr>
+                               th:field="${competitionSetupForm.assessmentPanelYear}" />
+                    </td>
+                </tr>
 
                 <!-- 10. Panel date -->
-                <tr><td>10. Panel date</td>
-                    <td th:text="${competitionSetupForm.panelDateDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('panelDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>10. Panel date</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.panelDateDayOfWeek}" />
+                    <td class="day">
+                              <input th:class="${#fields.hasErrors('panelDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a panel date"
-                               th:field="${competitionSetupForm.panelDateDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('panelDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.panelDateDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('panelDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a panel date"
-                               th:field="${competitionSetupForm.panelDateMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('panelDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.panelDateMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('panelDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a panel date"
-                               th:field="${competitionSetupForm.panelDateYear}" /></td></tr>
+                               th:field="${competitionSetupForm.panelDateYear}" />
+                    </td>
+                </tr>
 
                 <!-- 11. Funders panel -->
-                <tr><td>11. Funders panel</td>
-                    <td th:text="${competitionSetupForm.fundersPanelDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('fundersPanelDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>11. Funders panel</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.fundersPanelDayOfWeek}" />
+                    <td class="day">
+                              <input th:class="${#fields.hasErrors('fundersPanelDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a funders panel"
-                               th:field="${competitionSetupForm.fundersPanelDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('fundersPanelMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.fundersPanelDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('fundersPanelMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a funders panel"
-                               th:field="${competitionSetupForm.fundersPanelMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('fundersPanelYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.fundersPanelMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('fundersPanelYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a funders panel"
-                               th:field="${competitionSetupForm.fundersPanelYear}" /></td></tr>
+                               th:field="${competitionSetupForm.fundersPanelYear}" />
+                    </td>
+                </tr>
 
                 <!-- 12. Notifications -->
-                <tr><td>12. Notifications</td>
-                    <td th:text="${competitionSetupForm.notificationsDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('notificationsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>12. Notifications</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.notificationsDayOfWeek}" />
+                     <td class="day">
+                          <input th:class="${#fields.hasErrors('notificationsDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a notifications"
-                               th:field="${competitionSetupForm.notificationsDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('notificationsMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.notificationsDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('notificationsMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a notifications"
-                               th:field="${competitionSetupForm.notificationsMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('notificationsYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.notificationsMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('notificationsYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a notifications"
-                               th:field="${competitionSetupForm.notificationsYear}" /></td></tr>
+                               th:field="${competitionSetupForm.notificationsYear}" />
+                    </td>
+                </tr>
 
                 <!-- 13. Release feedback -->
-                <tr><td>13. Release feedback</td>
-                    <td th:text="${competitionSetupForm.releaseFeedbackDayOfWeek}" />
-                    <td><input th:class="${#fields.hasErrors('releaseFeedbackDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                <tr class="date-group js-future-date">
+                    <td>13. Release feedback</td>
+                    <td class="js-addWeekDay" th:text="${competitionSetupForm.releaseFeedbackDayOfWeek}" />
+                     <td class="day">
+                          <input th:class="${#fields.hasErrors('releaseFeedbackDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="DD"
+                               min="1"
+                               max="31"
                                required="required"
                                data-required-errormessage="Please enter a release feedback"
-                               th:field="${competitionSetupForm.releaseFeedbackDay}" /></td>
-                    <td><input th:class="${#fields.hasErrors('releaseFeedbackMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.releaseFeedbackDay}" />
+                    </td>
+                    <td class="month">
+                               <input th:class="${#fields.hasErrors('releaseFeedbackMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="MM"
+                               min="1"
+                               max="12"
                                required="required"
                                data-required-errormessage="Please enter a release feedback"
-                               th:field="${competitionSetupForm.releaseFeedbackMonth}" /></td>
-                    <td><input th:class="${#fields.hasErrors('releaseFeedbackYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                               th:field="${competitionSetupForm.releaseFeedbackMonth}" />
+                    </td>
+                    <td class="year">
+                               <input th:class="${#fields.hasErrors('releaseFeedbackYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                type="number"
                                placeholder="YYYY"
                                required="required"
                                data-required-errormessage="Please enter a release feedback"
-                               th:field="${competitionSetupForm.releaseFeedbackYear}" /></td></tr>
+                               th:field="${competitionSetupForm.releaseFeedbackYear}" />
+                    </td>
+                </tr>
 
                 </tbody>
             </table>
 
-            <button class="button">Done</button>
+            <button class="button extra-margin">Done</button>
 
         </fieldset>
 
-        <fieldset th:if="${!editable}" id="section-4-">
+        <th:block th:if="${!editable}">
             <table>
                 <thead>
                 <tr>
@@ -854,97 +1014,123 @@
                 <tbody>
 
                 <!-- 1. Open date -->
-                <tr><td>1. Open date</td>
+                <tr>
+                    <td>1. Open date</td>
                     <td th:text="${competitionSetupForm.openDateDayOfWeek}" />
                     <td th:text="${competitionSetupForm.openDateDay}" />
                     <td th:text="${competitionSetupForm.openDateMonth}" />
-                    <td th:text="${competitionSetupForm.openDateYear}" /></tr>
+                    <td th:text="${competitionSetupForm.openDateYear}" />
+                </tr>
                 <!-- 2. Briefing event -->
-                <tr><td>2. Briefing event</td>
+                <tr>
+                    <td>2. Briefing event</td>
                     <td th:text="${competitionSetupForm.briefingEventDayOfWeek}" />
                     <td th:text="${competitionSetupForm.briefingEventDay}" />
                     <td th:text="${competitionSetupForm.briefingEventMonth}" />
-                    <td th:text="${competitionSetupForm.briefingEventYear}" /></tr>
+                    <td th:text="${competitionSetupForm.briefingEventYear}" />
+                </tr>
                 <!-- 3. Submission date -->
-                <tr><td>3. Submission date</td>
+                <tr>
+                    <td>3. Submission date</td>
                     <td th:text="${competitionSetupForm.submissionDateDayOfWeek}" />
                     <td th:text="${competitionSetupForm.submissionDateDay}" />
                     <td th:text="${competitionSetupForm.submissionDateMonth}" />
-                    <td th:text="${competitionSetupForm.submissionDateYear}" /></tr>
+                    <td th:text="${competitionSetupForm.submissionDateYear}" />
+                </tr>
 
                 <!-- 4. Allocate accessors -->
-                <tr><td>4. Allocate accessors</td>
+                <tr>
+                    <td>4. Allocate accessors</td>
                     <td th:text="${competitionSetupForm.allocateAssessorsDayOfWeek}" />
                     <td th:text="${competitionSetupForm.allocateAssessorsDay}" />
                     <td th:text="${competitionSetupForm.allocateAssessorsMonth}" />
-                    <td th:text="${competitionSetupForm.allocateAssessorsYear}" /></tr>
+                    <td th:text="${competitionSetupForm.allocateAssessorsYear}" />
+                </tr>
 
                 <!-- 5. Assessor briefing -->
-                <tr><td>5. Assessor briefing</td>
+                <tr>
+                    <td>5. Assessor briefing</td>
                     <td th:text="${competitionSetupForm.assessorBriefingDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessorBriefingDay}" />
                     <td th:text="${competitionSetupForm.assessorBriefingMonth}" />
-                    <td th:text="${competitionSetupForm.assessorBriefingYear}" /></tr>
+                    <td th:text="${competitionSetupForm.assessorBriefingYear}" />
+                </tr>
 
                 <!-- 6. Assessor accepts -->
-                <tr><td>6. Assessor accepts</td>
+                <tr>
+                    <td>6. Assessor accepts</td>
                     <td th:text="${competitionSetupForm.assessorAcceptsDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessorAcceptsDay}" />
                     <td th:text="${competitionSetupForm.assessorAcceptsMonth}" />
-                    <td th:text="${competitionSetupForm.assessorAcceptsYear}" /></tr>
+                    <td th:text="${competitionSetupForm.assessorAcceptsYear}" />
+                </tr>
 
                 <!-- 7. Assessor deadline -->
-                <tr><td>7. Assessor deadline</td>
+                <tr>
+                    <td>7. Assessor deadline</td>
                     <td th:text="${competitionSetupForm.assessorDeadlineDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessorDeadlineDay}" />
                     <td th:text="${competitionSetupForm.assessorDeadlineMonth}" />
-                    <td th:text="${competitionSetupForm.assessorDeadlineYear}" /></tr>
+                    <td th:text="${competitionSetupForm.assessorDeadlineYear}" />
+                </tr>
 
                 <!-- 8. Line draw -->
-                <tr><td>8. Line draw</td>
+                <tr>
+                    <td>8. Line draw</td>
                     <td th:text="${competitionSetupForm.lineDrawDayOfWeek}" />
                     <td th:text="${competitionSetupForm.lineDrawDay}" />
                     <td th:text="${competitionSetupForm.lineDrawMonth}" />
-                    <td th:text="${competitionSetupForm.lineDrawYear}" /></tr>
+                    <td th:text="${competitionSetupForm.lineDrawYear}" />
+                </tr>
 
                 <!-- 9. Assessment panel -->
-                <tr><td>9. Assessment panel</td>
+                <tr>
+                    <td>9. Assessment panel</td>
                     <td th:text="${competitionSetupForm.assessmentPanelDayOfWeek}" />
                     <td th:text="${competitionSetupForm.assessmentPanelDay}" />
                     <td th:text="${competitionSetupForm.assessmentPanelMonth}" />
-                    <td th:text="${competitionSetupForm.assessmentPanelYear}" /></tr>
+                    <td th:text="${competitionSetupForm.assessmentPanelYear}" />
+                </tr>
 
                 <!-- 10. Panel date -->
-                <tr><td>10. Panel date</td>
+                <tr>
+                    <td>10. Panel date</td>
                     <td th:text="${competitionSetupForm.panelDateDayOfWeek}" />
                     <td th:text="${competitionSetupForm.panelDateDay}" />
                     <td th:text="${competitionSetupForm.panelDateMonth}" />
-                    <td th:text="${competitionSetupForm.panelDateYear}" /></tr>
+                    <td th:text="${competitionSetupForm.panelDateYear}" />
+                </tr>
 
                 <!-- 11. Funders panel -->
-                <tr><td>11. Funders panel</td>
+                <tr>
+                    <td>11. Funders panel</td>
                     <td th:text="${competitionSetupForm.fundersPanelDayOfWeek}" />
                     <td th:text="${competitionSetupForm.fundersPanelDay}" />
                     <td th:text="${competitionSetupForm.fundersPanelMonth}" />
-                    <td th:text="${competitionSetupForm.fundersPanelYear}" /></tr>
+                    <td th:text="${competitionSetupForm.fundersPanelYear}" />
+                </tr>
 
                 <!-- 12. Notifications -->
-                <tr><td>12. Notifications</td>
+                <tr>
+                    <td>12. Notifications</td>
                     <td th:text="${competitionSetupForm.notificationsDayOfWeek}" />
                     <td th:text="${competitionSetupForm.notificationsDay}" />
                     <td th:text="${competitionSetupForm.notificationsMonth}" />
-                    <td th:text="${competitionSetupForm.notificationsYear}" /></tr>
+                    <td th:text="${competitionSetupForm.notificationsYear}" />
+                </tr>
 
                 <!-- 13. Release feedback -->
-                <tr><td>13. Release feedback</td>
+                <tr>
+                    <td>13. Release feedback</td>
                     <td th:text="${competitionSetupForm.releaseFeedbackDayOfWeek}" />
                     <td th:text="${competitionSetupForm.releaseFeedbackDay}" />
                     <td th:text="${competitionSetupForm.releaseFeedbackMonth}" />
-                    <td th:text="${competitionSetupForm.releaseFeedbackYear}" /></tr>
+                    <td th:text="${competitionSetupForm.releaseFeedbackYear}" />
+                </tr>
                 </tbody>
             </table>
-            <button type="submit" class="button">Edit</button>
-        </fieldset>
+            <button type="submit" class="button extra-margin">Edit</button>
+        </th:block>
     </form>
 
     <ul class="pagination">
@@ -964,6 +1150,3 @@
         </li>
     </ul>
 </div>
-
-
-
