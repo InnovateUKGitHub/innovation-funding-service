@@ -8,7 +8,6 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
@@ -28,7 +27,7 @@ import java.util.function.Supplier;
  */
 public interface ApplicationService {
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasAuthority('applicant') || hasAuthority('system_registration')")
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
@@ -51,7 +50,6 @@ public interface ApplicationService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
-
     /**
      * This method saves only a few application attributes that
      * the user is able to modify on the application form.
