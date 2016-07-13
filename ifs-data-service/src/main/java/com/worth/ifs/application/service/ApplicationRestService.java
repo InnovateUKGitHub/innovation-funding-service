@@ -1,12 +1,12 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+import java.util.concurrent.Future;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.UserRoleType;
-
-import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link Application} related data.
