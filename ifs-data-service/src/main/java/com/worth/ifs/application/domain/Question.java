@@ -44,10 +44,7 @@ public class Question {
     @Column(nullable = false)
     private boolean needingAssessorFeedback = false;
 
-    @OneToMany
-    @JoinTable(name = "question_form_input",
-            joinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "form_input_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "question")
     @OrderColumn(name = "priority", nullable = false)
     private List<FormInput> formInputs = new ArrayList<>();
 

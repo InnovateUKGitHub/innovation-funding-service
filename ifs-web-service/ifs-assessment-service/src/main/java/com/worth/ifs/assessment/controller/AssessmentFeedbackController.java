@@ -12,6 +12,7 @@ import com.worth.ifs.assessment.model.AssessmentFeedbackModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentFeedbackService;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;

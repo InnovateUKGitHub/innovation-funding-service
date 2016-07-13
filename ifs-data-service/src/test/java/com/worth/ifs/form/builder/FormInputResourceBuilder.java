@@ -26,6 +26,11 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return new FormInputResourceBuilder(actions);
     }
 
+    @Override
+    protected FormInputResource createInitial() {
+        return new FormInputResource();
+    }
+
     public static FormInputResourceBuilder newFormInputResource() {
         return new FormInputResourceBuilder(emptyList())
                 .with(uniqueIds())
@@ -36,8 +41,8 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((id, formInput) -> formInput.setId(id), ids);
     }
 
-    public FormInputResourceBuilder withWordCount(Integer... wordCount) {
-        return withArray((id, formInput) -> setField("wordCount", id, formInput), wordCount);
+    public FormInputResourceBuilder withWordCount(Integer... wordCounts) {
+        return withArray((wordCount, formInput) -> setField("wordCount", wordCount, formInput), wordCounts);
     }
 
     public FormInputResourceBuilder withFormInputType(Long formInputType) {
@@ -48,8 +53,7 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return with(formInput -> formInput.setFormInputTypeTitle(formInputTypeTitle));
     }
 
-    @Override
-    protected FormInputResource createInitial() {
-        return new FormInputResource();
+    public FormInputResourceBuilder withPriority(Integer... priorities) {
+        return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
     }
 }

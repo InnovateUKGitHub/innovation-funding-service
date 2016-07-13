@@ -22,22 +22,30 @@ public class FormInputBuilderTest {
 
     @Test
     public void test_buildOne_defaultValuesAsExpected() {
-        FormInput formInput = newFormInput().build();
+        FormInput formInput = newFormInput()
+                .withPriority(0)
+                .build();
         assertEquals(Long.valueOf(1), formInput.getId());
         assertEquals("Description 1", formInput.getDescription());
+        assertEquals(Integer.valueOf(0), formInput.getPriority());
     }
 
     @Test
     public void test_buildMany_defaultValuesAsExpected() {
-        List<FormInput> formInputs = newFormInput().build(3);
+        List<FormInput> formInputs = newFormInput()
+                .withPriority(0, 1, 2)
+                .build(3);
 
         assertEquals(Long.valueOf(1), formInputs.get(0).getId());
         assertEquals("Description 1", formInputs.get(0).getDescription());
+        assertEquals(Integer.valueOf(0), formInputs.get(0).getPriority());
 
         assertEquals(Long.valueOf(2), formInputs.get(1).getId());
         assertEquals("Description 2", formInputs.get(1).getDescription());
+        assertEquals(Integer.valueOf(1), formInputs.get(1).getPriority());
 
         assertEquals(Long.valueOf(3), formInputs.get(2).getId());
         assertEquals("Description 3", formInputs.get(2).getDescription());
+        assertEquals(Integer.valueOf(2), formInputs.get(2).getPriority());
     }
 }

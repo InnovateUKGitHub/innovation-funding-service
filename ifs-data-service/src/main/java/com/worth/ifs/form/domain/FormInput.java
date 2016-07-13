@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
@@ -46,10 +47,7 @@ public class FormInput{
     private List<FormInputResponse> responses;
 
     @ManyToOne
-    @JoinTable(name = "question_form_input",
-            joinColumns = {@JoinColumn(name = "form_input_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")})
-    @OrderColumn(name = "priority", nullable = false)
+    @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
     @ManyToOne
@@ -71,6 +69,9 @@ public class FormInput{
     private String description;
 
     private Boolean includedInApplicationSummary = false;
+
+    @NotNull
+    private Integer priority;
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -181,5 +182,13 @@ public class FormInput{
 
     public void setGuidanceAnswer(final String guidanceAnswer) {
         this.guidanceAnswer = guidanceAnswer;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 }

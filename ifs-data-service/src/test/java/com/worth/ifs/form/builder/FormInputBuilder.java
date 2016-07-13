@@ -26,14 +26,19 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return new FormInputBuilder(actions);
     }
 
+    @Override
+    protected FormInput createInitial() {
+        return new FormInput();
+    }
+
     public static FormInputBuilder newFormInput() {
         return new FormInputBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedDescriptions("Description "));
     }
 
-    public FormInputBuilder withWordCount(Integer... wordCount) {
-        return withArray((id, formInput) -> setField("wordCount", id, formInput), wordCount);
+    public FormInputBuilder withWordCount(Integer... wordCounts) {
+        return withArray((wordCount, formInput) -> setField("wordCount", wordCount, formInput), wordCounts);
     }
 
     public FormInputBuilder withFormInputType(FormInputType formInputType) {
@@ -41,13 +46,10 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
     }
 
     public FormInputBuilder withQuestion(Question... questions) {
-        return withArray((id, question) -> setField("question", id, question), questions);
+        return withArray((question, formInput) -> setField("question", question, formInput), questions);
     }
 
-
-
-    @Override
-    protected FormInput createInitial() {
-        return new FormInput();
+    public FormInputBuilder withPriority(Integer... priorities) {
+        return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
     }
 }
