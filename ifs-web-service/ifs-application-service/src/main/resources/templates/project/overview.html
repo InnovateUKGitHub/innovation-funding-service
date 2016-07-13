@@ -32,7 +32,7 @@
       </li>
       <!--/* ========================= Project Details ========================= */-->
 
-      <li th:classappend="${model.projectDetailsSubmitted ? 'current' : 'complete'}">
+      <li th:classappend="${!model.projectDetailsSubmitted ? 'current' : 'complete'}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
