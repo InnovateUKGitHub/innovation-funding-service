@@ -27,7 +27,6 @@ public class OrganisationCreationForm implements Serializable {
     private OrganisationTypeEnum organisationTypeEnum;
     @NotEmpty
     // on empty value don't check pattern since then there already is a validation message.
-    @Pattern(regexp = "^$|^[A-Za-z0-9 _\\&\\-,.:;\\@]+$", message = "Please enter valid characters")
     private String organisationSearchName;
     private String searchOrganisationId;
     private boolean organisationSearching;

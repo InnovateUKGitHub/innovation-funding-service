@@ -10,6 +10,7 @@
 	<div class="modal-overlay js-close" aria-hidden="true"></div>
 </div>
 
+
 <!-- confirm submit modal -->
 
 <div th:fragment="modal-confirm-submit (messageTitle, message, submitLink, submitText, cancelText)">
@@ -103,7 +104,7 @@
 	      <form action="#">
 					<div th:include="fragments/modals :: close-button" th:remove="tag" />
 					<div class="form-group">
-	            <label class="form-label" for="reject-reason">Please let us know why you are rejecting this application</label>
+	            <label class="form-label" for="reject-reason">Please select a reason for rejecting the application</label>
 	            <select class="form-control" required="required" id="reject-reason" name="decisionReason">
 	                <option value="none">Please select one reason</option>
 	                <option value="conflict-of-interest">Conflict of interest</option>
@@ -112,7 +113,7 @@
 	            </select>
 	        </div>
 	        <div class="form-group">
-	            <label class="form-label" for="rejection-observations">Please provide some more information</label>
+	            <label class="form-label" for="rejection-observations">Use this space to provide more information</label>
 	            <textarea class="form-control width-full" rows="4" name="observations" id="rejection-observations"></textarea>
 	        </div>
 					<button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
@@ -156,4 +157,26 @@
 					</form>
 			</div>
 	</div>
+</div>
+<!-- save project details -->
+<div th:fragment="modal-bank-details">
+<div class="modal-bank" role="dialog" aria-hidden="true" >
+		<div th:include="fragments/modals :: close-button" th:remove="tag" />
+
+		<h2 class="heading-medium no-margin">Submit Bank Details</h2>
+		<p>Are you sure you wish to submit your bank details?</p>
+		<p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
+		<hr />
+		<div class="grid-row">
+			<div class="column-half">
+					<button type="button" class="js-close button buttonlink large">Cancel</button>
+			</div>
+			<div class="column-half alignright-button" method="post">
+				<button class="button large" name="submit-app-details">Submit</button>
+			</div>
+		</div>
+</div>
+
+
+
 </div>

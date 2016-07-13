@@ -1,6 +1,5 @@
 package com.worth.ifs.registration;
 
-import com.google.common.net.UrlEscapers;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
@@ -32,11 +31,13 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -131,8 +132,8 @@ public class OrganisationCreationController {
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
         if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
-            OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
-        ){
+                OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
+                ){
             model.addAttribute("searchEnabled", true);
         }else{
             model.addAttribute("searchEnabled", false);
@@ -145,7 +146,7 @@ public class OrganisationCreationController {
         try{
             searchLabel = messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         }catch(NoSuchMessageException e){
-        	LOG.error(e);
+            LOG.error(e);
             searchLabel = messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
         return searchLabel;
@@ -225,7 +226,8 @@ public class OrganisationCreationController {
         if (organisationForm.isOrganisationSearching()) {
             if (StringUtils.hasText(organisationForm.getOrganisationSearchName())) {
                 List<OrganisationSearchResult> searchResults;
-                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), organisationForm.getOrganisationSearchName())
+                String encodedSearchString = escapePathVariable(organisationForm.getOrganisationSearchName());
+                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), encodedSearchString)
                         .handleSuccessOrFailure(
                                 f -> new ArrayList<>(),
                                 s -> s
@@ -247,7 +249,8 @@ public class OrganisationCreationController {
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+
     }
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
@@ -316,12 +319,12 @@ public class OrganisationCreationController {
         return null;
     }
 
-    @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{postcode}/{selectedPostcodeIndex}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{selectedPostcodeIndex}"}, method = RequestMethod.GET)
     public String amendOrganisationAddressPostCode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                           Model model,
-                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
+                                                   Model model,
+                                                   @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
             return getRegistrationRedirectURL();
 
@@ -342,12 +345,13 @@ public class OrganisationCreationController {
         }
     }
 
-    @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}/{postcode}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}/search-postcode"}, method = RequestMethod.GET)
     public String amendOrganisationAddressPostcode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                           Model model,
-                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
+                                                   Model model,
+                                                   @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                                   @RequestParam(value="searchTerm", required=false) String searchTerm,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response) {
         if(isOrganisationAlreadyCreated(request))
             return getRegistrationRedirectURL();
 
@@ -396,9 +400,9 @@ public class OrganisationCreationController {
 
         if (!referer.contains(FIND_ORGANISATION)) {
             if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()), organisationForm.getAddressForm().getSelectedPostcodeIndex());
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
+                return String.format("redirect:%s/%s/%s/search-postcode?searchTerm=%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId())) {
                 return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId());
             } else {
@@ -408,7 +412,7 @@ public class OrganisationCreationController {
             if (organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
                 return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()), organisationForm.getAddressForm().getSelectedPostcodeIndex());
             } else if (StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
+                return String.format("redirect:%s/%s?searchTerm=%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
             } else {
                 return String.format("redirect:%s/%s", BASE_URL, redirectPart);
             }
@@ -552,25 +556,26 @@ public class OrganisationCreationController {
             final OrganisationResource finalOrganisationResource = organisationResource;
 
             inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
-                    s -> 
-                        inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
-                                f -> restFailure(HttpStatus.NOT_FOUND),
-                                i -> {
-                                    if (i.getOrganisation() == null) {
-                                        i.setOrganisation(finalOrganisationResource.getId());
-                                        // Save the created organisation Id, so the next invitee does not have to..
-                                        return inviteOrganisationRestService.put(i);
+                    s ->
+                            inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
+                                    f -> restFailure(HttpStatus.NOT_FOUND),
+                                    i -> {
+                                        if (i.getOrganisation() == null) {
+                                            i.setOrganisation(finalOrganisationResource.getId());
+                                            // Save the created organisation Id, so the next invitee does not have to..
+                                            return inviteOrganisationRestService.put(i);
+                                        }
+                                        return restFailure(HttpStatus.ALREADY_REPORTED);
                                     }
-                                    return restFailure(HttpStatus.ALREADY_REPORTED);
-                                }
-                        )
+                            )
             );
         }
     }
 
 
     private List<AddressResource> searchPostcode(String postcodeInput) {
-        RestResult<List<AddressResource>>  addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        RestResult<List<AddressResource>>  addressLookupRestResult =
+                addressRestService.doLookup(escapePathVariable(postcodeInput));
         List<AddressResource> addressResourceList = addressLookupRestResult.handleSuccessOrFailure(
                 failure -> new ArrayList<>(),
                 addresses -> addresses);
@@ -578,6 +583,13 @@ public class OrganisationCreationController {
     }
 
     private String escapePathVariable(final String input){
-        return UrlEscapers.urlPathSegmentEscaper().escape(input);
+        try {
+            return UriUtils.encodeQueryParam(input,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Unable to encode search string " + input, e);
+        }
+        return input;
     }
+
+
 }
