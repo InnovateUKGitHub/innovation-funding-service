@@ -55,14 +55,12 @@
                 <fieldset class="inline">
                     <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
                     <div class="form-group">
-                        <label class="block-label" for="assessor-funding-confirmation-yes">
-                            <input id="assessor-funding-confirmation-yes" type="radio" name="fundingConfirmation" value="Yes" />
-                            Yes
-                        </label>
-                        <label class="block-label" for="assessor-funding-confirmation-no">
-                            <input id="assessor-funding-confirmation-no" type="radio" name="fundingConfirmation" value="No" />
-                            No
-                        </label>
+                        <div th:each="field : *{fundingConfirmation}" th:remove="tag">
+                            <label class="block-label" th:for="">
+                                <input th:field="*{type}" th:value="${field}" type="radio" />
+                                <span th:text="#{${'seedstarter.type.' + field}}" th:remove="tag" />
+                            </label>
+                        </div>
                     </div>
                 </fieldset>
 
@@ -103,9 +101,7 @@
                         </div>
                     </div>
 
-                    <p class="icon-info">
-                        You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.
-                    </p>
+                    <p class="icon-info">You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.</p>
 
                     <div class="alignright">
                         <button type="submit" class="button button-large" name="confirm-submission">Save assessment</button>
