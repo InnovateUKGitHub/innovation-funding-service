@@ -76,17 +76,17 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 		competitionSetupForm.setPanelDateDay(currentDate.getDayOfMonth());
 		competitionSetupForm.setPanelDateMonth(currentDate.getMonthValue());
 		competitionSetupForm.setPanelDateYear(currentDate.getYear());
-		competitionSetupForm.setReleaseFeedbackDayOfWeek(dateFormatter(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear()) );
+		competitionSetupForm.setPanelDateDayOfWeek(dateFormatter(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear()) );
 
 		competitionSetupForm.setFundersPanelDay(currentDate.getDayOfMonth());
 		competitionSetupForm.setFundersPanelMonth(currentDate.getMonthValue());
 		competitionSetupForm.setFundersPanelYear(currentDate.getYear());
-		competitionSetupForm.setReleaseFeedbackDayOfWeek(dateFormatter(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear()) );
+		competitionSetupForm.setFundersPanelDayOfWeek(dateFormatter(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear()) );
 
 		competitionSetupForm.setNotificationsDay(currentDate.getDayOfMonth());
 		competitionSetupForm.setNotificationsMonth(currentDate.getMonthValue());
 		competitionSetupForm.setNotificationsYear(currentDate.getYear());
-		competitionSetupForm.setReleaseFeedbackDayOfWeek(dateFormatter(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear()) );
+		competitionSetupForm.setNotificationsDayOfWeek(dateFormatter(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear()) );
 
 		competitionSetupForm.setReleaseFeedbackDay(currentDate.getDayOfMonth());
 		competitionSetupForm.setReleaseFeedbackMonth(currentDate.getMonthValue());
@@ -100,15 +100,15 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 	 * Returns the first free letters of the day of the week
 	 */
 	private String dateFormatter(Integer day, Integer month, Integer year) {
-		String substring="Err";
+		String shortDayName="-";
 		try {
-			LocalDate localDate = LocalDate.of(day, month, year);
+			LocalDate localDate = LocalDate.of(year, month, day);
 			String dayOfWeek =  localDate.getDayOfWeek().name();
-			substring =  dayOfWeek.substring(0,3);
+			shortDayName =  dayOfWeek.substring(0,1) + dayOfWeek.substring(1,3).toLowerCase();
 		}
 		catch (Exception ex) {
-
+			ex.printStackTrace();
 		}
-		return substring;
+		return shortDayName;
 	}
 }
