@@ -1,7 +1,6 @@
 package com.worth.ifs.application.finance.view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,9 +24,11 @@ public class UnsavedFieldsManager {
     			 .filter(f -> !(StringUtils.isEmpty(f.getValue())))
     			 .collect(Collectors.groupingBy(f -> f.getFieldName()));
     	 
+    	 int largest = largestValue(grouped);
+    	 
     	 List<List<FinanceFormField>> result = new ArrayList<>();
     	 
-    	 for(int i = 0; i < Arrays.asList(grouped.entrySet()).get(0).size(); i++) {
+    	 for(int i = 0; i < largest; i++) {
     		 
     		 List<FinanceFormField> resultEntry = new ArrayList<>();
     		 for(Entry<String, List<FinanceFormField>> entry: grouped.entrySet()) {
@@ -40,5 +41,15 @@ public class UnsavedFieldsManager {
     		 }
     	 }
     	 return result;
+	}
+
+	private int largestValue(Map<String, List<FinanceFormField>> grouped) {
+		int largest = 0;
+		for(Entry<String, List<FinanceFormField>> entry: grouped.entrySet()) {
+			if(entry.getValue().size() > largest) {
+				largest = entry.getValue().size();
+			}
+		}
+		return largest;
 	}
 }

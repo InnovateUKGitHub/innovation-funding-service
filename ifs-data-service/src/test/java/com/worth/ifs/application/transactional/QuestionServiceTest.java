@@ -167,8 +167,8 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     	
     	assertTrue(result.isSuccess());
     	assertEquals(3, result.getSuccessObject().size());
-    	assertEquals(questionResource1, result.getSuccessObject().get(0));
-    	assertEquals(questionResource2, result.getSuccessObject().get(1));
-    	assertEquals(questionResource3, result.getSuccessObject().get(2));
+    	assertTrue(result.getSuccessObject().contains(questionResource1));
+    	assertTrue(result.getSuccessObject().contains(questionResource2));
+    	assertTrue(result.getSuccessObject().contains(questionResource3));
     }
 }
