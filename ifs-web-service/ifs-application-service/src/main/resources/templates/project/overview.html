@@ -17,26 +17,22 @@
     </div>
     <p class="form-hint">You need to complete the following steps before this project can begin.</p>
 
-    <div class="warning-alert" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
-        <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
-        <p>To enable your project to be funded by Innovate UK <strong>[Business name]</strong> must be registered with Companies House. </p>
-        <p><a href="/prototypes/2537-partner-add-companies-house">Link [Business name] to Companies House registration</a></p>
-    </div>
-
     <ul class="application-progress-list extra-margin">
+
       <li class="complete">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">Successful application</h2>
           <p>The application <strong th:text="${project.name}">Machine learning in robots</strong> has been successful within the <strong th:text="${competition.name}">Technology inspired</strong> competition</p>
           <p class="linkbar">
-            <a th:href="@{/application/{id}/summary(id=${project.application})}" class="buttonlink">View application and feedback</a>
-            <a href="#" class="buttonlink">View terms and conditions of grant offer</a>
+            <a th:href="@{/application/{id}/summary(id=${project.application})}">View application and feedback</a>
+            <a href="#">View terms and conditions of grant offer</a>
           </p>
         </div>
       </li>
+      <!--/* ========================= Project Details ========================= */-->
 
-      <li th:classappend="${project.submittedDate == null ? 'current' : 'complete'}">
+      <li th:classappend="${project.projectDetailsSubmitted ? 'complete' : 'current'}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -45,6 +41,7 @@
           <p>Confirm the contact details, proposed start date and location of the project.</p>
         </div>
       </li>
+      <!--/* ========================= Monitoring Officer ========================= */-->
 
       <li>
         <div class="progress-status" />
@@ -56,22 +53,25 @@
           </p>
         </div>
       </li>
-
-      <li>
+      <!--/* ========================= Bank Details ========================= */-->
+      <li th:unless="${project.projectDetailsSubmitted}">
         <div class="progress-status" />
         <div class="progress-info">
-          <h2 class="heading-medium"><a href="/prototypes/1578-bank-details">Bank details</a></h2>
+          <h2 class="heading-medium">Bank details</h2>
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
-
-      <li>
+      <li th:if="${project.projectDetailsSubmitted}" th:classappend="${bankDetails == null ? 'current' : 'complete'}">
         <div class="progress-status" />
         <div class="progress-info">
-          <h2 class="heading-medium"><a href="/prototypes/1578-bank-details-submitted">Bank details</a></h2>
+          <h2 class="heading-medium">
+            <a th:if="${isFunded}" th:href="@{/project/{id}/bank-details(id=${project.getId()})}">Bank details</a>
+            <th:block th:unless="${isFunded}">Bank details (not required)</th:block>
+          </h2>
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
+      <!--/* ========================= Finance Check ========================= */-->
 
       <li>
         <div class="progress-status" />
@@ -81,29 +81,18 @@
         </div>
       </li>
 
-      <li>
-        <div class="progress-status" />
-        <div class="progress-info">
-          <h2 class="heading-medium"><a href="#">Finance checks</a></h2>
-          <p>We will review all project costs and contact you if we have any queries.</p>
-        </div>
-      </li>
+      <!--/* ========================= Spend Profile ========================= */-->
+
 
       <li>
         <div class="progress-status" />
         <div class="progress-info">
-          <h2 class="heading-medium"><a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}">Spend profile</a></h2>
+          <h2 class="heading-medium"><a href="#">Spend profile</a></h2>
           <p>Once we have approved your financial information, we will produce a spend profile.</p>
         </div>
       </li>
 
-      <li>
-        <div class="progress-status" />
-        <div class="progress-info">
-          <h2 class="heading-medium"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profile</a></h2>
-          <p>Once we have approved your financial information, we will produce a spend profile.</p>
-        </div>
-      </li>
+      <!--/* ========================= Other documentse ========================= */-->
 
       <li>
         <div class="progress-status" />
@@ -122,25 +111,7 @@
           </ul>
         </div>
       </li>
-
-      <li>
-        <div class="progress-status" />
-        <div class="progress-info">
-          <div th:unless="${param.user != null}" th:remove="tag">
-            <h2 class="heading-medium"><a href="/prototypes/1590-document-upload?status=submitted">Other documents</a></h2>
-            <p>As the lead partner in the consortium, you will need to upload documents including:</p>
-          </div>
-          <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-            <h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead&#38;status=submitted">Other documents</a></h2>
-            <p>The lead partner of the consortium will need to upload documents including:</p>
-          </div>
-          <ul class="list-bullet">
-            <li>a collaboration agreement</li>
-            <li>exploitation plan</li>
-            <li>project plan</li>
-          </ul>
-        </div>
-      </li>
+      <!--/* ========================= GOL ========================= */-->
 
       <li>
         <div class="progress-status" />
