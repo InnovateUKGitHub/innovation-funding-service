@@ -12,11 +12,11 @@
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" th:remove="tag" />
 
     <div class="page-title">
-              <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+              <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
               <h1 class="heading-xlarge">Application status</h1>
     </div>
 
-    <ul class="application-progress-list">
+    <ul class="ifs-progress-list">
     	<li class="complete">
         <div class="progress-status" />
     		<div class="progress-info">
@@ -68,8 +68,8 @@
 
 
 
-    <ul class="grid-row application-progress-list">
-    	<li class="column-half complete">
+    <ul class="grid-row ifs-progress-list">
+    	<li class="column-half successful">
           <div class="progress-status" />
           <div class="progress-info">
             <h2 class="heading-medium">If your application is successful</h2>
@@ -84,7 +84,7 @@
 						</ul>
     		</div>
     	</li>
-    	<li class="column-half fail">
+    	<li class="column-half unsuccessful">
           <div class="progress-status" />
           <div class="progress-info">
             <h2 class="heading-medium">If your application is unsuccessful</h2>

@@ -79,8 +79,13 @@
 </div>
 
 <!-- =========================== Element: Application Title =========================== -->
-<div th:fragment="application-title (application, competition) ">
+<div th:fragment="application-title (application) ">
     <p class="subtitle" th:text="${#numbers.formatInteger(application.id,8)} + ': ' + ${application.getApplicationDisplayName()} "/>
+</div>
+
+<!-- =========================== Element: Project Title =========================== -->
+<div th:fragment="project-title (projectId, projectName) ">
+    <p class="subtitle" th:text="${#numbers.formatInteger(projectId,8)} + ': ' + ${projectName} "/>
 </div>
 
 <!-- =========================== Element: Competition Closing soon? =========================== -->
