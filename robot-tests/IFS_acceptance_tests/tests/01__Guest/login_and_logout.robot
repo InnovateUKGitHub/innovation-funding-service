@@ -88,7 +88,7 @@ Reset password (psw does not match)
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=forgot your password?
-    And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
+    And the user enters text to a text field    id=id_email    ${test_mailbox_one}+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
     And the user opens the mailbox and clicks the reset link
@@ -107,7 +107,7 @@ Reset password
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=forgot your password?
-    And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
+    And the user enters text to a text field    id=id_email    ${test_mailbox_one}+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
 
@@ -123,10 +123,10 @@ Reset password (email step)
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     And the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rd
+    When the guest user enters the log in credentials    ${test_mailbox_one}+changepsw@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
-    When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rdnew
+    When the guest user enters the log in credentials    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element        link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
@@ -146,5 +146,5 @@ the user should be logged-in as an Assessor
     Title Should Be    Assessor Dashboard - Innovation Funding Service
 
 the user opens the mailbox and clicks the reset link
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${testmailbox_one_password}
     And the user opens the mailbox and verifies the email from

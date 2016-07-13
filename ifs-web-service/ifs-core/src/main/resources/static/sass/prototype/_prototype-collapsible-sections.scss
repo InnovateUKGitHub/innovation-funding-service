@@ -56,6 +56,19 @@
      	text-align: right;
     }
 
+    .section-percentage{
+    	float: right;
+
+    	@include media-down(mobile) {
+			float: none;
+    	}
+    }
+
+    span[data-mirror]{
+		width: 180px;
+		text-align: right;
+	}
+
     @include media-down(mobile) {
 		span{
 			display: block;

@@ -31,6 +31,9 @@ public class ProjectSetupStatusController {
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private BankDetailsRestService bankDetailsRestService;
 	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId) {
@@ -44,6 +47,13 @@ public class ProjectSetupStatusController {
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
         Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
+        OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
+        Optional<BankDetailsResource> bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).toOptionalIfNotFound().getSuccessObject();
+        if(bankDetailsResource.isPresent()) {
+            model.addAttribute("bankDetails", bankDetailsResource.get());
+        }
+        model.addAttribute("isFunded", true); // TODO: INFUND-3709 - Some partners don't need this
+
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer);
     }
 }
