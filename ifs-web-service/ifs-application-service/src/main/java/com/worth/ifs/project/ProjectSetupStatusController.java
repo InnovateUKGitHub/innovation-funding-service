@@ -46,7 +46,7 @@ public class ProjectSetupStatusController {
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         model.addAttribute("model", getProjectSetupStatusViewModel(projectId, loggedInUser));
-        return "project/overview";
+        return "project/setup-status";
     }
 
     private ProjectSetupStatusViewModel getProjectSetupStatusViewModel(Long projectId, UserResource loggedInUser) {
