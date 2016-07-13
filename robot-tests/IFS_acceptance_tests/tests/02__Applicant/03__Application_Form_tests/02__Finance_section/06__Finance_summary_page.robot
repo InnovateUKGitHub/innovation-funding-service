@@ -89,7 +89,7 @@ Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    HappyPath    Email
     [Setup]    Log in create a new invite application invite academic collaborators and accept the invite
-    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
     When the user enters text to a text field    id=incurred-staff    1000000000
     And Guest user log-in    &{lead_applicant_credentials}

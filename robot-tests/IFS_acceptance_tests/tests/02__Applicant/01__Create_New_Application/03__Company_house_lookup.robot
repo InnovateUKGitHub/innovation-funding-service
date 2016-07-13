@@ -52,17 +52,22 @@ Company with spaces in the name
     And the user clicks the button/link    id=org-search
     Then the user should see the element    Link=HIVE IT LIMITED
 
-Invalid characters
-    [Documentation]    INFUND-887
-    [Tags]
-    When the user enters text to a text field    id=organisationSearchName    {}
-    And the user clicks the button/link    id=org-search
-    Then the user should see an error    Please enter valid characters
-
 Empty company name field
+    Given the user should see the text in the page    Create your account
     When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
     And the user clicks the button/link    id=org-search
     Then the user should see an error    ${empty_field_warning_message}
+
+Other characters
+    [Documentation]    INFUND-2960
+    [Tags]
+    When the user enters text to a text field    id=organisationSearchName    innovate\\
+    # Robot trims the backslash, if you want to use it it needs to be escaped.
+    And the user clicks the button/link    id=org-search
+    Then the user should see the text in the page    No results found.
+    When the user enters text to a text field    id=organisationSearchName    innovate/
+    And the user clicks the button/link    id=org-search
+    Then the search criteria should be displayed
 
 *** Keywords ***
 the search criteria should be displayed

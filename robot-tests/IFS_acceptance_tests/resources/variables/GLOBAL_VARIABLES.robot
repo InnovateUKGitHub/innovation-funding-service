@@ -82,7 +82,9 @@ ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-${TEST_MAILBOX_ONE}    worth.email.test@gmail.com
-${TEST_MAILBOX_TWO}    worth.email.test.two@gmail.com
+${TEST_MAILBOX_ONE}    worth.email.test
+${TEST_MAILBOX_TWO}    worth.email.test.two
+${test_mailbox_one_password}           testtest1
+${test_mailbox_two_password}           testtest1
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
 ${unsuccessful_login_message}       Your sign in was unsuccessful because of the following issue(s)
