@@ -50,10 +50,10 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private String overMaxAllowedTextSize;
 
     @Mock
-    BindingResult bindingResult;
+    private BindingResult bindingResult;
 
     @Autowired
-    CostRepository costRepository;
+    private CostRepository costRepository;
     private Cost grandClaimCost;
     private ApplicationFinance applicationFinance;
     private long leadApplicantId;
@@ -61,8 +61,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     public static final long APPLICATION_ID = 1L;
 
     @Autowired
-
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Override
     @Autowired

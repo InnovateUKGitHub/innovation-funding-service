@@ -1,18 +1,26 @@
 package com.worth.ifs.finance.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.Question;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.util.StringUtils;
+import static com.worth.ifs.finance.resource.cost.CostItem.MAX_DB_STRING_LENGTH;
+import static com.worth.ifs.finance.resource.cost.CostItem.MAX_LENGTH_MESSAGE;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.worth.ifs.finance.resource.cost.CostItem.MAX_DB_STRING_LENGTH;
-import static com.worth.ifs.finance.resource.cost.CostItem.MAX_LENGTH_MESSAGE;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.domain.Question;
 
 /**
  * Cost defines database relations and a model to use client side and server side.
@@ -120,6 +128,7 @@ public class Cost {
     public void setCostValues(List<CostValue> costValues) {
         this.costValues = costValues;
     }
+    
     public void addCostValues(CostValue... c) {
         Collections.addAll(this.costValues, c);
     }
