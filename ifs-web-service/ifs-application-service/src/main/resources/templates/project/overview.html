@@ -17,7 +17,7 @@
     </div>
     <p class="form-hint">You need to complete the following steps before this project can begin.</p>
 
-    <ul class="application-progress-list extra-margin">
+    <ul class="ifs-progress-list extra-margin">
 
       <li class="complete">
         <div class="progress-status" />
@@ -32,7 +32,7 @@
       </li>
       <!--/* ========================= Project Details ========================= */-->
 
-      <li th:classappend="${project.projectDetailsSubmitted ? 'complete' : 'current'}">
+      <li th:classappend="${project.projectDetailsSubmitted ? 'complete' : 'require-action'}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
