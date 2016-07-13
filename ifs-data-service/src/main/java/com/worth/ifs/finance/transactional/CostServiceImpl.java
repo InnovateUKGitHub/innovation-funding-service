@@ -377,6 +377,9 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
             cost.setQuestion(question);
             cost.setApplicationFinance(applicationFinance);
+            // TODO problem here
+            // org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: com.worth.ifs.finance.domain.Cost; nested exception is org.hibernate.PersistentObjectException: detached entity passed to persist: com.worth.ifs.finance.domain.Cost
+            questionRepository.save(question);
             return costRepository.save(cost);
         } else {
             ServiceResult<Cost> updated = doUpdate(existingCost.getId(), newCostItem);
