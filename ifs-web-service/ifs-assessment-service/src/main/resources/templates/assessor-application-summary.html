@@ -55,12 +55,10 @@
                 <fieldset class="inline">
                     <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
                     <div class="form-group">
-                        <div th:each="option : ${ { true, false } }" th:remove="tag">
-                            <label class="block-label">
-                                <input th:field="*{fundingConfirmation}" th:value="${option}" type="radio" />
-                                <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
-                            </label>
-                        </div>
+                        <label class="block-label" th:each="option : ${ { true, false } }">
+                            <input th:field="*{fundingConfirmation}" th:value="${option}" type="radio" th:checked="${option == fundingConfirmation}" />
+                            <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
+                        </label>
                     </div>
                 </fieldset>
 
