@@ -53,11 +53,6 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
-        try {
-            LOG.debug("decodedSearchText: " + UriUtils.decode(encodedSearchText, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
              // encoded in the web-services.
             JsonNode companiesResources = restGet(COMPANY_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
@@ -66,7 +61,6 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
             companyItems.forEach(i -> results.add(companySearchMapper(i)));
             return serviceSuccess(results);
         });
-
     }
 
     @Override

@@ -58,8 +58,8 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     @RestCacheResult
-    public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, Map<String, ?> variables) {
-        return getRestTemplate().exchange(path, GET, jsonEntity(null), c, variables);
+    public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, Map<String, ?> uriVariables) {
+        return getRestTemplate().exchange(path, GET, jsonEntity(null), c, uriVariables);
     }
     @RestCacheResult
     public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
