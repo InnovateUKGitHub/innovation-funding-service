@@ -60,7 +60,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/overview"))
+                .andExpect(view().name("project/setup-status"))
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
@@ -91,7 +91,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/overview"))
+                .andExpect(view().name("project/setup-status"))
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
@@ -125,7 +125,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/overview"))
+                .andExpect(view().name("project/setup-status"))
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
@@ -158,7 +158,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/overview"))
+                .andExpect(view().name("project/setup-status"))
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
