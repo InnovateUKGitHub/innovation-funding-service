@@ -90,7 +90,7 @@ Reset password
 
 Reset password validations
     [Documentation]    INFUND-1889
-    [Tags]
+    [Tags]     Email
     When the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
     And the user clicks the button/link    jQuery=input[value*="Save password"]
