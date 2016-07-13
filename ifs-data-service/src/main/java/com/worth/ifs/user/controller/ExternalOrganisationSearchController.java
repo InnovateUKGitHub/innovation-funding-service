@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,9 +34,9 @@ public class ExternalOrganisationSearchController {
     private static final int SEARCH_ITEMS_MAX = 10;
 
 
-    @RequestMapping("/searchOrganisations/{organisationType}/{organisationSearchText}")
+    @RequestMapping("/searchOrganisations/{organisationType}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final Long organisationTypeId,
-                                                                          @PathVariable("organisationSearchText") final String organisationSearchText) {
+                                                                          @RequestParam("organisationSearchText") final String organisationSearchText) {
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(organisationTypeId);
 
         switch (organisationType){

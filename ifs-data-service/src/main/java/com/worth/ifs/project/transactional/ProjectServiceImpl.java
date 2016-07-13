@@ -13,6 +13,7 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
@@ -29,7 +30,9 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -50,6 +53,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -86,6 +90,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
+
+    @Autowired
+    private OrganisationMapper organisationMapper;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
@@ -242,6 +249,17 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess();
     }
 
+    @Override
+    public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
+        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleIdAndUserId(projectId, partnerRole.getId(), userId);
+        if(projectUser != null && projectUser.getOrganisation() != null) {
+            return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
+        } else {
+            return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
+        }
+    }
+
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
@@ -347,10 +365,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
-    }
-
-    private ServiceResult<Address> getAddress(long addressId) {
-        return find(addressRepository.findOne(addressId), notFoundError(Address.class, addressId));
     }
 
     private ServiceResult<Project> getProjectByApplication(long applicationId){

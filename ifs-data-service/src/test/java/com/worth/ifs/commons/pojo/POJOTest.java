@@ -24,6 +24,8 @@ import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
+import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -91,6 +93,8 @@ public class POJOTest {
             ProjectUserResource.class,
             AddressType.class,
             AddressTypeResource.class,
+            BankDetails.class,
+            BankDetailsResource.class,
             MonitoringOfficerResource.class
     );
 

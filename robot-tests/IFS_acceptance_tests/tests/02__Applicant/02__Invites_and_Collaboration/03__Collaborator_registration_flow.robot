@@ -136,7 +136,7 @@ Catapult search (accept invitation flow)
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Invite    Catapult    Email
-    Given the user opens the mailbox and verifies the email from
+    Given the user opens the mailbox and verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd123
@@ -155,7 +155,7 @@ the radio button should have the new selection
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
 
 the user verifies the email
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}

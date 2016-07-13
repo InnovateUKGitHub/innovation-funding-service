@@ -1,12 +1,14 @@
 package com.worth.ifs.documentation;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.worth.ifs.application.builder.ApplicationResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static java.util.Arrays.asList;
@@ -26,7 +28,8 @@ public class ApplicationDocs {
             fieldWithPath("competitionName").description("Competition Name"),
             fieldWithPath("competitionStatus").description("Competition Status"),
             fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"),
-            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application")
+            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application"),
+            fieldWithPath("completion").description("percentage of completion of the application")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
@@ -42,6 +45,7 @@ public class ApplicationDocs {
             .withCompetitionName("competition name")
             .withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP)
             .withInviteList(asList(1L,2L,3L))
-            .withAssessorFeedbackFileEntry(123L);
+            .withAssessorFeedbackFileEntry(123L)
+            .withCompletion(new BigDecimal(30L));
 
 }
