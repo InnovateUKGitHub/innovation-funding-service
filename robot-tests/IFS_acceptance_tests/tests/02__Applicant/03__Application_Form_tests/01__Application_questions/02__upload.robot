@@ -50,8 +50,8 @@ Lead applicant can view a file
     [Tags]
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
-    The applicant opens the uploaded file
-    # Then the user should see the text in the page    ${valid_pdf_excerpt}
+    When the applicant opens the uploaded file
+    Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
 Lead applicant can download a pdf file
@@ -72,7 +72,7 @@ Collaborators can view a file
     And the user clicks the button/link    link=5. Technical approach
     And the user should see the text in the page    ${valid_pdf}
     When the user clicks the button/link    link=${valid_pdf}
-    # Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
 Collaborators can download a pdf file
@@ -121,7 +121,7 @@ Collaborators can view a file when the question is assigned
     And the user reloads the page
     And the user should see the element    link=${valid_pdf}
     When the user clicks the button/link    link=${valid_pdf}
-    # Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
 Collaborator can download a file when the question is assigned

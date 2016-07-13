@@ -89,14 +89,14 @@ Academic partner can view the file on the finances
     [Tags]
     When The user navigates to the academic application finances
     When the user clicks the button/link    link=${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
     [Tags]
     Given The user navigates to the finance overview of the academic
     When the user clicks the button/link    link=testing.pdf
-    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
 
 Lead applicant can't view the file on the finances page
     [Documentation]    INFUND-917
@@ -111,7 +111,7 @@ Lead applicant can view the file on the finances overview page
     Given The user navigates to the finance overview of the academic
     And the user should see the text in the page    ${valid_pdf}
     When the user clicks the button/link    link=${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402

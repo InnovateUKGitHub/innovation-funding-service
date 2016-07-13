@@ -40,7 +40,7 @@ Open and view the file
     Given the user should see the text in the page    ${valid_pdf}
     And the file has been scanned for viruses
     When the user clicks the button/link    link=${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
     [Teardown]    The user navigates to the page    ${successful_application_overview}
 
 Upload more than one file is impossible
