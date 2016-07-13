@@ -17,10 +17,10 @@
         <h1 class="heading-xlarge">Finance contact</h1>
     </div>
 
-    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${project.id})}" th:object="${form}" novalidate="novalidate">
+    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${project.id})}" th:object="${form}">
         <fieldset>
+          <h2 class="heading-medium">Finance contact</h2>
           <div class="form-group" th:classappend="${#fields.hasErrors('financeContact') ? 'error' : ''}">
-            <h2 class="heading-medium">Finance contact</h2>
             <legend>
                 <span class="visuallyhidden">Finance contact</span>
                 <div th:if="${#fields.hasErrors('financeContact')}" th:remove="tag">
@@ -38,7 +38,7 @@
                 <div th:each="user : ${organisationUsers}" th:remove="tag">
                     <input type="hidden" th:field="*{organisation}"></input>
                     <label th:for="${#ids.next('financeContact')}" class="block-label">
-                        <input type="radio" th:field="*{financeContact}" th:value="${user.user}" required="required" />
+                        <input type="radio" th:field="*{financeContact}" th:value="${user.user}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                         <span th:text="${user.userName}" th:remove="tag"></span>
                     </label>
                 </div>
