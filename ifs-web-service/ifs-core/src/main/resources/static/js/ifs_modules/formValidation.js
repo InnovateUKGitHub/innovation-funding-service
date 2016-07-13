@@ -357,10 +357,12 @@ IFS.core.formValidation = (function(){
         checkDate : function(field,showMessage){
           var dateGroup = field.closest('.date-group');
           field.addClass('js-visited');
+          var valid;
 
           var d = dateGroup.find('.day input');
           var m = dateGroup.find('.month input');
           var y = dateGroup.find('.year input');
+          var addWeekDay = dateGroup.find('.js-addWeekDay');
 
           var allFields = d.add(m).add(y);
           var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'));
@@ -376,33 +378,45 @@ IFS.core.formValidation = (function(){
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
                 if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
                 allFields.removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
+                //adding day of week which is not really validation might want to think about this
+                if(addWeekDay.length){
+                  var days = ['Sun','Mon','Tues','Wed','Thurs','Fri','Sat'];
+                  var weekday = days[date.getDay()];
+                  addWeekDay.text(weekday);
+                }
 
                 if(dateGroup.hasClass("js-future-date")){
                   var now = new Date();
-                  if(now < date){
+                  if(now.setHours(0,0,0,0) <= date.setHours(0,0,0,0)){
                     if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.future); }
-                    return true;
+                    valid = true;
                   }
                   else {
                     if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.future); }
-                    return false;
+                    valid = false;
                   }
                 }
-                return true;
+                valid = true;
             } else {
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
                 allFields.addClass('js-autosave-disabled').attr('data-date','');
-                return false;
+                valid = false;
             }
           }
           else if (filledOut || fieldsVisited){
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
                 allFields.addClass('js-autosave-disabled').attr('data-date','');
-                return false;
+                valid = false;
           }
           else {
-            return false;
+            valid = false;
           }
+
+          if(!valid && addWeekDay.length){
+            addWeekDay.text('-');
+          }
+
+          return valid;
         },
         getErrorMessage : function(field,type){
             //first look if there is a custom message defined on the element
