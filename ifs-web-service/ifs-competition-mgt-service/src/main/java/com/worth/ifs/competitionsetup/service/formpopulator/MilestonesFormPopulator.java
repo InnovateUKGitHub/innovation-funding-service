@@ -8,6 +8,7 @@ import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Form populator for the milestones competition setup section.
@@ -26,11 +27,19 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 
 		//temporary date
 		LocalDate currentDate = LocalDate.now();
+        List<Long> milestones = competitionResource.getMilestones();
 
-		//JH @todo null check on getDates from Repo
-		competitionSetupForm.setOpenDateDay(currentDate.getDayOfMonth());
-		competitionSetupForm.setOpenDateMonth(currentDate.getMonthValue());
-		competitionSetupForm.setOpenDateYear(currentDate.getYear());
+        if (milestones == null) {
+            competitionSetupForm.setOpenDateDay(null);
+            competitionSetupForm.setOpenDateMonth(null);
+            competitionSetupForm.setOpenDateYear(null);
+        }
+        else {
+            competitionSetupForm.setOpenDateDay(null);
+            competitionSetupForm.setOpenDateMonth(null);
+            competitionSetupForm.setOpenDateYear(null);
+        }
+
 		competitionSetupForm.setOpenDateDayOfWeek(dateFormatter(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear()) );
 
 		competitionSetupForm.setBriefingEventDay(currentDate.getDayOfMonth());

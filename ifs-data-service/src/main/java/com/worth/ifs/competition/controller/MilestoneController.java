@@ -1,0 +1,28 @@
+package com.worth.ifs.competition.controller;
+
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.domain.Milestone;
+import com.worth.ifs.competition.transactional.MilestoneService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+/**
+ * MilestoneController exposes Milestone data and operations through a REST API
+ */
+@RestController
+@RequestMapping("/milestone")
+public class MilestoneController {
+
+    @Autowired
+    private MilestoneService milestoneService;
+
+    @RequestMapping(value = "/milestone/{competitionId}", method = RequestMethod.POST)
+    public RestResult<List<Milestone>> findAllMilestonesByCompetitionId(@PathVariable("id") final Long id){
+        return milestoneService.getAllMilestoneDatesByCompetitionId(id).toGetResponse();
+    }
+ }
