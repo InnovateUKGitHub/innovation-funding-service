@@ -55,10 +55,10 @@
                 <fieldset class="inline">
                     <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
                     <div class="form-group">
-                        <div th:each="field : *{fundingConfirmation}" th:remove="tag">
-                            <label class="block-label" th:for="">
-                                <input th:field="*{type}" th:value="${field}" type="radio" />
-                                <span th:text="#{${'seedstarter.type.' + field}}" th:remove="tag" />
+                        <div th:each="option : ${ { true, false } }" th:remove="tag">
+                            <label class="block-label">
+                                <input th:field="*{fundingConfirmation}" th:value="${option}" type="radio" />
+                                <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
                             </label>
                         </div>
                     </div>

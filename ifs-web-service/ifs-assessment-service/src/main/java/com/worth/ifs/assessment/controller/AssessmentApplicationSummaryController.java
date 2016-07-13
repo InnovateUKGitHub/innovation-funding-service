@@ -43,7 +43,7 @@ public class AssessmentApplicationSummaryController extends AbstractApplicationC
                        @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentApplicationSummaryForm form,
                        BindingResult bindingResult,
                        @PathVariable("assessmentId") Long assessmentId) {
-        LOG.info("AssessmentApplicationSummaryForm{" +
+        LOG.warn("AssessmentApplicationSummaryForm{" +
                 "fundingConfirmation=" + form.getFundingConfirmation() +
                 ", feedback='" + form.getFeedback() + '\'' +
                 ", comments='" + form.getComments() +
