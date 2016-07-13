@@ -1,10 +1,10 @@
 package com.worth.ifs.address.builder;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.address.resource.AddressResource;
+
+import java.util.List;
+import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -57,7 +57,8 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
         return withArray((postcode, address) -> setField("postcode", postcode, address), postcodes);
     }
 
-    public AddressResourceBuilder withOrganisationList(List<Long>... organisationLists) {
+    @SafeVarargs
+    public final AddressResourceBuilder withOrganisationList(List<Long>... organisationLists) {
         return withArray((organisationList, address) -> setField("organisations", organisationList, address), organisationLists);
     }
 

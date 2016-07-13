@@ -103,8 +103,6 @@
 								<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
 							</div>
 
-
-
 							<div th:if="${param.stage == null or param.stage[0] &lt; '2'}"  th:remove="tag">
 								<td class="status action"><a href="/prototypes/2650-review-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
 							</div>
@@ -113,7 +111,8 @@
 								<td class="status ok"><a href="/prototypes/2650-review-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
 							</div>
 
-							<td class="status with-partner">-</td>
+							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
+				
 							<td class="status with-partner">-</td>
 							
 							<div th:if="${param.stage == null or param.stage[0] &lt; '5'}" th:remove="tag">
