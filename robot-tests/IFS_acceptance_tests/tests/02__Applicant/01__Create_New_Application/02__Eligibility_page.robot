@@ -2,6 +2,7 @@
 Documentation     INFUND-1859: As an applicant I want the Eligibility (process information) separate from applying, so that i don't have to apply in order to find out general information
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -28,6 +29,4 @@ User can navigate to the Before you apply pages
     And the user goes back to the previous page
     When the user clicks the button/link    link=What we ask you
     Then the user should be redirected to the correct page    ${What we ask you}
-    And the user should see the text in the page   The application has the following sections
-
-
+    And the user should see the text in the page    The application has the following sections
