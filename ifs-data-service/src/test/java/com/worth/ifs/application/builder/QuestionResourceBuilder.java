@@ -28,8 +28,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return new QuestionResourceBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedNames("Section "))
-                .withNeedingAssessorFeedback(true)
-                .withNeedingAssessorScore(true)
                 .withPriority(0)
                 .withQuestionNumber("1");
     }
@@ -50,14 +48,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
-    public QuestionResourceBuilder withAssessorGuidanceQuestion(String... assessorGuidanceQuestions) {
-        return withArray((assessorGuidanceQuestion, object) -> setField("assessorGuidanceQuestion", assessorGuidanceQuestion, object), assessorGuidanceQuestions);
-    }
-
-    public QuestionResourceBuilder withAssessorGuidanceAnswer(String... assessorGuidanceAnswers) {
-        return withArray((assessorGuidanceAnswer, object) -> setField("assessorGuidanceAnswer", assessorGuidanceAnswer, object), assessorGuidanceAnswers);
-    }
-
     public QuestionResourceBuilder withCompetition(Long... competitions) {
         return withArray((competition, object) -> setField("competition", competition, object), competitions);
     }
@@ -72,14 +62,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
 
     public QuestionResourceBuilder withCosts(List<Long>... costs) {
         return withArray((cost, object) -> setField("costs", cost, object), costs);
-    }
-
-    public QuestionResourceBuilder withNeedingAssessorFeedback(Boolean... needingAssessorFeedbacks) {
-        return withArray((needingAssessorFeedback, object) -> setField("needingAssessorFeedback", needingAssessorFeedback, object), needingAssessorFeedbacks);
-    }
-
-    public QuestionResourceBuilder withNeedingAssessorScore(Boolean... needingAssessorScores) {
-        return withArray((needingAssessorScore, object) -> setField("needingAssessorScore", needingAssessorScore, object), needingAssessorScores);
     }
 
     public QuestionResourceBuilder withQuestionNumber(String value) {

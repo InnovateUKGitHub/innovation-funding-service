@@ -127,7 +127,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Market opportunity", model.getQuestionShortName());
         assertEquals("1. What is the business opportunity that this project addresses?", model.getQuestionName());
         assertEquals("Value 1", model.getQuestionResponse());
-        assertFalse(model.isRequireScore());
+        assertTrue(model.isRequireScore());
         assertTrue(model.isRequireFeedback());
         assertFalse(model.isRequireCategory());
         assertFalse(model.isRequireScopeConfirmation());
@@ -240,10 +240,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         competitionResource.setAssessmentEndDate(LocalDateTime.now().plusDays(4));
 
         questionResources.get(QUESTION_ID).setShortName("Market opportunity");
-        questionResources.get(QUESTION_ID).setNeedingAssessorScore(false);
-        questionResources.get(QUESTION_ID).setNeedingAssessorFeedback(true);
-        questionResources.get(QUESTION_ID).setAssessorGuidanceQuestion("Guidance for assessing blah");
-        questionResources.get(QUESTION_ID).setAssessorGuidanceAnswer("Your answer should be based upon the following...");
         questionResources.get(APPLICATION_DETAILS_QUESTION_ID).setShortName("Application details");
     }
 

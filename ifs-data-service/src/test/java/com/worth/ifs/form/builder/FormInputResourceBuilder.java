@@ -1,8 +1,7 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.domain.FormInputScope;
 import com.worth.ifs.form.resource.FormInputResource;
 
 import java.util.List;
@@ -55,5 +54,9 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
 
     public FormInputResourceBuilder withPriority(Integer... priorities) {
         return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
+    }
+
+    public FormInputResourceBuilder withScope(FormInputScope... scopes) {
+        return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 }

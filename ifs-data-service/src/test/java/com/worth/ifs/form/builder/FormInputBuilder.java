@@ -3,6 +3,7 @@ package com.worth.ifs.form.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputScope;
 import com.worth.ifs.form.domain.FormInputType;
 
 import java.util.List;
@@ -51,5 +52,9 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
 
     public FormInputBuilder withPriority(Integer... priorities) {
         return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
+    }
+
+    public FormInputBuilder withScope(FormInputScope... scopes) {
+        return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 }

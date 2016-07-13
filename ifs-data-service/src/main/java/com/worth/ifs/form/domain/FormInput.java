@@ -4,18 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -72,6 +61,10 @@ public class FormInput{
 
     @NotNull
     private Integer priority;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private FormInputScope scope;
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -190,5 +183,13 @@ public class FormInput{
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public FormInputScope getScope() {
+        return scope;
+    }
+
+    public void setScope(FormInputScope scope) {
+        this.scope = scope;
     }
 }

@@ -1,5 +1,7 @@
 package com.worth.ifs.form.resource;
 
+import com.worth.ifs.form.domain.FormInputScope;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +20,7 @@ public class FormInputResource {
     private String guidanceQuestion;
     private String guidanceAnswer;
     private Integer priority;
+    private FormInputScope scope;
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
@@ -141,6 +144,14 @@ public class FormInputResource {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public FormInputScope getScope() {
+        return scope;
+    }
+
+    public void setScope(FormInputScope scope) {
+        this.scope = scope;
     }
 }
 

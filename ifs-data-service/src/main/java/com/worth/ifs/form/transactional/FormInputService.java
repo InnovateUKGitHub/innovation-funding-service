@@ -21,7 +21,6 @@ public interface FormInputService {
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
     ServiceResult<FormInputResource> findFormInput(Long id);
 
-
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
     ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId);
 

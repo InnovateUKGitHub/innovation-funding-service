@@ -50,8 +50,8 @@ public class AssessmentFeedbackModelPopulator {
     public AssessmentFeedbackViewModel populateModel(final ApplicationResource application, final Long questionId, final AssessmentFeedbackResource assessmentFeedback) {
         final CompetitionResource competition = getCompetition(application.getCompetition());
         final QuestionResource question = getQuestion(questionId);
-        final boolean requireScore = question.isNeedingAssessorScore();
-        final boolean requireFeedback = question.isNeedingAssessorFeedback();
+        final boolean requireScore = true;
+        final boolean requireFeedback = true;
         final boolean requireCategory = "Scope".equals(question.getShortName());
         final boolean requireScopeConfirmation = "Scope".equals(question.getShortName());
         final List<FormInputResource> questionFormInputs = getQuestionFormInputs(questionId);
@@ -74,11 +74,11 @@ public class AssessmentFeedbackModelPopulator {
             final boolean appendixResponseExists = appendixResponse != null;
             if (appendixResponseExists) {
                 final FileDetailsViewModel appendixDetails = new FileDetailsViewModel(appendixResponse.getFilename(), appendixResponse.getFilesizeBytes());
-                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), questionResponseValue, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, question.getAssessorGuidanceQuestion(), question.getAssessorGuidanceAnswer(), feedbackWordsLimit, feedbackWordsRemaining, true, appendixDetails);
+                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), questionResponseValue, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, "Guidance for assessing blah", "Your answer should be based upon the following...", feedbackWordsLimit, feedbackWordsRemaining, true, appendixDetails);
             }
         }
 
-        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), questionResponseValue, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, question.getAssessorGuidanceQuestion(), question.getAssessorGuidanceAnswer(), feedbackWordsLimit, feedbackWordsRemaining);
+        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), questionResponseValue, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, "Guidance for assessing blah", "Your answer should be based upon the following...", feedbackWordsLimit, feedbackWordsRemaining);
     }
 
     private CompetitionResource getCompetition(final Long competitionId) {
