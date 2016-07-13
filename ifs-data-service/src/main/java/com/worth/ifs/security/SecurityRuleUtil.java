@@ -9,14 +9,16 @@ import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 
-import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
-import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 
 public class SecurityRuleUtil {
 
     public static boolean isCompAdmin(UserResource user) {
         return hasRole(user, COMP_ADMIN);
+    }
+
+    public static boolean isProjectFinanceUser(UserResource user) {
+        return hasRole(user, PROJECT_FINANCE);
     }
 
     public static boolean isSystemMaintenanceUser(UserResource user) {

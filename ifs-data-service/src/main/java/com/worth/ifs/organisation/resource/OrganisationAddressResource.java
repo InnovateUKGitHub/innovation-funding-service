@@ -3,6 +3,8 @@ package com.worth.ifs.organisation.resource;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class OrganisationAddressResource {
     private Long id;
@@ -51,5 +53,31 @@ public class OrganisationAddressResource {
 
     public void setOrganisation(Long organisation) {
         this.organisation = organisation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrganisationAddressResource that = (OrganisationAddressResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(organisation, that.organisation)
+                .append(address, that.address)
+                .append(addressType, that.addressType)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(organisation)
+                .append(address)
+                .append(addressType)
+                .toHashCode();
     }
 }
