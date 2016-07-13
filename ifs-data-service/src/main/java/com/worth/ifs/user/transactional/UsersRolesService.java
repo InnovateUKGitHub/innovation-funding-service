@@ -3,7 +3,6 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import org.springframework.security.access.prepost.PostAuthorize;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface UsersRolesService {
     @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByIds(final Long[] ids);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(final Long applicationId);
 
     @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)

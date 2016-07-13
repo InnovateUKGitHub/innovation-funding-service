@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  */
 public interface ApplicationService {
 
-    @PreAuthorize("hasAuthority('applicant') || hasAuthority('system_registration')")
+    @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
