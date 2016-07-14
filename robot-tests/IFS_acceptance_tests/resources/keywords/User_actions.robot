@@ -387,6 +387,11 @@ Delete the emails from both test mailboxes
     Delete All Emails
     close mailbox
 
+Delete the emails from the main test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+
+
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
     Wait Until Page Contains Element    link=terms and conditions
