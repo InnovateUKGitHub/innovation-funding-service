@@ -6,7 +6,7 @@ import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.form.BankDetailsForm;
@@ -25,10 +25,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
-import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
 /**
  * This controller will handle all requests that are related to project bank details.
@@ -64,24 +63,23 @@ public class BankDetailsController extends AddressLookupBaseController {
     @RequestMapping(method = RequestMethod.POST)
     public String updateBankDetails(Model model,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
-                                    BindingResult bindingResult,
+                                    @SuppressWarnings("unused") BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
                                     @PathVariable("projectId") final Long projectId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectResource projectResource = projectService.getById(projectId);
+
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-
-        if(hasBindingErrors(form, bindingResult)){
-            form.setBindingResult(bindingResult);
-            form.setObjectErrors(bindingResult.getAllErrors());
-            return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
-        }
-
         OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
 
         BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource.getId(), organisationAddressResource, form);
         ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
-        return handleErrorsOrRedirectToProjectOverview("", projectId, model, form, bindingResult, updateResult, () -> bankDetails(model, projectId, loggedInUser, form));
+
+        if (updateResult.isFailure()) {
+            validationHandler.addAnyErrors(updateResult, asGlobalErrors());
+            return bankDetails(model, projectId, loggedInUser, form);
+        }
+
+        return redirectToBankDetails(projectId);
     }
 
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
@@ -206,21 +204,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         }
 
         return bankDetailsViewModel;
-    }
-
-    private String handleErrorsOrRedirectToProjectOverview(
-            String fieldName, long projectId, Model model,
-            BindingResultTarget form, BindingResult bindingResult,
-            ServiceResult<?> result,
-            Supplier<String> viewSupplier) {
-
-        if (result.isFailure()) {
-            bindAnyErrorsToField(result, fieldName, bindingResult, form);
-            model.addAttribute(FORM_ATTR_NAME, form);
-            return viewSupplier.get();
-        }
-
-        return redirectToBankDetails(projectId);
     }
 
     private String redirectToBankDetails(long projectId) {

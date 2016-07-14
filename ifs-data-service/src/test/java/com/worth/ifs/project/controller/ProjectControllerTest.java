@@ -12,6 +12,7 @@ import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,10 @@ import java.util.List;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
@@ -35,6 +39,21 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
+
+    private MonitoringOfficerResource monitoringOfficerResource;
+
+    @Before
+    public void setUp() {
+
+        monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+    }
 
     @Override
     protected ProjectController supplyControllerUnderTest() {
@@ -164,21 +183,53 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
+    public void saveMOWhenErrorWhistSaving() throws Exception {
+
+        Long projectId = 1L;
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(monitoringOfficerResource)))
+                .andExpect(status().isBadRequest());
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+        // Ensure that notification is not sent when there is error whilst saving
+        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMOWhenUnableToSendNotifications() throws Exception {
+
+        Long projectId = 1L;
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(monitoringOfficerResource)))
+                .andExpect(status().isInternalServerError());
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+
+    }
+
+    @Test
     public void saveMonitoringOfficer() throws Exception {
 
         Long projectId = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withId(null)
-                .withProject(projectId)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-
+        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+                thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
@@ -186,6 +237,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk());
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
 
     }
 
