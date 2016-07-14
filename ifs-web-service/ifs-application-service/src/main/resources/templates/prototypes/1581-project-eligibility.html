@@ -25,6 +25,12 @@
 	
 	<hr />
 
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="success-alert">
+			The partner finance eligibility has been approved
+		</div>
+	</th:block>
+
 	<h2 class="heading-medium">Finances overview</h2>
 
 	<div class="table-overflow">
@@ -139,7 +145,42 @@
 		    </label>
 	    </div>
 
-	    <input class="button" type="submit" value="Approve eligible costs" />
+	    <input class="button" data-js-modal="approve-eligibility" type="submit" value="Approve eligible costs" />
+
+	    <div class="approve-eligibility" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Approve eligible costs</h2>
+
+				<p>This will approve the applicants project costs.</p>
+
+				<form>
+
+					<div class="form-group">
+		                <label for="rag-rating" class="form-label">Please select the RAG rating before approving</label>
+		                <select name="rag-rating" id="rag-rating" class="form-control width-medium">
+		                	<option value="Green">Green</option>
+		                	<option value="Amber">Amber</option>
+		                	<option value="Red">Red</option>
+		                </select>
+		            </div>
+
+					<hr />
+
+		        	<div class="alignright-button">
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+						<input type="hidden" id="status" name="status" value="approved" />
+
+		        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
+		        	</div>
+
+		        </form>
+
+	        </div>
+	    </div>
 	
 	</form>
 

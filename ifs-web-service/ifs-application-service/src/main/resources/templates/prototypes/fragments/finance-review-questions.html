@@ -12,6 +12,7 @@
 					<th scope="col" id="other-source">Source of funding</th>
 					<th scope="col" id="other-date">Date secured</th>
 					<th scope="col" id="other-amount" class="alignright">Funding amount (&pound;)</th>
+					<th th:unless="${param.status != null and param.status[0] != 'edit-other'}">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,9 +28,13 @@
 					<td class="alignright numeric">
 						<input type="text" id="other-row-1-source" name="other-row-1-source" class="form-control width-medium" value="20,000" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-amount" />
 					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">
+						<a href="#">Remove</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>
+
 		<div class="grid-row total-cost">
 	        <div class="column-half">
 	            <span class="heading-medium">Total other funding</span>
@@ -38,6 +43,22 @@
 	            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;20,000" />
 	        </div>
 	    </div>
+
+	    <th:block th:if="${param.status != null and param.status[0] == 'edit-other'}">
+			<div class="alignright extra-margin-bottom">
+				<a href="#">Add another funder</a>
+			</div>
+		</th:block>
+		
+		<div class="alignright">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-other'}">
+				<a th:href="@{'?status=edit-other'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-other'}">
+				<a th:href="@{'?status=save-other'}" class="button">Save</a>
+			</th:block>
+		</div>
+
 	</fieldset>
 </div>
 
@@ -193,7 +214,7 @@
 		            <span class="heading-medium">Total administration support cost</span>
 		        </div>
 		        <div class="column-half alignright">
-		            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;20,000" />
+		            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;0" />
 		        </div>
 		    </div>
 		</div>
@@ -212,7 +233,7 @@
 		            <span class="heading-medium">Total administration support cost</span>
 		        </div>
 		        <div class="column-half alignright">
-		            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;20,000" />
+		            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="&pound;0" />
 		        </div>
 		    </div>
 
@@ -223,7 +244,7 @@
 			<div class="alignright">
 				<label>
 					Rate agreed with Innovate UK (%)
-					<input type="number" id="admin-support-special" name="admin-support-special" class="form-control width-medium alignright" value="£ 0" />
+					<input type="number" id="admin-support-special" name="admin-support-special" class="form-control width-medium alignright" value="&pound;0" />
 				</label>
 			</div>
 			<div class="grid-row total-cost extra-margin">
