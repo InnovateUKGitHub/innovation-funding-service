@@ -24,6 +24,6 @@ public class ProjectOtherDocumentsController {
     }
 
     private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId) {
-        return new ProjectOtherDocumentsViewModel(projectId);
+        return new ProjectOtherDocumentsViewModel(projectId, projectName);
     }
 }
