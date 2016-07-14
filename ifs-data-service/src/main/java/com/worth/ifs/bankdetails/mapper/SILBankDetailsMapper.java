@@ -25,8 +25,10 @@ public class SILBankDetailsMapper {
         return new AccountDetails(
                 bankDetailsResource.getSortCode(),
                 bankDetailsResource.getAccountNumber(),
-                bankDetailsResource.getOrganisation().getName(),
-                bankDetailsResource.getOrganisation().getCompanyHouseNumber(),
+                null,
+                null,
+                //bankDetailsResource.getOrganisationName(), (to be added on another branch)
+                //bankDetailsResource.getOrganisationCompanyHouseNumber(), (to be added on another branch)
                 address
         );
     }

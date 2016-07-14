@@ -4,11 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class AccountDetails {
-    String sortcode;
-    String accountNumber;
-    String companyName;
-    String registrationNumber;
-    Address address;
+    private String sortcode;
+    private String accountNumber;
+    private String companyName;
+    private String registrationNumber;
+    private Address address;
 
     public AccountDetails(String sortcode, String accountNumber, String companyName, String registrationNumber, Address address) {
         this.sortcode = sortcode;
@@ -16,6 +16,9 @@ public class AccountDetails {
         this.companyName = companyName;
         this.registrationNumber = registrationNumber;
         this.address = address;
+    }
+
+    public AccountDetails() {
     }
 
     public String getSortcode() {

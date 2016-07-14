@@ -2,7 +2,6 @@ package com.worth.ifs.bankdetails.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -29,7 +28,7 @@ public class BankDetailsResource {
     private OrganisationAddressResource organisationAddress;
 
     @NotNull(message = "Organisation id is mandatory")
-    private OrganisationResource organisation;
+    private Long organisation;
 
     public Long getId() {
         return id;
@@ -71,11 +70,11 @@ public class BankDetailsResource {
         this.organisationAddress = organisationAddressResource;
     }
 
-    public OrganisationResource getOrganisation() {
+    public Long getOrganisation() {
         return organisation;
     }
 
-    public void setOrganisation(OrganisationResource organisation) {
+    public void setOrganisation(Long organisation) {
         this.organisation = organisation;
     }
 

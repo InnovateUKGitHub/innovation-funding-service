@@ -6,9 +6,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.List;
 
 public class ValidationResult {
-    boolean checkPassed;
-    String iban;
-    List<Condition> conditions;
+    private boolean checkPassed;
+    private String iban;
+    private List<Condition> conditions;
 
     public boolean isCheckPassed() {
         return checkPassed;

@@ -4,12 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Address {
-    String organisation;
-    String buildingName;
-    String street;
-    String locality;
-    String town;
-    String postcode;
+    private String organisation;
+    private String buildingName;
+    private String street;
+    private String locality;
+    private String town;
+    private String postcode;
 
     public Address(String organisation, String buildingName, String street, String locality, String town, String postcode) {
         this.organisation = organisation;
@@ -18,6 +18,9 @@ public class Address {
         this.locality = locality;
         this.town = town;
         this.postcode = postcode;
+    }
+
+    public Address() {
     }
 
     public String getOrganisation() {
