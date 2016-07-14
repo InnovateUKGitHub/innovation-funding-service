@@ -1,5 +1,6 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
+import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -34,6 +35,8 @@ public class ProjectOtherDocumentsController {
 
         ProjectResource project = projectService.getById(projectId);
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
-                null, null, false, asList("Partner Org 1", "Partner Org 2", "Partner Org 3"));
+                new FileDetailsViewModel("file1.pdf", 1005), new FileDetailsViewModel("file2.pdf", 2534),
+                false,
+                asList("Partner Org 1", "Partner Org 2", "Partner Org 3"));
     }
 }
