@@ -136,3 +136,20 @@ include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-pro
 
 ====== Curl Example
 include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]
+
+=== Update Bank Details
+==== Success
+===== Request
+include::{snippets}/project/update-banks-detail/http-request.adoc[]
+include::{snippets}/project/update-banks-detail/path-parameters.adoc[]
+include::{snippets}/project/update-banks-detail/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/update-banks-detail/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/update-banks-detail/curl-request.adoc[]
+
+==== Failure cases
+===== Update Bank Details with invalid input
+include::{snippets}/project/update-banks-detail-with-invalid-details-returns-errors/http-response.adoc[]
