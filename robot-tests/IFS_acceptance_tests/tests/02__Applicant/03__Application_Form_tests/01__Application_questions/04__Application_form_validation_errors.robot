@@ -83,7 +83,7 @@ Duration field client side
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
     Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
-    And the applicant should not see the validation error any more
+    And the applicant should not see the validation error of the duration any more
 
 Application details server side
     [Documentation]    INFUND-2843
@@ -151,3 +151,11 @@ Applicant goes to the application details page of the Robot application
 the user enters some text in the text area
     Input Text    css=#form-input-11 .editor    Test text
     Mouse Out    css=#form-input-11 .editor
+
+the applicant should not see the validation error of the duration any more
+    Focus    css=.app-submit-btn
+    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error    mouse out    css=.editor
+    Focus    css=.app-submit-btn
+    sleep    300ms
+    Wait Until Page Does Not Contain    Please enter a valid value
