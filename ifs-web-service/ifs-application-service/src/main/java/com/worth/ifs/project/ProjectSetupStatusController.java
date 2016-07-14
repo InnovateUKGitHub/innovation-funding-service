@@ -7,6 +7,8 @@ import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
@@ -40,6 +42,9 @@ public class ProjectSetupStatusController {
 
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
+
+    @Autowired
+    private ApplicationFinanceRestService financeService;
 	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
@@ -61,7 +66,9 @@ public class ProjectSetupStatusController {
         RestResult<BankDetailsResource> existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisation.getId());
         Optional<BankDetailsResource> bankDetails = existingBankDetails.toOptionalIfNotFound().getSuccessObjectOrThrowException();
 
-        boolean funded = true; // TODO: INFUND-3709 - Some partners don't need this
+        ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
+        Integer grantClaim = applicationFinance.getGrantClaimPercentage();
+        boolean funded = grantClaim != null && grantClaim > 0;
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded);
     }

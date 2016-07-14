@@ -25,6 +25,12 @@
 	
 	<hr />
 
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="success-alert">
+			The partner finance eligibility has been approved
+		</div>
+	</th:block>
+
 	<h2 class="heading-medium">Finances overview</h2>
 
 	<div class="table-overflow">
@@ -50,19 +56,45 @@
 		</table>
 	</div>
 
-	<div class="extra-margin">
+	<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'approved'}">
 		<a href="#">Change % grant</a>
 	</div>
+	
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="panel-indent">
+			<h3 class="heading-medium no-margin-top">% Grant has been reduced from 55% to 40% </h3>
+			<ul>
+				<li>Funding sought - &pound;180,399</li>
+				<li>Funding granted - &pound;160,000</li>
+			</ul>
+		</div>
+	</th:block>
 
 	<form>
 
-		<h3 class="heading-medium">Project finance overview</h3>
 
-		<p>These finances where initially submitted at the application stage. All changes made to the finances are will be viewable by the applicants as soon as the changes are saved.</p>
+		<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
-		<p>All changes must be discussed with the applicant, by raising queries through IFS, before they are made.</p>
+			<h3 class="heading-medium">Project finance overview</h3>
 
-		<a href="#">Review all changes to project finances</a>
+			<p>These finances where initially submitted at the application stage. All changes made to the finances are will be viewable by the applicants as soon as the changes are saved.</p>
+
+			<p>All changes must be discussed with the applicant, by raising queries through IFS, before they are made.</p>
+
+			<a href="#">Review all changes to project finances</a>
+
+		</th:block>
+
+
+		<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+			
+			<h3 class="heading-medium">Detailed finances</h3>
+
+			<p>These finances where originally submitted at the application stage by the applicant, they include all changes made during the eligibility checks.</p>
+
+			<a href="/prototypes/1581-changes-finances">View changes to finances</a>
+
+		</th:block>
 
 		<div class="collapsible section-overview extra-margin">
 	        
@@ -127,26 +159,66 @@
 	    <div class="extra-margin">
 	    	<a href="#" class="button button-secondary">Queries</a>
 	    </div>
+		
+		
+		<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
-	    <h3 class="heading-medium">Approve eligible costs</h3>
-	    <p>After any required alterations have been made, eligable costs should be approved.</p>
-	    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+		    <h3 class="heading-medium">Approve eligible costs</h3>
+		    <p>After any required alterations have been made, eligable costs should be approved.</p>
+		    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
 
-	    <div class="form-group">
-	    	<label class="block-label" for="costs-reviewed">
-		      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
-		     	These funding costs have been reviewed and are acceptable
-		    </label>
-	    </div>
+		    <div class="form-group">
+		    	<label class="block-label" for="costs-reviewed">
+			      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
+			     	These funding costs have been reviewed and are acceptable
+			    </label>
+		    </div>
 
-	    <input class="button" type="submit" value="Approve eligible costs" />
+	    	<input class="button" data-js-modal="approve-eligibility" type="submit" value="Approve eligible costs" />
+
+		    <div class="approve-eligibility" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+
+					<h2 class="heading-medium no-margin">Approve eligible costs</h2>
+
+					<p>This will approve the applicants project costs.</p>
+
+					<form>
+
+						<div class="form-group">
+			                <label for="rag-rating" class="form-label">Please select the RAG rating before approving</label>
+			                <select name="rag-rating" id="rag-rating" class="form-control width-medium">
+			                	<option value="Green">Green</option>
+			                	<option value="Amber">Amber</option>
+			                	<option value="Red">Red</option>
+			                </select>
+			            </div>
+
+						<hr />
+
+			        	<div class="alignright-button">
+							
+							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+							<input type="hidden" id="status" name="status" value="approved" />
+
+			        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
+			        	</div>
+
+			        </form>
+
+		        </div>
+		    </div>
+
+		</th:block>
 	
 	</form>
 
 	<hr />
 
 	<div class="extra-margin">
-		<a href="/prototypes/1199-project-finances" class="button button-secondary">Save and return to finance checks</a>
+		<a href="/prototypes/1199-project-finances" class="button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
