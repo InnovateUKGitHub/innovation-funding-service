@@ -7,6 +7,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
@@ -71,6 +72,9 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
     ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+ 	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(final Long projectId, final Long userId);
+
+    @PreAuthorize("hasPermission(#monitoringOfficer.project, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
+    ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
 }
