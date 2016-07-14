@@ -26,7 +26,7 @@ Day field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_day    32
     Then the user should see an error    Please enter a valid date
@@ -87,7 +87,7 @@ Duration field client side
 
 Application details server side
     [Documentation]    INFUND-2843
-    [Tags]    Pending
+    [Tags]    Pending    HappyPath
     # pending INFUND-3999
     Given the user should see the text in the page    Application details
     When the user enters text to a text field    id=application_details-title    ${EMPTY}
