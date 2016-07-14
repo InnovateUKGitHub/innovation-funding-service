@@ -3,10 +3,12 @@ package com.worth.ifs.project;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,4 +48,16 @@ public interface ProjectService {
     Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
 
     ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
+
+    ByteArrayResource getCollaborationAgreementFile(Long projectId);
+
+    FileEntryResource getCollaborationAgreementFileDetails(Long projectId);
+
+    ByteArrayResource getExploitationPlanFile(Long projectId);
+
+    FileEntryResource getExploitationPlanFileDetails(Long projectId);
+
+    ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId);
+
+    ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 }
