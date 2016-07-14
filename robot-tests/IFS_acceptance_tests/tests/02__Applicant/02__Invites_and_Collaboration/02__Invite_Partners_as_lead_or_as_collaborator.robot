@@ -106,14 +106,14 @@ Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
     [Tags]    Email
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
+    When guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
     [Tags]    Email
-    #Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
+    #Given guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=View team members and add collaborators
@@ -190,7 +190,7 @@ the applicant enters valid inputs
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Fannie May
     Input Text    name=organisations[1].invites[0].personName    Adrian Booth
-    Input Text    name=organisations[1].invites[0].email    worth.email.test+inviteorg1@gmail.com
+    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg1@gmail.com
     focus    jquery=button:contains("Save Changes")
     Click Element    jquery=button:contains("Save Changes")
 
@@ -205,7 +205,7 @@ The lead applicant should have the correct status
 the user adds new collaborator
     the user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    worth.email.test+inviteorg2@gmail.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    300ms
 

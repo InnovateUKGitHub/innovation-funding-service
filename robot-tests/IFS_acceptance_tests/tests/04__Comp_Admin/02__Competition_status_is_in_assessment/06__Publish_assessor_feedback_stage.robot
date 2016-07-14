@@ -73,13 +73,13 @@ Successful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email
     # pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
-    Then open mailbox and verify the content    ${TEST_MAILBOX_ONE}    Following the success of your application
+    Then open mailbox and verify the content    worth.email.test@gmail.com   testtest1    Following the success of your application
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email
     # Pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
-    Then open mailbox and verify the content    ${TEST_MAILBOX_TWO}    Following the submission of your application
+    Then open mailbox and verify the content    worth.email.test.two@gmail.com    testtest1     Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup

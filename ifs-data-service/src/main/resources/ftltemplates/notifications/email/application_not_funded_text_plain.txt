@@ -1,3 +1,5 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
 Thank you for submitting your application '${applicationName}' for funding to Innovate UK for the ${competitionName} competition.
@@ -15,10 +17,4 @@ Competitions Team
 Innovate UK
 Tel: 0300 321 4357
 Email: competitions@innovateuk.gov.uk
-
-North Star House
-North Star Avenue
-Swindon
-Wiltshire
-SN2 1JF
-© Crown copyright
+</@layout.defaultPlainText>

@@ -1,3 +1,5 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
 ${leadApplicantTitle} ${leadApplicant} at ${leadOrganisation} has invited you/${inviteOrganisationName} to participate in their project for the ${competitionName} competition.
@@ -10,10 +12,4 @@ ${inviteUrl}
 
 Competitions Team,
 Innovate UK
-
-North Star House
-North Star Avenue
-Swindon
-Wiltshire
-SN2 1JF
-© Crown copyright
+</@layout.defaultPlainText>

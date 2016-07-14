@@ -1,3 +1,5 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
 Dear User 2,
 
 Application number: ${applicationNumber}
@@ -13,3 +15,4 @@ Yours sincerely,
 
 Competitions Team
 Innovate UK
+</@layout.defaultPlainText>

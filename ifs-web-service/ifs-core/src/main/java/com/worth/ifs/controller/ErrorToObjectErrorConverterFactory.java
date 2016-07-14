@@ -1,5 +1,6 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.commons.error.Error;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
@@ -11,13 +12,13 @@ import java.util.Optional;
 public class ErrorToObjectErrorConverterFactory {
 
     public static ErrorToObjectErrorConverter toField(String field) {
-        return e -> Optional.of(new FieldError("", field, e.getErrorMessage()));
+        return e -> Optional.of(newFieldError(e, field));
     }
 
     public static ErrorToObjectErrorConverter fieldErrorsToFieldErrors() {
         return e -> {
             if (e.isFieldError()) {
-                return Optional.of(new FieldError("", e.getFieldName(), null, true, new String[]{e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage()));
+                return Optional.of(newFieldError(e, e.getFieldName()));
             }
             return Optional.empty();
         };
@@ -34,7 +35,7 @@ public class ErrorToObjectErrorConverterFactory {
     public static ErrorToObjectErrorConverter mappingErrorKeyToField(String errorKey, String targetField) {
         return e -> {
             if (errorKey.equals(e.getErrorKey())) {
-                return Optional.of(new FieldError("", targetField, null, true, new String[]{e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage()));
+                return Optional.of(newFieldError(e, targetField));
             }
             return Optional.empty();
         };
@@ -42,5 +43,9 @@ public class ErrorToObjectErrorConverterFactory {
 
     public static ErrorToObjectErrorConverter mappingErrorKeyToField(Enum<?> errorKey, String targetField) {
         return mappingErrorKeyToField(errorKey.name(), targetField);
+    }
+
+    private static FieldError newFieldError(Error e, String fieldName) {
+        return new FieldError("", fieldName, null, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage());
     }
 }

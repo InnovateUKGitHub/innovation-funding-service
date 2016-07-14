@@ -17,7 +17,7 @@ ${ECONOMIC_BENEFIT_URL_APPLICATION_2}    ${SERVER}/application/2/form/question/4
 ${APPLICATION_3_OVERVIEW_URL}    ${SERVER}/application/3
 ${ECONOMIC_BENEFIT_URL_APPLICATION_3}    ${SERVER}/application/3/form/question/4
 ${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
-${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
+${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
 ${LOG_OUT}        ${LOGIN_URL}/Logout
 ${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/section/2/
@@ -56,9 +56,9 @@ ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/24/form/
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
 ${SUCCESSFUL_PROJECT_PAGE}    ${server}/project/4
-${project_start_date_page}       ${server}/project/4/details/start-date
-${project_address_page}          ${server}/project/4/details/project-address
-${project_manager_page}          ${server}/project/4/details/start-date
+${project_start_date_page}    ${server}/project/4/details/start-date
+${project_address_page}    ${server}/project/4/details/project-address
+${project_manager_page}    ${server}/project/4/details/start-date
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
@@ -82,7 +82,9 @@ ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-${TEST_MAILBOX_ONE}    worth.email.test@gmail.com
-${TEST_MAILBOX_TWO}    worth.email.test.two@gmail.com
+${TEST_MAILBOX_ONE}    worth.email.test
+${TEST_MAILBOX_TWO}    worth.email.test.two
+${test_mailbox_one_password}    testtest1
+${test_mailbox_two_password}    testtest1
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
-${unsuccessful_login_message}       Your sign in was unsuccessful because of the following issue(s)
+${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)

@@ -85,6 +85,12 @@ table{
 			display: table-row;
 		}
 	}
+
+	tr.item-changed{
+		td{
+			font-weight: bold;
+		}
+	}
 }
 
 .assessment-panel-start{

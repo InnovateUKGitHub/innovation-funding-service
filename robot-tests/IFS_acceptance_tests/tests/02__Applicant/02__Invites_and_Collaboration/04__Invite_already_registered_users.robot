@@ -19,8 +19,8 @@ The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]
     [Setup]    Delete the emails from both test mailboxes
-    Given we create a new user    worth.email.test+invitedregistered@gmail.com
-    Given the lead applicant invites a registered user    worth.email.test+invite2@gmail.com    worth.email.test+invitedregistered@gmail.com
+    Given we create a new user    ${test_mailbox_one}+invitedregistered@gmail.com
+    Given the lead applicant invites a registered user    ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
     When the user opens the mailbox and accepts the invitation to collaborate
     Then the user should see the text in the page    We've found an existing user account with the invited email address
 
@@ -28,7 +28,7 @@ The user clicks the login link
     [Documentation]    INFUND-1458
     [Tags]
     When the user clicks the button/link    link=Click here to sign in
-    And the guest user inserts user email & password    worth.email.test+invitedregistered@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
 

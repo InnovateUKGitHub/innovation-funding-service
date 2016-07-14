@@ -35,7 +35,8 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((uid, user) -> setField("uid", uid, user), uids);
     }
 
-    public UserResourceBuilder withRolesGlobal(List<RoleResource>... globalRoles) {
+    @SafeVarargs
+    public final UserResourceBuilder withRolesGlobal(List<RoleResource>... globalRoles) {
         return withArray((roles, user) -> user.setRoles(roles), globalRoles);
     }
 
@@ -67,11 +68,13 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((password, user) -> setField("password", password, user), passwords);
     }
 
-    public UserResourceBuilder withProcessRoles(List<Long>... processRoles) {
+    @SafeVarargs
+    public final UserResourceBuilder withProcessRoles(List<Long>... processRoles) {
         return withArray((processRoleList, user) -> user.setProcessRoles(processRoleList), processRoles);
     }
 
-    public UserResourceBuilder withOrganisations(List<Long>... organisationIds) {
+    @SafeVarargs
+    public final UserResourceBuilder withOrganisations(List<Long>... organisationIds) {
         return withArray((organisationIdList, user) -> user.setOrganisations(organisationIdList), organisationIds);
     }
 }

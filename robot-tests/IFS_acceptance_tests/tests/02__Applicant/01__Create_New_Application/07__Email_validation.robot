@@ -103,7 +103,7 @@ User can not login with the invalid email
 Valid account creation
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -114,7 +114,7 @@ Valid account creation
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]
+    [Tags]    HappyPath
     Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
