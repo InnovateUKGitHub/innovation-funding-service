@@ -226,7 +226,7 @@ else
     postcodeLookUpImplemented='YES'
 fi
 sendMailLocally=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsSendMailLocally'  | cut -d "=" -f2 | sed 's/"//g'`
-if [ $sendMailLocally='false' ]
+if [ $sendMailLocally = 'false' ]
 then
     echo "Sending mail locally not implemented"
     unset localMailSendingImplemented
@@ -234,7 +234,7 @@ else
     echo "Sending mail locally is implemented. The tests will expect emails to be sent out to all whitelisted recipients. Please take care not to spam anyone!"
     localMailSendingImplemented='YES'
 fi
-testMailboxOneExists=`sed '/^\#/d' dev-build.gradle | grep 'ifsTestMailboxOne'`
+testMailboxOneExists=`sed '/^\#/d' dev-build.gradle | grep 'ifsTestMailOne'`
 if [ "$testMailboxOneExists" ]
 then
     echo "It looks like you've configured your own test mailboxes, so using those. If you see connection errors, remember to allow less secure access!"

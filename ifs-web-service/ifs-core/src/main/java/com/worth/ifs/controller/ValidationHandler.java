@@ -11,9 +11,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static com.worth.ifs.util.CollectionFunctions.combineLists;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  * A helper class that wraps the standard BindingResult and allows us to more easily work with the various mechanisms that
@@ -54,7 +52,7 @@ public class ValidationHandler {
     }
 
     /**
-     * If there are currently errors, fail immediately invoking the given failureHandler.  Otehrwise, continue to process
+     * If there are currently errors, fail immediately invoking the given failureHandler.  Otherwise, continue to process
      * the successHandler.  Assumption is that we would normally be returning view names from the given suppliers.
      *
      * @param failureHandler

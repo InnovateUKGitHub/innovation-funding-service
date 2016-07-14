@@ -27,6 +27,7 @@ Day field client side
     ...
     ...    INFUND-2843
     [Tags]
+    [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_day    32
     Then the user should see an error    Please enter a valid date
     When the user enters text to a text field    id=application_details-startdate_day    0
@@ -43,6 +44,7 @@ Month field client side
     ...
     ...    INFUND-2843
     [Tags]
+    [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_month    0
     Then the user should see an error    Please enter a valid date
     When the user enters text to a text field    id=application_details-startdate_month    13
@@ -98,6 +100,7 @@ Application details server side
     And the user should see an error    Please enter a future date
     And the user should see an error    Your project should last between 1 and 36 months
     And the user should see the element    css=.error-summary-list
+    [Teardown]    And the user enters text to a text field    id=application_details-title    Robot test application
 
 Empty text area
     [Documentation]    INFUND-43
@@ -113,6 +116,8 @@ the applicant should not see the validation error any more
     Focus    css=.app-submit-btn
     run keyword and ignore error    mouse out    css=input
     Run Keyword And Ignore Error    mouse out    css=.editor
+    Focus    css=.app-submit-btn
+    sleep    300ms
     wait until element is not visible    css=.error-message
 
 the applicant inserts a valid date

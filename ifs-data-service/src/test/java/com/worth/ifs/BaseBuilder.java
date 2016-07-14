@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.getId;
+
 /**
  * A base class from which concrete builders can extend
  *
@@ -37,6 +39,15 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         List<BiConsumer<Integer, T>> newActions = new ArrayList<>(amendActions);
         newActions.add(multiAmendFunction);
         return createNewBuilderWithActions(newActions);
+    }
+
+    @Override
+    public S withIdBased(BiConsumer<Long, T> multiAmendFunction) {
+        BiConsumer<Integer, T> wrapperFunction = (i, t) -> {
+            Long id = getId(t);
+            multiAmendFunction.accept(id, t);
+        };
+        return with(wrapperFunction);
     }
 
     public <R> S withArray(BiConsumer<R, T> amendFunction, R[] values) {

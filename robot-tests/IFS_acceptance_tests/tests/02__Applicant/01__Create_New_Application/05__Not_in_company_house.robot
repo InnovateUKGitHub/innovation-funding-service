@@ -16,7 +16,7 @@ ${organisation_name}    Top of the Popps
 *** Test Cases ***
 Not in Companies House company link
     [Documentation]    INFUND-888
-    [Tags]    Applicant    HappyPath
+    [Tags]    HappyPath
     Given the user navigates to the page    ${find_org_on_company_house_url}
     And the user should see the text in the page    Not on Companies House?
     When the user clicks the button/link    name=not-in-company-house
@@ -25,7 +25,7 @@ Not in Companies House company link
 
 The address can be manually added and this persists on refresh
     [Documentation]    INFUND-888
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    name=manual-address
     Then the user should see the text in the page    Street
     And the user should see the text in the page    Town
@@ -36,7 +36,7 @@ The address can be manually added and this persists on refresh
 
 The address can be manually added and the details pass to the confirmation page
     [Documentation]    INFUND-888
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    The East Wing
     And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine2    Popple Manor
     And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
