@@ -1,5 +1,7 @@
 package com.worth.ifs.sil.email.controller;
 
+import com.worth.ifs.bankdetails.resource.experian.AccountDetails;
+import com.worth.ifs.bankdetails.resource.experian.ValidationResult;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
@@ -154,5 +156,15 @@ public class SimpleEmailEndpointController {
         }
 
         return restSuccess(ACCEPTED);
+    }
+
+    @RequestMapping(value="/experianValidate", method = POST)
+    public RestResult<ValidationResult> experianValidate(@RequestBody AccountDetails accountDetails){
+        return null;
+    }
+
+    @RequestMapping(value="/experianVerify", method = POST)
+    public RestResult<Void> experianVerify(@RequestBody AccountDetails accountDetails){
+        return null;
     }
 }
