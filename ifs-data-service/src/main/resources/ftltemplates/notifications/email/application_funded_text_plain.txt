@@ -1,3 +1,5 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
 We are pleased to inform you that your application ${applicationName} has been successful in achieving funding in the competition ${competitionName}.
@@ -15,10 +17,4 @@ Yours sincerely,
 
 Competitions Team
 Innovate UK
-
-North Star House
-North Star Avenue
-Swindon
-Wiltshire
-SN2 1JF
-© Crown copyright
+</@layout.defaultPlainText>

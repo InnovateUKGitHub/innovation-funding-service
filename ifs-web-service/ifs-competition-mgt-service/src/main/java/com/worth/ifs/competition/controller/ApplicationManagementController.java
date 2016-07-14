@@ -10,6 +10,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
@@ -40,11 +41,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
-import static com.worth.ifs.controller.RestFailuresToValidationErrorBindingUtils.bindAnyErrorsToField;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -105,6 +107,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
         addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         addAppendices(applicationId, responses, model);
 
+        model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
 
@@ -128,19 +131,21 @@ public class ApplicationManagementController extends AbstractApplicationControll
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("applicationId") final Long applicationId,
             @ModelAttribute("form") ApplicationForm applicationForm,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
             Model model,
-            BindingResult bindingResult,
             HttpServletRequest request) {
 
-        RestResult<FileEntryResource> uploadFileResult = uploadFormInput(applicationId, request);
-        bindAnyErrorsToField(uploadFileResult.toServiceResult(), "assessorFeedback", bindingResult, applicationForm);
+        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
 
-        if (uploadFileResult.isFailure()) {
-            model.addAttribute("form", applicationForm);
-            return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
-        }
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-        return redirectToApplicationOverview(competitionId, applicationId);
+            RestResult<FileEntryResource> uploadFileResult = uploadFormInput(applicationId, request);
+
+            return validationHandler.
+                    addAnyErrors(uploadFileResult, toField("assessorFeedback")).
+                    failNowOrSucceedWith(failureView, () -> redirectToApplicationOverview(competitionId, applicationId));
+        });
     }
 
     @RequestMapping(value = "/{applicationId}", params = "removeAssessorFeedback", method = POST)
@@ -148,22 +153,20 @@ public class ApplicationManagementController extends AbstractApplicationControll
                                              @PathVariable("applicationId") final Long applicationId,
                                              Model model,
                                              @ModelAttribute("form") ApplicationForm applicationForm,
-                                             BindingResult bindingResult,
+                                             @SuppressWarnings("unused") BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
                                              HttpServletRequest request) {
 
-        RestResult<Void> removeFileResult = assessorFeedbackRestService.removeAssessorFeedbackDocument(applicationId);
-        return handleErrorsOrRedirectToApplicationOverview(competitionId, applicationId, model, applicationForm, bindingResult, request, removeFileResult);
-    }
+        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
 
-    private String handleErrorsOrRedirectToApplicationOverview(Long competitionId, Long applicationId, Model model, ApplicationForm applicationForm, BindingResult bindingResult, HttpServletRequest request, RestResult<Void> result) {
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-        if (result.isFailure()) {
-            bindAnyErrorsToField(result.toServiceResult(), "assessorFeedback", bindingResult, applicationForm);
-            model.addAttribute("form", applicationForm);
-            return displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
-        }
+            RestResult<Void> removeFileResult = assessorFeedbackRestService.removeAssessorFeedbackDocument(applicationId);
 
-        return redirectToApplicationOverview(competitionId, applicationId);
+            return validationHandler.
+                    addAnyErrors(removeFileResult, toField("assessorFeedback")).
+                    failNowOrSucceedWith(failureView, () -> redirectToApplicationOverview(competitionId, applicationId));
+        });
     }
 
     @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)

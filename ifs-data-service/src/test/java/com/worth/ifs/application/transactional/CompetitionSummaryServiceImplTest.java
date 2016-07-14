@@ -1,5 +1,18 @@
 package com.worth.ifs.application.transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.CompletedPercentageResourceBuilder.newCompletedPercentageResource;
 import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
@@ -9,19 +22,6 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
 public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 
@@ -44,11 +44,11 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.countByCompetitionId(COMP_ID)).thenReturn(83L);
 		
-		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(COMP_ID, CREATED_AND_OPEN_STATUS_IDS)).thenReturn(newApplication().withId(1L, 2L).build(2));
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(COMP_ID, CREATED_AND_OPEN_STATUS_IDS)).thenReturn(newApplication().withId(1L, 2L).withCompletion(new BigDecimal("20"), new BigDecimal("80")).build(2));
 		when(applicationServiceMock.getProgressPercentageByApplicationId(1L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("20")).build()));
 		when(applicationServiceMock.getProgressPercentageByApplicationId(2L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()));
 		
-		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdNotIn(COMP_ID, SUBMITTED_STATUS_IDS)).thenReturn(newApplication().withId(3L, 4L).build(2));
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdNotIn(COMP_ID, SUBMITTED_STATUS_IDS)).thenReturn(newApplication().withId(3L, 4L).withCompletion(new BigDecimal("20"), new BigDecimal("80")).build(2));
 		when(applicationServiceMock.getProgressPercentageByApplicationId(3L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("20")).build()));
 		when(applicationServiceMock.getProgressPercentageByApplicationId(4L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()));
 		

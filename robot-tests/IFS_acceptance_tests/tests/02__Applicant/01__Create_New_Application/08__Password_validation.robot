@@ -31,7 +31,7 @@ Password from the blacklist
 
 Password all lower case
     [Documentation]    INFUND-1147
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567

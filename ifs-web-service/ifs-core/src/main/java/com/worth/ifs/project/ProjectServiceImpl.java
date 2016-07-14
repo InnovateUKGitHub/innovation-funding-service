@@ -106,6 +106,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId) {
+        return projectRestService.getOrganisationByProjectAndUser(projectId, userId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId) {
 
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
