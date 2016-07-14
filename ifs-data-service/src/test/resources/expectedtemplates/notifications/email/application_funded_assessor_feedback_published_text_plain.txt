@@ -7,7 +7,7 @@ Following the success of your application My Application to achieve funding in t
 
 The feedback provided by the independent assessors has been reviewed by Innovate UK.
 
-You can now view this feedback by logging onto your Innovation Funding Service dashboard at https://ifs-local-dev/dashboard.
+You can now view this feedback by signing into your Innovation Funding Service dashboard at https://ifs-local-dev/dashboard.
 
 Yours sincerely,
 

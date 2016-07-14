@@ -214,6 +214,19 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testNotifyMonitoringOfficer() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.notifyMonitoringOfficer(newMonitoringOfficerResource().withProject(123L).build()),
+                () -> {
+            verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getServiceClass() {
         return TestProjectService.class;
@@ -287,7 +300,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
             return null;
         }
-
+		
 		@Override
         public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
             return null;
@@ -295,6 +308,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
+            return null;
+        }
+		
+		
+		@Override
+        public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
             return null;
         }
 
