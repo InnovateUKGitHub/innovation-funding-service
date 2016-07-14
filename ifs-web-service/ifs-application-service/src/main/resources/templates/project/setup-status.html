@@ -31,7 +31,7 @@
         </div>
       </li>
       <!--/* ========================= Project Details ========================= */-->
-      <li th:classappend="${!model.projectDetailsSubmitted ? 'current' : 'complete'}">
+      <li th:classappend="${model.projectDetailsSubmitted ? 'complete' : 'require-action'}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -41,13 +41,14 @@
         </div>
       </li>
       <!--/* ========================= Monitoring Officer ========================= */-->
-
-      <li>
+      <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : ''}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium"><a th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a></h2>
-          <p th:unless="${param.stage == null or param.stage[0] == 'level1'}">Your Monitoring Officer for this project is Tom Evans.</p>
-          <p th:unless="${param.stage != null and param.stage[0] != 'level1'}">
+          <p th:if="${model.monitoringOfficerAssigned}">
+            Your Monitoring Officer for this project is  <th:block th:text="${model.monitoringOfficerName}" />.
+          </p>
+          <p th:unless="${model.monitoringOfficerAssigned}">
             Innovate UK will assign you a Monitoring Officer
           </p>
         </div>
@@ -60,7 +61,7 @@
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
-      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'current' : 'complete'}">
+      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'require-action' : ${model.bankDetails.isApproved ? 'complete' : 'waiting'}}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
