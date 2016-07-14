@@ -21,6 +21,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -55,6 +56,9 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
 
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
+                thenReturn(restSuccess(newApplicationFinanceResource().withGrantClaimPercentage(0).build()));
+
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
 
@@ -71,7 +75,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertFalse(viewModel.isProjectDetailsSubmitted());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
-        assertTrue(viewModel.isFunded()); // TODO: INFUND-3709 - Some partners don't need this
+        assertFalse(viewModel.isFunded());
         assertNull(viewModel.getBankDetails());
     }
 
@@ -86,6 +90,10 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
+                thenReturn(restSuccess(newApplicationFinanceResource().withGrantClaimPercentage(0).build()));
+
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
 
@@ -102,7 +110,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertTrue(viewModel.isProjectDetailsSubmitted());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
-        assertTrue(viewModel.isFunded()); // TODO: INFUND-3709 - Some partners don't need this
+        assertFalse(viewModel.isFunded());
         assertNull(viewModel.getBankDetails());
     }
 
@@ -120,6 +128,10 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerResult);
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
+                thenReturn(restSuccess(newApplicationFinanceResource().withGrantClaimPercentage(0).build()));
+
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
 
@@ -136,7 +148,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertTrue(viewModel.isProjectDetailsSubmitted());
         assertTrue(viewModel.isMonitoringOfficerAssigned());
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
-        assertTrue(viewModel.isFunded()); // TODO: INFUND-3709 - Some partners don't need this
+        assertFalse(viewModel.isFunded());
         assertNull(viewModel.getBankDetails());
     }
 
@@ -154,6 +166,10 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerResult);
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
+                thenReturn(restSuccess(newApplicationFinanceResource().withGrantClaimPercentage(0).build()));
+
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
@@ -169,8 +185,61 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertTrue(viewModel.isProjectDetailsSubmitted());
         assertTrue(viewModel.isMonitoringOfficerAssigned());
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
-        assertTrue(viewModel.isFunded()); // TODO: INFUND-3709 - Some partners don't need this
+        assertFalse(viewModel.isFunded());
         assertEquals(bankDetailsResource, viewModel.getBankDetails());
     }
 
+    @Test
+    public void testViewProjectSetupStatusWithFundedPartnerOrganisation() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
+        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
+                thenReturn(restSuccess(newApplicationFinanceResource().withGrantClaimPercentage(10).build()));
+
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
+                restFailure(notFoundError(BankDetailsResource.class, 1L)));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/setup-status"))
+                .andReturn();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(viewModel.isFunded());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithNullUnfundedPartnerOrganisation() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
+        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
+                thenReturn(restSuccess(newApplicationFinanceResource().build()));
+
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
+                restFailure(notFoundError(BankDetailsResource.class, 1L)));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/setup-status"))
+                .andReturn();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertFalse(viewModel.isFunded());
+    }
 }
