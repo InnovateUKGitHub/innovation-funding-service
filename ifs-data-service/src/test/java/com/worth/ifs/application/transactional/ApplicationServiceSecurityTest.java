@@ -34,6 +34,7 @@ import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newF
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -112,10 +113,14 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
     }
 
-    @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRoles() {
+   @Test
+    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
 
-        List<UserRoleType> nonApplicantRoles = asList(UserRoleType.values()).stream().filter(type -> type != APPLICANT).collect(toList());
+        List<UserRoleType> nonApplicantRoles = asList(UserRoleType.values())
+                .stream()
+                .filter(type -> type != APPLICANT
+                        && type != SYSTEM_REGISTRATION_USER)
+                .collect(toList());
 
         nonApplicantRoles.forEach(role -> {
 
@@ -123,7 +128,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
             try {
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
-                fail("Should not have been able to create an Application without the global Applicant role");
+                fail("Should not have been able to create an Application without the global Applicant role or as a system registrar");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
