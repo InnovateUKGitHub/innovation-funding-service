@@ -36,7 +36,7 @@ public class ProjectOtherDocumentsController {
         ProjectResource project = projectService.getById(projectId);
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
                 new FileDetailsViewModel("file1.pdf", 1005), new FileDetailsViewModel("file2.pdf", 2534),
-                false,
-                asList("Partner Org 1", "Partner Org 2", "Partner Org 3"));
+                asList("Partner Org 1", "Partner Org 2", "Partner Org 3"), asList("No documents for you!"), true, false, false
+        );
     }
 }

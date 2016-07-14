@@ -16,18 +16,21 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private FileDetailsViewModel exploitationPlanFileDetails;
     private boolean otherDocumentsSubmitted;
     private List<String> partnerOrganisationNames;
-
-
+    private List<String> rejectionReasons;
+    private boolean approved;
+    private boolean leadPartner;
 
     public ProjectOtherDocumentsViewModel(Long projectId, String projectName, FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails, boolean otherDocumentsSubmitted,
-                                          List<String> partnerOrganisationNames) {
+                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, boolean otherDocumentsApproved) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.collaborationAgreementFileDetails = collaborationAgreementFileDetails;
         this.exploitationPlanFileDetails = exploitationPlanFileDetails;
         this.otherDocumentsSubmitted = otherDocumentsSubmitted;
         this.partnerOrganisationNames = partnerOrganisationNames;
+        this.rejectionReasons = rejectionReasons;
+        this.approved = otherDocumentsApproved;
+        this.leadPartner = leadPartner;
     }
 
     public Long getProjectId() {
@@ -52,10 +55,34 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isReadOnly() {
-        return !otherDocumentsSubmitted; // TODO DW - permissions
+        return !isEditable();
+    }
+
+    public boolean isEditable() {
+        return leadPartner && !otherDocumentsSubmitted && !approved; // TODO DW - permissions
     }
 
     public boolean isShowSubmitDocumentsButton() {
         return !otherDocumentsSubmitted;
+    }
+
+    public boolean isShowRejectionMessages() {
+        return !rejectionReasons.isEmpty();
+    }
+
+    public List<String> getRejectionReasons() {
+        return rejectionReasons;
+    }
+
+    public boolean isShowApprovedMessage() {
+        return approved;
+    }
+
+    public boolean isShowLeadPartnerGuidanceInformation() {
+        return leadPartner && isEditable();
+    }
+
+    public boolean isShowDocumentsBeingReviewedMessage() {
+        return otherDocumentsSubmitted && !approved;
     }
 }
