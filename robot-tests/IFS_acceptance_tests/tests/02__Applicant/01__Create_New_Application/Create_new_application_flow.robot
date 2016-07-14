@@ -104,7 +104,7 @@ Non registered users non CH route (email step)
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    HappyPath    Email
+    [Tags]    Email    HappyPath
     [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
     When the user clicks the button/link    jQuery=.button:contains("Sign in")

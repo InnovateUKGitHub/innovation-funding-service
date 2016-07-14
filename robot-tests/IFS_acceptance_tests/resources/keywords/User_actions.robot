@@ -164,7 +164,7 @@ the user should see the dropdown option selected
 the user submits the form
     Submit Form
     Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
+    Page Should Not Contain Button    something went wrong
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
@@ -210,6 +210,7 @@ The user enters text to a text field
     Wait Until Element Is Visible    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Mouse Out    ${TEXT_FIELD}
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
@@ -325,7 +326,6 @@ the user opens the mailbox and verifies the email from
     Delete All Emails
     close mailbox
 
-
 the user opens the mailbox and verifies the email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
@@ -339,7 +339,6 @@ the user opens the mailbox and verifies the email
     Capture Page Screenshot
     Delete All Emails
     close mailbox
-
 
 the user opens the mailbox and accepts the invitation to collaborate
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
@@ -519,7 +518,7 @@ the lead applicant invites a registered user
     The guest user opens the browser
 
 Open mailbox and verify the content
-    [Arguments]    ${USER}   ${PASSWORD}   ${CONTENT}
+    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
     [Documentation]    This Keyword checks the content of the 1st email in a given inbox
     Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
     ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
