@@ -86,9 +86,33 @@ table{
 		}
 	}
 
-	tr.item-changed{
-		td{
-			font-weight: bold;
+	tfoot{
+		th,td{
+			border-bottom: none;
+		}
+	}
+}
+
+
+table.project-changes{
+	tbody{
+		th{
+			font-weight: normal;
+		}
+		.item-changed{
+
+			th,td{
+				font-weight: bold;
+			}
+
+			td:first-child{
+				font-weight: normal;
+				
+				& + td{
+					font-weight: normal;
+				}
+
+			}
 		}
 	}
 }
