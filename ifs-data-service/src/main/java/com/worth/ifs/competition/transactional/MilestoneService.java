@@ -1,8 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Milestone;
-import org.springframework.security.access.prepost.PostAuthorize;
+import com.worth.ifs.competition.resource.MilestoneResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -12,5 +11,5 @@ import java.util.List;
  */
 public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<List<Milestone>> getAllMilestoneDatesByCompetitionId(final Long id);
+    ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(final Long id);
 }
