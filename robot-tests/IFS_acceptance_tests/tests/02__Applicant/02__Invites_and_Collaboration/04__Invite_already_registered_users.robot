@@ -59,6 +59,7 @@ the user enters profile details
     Wait Until Element Is Visible    id=title
     Input Text    id=firstName    Dennis
     Input Text    id=lastName    Bergkamp
+    focus         css=[name="create-account"]
     Click Element    css=[name="create-account"]
 
 the user should see the change in the view team members page

@@ -104,7 +104,8 @@ Application details server side
 
 Empty text area
     [Documentation]    INFUND-43
-    [Tags]
+    [Tags]    Pending
+    # Pending due to chromedriver
     Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
     Then the user should see an error    Please enter some text
