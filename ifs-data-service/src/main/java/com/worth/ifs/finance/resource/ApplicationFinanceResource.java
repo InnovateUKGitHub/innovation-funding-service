@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,7 +26,7 @@ public class ApplicationFinanceResource {
     private Long application;
     private Long financeFileEntry;
     private OrganisationSize organisationSize;
-    private Map<CostType, CostCategory> financeOrganisationDetails;
+    private Map<CostType, CostCategory> financeOrganisationDetails = new HashMap<>();
 
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
         if (applicationFinance != null) {

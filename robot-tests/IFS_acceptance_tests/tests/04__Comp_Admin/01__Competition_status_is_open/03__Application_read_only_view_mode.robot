@@ -14,7 +14,6 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
-${valid_pdf_excerpt}    Adobe PDF is an ideal format for electronic document distribution
 ${quarantine_warning}   This file has been quarantined by the virus scanner
 
 *** Test Cases ***
@@ -73,12 +72,12 @@ the user can see the option to upload a file on the page
 
 the user can view this file without any errors
     the user clicks the button/link         link=testing.pdf(7 KB)
-    the user should see the text in the page    ${valid_pdf_excerpt}
+    the user should not see an error in the page
     the user goes back to the previous page
 
 the user cannot see this file but gets a quarantined message
     the user clicks the button/link      link=test_quarantine.pdf(7 KB)
-    the user should not see the text in the page    ${valid_pdf_excerpt}
+    the user should not see an error in the page
     the user should see the text in the page        ${quarantine_warning}
 
 the finance summary calculations should be correct
