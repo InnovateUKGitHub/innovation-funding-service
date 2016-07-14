@@ -334,61 +334,89 @@
 					<th th:unless="${param.status != null and param.status[0] != 'edit-materials'}">&nbsp;</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td style="width: 30%">
-						<input type="text" id="material-row-1-item" name="material-row-1-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Powder" aria-labelledby="material-item" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-1-quantity" name="material-row-1-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="20" aria-labelledby="quantity" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-1-cost" name="material-row-1-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;100" aria-labelledby="cost" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-1-total-costs" name="material-row-1-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;2000" aria-labelledby="material-total-costs" />
-					</td>
-					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
-						<a href="#">Remove</a>
-					</td>
-				</tr>
 
-				<tr>
-					<td style="width: 30%">
-						<input type="text" id="material-row-1-item" name="material-row-2-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Cricibles" aria-labelledby="material-item" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-2-quantity" name="material-row-2-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="6" aria-labelledby="quantity" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-2-cost" name="material-row-2-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;600" aria-labelledby="cost" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-2-total-costs" name="material-row-2-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3600" aria-labelledby="material-total-costs" />
-					</td>
-					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
-						<a href="#">Remove</a>
-					</td>
-				</tr>
+			<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
+				<tbody>
+					<tr>
+						<td style="width: 30%">
+							<input type="text" id="material-row-1-item" name="material-row-1-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Powder" aria-labelledby="material-item" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-1-quantity" name="material-row-1-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="20" aria-labelledby="quantity" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-1-cost" name="material-row-1-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;100" aria-labelledby="cost" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-1-total-costs" name="material-row-1-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;2000" aria-labelledby="material-total-costs" />
+						</td>
+						<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
+							<a href="#">Remove</a>
+						</td>
+					</tr>
 
-				<tr>
-					<td style="width: 30%">
-						<input type="text" id="material-row-1-item" name="material-row-3-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Valves" aria-labelledby="material-item" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-3-quantity" name="material-row-3-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="12" aria-labelledby="quantity" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-3-cost" name="material-row-3-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;250" aria-labelledby="cost" />
-					</td>
-					<td class="numeric">
-						<input type="text" id="material-row-3-total-costs" name="material-row-3-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3000" aria-labelledby="material-total-costs" />
-					</td>
-					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
-						<a href="#">Remove</a>
-					</td>
-				</tr>
-			</tbody>
+					<tr>
+						<td style="width: 30%">
+							<input type="text" id="material-row-1-item" name="material-row-2-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Crucibles" aria-labelledby="material-item" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-2-quantity" name="material-row-2-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="6" aria-labelledby="quantity" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-2-cost" name="material-row-2-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;600" aria-labelledby="cost" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-2-total-costs" name="material-row-2-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3600" aria-labelledby="material-total-costs" />
+						</td>
+						<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
+							<a href="#">Remove</a>
+						</td>
+					</tr>
+
+					<tr>
+						<td style="width: 30%">
+							<input type="text" id="material-row-1-item" name="material-row-3-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Valves" aria-labelledby="material-item" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-3-quantity" name="material-row-3-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="12" aria-labelledby="quantity" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-3-cost" name="material-row-3-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;250" aria-labelledby="cost" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="material-row-3-total-costs" name="material-row-3-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3000" aria-labelledby="material-total-costs" />
+						</td>
+						<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
+							<a href="#">Remove</a>
+						</td>
+					</tr>
+				</tbody>
+			</th:block>
+
+			<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+				<tbody>
+					<tr>
+						<td>Powder</td>
+						<td class="numeric">20</td>
+						<td class="numeric">&pound;100</td>
+						<td class="numeric">&pound;2000</td>
+					</tr>
+					<tr>
+						<td>Crucibles</td>
+						<td class="numeric">6</td>
+						<td class="numeric">&pound;600</td>
+						<td class="numeric">&pound;3600</td>
+					</tr>
+					<tr>
+						<td>Valves</td>
+						<td class="numeric">12</td>
+						<td class="numeric">&pound;250</td>
+						<td class="numeric">&pound;3000</td>
+					</tr>
+				</tbody>
+			</th:block>
+
+
 		</table>
 
 		<div class="grid-row total-cost">
