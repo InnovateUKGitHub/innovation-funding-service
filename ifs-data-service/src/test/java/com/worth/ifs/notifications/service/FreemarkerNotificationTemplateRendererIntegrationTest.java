@@ -109,6 +109,22 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("application_not_funded_assessor_feedback_published_text_html.html", templateArguments);
     }
 
+    @Test
+    public void testMonitoringOfficerAssignedEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "projectName", "My Project",
+                "leadOrganisation", "Lead Organisation 123",
+                "projectManagerName", "ABC",
+                "projectManagerEmail", "abc.xyz@gmail.com",
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_text_html.html", templateArguments);
+    }
+
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
         UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());

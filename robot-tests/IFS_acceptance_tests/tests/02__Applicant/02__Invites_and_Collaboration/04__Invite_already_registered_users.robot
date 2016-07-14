@@ -5,7 +5,7 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'View team members and add collaborators'.
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Invite    Email
+Force Tags        Email    HappyPath    Applicant    Collaboration
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

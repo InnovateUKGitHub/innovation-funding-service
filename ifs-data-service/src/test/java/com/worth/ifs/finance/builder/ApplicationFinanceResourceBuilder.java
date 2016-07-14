@@ -2,11 +2,14 @@ package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.category.GrantClaimCategory;
+import com.worth.ifs.finance.resource.cost.GrantClaim;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.finance.resource.cost.CostType.FINANCE;
 import static java.util.Collections.emptyList;
 
 /**
@@ -38,5 +41,14 @@ public class ApplicationFinanceResourceBuilder extends BaseBuilder<ApplicationFi
 
     public ApplicationFinanceResourceBuilder withOrganisation(Long organisationId) {
         return with(finance -> finance.setOrganisation(organisationId));
+    }
+
+    public ApplicationFinanceResourceBuilder withGrantClaimPercentage(Integer percentage) {
+        return with(finance -> {
+            GrantClaimCategory costCategory = new GrantClaimCategory();
+            costCategory.addCost(new GrantClaim(null, percentage));
+            costCategory.calculateTotal();
+            finance.getFinanceOrganisationDetails().put(FINANCE, costCategory);
+        });
     }
 }

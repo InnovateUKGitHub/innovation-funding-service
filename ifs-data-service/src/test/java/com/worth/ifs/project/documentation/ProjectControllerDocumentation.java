@@ -36,6 +36,7 @@ import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjec
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -55,6 +56,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<ProjectController> {
 
     private RestDocumentationResultHandler document;
+
+    private MonitoringOfficerResource monitoringOfficerResource;
+
+    @Before
+    public void setUp() {
+
+        monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+    }
 
     @Override
     protected ProjectController supplyControllerUnderTest() {
@@ -254,6 +270,9 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
+        // Ensure that notification is not sent when there is error whilst saving
+        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+
     }
 
     @Test
@@ -261,18 +280,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         Long projectId = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withId(null)
-                .withProject(projectId)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
-
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -287,6 +296,34 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
+        // Ensure that notification is not sent when there is error whilst saving
+        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMoWhenUnableToSendNotifications() throws Exception {
+
+        Long projectId = 1L;
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .andExpect(status().isInternalServerError())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
+                        ),
+                        requestFields(monitoringOfficerResourceFields)
+                ));
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+
     }
 
     @Test
@@ -294,16 +331,9 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         Long projectId = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withId(null)
-                .withProject(projectId)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+                thenReturn(serviceSuccess());
 
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -318,6 +348,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 ));
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
 
     }
 
