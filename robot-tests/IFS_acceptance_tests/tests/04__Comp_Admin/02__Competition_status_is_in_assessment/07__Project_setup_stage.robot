@@ -258,6 +258,15 @@ Unsuccessful applicant can download the uploaded feedback
     Then the file should be downloaded    ${valid_pdf}
     [Teardown]    Remove File    ${valid_pdf}
 
+Before Monitoring Officer is assigned
+    [Documentation]    INFUND-3349
+    [Tags]    Pending    HappyPath
+    # Pending due to INFUND-3963
+    Given the user navigates to the page    ${successful_project_page}
+    When the user clicks the button/link      link=Monitoring Officer
+    Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
+    And the user should not see the element    [element to check the green tick mark is not there]
+
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-3330
     [Tags]    Pending    HappyPath
@@ -327,6 +336,7 @@ MO details can be edited and updated
     And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user reloads the page
     Then the edited text should be visible
+    [Add step to check the status change in PS page]
 
 MO details can be viewed on the page after editting
     [Documentation]    INFUND-3330
@@ -335,6 +345,18 @@ MO details can be viewed on the page after editting
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Pradha
     And the user should see the text in the page    Jagankumar
+    And the user should see the text in the page    pradha.raj@gmail.com
+    And the user should see the text in the page    08549731414
+
+MO details accessible/seen by all partners
+    [Documentation]    INFUND-3349
+    [Tags]    Pending    HappyPath
+    # Pending due to INFUND-3963
+    Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    [greeen tick mark element]
+    And the user should see the text in the page    Your project has been assigned a Monitoring Officer
+    And the user should see the text in the page    Pradha Jagankumar
     And the user should see the text in the page    pradha.raj@gmail.com
     And the user should see the text in the page    08549731414
 
