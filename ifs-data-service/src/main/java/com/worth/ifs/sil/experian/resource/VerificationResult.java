@@ -1,4 +1,4 @@
-package com.worth.ifs.bankdetails.resource.experian;
+package com.worth.ifs.sil.experian.resource;
 
 import java.util.List;
 

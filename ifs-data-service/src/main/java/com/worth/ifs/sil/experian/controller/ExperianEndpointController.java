@@ -1,13 +1,15 @@
 package com.worth.ifs.sil.experian.controller;
 
-import com.worth.ifs.bankdetails.resource.experian.AccountDetails;
-import com.worth.ifs.bankdetails.resource.experian.ValidationResult;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.ValidationResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static org.hibernate.jpa.internal.QueryImpl.LOG;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -16,12 +18,19 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequestMapping("/silstub")
 public class ExperianEndpointController {
-    @Value("${sil.stub.send.mail.from.ifs:false}")
+    @Value("${sil.stub.experian.validate:true}")
     private Boolean validateFromSilStub;
 
     @RequestMapping(value="/experianValidate", method = POST)
     public RestResult<ValidationResult> experianValidate(@RequestBody AccountDetails accountDetails){
-        return null;
+        LOG.info("Stubbing out SIL experian validation: " + accountDetails);
+        ValidationResult validationResult = new ValidationResult();
+        if(accountDetails.getSortcode().equals("123456") && accountDetails.getAccountNumber().equals("12345678")) {
+            validationResult.setCheckPassed(false);
+        } else {
+            validationResult.setCheckPassed(true);
+        }
+        return restSuccess(validationResult);
     }
 
     @RequestMapping(value="/experianVerify", method = POST)

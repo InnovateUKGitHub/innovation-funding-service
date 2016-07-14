@@ -2,12 +2,12 @@ package com.worth.ifs.sil.experian.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.bankdetails.resource.experian.AccountDetails;
-import com.worth.ifs.bankdetails.resource.experian.Address;
+import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.Address;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -22,24 +22,23 @@ public class ExperianEndpointControllerMockMvcTest extends BaseControllerMockMVC
     @Override
     protected ExperianEndpointController supplyControllerUnderTest() {
         ExperianEndpointController endpointController = new ExperianEndpointController();
-        ReflectionTestUtils.setField(endpointController, "validateFromSilStub", FALSE);
+        ReflectionTestUtils.setField(endpointController, "validateFromSilStub", TRUE);
         return endpointController;
     }
 
     @Test
-    public void testSendMail() throws Exception {
+    public void testExperianValidate() throws Exception {
         String sortCode = "123456";
         String accountNumber = "12345678";
         String companyName = "ACME limited";
         String registrationNumber = "12345678";
-        String organisation = "";
         String buildingName = "";
         String street = "";
         String locality = "";
         String town = "";
         String postcode = "";
 
-        Address address = new Address(organisation, buildingName, street, locality, town, postcode);
+        Address address = new Address(companyName, buildingName, street, locality, town, postcode);
         AccountDetails accountDetails = new AccountDetails(sortCode, accountNumber, companyName, registrationNumber, address);
 
         String requestBody = new ObjectMapper().writeValueAsString(accountDetails);
@@ -51,7 +50,7 @@ public class ExperianEndpointControllerMockMvcTest extends BaseControllerMockMVC
                     header("IFS_AUTH_TOKEN", "123abc").
                     content(requestBody)
             ).
-            andExpect(status().isAccepted()).
+            andExpect(status().isOk()).
             andDo(document("silstub/experianValidate",
                 requestHeaders(
                     headerWithName("Content-Type").description("Needs to be application/json"),
@@ -60,4 +59,3 @@ public class ExperianEndpointControllerMockMvcTest extends BaseControllerMockMVC
             ));
     }
 }
-

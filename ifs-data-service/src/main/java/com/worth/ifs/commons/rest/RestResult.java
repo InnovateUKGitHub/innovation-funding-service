@@ -229,6 +229,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return restSuccess(successfulResult, OK);
     }
 
+    public static <T> RestResult<T> restAccepted(T successfulResult) {
+        return restSuccess(successfulResult, ACCEPTED);
+    }
+
     public static <T> RestResult<T> restSuccess(T result, HttpStatus statusCode) {
         return new RestResult<>(right(result), statusCode);
     }

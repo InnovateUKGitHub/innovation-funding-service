@@ -7,26 +7,22 @@ import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.mapper.SILBankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.experian.AccountDetails;
-import com.worth.ifs.bankdetails.resource.experian.ValidationResult;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.util.Either;
+import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS;
+import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -34,20 +30,6 @@ import static java.util.Arrays.asList;
 
 @Service
 public class BankDetailsServiceImpl implements BankDetailsService{
-
-    @Autowired
-    @Qualifier("sil_adaptor")
-    private AbstractRestTemplateAdaptor adaptor;
-
-    @Value("${sil.rest.baseURL}")
-    private String silRestServiceUrl;
-
-    @Value("${sil.rest.experianValidate}")
-    private String silExperianValidate;
-
-    @Value("${sil.rest.experianVerify}")
-    private String silExperianVerify;
-
     @Autowired
     private BankDetailsMapper bankDetailsMapper;
 
@@ -62,6 +44,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private SilExperianEndpoint silExperianEndpoint;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
@@ -112,18 +97,12 @@ public class BankDetailsServiceImpl implements BankDetailsService{
             return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
         } else {
             AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
-            return validateWithExperian(accountDetails).mapLeftOrRight(
-                    failure -> serviceFailure(new Error(EXPERIAN_VALIDATION_FAILED)),
-                    success -> serviceSuccess(bankDetailsResource)
-            );
+            return silExperianEndpoint.validate(accountDetails).
+                    handleSuccessOrFailure(
+                        failure -> serviceFailure(failure.getErrors()),
+                        validationResult -> serviceSuccess(bankDetailsResource)
+                );
+
         }
-    }
-
-    private Either<ResponseEntity<ValidationResult>, ResponseEntity<Void>> validateWithExperian(AccountDetails accountDetails) {
-        return adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails,
-                        Void.class,
-                        ValidationResult.class,
-                        HttpStatus.ACCEPTED);
-
     }
 }

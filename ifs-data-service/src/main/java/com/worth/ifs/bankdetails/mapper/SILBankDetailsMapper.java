@@ -2,8 +2,8 @@ package com.worth.ifs.bankdetails.mapper;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.experian.AccountDetails;
-import com.worth.ifs.bankdetails.resource.experian.Address;
+import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.Address;
 
 /**
  * Mapping results retrieved from the postcode web API to address resources.

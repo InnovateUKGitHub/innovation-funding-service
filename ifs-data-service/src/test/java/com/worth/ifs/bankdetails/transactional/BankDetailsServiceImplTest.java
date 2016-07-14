@@ -4,12 +4,15 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.bankdetails.mapper.SILBankDetailsMapper;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.ValidationResult;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +25,7 @@ import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetail
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -37,6 +41,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private Project project;
     private Organisation organisation;
     private BankDetails bankDetails;
+    private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
     @Before
     public void setUp(){
@@ -77,6 +82,10 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Test
     public void testSaveValidBankDetails(){
         project.setSubmittedDate(LocalDateTime.now());
+        AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.setCheckPassed(true);
+        when(silExperianEndpointMock.validate(accountDetails)).thenReturn(serviceSuccess(validationResult));
         ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
         assertTrue(result.isSuccess());
     }
