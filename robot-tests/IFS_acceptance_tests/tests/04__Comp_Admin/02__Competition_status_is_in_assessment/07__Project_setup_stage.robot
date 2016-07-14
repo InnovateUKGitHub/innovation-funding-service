@@ -20,21 +20,20 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
-${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
-${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
-${Successful_Monitoring_Officer_Page}     ${server}/management/project/4/monitoring-officer
+${successful_application_comp_admin_view}    ${server}/management/competition/3/application/16
+${unsuccessful_application_comp_admin_view}    ${server}/management/competition/3/application/17
+${Successful_Monitoring_Officer_Page}    ${server}/management/project/4/monitoring-officer
 
 *** Test Cases ***
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
-    [Tags]
+    [Tags]    HappyPath
     Given guest user log-in    worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user navigates to the page    ${successful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${successful_application_overview}
-
 
 Partner cannot remove the uploaded feedback
     [Documentation]    INFUND-2607
@@ -45,7 +44,7 @@ Partner cannot remove the uploaded feedback
 
 Partner can download the uploaded feedback
     [Documentation]    INFUND-2607
-    [Tags]    Pending
+    [Tags]    Pending    HappyPath
     # Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
@@ -54,6 +53,7 @@ Partner can download the uploaded feedback
 
 Partner can see the project setup page
     [Documentation]    INFUND-2612
+    [Tags]    HappyPath
     When the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
@@ -67,6 +67,7 @@ Partner can see the project setup page
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
+    [Tags]    HappyPath
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Please supply the following details for your project and the team
     And the user should see the element    link=Start date
@@ -82,44 +83,45 @@ Submit button is disabled if the details are not fully filled out
 
 Partner nominates a finance contact
     [Documentation]    INFUND-3162
-    [Setup]  Logout as user
-    When Log in as user                                     jessica.doe@ludlow.co.uk    Passw0rd
-    Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
-    And the user clicks the button/link                     link=Project details
-    Then the user should see the text in the page           Finance contacts
-    And the user should see the text in the page            Partner
-    And the user clicks the button/link                     link=Ludlow
-    And the user selects the radio button                   financeContact     financeContact1
-    And the user clicks the button/link                     jQuery=.button:contains("Save")
-    Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-    And the matching status checkbox is updated             project-details-finance    1    yes
+    [Tags]    HappyPath
+    [Setup]    Logout as user
+    When Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    Then the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=Ludlow
+    And the user selects the radio button    financeContact    financeContact1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the matching status checkbox is updated    project-details-finance    1    yes
     Then Logout as user
-    When Log in as user                                     pete.tom@egg.com    Passw0rd
-    Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
-    And the user clicks the button/link                     link=Project details
-    Then the user should see the text in the page           Finance contacts
-    And the user should see the text in the page            Partner
-    And the user clicks the button/link                     link=EGGS
-    And the user selects the radio button                   financeContact     financeContact1
-    And the user clicks the button/link                     jQuery=.button:contains("Save")
-    Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-    And the matching status checkbox is updated             project-details-finance    2    yes
+    When Log in as user    pete.tom@egg.com    Passw0rd
+    Then the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=EGGS
+    And the user selects the radio button    financeContact    financeContact1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the matching status checkbox is updated    project-details-finance    2    yes
     Then Logout as user
-    When Log in as user                                     worth.email.test+fundsuccess@gmail.com    Passw0rd
-    Then the user navigates to the page                     ${SUCCESSFUL_PROJECT_PAGE}
-    And the user clicks the button/link                     link=Project details
-    Then the user should see the text in the page           Finance contacts
-    And the user should see the text in the page            Partner
-    And the user clicks the button/link                     link=Cheeseco
-    Then the user should see the text in the page           Finance contact
-    And the user selects the radio button                   financeContact     financeContact2
-    And the user clicks the button/link                     jQuery=.button:contains("Save")
-    Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-    And the matching status checkbox is updated             project-details-finance    3    yes
-
+    When Log in as user    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Then the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=Cheeseco
+    Then the user should see the text in the page    Finance contact
+    And the user selects the radio button    financeContact    financeContact2
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the matching status checkbox is updated    project-details-finance    3    yes
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
+    [Tags]    HappyPath
     Given the user clicks the button/link    link=Start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
@@ -133,25 +135,24 @@ Lead partner can change the Start Date
     Then status of the start date should be Yes
 
 Lead partner can change the project manager
-    [Documentation]     INFUND-2616, INFUND-2996
-    [Tags]
+    [Documentation]    INFUND-2616, INFUND-2996
+    [Tags]    HappyPath
     Given the user clicks the button/link    link=Project manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see a validation error     You need to select a Project Manager before you can continue
-    When the user selects the radio button      projectManager        27
+    Then the user should see a validation error    You need to select a Project Manager before you can continue
+    When the user selects the radio button    projectManager    27
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page     test ten
-    And the user selects the radio button                   projectManager     projectManager1
-    And the user clicks the button/link                     jQuery=.button:contains("Save")
-    Then the user should be redirected to the correct page  ${SUCCESSFUL_PROJECT_PAGE}
-    And the matching status checkbox is updated      project-details    3    yes
-
+    Then the user should see the text in the page    test ten
+    And the user selects the radio button    projectManager    projectManager1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the matching status checkbox is updated    project-details    3    yes
 
 Lead partner can change the project address
-    [Documentation]     INFUND-3157, INFUND-2165
-    [Tags]
-    Given the user clicks the button/link     link=Project address
-    When the user clicks the button/link     jQuery=.button:contains("Save")
+    [Documentation]    INFUND-3157, INFUND-2165
+    [Tags]    HappyPath
+    Given the user clicks the button/link    link=Project address
+    When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    You need to select a project address before you can continue
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
@@ -164,12 +165,12 @@ Lead partner can change the project address
     And the user should see the address data
     When the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
-    And the user clicks the button/link       jQuery=.button:contains("Save")
-    Then the user should see the text in the page       	1 Cheese Road, Bath, BA1 5LR
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should see the text in the page    1 Cheese Road, Bath, BA1 5LR
 
 Project details submission flow
-    [Documentation]     INFUND-3467
-    [Tags]
+    [Documentation]    INFUND-3467
+    [Tags]    HappyPath
     When The user should not see the element    xpath=//span[contains(text(), 'No')]
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     Then the applicant clicks the submit button in the modal
@@ -178,10 +179,10 @@ Project details submission flow
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
 
 Project details submitted is read only
-    [Documentation]     INFUND-3467
+    [Documentation]    INFUND-3467
     [Tags]
-    When the user clicks the button/link       link=Project details
-    Then The user should not see the element   xpath=//span[contains(text(), 'No')]
+    When the user clicks the button/link    link=Project details
+    Then The user should not see the element    xpath=//span[contains(text(), 'No')]
     And The user should not see the element    link=Start date
     And The user should not see the element    link=Project address
     And The user should not see the element    link=Project manager
@@ -190,30 +191,30 @@ Project details submitted is read only
     And The user should not see the element    link=Cheeseco
 
 Non-lead partner cannot change any project details
-    [Documentation]     INFUND-2619
-    [Setup]       Run Keywords    logout as user
-    ...           AND     guest user log-in    jessica.doe@ludlow.co.uk     Passw0rd
-    Given the user navigates to the page      ${successful_project_page}
-    When the user clicks the button/link      link=Project details
-    Then the user should see the text in the page        Start date
-    And the user should see the text in the page       1 Jan 2018
-    And the user should not see the element        link=Start date
-    And the user should see the text in the page      Project manager
-    And the user should see the text in the page      Steve Smith
-    And the user should not see the element        link=Project manager
-    And the user should see the text in the page      Project address
-    And the user should see the text in the page      1 Cheese Road, Bath, BA1 5LR
-    And the user should not see the element       link=Project address
-    And the user navigates to the page       ${project_start_date_page}
-    And the user should be redirected to the correct page      ${successful_project_page}
-    And the user navigates to the page       ${project_manager_page}
-    And the user should be redirected to the correct page      ${successful_project_page}
-    And the user navigates to the page       ${project_address_page}
-    And the user should be redirected to the correct page      ${successful_project_page}
+    [Documentation]    INFUND-2619
+    [Setup]    Run Keywords    logout as user
+    ...    AND    guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
+    Given the user navigates to the page    ${successful_project_page}
+    When the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Start date
+    And the user should see the text in the page    1 Jan 2018
+    And the user should not see the element    link=Start date
+    And the user should see the text in the page    Project manager
+    And the user should see the text in the page    Steve Smith
+    And the user should not see the element    link=Project manager
+    And the user should see the text in the page    Project address
+    And the user should see the text in the page    1 Cheese Road, Bath, BA1 5LR
+    And the user should not see the element    link=Project address
+    And the user navigates to the page    ${project_start_date_page}
+    And the user should be redirected to the correct page    ${successful_project_page}
+    And the user navigates to the page    ${project_manager_page}
+    And the user should be redirected to the correct page    ${successful_project_page}
+    And the user navigates to the page    ${project_address_page}
+    And the user should be redirected to the correct page    ${successful_project_page}
 
 Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Run Keywords    Logout as user
     Given guest user log-in    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${successful_application_comp_admin_view}
@@ -259,13 +260,13 @@ Unsuccessful applicant can download the uploaded feedback
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-3330
-    [Tags]    Pending
+    [Tags]    Pending    HappyPath
     # Pending due to INFUND-3963
     Given guest user log-in    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Cheese is good
-   # And the user should see the text in the page (for "Area" message)
-    And the user should see the text in the page       	1 Cheese Road, Bath, BA1 5LR
+    # And the user should see the text in the page (for "Area" message)
+    And the user should see the text in the page    1 Cheese Road, Bath, BA1 5LR
     And the user should see the text in the page    1st Oct 2020
     And the user should see the text in the page    Steve Smith
     And the user should see the text in the page    Cheeseco
@@ -274,7 +275,7 @@ Comp admin can view the Supporting information details on MO page
 
 Standard verification for email address
     [Documentation]    INFUND-3330
-    [Tags]    Pending
+    [Tags]    Pending    HappyPath
     # Pending due to INFUND-3963
     When the user enters text to a text field    id=emailAddress    ${EMPTY}
     Then the user should see an error    Please enter your email
@@ -356,18 +357,17 @@ the duration should be visible
     Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    3 months
 
 the user shouldn't be able to edit the day field as all projects start on the first of the month
-    the user should see the element      css=.day [readonly]
-
+    the user should see the element    css=.day [readonly]
 
 the user should see the address data
     Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != 'NO'    the user should see the valid data
     Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == 'NO'    the user should see the dummy data
 
 the user should see the valid data
-    the user should see the text in the page      Am Reprographics, Bristol, BS1 4NT
+    the user should see the text in the page    Am Reprographics, Bristol, BS1 4NT
 
 the user should see the dummy data
- 	the user should see the text in the page      Montrose House 1, Neston, CH64 3RU
+    the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
 the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Submit project details")

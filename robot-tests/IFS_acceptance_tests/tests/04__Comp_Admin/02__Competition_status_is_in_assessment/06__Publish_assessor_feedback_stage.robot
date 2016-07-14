@@ -5,7 +5,7 @@ Documentation     INFUND-2672 As a competition administrator I want to be able t
 Suite Setup       Run Keywords    Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 ...               AND    Run Keyword And Ignore Error    Delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
-Force Tags        Comp admin    Upload
+Force Tags        Upload    CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -21,6 +21,7 @@ ${dialogue_warning_message}    Are you sure you wish to inform applicants if the
 *** Test Cases ***
 The publish feedback should be disabled
     [Documentation]    INFUND-2672
+    [Tags]    HappyPath
     When the user navigates to the page    ${assessor_feedback_competition_url}
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the element    css=h2.bold-small.blue-block
@@ -28,7 +29,7 @@ The publish feedback should be disabled
 
 The publish feedback should be enabled
     [Documentation]    INFUND-2672
-    [Tags]
+    [Tags]    HappyPath
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     When the user uploads the file    ${valid_pdf}
     Given the user can see the option to upload a file on the page    ${unsuccessful_application_overview}
@@ -45,7 +46,7 @@ Remove the upload then feedback button becomes disabled
 
 Pushing the publish feedback brings up a warning
     [Documentation]    INFUND-2672
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Run Keywords    the user navigates to the page    ${successful_application_overview}
     ...    AND    the user uploads the file    ${valid_pdf}
     Given the user navigates to the page    ${assessor_feedback_competition_url}
@@ -64,7 +65,7 @@ Choosing cancel on the dialogue
 
 Choosing to Notify the applicants in the dialogue
     [Documentation]    INFUND-2672
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    name=publish
     Then the user should be redirected to the correct page    ${assessor_feedback_competition_url}
     And the user should see the text in the page    Project setup
@@ -73,13 +74,13 @@ Successful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email
     # pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
-    Then open mailbox and verify the content    worth.email.test@gmail.com   testtest1    Following the success of your application
+    Then open mailbox and verify the content    worth.email.test@gmail.com    testtest1    Following the success of your application
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608
     [Tags]    Email
     # Pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
-    Then open mailbox and verify the content    worth.email.test.two@gmail.com    testtest1     Following the submission of your application
+    Then open mailbox and verify the content    worth.email.test.two@gmail.com    testtest1    Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup
