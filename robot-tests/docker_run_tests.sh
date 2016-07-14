@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sudo echo "Thanks for entering sudo!"
-
 setEnv() {
     case $OSTYPE in
         darwin*)
@@ -67,8 +65,8 @@ function buildAndDeploy {
 }
 
 function resetLDAP {
-    cd ${shibbolethScriptsPath}
-    ./reset-shibboleth-users.sh
+    cd ../setup-files/scripts/docker
+    ./syncShib.sh
 }
 
 function startServers {
@@ -76,6 +74,7 @@ function startServers {
     cd ../setup-files/scripts/docker
     ./startup.sh
     ./deploy.sh -x test
+    ./syncShib.sh
     wait
     cd ../shibboleth/ui
     # ./deploy-ui.sh
@@ -104,13 +103,7 @@ function startSeleniumGrid {
 function startPybot {
     echo "********** starting pybot for ${1} **************"
     targetDir=`basename ${1}`
-    if [ "$localMailSendingImplemented" ]
-    then
-        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS ${1}/* &
-
-    else
-        pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
-    fi
+    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
 }
 
 function runTests {
@@ -143,40 +136,13 @@ echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
 uploadFileDir=${scriptDir}"/upload_files"
-cd ../setup-files/scripts/environments
-shibbolethScriptsPath=$(pwd)
-echo "shibbolethScriptsPath:        ${shibbolethScriptsPath}"
-
-cd ../../../ifs-data-service
-dateFormat=`date +%Y-%m-%d`
+cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
-dataWebappsPath=`sed '/^\#/d' docker-build.gradle | grep 'ext.tomcatWebAppsDir'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "dataWebappsPath:   ${dataWebappsPath}"
-dataTomcatPath="$(dirname "$dataWebappsPath")"
-echo "dataTomcatPath:    ${dataTomcatPath}"
-dataTomcatBinPath=${dataTomcatPath}"/bin"
-echo "dataTomcatBinPath: ${dataTomcatBinPath}"
-dataLogPath=${dataTomcatPath}"/logs"
-echo "dataLogPath:       ${dataLogPath}"
-dataLogFilePath=${dataLogPath}"/catalina."${dateFormat}".log"
-echo "dataLogFilePath:   ${dataLogFilePath}"
-dataPort=`sed '/^\#/d' docker-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "dataPort:          ${dataPort}"
-mysqlUser=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsDatasourceUsername'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "mysqlUser:         ${mysqlUser}"
-mysqlPassword=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsDatasourcePassword'  | cut -d "=" -f2 | sed 's/"//g'`
 baseFileStorage=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`
-ifsDatasourceHost=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsDatasourceHost'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "${baseFileStorage}"
-storedFileFolder=${baseFileStorage}/ifs/
-echo "${storedFileFolder}"
-virusScanHoldingFolder=${baseFileStorage}/virus-scan-holding/
-echo "virusScanHoldingFolder:		${virusScanHoldingFolder}"
 virusScanQuarantinedFolder=${baseFileStorage}/virus-scan-quarantined
 echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
-virusScanScannedFolder=${baseFileStorage}/virus-scan-scanned
-echo "virusScanScannedFolder:		${virusScanScannedFolder}"
 echo "We are about to delete the above directories, make sure that they are right ones!"
 postcodeLookupKey=`sed '/^\#/d' docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
@@ -188,20 +154,9 @@ else
     echo "Postcode lookup implemented. The tests will expect proper data from the SuT."
     postcodeLookUpImplemented='YES'
 fi
-sendMailLocally=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsSendMailLocally'  | cut -d "=" -f2 | sed 's/"//g'`
-if [ $sendMailLocally = 'false' ]
-then
-    echo "Sending mail locally not implemented"
-    unset localMailSendingImplemented
-else
-    echo "Sending mail locally is implemented. The tests will expect emails to be sent out to all whitelisted recipients. Please take care not to spam anyone!"
-    localMailSendingImplemented='YES'
-fi
 cd ../ifs-web-service
 webServiceCodeDir=`pwd`
 echo "webServiceCodeDir: ${webServiceCodeDir}"
-webPort=`sed '/^\#/d' docker-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "webPort:           ${webPort}"
 webBase="ifs-local-dev"
 echo "webBase:           ${webBase}"
 
@@ -274,5 +229,3 @@ else
     addTestFiles
     runTests
 fi
-
-trap 'kill $(jobs -pr)' SIGINT SIGTERM EXIT

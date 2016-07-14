@@ -3,6 +3,9 @@ services:
   hub:
     container_name: hub
     image: selenium/hub
+    environment:
+      - GRID_BROWSER_TIMEOUT=100000
+      - GRID_TIMEOUT=90000
     ports:
       - '4444:4444'
     networks:
