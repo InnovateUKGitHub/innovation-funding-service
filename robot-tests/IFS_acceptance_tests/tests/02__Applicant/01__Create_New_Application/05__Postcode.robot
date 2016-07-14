@@ -42,9 +42,7 @@ Other Postcode values
     When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
-    When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT\\
-    And the user clicks the button/link    id=postcode-lookup
-    Then the user should see the element    id=addressForm.selectedPostcodeIndex
+    And the backslash doesnt give errors
 
 Same Operating address
     [Documentation]    INFUND-890
@@ -62,3 +60,10 @@ Same Operating address
     And the user should see the element    id=manual-company-input
 
 *** Keywords ***
+the backslash doesnt give errors
+    When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT\\
+    And the user clicks the button/link    id=postcode-lookup
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == 'NO'    the user should see the element    id=addressForm.selectedPostcodeIndex
+    When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT\\
+    And the user clicks the button/link    id=postcode-lookup
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != 'NO'    the user should see the text in the page    No results were found
