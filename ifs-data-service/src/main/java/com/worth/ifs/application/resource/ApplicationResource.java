@@ -1,20 +1,26 @@
 package com.worth.ifs.application.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import javax.validation.constraints.Digits;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -47,6 +53,7 @@ public class ApplicationResource {
     private List<Long> invites;
     private Long assessorFeedbackFileEntry;
     private CompetitionResource.Status competitionStatus;
+    private BigDecimal completion;
 
     public Long getId() {
         return id;
@@ -254,5 +261,13 @@ public class ApplicationResource {
 
     private boolean isInSubmitableCompetitionState() {
         return SUBMITABLE_COMPETITION_STATES.contains(competitionStatus);
+    }
+
+    public BigDecimal getCompletion() {
+        return completion;
+    }
+
+    public void setCompletion(final BigDecimal completion) {
+        this.completion = completion;
     }
 }

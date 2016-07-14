@@ -22,6 +22,7 @@ ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
 ${successful_application_comp_admin_view}   ${server}/management/competition/3/application/16
 ${unsuccessful_application_comp_admin_view}     ${server}/management/competition/3/application/17
+${Successful_Monitoring_Officer_Page}     ${server}/management/project/4/monitoring-officer
 
 *** Test Cases ***
 Partner can view the uploaded feedback
@@ -31,7 +32,7 @@ Partner can view the uploaded feedback
     And the user navigates to the page    ${successful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    # Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${successful_application_overview}
 
 
@@ -218,7 +219,7 @@ Comp admin can view uploaded feedback
     When the user navigates to the page    ${successful_application_comp_admin_view}
     And the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    # Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
 
 Comp admin can view unsuccessful uploaded feedback
     [Documentation]    INFUND-2607
@@ -226,7 +227,7 @@ Comp admin can view unsuccessful uploaded feedback
     Given the user navigates to the page    ${unsuccessful_application_comp_admin_view}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    # Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
     And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
     [Teardown]    Logout as user
 
@@ -237,7 +238,7 @@ Unsuccessful applicant can view the uploaded feedback
     Given the user navigates to the page    ${unsuccessful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    # Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${unsuccessful_application_comp_admin_view}
 
 Unsuccessful applicant cannot remove the uploaded feedback
@@ -255,6 +256,86 @@ Unsuccessful applicant can download the uploaded feedback
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
     [Teardown]    Remove File    ${valid_pdf}
+
+Comp admin can view the Supporting information details on MO page
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    Cheese is good
+   # And the user should see the text in the page (for "Area" message)
+    And the user should see the text in the page       	1 Cheese Road, Bath, BA1 5LR
+    And the user should see the text in the page    1st Oct 2020
+    And the user should see the text in the page    Steve Smith
+    And the user should see the text in the page    Cheeseco
+    And the user should see the text in the page    Ludlow
+    And the user should see the text in the page    EGGS
+
+Standard verification for email address
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    When the user enters text to a text field    id=emailAddress    ${EMPTY}
+    Then the user should see an error    Please enter your email
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_username}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_format}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${valid_email}
+    Then the user should see an error    Email address is already in use
+
+Standard verification for Phone number
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    When the user enters text to a text field    id=phoneNumber    ${EMPTY}
+    Then the user should see an error    Please enter a phone number
+    And the user enters text to a text field    id=phoneNumber    invalidphone
+    Then the user should see an error    Please enter a valid phone number
+    And the user enters text to a text field    id=phoneNumber    0123
+    Then the user should see an error    Input for your phone number has a minimum length of 8 characters
+
+MO details can be added and updated
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Then the user enters text to a text field    id=firstName    Pradha
+    And the user enters text to a text field    id=lastName    Muniraj
+    And the user enters text to a text field    id=emailAddress    pradha.muniraj@innovateuk.gov.uk
+    And the user enters text to a text field    id=phoneNumber    07438620303
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user reloads the page
+    Then the text should be visible
+
+MO details can be edited and updated
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Given the user clicks the button/link    link=Change Monitoring Officer
+    And the user enters text to a text field    id=firstName    Pradha
+    And the user enters text to a text field    id=lastName    Jagankumar
+    And the user enters text to a text field    id=emailAddress    pradha.raj@gmail.com
+    And the user enters text to a text field    id=phoneNumber    08549731414
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user reloads the page
+    Then the edited text should be visible
+
+MO details can be viewed on the page after editting
+    [Documentation]    INFUND-3330
+    [Tags]    Pending
+    # Pending due to INFUND-3963
+    Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    Pradha
+    And the user should see the text in the page    Jagankumar
+    And the user should see the text in the page    pradha.raj@gmail.com
+    And the user should see the text in the page    08549731414
 
 *** Keywords ***
 the user should see a validation error

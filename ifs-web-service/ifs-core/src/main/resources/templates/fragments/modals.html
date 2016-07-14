@@ -10,6 +10,7 @@
 	<div class="modal-overlay js-close" aria-hidden="true"></div>
 </div>
 
+
 <!-- confirm submit modal -->
 
 <div th:fragment="modal-confirm-submit (messageTitle, message, submitLink, submitText, cancelText)">
@@ -156,4 +157,26 @@
 					</form>
 			</div>
 	</div>
+</div>
+<!-- save project details -->
+<div th:fragment="modal-bank-details">
+<div class="modal-bank" role="dialog" aria-hidden="true" >
+		<div th:include="fragments/modals :: close-button" th:remove="tag" />
+
+		<h2 class="heading-medium no-margin">Submit Bank Details</h2>
+		<p>Are you sure you wish to submit your bank details?</p>
+		<p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
+		<hr />
+		<div class="grid-row">
+			<div class="column-half">
+					<button type="button" class="js-close button buttonlink large">Cancel</button>
+			</div>
+			<div class="column-half alignright-button" method="post">
+				<button class="button large" name="submit-app-details">Submit</button>
+			</div>
+		</div>
+</div>
+
+
+
 </div>

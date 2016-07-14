@@ -25,7 +25,7 @@ Lead applicant can assign a question
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
-    [Setup]    Guest user log-in    worth.email.test+invite2@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
     When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Dennis Bergkamp
@@ -50,7 +50,7 @@ The question is enabled for the assignee
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    HappyPath    Email
-    [Setup]    Guest user log-in    worth.email.test+invitedregistered@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should see the browser notification    Stuart ANDERSON has assigned a question to you
@@ -147,7 +147,7 @@ The question should be reassigned to the lead applicant
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
-    [Setup]    Guest user log-in    worth.email.test+invite2@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should see the browser notification    Dennis Bergkamp has assigned a question to you
@@ -167,7 +167,7 @@ Appendices are assigned along with the question
     And the user should see the text in the page    Upload
     When the applicant assigns the question to the collaborator    css=#form-input-6 .editor    test1233    Dennis Bergkamp
     the user closes the browser
-    And guest user log-in    worth.email.test+invitedregistered@gmail.com    Passw0rd123
+    And guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=6. Innovation
@@ -181,7 +181,7 @@ Lead marks finances as complete and collaborator should be able to edit them
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
-    [Setup]    Guest user log-in    worth.email.test+invite2@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     #Given the user navigates to the page    ${DASHBOARD_URL}
     Given the user clicks the button/link    link= Assign test
@@ -229,7 +229,7 @@ the question should contain the correct status/name
 
 Collaborator should be able to edit finances again
     close browser
-    Guest user log-in    worth.email.test+invitedregistered@gmail.com    Passw0rd123
+    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
     the user should see the element    jQuery=.button:contains("Mark all as complete")

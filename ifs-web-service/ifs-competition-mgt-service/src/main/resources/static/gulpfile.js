@@ -18,4 +18,6 @@ gulp.task('js', function () {
       .pipe(uglify())
       .pipe(gulp.dest('js/dest'))
 });
+
 gulp.task('css', function () {});
+gulp.task('css:watch', function () {});

@@ -14,8 +14,6 @@ ${funders_panel_competition_url}    ${server}/management/competition/3
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.
 ${email_success_message}    We are pleased to inform you that your application
 ${email_failure_message}    Unfortunately Innovate UK is unable to fund
-${test_mailbox_one}    worth.email.test@gmail.com
-${test_mailbox_two}    worth.email.test.two@gmail.com
 
 *** Test Cases ***
 Comp admin can visit a competition page at "Funder's Panel" stage and the option to notify applicants is disabled
@@ -83,12 +81,12 @@ Once applicants are notified, the whole state of the competition changes to Asse
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    ${test_mailbox_one}    ${email_success_message}
+    Then the user should get a confirmation email    worth.email.test@gmail.com   testtest1       ${email_success_message}
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    ${test_mailbox_two}    ${email_failure_message}
+    Then the user should get a confirmation email    worth.email.test.two@gmail.com    testtest1      ${email_failure_message}
 
 
 Successful applicants can see the assessment outcome on the dashboard page
@@ -132,8 +130,8 @@ The option to notify applicants is enabled
     the user should not see the element    css=#publish-funding-decision.button.disabled
 
 the user should get a confirmation email
-    [Arguments]    ${email_username}    ${message}
-    Open Mailbox    server=imap.googlemail.com    user=${email_username}    password=testtest1
+    [Arguments]    ${email_username}       ${email_password}     ${message}
+    Open Mailbox    server=imap.googlemail.com    user=${email_username}    password=${email_password}
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}

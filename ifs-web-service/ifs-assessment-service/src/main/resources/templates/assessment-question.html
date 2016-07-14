@@ -13,7 +13,7 @@
             <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${model.competition})" th:remove="tag" />
+                <div th:include="fragments/elements :: application-title (application=${model.application})" th:remove="tag" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
@@ -67,7 +67,7 @@
                                     <div class="panel-indent" ifs:utext="${model.assessorGuidanceAnswer}" />
                                 </details>
 
-                                <div th:include="fragments/assessment :: assessment-form-textarea-wordcount (id=${model.questionId}, name=${inputName}, value=*{value}, readonly=false, maxWords=${350})" th:remove="tag" />
+                                <div th:include="fragments/assessment :: assessment-form-textarea-wordcount (id=${model.questionId}, name=${inputName}, value=*{value}, readonly=false, maxWords=${model.feedbackWordsLimit}, currentWordsLeft=${model.feedbackWordsRemaining})" th:remove="tag" />
                             </div>
                         </div>
                     </fieldset>

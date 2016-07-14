@@ -1,5 +1,10 @@
 package com.worth.ifs.application.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -8,19 +13,13 @@ import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.application.service.Futures.call;
 import static java.util.stream.Collectors.toMap;
+
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
@@ -132,18 +131,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
-        return call(applications.stream()
+        return applications.stream()
                 .filter(this::applicationInProgress)
-                .map(ApplicationResource::getId)
-                .collect(toMap(id -> id, id -> applicationRestService.getCompleteQuestionsPercentage(id))))
-                .entrySet().stream()
-                .collect(toMap(Entry::getKey, entry -> entry.getValue().getSuccessObjectOrThrowException().intValue()));
+                .collect(toMap(ApplicationResource::getId, a -> a.getCompletion().intValue()));
     }
 
     @Override
     public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
-        ApplicationResource application = applicationRestService.createApplication(competitionId, userId, applicationName).getSuccessObjectOrThrowException();
-        return application;
+        return applicationRestService.createApplication(competitionId, userId, applicationName).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -157,8 +152,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Future<Integer> getCompleteQuestionsPercentage(Long applicationId) {
-        return adapt(applicationRestService.getCompleteQuestionsPercentage(applicationId), re -> re.getSuccessObject().intValue());
+    public Integer getCompleteQuestionsPercentage(Long applicationId) {
+        return call(
+                applicationRestService.getCompleteQuestionsPercentage(applicationId)
+            ).getSuccessObjectOrThrowException()
+            .intValue();
+
     }
 
     @Override
