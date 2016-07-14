@@ -104,8 +104,12 @@ IFS.autoSave = (function(){
                 	if(data.field_id !== null) {
                     	var name = field.attr('name');
                     	var nameDashSplit = name.split('-');
-                    	if (nameDashSplit.length < 4) {
-                    		field.attr('name', name + '-' + data.field_id);
+                    	if (nameDashSplit.length == 4 && nameDashSplit[3].length > 7 && nameDashSplit[3].substring(0, 7) === 'unsaved') {
+                    		var fieldsForUnsavedCost = jQuery('input[name*=' + nameDashSplit[3] + ']');
+                    		fieldsForUnsavedCost.each(function(){
+                    			var thisFieldSplit = jQuery(this).attr('name').split('-');
+                    			jQuery(this).attr('name', thisFieldSplit[0] + '-' + thisFieldSplit[1] + '-' + thisFieldSplit[2] + '-' + data.field_id);
+                    		});
                     	}
                 	}
                 	

@@ -370,19 +370,13 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private Cost addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
-        Cost existingCost = costRepository.findOneByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), newCostItem.getName(), question.getId());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
 
-        if (existingCost == null) {
-            Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
-            cost.setQuestion(question);
-            cost.setApplicationFinance(applicationFinance);
-            
-            return persistCostHandlingCostValues(cost);
-        } else {
-            ServiceResult<Cost> updated = doUpdate(existingCost.getId(), newCostItem);
-            return updated.getSuccessObjectOrThrowException();
-        }
+        Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
+        cost.setQuestion(question);
+        cost.setApplicationFinance(applicationFinance);
+        
+        return persistCostHandlingCostValues(cost);
     }
     
     private Cost persistCostHandlingCostValues(Cost cost) {

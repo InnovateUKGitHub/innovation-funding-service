@@ -404,10 +404,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationSubContractingCostUpdateSuccess() {
-        assertNotNull(subContractingCost.getName());
-        assertNotNull(subContractingCost.getCountry());
-        assertNotNull(subContractingCost.getRole());
-        assertNotNull(subContractingCost.getCost());
 
         subContractingCost.setName("Tom Bloggs");
         subContractingCost.setCountry("UK");

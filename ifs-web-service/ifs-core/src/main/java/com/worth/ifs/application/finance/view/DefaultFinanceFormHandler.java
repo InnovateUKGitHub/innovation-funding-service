@@ -196,7 +196,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             }
 
             Long id;
-            if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
+            if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
                 id = Long.valueOf(financeFormField.getId());
             } else {
             	if(StringUtils.isEmpty(financeFormField.getValue())) {
@@ -266,7 +266,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         CostType costType = CostType.fromString(financeFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
         Long costFormFieldId = 0L;
-        if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
+        if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
