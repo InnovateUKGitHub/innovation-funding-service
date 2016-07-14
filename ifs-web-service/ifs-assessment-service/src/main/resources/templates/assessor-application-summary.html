@@ -41,7 +41,7 @@
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">
-                <div th:each="question,iteration : ${model.questions}" th:remove="tag">
+                <div th:each="question : ${model.questions}" th:remove="tag">
                     <div th:include="fragments/assessment :: assessment-summary-section (question=${question})" th:remove="tag" />
                 </div>
             </div>
