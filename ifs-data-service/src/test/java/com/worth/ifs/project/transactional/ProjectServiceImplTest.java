@@ -6,6 +6,7 @@ import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
@@ -37,6 +38,8 @@ import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -52,6 +55,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
@@ -67,6 +71,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 	private User user;
 	private ProcessRole processRole;
 	private Project project;
+    private MonitoringOfficerResource monitoringOfficerResource;
 
 	@Before
 	public void setUp() {
@@ -90,6 +95,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
     	project = newProject().withId(projectId).withApplication(application).build();
+        monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -566,14 +578,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectid = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withProject(1L)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-
         Project projectInDB = newProject().withId(1L).build();
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
@@ -587,15 +591,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testSaveMOWhenMOExistsForAProject() {
 
         Long projectid = 1L;
-
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withProject(1L)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-
 
         // Set this to different values, so that we can assert that it gets updated
         MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
@@ -627,14 +622,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testSaveMOWhenMODoesNotExistForAProject() {
 
         Long projectid = 1L;
-
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withProject(1L)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
 
         Project projectInDB = newProject().withId(1L).withSubmittedDate(LocalDateTime.now()).build();
 
@@ -675,6 +662,63 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
 
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testNotifyMOWhenUnableToSendNotifications() {
+
+        Project projectInDB = createProjectForNotifyMonitoringOfficer();
+
+        when(projectRepositoryMock.findOne(monitoringOfficerResource.getProject())).thenReturn(projectInDB);
+
+        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+
+        ServiceResult<Void> result = service.notifyMonitoringOfficer(monitoringOfficerResource);
+
+        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+    }
+
+    @Test
+    public void testNotifyMonitoringOfficer() {
+
+        Project projectInDB = createProjectForNotifyMonitoringOfficer();
+
+        when(projectRepositoryMock.findOne(monitoringOfficerResource.getProject())).thenReturn(projectInDB);
+
+        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.notifyMonitoringOfficer(monitoringOfficerResource);
+
+        assertTrue(result.isSuccess());
+
+    }
+
+    private Project createProjectForNotifyMonitoringOfficer() {
+
+        User projectManager = newUser()
+                .withFirstName("Sam")
+                .withLastName("Doe")
+                .withEmailAddress("Sam.Doe@gmail.com")
+                .build();
+
+        Organisation organisation = newOrganisation().withName("ABC Organisation").build();
+
+        ProcessRole projectManagerRole = newProcessRole()
+                .withUser(projectManager)
+                .withRole(LEADAPPLICANT)
+                .withOrganisation(organisation)
+                .build();
+
+        Application application = newApplication().withProcessRoles(projectManagerRole).build();
+
+        Project project = newProject()
+                .withId(1L)
+                .withName("Cheese")
+                .withProjectManager(projectManagerRole)
+                .withApplication(application)
+                .build();
+
+        return project;
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

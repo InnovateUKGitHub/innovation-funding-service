@@ -110,6 +110,9 @@ include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/
 ==== Save Monitoring Officer when project details are not yet submitted
 include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-response.adoc[]
 
+==== Save Monitoring Officer when unable to send notifications
+include::{snippets}/project/save-mo-when-unable-to-send-notifications/http-response.adoc[]
+
 === Is Submit Allowed
 ==== Success
 ===== Request

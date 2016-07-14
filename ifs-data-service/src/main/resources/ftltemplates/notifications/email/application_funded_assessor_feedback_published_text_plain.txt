@@ -1,3 +1,5 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
 Dear User 2,
 
 Application number: ${applicationNumber}
@@ -7,9 +9,10 @@ Following the success of your application ${applicationName} to achieve funding 
 
 The feedback provided by the independent assessors has been reviewed by Innovate UK.
 
-You can now view this feedback by logging onto your Innovation Funding Service dashboard at ${dashboardUrl}.
+You can now view this feedback by signing into your Innovation Funding Service dashboard at ${dashboardUrl}.
 
 Yours sincerely,
 
 Competitions Team
 Innovate UK
+</@layout.defaultPlainText>
