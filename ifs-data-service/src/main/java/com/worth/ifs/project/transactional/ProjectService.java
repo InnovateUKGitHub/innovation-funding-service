@@ -74,8 +74,7 @@ public interface ProjectService {
 
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(final Long projectId, final Long userId);
-	
-    //TODO - Add Security to this
-    @NotSecured(value = "", mustBeSecuredByOtherServices = false)
+
+    @PreAuthorize("hasPermission(#monitoringOfficer.project, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
     ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
 }

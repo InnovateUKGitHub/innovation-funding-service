@@ -214,6 +214,19 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testNotifyMonitoringOfficer() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.notifyMonitoringOfficer(newMonitoringOfficerResource().withProject(123L).build()),
+                () -> {
+            verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getServiceClass() {
         return TestProjectService.class;

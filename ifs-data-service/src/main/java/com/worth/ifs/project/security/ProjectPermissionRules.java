@@ -58,5 +58,4 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean compAdminsCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
     }
-
 }
