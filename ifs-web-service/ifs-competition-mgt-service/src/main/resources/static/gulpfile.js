@@ -10,6 +10,7 @@ gulp.task('default',['js','css']);
 gulp.task('js', function () {
    return gulp.src([
       'js/ifsCompetitionManagementLoader.js',
+      'js/ifs_modules/*.js',
       'js/ifs_pages/*.js',
    		])
       .pipe(jshint())
