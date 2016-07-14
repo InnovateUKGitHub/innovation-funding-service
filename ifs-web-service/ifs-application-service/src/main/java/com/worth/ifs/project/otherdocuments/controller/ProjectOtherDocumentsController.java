@@ -1,6 +1,9 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
+import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import com.worth.ifs.project.resource.ProjectResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +18,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/project/{projectId}/other-documents")
 public class ProjectOtherDocumentsController {
 
+    @Autowired
+    private ProjectService projectService;
+
     @RequestMapping(method = GET)
     public String viewMonitoringOfficer(@PathVariable("projectId") Long projectId, Model model) {
 
@@ -24,6 +30,8 @@ public class ProjectOtherDocumentsController {
     }
 
     private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId) {
-        return new ProjectOtherDocumentsViewModel(projectId, projectName);
+
+        ProjectResource project = projectService.getById(projectId);
+        return new ProjectOtherDocumentsViewModel(projectId, project.getName());
     }
 }
