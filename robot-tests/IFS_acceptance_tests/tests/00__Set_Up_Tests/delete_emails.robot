@@ -8,4 +8,5 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 Empty test mailboxes to set up for email enabled test runs
     [Documentation]   INFUND-3822
+    [Tags]    HappyPath
     Delete the emails from both test mailboxes

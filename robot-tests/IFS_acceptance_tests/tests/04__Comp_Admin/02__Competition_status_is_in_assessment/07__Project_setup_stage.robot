@@ -141,6 +141,7 @@ Lead partner can change the project manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
     When the user selects the radio button    projectManager    27
+    And the user should not see the text in the page      You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    test ten
     And the user selects the radio button    projectManager    projectManager1
@@ -336,7 +337,7 @@ MO details can be edited and updated
     And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user reloads the page
     Then the edited text should be visible
-    [Add step to check the status change in PS page]
+    #Add step to check the status change in PS page
 
 MO details can be viewed on the page after editting
     [Documentation]    INFUND-3330
