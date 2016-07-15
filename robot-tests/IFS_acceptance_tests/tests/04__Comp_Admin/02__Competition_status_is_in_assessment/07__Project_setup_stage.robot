@@ -320,18 +320,18 @@ Standard verification for Phone number
 
 MO details can be added and updated
     [Documentation]    INFUND-3330, INFUND-3334
-    [Tags]   Pending
+    [Tags]
     Given guest user log-in    john.doe@innovateuk.test    Passw0rd
     And the user navigates to the page  ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     When the user enters text to a text field    id=firstName    Pradha
     And the user enters text to a text field    id=lastName    Muniraj
-    And the user enters text to a text field    id=emailAddress    worth.email.test+monitoringofficer@gmail.com
+    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
     And the user enters text to a text field    id=phoneNumber    07438620303
     Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
     Then the user should see the text in the page    A Monitoring Officer has been assigned.
-    And Open mailbox and confirm received email    worth.email.test+monitoringofficer@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    New Monitoring Officer assignment
+    And Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk     has been assigned to you
 
 MO details can be edited and updated
     [Documentation]    INFUND-3330
