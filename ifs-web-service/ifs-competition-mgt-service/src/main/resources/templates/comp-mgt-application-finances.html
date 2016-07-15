@@ -33,7 +33,7 @@
 
 
 	<div class="page-title">
-            <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+            <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${title}" />
         </div>
         <form action="#"  method="post" th:object="${form}" enctype="multipart/form-data"

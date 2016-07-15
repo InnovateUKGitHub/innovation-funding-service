@@ -85,6 +85,47 @@ table{
 			display: table-row;
 		}
 	}
+
+	tfoot{
+		th,td{
+			border-bottom: none;
+		}
+	}
+}
+
+
+table.project-changes{
+	tbody{
+		th{
+			font-weight: normal;
+			vertical-align: top;
+		}
+		td{
+			vertical-align: top;
+		}
+
+		.change-row{
+			td, th{
+				padding-bottom: 2.5em;
+			}
+		}
+
+		.item-changed{
+
+			th,td{
+				font-weight: bold;
+			}
+
+			td:first-child{
+				font-weight: normal;
+				
+				& + td{
+					font-weight: normal;
+				}
+
+			}
+		}
+	}
 }
 
 .assessment-panel-start{

@@ -14,14 +14,18 @@
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}"  th:remove="tag"></div>
 
   <div class="page-title">
-      <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)}"/>
+      <div th:include="fragments/elements :: project-title (projectId=${project.id}, projectName=${project.name})" th:remove="tag" />
       <h1 class="heading-xlarge">Bank account</h1>
   </div>
 
-	<p>In order for Innovate UK to fund your project we need your bank account details. We will then verify the bank account to the lead organisation.</p>
+  <div th:unless="${bankDetails == null}" class="success-alert">
+      <p><strong>Your bank account details have been submitted to Innovate UK</strong></p>
+  </div>
+
+	<p th:class="${bankDetails == null ? '' : 'extra-margin'}" >In order for Innovate UK to fund your project we need your bank account details. We will then verify the bank account to the lead organisation.</p>
 	<p>The bank account must belong to the organisation below.</p>
 
-	<h3 class="heading-medium">Organisation information</h3>
+	<h2 class="heading-medium">Organisation information</h2>
 	<p class="form-hint">This information provided during the application process cannot be changed.</p>
 
 	<p class="extra-margin">
@@ -30,7 +34,11 @@
 	</p>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
-    <div class="form-group" th:classappend="${#fields.hasErrors('accountNumber') ? 'error' : ''}">
+    <h2 class="heading-medium no-margin-bottom">Account details</h2>
+    <p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
+
+    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber') ? 'error' : ''}">
+
       <label for="bank-acc-number">
         <span class="form-label-bold">Account number</span>
         <span class="form-hint">For example: 1548965</span>
@@ -62,8 +70,8 @@
             <div th:unless="${readonly}" th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
         </fieldset>
     </div>
-    <div th:if="${readonly}">
-      <h2 class="heading-medium">Billing address</h2>
+    <div th:if="${readonly}" th:remove="tag">
+      <h2 class="heading-medium no-margin">Billing address</h2>
       <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
 
       <div class="boxed extra-margin">
