@@ -3,10 +3,10 @@ package com.worth.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class Error {
-    int code;
-    String message;
-    String fields;
+public class SilError {
+    private int code;
+    private String message;
+    private String fields;
 
     public int getCode() {
         return code;
@@ -38,7 +38,7 @@ public class Error {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        Error error = (Error) o;
+        SilError error = (SilError) o;
 
         return new EqualsBuilder()
                 .append(code, error.code)

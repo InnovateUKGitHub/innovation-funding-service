@@ -100,7 +100,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
             return silExperianEndpoint.validate(accountDetails).
                     handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
-                        validationResult -> serviceSuccess(bankDetailsResource)
+                        validationResult -> {
+                            return serviceSuccess(bankDetailsResource);
+                        }
                 );
 
         }

@@ -4,6 +4,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.SilError;
 import com.worth.ifs.sil.experian.resource.ValidationResult;
 import com.worth.ifs.sil.experian.resource.VerificationResult;
 import com.worth.ifs.util.Either;
@@ -15,7 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.EXPERIAN_VALIDATION_FAILED;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * A simple logging implementation of the SIL email endpoint as opposed to a REST-based endpoint
@@ -38,11 +40,11 @@ public class RestSilExperianEndpoint implements SilExperianEndpoint {
 
     @Override
     public ServiceResult<ValidationResult> validate(AccountDetails accountDetails) {
-        final Either<ResponseEntity<Void>, ResponseEntity<ValidationResult>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails, ValidationResult.class, Void.class, HttpStatus.ACCEPTED);
+        final Either<ResponseEntity<ValidationResult>, ResponseEntity<SilError>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails, SilError.class, ValidationResult.class, HttpStatus.ACCEPTED);
         if(response.isLeft()){
-            return serviceFailure(new Error(EXPERIAN_VALIDATION_FAILED));
+            return serviceSuccess(response.getLeft().getBody());
         } else {
-            return serviceSuccess(response.getRight().getBody());
+            return serviceFailure(new Error(EXPERIAN_VALIDATION_FAILED));
         }
     }
 
