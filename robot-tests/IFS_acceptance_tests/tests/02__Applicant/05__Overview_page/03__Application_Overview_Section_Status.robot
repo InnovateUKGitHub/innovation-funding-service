@@ -19,7 +19,8 @@ Green check shows after marking a question as complete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
     [Setup]
-    When The user navigates to the overview page of the Robot test application
+    Given the user makes sure that the finances section is not marked as complete
+    When the user navigates to the overview page of the Robot test application
     And none of the sections are marked as complete
     And the user clicks the button/link    link=4. Economic benefit
     And the applicant adds some content and marks this section as complete
@@ -39,7 +40,7 @@ Blue flag shows after marking a question as incomplete
 Green check shows when finances are marked as complete
     [Documentation]    INFUND-1733
     [Tags]    Finances
-    [Setup]    Run keywords    the user marks the finance section as not complete    Make the finances ready for mark as complete
+    [Setup]    Run keywords     Make the finances ready for mark as complete
     When the user marks the finances as complete
     Then the user should see the element    jQuery=#section-6 .section:nth-child(1) img[src*="/images/field/field-done-right"]
     [Teardown]    Run keywords    Applicant navigates to the finances of the Robot application
@@ -57,3 +58,8 @@ none of the sections are marked as complete
 
 the applicant can see that the economics benefit section is marked as complete
     the user should see the element    jQuery=#section-2 .section:nth-child(4) img[src*="/images/field/field-done-right"]
+
+the user makes sure that the finances section is not marked as complete
+    the user navigates to the overview page of the Robot test application
+    the user clicks the button/link    link=Your finances
+    run keyword and ignore error     the user clicks the button/link       Edit

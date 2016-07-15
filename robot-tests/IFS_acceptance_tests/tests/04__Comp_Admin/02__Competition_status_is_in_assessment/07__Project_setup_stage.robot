@@ -336,7 +336,7 @@ MO details can be edited and updated
     And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user reloads the page
     Then the edited text should be visible
-    [Add step to check the status change in PS page]
+    #Add step to check the status change in PS page
 
 MO details can be viewed on the page after editting
     [Documentation]    INFUND-3330
