@@ -1,7 +1,7 @@
 package com.worth.ifs.application.form;
 
+import com.worth.ifs.commons.validation.ValidationConstants;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.util.FormUtil;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -14,7 +14,7 @@ public class InviteeForm implements Serializable {
     @NotEmpty
     private String personName;
     @NotEmpty
-    @Email(regexp = FormUtil.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)
     private String email;
     private InviteStatusConstants inviteStatus;
 

@@ -259,8 +259,9 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Error lastNameError = fieldError("lastName", "NotEmpty");
         Error emailError = fieldError("email", "Email");
         Error phoneNumberError = fieldError("phoneNumber", "Pattern");
+        Error phoneNumberLengthError = fieldError("phoneNumber", "Size");
 
-        RestErrorResponse expectedErrors = new RestErrorResponse(asList(firstNameError, lastNameError, emailError, phoneNumberError));
+        RestErrorResponse expectedErrors = new RestErrorResponse(asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
