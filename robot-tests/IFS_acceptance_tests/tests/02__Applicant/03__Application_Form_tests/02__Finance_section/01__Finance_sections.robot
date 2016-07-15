@@ -48,7 +48,9 @@ Finance fields are empty
     Then the Funding levels value should be empty
 
 User presses back button should get the correct version of the page
+    [Tags]    Pending
     [Setup]    The user adds three material rows
+    # pending INFUND-4026
     When the user clicks the button/link    link=Please refer to our guide to project costs for further information.
     And the user should see the text in the page    Guide on eligible project costs and completing the finance form
     And the user goes back to the previous page
@@ -67,8 +69,8 @@ the Applicant should see all the "Your Finance" Sections
 
 the user adds three material rows
     the user clicks the button/link    jQuery=button:contains("Materials")
-    Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    #Focus    jQuery=button:contains('Add another materials cost')
+    #the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Focus    jQuery=button:contains('Add another materials cost')
     the user clicks the button/link    jQuery=button:contains('Add another materials cost')

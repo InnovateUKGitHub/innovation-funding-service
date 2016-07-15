@@ -18,14 +18,15 @@ Labour client side
     [Documentation]    INFUND-844
     [Tags]
     Given the user clicks the button/link    jQuery=button:contains("Labour")
-    And the user clicks the button/link    jQuery=button:contains('Add another role')
+    #And the user clicks the button/link    jQuery=button:contains('Add another role')
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    -1
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     Then the user gets the expected validation errors    This field should be 1 or higher    This field cannot be left blank
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    366
-    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    -1
+    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    12121212121212121212121212
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112
-    Then the user gets the expected validation errors    You must enter a value less than 10 digits    This field should be 1 or higher
+    And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
+    Then the user gets the expected validation errors    You must enter a value less than 10 digits    You must enter a value less than 20 digits
     And the user gets the expected validation errors    This field should be 365 or lower    This field cannot be left blank
     When the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    123456789101112131415161718192021
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    120
@@ -81,7 +82,7 @@ Admin costs server side
 Materials client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link    jQuery=button:contains("Materials")
-    And the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    #And the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
     Then the user gets the expected validation errors    You must enter a value less than 10 digits    This field should be 1 or higher
@@ -110,7 +111,7 @@ Materials server side
 Capital usage client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link    jQuery=button:contains("Capital usage")
-    And the user clicks the button/link    jQuery=button:contains('Add another asset')
+    #And the user clicks the button/link    jQuery=button:contains('Add another asset')
     When the user enters text to a text field    css=.form-finances-capital-usage-depreciation    ${EMPTY}
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    12121212121212121212121212121
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
@@ -142,7 +143,7 @@ Capital usage server side
 Subcontracting costs client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
-    And the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
+    #And the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
     When the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    ${EMPTY}
     And the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank    This field should be 1 or higher
@@ -161,7 +162,7 @@ Subcontracting costs server side
 Travel and subsistence client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
-    And the user clicks the button/link    jQuery=button:contains('Add another travel cost')
+    #And the user clicks the button/link    jQuery=button:contains('Add another travel cost')
     When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0123456789101112131415161718192021
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
@@ -189,7 +190,7 @@ Travel and subsistence server side
 Other costs client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link    jQuery=button:contains("Other Costs")
-    And the user clicks the button/link    jQuery=button:contains('Add another cost')
+    #And the user clicks the button/link    jQuery=button:contains('Add another cost')
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
     And the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank    This field should be 1 or higher
@@ -236,7 +237,8 @@ Funding level server side
 Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]    Run keywords    the user clicks the button/link    jQuery=label:contains(Yes) input
+    [Setup]    Run keywords    Focus    jQuery=label:contains(Yes) input
+    ...    AND    the user clicks the button/link    jQuery=label:contains(Yes) input
     ...    AND    Focus    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
@@ -290,7 +292,8 @@ the user reloads the page with validation errors
     Mouse Out    css=input
     Focus    jQuery=button:contains("Mark all as complete")
     sleep    300ms
-    the user reloads the page
+    Reload Page
+    run keyword and ignore error    confirm action
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
