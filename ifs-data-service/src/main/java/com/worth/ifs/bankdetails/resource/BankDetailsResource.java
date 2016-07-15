@@ -2,6 +2,7 @@ package com.worth.ifs.bankdetails.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -29,6 +30,12 @@ public class BankDetailsResource {
 
     @NotNull(message = "Organisation id is mandatory")
     private Long organisation;
+
+    private OrganisationTypeResource organisationType;
+
+    private String companyName;
+
+    private String registrationNumber;
 
     public Long getId() {
         return id;
@@ -78,6 +85,30 @@ public class BankDetailsResource {
         this.organisation = organisation;
     }
 
+    public OrganisationTypeResource getOrganisationType() {
+        return organisationType;
+    }
+
+    public void setOrganisationType(OrganisationTypeResource organisationType) {
+        this.organisationType = organisationType;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
     @JsonIgnore
     public boolean isApproved(){
         return true;
@@ -98,6 +129,9 @@ public class BankDetailsResource {
                 .append(project, that.project)
                 .append(organisationAddress, that.organisationAddress)
                 .append(organisation, that.organisation)
+                .append(organisationType, that.organisationType)
+                .append(companyName, that.companyName)
+                .append(registrationNumber, that.registrationNumber)
                 .isEquals();
     }
 
@@ -110,6 +144,9 @@ public class BankDetailsResource {
                 .append(project)
                 .append(organisationAddress)
                 .append(organisation)
+                .append(organisationType)
+                .append(companyName)
+                .append(registrationNumber)
                 .toHashCode();
     }
 }
