@@ -21,7 +21,7 @@ public class OrganisationSearchRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<List<OrganisationSearchResult>> searchOrganisation(Long organisationTypeId, String organisationSearchText) {
-        return getWithRestResultAnonymous(organisationRestURL + "/searchOrganisations/" + organisationTypeId + "/"+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
+        return getWithRestResultAnonymous(organisationRestURL + "/searchOrganisations/" + organisationTypeId + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
     }
 
     @Override

@@ -3,7 +3,7 @@
 <head>
 	<div th:include="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" th:remove="tag" />
 </head>
-<body class="competition-management assign-mo">
+<body th:with="context='comp-management'" class="competition-management assign-mo">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -49,7 +49,7 @@
 										<span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
 								</th:block>
 							</label>
-							<input type="text" th:errorclass="field-error" required="required" data-required-errormessage="Please provide a first name" class="form-control width-full" th:readonly="${readonly}" th:field="*{firstName}" />
+							<input type="text" th:errorclass="field-error" required="required" data-required-errormessage="Please enter a first name" class="form-control width-full" th:readonly="${readonly}" th:field="*{firstName}" />
 						</div>
 
 						  <div class="form-group" th:classappend="${#fields.hasErrors('lastName') ? 'error' : ''}">
@@ -59,7 +59,7 @@
 													<span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
 											</th:block>
 							  </label>
-							  <input type="text"  th:errorclass="field-error" required="required" data-required-errormessage="Please provide a last name"  class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
+							  <input type="text"  th:errorclass="field-error" required="required" data-required-errormessage="Please enter a last name"  class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
 						  </div>
 
 						  <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress') ? 'error' : ''}">
@@ -69,7 +69,7 @@
 													<span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}" />
 											</th:block>
 							  </label>
-							  <input type="email" th:errorclass="field-error" required="required" data-required-errormessage="Please provide an email address" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
+							  <input type="email" th:errorclass="field-error" required="required" data-required-errormessage="Please enter an email address" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
 						  </div>
 
 						  <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber') ? 'error' : ''}">
@@ -79,14 +79,14 @@
 											<span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
 									</th:block>
 							  </label>
-							  <input type="tel" th:errorclass="field-error" required="required" data-required-errormessage="Please provide a phone number" class="form-control" th:readonly="${readonly}" th:field="*{phoneNumber}" />
+							  <input type="tel" th:errorclass="field-error" required="required" data-required-errormessage="Please enter a phone number" class="form-control" th:readonly="${readonly}" th:field="*{phoneNumber}" />
 						  </div>
 
 						  <a th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
 							  Change Monitoring Officer
 						  </a>
 
-						  <button data-js-modal="modal-assign-mo" type="submit" class="button" th:if="${model.displayAssignMonitoringOfficerLink}">
+						  <button data-js-modal="modal-assign-mo" type="submit" class="button" th:if="${model.displayAssignMonitoringOfficerButton}">
 							  Assign Monitoring Officer
 						  </button>
 

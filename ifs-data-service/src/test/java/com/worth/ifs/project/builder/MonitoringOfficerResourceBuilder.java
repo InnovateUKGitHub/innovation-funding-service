@@ -17,7 +17,12 @@ public class MonitoringOfficerResourceBuilder extends BaseBuilder<MonitoringOffi
     }
 
     public static MonitoringOfficerResourceBuilder newMonitoringOfficerResource() {
-        return new MonitoringOfficerResourceBuilder(emptyList()).with(uniqueIds());
+        return new MonitoringOfficerResourceBuilder(emptyList()).
+                with(uniqueIds()).
+                withIdBased((id, mo) -> mo.setFirstName("Monitoring " + id)).
+                withIdBased((id, mo) -> mo.setLastName("Officer " + id)).
+                withIdBased((id, mo) -> mo.setEmail("mo" + id + "@example.com")).
+                withIdBased((id, mo) -> mo.setPhoneNumber(id + " 9999"));
     }
 
     @Override
@@ -50,8 +55,8 @@ public class MonitoringOfficerResourceBuilder extends BaseBuilder<MonitoringOffi
         return with((monitoringOfficerResource) -> monitoringOfficerResource.setPhoneNumber(phoneNumber));
     }
 
-    public MonitoringOfficerResourceBuilder withProject(Long project){
-        return with((monitoringOfficerResource) -> monitoringOfficerResource.setProject(project));
+    public MonitoringOfficerResourceBuilder withProject(Long... project){
+        return withArray((projectId, monitoringOfficerResource) -> monitoringOfficerResource.setProject(projectId), project);
     }
 
 }

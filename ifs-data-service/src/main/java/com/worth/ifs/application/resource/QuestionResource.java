@@ -24,7 +24,6 @@ public class QuestionResource {
     private Integer priority;
     private boolean needingAssessorScore;
     private boolean needingAssessorFeedback;
-    private String assessorConfirmationQuestion;
     private Long competition;
     private Long section;
     private List<Long> questionStatuses;
@@ -121,10 +120,6 @@ public class QuestionResource {
         return this.priority;
     }
 
-    public String getAssessorConfirmationQuestion() {
-        return this.assessorConfirmationQuestion;
-    }
-
     public String getQuestionNumber() {
         return this.questionNumber;
     }
@@ -183,10 +178,6 @@ public class QuestionResource {
         this.priority = priority;
     }
 
-    public void setAssessorConfirmationQuestion(String assessorConfirmationQuestion) {
-        this.assessorConfirmationQuestion = assessorConfirmationQuestion;
-    }
-
     public void setCompetition(Long competition) {
         this.competition = competition;
     }
@@ -237,7 +228,6 @@ public class QuestionResource {
                 .append(assignEnabled, that.assignEnabled)
                 .append(multipleStatuses, that.multipleStatuses)
                 .append(priority, that.priority)
-                .append(assessorConfirmationQuestion, that.assessorConfirmationQuestion)
                 .append(competition, that.competition)
                 .append(section, that.section)
                 .append(questionStatuses, that.questionStatuses)
@@ -262,7 +252,6 @@ public class QuestionResource {
                 .append(priority)
                 .append(needingAssessorScore)
                 .append(needingAssessorFeedback)
-                .append(assessorConfirmationQuestion)
                 .append(competition)
                 .append(section)
                 .append(questionStatuses)

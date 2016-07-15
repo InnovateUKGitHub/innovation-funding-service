@@ -1,4 +1,4 @@
-IFS.autoSave = (function(){
+IFS.core.autoSave = (function(){
     "use strict";
     var s; // private alias to settings
     var promiseList = {};
@@ -22,14 +22,14 @@ IFS.autoSave = (function(){
                 if(e.type == 'keyup'){
                   //wait until the user stops typing
                   clearTimeout(autoSave_timer);
-                  autoSave_timer = setTimeout(function(){ IFS.autoSave.fieldChanged(e.target); }, s.typeTimeout);
+                  autoSave_timer = setTimeout(function(){ IFS.core.autoSave.fieldChanged(e.target); }, s.typeTimeout);
                 }
                 else {
-                    IFS.autoSave.fieldChanged(e.target);
+                    IFS.core.autoSave.fieldChanged(e.target);
                 }
             });
             jQuery('body').on('change', s.inputs, function(e){
-                IFS.autoSave.fieldChanged(e.target);
+                IFS.core.autoSave.fieldChanged(e.target);
             });
         },
         fieldChanged : function (element){
@@ -66,7 +66,7 @@ IFS.autoSave = (function(){
               if(typeof(promiseList[name]) == 'undefined'){
                 promiseList[name] = jQuery.when({}); //fire first promise :)
               }
-              promiseList[name] = promiseList[name].then(IFS.autoSave.processAjax(field, applicationId,jsonObj));
+              promiseList[name] = promiseList[name].then(IFS.core.autoSave.processAjax(field, applicationId,jsonObj));
           }
         },
         processAjax : function(field,applicationId, data){
@@ -92,7 +92,7 @@ IFS.autoSave = (function(){
             })
             .done(function(data){
                 var doneAjaxTime = new Date().getTime();
-                var remainingWaitingTime = (IFS.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
+                var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
                 // set the form-saved-state
                 jQuery('body').trigger('updateSerializedFormState');
@@ -115,16 +115,16 @@ IFS.autoSave = (function(){
                 	
                 	//save message
                     setTimeout(function(){
-                        IFS.autoSave.clearServerSideValidationErrors(field);
+                        IFS.core.autoSave.clearServerSideValidationErrors(field);
                         formTextareaSaveInfo.html('Saved!');
                     }, remainingWaitingTime);
                 }else{
                     setTimeout(function(){
-                        IFS.autoSave.clearServerSideValidationErrors(field);
+                        IFS.core.autoSave.clearServerSideValidationErrors(field);
                         formTextareaSaveInfo.html('Saved!');
                         if(s.hideAjaxValidation === false){
                           jQuery.each(data.validation_errors, function(index, value){
-                              IFS.formValidation.setInvalid(field,value);
+                              IFS.core.formValidation.setInvalid(field,value);
                               serverSideValidationErrors.push(value);
                           });
                         }
@@ -132,7 +132,7 @@ IFS.autoSave = (function(){
                 }
             }).fail(function(data) {
                 var doneAjaxTime = new Date().getTime();
-                var remainingWaitingTime = (IFS.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
+                var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
                 if(typeof(data.responseJSON) !== 'undefined'){
                   setTimeout(function(){
                       var errorMessage = data.responseJSON.errorMessage;
@@ -144,7 +144,7 @@ IFS.autoSave = (function(){
                              var label = formGroup.find('label,legend').first();
                              if (label.length) {
                                serverSideValidationErrors.push(errorMessage);
-                               IFS.formValidation.setInvalid(field,errorMessage);
+                               IFS.core.formValidation.setInvalid(field,errorMessage);
                              }
                           }
                       } else {
@@ -157,7 +157,7 @@ IFS.autoSave = (function(){
                      var err = jQuery.parseJSON(xhr.responseText);
                      var errorMessage = err.error+' : '+err.message;
                      serverSideValidationErrors.push(errorMessage);
-                     IFS.formValidation.setInvalid(field,errorMessage);
+                     IFS.core.formValidation.setInvalid(field,errorMessage);
                      formTextareaSaveInfo.html('');
                  }
            }).complete(function(){
@@ -168,7 +168,7 @@ IFS.autoSave = (function(){
         },
         clearServerSideValidationErrors : function(field){
             for (var i = 0; i < serverSideValidationErrors.length; i++){
-                 IFS.formValidation.setValid(field,serverSideValidationErrors[i]);
+                 IFS.core.formValidation.setValid(field,serverSideValidationErrors[i]);
             }
         }
 

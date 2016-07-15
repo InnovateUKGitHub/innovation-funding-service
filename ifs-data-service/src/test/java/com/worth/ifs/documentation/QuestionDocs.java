@@ -22,7 +22,6 @@ public class QuestionDocs {
             fieldWithPath("needingAssessorFeedback").description("boolean to indicate if the question needs assessor feedback"),
             fieldWithPath("needingAssessorScore").description("boolean to indicate if the question needs an assessor score"),
             fieldWithPath("formInputs").description("list of the inputs used to answer the question"),
-            fieldWithPath("assessorConfirmationQuestion").description("scope verification question for the assessor"),
             fieldWithPath("questionStatuses").description("List of question statuses"),
             fieldWithPath("questionNumber").description("number of the question"),
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
@@ -42,7 +41,6 @@ public class QuestionDocs {
             .withPriority(1)
             .withNeedingAssessorFeedback(true)
             .withNeedingAssessorScore(true)
-            .withAssessorConfirmationQuestion("confirmation question")
             .withCompetition(1L)
             .withSection(1L)
             .withQuestionStatuses(asList(1L, 2L))

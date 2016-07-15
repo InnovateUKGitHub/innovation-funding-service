@@ -100,10 +100,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((assessorGuidanceAnswer, object) -> setField("assessorGuidanceAnswer", assessorGuidanceAnswer, object), assessorGuidanceAnswers);
     }
 
-    public QuestionBuilder withAssessorConfirmationQuestion(String... assessorConfirmationQuestions) {
-        return withArray((assessorConfirmationQuestion, object) -> setField("assessorConfirmationQuestion", assessorConfirmationQuestion, object), assessorConfirmationQuestions);
-    }
-
     public QuestionBuilder withCompetition(Competition... competitions) {
         return withArray((competition, object) -> setField("competition", competition, object), competitions);
     }

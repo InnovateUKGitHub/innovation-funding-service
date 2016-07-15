@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -27,8 +28,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
-import static org.hamcrest.Matchers.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -146,25 +149,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(3, messages.getErrors().size());
         assertEquals(labourCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
+        List<Error> expectedErrors = asList(
+                fieldError("labourDays", "This field should be 1 or higher"),
+                fieldError("grossAnnualSalary", "This field should be 1 or higher"),
+                fieldError("role", "This field cannot be left blank"));
 
-        assertThat(messages.getErrors(),
-                containsInAnyOrder(
-                        allOf(
-                                hasProperty("errorKey", is("labourDays")),
-                                hasProperty("errorMessage", is("This field should be 1 or higher"))
-                        ),
-                        allOf(
-                                hasProperty("errorKey", is("grossAnnualSalary")),
-                                hasProperty("errorMessage", is("This field should be 1 or higher"))
-                        ),
-                        allOf(
-                                hasProperty("errorKey", is("role")),
-                                hasProperty("errorMessage", is("This field cannot be left blank"))
-                        )
-                )
-        );
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -212,14 +204,12 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(1, messages.getErrors().size());
         assertEquals(overhead.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("rate")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("rate", "This field should be 1 or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -234,14 +224,12 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(1, messages.getErrors().size());
         assertEquals(overhead.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("rate")),
-                        hasProperty("errorMessage", is("This field should be 100 or lower"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("rate", "This field should be 100 or lower"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
 
@@ -268,25 +256,16 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(3, messages.getErrors().size());
         assertEquals(materials.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("item")),
-                        hasProperty("errorMessage", is("This field cannot be left blank"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("quantity")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("cost")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                )
-        ));
+        List<Error> expectedErrors = asList(
+                fieldError("item", "This field cannot be left blank"),
+                fieldError("quantity", "This field should be 1 or higher"),
+                fieldError("cost", "This field should be 1 or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -336,37 +315,19 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(6, messages.getErrors().size());
         assertEquals(capitalUsage.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("description")),
-                        hasProperty("errorMessage", is("This field cannot be left blank"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("existing")),
-                        hasProperty("errorMessage", is("This field cannot be left blank"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("deprecation")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("residualValue")),
-                        hasProperty("errorMessage", is("This field should be 0 or higher"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("npv")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("utilisation")),
-                        hasProperty("errorMessage", is("This field should be 0 or higher"))
-                )
-        ));
+        List<Error> expectedErrors = asList(
+                fieldError("description", "This field cannot be left blank"),
+                fieldError("existing", "This field cannot be left blank"),
+                fieldError("deprecation", "This field should be 1 or higher"),
+                fieldError("residualValue", "This field should be 0 or higher"),
+                fieldError("npv", "This field should be 1 or higher"),
+                fieldError("utilisation", "This field should be 0 or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -382,21 +343,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(2, messages.getErrors().size());
         assertEquals(capitalUsage.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("existing")),
-                        hasProperty("errorMessage", is("This field cannot contain more than 255 characters"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("utilisation")),
-                        hasProperty("errorMessage", is("This field should be 100 or lower"))
-                )
-        ));
+        List<Error> expectedErrors = asList(
+                fieldError("existing", "This field cannot contain more than 255 characters"),
+                fieldError("utilisation", "This field should be 100 or lower"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     /* SubContracting Section Tests */
@@ -426,25 +381,16 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(3, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("item")),
-                        hasProperty("errorMessage", is("This field cannot be left blank"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("cost")),
-                        hasProperty("errorMessage", is("may not be null"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("quantity")),
-                        hasProperty("errorMessage", is("may not be null"))
-                )
-        ));
+        List<Error> expectedErrors = asList(
+                fieldError("item", "This field cannot be left blank"),
+                fieldError("cost", "may not be null"),
+                fieldError("quantity", "may not be null"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -485,25 +431,16 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(3, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("item")),
-                        hasProperty("errorMessage", is("This field cannot be left blank"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("cost")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("quantity")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                )
-        ));
+        List<Error> expectedErrors = asList(
+                fieldError("item", "This field cannot be left blank"),
+                fieldError("cost", "This field should be 1 or higher"),
+                fieldError("quantity", "This field should be 1 or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -519,22 +456,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertEquals(300, overMaxAllowedTextSize.length());
 
-        assertEquals(2, messages.getErrors().size());
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("cost")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("quantity")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
+        List<Error> expectedErrors = asList(
+                fieldError("cost", "This field should be 1 or higher"),
+                fieldError("quantity", "This field should be 1 or higher"));
 
-                )
-        ));
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     /* Other Cost Section Tests */
@@ -560,17 +490,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(1, messages.getErrors().size());
         assertEquals(otherCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("cost")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("cost", "This field should be 1 or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -583,22 +510,15 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(2, messages.getErrors().size());
         assertEquals(otherCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
-        messages.getErrors().get(0);
+        List<Error> expectedErrors = asList(
+                fieldError("description", "This field cannot be left blank"),
+                fieldError("cost", "This field should be 1 or higher"));
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("description")),
-                        hasProperty("errorMessage", is("This field cannot be left blank"))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("cost")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                )
-        ));
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
      /* Other funding section Tests */
@@ -629,24 +549,16 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(otherFundingCost.getId(), otherFundingCost);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(3, messages.getErrors().size());
         assertEquals(otherFundingCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
-        assertThat(messages.getErrors(), containsInAnyOrder(
-                allOf(
-                        hasProperty("errorKey", is("securedDate")),
-                        hasProperty("errorMessage", is("Invalid secured date.  Please use MM-YYYY format."))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("fundingSource")),
-                        hasProperty("errorMessage", is("Funding source cannot be blank."))
-                ),
-                allOf(
-                        hasProperty("errorKey", is("fundingAmount")),
-                        hasProperty("errorMessage", is("This field should be 1 or higher"))
-                )
-        ));
+        List<Error> expectedErrors = asList(
+                fieldError("securedDate", "Invalid secured date.  Please use MM-YYYY format."),
+                fieldError("fundingSource", "Funding source cannot be blank."),
+                fieldError("fundingAmount", "This field should be 1 or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     /* Grant Claim Section Tests - Small Organisation Size */
@@ -673,17 +585,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is("This field should be 70% or lower"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("grantClaimPercentage", "This field should be 70% or lower"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -697,17 +606,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is("This field should be 0% or higher"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("grantClaimPercentage", "This field should be 0% or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
      /* Grant Claim Section Tests - Medium Organisation Size */
@@ -738,17 +644,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is("This field should be 60% or lower"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("grantClaimPercentage", "This field should be 60% or lower"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -763,17 +666,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is("This field should be 0% or higher"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("grantClaimPercentage", "This field should be 0% or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     /* Grant Claim Section Tests - Large Organisation Size */
@@ -804,17 +704,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
 
-        assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is("This field should be 50% or lower"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("grantClaimPercentage", "This field should be 50% or lower"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
     @Rollback
@@ -832,13 +729,11 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
-        messages.getErrors().get(0);
 
-        assertThat(messages.getErrors(), contains(
-                allOf(
-                        hasProperty("errorKey", is("grantClaimPercentage")),
-                        hasProperty("errorMessage", is("This field should be 0% or higher"))
-                )
-        ));
+        List<Error> expectedErrors = singletonList(
+                fieldError("grantClaimPercentage", "This field should be 0% or higher"));
+
+        assertEquals(expectedErrors.size(), messages.getErrors().size());
+        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 }

@@ -1,5 +1,7 @@
 package com.worth.ifs.commons.service;
 
+import com.worth.ifs.commons.error.ErrorHolder;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -8,7 +10,7 @@ import java.util.function.Supplier;
  * other functions to produce results in the event of successes or failures by "mapping" over this object with the "andOnSuccess()" and
  * handleSuccessOrFailure() methods
  */
-public interface FailingOrSucceedingResult<SuccessType, FailureType> {
+public interface FailingOrSucceedingResult<SuccessType, FailureType> extends ErrorHolder {
 
     SuccessType getSuccessObject();
 

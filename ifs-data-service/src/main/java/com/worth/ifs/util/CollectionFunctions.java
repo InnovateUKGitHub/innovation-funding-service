@@ -368,7 +368,7 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> List<T> simpleFilter(List<T> list, Predicate<T> filterFn) {
+    public static <T> List<T> simpleFilter(Collection<T> list, Predicate<T> filterFn) {
         if (list == null || list.isEmpty()) {
             return emptyList();
         }

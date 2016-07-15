@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Eligibility'}, ${'/prototypes/1581-project-eligibility?status=approved'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Changes to finances'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<table class="project-changes">
+		<thead>
+			<tr>
+				<th scope="col" style="width: 15%">Action</th>
+				<th scope="col" style="width: 15%">Section</th>
+				<th scope="col" style="width: 15%">Detail</th>
+				<th scope="col" style="width: 20%">Submitted</th>
+				<th scope="col" style="width: 20%">Updated</th>
+				<th scope="col" style="width: 15%" class="numeric">Cost</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>Overall</th>
+				<th colspan="5" class="numeric">-&pound;60,045</th>
+			</tr>
+		</tfoot>
+		<tbody>
+			<tr>
+				<td rowspan="4">Change</td>
+				<td rowspan="4">Labour</td>
+				<th scope="row">Role</th>
+				<td>Programmer</td>
+				<td>Programmer</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Gross annual salary</th>
+				<td>&pound;25,000</td>
+				<td>&pound;25,000</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Rate</th>
+				<td>24</td>
+				<td>24</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr class="item-changed">
+				<th scope="row">Days to be spent</th>
+				<td>258</td>
+				<td class="item-changed">189</td>
+				<td class="numeric">-&pound;3,000</td>
+			</tr>
+
+			<tr class="item-changed">
+				<td>Change</td>
+				<td>Admin support costs</td>
+				<th scope="row">Percentage of labour costs</th>
+				<td>35%</td>
+				<td class="item-changed">20%</td>
+				<td class="numeric">-&pound;50,000</td>
+			</tr>
+
+			<tr>
+				<td rowspan="4">Change</td>
+				<td rowspan="4">Materials</td>
+				<th scope="row">Item</th>
+				<td>Office chair</td>
+				<td>Office chair</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr class="item-changed">
+				<th scope="row">Quantity</th>
+				<td>18</td>
+				<td>17</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Cost per item</th>
+				<td>&pound;45</td>
+				<td>&pound;45</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Total</th>
+				<td>&pound;810</td>
+				<td>&pound;765</td>
+				<td class="numeric">-&pound;45</td>
+			</tr>
+
+			<tr>
+				<td rowspan="7">Remove</td>
+				<td rowspan="7">Capital usage</td>
+				<th scope="row">Item description</th>
+				<td>Description of capital usage</td>
+				<td>Removed</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">New or existing</th>
+				<td>New</td>
+				<td>Removed</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Depreciation period</th>
+				<td>12 months</td>
+				<td>Removed</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Net present value</th>
+				<td>&pound;4,500</td>
+				<td>Removed</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Residual value</th>
+				<td>&pound;0</td>
+				<td>Removed</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Utilisation</th>
+				<td>100%</td>
+				<td>Removed</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Net cost</th>
+				<td>&pound;4,500</td>
+				<td>Removed</td>
+				<td class="numeric">-&pound;4,000</td>
+			</tr>
+			
+			<tr>
+				<td rowspan="4">Change</td>
+				<td rowspan="4">Subcontracting costs</td>
+				<th scope="row">Suncontractor name</th>
+				<td>Paul Davidson</td>
+				<td>Paul Davidson</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr>
+				<th scope="row">Country</th>
+				<td>United Kingdom</td>
+				<td>United Kingdom</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr class="item-changed">
+				<th scope="row">Role</th>
+				<td>Overall design of the website for the product</td>
+				<td>Supporting design of the website for the product</td>
+				<td class="numeric">&nbsp;</td>
+			</tr>
+			<tr class="item-changed">
+				<th scope="row">Cost</th>
+				<td>&pound;4,000</td>
+				<td>&pound;2,000</td>
+				<td class="numeric">-&pound;2,000</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<div class="extra-margin">
+		<a href="/prototypes/1581-project-eligibility?status=approved" class="button button-secondary">Return to eligibility</a>
+	</div>
+
+	
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	
+	// ]]>
+</script>
+</body>
+</html>

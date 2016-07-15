@@ -44,6 +44,7 @@ Don't use the javascript underneath which is just for demo, just add the html fr
 <button onclick="showNoAnimation()">Show an alert that stays on top</button>
 ```
 */
+@import "compass/css3/animation";
 @include keyframes(slideup) {
     0% {
         @include transform(translate(0,0));

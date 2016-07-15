@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
 </head>
-<body class="app-dashboard">
+<body th:with="context='applicant'" class="app-dashboard">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -39,7 +39,7 @@
                 </li>
             </ul>
         </section>
-           
+
         <section class="in-progress">
             <h2 class="heading-medium">Application in progress</h2>
             <ul class="boxed-list">
@@ -86,7 +86,7 @@
                     <div class="grid-row">
                         <div class="column-assessment-details">
                             <h3 class="heading-medium">
-                                <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="${#numbers.formatInteger(application.id,8)} + ': ' + (${application.getApplicationDisplayName()}) ">placeholder</a>
+                                <a th:href="@{/application/{id}/summary(id=${application.getId()})}" th:text="${#numbers.formatInteger(application.id,8)} + ': ' + (${application.getApplicationDisplayName()}) ">placeholder</a>
                             </h3>
                         </div>
                         <div class="column-assessment-status navigation-right">

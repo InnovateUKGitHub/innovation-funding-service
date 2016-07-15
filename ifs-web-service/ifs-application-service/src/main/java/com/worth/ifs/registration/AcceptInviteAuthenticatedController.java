@@ -13,6 +13,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.registration.service.RegistrationService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -39,6 +41,8 @@ public class AcceptInviteAuthenticatedController extends BaseController{
     @Autowired
     private OrganisationService organisationService;
     @Autowired
+    private RegistrationService registrationService;
+    @Autowired
     UserAuthenticationService userAuthenticationService;
 
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation", method = RequestMethod.GET)
@@ -53,7 +57,10 @@ public class AcceptInviteAuthenticatedController extends BaseController{
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
-                if (invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)){
+                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
+
+                if (failureMessages.size() > 0){
+                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
                     return "registration/accept-invite-failure";
                 }
                 OrganisationResource organisation = getUserOrInviteOrganisation(loggedInUser, inviteOrganisation);
@@ -86,7 +93,11 @@ public class AcceptInviteAuthenticatedController extends BaseController{
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
-                if (invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
+                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
+
+                if (failureMessages.size() > 0){
+                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
+
                     return "registration/accept-invite-failure";
                 }
                 inviteRestService.acceptInvite(hash, loggedInUser.getId()).getSuccessObjectOrThrowException();
@@ -111,19 +122,6 @@ public class AcceptInviteAuthenticatedController extends BaseController{
             organisation = organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
         }
         return organisation;
-    }
-
-    static boolean invalidInvite(Model model, UserResource loggedInUser, InviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
-        if (!inviteResource.getEmail().equals(loggedInUser.getEmail())) {
-            // Invite is for different emailaddress then current logged in user.
-            model.addAttribute("failureMessageKey", "registration.LOGGED_IN_WITH_OTHER_ACCOUNT");
-            return true;
-        } else if (inviteOrganisation.getOrganisation() != null && !inviteOrganisation.getOrganisation().equals(loggedInUser.getOrganisations().get(0))) {
-            // Invite Organisation is already confirmed, with different organisation than the current users organisation.
-            model.addAttribute("failureMessageKey", "registration.MULTIPLE_ORGANISATIONS");
-            return true;
-        }
-        return false;
     }
 
     /**

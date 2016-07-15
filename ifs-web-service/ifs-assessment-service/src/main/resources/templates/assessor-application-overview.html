@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  th:remove="tag"></div>
 </head>
-<body class="assessment assessment-overview">
+<body th:with="context='assessment'" class="assessment assessment-overview">
 
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 <div th:include="fragments/modals :: reject-assesment-modal" th:remove="tag" />
@@ -16,7 +16,7 @@
     <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${currentCompetition.id})},daysPercentage=${daysLeftPercentage},daysLeft=${daysLeft}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+        <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
         <h1 class="heading-xlarge">Assessment overview</h1>
     </div>
 

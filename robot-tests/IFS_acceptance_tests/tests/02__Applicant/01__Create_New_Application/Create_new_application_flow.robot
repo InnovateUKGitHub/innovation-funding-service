@@ -42,7 +42,7 @@ Non registered users CH route
     And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    worth.email.test+1@gmail.com
+    And the user enters the details and clicks the create account    ${test_mailbox_one}+1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Non registered users CH route (email step)
@@ -58,7 +58,7 @@ Non registered users CH route (email step)
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
@@ -79,7 +79,7 @@ The email address does not stay in the cookie
     And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    worth.email.test+1@gmail.com
+    Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
 
 Non registered users non CH route
     [Documentation]    INFUND-669
@@ -95,7 +95,7 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    worth.email.test+2@gmail.com
+    And the user enters the details and clicks the create account    ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Non registered users non CH route (email step)
@@ -104,11 +104,11 @@ Non registered users non CH route (email step)
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    HappyPath    Email
+    [Tags]    Email    HappyPath
     [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
@@ -121,7 +121,7 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
-    When guest user log-in    worth.email.test+1@gmail.com    Passw0rd123
+    When guest user log-in    ${test_mailbox_one}+1@gmail.com    Passw0rd123
     And the user edits the competition title
     Then the user should see the text in the page    test title
     And the progress indicator should show 0
@@ -142,7 +142,7 @@ Special Projecct Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    worth.email.test+project.finance1@gmail.com
+    And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Special Project Finance role (email step)
@@ -152,7 +152,7 @@ Special Project Finance role (email step)
     # Pending ongoing work on the project finance role
     Given the user opens the mailbox and verifies the email from
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    worth.email.test+project.finance1@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
     [Teardown]    Logout as user

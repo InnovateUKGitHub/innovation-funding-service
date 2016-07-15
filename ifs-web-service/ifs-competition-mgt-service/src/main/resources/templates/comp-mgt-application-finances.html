@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Finances'"  th:remove="tag" />
 </head>
-<body class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+<body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -33,7 +33,7 @@
 
 
 	<div class="page-title">
-            <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+            <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${title}" />
         </div>
         <form action="#"  method="post" th:object="${form}" enctype="multipart/form-data"

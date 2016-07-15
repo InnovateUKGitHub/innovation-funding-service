@@ -62,4 +62,8 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
     public ProjectBuilder withSubmittedDate(LocalDateTime... submittedDate){
         return withArray((subDate, project) -> project.setSubmittedDate(subDate), submittedDate);
     }
+
+    public ProjectBuilder withName(String name) {
+        return with((project) -> project.setName(name));
+    }
 }
