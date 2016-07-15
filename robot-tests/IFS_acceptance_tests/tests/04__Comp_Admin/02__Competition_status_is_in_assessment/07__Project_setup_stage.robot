@@ -9,6 +9,11 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...               INFUND-2614 As a lead partner I need to provide a target start date for the project so that Innovate UK has correct details for my project setup
 ...
 ...               INFUND-2620 As a partner I want to provide my organisation's finance contact details so that the correct person is assigned to the role
+...
+...               INFUND-2630 As a Competitions team member I want to be able to enter the details of a Monitoring Officer to assign them to the project and share their contact details with the consortium
+...
+...               INFUND-2632 As a Competitions team member I want to send an email to a Monitoring Officer so they are aware I have assigned them to a project
+Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -314,16 +319,19 @@ Standard verification for Phone number
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters
 
 MO details can be added and updated
-    [Documentation]    INFUND-3330
-    [Tags]    Pending
-    # Pending due to INFUND-3963
-    Then the user enters text to a text field    id=firstName    Pradha
+    [Documentation]    INFUND-3330, INFUND-3334
+    [Tags]   Pending
+    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
+    And the user navigates to the page  ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    Monitoring Officer
+    When the user enters text to a text field    id=firstName    Pradha
     And the user enters text to a text field    id=lastName    Muniraj
-    And the user enters text to a text field    id=emailAddress    pradha.muniraj@innovateuk.gov.uk
+    And the user enters text to a text field    id=emailAddress    worth.email.test+monitoringofficer@gmail.com
     And the user enters text to a text field    id=phoneNumber    07438620303
-    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    And the user reloads the page
-    Then the text should be visible
+    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+    Then the user should see the text in the page    A Monitoring Officer has been assigned.
+    And Open mailbox and confirm received email    worth.email.test+monitoringofficer@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    New Monitoring Officer assignment
 
 MO details can be edited and updated
     [Documentation]    INFUND-3330
@@ -337,7 +345,7 @@ MO details can be edited and updated
     And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user reloads the page
     Then the edited text should be visible
-    #Add step to check the status change in PS page
+    # TODO [Add step to check the status change in PS page]
 
 MO details can be viewed on the page after editting
     [Documentation]    INFUND-3330
