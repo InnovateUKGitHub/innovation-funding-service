@@ -1,6 +1,6 @@
 package com.worth.ifs.registration.form;
 
-import com.worth.ifs.util.FormUtil;
+import com.worth.ifs.commons.validation.ValidationConstants;
 import com.worth.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -21,7 +21,7 @@ public class RegistrationForm {
     private static final String PASSWORD_CANNOT_BE_SO_SHORT= "Password must at least be 10 characters";
     private static final String PASSWORD_CANNOT_BE_SO_LONG = "Password must not be more than 30 characters";
 
-    @Email(regexp = FormUtil.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
     @NotEmpty(message = "Please enter your email")
     @Size(max = 256, message = "Your email address has a maximum length of 256 characters")
     private String email;
