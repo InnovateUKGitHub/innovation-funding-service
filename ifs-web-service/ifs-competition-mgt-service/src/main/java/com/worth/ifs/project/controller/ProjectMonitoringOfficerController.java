@@ -67,7 +67,10 @@ public class ProjectMonitoringOfficerController {
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
-        return viewMonitoringOfficerWithNewFormInViewMode(model, projectId);
+
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
+        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
+        return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
 
     @RequestMapping(value = "/edit", method = GET)
@@ -75,7 +78,10 @@ public class ProjectMonitoringOfficerController {
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
-        return viewMonitoringOfficerWithNewFormInEditMode(model, projectId);
+
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
+        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
+        return editMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
 
     @RequestMapping(value = "/confirm", method = POST)
@@ -87,7 +93,7 @@ public class ProjectMonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
+        Supplier<String> failureView = () -> editMonitoringOfficer(model, projectId, form, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             doViewMonitoringOfficer(model, projectId, form, false, false);
@@ -104,7 +110,7 @@ public class ProjectMonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Supplier<String> failureView = () -> viewMonitoringOfficerWithExistingForm(model, projectId, form);
+        Supplier<String> failureView = () -> editMonitoringOfficer(model, projectId, form, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -124,25 +130,17 @@ public class ProjectMonitoringOfficerController {
         }
     }
 
-    private String viewMonitoringOfficerWithNewFormInViewMode(Model model, Long projectId) {
-        return doViewMonitoringOfficer(model, projectId, false);
+    private String viewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned) {
+        return doViewMonitoringOfficer(model, projectId, form, false, existingMonitoringOfficerAssigned);
     }
 
-    private String viewMonitoringOfficerWithNewFormInEditMode(Model model, Long projectId) {
-        return doViewMonitoringOfficer(model, projectId, true);
+    private String editMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned) {
+        return doViewMonitoringOfficer(model, projectId, form, true, existingMonitoringOfficerAssigned);
     }
 
-    private String viewMonitoringOfficerWithExistingForm(Model model, Long projectId, ProjectMonitoringOfficerForm form) {
-        return doViewMonitoringOfficer(model, projectId, form, true, false);
-    }
+    private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean currentlyEditing, boolean existingMonitoringOfficer) {
 
-    private String doViewMonitoringOfficer(Model model, Long projectId, boolean editMode) {
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
-        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
-        return doViewMonitoringOfficer(model, projectId, form, editMode, existingMonitoringOfficer.isPresent());
-    }
-
-    private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean editMode, boolean existingMonitoringOfficer) {
+        boolean editMode = currentlyEditing || !existingMonitoringOfficer;
 
         ProjectMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(projectId, editMode, existingMonitoringOfficer);
         model.addAttribute("model", viewModel);

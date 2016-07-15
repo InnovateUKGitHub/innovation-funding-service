@@ -1,6 +1,6 @@
 package com.worth.ifs.login;
 
-import com.worth.ifs.util.FormUtil;
+import com.worth.ifs.commons.validation.ValidationConstants;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class ResetPasswordRequestForm {
 
     @NotEmpty(message = "Please enter your e-mail address")
-    @Email(regexp = FormUtil.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid e-mail address")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid e-mail address")
     private String email;
 
     public String getEmail() {

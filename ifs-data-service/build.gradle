@@ -156,6 +156,7 @@ task client(type: Jar) {
         include "com/worth/ifs/commons/security/**"
         include "com/worth/ifs/commons/rest/**"
         include "com/worth/ifs/commons/error/**"
+        include "com/worth/ifs/commons/validation/**"
         include "com/worth/ifs/mappers/**"
         exclude "com/worth/ifs/**/transactional/**"
         exclude "com/worth/ifs/notifications/**"
