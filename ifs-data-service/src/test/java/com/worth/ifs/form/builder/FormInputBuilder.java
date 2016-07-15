@@ -3,7 +3,7 @@ package com.worth.ifs.form.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputScope;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.domain.FormInputType;
 
 import java.util.List;

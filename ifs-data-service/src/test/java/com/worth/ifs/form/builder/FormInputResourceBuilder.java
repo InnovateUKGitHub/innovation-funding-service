@@ -1,7 +1,7 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.form.domain.FormInputScope;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.resource.FormInputResource;
 
 import java.util.List;

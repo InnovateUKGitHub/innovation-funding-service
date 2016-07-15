@@ -1,4 +1,4 @@
-package com.worth.ifs.form.domain;
+package com.worth.ifs.form.resource;
 
 /**
  * Enumeration defining possible scopes for Form Inputs.

@@ -8,8 +8,8 @@ import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-import static com.worth.ifs.form.domain.FormInputScope.APPLICATION;
-import static com.worth.ifs.form.domain.FormInputScope.ASSESSMENT;
+import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
+import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 
 /**
