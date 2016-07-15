@@ -4,10 +4,9 @@ Documentation     INFUND-1987
 ...               INFUND-2307 Acceptance test: List of applications which are in assessment
 ...
 ...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
-...
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Comp admin
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -17,12 +16,14 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Competition status should be correct
     [Documentation]    INFUND-2307
+    [Tags]    HappyPath
     Given the user navigates to the page    ${COMP_ADMINISTRATOR_IN_ASSESSMENT}
     Then the user should see the text in the page    In assessment
     Then the user should not see the text in the page    Competition open
 
 Columns show of the submitted applications
     [Documentation]    INFUND-2307
+    [Tags]    HappyPath
     Then the user should see the text in the page    Application no
     And the user should see the text in the page    Project title
     And the user should see the text in the page    Lead
@@ -33,11 +34,13 @@ Columns show of the submitted applications
 
 Summary of the submitted applications
     [Documentation]    INFUND-2307
+    [Tags]    HappyPath
     Then the calculations should be correct    css=.info-area p:nth-child(2) span
     And both calculations in the page should show the same    css=.info-area p:nth-child(2) span
 
 Sort by Lead
     [Documentation]    INFUND-2307
+    [Tags]    HappyPath
     When the application list is sorted by    Lead
     Then the applications should be sorted by column    3
 
@@ -53,11 +56,13 @@ Sort by Total project cost
 
 Finances are showing in the list
     [Documentation]    INFUND-2411
+    [Tags]    HappyPath
     Then the user should see the text in the page    4608.00
     And the user should see the text in the page    7680.00
 
 Excel download button should be visible
     [Documentation]    INFUND-2307
+    [Tags]    HappyPath
     Then the user should see the element    link=Export application data (.xls)
 
 Only applications from this competition should be visible
@@ -82,13 +87,13 @@ Sorted by percentage
     When the application list is sorted by    Project title
     Then the applications should be sorted by column    2
 
-Only non submitted applications from this competition should be visible
+Non submitted applications from this competition should be visible
     [Documentation]    INFUND-2311
     Then the user should not see the element    link=00000001
 
 Excel export
     [Documentation]    INFUND-1987
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath    Failing
     # we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
     Given the user navigates to the page    ${COMP_ADMINISTRATOR_OPEN}
     When the admin downloads the excel

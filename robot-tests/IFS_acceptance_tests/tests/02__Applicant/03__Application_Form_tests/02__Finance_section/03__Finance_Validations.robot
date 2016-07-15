@@ -5,7 +5,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances
+Force Tags        Finances    Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -80,6 +80,7 @@ Admin costs server side
 
 Materials client side
     [Documentation]    INFUND-844
+    [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=button:contains("Materials")
     And the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
@@ -89,7 +90,7 @@ Materials client side
 
 Materials server side
     [Documentation]    INFUND-844
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    1212121212121212121212
@@ -215,6 +216,7 @@ Other costs server side
     [Teardown]    Remove row    jQuery=button:contains("Other Costs")    jQuery=#other-costs-table button:contains("Remove")
 
 Funding level client side
+    [Tags]
     Given the user selects a radio button
     And the user enters text to a text field    id=cost-financegrantclaim    -1
     Then the user gets the expected validation errors    This field should be 0% or higher    This field should be 0% or higher
