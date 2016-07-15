@@ -71,15 +71,13 @@ Choosing to Notify the applicants in the dialogue
     And the user should see the text in the page    Project setup
 
 Successful applicant gets feedback email
-    [Documentation]    INFUND-2608
+    [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    # pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
     Then Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    Following the success of your application
 
 Unsuccessful applicant gets feedback email
-    [Documentation]    INFUND-2608
+    [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    # Pending due to INFUND-3476 - have re-enabled this test for now to test on overnight bamboo run
     Then Open mailbox and confirm received email    worth.email.test.two@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
