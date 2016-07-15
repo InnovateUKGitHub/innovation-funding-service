@@ -62,4 +62,4 @@ the applicant can see that the economics benefit section is marked as complete
 the user makes sure that the finances section is not marked as complete
     the user navigates to the overview page of the Robot test application
     the user clicks the button/link    link=Your finances
-    run keyword and ignore error     the user clicks the button/link       Edit
+    run keyword and ignore error     the user clicks the button/link       jQuery=button:contains("Edit")
