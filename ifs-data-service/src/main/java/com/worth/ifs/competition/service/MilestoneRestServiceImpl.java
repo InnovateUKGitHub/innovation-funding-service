@@ -24,4 +24,14 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     public RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long competitionId) {
         return getWithRestResult(milestonesRestURL + "/" + competitionId, milestoneResourceListType());
     }
+
+    @Override
+    public RestResult<Void> update(MilestoneResource milestones, Long competitionId) {
+        return putWithRestResult(milestonesRestURL + "/" + competitionId, milestones, Void.class);
+    }
+
+    @Override
+    public RestResult<MilestoneResource> create(MilestoneResource milestones) {
+        return putWithRestResult(milestonesRestURL + "", MilestoneResource.class);
+    }
 }

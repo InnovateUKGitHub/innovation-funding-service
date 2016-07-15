@@ -9,5 +9,11 @@ import java.util.List;
  * Interface for CRUD operations on {@link com.worth.ifs.competition.domain.Milestone} related data.
  */
 public interface MilestoneRestService {
+
     RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long competitionId);
+
+    RestResult<Void> update(MilestoneResource milestones, Long competitionId);
+
+    //RestResult<MilestoneResource> create (List<MilestoneResource> milestones);
+    RestResult<MilestoneResource> create (MilestoneResource milestones);
 }

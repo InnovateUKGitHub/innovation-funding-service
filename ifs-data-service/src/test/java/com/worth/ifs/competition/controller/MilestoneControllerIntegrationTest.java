@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -53,5 +55,30 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
         assertTrue(milestone.isEmpty());
         assertNotNull(milestone);
+    }
+
+    @Rollback
+    @Test
+    public void testCreateMilestone() throws Exception {
+        RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(COMPETITION_ID_VALID);
+        assertTrue(milestoneResult.isSuccess());
+        List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
+        assertNotNull(milestone);
+        assertTrue(milestone.size() == 5);
+        createNewMilestone();
+        List<MilestoneResource> milestones = (List<MilestoneResource>) controller.getAllDatesByCompetitionId(COMPETITION_ID_VALID);
+        assertTrue(milestones.size() == 6L);
+
+
+
+    }
+
+    private MilestoneResource createNewMilestone() {
+        RestResult<MilestoneResource> milestoneResult = controller.create();
+        assertTrue(milestoneResult.isSuccess());
+        MilestoneResource milestone = milestoneResult.getSuccessObject();
+        assertThat(milestone.getName(), isEmptyOrNullString());
+        return milestone;
+
     }
 }

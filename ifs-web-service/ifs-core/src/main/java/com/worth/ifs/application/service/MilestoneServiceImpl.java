@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Joe on 14/07/2016.
+ * This class contains methods to retrieve and store {@link MilestoneResource} related data,
+ * through the RestService {@link MilestoneRestService}.
  */
 @Service
 public class MilestoneServiceImpl implements MilestoneService{
@@ -20,4 +21,15 @@ public class MilestoneServiceImpl implements MilestoneService{
     public List<MilestoneResource> getAllDatesByCompetitionId(Long competitionId) {
         return milestoneRestService.getAllDatesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public void update(MilestoneResource milestone) {
+       // milestoneRestService.update(milestone).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public void create(MilestoneResource milestone) {
+
+    }
+
 }

@@ -4,10 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.transactional.MilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +22,13 @@ public class MilestoneController {
     public RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(
             @PathVariable("competitionId") final Long competitionId){
         return milestoneService.getAllDatesByCompetitionId(competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public RestResult<MilestoneResource> create() { return milestoneService.create().toPostCreateResponse();}
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public RestResult<MilestoneResource> saveMilestone(@RequestBody MilestoneResource milestoneResource, @PathVariable("id") final Long id) {
+        return milestoneService.update(id, milestoneResource).toGetResponse();
     }
  }

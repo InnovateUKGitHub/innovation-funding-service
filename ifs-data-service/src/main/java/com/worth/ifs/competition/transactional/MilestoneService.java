@@ -12,4 +12,11 @@ import java.util.List;
 public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(final Long id);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<MilestoneResource> update(Long id, MilestoneResource milestones);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<MilestoneResource> create();
+    //ServiceResult<MilestoneResource> create(List<MilestoneResource> milestones);
 }
