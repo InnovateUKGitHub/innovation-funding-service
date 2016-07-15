@@ -98,7 +98,18 @@ table.project-changes{
 	tbody{
 		th{
 			font-weight: normal;
+			vertical-align: top;
 		}
+		td{
+			vertical-align: top;
+		}
+
+		.change-row{
+			td, th{
+				padding-bottom: 2.5em;
+			}
+		}
+
 		.item-changed{
 
 			th,td{
