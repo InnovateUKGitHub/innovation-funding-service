@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -123,6 +124,10 @@ public abstract class BaseRestService {
         return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
+    protected RestResult<Void> deleteWithRestResult(String path) {
+        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, Void.class);
+    }
+
     protected <T> T restGet(String path, Class<T> c) {
         return restGetEntity(path, c).getBody();
     }
@@ -190,6 +195,13 @@ public abstract class BaseRestService {
 
     public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
         return adaptor.restGetAsync(getDataRestServiceURL() + path, clazz);
+    }
+
+    protected HttpHeaders createFileUploadHeader(String contentType, long contentLength){
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentLength(contentLength);
+        return headers;
     }
 }
 

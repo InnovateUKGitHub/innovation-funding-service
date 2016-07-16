@@ -40,7 +40,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ProjectOtherDocumentsController {
 
     private static final Log LOG = LogFactory.getLog(ProjectOtherDocumentsController.class);
-    public static final String FORM_ATTR = "form";
+    private static final String FORM_ATTR = "form";
 
     @Autowired
     private ProjectService projectService;
@@ -57,8 +57,9 @@ public class ProjectOtherDocumentsController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final ByteArrayResource resource = projectService.getCollaborationAgreementFile(projectId);
-        final FileEntryResource fileDetails = projectService.getCollaborationAgreementFileDetails(projectId);
+        // TODO DW - remove these gets()
+        final ByteArrayResource resource = projectService.getCollaborationAgreementFile(projectId).get();
+        final FileEntryResource fileDetails = projectService.getCollaborationAgreementFileDetails(projectId).get();
         return getFileResponseEntity(resource, fileDetails);
     }
 
@@ -66,8 +67,9 @@ public class ProjectOtherDocumentsController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final ByteArrayResource resource = projectService.getExploitationPlanFile(projectId);
-        final FileEntryResource fileDetails = projectService.getExploitationPlanFileDetails(projectId);
+        // TODO DW - remove these gets()
+        final ByteArrayResource resource = projectService.getExploitationPlanFile(projectId).get();
+        final FileEntryResource fileDetails = projectService.getExploitationPlanFileDetails(projectId).get();
         return getFileResponseEntity(resource, fileDetails);
     }
 

@@ -49,13 +49,13 @@ public interface ProjectService {
 
     ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
 
-    ByteArrayResource getCollaborationAgreementFile(Long projectId);
+    Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId);
 
-    FileEntryResource getCollaborationAgreementFileDetails(Long projectId);
+    Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId);
 
-    ByteArrayResource getExploitationPlanFile(Long projectId);
+    Optional<ByteArrayResource> getExploitationPlanFile(Long projectId);
 
-    FileEntryResource getExploitationPlanFileDetails(Long projectId);
+    Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId);
 
     ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId);
 

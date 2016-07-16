@@ -117,7 +117,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
 
-        List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, pu -> pu.getOrganisation()));
+        List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
         List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationRestService::getOrganisationById);
         RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);
 
@@ -136,32 +136,32 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ByteArrayResource getCollaborationAgreementFile(Long projectId) {
-        return null;
+    public Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId) {
+        return projectRestService.getCollaborationAgreementFile(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public FileEntryResource getCollaborationAgreementFileDetails(Long projectId) {
-        return null;
+    public Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId) {
+        return projectRestService.getCollaborationAgreementFileDetails(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public ByteArrayResource getExploitationPlanFile(Long projectId) {
-        return null;
+    public Optional<ByteArrayResource> getExploitationPlanFile(Long projectId) {
+        return projectRestService.getExploitationPlanFile(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public FileEntryResource getExploitationPlanFileDetails(Long projectId) {
-        return null;
+    public Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId) {
+        return projectRestService.getExploitationPlanFileDetails(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId) {
-        return null;
+        return projectRestService.removeCollaborationAgreementDocument(projectId).toServiceResult();
     }
 
     @Override
     public ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
-        return null;
+        return projectRestService.addCollaborationAgreementDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 }
