@@ -3,7 +3,6 @@ package com.worth.ifs.project.otherdocuments.controller;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
-import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.function.Supplier;
 
@@ -50,6 +50,7 @@ public class ProjectOtherDocumentsController {
 
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId);
         model.addAttribute("model", viewModel);
+        model.addAttribute("form", new ProjectOtherDocumentsForm());
         return "project/other-documents";
     }
 
@@ -73,18 +74,17 @@ public class ProjectOtherDocumentsController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @RequestMapping(value = "/", params = "uploadCollaborationAgreement", method = POST)
+    @RequestMapping(params = "uploadCollaborationAgreementClicked", method = POST)
     public String uploadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model) {
+            Model model, HttpServletRequest request) {
 
         Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
             ServiceResult<FileEntryResource> uploadFileResult = uploadFormInput(projectId, form.getCollaborationAgreement());
 
             return validationHandler.
@@ -93,7 +93,7 @@ public class ProjectOtherDocumentsController {
         });
     }
 
-    @RequestMapping(value = "/", params = "removeCollaborationAgreement", method = POST)
+    @RequestMapping(params = "removeCollaborationAgreementClicked", method = POST)
     public String removeAssessorFeedbackFile(@PathVariable("projectId") final Long projectId,
                                              @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm applicationForm,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
@@ -129,7 +129,7 @@ public class ProjectOtherDocumentsController {
 
         ProjectResource project = projectService.getById(projectId);
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
-                new FileDetailsViewModel("file1.pdf", 1005), new FileDetailsViewModel("file2.pdf", 2534),
+                null, null,
                 asList("Partner Org 1", "Partner Org 2", "Partner Org 3"), asList("No documents for you!"), true, false, false
         );
     }

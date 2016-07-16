@@ -29,7 +29,7 @@
     </th:block>
 
 
-    <form action="#" th:if="${model.isEditable()}">
+    <form th:action="@{/project/{id}/other-documents(id=${model.projectId})}" th:if="${model.isEditable()}" th:object="${form}" method="post" enctype="multipart/form-data">
 
 
 
@@ -56,15 +56,15 @@
               </details>
 
                 <th:block th:unless="${model.collaborationAgreementFileDetails}">
-                  <input type="file" id="uploadCollaborationAgreement" name="uploadCollaborationAgreement" class="inputfile" />
-                  <label for="uploadCollaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
-                  <button class="button-secondary" type="submit" data-for-file-upload="uploadCollaborationAgreement">Save</button>
+                  <input th:field="*{collaborationAgreement}" type="file" id="collaborationAgreement" class="inputfile" />
+                  <label for="collaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
+                  <button name="uploadCollaborationAgreementClicked" class="button-secondary" type="submit" data-for-file-upload="collaborationAgreement">Save</button>
                 </th:block>
 
                 <!--/* file is uploaded */-->
                 <th:block th:if="${model.collaborationAgreementFileDetails}">
                   <a href="#" class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                  <button class="button-secondary no-margin-right" type="submit">Remove</button>
+                  <button name="removeCollaborationAgreementClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
                 </th:block>
 
         </div>
@@ -94,15 +94,15 @@
 
               <!--/* file is not uploaded */-->
               <th:block th:unless="${model.exploitationPlanFileDetails}">
-                <input type="file" id="uploadExploitationPlan" name="uploadExploitationPlan" class="inputfile" />
-                <label for="uploadExploitationPlan" class="button-secondary extra-margin">+ Upload</label>
-                <button class="button-secondary" type="submit" data-for-file-upload="uploadExploitationPlan">Save</button>
+                <input th:field="*{exploitationPlan}" type="file" id="exploitationPlan" class="inputfile" />
+                <label for="exploitationPlan" class="button-secondary extra-margin">+ Upload</label>
+                <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit" data-for-file-upload="exploitationPlan">Save</button>
               </th:block>
 
               <!--/* file is uploaded */-->
               <th:block th:if="${model.exploitationPlanFileDetails}">
                 <a href="#" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                <button class="button-secondary no-margin-right" type="submit">Remove</button>
+                <button name="removeExploitationPlanClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
               </th:block>
           </div>
     </form>
