@@ -78,6 +78,10 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         return approved;
     }
 
+    public boolean isLeadPartner(){
+        return leadPartner;
+    }
+
     public boolean isShowLeadPartnerGuidanceInformation() {
         return leadPartner && isEditable();
     }
