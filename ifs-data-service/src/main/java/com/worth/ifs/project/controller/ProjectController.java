@@ -207,9 +207,9 @@ public class ProjectController {
 
     @RequestMapping(value = "/collaboration-agreement/fileentry", method = GET)
     public RestResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(
-            @RequestParam("projectId") long applicationId) throws IOException {
+            @RequestParam("projectId") long projectId) throws IOException {
 
-        return projectService.getCollaborationAgreementFileEntryDetails(applicationId).toGetResponse();
+        return projectService.getCollaborationAgreementFileEntryDetails(projectId).toGetResponse();
     }
 
 
@@ -231,8 +231,7 @@ public class ProjectController {
     public RestResult<Void> deleteCollaborationAgreementDocument(
             @RequestParam("projectId") long projectId) throws IOException {
 
-        ServiceResult<Void> deleteResult = projectService.deleteCollaborationAgreementFileEntry(projectId);
-        return deleteResult.toDeleteResponse();
+        return projectService.deleteCollaborationAgreementFileEntry(projectId).toDeleteResponse();
     }
 
 

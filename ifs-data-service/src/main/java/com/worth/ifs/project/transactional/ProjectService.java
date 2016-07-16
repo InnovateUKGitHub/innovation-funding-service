@@ -89,13 +89,13 @@ public interface ProjectService {
     ServiceResult<Pair<FileEntryResource,Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId);
 
     @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
-    ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long applicationId);
+    ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long projectId);
 
     @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
-    ServiceResult<Void> deleteCollaborationAgreementFileEntry(long applicationId);
+    ServiceResult<Void> deleteCollaborationAgreementFileEntry(long projectId);
 
     @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
