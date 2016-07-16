@@ -12,6 +12,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -39,11 +40,13 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -473,5 +476,55 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long applicationId) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<Void> deleteCollaborationAgreementFileEntry(long applicationId) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long applicationId) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<Void> deleteExploitationPlanFileEntry(long applicationId) {
+        return null;
     }
 }

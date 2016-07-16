@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.function.Supplier;
 
@@ -80,7 +79,7 @@ public class ProjectOtherDocumentsController {
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model, HttpServletRequest request) {
+            Model model) {
 
         Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
 

@@ -31,8 +31,6 @@
 
     <form th:action="@{/project/{id}/other-documents(id=${model.projectId})}" th:if="${model.isEditable()}" th:object="${form}" method="post" enctype="multipart/form-data">
 
-
-
         <div class="upload-section">
             <h2 class="heading-medium no-margin">Collaboration agreement</h2>
             <p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It must be signed by all partners.</p>

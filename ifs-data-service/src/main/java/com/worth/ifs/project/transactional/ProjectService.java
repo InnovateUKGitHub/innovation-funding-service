@@ -4,21 +4,25 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Transactional and secure service for Project processing work
@@ -77,4 +81,34 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#monitoringOfficer.project, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
     ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<Pair<FileEntryResource,Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long applicationId);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> deleteCollaborationAgreementFileEntry(long applicationId);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<Pair<FileEntryResource,Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long applicationId);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> deleteExploitationPlanFileEntry(long applicationId);
 }

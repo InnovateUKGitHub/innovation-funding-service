@@ -4,21 +4,41 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
+import static org.hibernate.jpa.internal.QueryImpl.LOG;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -33,6 +53,10 @@ public class ProjectController {
 
     @Autowired
     private BankDetailsService bankDetailsService;
+
+    @Autowired
+    @Qualifier("projectSetupOtherDocumentsFileValidator")
+    private FileHttpHeadersValidator fileValidator;
 
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -130,5 +154,164 @@ public class ProjectController {
     public RestResult<BankDetailsResource> getBankDetailsByOrganisationId(@PathVariable("projectId") final Long projectId,
                                                                           @RequestParam("organisationId") final Long organisationId){
         return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/collaboration-agreement", method = POST)
+    public RestResult<FileEntryResource> addCollaborationAgreementDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @RequestParam(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        ServiceResult<FileEntryResource> fileAddedResult =
+                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
+                        projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+
+        return fileAddedResult.toPostCreateResponse();
+    }
+
+    @RequestMapping(value = "/collaboration-agreement", method = GET)
+    public @ResponseBody
+    ResponseEntity<Object> getCollaborationAgreementFileContents(
+            @RequestParam("projectId") long projectId) throws IOException {
+
+        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
+        try {
+
+            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = projectService.getCollaborationAgreementFileEntryContents(projectId);
+
+            return getFileResult.handleSuccessOrFailure(
+                    failure -> {
+                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
+                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
+                    },
+                    fileResult -> {
+                        FileEntryResource fileEntry = fileResult.getKey();
+                        Supplier<InputStream> inputStreamSupplier = fileResult.getValue();
+                        InputStream inputStream = inputStreamSupplier.get();
+                        ByteArrayResource inputStreamResource = new ByteArrayResource(StreamUtils.copyToByteArray(inputStream));
+                        HttpHeaders httpHeaders = new HttpHeaders();
+                        httpHeaders.setContentLength(fileEntry.getFilesizeBytes());
+                        httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));
+                        return new ResponseEntity<>(inputStreamResource, httpHeaders, OK);
+                    }
+            );
+
+        } catch (Exception e) {
+
+            LOG.error("Error retrieving file", e);
+            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/collaboration-agreement/fileentry", method = GET)
+    public RestResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(
+            @RequestParam("projectId") long applicationId) throws IOException {
+
+        return projectService.getCollaborationAgreementFileEntryDetails(applicationId).toGetResponse();
+    }
+
+
+    @RequestMapping(value = "/collaboration-agreement", method = PUT)
+    public RestResult<Void> updateCollaborationAgreementDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @RequestParam(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
+                projectService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+
+        return updateResult.toPutResponse();
+    }
+
+    @RequestMapping(value = "/collaboration-agreement", method = DELETE)
+    public RestResult<Void> deleteCollaborationAgreementDocument(
+            @RequestParam("projectId") long projectId) throws IOException {
+
+        ServiceResult<Void> deleteResult = projectService.deleteCollaborationAgreementFileEntry(projectId);
+        return deleteResult.toDeleteResponse();
+    }
+
+
+    @RequestMapping(value = "/exploitation-plan", method = POST)
+    public RestResult<FileEntryResource> addExploitationPlanDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @RequestParam(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        ServiceResult<FileEntryResource> fileAddedResult =
+                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
+                        projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+
+        return fileAddedResult.toPostCreateResponse();
+    }
+
+    @RequestMapping(value = "/exploitation-plan", method = GET)
+    public @ResponseBody
+    ResponseEntity<Object> getExploitationPlanFileContents(
+            @RequestParam("projectId") long projectId) throws IOException {
+
+        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
+        try {
+
+            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = projectService.getCollaborationAgreementFileEntryContents(projectId);
+
+            return getFileResult.handleSuccessOrFailure(
+                    failure -> {
+                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
+                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
+                    },
+                    fileResult -> {
+                        FileEntryResource fileEntry = fileResult.getKey();
+                        Supplier<InputStream> inputStreamSupplier = fileResult.getValue();
+                        InputStream inputStream = inputStreamSupplier.get();
+                        ByteArrayResource inputStreamResource = new ByteArrayResource(StreamUtils.copyToByteArray(inputStream));
+                        HttpHeaders httpHeaders = new HttpHeaders();
+                        httpHeaders.setContentLength(fileEntry.getFilesizeBytes());
+                        httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));
+                        return new ResponseEntity<>(inputStreamResource, httpHeaders, OK);
+                    }
+            );
+
+        } catch (Exception e) {
+
+            LOG.error("Error retrieving file", e);
+            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/exploitation-plan/fileentry", method = GET)
+    public RestResult<FileEntryResource> getExploitationPlanFileEntryDetails(
+            @RequestParam("projectId") long applicationId) throws IOException {
+
+        return projectService.getCollaborationAgreementFileEntryDetails(applicationId).toGetResponse();
+    }
+
+
+    @RequestMapping(value = "/exploitation-plan", method = PUT)
+    public RestResult<Void> updateExploitationPlanDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @RequestParam(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
+                projectService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+
+        return updateResult.toPutResponse();
+    }
+
+    @RequestMapping(value = "/exploitation-plan", method = DELETE)
+    public RestResult<Void> deleteExploitationPlanDocument(
+            @RequestParam("projectId") long projectId) throws IOException {
+
+        ServiceResult<Void> deleteResult = projectService.deleteCollaborationAgreementFileEntry(projectId);
+        return deleteResult.toDeleteResponse();
     }
 }
