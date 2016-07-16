@@ -23,7 +23,7 @@ Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
-    [Tags]
+    [Tags]    HappyPath
     Then the Applicant should see all the "Your Finance" Sections
 
 Organisation name visible in the Finance section
@@ -45,6 +45,7 @@ Working days per year should be 232
 
 Finance fields are empty
     [Documentation]    INFUND-2051: Remove the '0' in finance fields
+    [Tags]    HappyPath
     Then the Funding levels value should be empty
 
 User presses back button should get the correct version of the page
