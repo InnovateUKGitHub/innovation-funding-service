@@ -2,7 +2,6 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
@@ -27,7 +26,6 @@ import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,12 +49,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Controller
 @RequestMapping("/project")
-public class ProjectDetailsController {
-
-    static final String FORM_ATTR_NAME = "form";
-    private static final String MANUAL_ADDRESS = "manual-address";
-    private static final String SEARCH_ADDRESS = "search-address";
-    private static final String SELECT_ADDRESS = "select-address";
+public class ProjectDetailsController extends AddressLookupBaseController {
 
 	@Autowired
     private ProjectService projectService;
@@ -72,9 +65,6 @@ public class ProjectDetailsController {
     
     @Autowired
     private OrganisationRestService organisationRestService;
-    
-    @Autowired
-    private AddressRestService addressRestService;
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -436,38 +426,6 @@ public class ProjectDetailsController {
         return "redirect:/project/" + projectId + "/details";
     }
 
-    private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
-        return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
-    }
-
-    /**
-     * Get the list of postcode options, with the entered postcode. Add those results to the form.
-     */
-    private void addAddressOptions(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
-        if (StringUtils.hasText(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput())) {
-            AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
-            addressForm.setPostcodeOptions(searchPostcode(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput()));
-            addressForm.setPostcodeInput(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput());
-        }
-    }
-
-    /**
-     * if user has selected a address from the dropdown, get it from the list, and set it as selected.
-     */
-    private void addSelectedAddress(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
-        AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
-        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
-            addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
-        }
-    }
-
-    private List<AddressResource> searchPostcode(String postcodeInput) {
-        RestResult<List<AddressResource>> addressLookupRestResult = addressRestService.doLookup(postcodeInput);
-        return addressLookupRestResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(),
-                addresses -> addresses);
-    }
-
     private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
@@ -488,11 +446,6 @@ public class ProjectDetailsController {
         }
 
         return projectDetailsAddressViewModel;
-    }
-
-    private void processAddressLookupFields(ProjectDetailsAddressViewModelForm form) {
-        addAddressOptions(form);
-        addSelectedAddress(form);
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {

@@ -5,6 +5,7 @@ Documentation     INFUND-2129 As an internal Innovate UK user I want to be able 
 ...               INFUND-1987 As a Competition Administrator I want to be able to export specified data from all successfully submitted applications so that the competitions team can work with this data in the existing competitions database
 Suite Setup       The guest user opens the browser
 Suite Teardown    the user closes the browser
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -14,6 +15,8 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 If user from the list is not registered shouldn't be able to login
     [Documentation]    INFUND-2129
+    [Tags]
+    [Setup]   delete the emails from the main test mailbox
     Given the user navigates to the page    ${LOGIN_URL}
     When the guest user enters the log in credentials    worth.email.test+admin2@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -41,7 +44,7 @@ User creates new account verifies email and login
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user opens the mailbox and verifies the email from
+    the user opens the mailbox and verifies the email
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123

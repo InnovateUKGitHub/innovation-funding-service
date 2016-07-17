@@ -11,7 +11,13 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
@@ -28,9 +34,12 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,10 +51,14 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -79,6 +92,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
+
+    @Autowired
+    private OrganisationMapper organisationMapper;
+	
+	@Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
+    enum Notifications {
+        MONITORING_OFFICER_ASSIGNED,
+    }
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
@@ -198,6 +227,57 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
     }
 
+    @Override
+    public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
+
+        Notification notification = createMonitoringOfficerAssignedNotification(monitoringOfficer);
+
+        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
+
+        return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
+    }
+
+
+    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer) {
+
+        NotificationTarget notificationTarget = createMonitoringOfficerAssignedNotificationTarget(monitoringOfficer);
+
+        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer);
+
+        return new Notification(systemNotificationSource, singletonList(notificationTarget),
+                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, emptyMap());
+
+    }
+
+    private NotificationTarget createMonitoringOfficerAssignedNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
+
+        String fullName = getMonitoringOfficerFullName(monitoringOfficer);
+
+        return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
+
+    }
+    private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
+
+        // At this stage, validation has already been done to ensure that first name and last name are not empty
+        return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
+    }
+
+    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer) {
+
+        Project project = projectRepository.findOne(monitoringOfficer.getProject());
+        User projectManager = getExistingProjectManager(project).get().getUser();
+
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("dashboardUrl", webBaseUrl);
+        globalArguments.put("projectName", project.getName());
+        globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
+        globalArguments.put("projectManagerName", projectManager.getFirstName() + " " + projectManager.getLastName());
+        globalArguments.put("projectManagerEmail", projectManager.getEmail());
+
+        return globalArguments;
+
+    }
+
     private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         if (!projectId.equals(monitoringOfficerResource.getProject())) {
@@ -237,6 +317,17 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
         monitoringOfficerRepository.save(monitoringOfficer);
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
+        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleIdAndUserId(projectId, partnerRole.getId(), userId);
+        if(projectUser != null && projectUser.getOrganisation() != null) {
+            return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
+        } else {
+            return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
+        }
     }
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {

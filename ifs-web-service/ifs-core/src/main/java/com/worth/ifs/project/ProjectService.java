@@ -41,6 +41,8 @@ public interface ProjectService {
 
     OrganisationResource getLeadOrganisation(Long projectId);
 
+    OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
+
     Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
 
     ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);

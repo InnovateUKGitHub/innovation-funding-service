@@ -1,5 +1,10 @@
 package com.worth.ifs.application.builder;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
@@ -9,11 +14,9 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.user.domain.ProcessRole;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.function.BiConsumer;
-
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -89,5 +92,9 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         if (built.getCompetition() != null) {
             built.getCompetition().getApplications().add(built);
         }
+    }
+
+    public ApplicationBuilder withCompletion(BigDecimal... bigDecimals) {
+        return withArray((completion, application) -> application.setCompletion(completion), bigDecimals);
     }
 }

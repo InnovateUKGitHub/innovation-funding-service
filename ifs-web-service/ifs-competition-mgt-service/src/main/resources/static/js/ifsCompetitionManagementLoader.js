@@ -21,7 +21,13 @@ IFS.competition_management = {};
 IFS.competition_management.loadOrder = {
   common : {
     init : function(){
+      IFS.competition_management.stickyMenu.init();
       IFS.competition_management.various.init();
+    }
+  },
+  'competition-setup' : {
+    init : function(){
+      IFS.competition_management.setup.init();
     }
   }
 };

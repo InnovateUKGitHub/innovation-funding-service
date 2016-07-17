@@ -151,7 +151,7 @@ function runTests {
 
     if [ "$localMailSendingImplemented" ]
     then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
     else
         pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
     fi
@@ -161,11 +161,12 @@ function runTests {
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
+
     if [ "$localMailSendingImplemented" ]
     then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword --include HappyPath --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
     else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' --include HappyPath --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
     fi
 }
 
@@ -234,6 +235,21 @@ else
     echo "Sending mail locally is implemented. The tests will expect emails to be sent out to all whitelisted recipients. Please take care not to spam anyone!"
     localMailSendingImplemented='YES'
 fi
+testMailboxOneExists=`sed '/^\#/d' dev-build.gradle | grep 'ifsTestMailOne'`
+if [ "$testMailboxOneExists" ]
+then
+    echo "It looks like you've configured your own test mailboxes, so using those. If you see connection errors, remember to allow less secure access!"
+    testMailboxOne=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailOne'  | cut -d "=" -f2 | sed 's/"//g' | cut -d "@" -f1`
+    testMailboxTwo=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailTwo'  | cut -d "=" -f2 | sed 's/"//g' | cut -d "@" -f1`
+    testMailboxOnePassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailPasswordOne'  | cut -d "=" -f2 | sed 's/"//g'`
+    testMailboxTwoPassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsTestMailPasswordTwo'  | cut -d "=" -f2 | sed 's/"//g'`
+else
+    echo "We're going to use the normal test mailboxes, please be aware that you may get email collisions if someone else is running at the same time!"
+    testMailboxOne='worth.email.test'
+    testMailboxTwo='worth.email.test.two'
+    testMailboxOnePassword='testtest1'
+    testMailboxTwoPassword='testtest1'
+fi
 cd ../ifs-web-service
 webServiceCodeDir=`pwd`
 echo "webServiceCodeDir: ${webServiceCodeDir}"
@@ -260,6 +276,8 @@ unset happyPath
 useXvfb=true
 unset remoteRun
 unset startServersInDebugMode
+unset testMailboxOneExists
+
 
 browser="Firefox"
 

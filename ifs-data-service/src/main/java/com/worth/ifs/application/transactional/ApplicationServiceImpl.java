@@ -59,6 +59,7 @@ import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.MathFunctions.percentage;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -351,10 +352,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
-
-        return getProgressPercentageBigDecimalByApplicationId(applicationId).andOnSuccessReturn(percentage -> {
+        return getApplicationById(applicationId).andOnSuccessReturn(applicationResource -> {
             CompletedPercentageResource resource = new CompletedPercentageResource();
-            resource.setCompletedPercentage(percentage);
+            resource.setCompletedPercentage(applicationResource.getCompletion());
             return resource;
         });
     }
@@ -495,7 +495,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     // TODO DW - INFUND-1555 - deal with rest results
-    private ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
+    @Override
+    public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
@@ -532,17 +533,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         LOG.info("Total questions" + totalQuestions);
         LOG.info("Total completed questions" + countCompleted);
 
-        if (questions.isEmpty()) {
-            return BigDecimal.ZERO;
-        } else if (totalQuestions.compareTo(countCompleted) == 0) {
-            return BigDecimal.valueOf(100).setScale(2); // make sure there is no result like 100.0000000001 because of rounding issues.
-        } else {
-            BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
-            result = result.divide(new BigDecimal(totalQuestions.toString()), 10, BigDecimal.ROUND_HALF_UP);
-            result = result.multiply(new BigDecimal(countCompleted.toString()));
-            return result;
-        }
+        return percentage(countCompleted, totalQuestions);
     }
+
+
 
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
         return simpleMap(filtered, application -> applicationMapper.mapToResource(application));

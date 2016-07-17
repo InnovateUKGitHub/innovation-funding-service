@@ -17,7 +17,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
-Force Tags        Finances
+Force Tags        Finances    Applicant
 Default Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -77,7 +77,7 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Make the finances ready for mark as complete
     When the user marks the finances as complete
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
@@ -87,9 +87,9 @@ Green check should show when the finances are complete
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath    Email
+    [Tags]    Email
     [Setup]    Log in create a new invite application invite academic collaborators and accept the invite
-    Given guest user log-in    worth.email.test+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
     When the user enters text to a text field    id=incurred-staff    1000000000
     And Guest user log-in    &{lead_applicant_credentials}
@@ -104,7 +104,7 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath
+    [Tags]    Email
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When Lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
@@ -157,11 +157,11 @@ the red warning should be visible
 Lead enters a valid research participation value
     When The user navigates to the academic application finances
     the user clicks the button/link    jQuery=button:contains("Labour")
-    the user should see the element     name=add_cost
+    the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
     mouse out    css=input
-    sleep     500ms
+    sleep    500ms

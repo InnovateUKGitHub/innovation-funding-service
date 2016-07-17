@@ -13,7 +13,7 @@ Logged in user can create a new application
     [Documentation]    INFUND-1040
     ...
     ...    INFUND-1223
-    [Tags]
+    [Tags]    HappyPath
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
@@ -31,7 +31,7 @@ Logged in user can create a new application
 
 Logged in user can choose to continue with an existing application
     [Documentation]    INFUND-1040
-    [Tags]
+    [Tags]    HappyPath
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")

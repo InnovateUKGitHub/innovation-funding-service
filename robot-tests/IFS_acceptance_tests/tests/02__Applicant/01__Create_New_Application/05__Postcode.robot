@@ -26,8 +26,8 @@ Enter Valid Postcode and see the results in the dropdown
     And the user clicks the button/link    css=#select-address-block > button
     And the address fields should be filled
 
-Empty Postcode field
-    [Documentation]    INFUND-890
+Other Postcode values
+    [Documentation]    INFUND-890, INFUND-2960
     [Tags]
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
@@ -39,6 +39,12 @@ Empty Postcode field
     Then the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    id=postcode-lookup
     And the user should see the element    css=.form-label .error-message
+    When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT/
+    And the user clicks the button/link    id=postcode-lookup
+    Then the user should see the element    id=addressForm.selectedPostcodeIndex
+    When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT\\
+    And the user clicks the button/link    id=postcode-lookup
+    And the backslash doesnt give errors
 
 Same Operating address
     [Documentation]    INFUND-890
@@ -56,3 +62,6 @@ Same Operating address
     And the user should see the element    id=manual-company-input
 
 *** Keywords ***
+the backslash doesnt give errors
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    the user should see the element    id=addressForm.selectedPostcodeIndex
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords    the user should see the text in the page    No results were found
