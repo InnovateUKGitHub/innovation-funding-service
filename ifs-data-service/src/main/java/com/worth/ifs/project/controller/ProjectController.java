@@ -205,7 +205,7 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value = "/{projectId}/collaboration-agreement/fileentry", method = GET, produces = "application/json")
+    @RequestMapping(value = "/{projectId}/collaboration-agreement/details", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
@@ -284,7 +284,7 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value = "/{projectId}/exploitation-plan/fileentry", method = GET, produces = "application/json")
+    @RequestMapping(value = "/{projectId}/exploitation-plan/details", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> getExploitationPlanFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 

@@ -3,6 +3,7 @@ package com.worth.ifs.project.otherdocuments.controller;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
+import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -179,9 +182,20 @@ public class ProjectOtherDocumentsController {
     private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId) {
 
         ProjectResource project = projectService.getById(projectId);
+        Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
+        Optional<FileEntryResource> exploitationPlan = projectService.getExploitationPlanFileDetails(projectId);
+        List<String> partnerOrganisationNames = asList("Partner Org 1", "Partner Org 2", "Partner Org 3");
+        List<String> rejectionReasons = asList("No documents for you!", "They have been rejected!");
+
+        boolean leadPartner = true;
+        boolean otherDocumentsSubmitted = false;
+        boolean otherDocumentsApproved = false;
+
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
-                null, null,
-                asList("Partner Org 1", "Partner Org 2", "Partner Org 3"), asList("No documents for you!"), true, false, false
+                collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
+                exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
+                partnerOrganisationNames, rejectionReasons,
+                leadPartner, otherDocumentsSubmitted, otherDocumentsApproved
         );
     }
 
