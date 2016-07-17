@@ -100,6 +100,17 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
+    public RestResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/collaboration-agreement?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Void> removeCollaborationAgreementDocument(Long projectId) {
+        return deleteWithRestResult(projectRestURL + "/" + projectId + "/collaboration-agreement");
+    }
+
+    @Override
     public RestResult<Optional<ByteArrayResource>> getExploitationPlanFile(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/exploitation-plan", ByteArrayResource.class).toOptionalIfNotFound();
     }
@@ -110,24 +121,13 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Void> removeCollaborationAgreementDocument(Long projectId) {
-        return deleteWithRestResult(projectRestURL + "/" + projectId + "/collaboration-agreement");
-    }
-
-    @Override
-    public RestResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        String url = projectRestURL + "/" + projectId + "/collaboration-agreement?filename=" + originalFilename;
+    public RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/exploitation-plan?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }
 
     @Override
     public RestResult<Void> removeExploitationPlanDocument(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/exploitation-plan");
-    }
-
-    @Override
-    public RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        String url = projectRestURL + "/" + projectId + "/collaboration-agreement?filename=" + originalFilename;
-        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }
 }

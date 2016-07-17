@@ -53,11 +53,16 @@ public interface ProjectService {
 
     Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId);
 
+    ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
+    ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId);
+
     Optional<ByteArrayResource> getExploitationPlanFile(Long projectId);
 
     Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId);
 
-    ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId);
+    ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
-    ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+    ServiceResult<Void> removeExploitationPlanDocument(Long projectId);
+
 }

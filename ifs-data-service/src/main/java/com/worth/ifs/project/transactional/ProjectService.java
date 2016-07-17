@@ -8,7 +8,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.lang3.tuple.Pair;
@@ -82,33 +81,33 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#monitoringOfficer.project, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
     ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
     ServiceResult<Pair<FileEntryResource,Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
     ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long projectId);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
     ServiceResult<Void> deleteCollaborationAgreementFileEntry(long projectId);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
     ServiceResult<Pair<FileEntryResource,Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
     ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long applicationId);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @NotSecured(value="TODO DW - INFUND-3011 - secure", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
     ServiceResult<Void> deleteExploitationPlanFileEntry(long applicationId);
 }

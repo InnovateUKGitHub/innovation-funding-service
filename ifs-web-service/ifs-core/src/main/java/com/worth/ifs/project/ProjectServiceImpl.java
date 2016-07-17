@@ -146,6 +146,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addCollaborationAgreementDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId) {
+        return projectRestService.removeCollaborationAgreementDocument(projectId).toServiceResult();
+    }
+
+    @Override
     public Optional<ByteArrayResource> getExploitationPlanFile(Long projectId) {
         return projectRestService.getExploitationPlanFile(projectId).getSuccessObjectOrThrowException();
     }
@@ -155,13 +165,14 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.getExploitationPlanFileDetails(projectId).getSuccessObjectOrThrowException();
     }
 
+
     @Override
-    public ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId) {
-        return projectRestService.removeCollaborationAgreementDocument(projectId).toServiceResult();
+    public ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addExploitationPlanDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
     @Override
-    public ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
-        return projectRestService.addCollaborationAgreementDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    public ServiceResult<Void> removeExploitationPlanDocument(Long projectId) {
+        return projectRestService.removeExploitationPlanDocument(projectId).toServiceResult();
     }
 }

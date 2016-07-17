@@ -245,7 +245,7 @@ public class ProjectController {
 
         ServiceResult<FileEntryResource> fileAddedResult =
                 fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                        projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+                        projectService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
 
         return fileAddedResult.toPostCreateResponse();
     }
@@ -258,7 +258,7 @@ public class ProjectController {
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
 
-            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = projectService.getCollaborationAgreementFileEntryContents(projectId);
+            ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileResult = projectService.getExploitationPlanFileEntryContents(projectId);
 
             return getFileResult.handleSuccessOrFailure(
                     failure -> {
@@ -286,9 +286,9 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/exploitation-plan/fileentry", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> getExploitationPlanFileEntryDetails(
-            @PathVariable("projectId") long applicationId) throws IOException {
+            @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectService.getCollaborationAgreementFileEntryDetails(applicationId).toGetResponse();
+        return projectService.getExploitationPlanFileEntryDetails(projectId).toGetResponse();
     }
 
 
@@ -301,7 +301,7 @@ public class ProjectController {
             HttpServletRequest request) {
 
         ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                projectService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
+                projectService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
 
         return updateResult.toPutResponse();
     }
@@ -310,7 +310,7 @@ public class ProjectController {
     public RestResult<Void> deleteExploitationPlanDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        ServiceResult<Void> deleteResult = projectService.deleteCollaborationAgreementFileEntry(projectId);
+        ServiceResult<Void> deleteResult = projectService.deleteExploitationPlanFileEntry(projectId);
         return deleteResult.toDeleteResponse();
     }
 }

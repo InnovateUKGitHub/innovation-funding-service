@@ -63,16 +63,6 @@ public class ProjectOtherDocumentsController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @RequestMapping(value = "/exploitation-plan", method = GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
-            @PathVariable("projectId") final Long projectId) {
-
-        // TODO DW - remove these gets()
-        final ByteArrayResource resource = projectService.getExploitationPlanFile(projectId).get();
-        final FileEntryResource fileDetails = projectService.getExploitationPlanFileDetails(projectId).get();
-        return getFileResponseEntity(resource, fileDetails);
-    }
-
     @RequestMapping(params = "uploadCollaborationAgreementClicked", method = POST)
     public String uploadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId,
@@ -84,7 +74,7 @@ public class ProjectOtherDocumentsController {
         Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<FileEntryResource> uploadFileResult = uploadFormInput(projectId, form.getCollaborationAgreement());
+            ServiceResult<FileEntryResource> uploadFileResult = uploadCollaborationAgreementFormInput(projectId, form.getCollaborationAgreement());
 
             return validationHandler.
                     addAnyErrors(uploadFileResult, toField("collaborationAgreement")).
@@ -93,8 +83,8 @@ public class ProjectOtherDocumentsController {
     }
 
     @RequestMapping(params = "removeCollaborationAgreementClicked", method = POST)
-    public String removeAssessorFeedbackFile(@PathVariable("projectId") final Long projectId,
-                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm applicationForm,
+    public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
+                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              Model model) {
@@ -111,11 +101,73 @@ public class ProjectOtherDocumentsController {
         });
     }
 
-    private ServiceResult<FileEntryResource> uploadFormInput(Long projectId, MultipartFile file) {
+    @RequestMapping(value = "/exploitation-plan", method = GET)
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
+            @PathVariable("projectId") final Long projectId) {
+
+        // TODO DW - remove these gets()
+        final ByteArrayResource resource = projectService.getExploitationPlanFile(projectId).get();
+        final FileEntryResource fileDetails = projectService.getExploitationPlanFileDetails(projectId).get();
+        return getFileResponseEntity(resource, fileDetails);
+    }
+
+    @RequestMapping(params = "uploadExploitationPlanClicked", method = POST)
+    public String uploadExploitationPlanFile(
+            @PathVariable("projectId") final Long projectId,
+            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model) {
+
+        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ServiceResult<FileEntryResource> uploadFileResult = uploadExploitationPlanFormInput(projectId, form.getExploitationPlan());
+
+            return validationHandler.
+                    addAnyErrors(uploadFileResult, toField("exploitationPlan")).
+                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
+        });
+    }
+
+    @RequestMapping(params = "removeExploitationPlanClicked", method = POST)
+    public String removeExploitationPlanFile(@PathVariable("projectId") final Long projectId,
+                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                             @SuppressWarnings("unused") BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
+                                             Model model) {
+
+        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            ServiceResult<Void> removeFileResult = projectService.removeExploitationPlanDocument(projectId);
+
+            return validationHandler.
+                    addAnyErrors(removeFileResult, toField("exploitationPlan")).
+                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
+        });
+    }
+
+    private ServiceResult<FileEntryResource> uploadCollaborationAgreementFormInput(Long projectId, MultipartFile file) {
 
         try {
 
             return projectService.addCollaborationAgreementDocument(projectId,
+                    file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
+
+        } catch (IOException e) {
+            LOG.error(e);
+            throw new UnableToReadUploadedFile();
+        }
+    }
+
+    // TODO DW = refactor!
+    private ServiceResult<FileEntryResource> uploadExploitationPlanFormInput(Long projectId, MultipartFile file) {
+
+        try {
+
+            return projectService.addExploitationPlanDocument(projectId,
                     file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
 
         } catch (IOException e) {
