@@ -110,7 +110,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 build();
 
-        monitoringOfficerResource = newMonitoringOfficerResource().build();
+        monitoringOfficerResource = newMonitoringOfficerResource()
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -469,7 +475,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Address address = newAddress().build();
         Project project = newProject().withId(1L).withAddress(address).withProjectUsers(singletonList(projectManagerProjectUser)).withTargetStartDate(LocalDate.now()).build();
 
-
         Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
         Role partnerRole = newRole().withType(PARTNER).build();
 
@@ -488,8 +493,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ProjectUserResource projectUser2WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation2.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
         ProjectUserResource projectUser3WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
         ProjectUserResource projectUser3WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(partnerRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
+        ProjectUserResource projectManagerProjectUserResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(projectManagerRole.getId()).withRoleName(PROJECT_MANAGER.getName()).build();
 
-        projectUserObjs = asList(projectUser1WithPartnerRole, projectUser1WithFinanceRole, projectUser2WithPartnerRole, projectUser2WithFinanceRole, projectUser3WithPartnerRole, projectUser3WithFinanceRole);
+        projectUserObjs = asList(projectManagerProjectUser, projectUser1WithPartnerRole, projectUser1WithFinanceRole, projectUser2WithPartnerRole, projectUser2WithFinanceRole, projectUser3WithPartnerRole, projectUser3WithFinanceRole);
 
         when(projectRepositoryMock.findOne(1L)).thenReturn(project);
         when(projectUserRepositoryMock.findByProjectId(1L)).thenReturn(projectUserObjs);
@@ -503,6 +509,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectUserMapperMock.mapToResource(projectUser2WithFinanceRole)).thenReturn(projectUser2WithFinanceRoleResource);
         when(projectUserMapperMock.mapToResource(projectUser3WithPartnerRole)).thenReturn(projectUser3WithPartnerRoleResource);
         when(projectUserMapperMock.mapToResource(projectUser3WithFinanceRole)).thenReturn(projectUser3WithFinanceRoleResource);
+        when(projectUserMapperMock.mapToResource(projectManagerProjectUser)).thenReturn(projectManagerProjectUserResource);
 
         ServiceResult result = service.saveProjectSubmitDateTime(1L, LocalDateTime.now());
         assertTrue(result.isSuccess());
