@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -199,7 +199,7 @@ public class ProjectOtherDocumentsController {
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
         // TODO DW - these rejection messages to be covered in other stories
-        List<String> rejectionReasons = asList("No documents for you!", "They have been rejected!");
+        List<String> rejectionReasons = emptyList();
 
         // TODO DW - these flags to be covered in other stories
         boolean otherDocumentsSubmitted = false;
