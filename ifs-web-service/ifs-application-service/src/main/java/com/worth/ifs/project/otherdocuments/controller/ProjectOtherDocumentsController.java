@@ -9,6 +9,8 @@ import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -48,9 +51,10 @@ public class ProjectOtherDocumentsController {
     private ProjectService projectService;
 
     @RequestMapping(method = GET)
-    public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model) {
+    public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
+                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId);
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("form", new ProjectOtherDocumentsForm());
         return "project/other-documents";
@@ -72,9 +76,10 @@ public class ProjectOtherDocumentsController {
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model) {
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
+        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<FileEntryResource> uploadFileResult = uploadCollaborationAgreementFormInput(projectId, form.getCollaborationAgreement());
@@ -90,9 +95,10 @@ public class ProjectOtherDocumentsController {
                                              @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
-                                             Model model) {
+                                             Model model,
+                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
+        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -120,9 +126,10 @@ public class ProjectOtherDocumentsController {
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model) {
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
+        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<FileEntryResource> uploadFileResult = uploadExploitationPlanFormInput(projectId, form.getExploitationPlan());
@@ -138,9 +145,10 @@ public class ProjectOtherDocumentsController {
                                              @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
-                                             Model model) {
+                                             Model model,
+                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
+        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -179,15 +187,21 @@ public class ProjectOtherDocumentsController {
         }
     }
 
-    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId) {
+    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
         Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
         Optional<FileEntryResource> exploitationPlan = projectService.getExploitationPlanFileDetails(projectId);
-        List<String> partnerOrganisationNames = asList("Partner Org 1", "Partner Org 2", "Partner Org 3");
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+
+        List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
+
+        boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
+
+        // TODO DW - these rejection messages to be covered in other stories
         List<String> rejectionReasons = asList("No documents for you!", "They have been rejected!");
 
-        boolean leadPartner = true;
+        // TODO DW - these flags to be covered in other stories
         boolean otherDocumentsSubmitted = false;
         boolean otherDocumentsApproved = false;
 

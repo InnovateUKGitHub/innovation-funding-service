@@ -65,4 +65,11 @@ public interface ProjectService {
 
     ServiceResult<Void> removeExploitationPlanDocument(Long projectId);
 
+    boolean isUserLeadPartner(Long projectId, Long userId);
+
+    List<ProjectUserResource> getLeadPartners(Long projectId);
+
+    boolean isUserPartner(Long projectId, Long userId);
+
+    List<ProjectUserResource> getPartners(Long projectId);
 }

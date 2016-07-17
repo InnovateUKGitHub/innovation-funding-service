@@ -90,7 +90,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
-                userIsLeadPartner(projectId, loggedInUser.getId())));
+                projectService.isUserLeadPartner(projectId, loggedInUser.getId())));
         model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
 
         return "project/detail";
@@ -341,18 +341,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                              ApplicationResource applicationResource) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        List<ProjectUserResource> leadPartners = getLeadPartners(projectId);
+        List<ProjectUserResource> leadPartners = projectService.getLeadPartners(projectId);
 
         model.addAttribute("allUsers", leadPartners);
         model.addAttribute("project", projectResource);
         model.addAttribute("app", applicationResource);
         model.addAttribute(FORM_ATTR_NAME, form);
-    }
-
-    private List<ProjectUserResource> getLeadPartners(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        return simpleFilter(projectUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
     }
 
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
@@ -407,7 +401,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
-        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
+        if(!projectService.isUserLeadPartner(projectResource.getId(), loggedInUser.getId())) {
             return redirectToProjectDetails(projectId);
         }
 
@@ -464,10 +458,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
-    }
-
-    private boolean userIsLeadPartner(Long projectId, Long userId) {
-        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }
 
     private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {

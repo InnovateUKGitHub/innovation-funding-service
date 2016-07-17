@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
-import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -174,5 +174,34 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Void> removeExploitationPlanDocument(Long projectId) {
         return projectRestService.removeExploitationPlanDocument(projectId).toServiceResult();
+    }
+
+    @Override
+    public List<ProjectUserResource> getLeadPartners(Long projectId) {
+        List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
+        return simpleFilter(partnerUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
+    }
+
+    @Override
+    public List<ProjectUserResource> getPartners(Long projectId) {
+        List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
+        return simpleFilter(partnerUsers, projectUser -> !(projectUser.getOrganisation().equals(leadOrganisation.getId())));
+    }
+
+    @Override
+    public boolean isUserLeadPartner(Long projectId, Long userId) {
+        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+    }
+
+    @Override
+    public boolean isUserPartner(Long projectId, Long userId) {
+        return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+    }
+
+    private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
+        List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
+        return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
     }
 }
