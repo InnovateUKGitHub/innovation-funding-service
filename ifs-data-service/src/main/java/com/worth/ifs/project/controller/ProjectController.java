@@ -156,11 +156,11 @@ public class ProjectController {
         return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/collaboration-agreement", method = POST)
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addCollaborationAgreementDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "projectId") long projectId,
+            @PathVariable(value = "projectId") long projectId,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
@@ -171,10 +171,10 @@ public class ProjectController {
         return fileAddedResult.toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/collaboration-agreement", method = GET)
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = GET)
     public @ResponseBody
     ResponseEntity<Object> getCollaborationAgreementFileContents(
-            @RequestParam("projectId") long projectId) throws IOException {
+            @PathVariable("projectId") long projectId) throws IOException {
 
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
@@ -205,19 +205,19 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value = "/collaboration-agreement/fileentry", method = GET)
+    @RequestMapping(value = "/{projectId}/collaboration-agreement/fileentry", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(
-            @RequestParam("projectId") long projectId) throws IOException {
+            @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.getCollaborationAgreementFileEntryDetails(projectId).toGetResponse();
     }
 
 
-    @RequestMapping(value = "/collaboration-agreement", method = PUT)
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = PUT, produces = "application/json")
     public RestResult<Void> updateCollaborationAgreementDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "projectId") long projectId,
+            @PathVariable(value = "projectId") long projectId,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
@@ -227,19 +227,19 @@ public class ProjectController {
         return updateResult.toPutResponse();
     }
 
-    @RequestMapping(value = "/collaboration-agreement", method = DELETE)
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = DELETE, produces = "application/json")
     public RestResult<Void> deleteCollaborationAgreementDocument(
-            @RequestParam("projectId") long projectId) throws IOException {
+            @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.deleteCollaborationAgreementFileEntry(projectId).toDeleteResponse();
     }
 
 
-    @RequestMapping(value = "/exploitation-plan", method = POST)
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addExploitationPlanDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "projectId") long projectId,
+            @PathVariable(value = "projectId") long projectId,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
@@ -250,10 +250,10 @@ public class ProjectController {
         return fileAddedResult.toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/exploitation-plan", method = GET)
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = GET)
     public @ResponseBody
     ResponseEntity<Object> getExploitationPlanFileContents(
-            @RequestParam("projectId") long projectId) throws IOException {
+            @PathVariable("projectId") long projectId) throws IOException {
 
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
@@ -284,19 +284,19 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value = "/exploitation-plan/fileentry", method = GET)
+    @RequestMapping(value = "/{projectId}/exploitation-plan/fileentry", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> getExploitationPlanFileEntryDetails(
-            @RequestParam("projectId") long applicationId) throws IOException {
+            @PathVariable("projectId") long applicationId) throws IOException {
 
         return projectService.getCollaborationAgreementFileEntryDetails(applicationId).toGetResponse();
     }
 
 
-    @RequestMapping(value = "/exploitation-plan", method = PUT)
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = PUT, produces = "application/json")
     public RestResult<Void> updateExploitationPlanDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "projectId") long projectId,
+            @PathVariable(value = "projectId") long projectId,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
@@ -306,9 +306,9 @@ public class ProjectController {
         return updateResult.toPutResponse();
     }
 
-    @RequestMapping(value = "/exploitation-plan", method = DELETE)
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = DELETE, produces = "application/json")
     public RestResult<Void> deleteExploitationPlanDocument(
-            @RequestParam("projectId") long projectId) throws IOException {
+            @PathVariable("projectId") long projectId) throws IOException {
 
         ServiceResult<Void> deleteResult = projectService.deleteCollaborationAgreementFileEntry(projectId);
         return deleteResult.toDeleteResponse();

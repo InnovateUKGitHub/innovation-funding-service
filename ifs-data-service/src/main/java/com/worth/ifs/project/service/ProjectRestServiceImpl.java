@@ -116,7 +116,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
     @Override
     public RestResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        String url = projectRestURL + "/" + projectId + "/collaboration-agreement&filename=" + originalFilename;
+        String url = projectRestURL + "/" + projectId + "/collaboration-agreement?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }
 
@@ -127,7 +127,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
     @Override
     public RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        String url = projectRestURL + "/" + projectId + "/collaboration-agreement&filename=" + originalFilename;
+        String url = projectRestURL + "/" + projectId + "/collaboration-agreement?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }
 }
