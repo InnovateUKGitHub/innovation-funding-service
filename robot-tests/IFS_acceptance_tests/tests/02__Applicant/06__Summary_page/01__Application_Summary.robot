@@ -33,6 +33,7 @@ Clicking the Scope button expands the section
     Then the Scope section should be expanded
 
 Mark as complete from the summary page
+    [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=button:contains("Project summary")
     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Mark as complete")
     Then the Project summary question should be marked as complete
@@ -40,7 +41,7 @@ Mark as complete from the summary page
 
 Edit link navigates to the application form
     [Documentation]    INFUND-193
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
     Then the user redirects to the page    Please provide a short summary of your project    Project summary
 
