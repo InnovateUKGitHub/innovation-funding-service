@@ -1,8 +1,7 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
@@ -25,12 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
@@ -79,14 +77,12 @@ public class ProjectOtherDocumentsController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", () -> {
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<FileEntryResource> uploadFileResult = uploadCollaborationAgreementFormInput(projectId, form.getCollaborationAgreement());
+            MultipartFile file = form.getCollaborationAgreement();
 
-            return validationHandler.
-                    addAnyErrors(uploadFileResult, toField("collaborationAgreement")).
-                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
+            return projectService.addCollaborationAgreementDocument(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
 
@@ -98,16 +94,8 @@ public class ProjectOtherDocumentsController {
                                              Model model,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            ServiceResult<Void> removeFileResult = projectService.removeCollaborationAgreementDocument(projectId);
-
-            return validationHandler.
-                    addAnyErrors(removeFileResult, toField("collaborationAgreement")).
-                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
-        });
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement",
+                () -> projectService.removeCollaborationAgreementDocument(projectId));
     }
 
     @RequestMapping(value = "/exploitation-plan", method = GET)
@@ -129,14 +117,12 @@ public class ProjectOtherDocumentsController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", () -> {
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<FileEntryResource> uploadFileResult = uploadExploitationPlanFormInput(projectId, form.getExploitationPlan());
+            MultipartFile file = form.getExploitationPlan();
 
-            return validationHandler.
-                    addAnyErrors(uploadFileResult, toField("exploitationPlan")).
-                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
+            return projectService.addExploitationPlanDocument(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
 
@@ -148,43 +134,16 @@ public class ProjectOtherDocumentsController {
                                              Model model,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan",
+                () -> projectService.removeExploitationPlanDocument(projectId));
+    }
+
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+
+        Supplier<String> successView = () -> redirectToOtherDocumentsPage(projectId);
         Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            ServiceResult<Void> removeFileResult = projectService.removeExploitationPlanDocument(projectId);
-
-            return validationHandler.
-                    addAnyErrors(removeFileResult, toField("exploitationPlan")).
-                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
-        });
-    }
-
-    private ServiceResult<FileEntryResource> uploadCollaborationAgreementFormInput(Long projectId, MultipartFile file) {
-
-        try {
-
-            return projectService.addCollaborationAgreementDocument(projectId,
-                    file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
-
-        } catch (IOException e) {
-            LOG.error(e);
-            throw new UnableToReadUploadedFile();
-        }
-    }
-
-    // TODO DW = refactor!
-    private ServiceResult<FileEntryResource> uploadExploitationPlanFormInput(Long projectId, MultipartFile file) {
-
-        try {
-
-            return projectService.addExploitationPlanDocument(projectId,
-                    file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
-
-        } catch (IOException e) {
-            LOG.error(e);
-            throw new UnableToReadUploadedFile();
-        }
+        return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
     }
 
     private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId, UserResource loggedInUser) {
