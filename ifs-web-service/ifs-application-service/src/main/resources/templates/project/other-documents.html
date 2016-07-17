@@ -61,7 +61,7 @@
 
                 <!--/* file is uploaded */-->
                 <th:block th:if="${model.collaborationAgreementFileDetails}">
-                  <a href="#" class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                  <a th:href="@{/project/{id}/other-documents/collaboration-agreement(id=${model.projectId})}" class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
                   <button name="removeCollaborationAgreementClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
                 </th:block>
 
@@ -99,7 +99,7 @@
 
               <!--/* file is uploaded */-->
               <th:block th:if="${model.exploitationPlanFileDetails}">
-                <a href="#" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                <a th:href="@{/project/{id}/other-documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
                 <button name="removeExploitationPlanClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
               </th:block>
           </div>
