@@ -24,7 +24,7 @@ public class AdditionalInfoSectionSaverTest {
 	
 	@Test
 	public void testSaveCompetitionSetupSection() {
-		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "Funder", "Funder Budget");
+		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "Funder", 0.0);
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
@@ -33,8 +33,8 @@ public class AdditionalInfoSectionSaverTest {
 		
 		assertEquals("Activity", competition.getActivityCode());
 		assertEquals("Innovate", competition.getInnovateBudget());
-		assertEquals("Funder", competition.getCoFunders());
-		assertEquals("Funder Budget", competition.getCoFundersBudget());
+		assertEquals("Funder", competition.getFunder());
+		assertEquals("Funder Budget", competition.getFunderBudget());
 
 		verify(competitionService).update(competition);
 	}

@@ -1,6 +1,10 @@
 package com.worth.ifs.competitionsetup.form;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Form for the additional info competition setup section.
@@ -10,19 +14,31 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     private String activityCode;
     @Size(max = 255, message = "Innovate budget has a maximum length of 255 characters")
     private String innovateBudget;
-    @Size(max = 255, message = "Co-funders has a maximum length of 255 characters")
-    private String coFunders;
-    @Size(max = 255, message = "Co-funders budget has a maximum length of 255 characters")
-    private String coFundersBudget;
+    @Size(max = 255, message = "Funder has a maximum length of 255 characters")
+    private String funder;
+
+    //TODO add validation for numeric
+    //@Size(max = 255, message = "Funder budget has a maximum length of 255 characters")
+    private Double funderBudget;
+    @NotEmpty(message = "Please enter a PAF number")
+    private String pafNumber;
+    @NotEmpty(message = "Please generate a competition code")
+    private String competitionCode;
+    @NotEmpty(message = "Please enter a budget code")
+    private String budgetCode;
+
+
+    private List<CoFunderForm> coFunders = new ArrayList<>();
+
 
     public AdditionalInfoForm() {
     }
 
-    public AdditionalInfoForm(String activityCode, String innovateBudget, String coFunders, String coFundersBudget) {
+    public AdditionalInfoForm(String activityCode, String innovateBudget, String funder, Double funderBudget) {
         this.activityCode = activityCode;
         this.innovateBudget = innovateBudget;
-        this.coFunders = coFunders;
-        this.coFundersBudget = coFundersBudget;
+        this.funder = funder;
+        this.funderBudget = funderBudget;
     }
 
     public String getActivityCode() {
@@ -41,19 +57,51 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
         this.innovateBudget = innovateBudget;
     }
 
-    public String getCoFunders() {
+    public String getFunder() {
+        return funder;
+    }
+
+    public void setFunder(String funder) {
+        this.funder = funder;
+    }
+
+    public Double getFunderBudget() {
+        return funderBudget;
+    }
+
+    public void setFunderBudget(Double funderBudget) {
+        this.funderBudget = funderBudget;
+    }
+
+    public String getPafNumber() {
+        return pafNumber;
+    }
+
+    public void setPafNumber(String pafNumber) {
+        this.pafNumber = pafNumber;
+    }
+
+    public String getCompetitionCode() {
+        return competitionCode;
+    }
+
+    public void setCompetitionCode(String competitionCode) {
+        this.competitionCode = competitionCode;
+    }
+
+    public String getBudgetCode() {
+        return budgetCode;
+    }
+
+    public void setBudgetCode(String budgetCode) {
+        this.budgetCode = budgetCode;
+    }
+
+    public List<CoFunderForm> getCoFunders() {
         return coFunders;
     }
 
-    public void setCoFunders(String coFunders) {
+    public void setCoFunders(List<CoFunderForm> coFunders) {
         this.coFunders = coFunders;
-    }
-
-    public String getCoFundersBudget() {
-        return coFundersBudget;
-    }
-
-    public void setCoFundersBudget(String coFundersBudget) {
-        this.coFundersBudget = coFundersBudget;
     }
 }

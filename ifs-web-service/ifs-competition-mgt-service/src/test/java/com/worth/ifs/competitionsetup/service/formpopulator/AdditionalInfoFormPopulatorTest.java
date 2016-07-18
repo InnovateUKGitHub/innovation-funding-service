@@ -34,7 +34,7 @@ public class AdditionalInfoFormPopulatorTest {
         AdditionalInfoForm form = (AdditionalInfoForm) result;
 		assertEquals("Activity Code", form.getActivityCode());
 		assertEquals("Innovate Budget", form.getInnovateBudget());
-		assertEquals("Funders", form.getCoFunders());
-		assertEquals("Funders budget", form.getCoFundersBudget());
+		assertEquals("Funders", form.getFunder());
+		assertEquals("Funders budget", form.getFunderBudget());
 	}
 }

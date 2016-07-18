@@ -1,15 +1,14 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import java.time.LocalDateTime;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * Competition setup section saver for the initial details section.
@@ -31,7 +30,6 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 		
 		competition.setName(initialDetailsForm.getTitle());
-		competition.setBudgetCode(initialDetailsForm.getBudgetCode());
 		competition.setExecutive(initialDetailsForm.getExecutiveUserId());
 
 		try {
@@ -43,14 +41,13 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		}
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
 		competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
-		competition.setPafCode(initialDetailsForm.getPafNumber());
 
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 		competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
 		competitionService.update(competition);
 
-		initialDetailsForm.setCompetitionCode(competition.getCode());
+
 	}
 	
 	@Override

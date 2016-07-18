@@ -1,33 +1,5 @@
 package com.worth.ifs.competition.domain;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.MapKeyEnumerated;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -38,6 +10,12 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.user.domain.User;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -76,6 +54,9 @@ public class Competition {
 
     @OneToMany(mappedBy="competition")
     private List<Question> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy="competition")
+    private List<CompetitionCoFunder> coFunders = new ArrayList<>();
 
     @OneToMany(mappedBy="competition")
     @OrderBy("priority ASC")
@@ -132,8 +113,8 @@ public class Competition {
 
     private String activityCode;
     private String innovateBudget;
-    private String coFunders;
-    private String coFundersBudget;
+    private String funder;
+    private Double funderBudget;
 
     private boolean multiStream;
     private String streamName;
@@ -482,20 +463,28 @@ public class Competition {
         this.innovateBudget = innovateBudget;
     }
 
-    public String getCoFunders() {
+    public String getFunder() {
+        return funder;
+    }
+
+    public void setFunder(String funder) {
+        this.funder = funder;
+    }
+
+    public Double getFunderBudget() {
+        return funderBudget;
+    }
+
+    public void setFunderBudget(Double funderBudget) {
+        this.funderBudget = funderBudget;
+    }
+
+    public List<CompetitionCoFunder> getCoFunders() {
         return coFunders;
     }
 
-    public void setCoFunders(String coFunders) {
+    public void setCoFunders(List<CompetitionCoFunder> coFunders) {
         this.coFunders = coFunders;
-    }
-
-    public String getCoFundersBudget() {
-        return coFundersBudget;
-    }
-
-    public void setCoFundersBudget(String coFundersBudget) {
-        this.coFundersBudget = coFundersBudget;
     }
 }
 

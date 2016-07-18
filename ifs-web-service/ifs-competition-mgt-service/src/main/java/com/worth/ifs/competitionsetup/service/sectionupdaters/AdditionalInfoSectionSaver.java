@@ -1,13 +1,12 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Competition setup section saver for the additional info section.
@@ -28,8 +27,11 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 		competition.setActivityCode(additionalInfoForm.getActivityCode());
 		competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
-		competition.setCoFunders(additionalInfoForm.getCoFunders());
-		competition.setCoFundersBudget(additionalInfoForm.getCoFundersBudget());
+		competition.setFunder(additionalInfoForm.getFunder());
+		competition.setFunderBudget(additionalInfoForm.getFunderBudget());
+		competition.setBudgetCode(additionalInfoForm.getBudgetCode());
+		competition.setPafCode(additionalInfoForm.getPafNumber());
+		additionalInfoForm.setCompetitionCode(competition.getCode());
 
         competitionService.update(competition);
 	}
