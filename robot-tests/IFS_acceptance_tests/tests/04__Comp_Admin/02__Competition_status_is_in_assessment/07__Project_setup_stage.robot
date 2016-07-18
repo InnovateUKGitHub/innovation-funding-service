@@ -13,6 +13,10 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...               INFUND-2630 As a Competitions team member I want to be able to enter the details of a Monitoring Officer to assign them to the project and share their contact details with the consortium
 ...
 ...               INFUND-2632 As a Competitions team member I want to send an email to a Monitoring Officer so they are aware I have assigned them to a project
+...
+...               INFUND-3010 As a partner I want to be able to supply bank details for my business so that Innovate UK can verify its suitability for funding purposes
+...
+...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
@@ -30,6 +34,57 @@ ${unsuccessful_application_comp_admin_view}    ${server}/management/competition/
 ${Successful_Monitoring_Officer_Page}    ${server}/management/project/4/monitoring-officer
 
 *** Test Cases ***
+
+
+
+Comp admin can view uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]    HappyPath
+    [Setup]
+    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${successful_application_comp_admin_view}
+    And the user should see the text in the page    ${valid_pdf}
+    And the user clicks the button/link    link=testing.pdf (7.94 KB)
+    Then the user should not see an error in the page
+    [Teardown]     The user goes back to the previous page
+
+
+Comp admin can view unsuccessful uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]
+    Given the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+    When the user should see the text in the page    ${valid_pdf}
+    And the user clicks the button/link    link=testing.pdf (7.94 KB)
+    Then the user should not see an error in the page
+    And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+    [Teardown]    Logout as user
+
+Unsuccessful applicant can view the uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]
+    [Setup]    guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
+    Given the user navigates to the page    ${unsuccessful_application_overview}
+    When the user should see the text in the page    ${valid_pdf}
+    And the user clicks the button/link    link=testing.pdf (7.94 KB)
+    Then the user should not see an error in the page
+    [Teardown]    the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+
+Unsuccessful applicant cannot remove the uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]
+    When the user should see the text in the page    ${valid_pdf}
+    Then the user should not see the text in the page    Remove
+    And the user should not see the element    link=Remove
+
+Unsuccessful applicant can download the uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]    Pending
+    # Pending until download functionality has been plugged in
+    Given the user should see the text in the page    ${valid_pdf}
+    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
+    Then the file should be downloaded    ${valid_pdf}
+    [Teardown]    Remove File    ${valid_pdf}
+
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
@@ -179,6 +234,7 @@ Project details submission flow
     [Tags]    HappyPath
     When The user should not see the element    xpath=//span[contains(text(), 'No')]
     And the applicant clicks the submit button and the clicks cancel in the submit modal
+    And the user should not see the text in the page      The project details have been submitted to Innovate UK
     Then the applicant clicks the submit button in the modal
     And the user should see the text in the page    The project details have been submitted to Innovate UK
     Then the user navigates to the page    ${successful_project_page}
@@ -218,51 +274,75 @@ Non-lead partner cannot change any project details
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${successful_project_page}
 
-Comp admin can view uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    HappyPath
-    [Setup]    Run Keywords    Logout as user
-    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page    ${successful_application_comp_admin_view}
-    And the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    Then the user should not see an error in the page
 
-Comp admin can view unsuccessful uploaded feedback
-    [Documentation]    INFUND-2607
+Bank details server side validations
+    [Documentation]    INFUND-3010
     [Tags]
-    Given the user navigates to the page    ${unsuccessful_application_comp_admin_view}
-    When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    Then the user should not see an error in the page
-    And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
-    [Teardown]    Logout as user
+    [Setup]   logout as user
+    Given guest user log-in       steve.smith@empire.com     Passw0rd
+    And the user clicks the button/link      link=00000004: Cheese is good
+    And the user clicks the button/link     link=Bank details
+    When the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
+    Then the user should see an error       Please enter an account number
+    And the user should see an error        Please enter a sort code
+    And the user should see an error        You need to select a bank address before you can continue
 
-Unsuccessful applicant can view the uploaded feedback
-    [Documentation]    INFUND-2607
+
+Bank details client side validations
+    [Documentation]     INFUND-3010
     [Tags]
-    [Setup]    guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
-    Given the user navigates to the page    ${unsuccessful_application_overview}
-    When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    Then the user should not see an error in the page
-    [Teardown]    the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+    When the user enters text to a text field     name=accountNumber      1234567
+    And the user moves focus away from the element     name=accountNumber
+    Then the user should not see the text in the page        Please enter an account number
+    And the user should see an error       Please enter a valid account number
+    When the user enters text to a text field      name=accountNumber    12345678
+    And the user moves focus away from the element     name=accountNumber
+    Then the user should not see the text in the page    Please enter an account number
+    And the user should not see the text in the page     Please enter a valid account number
+    When the user enters text to a text field      name=sortCode     12345
+    And the user moves focus away from the element    name=sortCode
+    Then the user should see an error     Please enter a valid sort code
+    When the user enters text to a text field     name=sortCode    123456
+    And the user moves focus away from the element      name=sortCode
+    Then the user should not see the text in the page      Please enter a sort code
+    And the user should not see the text in the page      Please enter a valid sort code
+    When the user selects the radio button      addressType    REGISTERED
+    Then the user should not see the text in the page      You need to select a bank address before you can continue
 
-Unsuccessful applicant cannot remove the uploaded feedback
-    [Documentation]    INFUND-2607
+
+Bank account postcode lookup
+    [Documentation]    INFUND-3282
     [Tags]
-    When the user should see the text in the page    ${valid_pdf}
-    Then the user should not see the text in the page    Remove
-    And the user should not see the element    link=Remove
+    When the user selects the radio button     addressType   ADD_NEW
+    When the user enters text to a text field    name=addressForm.postcodeInput    ${EMPTY}
+    # the following two steps have been commented out as they are
+    # Pending due to INFUND-4043
+    # And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    # Then the user should see the element    css=.form-label .error-message
+    When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT/
+    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    Then the user should see the element    name=addressForm.selectedPostcodeIndex
+    When the user selects the radio button      addressType    ADD_NEW
+    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    id=postcode-lookup
+    Then the user should see the element    css=#select-address-block
+    And the user clicks the button/link    css=#select-address-block > button
+    And the address fields should be filled
 
-Unsuccessful applicant can download the uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    Pending
-    # Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
+
+Bank details submission
+    [Documentation]     INFUND-3010
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link    jquery=button:contains("Cancel")
+    And the user should not see the text in the page      Your bank account details have been submitted to Innovate UK
+    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link    jquery=button:contains("Submit")
+    And the user should see the text in the page    Your bank account details have been submitted to Innovate UK
+    And the user should see the element       css=.success-alert
+    Then the user navigates to the page    ${successful_project_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(2)
+
 
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-3349
@@ -418,3 +498,10 @@ the applicant clicks the submit button in the modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=button:contains("Submit")
+
+
+
+the user moves focus away from the element
+    [Arguments]    ${element}
+    mouse out       ${element}
+    focus         jQuery=.button:contains("Submit bank account details")
