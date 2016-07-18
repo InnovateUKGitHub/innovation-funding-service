@@ -542,6 +542,7 @@ Open mailbox and verify the content
     close mailbox
 
 Open mailbox and confirm received email
+    # TODO
     #  this keyword has the same functionality as the Open mailbox and verify the content
     #  once this is reviewed we can remove one of them
     [Arguments]    ${USER}    ${PASSWORD}    ${FROM_EMAIL}    ${PATTERN}
@@ -552,3 +553,13 @@ Open mailbox and confirm received email
     Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
     close mailbox
+
+Download should be done
+    [Documentation]    Verifies that the directory has only one folder
+    ...
+    ...    Returns path to the file
+    ${files}    List Files In Directory   ${DOWNLOAD_FOLDER}
+    Length Should Be    ${files}    1    Should be only one file in the download folder
+    ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
+    Log    File was successfully downloaded to ${file}
+    [Return]    ${file}
