@@ -23,7 +23,7 @@ public interface AssessorFeedbackService {
     ServiceResult<FileEntryResource> getAssessorFeedbackFileEntryDetails(long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPLOAD_ASSESSOR_FEEDBACK')")
-    ServiceResult<FileEntryResource> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<Void> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'REMOVE_ASSESSOR_FEEDBACK')")
     ServiceResult<Void> deleteAssessorFeedbackFileEntry(long applicationId);

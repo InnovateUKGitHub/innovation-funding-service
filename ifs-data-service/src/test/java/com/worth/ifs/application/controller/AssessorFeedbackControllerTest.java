@@ -5,27 +5,20 @@ import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.service.BasicFileAndContents;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -34,8 +27,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,49 +47,24 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void testUpdateAssessorFeedback() throws Exception {
 
-        // having to "fake" the request body as JSON because Spring Restdocs does not support other content types other
-        // than JSON and XML
-        String dummyContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
+        BiFunction<AssessorFeedbackService, FileEntryResource, ServiceResult<Void>> updateCall =
+                (service, fileToUpdate) -> assessorFeedbackServiceMock.updateAssessorFeedbackFileEntry(eq(123L), eq(fileToUpdate), fileUploadInputStreamExpectations());
 
-        FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "updated.pdf");
-        when(fileValidatorMock.validateFileHeaders("application/pdf", "1000", "updated.pdf")).thenReturn(serviceSuccess(fileAttributesAfterValidation));
-
-        FileEntryResource updatedResource = newFileEntryResource().with(id(1111L)).build();
-        ServiceResult<FileEntryResource> successResponse = serviceSuccess(updatedResource);
-
-        when(assessorFeedbackServiceMock.updateAssessorFeedbackFileEntry(eq(123L),
-                createFileEntryResourceExpectations(fileAttributesAfterValidation),
-                fileUploadInputStreamExpectations(dummyContent))).thenReturn(successResponse);
-
-        mockMvc.perform(
-                        put("/assessorfeedback/assessorFeedbackDocument").
-                                param("applicationId", "123").
-                                param("filename", "updated.pdf").
-                                header("Content-Type", "application/pdf").
-                                header("Content-Length", "1000").
-                                header("IFS_AUTH_TOKEN", "123abc").
-                                content(dummyContent)
-                ).
-                andExpect(status().isOk()).
-                andExpect(content().string("")).
+        assertFileUpdateProcess("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
+                asMap("applicationId", "123"),
+                assessorFeedbackServiceMock, updateCall).
                 andDo(documentUpdateAssessorFeedbackDocument());
-
-        verify(fileValidatorMock).validateFileHeaders("application/pdf", "1000", "updated.pdf");
-        verify(assessorFeedbackServiceMock).updateAssessorFeedbackFileEntry(eq(123L), createFileEntryResourceExpectations(fileAttributesAfterValidation), fileUploadInputStreamExpectations(dummyContent));
     }
 
     @Test
     public void testDeleteAssessorFeedback() throws Exception {
 
-        when(assessorFeedbackServiceMock.deleteAssessorFeedbackFileEntry(123L)).thenReturn(serviceSuccess());
+        Function<AssessorFeedbackService, ServiceResult<Void>> deleteCall =
+                service -> assessorFeedbackServiceMock.deleteAssessorFeedbackFileEntry(123L);
 
-        mockMvc.perform(
-                delete("/assessorfeedback/assessorFeedbackDocument").
-                        param("applicationId", "123").
-                        header("IFS_AUTH_TOKEN", "123abc")
-        ).
-                andExpect(status().isNoContent()).
-                andExpect(content().string("")).
+        assertDeleteFileDetails("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
+                asMap("applicationId", "123"),
+                assessorFeedbackServiceMock, deleteCall).
                 andDo(documentDeleteAssessorFeedbackDocument());
 
         verify(assessorFeedbackServiceMock).deleteAssessorFeedbackFileEntry(123L);
@@ -107,47 +73,25 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void testGetAssessorFeedbackFileContents() throws Exception {
 
-        FileEntryResource returnedFileEntry = newFileEntryResource().build();
+        BiFunction<AssessorFeedbackService, FileEntryResource, ServiceResult<FileAndContents>> getFileAction =
+                (service, fileToGet) -> service.getAssessorFeedbackFileEntryContents(123L);
 
-        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
-
-        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntryContents(123L)).thenReturn(serviceSuccess(new BasicFileAndContents(returnedFileEntry, inputStreamSupplier)));
-
-        MvcResult response = mockMvc.
-                perform(
-                        MockMvcRequestBuilders.get("/assessorfeedback/assessorFeedbackDocument").
-                                param("applicationId", "123").
-                                header("IFS_AUTH_TOKEN", "123abc")
-                ).
-                andExpect(status().isOk()).
-                andDo(documentGetAssessorFeedbackDocumentationContents()).
-                andReturn();
-
-        assertEquals("The returned binary file data", response.getResponse().getContentAsString());
+        assertGetFileContents("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
+                asMap("applicationId", "123"),
+                assessorFeedbackServiceMock, getFileAction).
+                andDo(documentGetAssessorFeedbackDocumentationContents());
     }
 
     @Test
     public void testGetAssessorFeedbackFileEntry() throws Exception {
 
-        FileEntryResource returnedFileEntry = newFileEntryResource().
-                withName("lookedup.pdf").
-                withMediaType("application/pdf").
-                withFilesizeBytes(1000).build();
+        BiFunction<AssessorFeedbackService, FileEntryResource, ServiceResult<FileEntryResource>> getFileAction =
+                (service, fileToGet) -> service.getAssessorFeedbackFileEntryDetails(123L);
 
-        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntryDetails(123L)).thenReturn(serviceSuccess(returnedFileEntry));
-
-        mockMvc.
-                perform(
-                        MockMvcRequestBuilders.get("/assessorfeedback/assessorFeedbackDocument/fileentry").
-                                param("applicationId", "123").
-                                header("IFS_AUTH_TOKEN", "123abc")
-                ).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(returnedFileEntry))).
-                andDo(documentGetAssessorFeedbackDocumentationFileEntry());
-
-        verify(assessorFeedbackServiceMock).getAssessorFeedbackFileEntryDetails(123L);
-
+        assertGetFileDetails("/assessorfeedback/assessorFeedbackDocument/fileentry", new Object[] {},
+                asMap("applicationId", "123"),
+                assessorFeedbackServiceMock, getFileAction).
+                andDo(documentGetAssessorFeedbackDocumentationContents());
     }
     
     @Test

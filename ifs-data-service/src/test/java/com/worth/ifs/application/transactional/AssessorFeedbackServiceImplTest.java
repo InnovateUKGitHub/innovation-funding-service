@@ -185,13 +185,12 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         //
         // Call the method under test
         //
-        ServiceResult<FileEntryResource> result = service.updateAssessorFeedbackFileEntry(application.getId(), fileEntryToUpdate, inputStreamSupplier);
+        ServiceResult<Void> result = service.updateAssessorFeedbackFileEntry(application.getId(), fileEntryToUpdate, inputStreamSupplier);
 
         //
         // Assert that the result of our service call was successful and contains the resource returned from the mapper
         //
         assertTrue(result.isSuccess());
-        assertEquals(updatedFileEntryResource, result.getSuccessObject());
 
         // assert that the application entity got its Assessor Feedback file entry updated to match the FileEntry returned by
         // the FileService

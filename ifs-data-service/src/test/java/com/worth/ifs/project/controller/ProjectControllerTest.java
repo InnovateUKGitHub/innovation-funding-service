@@ -39,6 +39,7 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
@@ -363,7 +364,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
                 (service, fileToUpload) -> service.updateCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload);
@@ -377,7 +378,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.getCollaborationAgreementFileEntryDetails(projectId);
 
-        assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId},
+        assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId}, emptyMap(),
                 projectServiceMock, serviceCallToUpload);
     }
 
@@ -390,7 +391,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 (service, fileToUpload) -> service.getCollaborationAgreementFileEntryContents(projectId);
 
         assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
-                projectServiceMock, serviceCallToUpload);
+                emptyMap(), projectServiceMock, serviceCallToUpload);
     }
 
     @Test

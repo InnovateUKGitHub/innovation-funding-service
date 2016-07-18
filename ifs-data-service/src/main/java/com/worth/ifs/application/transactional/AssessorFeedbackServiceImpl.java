@@ -107,10 +107,10 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-    public ServiceResult<FileEntryResource> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<Void> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getApplication(applicationId).
                 andOnSuccess(application -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                andOnSuccessReturn(fileDetails -> linkAssessorFeedbackFileToApplication(application, fileDetails)));
+                andOnSuccessReturnVoid(fileDetails -> linkAssessorFeedbackFileToApplication(application, fileDetails)));
     }
 
     @Override

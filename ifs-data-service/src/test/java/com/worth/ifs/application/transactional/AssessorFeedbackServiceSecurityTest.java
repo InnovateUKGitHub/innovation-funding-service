@@ -226,7 +226,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<FileEntryResource> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        public ServiceResult<Void> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 

@@ -91,7 +91,7 @@ public interface ProjectService {
     ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
     ServiceResult<Void> deleteCollaborationAgreementFileEntry(Long projectId);
