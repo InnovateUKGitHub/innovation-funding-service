@@ -7,6 +7,8 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
@@ -14,11 +16,14 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Supplier;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.JsonTestUtil.fromJson;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -28,6 +33,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITO
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -39,6 +45,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -339,7 +346,39 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .contentType(APPLICATION_JSON)
                 .content(toJson(bankDetailsResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(expectedErrors)))
-                .andReturn();
+                .andExpect(content().json(toJson(expectedErrors)));
+    }
+
+    @Test
+    public void addCollaborationAgreement() throws Exception {
+        Long projectId = 1L;
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "Content to upload".getBytes());
+
+        FileEntryResource expectedTemporaryFile = newFileEntryResource().
+                with(id(null)).
+                withFilesizeBytes(17).
+                withName("filename.txt").
+                withMediaType("text/plain").
+                build();
+
+        FileHeaderAttributes fileAttributes = new FileHeaderAttributes(TEXT_PLAIN, 17, "filename.txt");
+        when(fileValidatorMock.validateFileHeaders("text/plain", "17", "filename.txt")).thenReturn(serviceSuccess(fileAttributes));
+
+        FileEntryResource savedFile = newFileEntryResource().with(id(456L)).build();
+        when(projectServiceMock.createCollaborationAgreementFileEntry(eq(projectId), eq(expectedTemporaryFile), isA(Supplier.class))).
+                thenReturn(serviceSuccess(savedFile));
+
+        mockMvc.perform(
+                fileUpload("/project/{projectId}/collaboration-agreement", projectId).
+                    file(uploadedFile).
+                    param("filename", "filename.txt").
+                    header("Content-Type", "text/plain").
+                    header("Content-Length", "17").
+                    header("IFS_AUTH_TOKEN", "123abc")).
+                andExpect(status().isCreated()).
+                andExpect(content().json(toJson(savedFile)));
+
+        verify(projectServiceMock).createCollaborationAgreementFileEntry(eq(projectId), eq(expectedTemporaryFile), isA(Supplier.class));
     }
 }
