@@ -1,5 +1,7 @@
 package com.worth.ifs.util;
 
+import java.util.stream.Stream;
+
 /**
  * utility class to assist in null checks.
  */
@@ -10,11 +12,6 @@ public final class NullCheckFunctions {
 	 * returns true iff all arguments are null.
 	 */
 	public static boolean allNull(Object...objects) {
-		for(Object o: objects) {
-			if(o != null) {
-				return false;
-			}
-		}
-		return true;
+		return Stream.of(objects).allMatch(o -> o == null);
 	}
 }
