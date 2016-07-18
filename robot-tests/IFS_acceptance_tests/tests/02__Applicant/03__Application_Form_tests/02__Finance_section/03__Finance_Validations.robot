@@ -239,8 +239,8 @@ Funding level server side
 Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]    Run keywords    Focus    jQuery=label:contains(Yes) input
-    ...    AND    the user clicks the button/link    jQuery=label:contains(Yes) input
+    [Setup]    Run keywords    Focus    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
+    ...    AND    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
     ...    AND    Focus    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
@@ -248,7 +248,9 @@ Mark as complete with empty other funding row should be impossible
     #Then the user should see an error    You should provide at least 1 source of other funding
 
 Other funding client side
+    [Tags]    Pending
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    #INFUND-4042
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
     and the user should see an error    This field should be 1 or higher
@@ -286,7 +288,6 @@ user selects the admin costs
     focus    css=.app-submit-btn
 
 the field with the wrong input should be saved
-    sleep    300ms
     ${input_value} =    Get Value    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Should Be Equal As Strings    ${input_value}    -1
 
@@ -295,6 +296,9 @@ the user reloads the page with validation errors
     Focus    jQuery=button:contains("Mark all as complete")
     sleep    300ms
     Reload Page
+    sleep    300ms
+    run keyword and ignore error    confirm action
+    run keyword and ignore error    confirm action
     run keyword and ignore error    confirm action
 
 the user enters invalid inputs in the other funding fields
