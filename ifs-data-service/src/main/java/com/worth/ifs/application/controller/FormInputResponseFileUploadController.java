@@ -3,7 +3,7 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.transactional.ApplicationService;
-import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.application.transactional.FormInputResponseFileAndContents;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -15,23 +15,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static com.worth.ifs.file.controller.FileUploadControllerUtils.inputStreamSupplier;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
+import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
+import static com.worth.ifs.file.controller.FileControllerUtils.inputStreamSupplier;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -91,32 +83,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
-        try {
-
-            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
-
-            return result.handleSuccessOrFailure(
-                    failure -> {
-                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
-                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
-                    },
-                    success -> {
-                        FormInputResponseFileEntryResource fileEntry = success.getKey();
-                        InputStream inputStream = success.getValue().get();
-                        ByteArrayResource inputStreamResource = new ByteArrayResource(StreamUtils.copyToByteArray(inputStream));
-                        HttpHeaders httpHeaders = new HttpHeaders();
-                        httpHeaders.setContentLength(fileEntry.getFileEntryResource().getFilesizeBytes());
-                        httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getFileEntryResource().getMediaType()));
-                        return new ResponseEntity<>(inputStreamResource, httpHeaders, OK);
-                    }
-            );
-
-        } catch (Exception e) {
-
-            LOG.error("Error retrieving file", e);
-            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
-        }
+        return handleFileDownload(() -> doGetFile(formInputId, applicationId, processRoleId));
     }
 
     @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
@@ -125,8 +92,8 @@ public class FormInputResponseFileUploadController {
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
-        return result.andOnSuccessReturn(Pair::getKey).toGetResponse();
+        ServiceResult<FormInputResponseFileAndContents> result = doGetFile(formInputId, applicationId, processRoleId);
+        return result.andOnSuccessReturn(FormInputResponseFileAndContents::getFormInputResponseFileEntry).toGetResponse();
     }
 
     @RequestMapping(value = "/file", method = DELETE, produces = "application/json")
@@ -140,7 +107,7 @@ public class FormInputResponseFileUploadController {
         return deleteResult.toDeleteResponse();
     }
 
-    private ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId) {
+    private ServiceResult<FormInputResponseFileAndContents> doGetFile(long formInputId, long applicationId, long processRoleId) {
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
         return applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
     }

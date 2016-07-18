@@ -14,6 +14,8 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.BasicFileAndContents;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
@@ -45,7 +47,6 @@ import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -67,8 +68,6 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -261,7 +260,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId) {
+    public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
@@ -271,7 +270,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             }
 
             ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> Pair.of(fileEntryMapper.mapToResource(fileEntry), inputStream));
+            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
         });
     }
 
@@ -312,7 +311,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId) {
+    public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getExploitationPlan();
@@ -322,7 +321,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             }
 
             ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> Pair.of(fileEntryMapper.mapToResource(fileEntry), inputStream));
+            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
         });
     }
 

@@ -29,8 +29,6 @@ import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -55,6 +53,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
@@ -94,14 +93,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         formInput = newFormInput().withFormInputType(formInputType).build();
         formInput.setId(123L);
         formInput.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInput));
+        question.setFormInputs(singletonList(formInput));
 
         fileEntryResource = newFileEntryResource().with(id(999L)).build();
         formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
 
         existingFileEntry = newFileEntry().with(id(999L)).build();
         existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
-        existingFormInputResponses = Arrays.asList(existingFormInputResponse);
+        existingFormInputResponses = singletonList(existingFormInputResponse);
         unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
@@ -121,7 +120,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(Collections.singletonList(applicationStatus));
+        when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(singletonList(applicationStatus));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(roleRepositoryMock.findOneByName(leadApplicantRole.getName())).thenReturn(leadApplicantRole);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
@@ -200,7 +199,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInputLocal));
+        question.setFormInputs(singletonList(formInputLocal));
 
         when(fileServiceMock.deleteFile(alreadyExistingFileEntry.getId())).thenReturn(serviceSuccess(alreadyExistingFileEntry));
 
@@ -357,7 +356,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInputLocal));
+        question.setFormInputs(singletonList(formInputLocal));
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
 
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
@@ -393,7 +392,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInputLocal));
+        question.setFormInputs(singletonList(formInputLocal));
 
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
@@ -472,7 +471,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInputLocal));
+        question.setFormInputs(singletonList(formInputLocal));
 
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
@@ -496,20 +495,20 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInputLocal));
+        question.setFormInputs(singletonList(formInputLocal));
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
 
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
+        ServiceResult<FormInputResponseFileAndContents> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isSuccess());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getValue());
+        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(321L)).build();
-        FormInputResponseFileEntryResource formInputResponseFile = result.getSuccessObject().getKey();
+        FormInputResponseFileEntryResource formInputResponseFile = result.getSuccessObject().getFormInputResponseFileEntry();
 
         assertEquals(fileEntryResource.getId(), formInputResponseFile.getFileEntryResource().getId());
         assertEquals(123L, formInputResponseFile.getCompoundId().getFormInputId());
@@ -528,13 +527,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInputLocal));
+        question.setFormInputs(singletonList(formInputLocal));
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceFailure(internalServerErrorError("no files for you...")));
 
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
+        ServiceResult<FormInputResponseFileAndContents> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isFailure());
@@ -548,12 +547,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
-        question.setFormInputs(Arrays.asList(formInputLocal));
+        question.setFormInputs(singletonList(formInputLocal));
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
 
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
+        ServiceResult<FormInputResponseFileAndContents> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isFailure());

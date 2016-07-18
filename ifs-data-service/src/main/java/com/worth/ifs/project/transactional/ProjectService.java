@@ -5,12 +5,12 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -85,7 +85,7 @@ public interface ProjectService {
     ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<Pair<FileEntryResource,Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId);
+    ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
     ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long projectId);
@@ -100,7 +100,7 @@ public interface ProjectService {
     ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<Pair<FileEntryResource,Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId);
+    ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
     ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long applicationId);

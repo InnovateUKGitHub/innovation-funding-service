@@ -5,6 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.transactional.FormInputResponseFileAndContents;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -573,7 +574,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        when(applicationServiceMock.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(Pair.of(fileEntryResource, inputStreamSupplier)));
+        when(applicationServiceMock.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(new FormInputResponseFileAndContents(fileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -652,7 +653,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
-        when(applicationServiceMock.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(Pair.of(fileEntryResource, inputStreamSupplier)));
+        when(applicationServiceMock.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(new FormInputResponseFileAndContents(fileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(
@@ -754,7 +755,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        when(applicationServiceMock.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(Pair.of(formInputFileEntryResource, inputStreamSupplier)));
+        when(applicationServiceMock.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(new FormInputResponseFileAndContents(formInputFileEntryResource, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(

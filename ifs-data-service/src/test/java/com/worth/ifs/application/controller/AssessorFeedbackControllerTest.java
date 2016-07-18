@@ -5,8 +5,8 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -134,7 +134,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
 
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
-        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntryContents(123L)).thenReturn(serviceSuccess(Pair.of(returnedFileEntry, inputStreamSupplier)));
+        when(assessorFeedbackServiceMock.getAssessorFeedbackFileEntryContents(123L)).thenReturn(serviceSuccess(new BasicFileAndContents(returnedFileEntry, inputStreamSupplier)));
 
         MvcResult response = mockMvc.
                 perform(

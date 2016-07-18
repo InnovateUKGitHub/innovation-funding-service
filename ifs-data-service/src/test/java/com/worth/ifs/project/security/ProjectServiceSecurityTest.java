@@ -6,6 +6,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -14,7 +15,6 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -331,7 +331,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId) {
+        public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(long projectId) {
             return null;
         }
 
@@ -356,7 +356,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId) {
+        public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(long projectId) {
             return null;
         }
 

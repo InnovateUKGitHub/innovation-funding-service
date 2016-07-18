@@ -6,6 +6,8 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.BasicFileAndContents;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -44,7 +46,7 @@ import static com.worth.ifs.util.CollectionFunctions.*;
 @Service
 public class AssessorFeedbackServiceImpl extends BaseTransactionalService implements AssessorFeedbackService {
 
-    public static final Predicate<Application> applicationApprovedFilter = application -> application.getApplicationStatus().isApproved();
+    private static final Predicate<Application> applicationApprovedFilter = application -> application.getApplicationStatus().isApproved();
 
     enum Notifications {
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
@@ -74,7 +76,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getAssessorFeedbackFileEntryContents(long applicationId) {
+    public ServiceResult<FileAndContents> getAssessorFeedbackFileEntryContents(long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
 
@@ -85,7 +87,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
             }
 
             ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(assessorFeedbackFileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> Pair.of(fileEntryMapper.mapToResource(assessorFeedbackFileEntry), inputStream));
+            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(assessorFeedbackFileEntry), inputStream));
         });
     }
 
