@@ -65,7 +65,7 @@
                 <fieldset>
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="form-group">
-                        <label class="form-label form-label-bold" for="assessor-application-feedback-text">
+                        <label class="form-label form-label-bold" th:for="${#ids.next('feedback')}">
                             Your feedback
                             <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
                         </label>
@@ -83,7 +83,7 @@
 
                     <div class="form-group">
                         <div class="form-group">
-                            <label class="form-label form-label-bold" for="assessor-application-comments-text">
+                            <label class="form-label form-label-bold" th:for="${#ids.next('comments')}">
                                 Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                             </label>
 
