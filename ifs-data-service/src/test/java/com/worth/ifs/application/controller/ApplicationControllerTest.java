@@ -103,7 +103,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
 
-        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
                 .contentType(APPLICATION_JSON)
