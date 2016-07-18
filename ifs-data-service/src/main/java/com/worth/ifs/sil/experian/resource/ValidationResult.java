@@ -10,6 +10,14 @@ public class ValidationResult {
     private String iban;
     private List<Condition> conditions;
 
+    public ValidationResult() {}
+
+    public ValidationResult(boolean checkPassed, String iban, List<Condition> conditions) {
+        this.checkPassed = checkPassed;
+        this.iban = iban;
+        this.conditions = conditions;
+    }
+
     public boolean isCheckPassed() {
         return checkPassed;
     }

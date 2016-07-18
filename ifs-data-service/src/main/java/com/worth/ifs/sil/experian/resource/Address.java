@@ -11,6 +11,8 @@ public class Address {
     private String town;
     private String postcode;
 
+    public Address() {}
+
     public Address(String organisation, String buildingName, String street, String locality, String town, String postcode) {
         this.organisation = organisation;
         this.buildingName = buildingName;
@@ -18,9 +20,6 @@ public class Address {
         this.locality = locality;
         this.town = town;
         this.postcode = postcode;
-    }
-
-    public Address() {
     }
 
     public String getOrganisation() {

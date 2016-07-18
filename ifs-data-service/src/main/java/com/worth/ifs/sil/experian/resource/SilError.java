@@ -8,6 +8,14 @@ public class SilError {
     private String message;
     private String fields;
 
+    public SilError() {}
+
+    public SilError(int code, String message, String fields) {
+        this.code = code;
+        this.message = message;
+        this.fields = fields;
+    }
+
     public int getCode() {
         return code;
     }

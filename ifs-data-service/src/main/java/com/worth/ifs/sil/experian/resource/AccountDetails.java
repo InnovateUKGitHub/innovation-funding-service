@@ -10,15 +10,14 @@ public class AccountDetails {
     private String registrationNumber;
     private Address address;
 
+    public AccountDetails() {}
+
     public AccountDetails(String sortcode, String accountNumber, String companyName, String registrationNumber, Address address) {
         this.sortcode = sortcode;
         this.accountNumber = accountNumber;
         this.companyName = companyName;
         this.registrationNumber = registrationNumber;
         this.address = address;
-    }
-
-    public AccountDetails() {
     }
 
     public String getSortcode() {

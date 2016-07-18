@@ -4,9 +4,17 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Condition {
-    String severity;
-    String code;
-    String description;
+    private String severity;
+    private String code;
+    private String description;
+
+    public Condition() {}
+
+    public Condition(String severity, String code, String description) {
+        this.severity = severity;
+        this.code = code;
+        this.description = description;
+    }
 
     public String getSeverity() {
         return severity;
