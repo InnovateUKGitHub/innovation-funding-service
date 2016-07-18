@@ -11,7 +11,6 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -48,11 +46,6 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
 
     @Before
     public void setup() throws Exception {
-
-        // Set up global role method mocks
-        for (Role role : allRoles) {
-            when(roleRepositoryMock.findByName(role.getName())).thenReturn(asList(role));
-        }
 
         application = newApplication().build();
         organisation1 = newOrganisation().build();

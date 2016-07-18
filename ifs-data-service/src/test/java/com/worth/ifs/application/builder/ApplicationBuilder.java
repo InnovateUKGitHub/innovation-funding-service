@@ -86,22 +86,12 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     @Override
-    public List<Application> build(int numberToBuild) {
-        List<Application> builtList = super.build(numberToBuild);
+    public void postProcess(int index, Application built) {
 
         // add hibernate-style back refs
-        builtList.forEach(built -> {
-
-            if (built.getCompetition() != null) {
-                built.getCompetition().getApplications().add(built);
-            }
-
-            if (built.getProcessRoles() != null && !built.getProcessRoles().isEmpty()) {
-
-            }
-        });
-
-        return builtList;
+        if (built.getCompetition() != null) {
+            built.getCompetition().getApplications().add(built);
+        }
     }
 
     public ApplicationBuilder withCompletion(BigDecimal... bigDecimals) {

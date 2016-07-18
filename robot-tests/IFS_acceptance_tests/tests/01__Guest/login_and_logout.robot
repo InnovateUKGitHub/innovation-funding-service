@@ -75,11 +75,13 @@ Valid login as Project Finance role
     Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
     # note that I haven't used error checking on this redirect as this page will currently produce an error
     # at that point this can be changed to include error checking
+    [Teardown]     the user closes the browser
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath    Pending
-    [Setup]    The guest user opens the browser
+    [Tags]    Email    HappyPath
+    [Setup]       Run Keywords    delete the emails from the main test mailbox
+    ...           AND             the guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
@@ -90,7 +92,7 @@ Reset password
 
 Reset password validations
     [Documentation]    INFUND-1889
-    [Tags]     Email    Pending
+    [Tags]     Email
     When the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
     And the user clicks the button/link    jQuery=input[value*="Save password"]
@@ -98,7 +100,7 @@ Reset password validations
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath    Pending
+    [Tags]    Email    HappyPath
     [Setup]    Clear the login fields
     When the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    Passw0rdnew

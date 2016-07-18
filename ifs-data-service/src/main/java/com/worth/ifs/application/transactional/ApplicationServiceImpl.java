@@ -31,7 +31,6 @@ import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -56,6 +55,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELE
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -121,26 +121,26 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setApplicationStatus(applicationStatus);
         application.setDurationInMonths(3L);
 
-        List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
-        Role role = roles.get(0);
+        return getRole(LEADAPPLICANT).andOnSuccess(role -> {
 
-        List<ProcessRole> usersProcessRoles = user.getProcessRoles();
-        Organisation userOrganisation = usersProcessRoles.size()!=0
+            List<ProcessRole> usersProcessRoles = user.getProcessRoles();
+			Organisation userOrganisation = usersProcessRoles.size()!=0
                 ? usersProcessRoles.get(0).getOrganisation()
                 : user.getOrganisations().get(0);
 
-        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+            ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
+            List<ProcessRole> processRoles = new ArrayList<>();
+            processRoles.add(processRole);
 
-        application.setProcessRoles(processRoles);
-        application.setCompetition(competition);
+            application.setProcessRoles(processRoles);
+            application.setCompetition(competition);
 
-        Application createdApplication = applicationRepository.save(application);
-        processRoleRepository.save(processRole);
+            Application createdApplication = applicationRepository.save(application);
+            processRoleRepository.save(processRole);
 
-        return serviceSuccess(applicationMapper.mapToResource(createdApplication));
+            return serviceSuccess(applicationMapper.mapToResource(createdApplication));
+        });
     }
 
     @Override
@@ -471,7 +471,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = application.getProcessRoles();
 
         Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) 
+					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) 
+					|| p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
                 .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()

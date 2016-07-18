@@ -89,7 +89,7 @@ public class ProjectMonitoringOfficerViewModel {
         return isReadOnly();
     }
 
-    public boolean isDisplayAssignMonitoringOfficerLink() {
+    public boolean isDisplayAssignMonitoringOfficerButton() {
         return isEditMode();
     }
 }
