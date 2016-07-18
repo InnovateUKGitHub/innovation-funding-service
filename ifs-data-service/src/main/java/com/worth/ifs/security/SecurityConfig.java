@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/createLeadApplicantForOrganisation/*").permitAll()
                 .antMatchers("/user/findByEmail/*/").permitAll()
                 .antMatchers("/organisation/findById/*").permitAll()
-                .antMatchers("/address/doLookup/*").permitAll()
+                .antMatchers("/address/doLookup/**").permitAll()
                 .antMatchers("/alert/findAllVisible").permitAll()
                 .antMatchers("/alert/findAllVisible/*").permitAll()
                 .antMatchers("/browser/**").permitAll()

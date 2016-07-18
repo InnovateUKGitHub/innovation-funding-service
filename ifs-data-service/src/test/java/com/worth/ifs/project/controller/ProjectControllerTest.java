@@ -4,26 +4,38 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.worth.ifs.JsonTestUtil.fromJson;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -31,6 +43,21 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
+
+    private MonitoringOfficerResource monitoringOfficerResource;
+
+    @Before
+    public void setUp() {
+
+        monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+                .withId(null)
+                .withProject(1L)
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+    }
 
     @Override
     protected ProjectController supplyControllerUnderTest() {
@@ -160,21 +187,53 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
+    public void saveMOWhenErrorWhistSaving() throws Exception {
+
+        Long projectId = 1L;
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
+
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(monitoringOfficerResource)))
+                .andExpect(status().isBadRequest());
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+        // Ensure that notification is not sent when there is error whilst saving
+        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMOWhenUnableToSendNotifications() throws Exception {
+
+        Long projectId = 1L;
+
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+                thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(monitoringOfficerResource)))
+                .andExpect(status().isInternalServerError());
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+
+    }
+
+    @Test
     public void saveMonitoringOfficer() throws Exception {
 
         Long projectId = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withId(null)
-                .withProject(projectId)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-
+        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+                thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
@@ -182,6 +241,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk());
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
 
     }
 
@@ -203,16 +263,83 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Error lastNameError = fieldError("lastName", "NotEmpty");
         Error emailError = fieldError("email", "Email");
         Error phoneNumberError = fieldError("phoneNumber", "Pattern");
+        Error phoneNumberLengthError = fieldError("phoneNumber", "Size");
 
-        RestErrorResponse expectedErrors = new RestErrorResponse(asList(firstNameError, lastNameError, emailError, phoneNumberError));
-
-        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+        MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(monitoringOfficerResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(expectedErrors)));
+                .andReturn();
+
+        RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
+        assertEquals(5, response.getErrors().size());
+        asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError).forEach(e -> {
+            String fieldName = e.getFieldName();
+            String errorKey = e.getErrorKey();
+            List<Error> matchingErrors = simpleFilter(response.getErrors(), error -> fieldName.equals(error.getFieldName()) && errorKey.equals(error.getErrorKey()));
+            assertEquals(1, matchingErrors.size());
+        });
 
         verify(projectServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+    }
 
+    @Test
+    public void updateBanksDetailsSuccessfully() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        BankDetailsResource bankDetailsResource = newBankDetailsResource()
+                .withProject(projectId).withSortCode("123456")
+                .withAccountNumber("12345678")
+                .withOrganisation(organisationId)
+                .withOrganiationAddress(organisationAddressResource)
+                .build();
+
+        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/bank-details", projectId).contentType(APPLICATION_JSON).content(toJson(bankDetailsResource))).andExpect(status().isOk()).andReturn();
+    }
+
+    @Test
+    public void updateBanksDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        BankDetailsResource bankDetailsResource = newBankDetailsResource()
+                .withProject(projectId).withSortCode("123")
+                .withAccountNumber("1234567")
+                .withOrganisation(organisationId)
+                .withOrganiationAddress(organisationAddressResource)
+                .build();
+
+        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+
+        Error invalidSortCodeError = fieldError("sortCode", "Pattern");
+        Error sortCodeNotProvided = fieldError("sortCode", "NotBlank");
+        Error invalidAccountNumberError = fieldError("accountNumber","Pattern");
+        Error accountNumberNotProvided = fieldError("accountNumber", "NotBlank");
+        Error organisationAddressNotProvided = fieldError("organisationAddress","NotNull");
+        Error organisationIdNotProvided = fieldError("organisation","NotNull");
+        Error projectIdNotProvided = fieldError("project","NotNull");
+
+        RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
+
+        mockMvc.perform(post("/project/{projectId}/bank-details", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(bankDetailsResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(expectedErrors)))
+                .andReturn();
+
+        bankDetailsResource = newBankDetailsResource().build();
+
+        expectedErrors = new RestErrorResponse(asList(sortCodeNotProvided, accountNumberNotProvided, organisationAddressNotProvided, organisationIdNotProvided, projectIdNotProvided));
+
+        mockMvc.perform(post("/project/{projectId}/bank-details", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(bankDetailsResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(expectedErrors)))
+                .andReturn();
     }
 }

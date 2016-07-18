@@ -164,7 +164,7 @@ the user should see the dropdown option selected
 the user submits the form
     Submit Form
     Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
+    Page Should Not Contain Button    something went wrong
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
@@ -210,6 +210,7 @@ The user enters text to a text field
     Wait Until Element Is Visible    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Mouse Out    ${TEXT_FIELD}
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
@@ -238,6 +239,9 @@ the user should not see an error in the page
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
+    Run Keyword And Ignore Error    Mouse Out    css=input
+    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    sleep    300ms
     wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
@@ -309,6 +313,20 @@ The element should be disabled
     Element Should Be Disabled    ${ELEMENT}
 
 the user opens the mailbox and verifies the email from
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+the user opens the mailbox and verifies the email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
@@ -323,7 +341,7 @@ the user opens the mailbox and verifies the email from
     close mailbox
 
 the user opens the mailbox and accepts the invitation to collaborate
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
@@ -362,12 +380,27 @@ the user cannot see the option to upload a file on the page
     the user should not see the text in the page    Upload
 
 Delete the emails from both test mailboxes
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
+    Delete All Emails
+    close mailbox
+
+Delete the emails from the main test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
+Delete the emails from both main test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
+
+
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
@@ -500,10 +533,22 @@ the lead applicant invites a registered user
     The guest user opens the browser
 
 Open mailbox and verify the content
-    [Arguments]    ${USER}    ${CONTENT}
+    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
     [Documentation]    This Keyword checks the content of the 1st email in a given inbox
-    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
     ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    Delete All Emails
+    close mailbox
+
+Open mailbox and confirm received email
+    #  this keyword has the same functionality as the Open mailbox and verify the content
+    #  once this is reviewed we can remove one of them
+    [Arguments]    ${USER}    ${PASSWORD}    ${FROM_EMAIL}    ${PATTERN}
+    [Documentation]    This Keyword searches the correct email using regex
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
+    ${WHICH_EMAIL}=    Wait for Mail    fromEmail=${FROM_EMAIL}    toEmail=${USER}    timeout=150
+    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
     Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
     close mailbox

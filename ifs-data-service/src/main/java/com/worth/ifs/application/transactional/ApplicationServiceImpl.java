@@ -31,7 +31,6 @@ import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -56,9 +55,11 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELE
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.MathFunctions.percentage;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -120,23 +121,23 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setApplicationStatus(applicationStatus);
         application.setDurationInMonths(3L);
 
-        List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
-        Role role = roles.get(0);
+        return getRole(LEADAPPLICANT).andOnSuccess(role -> {
 
-        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+            Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
 
-        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+            ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
+            List<ProcessRole> processRoles = new ArrayList<>();
+            processRoles.add(processRole);
 
-        application.setProcessRoles(processRoles);
-        application.setCompetition(competition);
+            application.setProcessRoles(processRoles);
+            application.setCompetition(competition);
 
-        applicationRepository.save(application);
-        processRoleRepository.save(processRole);
+            applicationRepository.save(application);
+            processRoleRepository.save(processRole);
 
-        return serviceSuccess(applicationMapper.mapToResource(application));
+            return serviceSuccess(applicationMapper.mapToResource(application));
+        });
     }
 
     @Override
@@ -351,10 +352,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
-
-        return getProgressPercentageBigDecimalByApplicationId(applicationId).andOnSuccessReturn(percentage -> {
+        return getApplicationById(applicationId).andOnSuccessReturn(applicationResource -> {
             CompletedPercentageResource resource = new CompletedPercentageResource();
-            resource.setCompletedPercentage(percentage);
+            resource.setCompletedPercentage(applicationResource.getCompletion());
             return resource;
         });
     }
@@ -434,23 +434,23 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setApplicationStatus(applicationStatus);
         application.setDurationInMonths(3L);
 
-        List<Role> roles = roleRepository.findByName("leadapplicant");
-        Role role = roles.get(0);
+        return getRole(LEADAPPLICANT).andOnSuccess(role -> {
 
-        Organisation userOrganisation = user.getOrganisations().get(0);
+            Organisation userOrganisation = user.getOrganisations().get(0);
 
-        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+            ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
+            List<ProcessRole> processRoles = new ArrayList<>();
+            processRoles.add(processRole);
 
-        application.setProcessRoles(processRoles);
-        application.setCompetition(competition);
+            application.setProcessRoles(processRoles);
+            application.setCompetition(competition);
 
-        Application createdApplication = applicationRepository.save(application);
-        processRoleRepository.save(processRole);
+            Application createdApplication = applicationRepository.save(application);
+            processRoleRepository.save(processRole);
 
-        return serviceSuccess(applicationMapper.mapToResource(createdApplication));
+            return serviceSuccess(applicationMapper.mapToResource(createdApplication));
+        });
     }
 
     @Override
@@ -495,7 +495,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     // TODO DW - INFUND-1555 - deal with rest results
-    private ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
+    @Override
+    public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
@@ -510,7 +511,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = application.getProcessRoles();
 
         Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
                 .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
@@ -532,17 +533,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         LOG.info("Total questions" + totalQuestions);
         LOG.info("Total completed questions" + countCompleted);
 
-        if (questions.isEmpty()) {
-            return BigDecimal.ZERO;
-        } else if (totalQuestions.compareTo(countCompleted) == 0) {
-            return BigDecimal.valueOf(100).setScale(2); // make sure there is no result like 100.0000000001 because of rounding issues.
-        } else {
-            BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
-            result = result.divide(new BigDecimal(totalQuestions.toString()), 10, BigDecimal.ROUND_HALF_UP);
-            result = result.multiply(new BigDecimal(countCompleted.toString()));
-            return result;
-        }
+        return percentage(countCompleted, totalQuestions);
     }
+
+
 
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
         return simpleMap(filtered, application -> applicationMapper.mapToResource(application));

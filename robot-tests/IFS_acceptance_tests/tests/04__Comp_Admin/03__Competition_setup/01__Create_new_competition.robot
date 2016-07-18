@@ -12,7 +12,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-3182 As a Competition Executive I want to the ability to save progress on each tab in competition setup.
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Comp admin
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -31,7 +31,7 @@ User can navigate to the competition setup form
     ...    State Aid when I select a 'Competition type' in competition setup.
     ...
     ...    INFUND-2986 Create a Competition: Step 3: Eligibility
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user redirects to the page    Competition Setup    Step 1: Initial competition details
     And the user should not see the element    css=#stateAid
@@ -57,7 +57,7 @@ Initial details server-side validations
 
 Initial details client-side validations
     [Documentation]    INFUND-2982
-    [Tags]    Pending
+    [Tags]    Pending    HappyPath
     # pending INFUND-3957
     When the user selects the option from the drop-down menu    Competition Executive One    id=executiveUserId
     Then the user should not see the error anymore    Please select a competition executive
@@ -87,7 +87,7 @@ Initial details correct state aid status
     [Documentation]    INFUND-2982
     ...
     ...    INFUND-2983
-    [Tags]
+    [Tags]    HappyPath
     Given the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     Then the user should see the element    css=.yes

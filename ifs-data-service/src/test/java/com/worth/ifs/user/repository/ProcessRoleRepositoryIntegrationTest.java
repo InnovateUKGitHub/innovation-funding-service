@@ -29,7 +29,7 @@ public class ProcessRoleRepositoryIntegrationTest extends BaseRepositoryIntegrat
         long applicationId = 1L;
         String roleName = UserRoleType.COLLABORATOR.getName();
 
-        Role role = roleRepository.findByName(roleName).stream().findFirst().get();
+        Role role = roleRepository.findOneByName(roleName);
         List<ProcessRole> processRoles = repository.findByUserIdAndRoleAndApplicationId(userId, role, applicationId);
 
         assertEquals(1, processRoles.size());
