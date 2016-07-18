@@ -92,10 +92,10 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
     }
 
     @Test
-    public void rejectApplication() {
-        final Long assessmentId = 1L;
-        final String reason = "reason";
-        final String comment = "comment";
+    public void testRejectApplication() {
+        Long assessmentId = 1L;
+        String reason = "reason";
+        String comment = "comment";
 
         ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
         processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
