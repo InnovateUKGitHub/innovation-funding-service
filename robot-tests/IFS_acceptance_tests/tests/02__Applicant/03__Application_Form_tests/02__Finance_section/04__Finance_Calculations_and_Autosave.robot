@@ -7,7 +7,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath    Finances
+Force Tags        HappyPath    Finances    Pending
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -30,6 +30,7 @@ Labour
     ...
     ...    INFUND-1256
     [Tags]
+    #Pending INFUND-4027
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -46,6 +47,7 @@ Administration support costs
     ...
     ...    INFUND-736z
     [Tags]    Failing
+    #Pending INFUND-4027
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
@@ -59,6 +61,7 @@ Materials
     ...
     ...    INFUND-736
     [Tags]
+    #Pending INFUND-4027
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
@@ -69,6 +72,7 @@ Materials
 Capital usage
     [Documentation]    INFUND-736
     [Tags]
+    #Pending INFUND-4027
     When the applicant fills the 'capital usage' field
     Then Totals should be correct    css=#section-total-12    £ 200    css=[data-mirror="#section-total-12"]    £ 200
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
@@ -81,6 +85,7 @@ Subcontracting costs
     ...    INFUND-736
     ...    INFUND-2303
     [Tags]
+    #Pending INFUND-4027
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
     And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
@@ -91,6 +96,7 @@ Subcontracting costs
 Travel and subsistence
     [Documentation]    INFUND-736
     [Tags]
+    #Pending INFUND-4027
     When the Applicant fills the Travel fields
     Then Totals should be correct    css=#section-total-14    £ 2,000    css=[data-mirror="#section-total-14"]    £ 2,000
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
@@ -101,6 +107,7 @@ Travel and subsistence
 Other costs
     [Documentation]    INFUND-736
     [Tags]
+    #Pending INFUND-4027
     When the applicant adds one row for the other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
@@ -110,6 +117,7 @@ Other costs
 Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
     [Tags]
+    #Pending INFUND-4027
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant selects 'Yes' and fills two rows
@@ -124,13 +132,13 @@ Other Funding
 
 Funding level
     [Tags]
+    #Pending INFUND-4027
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
     the user clicks the button/link    jQuery=button:contains("Labour")
-    the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=[name^="labour-labourDaysYearly"]
     Input Text    css=[name^="labour-labourDaysYearly"]    230
@@ -153,7 +161,6 @@ the applicant edits the working days field
 
 the Applicant fills the Materials fields
     the user clicks the button/link    jQuery=button:contains("Materials")
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -167,7 +174,6 @@ the Applicant fills the Materials fields
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
-    the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
     the user should see the text in the page    Subcontractor name
     Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
     input text    css=.form-row:nth-child(1) [name^="subcontracting-name"]    test1
@@ -186,7 +192,6 @@ the applicant edits the Subcontracting costs section
 
 the applicant fills the 'capital usage' field
     the user clicks the button/link    jQuery=button:contains("Capital usage")
-    the user clicks the button/link    jQuery=button:contains('Add another asset')
     the user should see the element    css=#capital_usage [name="remove_cost"]
     Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
@@ -209,7 +214,6 @@ the applicant fills the 'capital usage' field
 
 the Applicant fills the Travel fields
     the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
-    the user clicks the button/link    jQuery=button:contains('Add another travel cost')
     the user should see the element    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -226,7 +230,7 @@ the Applicant fills the Travel fields
 
 the applicant adds one row for the other costs
     the user clicks the button/link    jQuery=button:contains("Other Costs")
-    the user clicks the button/link    jQuery=button:contains('Add another cost')
+    #the user clicks the button/link    jQuery=button:contains('Add another cost')
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
     Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
@@ -260,7 +264,7 @@ The applicant can leave the 'Your finances' page but the details are still saved
 The applicant selects 'Yes' and fills two rows
     the user clicks the button/link    jQuery=label:contains(Yes) input
     Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
-    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
+    #the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user should see the element    id=other-funding-table
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
