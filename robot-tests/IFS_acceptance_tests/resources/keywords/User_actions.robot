@@ -358,8 +358,17 @@ the user downloads the file from the link
     [Arguments]    ${filename}    ${download_link}
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${download_link}
-    sleep    2s
+    Download File    ${ALL_COOKIES}    ${download_link}    ${filename}
+    wait until keyword succeeds   300ms    1 seconds    Download should be done
+
+Download should be done
+    [Documentation]    Verifies that the directory has only one folder
+    ...                Returns path to the file
+    ${files}    List Files In Directory   ${DOWNLOAD_FOLDER}
+    Length Should Be    ${files}    1    Should be only one file in the download folder
+    ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
+    Log    File was successfully downloaded to ${file}
+    [Return]    ${file}
 
 the file should be downloaded
     [Arguments]    ${filename}
@@ -399,8 +408,6 @@ Delete the emails from both main test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
-
-
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
@@ -553,13 +560,3 @@ Open mailbox and confirm received email
     Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
     close mailbox
-
-Download should be done
-    [Documentation]    Verifies that the directory has only one folder
-    ...
-    ...    Returns path to the file
-    ${files}    List Files In Directory   ${DOWNLOAD_FOLDER}
-    Length Should Be    ${files}    1    Should be only one file in the download folder
-    ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
-    Log    File was successfully downloaded to ${file}
-    [Return]    ${file}
