@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
+import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
+
 /**
  * This class contains methods to retrieve and store {@link FormInputResource} related data,
  * through the RestService {@link FormInputRestService}.
@@ -22,12 +25,17 @@ public class FormInputServiceImpl implements FormInputService {
     }
 
     @Override
-    public List<FormInputResource> findByQuestion(Long questionId) {
-        return formInputRestService.getByQuestionId(questionId).getSuccessObjectOrThrowException();
+    public List<FormInputResource> findApplicationInputsByQuestion(Long questionId) {
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public List<FormInputResource> findByCompetitionId(Long competitionId) {
-        return formInputRestService.getByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+    public List<FormInputResource> findAssessmentInputsByQuestion(Long questionId) {
+        return formInputRestService.getByCompetitionIdAndScope(questionId, ASSESSMENT).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<FormInputResource> findApplicationInputsByCompetition(Long competitionId) {
+        return formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
     }
 }

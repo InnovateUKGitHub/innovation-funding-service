@@ -66,6 +66,8 @@ public class Question {
 
     private String questionNumber;
 
+    private Integer assessorMaximumScore;
+
     public Question() {
         //default constructor
     }
@@ -199,6 +201,14 @@ public class Question {
         this.questionNumber = questionNumber;
     }
 
+    public Integer getAssessorMaximumScore() {
+        return assessorMaximumScore;
+    }
+
+    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
+        this.assessorMaximumScore = assessorMaximumScore;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -226,6 +236,7 @@ public class Question {
                 .append(questionStatuses, question.questionStatuses)
                 .append(costs, question.costs)
                 .append(questionNumber, question.questionNumber)
+                .append(assessorMaximumScore, question.assessorMaximumScore)
                 .isEquals();
     }
 
@@ -246,6 +257,7 @@ public class Question {
                 .append(questionStatuses)
                 .append(costs)
                 .append(questionNumber)
+                .append(assessorMaximumScore)
                 .toHashCode();
     }
 }

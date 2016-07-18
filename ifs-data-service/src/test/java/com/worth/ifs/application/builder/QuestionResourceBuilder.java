@@ -80,6 +80,10 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return with(question -> setField("formInputs", new ArrayList<>(formInputs), question));
     }
 
+    public QuestionResourceBuilder withAssessorMaximumScore(Integer... assessorMaximumScores) {
+        return withArray((assessorMaximumScore, object) -> setField("assessorMaximumScore", assessorMaximumScore, object), assessorMaximumScores);
+    }
+
     public QuestionResourceBuilder withCompetitionAndSectionAndPriority(Competition competition, Section section, Integer priority) {
         return with(question -> {
             question.setCompetition(competition.getId());

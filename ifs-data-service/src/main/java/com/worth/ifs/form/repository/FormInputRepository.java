@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.worth.ifs.form.domain.FormInput;
 
+import com.worth.ifs.form.resource.FormInputScope;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
@@ -14,5 +15,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface FormInputRepository extends PagingAndSortingRepository<FormInput, Long> {
     List<FormInput> findAll();
     List<FormInput> findByCompetitionId(Long competitionId);
+    List<FormInput> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope);
     List<FormInput> findByQuestionId(Long questionId);
+    List<FormInput> findByQuestionIdAndScope(Long questionId, FormInputScope scope);
 }

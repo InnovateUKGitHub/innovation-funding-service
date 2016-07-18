@@ -49,12 +49,8 @@ public class AssessorFormInputResponseBuilder extends BaseBuilder<AssessorFormIn
         return withArray((formInput, assessorFormInputResponse) -> setField("formInput", formInput, assessorFormInputResponse), formInputs);
     }
 
-    public AssessorFormInputResponseBuilder withNumericValue(Integer... numericValues) {
-        return withArray((numericValue, assessorFormInputResponse) -> setField("numericValue", numericValue, assessorFormInputResponse), numericValues);
-    }
-
-    public AssessorFormInputResponseBuilder withTextValue(String... textValues) {
-        return withArray((textValue, assessorFormInputResponse) -> setField("textValue", textValue, assessorFormInputResponse), textValues);
+    public AssessorFormInputResponseBuilder withValue(String... values) {
+        return withArray((value, assessorFormInputResponse) -> setField("value", value, assessorFormInputResponse), values);
     }
 
     public AssessorFormInputResponseBuilder withUpdatedDate(LocalDateTime... updatedDates) {

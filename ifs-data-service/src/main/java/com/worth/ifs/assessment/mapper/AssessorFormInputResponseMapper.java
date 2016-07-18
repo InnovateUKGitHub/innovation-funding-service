@@ -6,6 +6,8 @@ import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.form.mapper.FormInputMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * Maps between domain and resource DTO for {@link AssessorFormInputResponse}.
@@ -19,7 +21,13 @@ import org.mapstruct.Mapper;
 )
 public abstract class AssessorFormInputResponseMapper extends BaseMapper<AssessorFormInputResponse, AssessorFormInputResponseResource, Long> {
 
-    public Long mapAssessmentFormInputResponseToId(final AssessorFormInputResponse object) {
+    @Mappings({
+            @Mapping(source = "formInput.question.id", target = "question")
+    })
+    @Override
+    public abstract AssessorFormInputResponseResource mapToResource(AssessorFormInputResponse domain);
+
+    public Long mapAssessorFormInputResponseToId(final AssessorFormInputResponse object) {
         if (object == null) {
             return null;
         }

@@ -3,10 +3,10 @@ package com.worth.ifs.assessment.model;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.form.AssessmentOverviewForm;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.service.AssessmentFeedbackService;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.stream.Collectors.groupingBy;
 
 @Component
 public class AssessmentOverviewModelPopulator {
@@ -52,7 +53,7 @@ public class AssessmentOverviewModelPopulator {
     @Autowired
     private AssessmentService assessmentService;
     @Autowired
-    private AssessmentFeedbackService assessmentFeedbackService;
+    private AssessorFormInputResponseService assessorFormInputResponseService;
     @Autowired
     private FormInputRestService formInputRestService;
     @Autowired
@@ -67,7 +68,7 @@ public class AssessmentOverviewModelPopulator {
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
         ProjectResource projectResource = projectService.getByApplicationId(application.getId());
 
-        if(form == null){
+        if (form == null) {
             form = new AssessmentOverviewForm();
         }
 
@@ -79,25 +80,25 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        model.addAttribute("daysLeftPercentage",competition.getAssessmentDaysLeftPercentage());
-        model.addAttribute("daysLeft",competition.getAssessmentDaysLeft());
-        model.addAttribute("assessmentId",assessmentId);
+        model.addAttribute("daysLeftPercentage", competition.getAssessmentDaysLeftPercentage());
+        model.addAttribute("daysLeft", competition.getAssessmentDaysLeft());
+        model.addAttribute("assessmentId", assessmentId);
 
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(application.getId());
-        addAppendices(application.getId(), responses, model);
+        List<FormInputResponseResource> applicantResponses = formInputResponseService.getByApplication(application.getId());
+        addAppendices(application.getId(), applicantResponses, model);
     }
 
     private void addSections(Model model, CompetitionResource competition, Long assessmentId) {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
         final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
-        final List<AssessmentFeedbackResource> feedback = assessmentFeedbackService.getAllAssessmentFeedback(assessmentId);
+        final List<AssessorFormInputResponseResource> assessorResponses = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId);
 
         final Map<Long, SectionResource> sections =
                 parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
-        final Map<Long, List<SectionResource>>   subSections = parentSections.stream()
+        final Map<Long, List<SectionResource>> subSections = parentSections.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
                 ));
@@ -110,11 +111,7 @@ public class AssessmentOverviewModelPopulator {
 
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
-        final Map<Long, AssessmentFeedbackResource> questionFeedback = feedback.stream()
-                .collect(Collectors.toMap(
-                        AssessmentFeedbackResource::getQuestion,
-                        assessmentFeedbackResource -> assessmentFeedbackResource)
-                );
+        Map<Long, List<AssessorFormInputResponseResource>> questionFeedback = assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
 
         boolean hasFinanceSection = false;
         Long financeSectionId = null;
@@ -151,7 +148,7 @@ public class AssessmentOverviewModelPopulator {
         return processRoleResource.get().getApplication();
     }
 
-    private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections){
+    private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections) {
         return sections.stream()
                 .filter(s -> SectionType.FINANCE.equals(s.getType()))
                 .collect(Collectors.toList());
@@ -177,30 +174,30 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("markedAsComplete", markedAsComplete);
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
-        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(model, application, userOrganisation, completedSectionsByOrganisation);
+        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation, completedSectionsByOrganisation);
         model.addAttribute("userFinanceSectionCompleted", userFinanceSectionCompleted);
 
     }
 
-    private Boolean isUserFinanceSectionCompleted(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+    private Boolean isUserFinanceSectionCompleted(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
 
         Long eachCollaboratorFinanceSectionId = null;
-        if(!eachOrganisationFinanceSections.isEmpty()) {
+        if (!eachOrganisationFinanceSections.isEmpty()) {
             eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
         }
         return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
     }
 
-    private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
+    private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type) {
         return simpleFilter(list, s -> type.equals(s.getType()));
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId=0L;
-        if(userOrganisation.isPresent()) {
+        Long organisationId = 0L;
+        if (userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
         }
         return questionService.getMarkedAsComplete(application.getId(), organisationId);

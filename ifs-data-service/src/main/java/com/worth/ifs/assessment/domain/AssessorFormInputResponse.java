@@ -28,10 +28,8 @@ public class AssessorFormInputResponse {
     @JoinColumn(name = "formInputId", referencedColumnName = "id")
     private FormInput formInput;
 
-    private Integer numericValue;
-
     @Lob
-    private String textValue;
+    private String value;
 
     @NotNull
     @DateTimeFormat
@@ -61,20 +59,12 @@ public class AssessorFormInputResponse {
         this.formInput = formInput;
     }
 
-    public Integer getNumericValue() {
-        return numericValue;
+    public String getValue() {
+        return value;
     }
 
-    public void setNumericValue(Integer numericValue) {
-        this.numericValue = numericValue;
-    }
-
-    public String getTextValue() {
-        return textValue;
-    }
-
-    public void setTextValue(String textValue) {
-        this.textValue = textValue;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public LocalDateTime getUpdatedDate() {

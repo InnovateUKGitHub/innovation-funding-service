@@ -1,6 +1,7 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.resource.FormInputScope;
@@ -36,6 +37,10 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return new FormInputBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedDescriptions("Description "));
+    }
+
+    public FormInputBuilder withId(Long... ids) {
+        return withArray(BuilderAmendFunctions::setId, ids);
     }
 
     public FormInputBuilder withWordCount(Integer... wordCounts) {

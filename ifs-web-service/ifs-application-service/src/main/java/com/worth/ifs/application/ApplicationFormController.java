@@ -221,7 +221,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-            List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
+            List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {

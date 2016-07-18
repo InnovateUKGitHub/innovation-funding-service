@@ -13,20 +13,20 @@ public class AssessorFormInputResponseResource {
 
     private Long id;
     private Long assessment;
+    private Long question;
     private Long formInput;
-    private Integer numericValue;
-    private String textValue;
+    private String value;
     private LocalDateTime updatedDate;
 
     public AssessorFormInputResponseResource() {
     }
 
-    public AssessorFormInputResponseResource(Long id, Long assessment, Long formInput, Integer numericValue, String textValue, LocalDateTime updatedDate) {
+    public AssessorFormInputResponseResource(Long id, Long assessment, Long question, Long formInput, String value, LocalDateTime updatedDate) {
         this.id = id;
         this.assessment = assessment;
+        this.question = question;
         this.formInput = formInput;
-        this.numericValue = numericValue;
-        this.textValue = textValue;
+        this.value = value;
         this.updatedDate = updatedDate;
     }
 
@@ -46,6 +46,14 @@ public class AssessorFormInputResponseResource {
         this.assessment = assessment;
     }
 
+    public Long getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Long question) {
+        this.question = question;
+    }
+
     public Long getFormInput() {
         return formInput;
     }
@@ -54,20 +62,12 @@ public class AssessorFormInputResponseResource {
         this.formInput = formInput;
     }
 
-    public Integer getNumericValue() {
-        return numericValue;
+    public String getValue() {
+        return value;
     }
 
-    public void setNumericValue(Integer numericValue) {
-        this.numericValue = numericValue;
-    }
-
-    public String getTextValue() {
-        return textValue;
-    }
-
-    public void setTextValue(String textValue) {
-        this.textValue = textValue;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public LocalDateTime getUpdatedDate() {

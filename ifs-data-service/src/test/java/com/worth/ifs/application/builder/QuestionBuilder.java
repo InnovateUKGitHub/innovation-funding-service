@@ -95,6 +95,10 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((cost, object) -> setField("costs", cost, object), costs);
     }
 
+    public QuestionBuilder withAssessorMaximumScore(Integer... assessorMaximumScores) {
+        return withArray((assessorMaximumScore, object) -> setField("assessorMaximumScore", assessorMaximumScore, object), assessorMaximumScores);
+    }
+
     @Override
     protected Question createInitial() {
         return new Question();

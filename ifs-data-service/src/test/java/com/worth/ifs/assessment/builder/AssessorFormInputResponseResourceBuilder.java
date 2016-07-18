@@ -43,16 +43,16 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
         return withArray((assessment, assessorFormInputResponse) -> setField("assessment", assessment, assessorFormInputResponse), assessments);
     }
 
+    public AssessorFormInputResponseResourceBuilder withQuestion(Long... questions) {
+        return withArray((question, assessorFormInputResponse) -> setField("question", question, assessorFormInputResponse), questions);
+    }
+
     public AssessorFormInputResponseResourceBuilder withFormInput(Long... formInputs) {
         return withArray((formInput, assessorFormInputResponse) -> setField("formInput", formInput, assessorFormInputResponse), formInputs);
     }
 
-    public AssessorFormInputResponseResourceBuilder withNumericValue(Integer... numericValues) {
-        return withArray((numericValue, assessorFormInputResponse) -> setField("numericValue", numericValue, assessorFormInputResponse), numericValues);
-    }
-
-    public AssessorFormInputResponseResourceBuilder withTextValue(String... textValues) {
-        return withArray((textValue, assessorFormInputResponse) -> setField("textValue", textValue, assessorFormInputResponse), textValues);
+    public AssessorFormInputResponseResourceBuilder withValue(String... values) {
+        return withArray((value, assessorFormInputResponse) -> setField("value", value, assessorFormInputResponse), values);
     }
 
     public AssessorFormInputResponseResourceBuilder withUpdatedDate(LocalDateTime... updatedDates) {

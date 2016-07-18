@@ -73,7 +73,7 @@ public class QuestionModelPopulator {
 
     public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form) {
         QuestionResource question = questionService.getById(questionId);
-        List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
+        List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());

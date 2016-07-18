@@ -15,25 +15,25 @@ public class AssessorFormInputResponseResourceBuilderTest {
     public void testBuildOne() {
         Long expectedId = 1L;
         Long expectedAssessment = 2L;
-        Long expectedFormInput = 3L;
-        Integer expectedNumericValue = 999;
-        String expectedTextValue = "Blah";
+        Long expectedQuestion = 3L;
+        Long expectedFormInput = 4L;
+        String expectedValue = "Blah";
         LocalDateTime expectedUpdatedDate = LocalDateTime.parse("2016-07-12T16:10:50.21");
 
         AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
                 .withId(expectedId)
                 .withAssessment(expectedAssessment)
+                .withQuestion(expectedQuestion)
                 .withFormInput(expectedFormInput)
-                .withNumericValue(expectedNumericValue)
-                .withTextValue(expectedTextValue)
+                .withValue(expectedValue)
                 .withUpdatedDate(expectedUpdatedDate)
                 .build();
 
         assertEquals(expectedId, assessorFormInputResponse.getId());
         assertEquals(expectedAssessment, assessorFormInputResponse.getAssessment());
+        assertEquals(expectedQuestion, assessorFormInputResponse.getQuestion());
         assertEquals(expectedFormInput, assessorFormInputResponse.getFormInput());
-        assertEquals(expectedNumericValue, assessorFormInputResponse.getNumericValue());
-        assertEquals(expectedTextValue, assessorFormInputResponse.getTextValue());
+        assertEquals(expectedValue, assessorFormInputResponse.getValue());
         assertEquals(expectedUpdatedDate, assessorFormInputResponse.getUpdatedDate());
     }
 
@@ -41,34 +41,34 @@ public class AssessorFormInputResponseResourceBuilderTest {
     public void testBuildMany() {
         Long[] expectedIds = {1L, 2L};
         Long[] expectedAssessments = {3L, 4L};
-        Long[] expectedFormInputs = {5L, 6L};
-        Integer[] expectedNumericValues = {999, 888};
-        String[] expectedTextValues = {"Sample message 1", "Sample message 2"};
+        Long[] expectedQuestions = {5L, 6L};
+        Long[] expectedFormInputs = {7L, 8L};
+        String[] expectedValues = {"Sample message 1", "Sample message 2"};
         LocalDateTime[] expectedUpdatedDates = {LocalDateTime.parse("2016-07-12T16:10:50.21"), LocalDateTime.parse("2016-07-12T16:15:25.42")};
 
         List<AssessorFormInputResponseResource> assessorFormInputResponses = newAssessorFormInputResponseResource()
                 .withId(expectedIds)
                 .withAssessment(expectedAssessments)
+                .withQuestion(expectedQuestions)
                 .withFormInput(expectedFormInputs)
-                .withNumericValue(expectedNumericValues)
-                .withTextValue(expectedTextValues)
+                .withValue(expectedValues)
                 .withUpdatedDate(expectedUpdatedDates)
                 .build(2);
 
         AssessorFormInputResponseResource first = assessorFormInputResponses.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedAssessments[0], first.getAssessment());
+        assertEquals(expectedQuestions[0], first.getQuestion());
         assertEquals(expectedFormInputs[0], first.getFormInput());
-        assertEquals(expectedNumericValues[0], first.getNumericValue());
-        assertEquals(expectedTextValues[0], first.getTextValue());
+        assertEquals(expectedValues[0], first.getValue());
         assertEquals(expectedUpdatedDates[0], first.getUpdatedDate());
 
         AssessorFormInputResponseResource second = assessorFormInputResponses.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedAssessments[1], second.getAssessment());
+        assertEquals(expectedQuestions[1], second.getQuestion());
         assertEquals(expectedFormInputs[1], second.getFormInput());
-        assertEquals(expectedNumericValues[1], second.getNumericValue());
-        assertEquals(expectedTextValues[1], second.getTextValue());
+        assertEquals(expectedValues[1], second.getValue());
         assertEquals(expectedUpdatedDates[1], second.getUpdatedDate());
     }
 

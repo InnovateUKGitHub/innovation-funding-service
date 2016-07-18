@@ -25,6 +25,7 @@ public class QuestionResource {
     private List<Long> questionStatuses;
     private List<Long> costs;
     private String questionNumber;
+    private Integer assessorMaximumScore;
 
     public QuestionResource() {
         //default constructor
@@ -103,6 +104,9 @@ public class QuestionResource {
         return this.questionNumber;
     }
 
+    public Integer getAssessorMaximumScore() {
+        return assessorMaximumScore;
+    }
 
     public List<Long> getFormInputs() {
         return this.formInputs;
@@ -157,6 +161,10 @@ public class QuestionResource {
         this.questionNumber = questionNumber;
     }
 
+    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
+        this.assessorMaximumScore = assessorMaximumScore;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -184,6 +192,7 @@ public class QuestionResource {
                 .append(questionStatuses, that.questionStatuses)
                 .append(costs, that.costs)
                 .append(questionNumber, that.questionNumber)
+                .append(assessorMaximumScore, that.assessorMaximumScore)
                 .isEquals();
     }
 
@@ -204,6 +213,7 @@ public class QuestionResource {
                 .append(questionStatuses)
                 .append(costs)
                 .append(questionNumber)
+                .append(assessorMaximumScore)
                 .toHashCode();
     }
 }
