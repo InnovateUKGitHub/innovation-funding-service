@@ -7,6 +7,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
@@ -21,6 +22,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
@@ -351,9 +354,36 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     @Test
     public void addCollaborationAgreement() throws Exception {
-        Long projectId = 1L;
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "Content to upload".getBytes());
+        Long projectId = 123L;
+
+        Function<FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                fileToUpload -> projectServiceMock.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), isA(Supplier.class));
+
+        Consumer<FileEntryResource> serviceCallVerification =
+                fileToUpload -> verify(projectServiceMock).createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), isA(Supplier.class));
+
+        assertDocumentUploadProcess(
+                "/project/" + projectId + "/collaboration-agreement",
+                serviceCallToUpload,
+                serviceCallVerification);
+    }
+
+    private void assertDocumentUploadProcess(
+            String url,
+            Function<FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall,
+            Consumer<FileEntryResource> createFileServiceVerification) throws Exception {
+
+        assertDocumentUploadProcess(url, new Object[] {}, createFileServiceCall, createFileServiceVerification);
+    }
+
+    private void assertDocumentUploadProcess(
+            String url,
+            Object[] urlParams,
+            Function<FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall,
+            Consumer<FileEntryResource> createFileServiceVerification) throws Exception {
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("thefile", "filename.txt", "text/plain", "Content to upload".getBytes());
 
         FileEntryResource expectedTemporaryFile = newFileEntryResource().
                 with(id(null)).
@@ -366,11 +396,11 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         when(fileValidatorMock.validateFileHeaders("text/plain", "17", "filename.txt")).thenReturn(serviceSuccess(fileAttributes));
 
         FileEntryResource savedFile = newFileEntryResource().with(id(456L)).build();
-        when(projectServiceMock.createCollaborationAgreementFileEntry(eq(projectId), eq(expectedTemporaryFile), isA(Supplier.class))).
+        when(createFileServiceCall.apply(expectedTemporaryFile)).
                 thenReturn(serviceSuccess(savedFile));
 
         mockMvc.perform(
-                fileUpload("/project/{projectId}/collaboration-agreement", projectId).
+                fileUpload(url, urlParams).
                     file(uploadedFile).
                     param("filename", "filename.txt").
                     header("Content-Type", "text/plain").
@@ -379,6 +409,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 andExpect(status().isCreated()).
                 andExpect(content().json(toJson(savedFile)));
 
-        verify(projectServiceMock).createCollaborationAgreementFileEntry(eq(projectId), eq(expectedTemporaryFile), isA(Supplier.class));
+        createFileServiceVerification.accept(expectedTemporaryFile);
     }
 }
