@@ -93,7 +93,6 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
 	@Override
 	public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(
 			Long sectionId, QuestionType type) {
-		 return getWithRestResult(questionRestURL + "/getQuestionsBySectionIdAndType/" + sectionId + "/" + type.name(), new ParameterizedTypeReference<List<QuestionResource>>() {
-	        });
+		 return getWithRestResult(questionRestURL + "/getQuestionsBySectionIdAndType/" + sectionId + "/" + type.name(), questionResourceListType());
 	}
 }

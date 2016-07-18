@@ -10,6 +10,8 @@ import org.apache.commons.logging.LogFactory;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 public class TravelCostHandler extends CostHandler {
     private static final Log LOG = LogFactory.getLog(TravelCostHandler.class);
 
@@ -39,7 +41,7 @@ public class TravelCostHandler extends CostHandler {
             }
         }
         
-        if(id == null && costPerItem == null && item == null && quantity == null) {
+        if(allNull(id, costPerItem, item, quantity)) {
         	return null;
         }
         return new TravelCost(id, item, costPerItem, quantity);

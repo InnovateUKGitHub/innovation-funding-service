@@ -8,6 +8,8 @@ import com.worth.ifs.util.NumberUtils;
 
 import java.util.List;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 /**
  * Handles the conversion of form fields to overhead
  */
@@ -32,7 +34,7 @@ public class OverheadsHandler extends CostHandler {
             }
         }
 
-        if(id == null && customRate == null && rateType == null) {
+        if(allNull(id == null, customRate, rateType)) {
         	return null;
         }
         

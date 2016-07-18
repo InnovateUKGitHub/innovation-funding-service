@@ -8,6 +8,8 @@ import com.worth.ifs.util.NumberUtils;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 /**
  * Handles the conversion of form fields to a grant claims
  */
@@ -20,7 +22,7 @@ public class GrantClaimHandler extends CostHandler {
             grantClaimPercentage = NumberUtils.getIntegerValue(grantClaimPercentageField.get().getValue(), 0);
         }
 
-        if(id == null && grantClaimPercentage == null) {
+        if(allNull(id, grantClaimPercentage)) {
         	return null;
         }
         return new GrantClaim(id, grantClaimPercentage);

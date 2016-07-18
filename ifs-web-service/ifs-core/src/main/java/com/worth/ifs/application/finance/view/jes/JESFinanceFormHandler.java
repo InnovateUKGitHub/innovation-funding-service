@@ -97,7 +97,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if(costItem != null) {
         	return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
         } else {
-        	return new ValidationMessages();
+        	return ValidationMessages.noErrors();
         }
     }
 

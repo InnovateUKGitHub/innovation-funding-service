@@ -8,6 +8,8 @@ import com.worth.ifs.util.NumberUtils;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 /**
  * Handles the conversion of form fields to other costs
  */
@@ -34,7 +36,7 @@ public class OtherCostHandler extends CostHandler {
             }
         }
         
-        if(id == null && description == null && cost == null) {
+        if(allNull(id, description, cost)) {
         	return null;
         }
         return new OtherCost(id, description, cost);

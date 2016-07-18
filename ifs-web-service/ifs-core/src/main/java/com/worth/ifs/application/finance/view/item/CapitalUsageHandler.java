@@ -8,6 +8,8 @@ import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.util.NumberUtils;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 /**
  * Handles the conversion of form fields to a cost item
  */
@@ -49,7 +51,7 @@ public class CapitalUsageHandler extends CostHandler {
             }
         }
 
-        if(id == null && deprecation == null && description == null && existing == null && npv == null && residualValue == null && utilisation == null) {
+        if(allNull(id, deprecation, description, existing, npv, residualValue, utilisation)) {
         	return null;
         }
         

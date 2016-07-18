@@ -98,6 +98,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
         );
     }
+    
+    @Test
+    public void testGetQuestionsBySectionIdAndType() {
+         service.getQuestionsBySectionIdAndType(1L, QuestionType.GENERAL);
+         verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
+    }
 
     @Override
     protected Class<TestQuestionService> getServiceClass() {
@@ -211,7 +217,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
 		@Override
 		public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-			return null;
+			 return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
 		}
     }
 }

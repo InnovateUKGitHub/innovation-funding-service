@@ -309,8 +309,8 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldErrors("phoneNumber").get(0).getCode());
-        assertEquals("Size", bindingResult.getFieldErrors("phoneNumber").get(1).getCode());
+        assertEquals("Size", bindingResult.getFieldErrors("phoneNumber").get(0).getCode());
+        assertEquals("NotEmpty", bindingResult.getFieldErrors("phoneNumber").get(1).getCode());
     }
 
     @Test
