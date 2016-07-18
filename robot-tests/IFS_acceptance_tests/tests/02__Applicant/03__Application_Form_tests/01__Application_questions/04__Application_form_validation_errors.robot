@@ -88,7 +88,7 @@ Duration field client side
 Application details server side
     [Documentation]    INFUND-2843
     [Tags]    Pending    HappyPath
-    # pending INFUND-3999
+    # TODO pending INFUND-3999
     Given the user should see the text in the page    Application details
     When the user enters text to a text field    id=application_details-title    ${EMPTY}
     Then the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
