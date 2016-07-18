@@ -17,6 +17,16 @@
       <div th:include="fragments/elements :: project-title (projectId=${project.id}, projectName=${project.name})" th:remove="tag" />
       <h1 class="heading-xlarge">Bank account</h1>
   </div>
+  <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
+
+  <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+      <h2 class="heading-medium error-summary-heading">
+          We are unable to save your bank account details:
+      </h2>
+      <ul class="error-summary-list">
+          <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+      </ul>
+  </div>
 
   <div th:unless="${bankDetails == null}" class="success-alert">
       <p><strong>Your bank account details have been submitted to Innovate UK</strong></p>
@@ -33,7 +43,6 @@
         <th:block th:if="${organisation.companyHouseNumber}" th:text="|Company no. ${organisation.companyHouseNumber}|">02423435</th:block>
 	</p>
 
-    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
     <h2 class="heading-medium no-margin-bottom">Account details</h2>
     <p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
 
@@ -41,7 +50,7 @@
 
       <label for="bank-acc-number">
         <span class="form-label-bold">Account number</span>
-        <span class="form-hint">For example: 1548965</span>
+        <span class="form-hint">For example: 15481965</span>
         <span th:if="${#fields.hasErrors('accountNumber')}" th:remove="tag">
               <span class="error-message"  th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
         </span>
