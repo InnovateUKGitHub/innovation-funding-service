@@ -38,6 +38,18 @@ public class BankDetailsResourceBuilder extends BaseBuilder<BankDetailsResource,
         return with((bankDetails) -> bankDetails.setOrganisation(organisation));
     }
 
+    public BankDetailsResourceBuilder withOrganisationTypeName(String organisationTypeName) {
+        return with((bankDetails) -> bankDetails.setOrganisationTypeName(organisationTypeName));
+    }
+
+    public BankDetailsResourceBuilder withRegistrationNumber(String registrationNumber) {
+        return with((bankDetails) -> bankDetails.setRegistrationNumber(registrationNumber));
+    }
+
+    public BankDetailsResourceBuilder withCompanyName(String companyName) {
+        return with((bankDetails) -> bankDetails.setCompanyName(companyName));
+    }
+
     public BankDetailsResourceBuilder withOrganiationAddress(OrganisationAddressResource organisationAddressResource) {
         return with(bankDetails -> bankDetails.setOrganisationAddress(organisationAddressResource));
     }

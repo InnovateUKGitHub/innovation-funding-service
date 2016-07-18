@@ -117,6 +117,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons){
-        return conditons.stream().map(condition -> new Error(condition.getDescription(), HttpStatus.BAD_REQUEST)).collect(Collectors.toList());
+        return conditons.stream().map(condition -> Error.globalError("", condition.getDescription())).collect(Collectors.toList());
     }
 }

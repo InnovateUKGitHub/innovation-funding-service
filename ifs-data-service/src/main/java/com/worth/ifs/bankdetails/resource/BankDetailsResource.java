@@ -2,7 +2,6 @@ package com.worth.ifs.bankdetails.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -31,7 +30,7 @@ public class BankDetailsResource {
     @NotNull(message = "Organisation id is mandatory")
     private Long organisation;
 
-    private OrganisationTypeResource organisationType;
+    private String organisationTypeName;
 
     private String companyName;
 
@@ -85,14 +84,6 @@ public class BankDetailsResource {
         this.organisation = organisation;
     }
 
-    public OrganisationTypeResource getOrganisationType() {
-        return organisationType;
-    }
-
-    public void setOrganisationType(OrganisationTypeResource organisationType) {
-        this.organisationType = organisationType;
-    }
-
     public String getCompanyName() {
         return companyName;
     }
@@ -114,6 +105,14 @@ public class BankDetailsResource {
         return true;
     }
 
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
+    }
+
+    public void setOrganisationTypeName(String organisationTypeName) {
+        this.organisationTypeName = organisationTypeName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -129,7 +128,7 @@ public class BankDetailsResource {
                 .append(project, that.project)
                 .append(organisationAddress, that.organisationAddress)
                 .append(organisation, that.organisation)
-                .append(organisationType, that.organisationType)
+                .append(organisationTypeName, that.organisationTypeName)
                 .append(companyName, that.companyName)
                 .append(registrationNumber, that.registrationNumber)
                 .isEquals();
@@ -144,7 +143,7 @@ public class BankDetailsResource {
                 .append(project)
                 .append(organisationAddress)
                 .append(organisation)
-                .append(organisationType)
+                .append(organisationTypeName)
                 .append(companyName)
                 .append(registrationNumber)
                 .toHashCode();

@@ -70,6 +70,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         organisationResource.setAddresses(Collections.singletonList(organisationAddressResource));
+        organisationResource.setName("Acme Corporation");
+        organisationResource.setOrganisationTypeName("Business");
+        organisationResource.setCompanyHouseNumber("00123");
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource projectResource = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
@@ -79,6 +82,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 withAccountNumber("12345678").
                 withOrganiationAddress(organisationAddressResource).
                 withOrganisation(organisationResource.getId()).
+                withCompanyName("Acme Corporation").
+                withOrganisationTypeName("Business").
+                withRegistrationNumber("00123").
                 withProject(projectResource.getId()).build();
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
