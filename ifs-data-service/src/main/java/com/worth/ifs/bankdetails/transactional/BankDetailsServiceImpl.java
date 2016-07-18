@@ -15,14 +15,19 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.Condition;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
+import static com.worth.ifs.commons.error.CommonFailureKeys.EXPERIAN_VALIDATION_FAILED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -101,10 +106,18 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                     handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
                         validationResult -> {
-                            return serviceSuccess(bankDetailsResource);
+                            if(validationResult.isCheckPassed()) {
+                                return serviceSuccess(bankDetailsResource);
+                            } else {
+                                return serviceFailure(convertExperianValidationMsgToUserMsg(validationResult.getConditions()));
+                            }
                         }
                 );
 
         }
+    }
+
+    private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons){
+        return conditons.stream().map(condition -> new Error(EXPERIAN_VALIDATION_FAILED)).collect(Collectors.toList());
     }
 }
