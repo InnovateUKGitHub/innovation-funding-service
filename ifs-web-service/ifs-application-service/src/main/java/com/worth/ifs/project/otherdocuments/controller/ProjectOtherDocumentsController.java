@@ -1,14 +1,15 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Collections.emptyList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -46,10 +49,12 @@ public class ProjectOtherDocumentsController {
     private ProjectService projectService;
 
     @RequestMapping(method = GET)
-    public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model) {
+    public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
+                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId);
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
+        model.addAttribute("form", new ProjectOtherDocumentsForm());
         return "project/other-documents";
     }
 
@@ -63,6 +68,36 @@ public class ProjectOtherDocumentsController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
+    @RequestMapping(params = "uploadCollaborationAgreementClicked", method = POST)
+    public String uploadCollaborationAgreementFile(
+            @PathVariable("projectId") final Long projectId,
+            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", () -> {
+
+            MultipartFile file = form.getCollaborationAgreement();
+
+            return projectService.addCollaborationAgreementDocument(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
+        });
+    }
+
+    @RequestMapping(params = "removeCollaborationAgreementClicked", method = POST)
+    public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
+                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                             @SuppressWarnings("unused") BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
+                                             Model model,
+                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement",
+                () -> projectService.removeCollaborationAgreementDocument(projectId));
+    }
+
     @RequestMapping(value = "/exploitation-plan", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId) {
@@ -73,64 +108,67 @@ public class ProjectOtherDocumentsController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @RequestMapping(value = "/", params = "uploadCollaborationAgreement", method = POST)
-    public String uploadCollaborationAgreementFile(
+    @RequestMapping(params = "uploadExploitationPlanClicked", method = POST)
+    public String uploadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model) {
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", () -> {
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            MultipartFile file = form.getExploitationPlan();
 
-            ServiceResult<FileEntryResource> uploadFileResult = uploadFormInput(projectId, form.getCollaborationAgreement());
-
-            return validationHandler.
-                    addAnyErrors(uploadFileResult, toField("collaborationAgreement")).
-                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
+            return projectService.addExploitationPlanDocument(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
 
-    @RequestMapping(value = "/", params = "removeCollaborationAgreement", method = POST)
-    public String removeAssessorFeedbackFile(@PathVariable("projectId") final Long projectId,
-                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm applicationForm,
+    @RequestMapping(params = "removeExploitationPlanClicked", method = POST)
+    public String removeExploitationPlanFile(@PathVariable("projectId") final Long projectId,
+                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
-                                             Model model) {
+                                             Model model,
+                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            ServiceResult<Void> removeFileResult = projectService.removeCollaborationAgreementDocument(projectId);
-
-            return validationHandler.
-                    addAnyErrors(removeFileResult, toField("collaborationAgreement")).
-                    failNowOrSucceedWith(failureView, () -> redirectToOtherDocumentsPage(projectId));
-        });
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan",
+                () -> projectService.removeExploitationPlanDocument(projectId));
     }
 
-    private ServiceResult<FileEntryResource> uploadFormInput(Long projectId, MultipartFile file) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
-        try {
+        Supplier<String> successView = () -> redirectToOtherDocumentsPage(projectId);
+        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
 
-            return projectService.addCollaborationAgreementDocument(projectId,
-                    file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
-
-        } catch (IOException e) {
-            LOG.error(e);
-            throw new UnableToReadUploadedFile();
-        }
+        return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
     }
 
-    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId) {
+    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
+        Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
+        Optional<FileEntryResource> exploitationPlan = projectService.getExploitationPlanFileDetails(projectId);
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+
+        List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
+
+        boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
+
+        // TODO DW - these rejection messages to be covered in other stories
+        List<String> rejectionReasons = emptyList();
+
+        // TODO DW - these flags to be covered in other stories
+        boolean otherDocumentsSubmitted = false;
+        boolean otherDocumentsApproved = false;
+
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
-                new FileDetailsViewModel("file1.pdf", 1005), new FileDetailsViewModel("file2.pdf", 2534),
-                asList("Partner Org 1", "Partner Org 2", "Partner Org 3"), asList("No documents for you!"), true, false, false
+                collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
+                exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
+                partnerOrganisationNames, rejectionReasons,
+                leadPartner, otherDocumentsSubmitted, otherDocumentsApproved
         );
     }
 

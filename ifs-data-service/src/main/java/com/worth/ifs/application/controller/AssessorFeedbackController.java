@@ -114,8 +114,7 @@ public class AssessorFeedbackController {
     public RestResult<Void> deleteAssessorFeedbackDocument(
             @RequestParam("applicationId") long applicationId) throws IOException {
 
-        ServiceResult<Void> deleteResult = assessorFeedbackService.deleteAssessorFeedbackFileEntry(applicationId);
-        return deleteResult.toDeleteResponse();
+        return assessorFeedbackService.deleteAssessorFeedbackFileEntry(applicationId).toDeleteResponse();
     }
     
     @RequestMapping(value = "/assessorFeedbackUploaded", method = GET, produces = "application/json")

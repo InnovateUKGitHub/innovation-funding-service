@@ -11,6 +11,10 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -38,10 +42,14 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -59,6 +67,8 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -101,6 +111,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private FileEntryMapper fileEntryMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -235,6 +251,152 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
 
         return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
+    }
+
+@Override
+    public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getCollaborationAgreement();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
+            return getFileResult.andOnSuccessReturn(inputStream -> Pair.of(fileEntryMapper.mapToResource(fileEntry), inputStream));
+        });
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getCollaborationAgreement();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        });
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<Void> deleteCollaborationAgreementFileEntry(long projectId) {
+        return getProject(projectId).andOnSuccess(project ->
+                getCollaborationAgreement(project).andOnSuccess(fileEntry ->
+                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                removeCollaborationAgreementFileFromProject(project))));
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getExploitationPlan();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
+            return getFileResult.andOnSuccessReturn(inputStream -> Pair.of(fileEntryMapper.mapToResource(fileEntry), inputStream));
+        });
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getExploitationPlan();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        });
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<Void> deleteExploitationPlanFileEntry(long projectId) {
+        return getProject(projectId).andOnSuccess(project ->
+                getExploitationPlan(project).andOnSuccess(fileEntry ->
+                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                removeExploitationPlanFileFromProject(project))));
+    }
+
+    private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
+        if (project.getCollaborationAgreement() == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        } else {
+            return serviceSuccess(project.getCollaborationAgreement());
+        }
+    }
+
+    private FileEntryResource linkCollaborationAgreementFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+        FileEntry fileEntry = fileDetails.getValue();
+        linkCollaborationAgreementFileEntryToProject(fileEntry, project);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
+    private void linkCollaborationAgreementFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setCollaborationAgreement(fileEntry);
+    }
+
+    private void removeCollaborationAgreementFileFromProject(Project project) {
+        project.setCollaborationAgreement(null);
+    }
+
+    private ServiceResult<FileEntry> getExploitationPlan(Project project) {
+        if (project.getExploitationPlan() == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        } else {
+            return serviceSuccess(project.getExploitationPlan());
+        }
+    }
+
+    private FileEntryResource linkExploitationPlanFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+        FileEntry fileEntry = fileDetails.getValue();
+        linkExploitationPlanFileEntryToProject(fileEntry, project);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
+    private void linkExploitationPlanFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setExploitationPlan(fileEntry);
+    }
+
+    private void removeExploitationPlanFileFromProject(Project project) {
+        project.setExploitationPlan(null);
     }
 
 

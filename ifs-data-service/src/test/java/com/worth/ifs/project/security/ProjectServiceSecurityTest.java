@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -13,17 +14,20 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -310,8 +314,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
             return null;
         }
-		
-		
+
 		@Override
         public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
             return null;
@@ -319,6 +322,56 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getCollaborationAgreementFileEntryContents(long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteCollaborationAgreementFileEntry(long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getExploitationPlanFileEntryContents(long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteExploitationPlanFileEntry(long applicationId) {
             return null;
         }
     }

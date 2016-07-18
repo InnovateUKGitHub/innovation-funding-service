@@ -13,6 +13,8 @@ import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.Future;
 
+import static java.util.Collections.singletonList;
+
 /**
  * BaseRestService provides a base for all Service classes.
  */
@@ -201,6 +203,7 @@ public abstract class BaseRestService {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
         headers.setContentLength(contentLength);
+        headers.setAccept(singletonList(MediaType.parseMediaType("application/json")));
         return headers;
     }
 }
