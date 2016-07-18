@@ -29,12 +29,8 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-<<<<<<< HEAD
-    [Tags]
-    #Pending INFUND-4027
-=======
     [Tags]    HappyPath
->>>>>>> refs/remotes/origin/development
+    #Pending INFUND-4027
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -50,12 +46,7 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736z
-<<<<<<< HEAD
-    [Tags]    Failing
     #Pending INFUND-4027
-=======
-    [Tags]
->>>>>>> refs/remotes/origin/development
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
@@ -296,7 +287,6 @@ Totals should be correct
 User selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
     click element    xpath=//input[@type='radio' and starts-with(@name, '${RADIO_BUTTON}') and (@value='${SELECTION}' or @id='${SELECTION}')]
-
     focus    css=.app-submit-btn
 
 Admin costs total should be correct
