@@ -8,7 +8,6 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -75,13 +74,6 @@ public interface ApplicationService {
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                      final Long userId,
                                                                                      final UserRoleType role);
-
-    //@NotSecured("user only has to be authenticated")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            final Long competitionId,
-            final Long userId,
-            String applicationName);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);

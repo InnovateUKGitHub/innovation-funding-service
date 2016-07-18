@@ -88,8 +88,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private QuestionService questionService;
     @Autowired
-    private ApplicationMapper applicationMapper;
-    @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
     @Autowired
     private SectionService sectionService;
@@ -97,6 +95,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private NotificationService notificationService;
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+    @Autowired
+    private ApplicationMapper applicationMapper;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -405,48 +405,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            final Long competitionId,
-            final Long userId,
-            final String applicationName) {
-        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) ->
-                        createApplicationByApplicationNameForUserAndCompetition(applicationName, user, competition)
-        );
-    }
-
-    private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserAndCompetition(String applicationName, User user, Competition competition) {
-        Application application = new Application();
-        application.setName(applicationName);
-        application.setStartDate(null);
-
-        String name = ApplicationStatusConstants.CREATED.getName();
-
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-        ApplicationStatus applicationStatus = applicationStatusList.get(0);
-
-        application.setApplicationStatus(applicationStatus);
-        application.setDurationInMonths(3L);
-
-        return getRole(LEADAPPLICANT).andOnSuccess(role -> {
-
-            Organisation userOrganisation = user.getOrganisations().get(0);
-
-            ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
-
-            List<ProcessRole> processRoles = new ArrayList<>();
-            processRoles.add(processRole);
-
-            application.setProcessRoles(processRoles);
-            application.setCompetition(competition);
-
-            Application createdApplication = applicationRepository.save(application);
-            processRoleRepository.save(processRole);
-
-            return serviceSuccess(applicationMapper.mapToResource(createdApplication));
-        });
-    }
-
-    @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole ->
                         applicationMapper.mapToResource(processRole.getApplication())
@@ -504,7 +462,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = application.getProcessRoles();
 
         Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) 
+					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) 
+					|| p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
                 .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
