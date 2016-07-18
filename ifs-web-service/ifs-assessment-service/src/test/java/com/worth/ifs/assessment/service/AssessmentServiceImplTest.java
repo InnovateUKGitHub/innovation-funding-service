@@ -9,12 +9,14 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.builder.AssessmentResourceBuilder;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.builder.ProcessRoleResourceBuilder;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -87,5 +89,21 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         final List<QuestionResource> response = service.getAllQuestionsById(assessmentId);
         assertSame(expected, response);
+    }
+
+    @Test
+    public void rejectApplication() {
+        final Long assessmentId = 1L;
+        final String reason = "reason";
+        final String comment = "comment";
+
+        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
+        processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
+        processOutcome.setComment(comment);
+        processOutcome.setDescription(reason);
+        when(assessmentRestService.updateStatus(assessmentId,processOutcome)).thenReturn(restSuccess());
+
+        service.rejectApplication(assessmentId,reason,comment);
+        verify(assessmentRestService, only()).updateStatus(assessmentId,processOutcome);
     }
 }
