@@ -14,10 +14,10 @@ import org.junit.Rule;
 import org.mockito.InjectMocks;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -46,8 +46,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -137,13 +138,13 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      * 5) Verifies the fileValidator was called as expected
      * 6) Verifies the "create file" service method was called as expected
      */
-    protected <T> void assertFileUploadProcess(
+    protected <T> ResultActions assertFileUploadProcess(
             String url,
             T serviceToCall,
             BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall)
             throws Exception {
 
-        assertFileUploadProcess(url, new Object[] {}, emptyMap(), serviceToCall, createFileServiceCall);
+        return assertFileUploadProcess(url, new Object[] {}, emptyMap(), serviceToCall, createFileServiceCall);
     }
 
     /**
@@ -158,14 +159,53 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      * 5) Verifies the fileValidator was called as expected
      * 6) Verifies the "create file" service method was called as expected
      */
-    protected <T> void assertFileUploadProcess(
+    protected <T> ResultActions assertFileUploadProcess(
             String url,
             Object[] urlParams,
             Map<String, String> requestParams,
             T serviceToCall,
             BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall) throws Exception {
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("thefile", "filename.txt", "text/plain", "Content to upload".getBytes());
+        return assertFileUploadProcess(url, urlParams, requestParams, serviceToCall, createFileServiceCall, false);
+    }
+
+    protected <T> ResultActions assertFileUpdateProcess(
+            String url,
+            T serviceToCall,
+            BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall)
+            throws Exception {
+
+        return assertFileUpdateProcess(url, new Object[] {}, emptyMap(), serviceToCall, createFileServiceCall);
+    }
+
+    /**
+     * A useful shorthand way to test file upload endpoints that take a file, call a service to create the file on the filesystem,
+     * and return the new FileEntryResource as a JSON POST response.  Essentially this method:
+     *
+     * 1) Constructs a new POST request with some file details on it
+     * 2) Sets expectations on a fileValidator validating the file being uploaded
+     * 3) Lets the calling code supply a function that sets expectations on the "create file" service method that will be
+     *    invoked by the Controller
+     * 4) Invokes the POST request
+     * 5) Verifies the fileValidator was called as expected
+     * 6) Verifies the "create file" service method was called as expected
+     */
+    protected <T> ResultActions assertFileUpdateProcess(
+            String url,
+            Object[] urlParams,
+            Map<String, String> requestParams,
+            T serviceToCall,
+            BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall) throws Exception {
+
+        return assertFileUploadProcess(url, urlParams, requestParams, serviceToCall, createFileServiceCall, true);
+    }
+
+        private <T> ResultActions assertFileUploadProcess(
+            String url,
+            Object[] urlParams,
+            Map<String, String> requestParams,
+            T serviceToCall,
+            BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall, boolean update) throws Exception {
 
         FileEntryResource expectedTemporaryFile = newFileEntryResource().
                 with(id(null)).
@@ -181,8 +221,10 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         when(createFileServiceCall.apply(serviceToCall, expectedTemporaryFile)).
                 thenReturn(serviceSuccess(savedFile));
 
-        MockHttpServletRequestBuilder mainRequest = fileUpload(url, urlParams).
-                file(uploadedFile).
+            MockHttpServletRequestBuilder methodPart =
+                    update ? put(url, urlParams) : post(url, urlParams);
+
+            MockHttpServletRequestBuilder mainRequest = methodPart.
                 content("Content to upload").
                 param("filename", "filename.txt").
                 header("Content-Type", "text/plain").
@@ -191,12 +233,22 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         requestParams.forEach(mainRequest::param);
 
-        mockMvc.perform(mainRequest).
-                andExpect(status().isCreated()).
-                andExpect(content().json(toJson(savedFile)));
+        ResultActions resultActions = mockMvc.perform(mainRequest);
+
+        if (update) {
+            resultActions.
+                    andExpect(content().string("")).
+                    andExpect(status().isOk());
+        } else {
+            resultActions.
+                    andExpect(content().json(toJson(savedFile))).
+                    andExpect(status().isCreated());
+        }
 
         verify(fileValidatorMock).validateFileHeaders("text/plain", "17", "filename.txt");
         createFileServiceCall.apply(verify(serviceToCall), expectedTemporaryFile);
+
+        return resultActions;
     }
 
     protected Supplier<InputStream> fileUploadInputStreamExpectations(String expectedContent) {

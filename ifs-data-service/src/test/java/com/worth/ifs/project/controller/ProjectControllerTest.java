@@ -9,6 +9,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
@@ -19,9 +20,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.JsonTestUtil.fromJson;
 import static com.worth.ifs.JsonTestUtil.toJson;
@@ -32,6 +36,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITO
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -355,5 +360,62 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 (service, fileToUpload) -> service.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload);
+    }
+
+    @Test
+    public void updateCollaborationAgreement() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.updateCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload);
+    }
+
+    @Test
+    public void getCollaborationAgreementFileDetails() throws Exception {
+
+        Long projectId = 123L;
+
+        FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
+
+        when(projectServiceMock.getCollaborationAgreementFileEntryDetails(projectId)).thenReturn(serviceSuccess(expectedFileEntryResource));
+
+        mockMvc.perform(get("/project/{projectId}/collaboration-agreement/details", projectId)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(expectedFileEntryResource)));
+    }
+
+
+    @Test
+    public void getCollaborationAgreementFileContent() throws Exception {
+
+        Long projectId = 123L;
+
+        FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
+
+        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
+
+        BasicFileAndContents getResult = new BasicFileAndContents(expectedFileEntryResource, inputStreamSupplier);
+        when(projectServiceMock.getCollaborationAgreementFileEntryContents(projectId)).thenReturn(serviceSuccess(getResult));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/collaboration-agreement", projectId)).
+                andExpect(status().isOk()).
+                andReturn();
+
+        assertEquals("The returned binary file data", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void deleteCollaborationAgreementFileDetails() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectServiceMock.deleteCollaborationAgreementFileEntry(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/collaboration-agreement", projectId)).
+                andExpect(status().isNoContent()).
+                andExpect(content().string(""));
     }
 }
