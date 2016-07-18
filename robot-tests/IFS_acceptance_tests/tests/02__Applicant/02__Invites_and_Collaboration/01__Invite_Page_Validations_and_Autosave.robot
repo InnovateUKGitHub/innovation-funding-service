@@ -8,7 +8,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 Suite Setup       Login and create a new application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Collaboration
+Force Tags        Collaboration    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -36,7 +36,7 @@ lead applicant cannot remove himself
 
 Validations for the Email field
     [Documentation]    INFUND-901
-    [Tags]
+    [Tags]    HappyPath
     When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
     Then the user should see an error    not a well-formed email address
@@ -49,7 +49,7 @@ Validations for the name field
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
-    [Tags]
+    [Tags]    HappyPath
     # on the user interface.    All we can test is that the state is saved in cookie, so not lost on page reload.
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant inputs details    1
@@ -92,11 +92,12 @@ Invalid email address is not allowed
     Then the user should see an error    not a well-formed email address
 
 Already invite email should is not allowed
+    [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
     Then the user should see an error    You have already added this email address
 
 Link to add multiple partner organisation
-    [Tags]
+    [Tags]    HappyPath
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And The user should see the element    css=li:nth-child(3)
     And The user clicks the button/link    jQuery=li:nth-child(3) button:contains("Remove")
@@ -104,7 +105,7 @@ Link to add multiple partner organisation
 
 The user's inputs should be autosaved
     [Documentation]    INFUND-901
-    [Tags]
+    [Tags]    HappyPath
     When the user fills the name and email field and reloads the page    1
     Then the user's inputs should still be visible    1
     And the user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}

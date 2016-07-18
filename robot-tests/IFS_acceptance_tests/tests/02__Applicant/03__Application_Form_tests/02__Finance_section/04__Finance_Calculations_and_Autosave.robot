@@ -7,7 +7,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath    Finances
+Force Tags        Finances    Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -29,7 +29,7 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]
+    [Tags]    HappyPath
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -45,11 +45,11 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736z
-    [Tags]    Failing
+    [Tags]
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    And user selects the admin costs    overheads-type-29-284    CUSTOM_RATE
+    And user selects the admin costs    overheads-type-29    CUSTOM_RATE
     And the user enters text to a text field    css=[id$="customRate"]    30
     Then admin costs total should be correct    id=section-total-10-custom    £ 14,400
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Administration support costs")
@@ -283,7 +283,8 @@ Totals should be correct
 
 User selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    the user selects the radio button    ${RADIO_BUTTON}    ${SELECTION}
+    click element    xpath=//input[@type='radio' and starts-with(@name, '${RADIO_BUTTON}') and (@value='${SELECTION}' or @id='${SELECTION}')]
+
     focus    css=.app-submit-btn
 
 Admin costs total should be correct

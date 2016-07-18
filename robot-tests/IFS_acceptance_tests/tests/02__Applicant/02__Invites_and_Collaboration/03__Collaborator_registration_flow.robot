@@ -1,11 +1,10 @@
 *** Settings ***
-Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
+Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
 ...
 ...
-...               #Invite flow without email. This test is using the old application
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags
+Force Tags        Collaboration    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -105,7 +104,7 @@ The type of the sub organisation navigates to the correct page
 
 Catapult search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult
+    [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    2
@@ -126,7 +125,7 @@ Catapult search (empty, invalid & valid inputs)
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
@@ -135,7 +134,7 @@ Catapult search (accept invitation flow)
 
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult    Email
+    [Tags]    Email    HappyPath
     Given the user opens the mailbox and verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")

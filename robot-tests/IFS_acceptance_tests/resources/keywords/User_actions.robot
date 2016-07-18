@@ -387,6 +387,21 @@ Delete the emails from both test mailboxes
     Delete All Emails
     close mailbox
 
+Delete the emails from the main test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
+Delete the emails from both main test mailboxes
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
+
+
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
     Wait Until Page Contains Element    link=terms and conditions
@@ -522,6 +537,18 @@ Open mailbox and verify the content
     [Documentation]    This Keyword checks the content of the 1st email in a given inbox
     Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
     ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    Delete All Emails
+    close mailbox
+
+Open mailbox and confirm received email
+    #  this keyword has the same functionality as the Open mailbox and verify the content
+    #  once this is reviewed we can remove one of them
+    [Arguments]    ${USER}    ${PASSWORD}    ${FROM_EMAIL}    ${PATTERN}
+    [Documentation]    This Keyword searches the correct email using regex
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
+    ${WHICH_EMAIL}=    Wait for Mail    fromEmail=${FROM_EMAIL}    toEmail=${USER}    timeout=150
+    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
     Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
     close mailbox

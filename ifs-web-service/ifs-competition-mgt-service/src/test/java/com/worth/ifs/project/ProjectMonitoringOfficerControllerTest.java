@@ -13,8 +13,7 @@ import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -35,9 +34,8 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -85,7 +83,6 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
             withId(projectId).
             withName("My Project").
             withApplication(applicationId).
-            withProjectManager(999L).
             withAddress(projectAddress).
             withTargetStartDate(LocalDate.of(2017, 01, 05)).
             withSubmittedDate(LocalDateTime.of(2016, 07, 04, 11, 2));
@@ -112,7 +109,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         // assert the various flags are correct for helping to drive what's visible on the page
         assertTrue(model.isExistingMonitoringOfficer());
         assertTrue(model.isDisplayMonitoringOfficerAssignedMessage());
-        assertFalse(model.isDisplayAssignMonitoringOfficerLink());
+        assertFalse(model.isDisplayAssignMonitoringOfficerButton());
         assertTrue(model.isDisplayChangeMonitoringOfficerLink());
         assertFalse(model.isEditMode());
         assertTrue(model.isReadOnly());
@@ -140,13 +137,15 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
 
-        // assert the various flags are correct for helping to drive what's visible on the page
+        // assert the various flags are correct for helping to drive what's visible on the page, especially
+        // with regards to the fact that if no MO has yet been assigned, the default behaviour will be to start in
+        // edit mode
         assertFalse(model.isExistingMonitoringOfficer());
         assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
-        assertFalse(model.isDisplayAssignMonitoringOfficerLink());
-        assertTrue(model.isDisplayChangeMonitoringOfficerLink());
-        assertFalse(model.isEditMode());
-        assertTrue(model.isReadOnly());
+        assertTrue(model.isDisplayAssignMonitoringOfficerButton());
+        assertFalse(model.isDisplayChangeMonitoringOfficerLink());
+        assertTrue(model.isEditMode());
+        assertFalse(model.isReadOnly());
 
         // assert the form for the MO details is not prepopulated
         assertMonitoringOfficerFormNotPrepopulated(modelMap);
@@ -186,7 +185,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         // assert the various flags are correct for helping to drive what's visible on the page
         assertTrue(model.isExistingMonitoringOfficer());
         assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
-        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
         assertFalse(model.isReadOnly());
@@ -217,7 +216,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         // assert the various flags are correct for helping to drive what's visible on the page
         assertFalse(model.isExistingMonitoringOfficer());
         assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
-        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
         assertFalse(model.isReadOnly());
@@ -290,7 +289,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         // assert the various flags are correct for helping to drive what's visible on the page
         assertFalse(model.isExistingMonitoringOfficer());
         assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
-        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
         assertFalse(model.isReadOnly());
@@ -303,11 +302,12 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getPhoneNumber());
 
         BindingResult bindingResult = form.getBindingResult();
-        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals(5, bindingResult.getFieldErrorCount());
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
-        assertEquals("Pattern", bindingResult.getFieldError("phoneNumber").getCode());
+        assertTrue(asList("NotEmpty", "Size").contains(bindingResult.getFieldErrors("phoneNumber").get(0).getCode()));
+        assertTrue(asList("NotEmpty", "Size").contains(bindingResult.getFieldErrors("phoneNumber").get(1).getCode()));
     }
 
     @Test
@@ -370,7 +370,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         // assert the various flags are correct for helping to drive what's visible on the page
         assertFalse(model.isExistingMonitoringOfficer());
         assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
-        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
         assertFalse(model.isReadOnly());
@@ -428,7 +428,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         // assert the various flags are correct for helping to drive what's visible on the page
         assertFalse(model.isExistingMonitoringOfficer());
         assertFalse(model.isDisplayMonitoringOfficerAssignedMessage());
-        assertTrue(model.isDisplayAssignMonitoringOfficerLink());
+        assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
         assertFalse(model.isReadOnly());
@@ -446,7 +446,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
-        assertEquals("Pattern", bindingResult.getFieldError("phoneNumber").getCode());
+        assertEquals("Size", bindingResult.getFieldError("phoneNumber").getCode());
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
@@ -468,13 +468,10 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummary);
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
 
-        RoleResource projectManagerRole = newRoleResource().withType(PROJECT_MANAGER).build();
+        List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").
+                withRoleName(PROJECT_MANAGER.getName()).build(1);
 
-        // TODO DW - Project Manager needs to be a Project User rather than a ProcessRole
-        List<ProcessRoleResource> processRoles = newProcessRoleResource().with(id(999L)).withUserName("Dave Smith").
-                withRole(projectManagerRole).build(1);
-
-        when(processRoleService.findProcessRolesByApplicationId(project.getApplication())).thenReturn(processRoles);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
     }
 
     private void assertProjectDetailsPrepopulatedOk(ProjectMonitoringOfficerViewModel model) {

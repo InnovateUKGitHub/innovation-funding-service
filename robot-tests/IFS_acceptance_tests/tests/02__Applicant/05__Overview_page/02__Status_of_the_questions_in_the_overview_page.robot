@@ -4,7 +4,7 @@ Documentation     INFUND-39: As an applicant and I am on the application overvie
 ...               INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Email
+Force Tags        Email    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -15,7 +15,7 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 Status changes when we assign a question
     [Documentation]    INFUND-39
-    [Tags]    Applicant    Overview    HappyPath
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -27,7 +27,7 @@ Status changes when we assign a question
 
 Re-assign is possible from the overview page
     [Documentation]    INFUND-39
-    [Tags]    Applicant    Overview
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     When the applicant assigns the Project Summary question from the overview page    Steve Smith
