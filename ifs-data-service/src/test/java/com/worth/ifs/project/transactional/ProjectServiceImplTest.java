@@ -152,6 +152,22 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertFalse(result.isSuccess());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
     }
+
+    @Test
+    public void testSetProjectManagerWhenProjectDetailsAlreadySubmitted() {
+
+        Project existingProject = newProject().withSubmittedDate(LocalDateTime.now()).build();
+
+        assertTrue(existingProject.getProjectUsers().isEmpty());
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+
+        ServiceResult<Void> result = service.setProjectManager(projectId, userId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+
+        assertTrue(existingProject.getProjectUsers().isEmpty());
+    }
     
     @Test
     public void testValidProjectManagerProvided() {
@@ -273,6 +289,26 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testUpdateProjectStartDateWhenProjectDetailsAlreadySubmitted() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        Project existingProject = newProject().withSubmittedDate(LocalDateTime.now()).build();
+        assertNull(existingProject.getTargetStartDate());
+        assertNotNull(existingProject.getSubmittedDate());
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+
+        verify(projectRepositoryMock).findOne(123L);
+        assertNull(existingProject.getTargetStartDate());
+    }
+
+    @Test
     public void testUpdateFinanceContact() {
 
         Project project = newProject().withId(123L).build();
@@ -379,6 +415,24 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+    }
+
+    @Test
+    public void testUpdateFinanceContactWhenProjectDetailsAlreadySubmitted() {
+
+        Project project = newProject().withId(123L).withSubmittedDate(LocalDateTime.now()).build();
+
+        assertTrue(project.getProjectUsers().isEmpty());
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
+
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+
+        verify(projectRepositoryMock).findOne(123L);
+        assertTrue(project.getProjectUsers().isEmpty());
     }
 
     @Test

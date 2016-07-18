@@ -1,10 +1,14 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,5 +42,22 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Optional<Long> processOutcome = processOutcomes.stream().filter(pr -> pr.equals(assessmentId)).findAny();
         assertTrue(processOutcome.isPresent());
         assertEquals(assessmentId,processOutcome.get());
+    }
+
+    @Test
+    @Rollback
+    public void rejectApplication() {
+        Long assessmentId = 2L;
+        Long processRole = 8L;
+
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(AssessmentStates.OPEN.getState(),assessmentResource.getStatus());
+        assertEquals(processRole,assessmentResource.getProcessRole());
+
+        ProcessOutcome processOutcome = new ProcessOutcome();
+        processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
+        controller.updateStatus(assessmentResource.getId(),processOutcome);
+        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(AssessmentStates.REJECTED.getState(),assessmentResult.getStatus());
     }
 }

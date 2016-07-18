@@ -144,6 +144,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
             return true;
         }));
 
+        when(applicationRepositoryMock.save(applicationExpectations)).thenReturn(applicationExpectations);
         when(applicationMapperMock.mapToResource(applicationExpectations)).thenReturn(applicationResource);
 
         ApplicationResource created =
