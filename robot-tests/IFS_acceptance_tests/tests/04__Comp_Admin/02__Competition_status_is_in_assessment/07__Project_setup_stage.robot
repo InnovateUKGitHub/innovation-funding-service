@@ -76,14 +76,16 @@ Unsuccessful applicant cannot remove the uploaded feedback
     Then the user should not see the text in the page    Remove
     And the user should not see the element    link=Remove
 
+
 Unsuccessful applicant can download the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    Pending
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
     [Teardown]    Remove File    ${valid_pdf}
+
 
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
@@ -105,7 +107,7 @@ Partner cannot remove the uploaded feedback
 Partner can download the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    Pending    HappyPath
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -138,6 +140,7 @@ Lead partner can see the overview of the project details
 Submit button is disabled if the details are not fully filled out
     [Documentation]    INFUND-3467
     [Tags]    Pending
+    # TODO
     When the user should see the element    xpath=//span[contains(text(), 'No')]
     Then the submit button should be disabled
 
@@ -343,11 +346,10 @@ Bank details submission
     Then the user navigates to the page    ${successful_project_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
 
-
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-3349
     [Tags]    Pending    HappyPath
-    # Pending due to INFUND-3963
+    # TODO Pending due to INFUND-3963
     Given the user navigates to the page    ${successful_project_page}
     When the user clicks the button/link      link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
@@ -357,7 +359,7 @@ Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-3330
     [Tags]    Pending    HappyPath
     [Setup]    Log in as user    &{Comp_admin1_credentials}
-    # Pending due to work in progress
+    # TODO Pending due to work in progress
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Cheese is good
     And the user should see the text in the page    Earth Observation
@@ -371,12 +373,12 @@ Comp admin can view the Supporting information details on MO page
 MO client-side validation
     [Documentation]    INFUND-3330
     [Tags]    Pending    HappyPath
-    # Pending due to work in progress
+    # TODO Pending due to work in progress
 
 MO server-side validation
     [Documentation]    INFUND-3330
     [Tags]    Pending    HappyPath
-    # Pending due to work in progress
+    # TODO Pending due to work in progress
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
 
 
@@ -398,7 +400,7 @@ MO details can be added and updated
 MO details can be edited and updated
     [Documentation]    INFUND-3330
     [Tags]    Pending
-    # Pending due to work in progress
+    # TODO Pending due to work in progress
     Given the user clicks the button/link    link=Change Monitoring Officer
     And the user enters text to a text field    id=firstName    Pradha
     And the user enters text to a text field    id=lastName    Jagankumar
@@ -412,7 +414,7 @@ MO details can be edited and updated
 MO details can be viewed on the page after editting
     [Documentation]    INFUND-3330
     [Tags]    Pending
-    # Pending due to work in progress
+    # TODO Pending due to work in progress
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Pradha
     And the user should see the text in the page    Jagankumar
@@ -422,7 +424,7 @@ MO details can be viewed on the page after editting
 MO details accessible/seen by all partners
     [Documentation]    INFUND-3349
     [Tags]    Pending    HappyPath
-    # Pending due to work in progress
+    # TODO Pending due to work in progress
     Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    [greeen tick mark element]
