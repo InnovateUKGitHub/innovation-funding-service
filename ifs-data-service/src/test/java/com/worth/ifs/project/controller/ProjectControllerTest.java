@@ -9,24 +9,20 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.transactional.ProjectService;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.JsonTestUtil.fromJson;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -36,7 +32,6 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITO
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -48,7 +43,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -357,58 +351,9 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        Function<FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                fileToUpload -> projectServiceMock.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), isA(Supplier.class));
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        Consumer<FileEntryResource> serviceCallVerification =
-                fileToUpload -> verify(projectServiceMock).createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), isA(Supplier.class));
-
-        assertDocumentUploadProcess(
-                "/project/" + projectId + "/collaboration-agreement",
-                serviceCallToUpload,
-                serviceCallVerification);
-    }
-
-    private void assertDocumentUploadProcess(
-            String url,
-            Function<FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall,
-            Consumer<FileEntryResource> createFileServiceVerification) throws Exception {
-
-        assertDocumentUploadProcess(url, new Object[] {}, createFileServiceCall, createFileServiceVerification);
-    }
-
-    private void assertDocumentUploadProcess(
-            String url,
-            Object[] urlParams,
-            Function<FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall,
-            Consumer<FileEntryResource> createFileServiceVerification) throws Exception {
-
-        MockMultipartFile uploadedFile = new MockMultipartFile("thefile", "filename.txt", "text/plain", "Content to upload".getBytes());
-
-        FileEntryResource expectedTemporaryFile = newFileEntryResource().
-                with(id(null)).
-                withFilesizeBytes(17).
-                withName("filename.txt").
-                withMediaType("text/plain").
-                build();
-
-        FileHeaderAttributes fileAttributes = new FileHeaderAttributes(TEXT_PLAIN, 17, "filename.txt");
-        when(fileValidatorMock.validateFileHeaders("text/plain", "17", "filename.txt")).thenReturn(serviceSuccess(fileAttributes));
-
-        FileEntryResource savedFile = newFileEntryResource().with(id(456L)).build();
-        when(createFileServiceCall.apply(expectedTemporaryFile)).
-                thenReturn(serviceSuccess(savedFile));
-
-        mockMvc.perform(
-                fileUpload(url, urlParams).
-                    file(uploadedFile).
-                    param("filename", "filename.txt").
-                    header("Content-Type", "text/plain").
-                    header("Content-Length", "17").
-                    header("IFS_AUTH_TOKEN", "123abc")).
-                andExpect(status().isCreated()).
-                andExpect(content().json(toJson(savedFile)));
-
-        createFileServiceVerification.accept(expectedTemporaryFile);
+        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload);
     }
 }
