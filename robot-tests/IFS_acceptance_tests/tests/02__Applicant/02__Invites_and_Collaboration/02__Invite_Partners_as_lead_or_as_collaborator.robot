@@ -14,7 +14,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Collaboration
+Force Tags        Collaboration    Appllicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -47,7 +47,7 @@ Pending partners visible in the Application details
     [Documentation]    INFUND-2966
     ...
     ...    INFUND-2738
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Application details
@@ -57,7 +57,7 @@ Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
     ...    INFUND-1962
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the next question
     Then the applicant cannot assign to pending invitees
     And the user should see the text in the page    Adrian Booth (pending)
@@ -104,7 +104,7 @@ Business organisation (partner accepts invitation)
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -154,7 +154,7 @@ Lead applicant invites a non registered user in the same organisation
     ...    INFUND-1463
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application

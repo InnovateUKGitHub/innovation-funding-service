@@ -75,29 +75,22 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
     }
 
     @Override
-    public List<ProcessRole> build(int numberToBuild) {
-        List<ProcessRole> built = super.build(numberToBuild);
+    public void postProcess(int index, ProcessRole processRole) {
 
         // now add back-refs where appropriate
-        built.forEach(processRole -> {
-            User user = processRole.getUser();
-            if (user != null && !user.getProcessRoles().contains(processRole)) {
-                user.addUserApplicationRole(processRole);
-            }
-        });
+        User user = processRole.getUser();
+        if (user != null && !user.getProcessRoles().contains(processRole)) {
+            user.addUserApplicationRole(processRole);
+        }
 
-        built.forEach(processRole -> {
-            Application application = processRole.getApplication();
-            if (application != null){
-                if (application.getProcessRoles() == null){
-                    application.setProcessRoles(new ArrayList<>());
-                }
-                if (!application.getProcessRoles().contains(processRole)){
-                    application.addUserApplicationRole(processRole);
-                }
+        Application application = processRole.getApplication();
+        if (application != null){
+            if (application.getProcessRoles() == null){
+                application.setProcessRoles(new ArrayList<>());
             }
-        });
-
-        return built;
+            if (!application.getProcessRoles().contains(processRole)){
+                application.addUserApplicationRole(processRole);
+            }
+        }
     }
 }

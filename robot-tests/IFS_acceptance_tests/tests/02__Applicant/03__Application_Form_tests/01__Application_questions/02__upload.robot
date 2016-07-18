@@ -28,7 +28,7 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -37,7 +37,7 @@ Non pdf uploads not allowed
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    HappyPath
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -47,7 +47,7 @@ Lead applicant can upload a pdf file
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]    HappyPath
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
@@ -56,7 +56,7 @@ Lead applicant can view a file
 
 Lead applicant can download a pdf file
     [Documentation]    INFUND-2720
-    [Tags]    Pending
+    [Tags]    Pending    HappyPath
     # Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
@@ -65,7 +65,7 @@ Lead applicant can download a pdf file
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -92,7 +92,7 @@ Collaborators cannot upload a file if not assigned
 
 Collaborators cannot remove a file if not assigned
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]    HappyPath
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the text in the page    Remove
 

@@ -19,7 +19,6 @@ import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -136,9 +135,16 @@ public abstract class BaseTransactionalService  {
         return () -> getRole(roleType);
     }
 
+    protected Supplier<ServiceResult<Role>> role(String roleName) {
+        return () -> getRole(roleName);
+    }
+
     protected ServiceResult<Role> getRole(UserRoleType roleType) {
-        return find(roleRepository.findByName(roleType.getName()), notFoundError(Role.class, roleType.getName())).
-                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
+        return getRole(roleType.getName());
+    }
+
+    protected ServiceResult<Role> getRole(String roleName) {
+        return find(roleRepository.findOneByName(roleName), notFoundError(Role.class, roleName));
     }
 
     protected Supplier<ServiceResult<Organisation>> organisation(Long id) {
