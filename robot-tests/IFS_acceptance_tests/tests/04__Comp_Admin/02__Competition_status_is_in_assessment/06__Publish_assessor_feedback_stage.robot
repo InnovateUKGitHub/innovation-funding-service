@@ -71,16 +71,14 @@ Choosing to Notify the applicants in the dialogue
     And the user should see the text in the page    Project setup
 
 Successful applicant gets feedback email
-    [Documentation]    INFUND-2608
-    [Tags]    Email    Pending
-    # pending due to INFUND-3476
-    Then open mailbox and verify the content    worth.email.test@gmail.com    testtest1    Following the success of your application
+    [Documentation]    INFUND-2608, INFUND-3476
+    [Tags]    Email
+    Then Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    Following the success of your application
 
 Unsuccessful applicant gets feedback email
-    [Documentation]    INFUND-2608
-    [Tags]    Email     Pending
-    # Pending due to INFUND-3476
-    Then open mailbox and verify the content    worth.email.test.two@gmail.com    testtest1    Following the submission of your application
+    [Documentation]    INFUND-2608, INFUND-3476
+    [Tags]    Email
+    Then Open mailbox and confirm received email    worth.email.test.two@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup

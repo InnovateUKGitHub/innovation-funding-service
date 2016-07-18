@@ -146,6 +146,7 @@ Lead partner can change the project manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
     When the user selects the radio button    projectManager    27
+    And the user should not see the text in the page      You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    test ten
     And the user selects the radio button    projectManager    projectManager1
@@ -301,20 +302,18 @@ MO server-side validation
 
 MO details can be added and updated
     [Documentation]    INFUND-3330, INFUND-3334
-    [Tags]    Pending
-    # Pending due to work in progress
+    [Tags]   Pending
     Given guest user log-in    john.doe@innovateuk.test    Passw0rd
     And the user navigates to the page  ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     When the user enters text to a text field    id=firstName    Pradha
     And the user enters text to a text field    id=lastName    Muniraj
-    And the user enters text to a text field    id=emailAddress    worth.email.test+monitoringofficer@gmail.com
-    And the standard verification for email address follows
+    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
     And the user enters text to a text field    id=phoneNumber    07438620303
     Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
     Then the user should see the text in the page    A Monitoring Officer has been assigned.
-    And Open mailbox and confirm received email    worth.email.test+monitoringofficer@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    New Monitoring Officer assignment
+    And Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    has been assigned to you
 
 MO details can be edited and updated
     [Documentation]    INFUND-3330
