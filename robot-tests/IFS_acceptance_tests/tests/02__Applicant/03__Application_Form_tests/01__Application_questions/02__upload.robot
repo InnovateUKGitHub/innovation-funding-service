@@ -18,7 +18,7 @@ ${virus_scanning_warning}    This file is awaiting virus scanning
 *** Test Cases ***
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -28,7 +28,7 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach

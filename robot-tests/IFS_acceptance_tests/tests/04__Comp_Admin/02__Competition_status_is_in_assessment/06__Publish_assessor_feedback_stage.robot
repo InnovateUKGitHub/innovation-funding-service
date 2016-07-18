@@ -38,7 +38,7 @@ The publish feedback should be enabled
 
 Remove the upload then feedback button becomes disabled
     [Documentation]    INFUND-2672
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${successful_application_overview}
     And the user should see the text in the page    Remove
     When the user clicks the button/link    name=removeAssessorFeedback
