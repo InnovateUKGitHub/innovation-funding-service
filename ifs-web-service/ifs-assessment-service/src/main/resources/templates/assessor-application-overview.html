@@ -36,8 +36,7 @@
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}"  th:if="${childSection.id == 8}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a href="#"
-                                       th:text="${childSection.name}" />
+                                    <a th:href="@{/{id}/finances(id=${assessmentId})}" th:text="${childSection.name}" />
                                 </h3>
                             </div>
                         </li>
