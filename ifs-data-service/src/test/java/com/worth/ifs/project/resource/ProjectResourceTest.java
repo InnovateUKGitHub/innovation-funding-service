@@ -20,7 +20,6 @@ public class ProjectResourceTest {
     Long id;
     String name;
     ApplicationResource applicationResource;
-    Long projectManagerId;
     List<Long> projectUsers;
     AddressResource addressResource;
     Long duration;
@@ -33,7 +32,6 @@ public class ProjectResourceTest {
         id = 1L;
         name = "Test Project 1";
         applicationResource = newApplicationResource().build();
-        projectManagerId = 1L;
         projectUsers = asList(1L, 2L, 3L);
         addressResource = newAddressResource().build();
         duration = 3L;
@@ -41,7 +39,6 @@ public class ProjectResourceTest {
         projectResource = newProjectResource().withId(id)
                 .withName(name)
                 .withApplication(applicationResource)
-                .withProjectManager(projectManagerId)
                 .withProjectUsers(projectUsers)
                 .withAddress(addressResource)
                 .withDuration(duration)
@@ -56,7 +53,6 @@ public class ProjectResourceTest {
         assertEquals(projectResource.getAddress(), addressResource);
         assertEquals(projectResource.getName(), name);
         assertEquals(projectResource.getSubmittedDate(), submittedDate);
-        assertEquals(projectResource.getProjectManager(), projectManagerId);
         assertEquals(projectResource.getDurationInMonths(), duration);
         assertEquals(projectResource.getApplication(), applicationResource.getId());
         assertEquals(projectResource.getFormattedId(), "00000001");

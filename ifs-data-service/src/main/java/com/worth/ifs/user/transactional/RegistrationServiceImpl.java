@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -26,10 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.*;
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.String.format;
@@ -154,14 +155,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<User> addRoleToUser(User user, String roleName) {
 
-        return find(roleRepository.findByName(roleName), notFoundError(Role.class, roleName)).andOnSuccessReturn(roles -> {
-
-            Role applicantRole = getOnlyElement(roles);
+        return getRole(roleName).andOnSuccessReturn(role -> {
 
             List<Role> newRoles = user.getRoles() != null ? new ArrayList<>(user.getRoles()) : new ArrayList<>();
 
-            if (!newRoles.contains(applicantRole)) {
-                newRoles.add(applicantRole);
+            if (!newRoles.contains(role)) {
+                newRoles.add(role);
             }
 
             user.setRoles(newRoles);
