@@ -61,7 +61,7 @@
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
-      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'require-action' : (model.bankDetails.isApproved ? 'complete' : 'waiting')}">
+      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'require-action' : (model.bankDetails.approved ? 'complete' : 'waiting')}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">

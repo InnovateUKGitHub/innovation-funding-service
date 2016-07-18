@@ -12,7 +12,6 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface RoleRepository extends PagingAndSortingRepository<Role, Long> {
-    List<Role> findByName(@Param("name") String name);
     Role findOneByName(@Param("name") String name);
     List<Role> findByNameIn(@Param("names") List<String> names);
 }

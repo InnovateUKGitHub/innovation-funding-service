@@ -8,7 +8,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    the user closes the browser
-Force Tags        Finances    Email
+Force Tags        Finances    Email    Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -34,7 +34,7 @@ Academic finances should be editable when lead marks them as complete
 
 Academic finance validations
     [Documentation]    INFUND-2399
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
@@ -48,7 +48,7 @@ Academic finance calculations
     [Documentation]    INFUND-917
     ...
     ...    INFUND-2399
-    [Tags]
+    [Tags]    HappyPath
     [Setup]
     Given The user navigates to the academic application finances
     When the academic partner fills the finances
@@ -76,7 +76,7 @@ Lead applicant can't upload a JeS file
 
 Academics upload
     [Documentation]    INFUND-917
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     When the academic partner uploads a file    ${valid_pdf}
@@ -86,7 +86,7 @@ Academics upload
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
-    [Tags]
+    [Tags]    HappyPath
     When The user navigates to the academic application finances
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
