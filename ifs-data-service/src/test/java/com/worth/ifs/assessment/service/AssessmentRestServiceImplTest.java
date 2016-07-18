@@ -47,7 +47,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         final Long assessmentId = 1L;
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s", assessmentRestURL, assessmentId), processOutcome, OK);
+        setupPutWithRestResultExpectations(format("%s/%s/status", assessmentRestURL, assessmentId), processOutcome, OK);
         final RestResult<Void> response = service.updateStatus(assessmentId, processOutcome);
         assertTrue(response.isSuccess());
     }

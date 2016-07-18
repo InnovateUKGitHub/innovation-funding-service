@@ -2,7 +2,6 @@ package com.worth.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.assessment.builder.ProcessOutcomeBuilder;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
@@ -12,6 +11,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 
+import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -50,22 +50,22 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void rejectApplication() throws Exception {
-        final Long processRoleId = 1L;
-        final Long assessmentId  = 1L;
+        Long processRoleId = 1L;
+        Long assessmentId  = 1L;
 
-        final ProcessRole processRole = ProcessRoleBuilder.newProcessRole().withId(processRoleId).build();
-        final Assessment assessment = newAssessment()
+        ProcessRole processRole = ProcessRoleBuilder.newProcessRole().withId(processRoleId).build();
+        Assessment assessment = newAssessment()
                 .withId(assessmentId)
                 .withProcessStatus(AssessmentStates.OPEN)
                 .withProcessRole(processRole)
                 .build();
 
-        ProcessOutcome processOutcome = ProcessOutcomeBuilder.newProcessOutcome().withOutcome(AssessmentOutcomes.REJECT.getType()).build();
+        ProcessOutcome processOutcome = newProcessOutcome().withOutcome(AssessmentOutcomes.REJECT.getType()).build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentServiceMock.updateStatus(assessmentId,processOutcome)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/status", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(processOutcome)))
                 .andExpect(status().isOk());

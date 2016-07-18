@@ -8,7 +8,6 @@ import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +29,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     private static final String DESCRIPTION = "description";
 
     @Test
-    @Rollback
     public void testStateChangePendingToOpen() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(PENDING_PROCESS_ROLE);
         assertEquals(AssessmentStates.PENDING.getState(),assessment.getProcessStatus());
@@ -40,7 +38,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @Rollback
     public void testStateChangePendingToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(PENDING_PROCESS_ROLE);
         assertEquals(AssessmentStates.PENDING.getState(),assessment.getProcessStatus());
@@ -52,7 +49,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @Rollback
     public void testStateChangeOpenToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(OPEN_PROCESS_ROLE);
         assertEquals(AssessmentStates.OPEN.getState(),assessment.getProcessStatus());
@@ -64,7 +60,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @Rollback
     public void testStateChangeOpenToAssessed() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(OPEN_PROCESS_ROLE);
         assertEquals(AssessmentStates.OPEN.getState(),assessment.getProcessStatus());
@@ -74,7 +69,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @Rollback
     public void testStateChangeAssessedToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(ASSESSED_PROCESS_ROLE);
         assertEquals(AssessmentStates.ASSESSED.getState(),assessment.getProcessStatus());
@@ -86,7 +80,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @Rollback
     public void testStateChangeAssessedToSubmitted() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(ASSESSED_PROCESS_ROLE);
         assertEquals(AssessmentStates.ASSESSED.getState(),assessment.getProcessStatus());

@@ -28,7 +28,7 @@ public class AssessmentController {
         return assessmentService.findById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/{id}", method = PUT)
+    @RequestMapping(value= "/{id}/status", method = PUT)
     public RestResult<Void> updateStatus(@PathVariable("id") final Long id,@RequestBody final ProcessOutcome processOutcome) {
         return assessmentService.updateStatus(id, processOutcome).toPutResponse();
     }

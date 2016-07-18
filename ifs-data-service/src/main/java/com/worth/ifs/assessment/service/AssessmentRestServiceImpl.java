@@ -29,6 +29,6 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
 
     @Override
     public RestResult<Void> updateStatus(Long id, ProcessOutcomeResource processOutcome) {
-         return putWithRestResult(format("%s/%s", assessmentRestURL, id), processOutcome, Void.class);
+         return putWithRestResult(format("%s/%s/status", assessmentRestURL, id), processOutcome, Void.class);
     }
 }
