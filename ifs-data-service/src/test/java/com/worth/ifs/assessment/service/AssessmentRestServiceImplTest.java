@@ -2,12 +2,16 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<AssessmentRestServiceImpl> {
@@ -36,5 +40,15 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         setupGetWithRestResultExpectations(format("%s/%s", assessmentRestURL, assessmentId), AssessmentResource.class, expected, OK);
         final AssessmentResource response = service.getById(assessmentId).getSuccessObject();
         assertSame(expected, response);
+    }
+
+    @Test
+    public void updateStatus() throws Exception {
+        final Long assessmentId = 1L;
+
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/status", assessmentRestURL, assessmentId), processOutcome, OK);
+        final RestResult<Void> response = service.updateStatus(assessmentId, processOutcome);
+        assertTrue(response.isSuccess());
     }
 }

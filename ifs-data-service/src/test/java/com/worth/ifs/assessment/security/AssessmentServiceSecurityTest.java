@@ -4,6 +4,7 @@ import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Before;
 import org.junit.Ignore;
 
@@ -29,5 +30,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         public ServiceResult<AssessmentResource> findById(Long id) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> updateStatus(Long id, ProcessOutcome processOutcome) {
+            return null;
+        }
+
     }
 }
