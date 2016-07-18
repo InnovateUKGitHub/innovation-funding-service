@@ -132,6 +132,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
+                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
                 andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
@@ -139,13 +140,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
-                andOnSuccess(() -> getProject(projectId).
-                        andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate)));
+                andOnSuccess(() -> getProject(projectId)).
+                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
     }
 
     @Override
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
+                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
                         andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                 andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
@@ -365,6 +368,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         }
 
         return serviceSuccess();
+    }
+
+    private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
+
+        if (project.isProjectDetailsSubmitted()) {
+            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+        }
+
+        return serviceSuccess(project);
     }
 
     private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
