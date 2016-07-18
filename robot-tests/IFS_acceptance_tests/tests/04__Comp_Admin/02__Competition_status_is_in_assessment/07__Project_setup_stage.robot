@@ -302,7 +302,7 @@ MO server-side validation
 
 MO details can be added and updated
     [Documentation]    INFUND-3330, INFUND-3334
-    [Tags]   Pending
+    [Tags]
     Given guest user log-in    john.doe@innovateuk.test    Passw0rd
     And the user navigates to the page  ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer

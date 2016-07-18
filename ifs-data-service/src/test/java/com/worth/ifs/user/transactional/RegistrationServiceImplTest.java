@@ -41,7 +41,6 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.time.LocalDateTime.now;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -85,7 +84,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role applicantRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(singletonList(applicantRole));
+        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         User expectedCreatedUser = createLambdaMatcher(user -> {
@@ -166,7 +165,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Organisation selectedOrganisation = newOrganisation().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(emptyList());
+        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(null);
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
@@ -192,7 +191,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role applicantRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(singletonList(applicantRole));
+        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
@@ -211,7 +210,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role applicantRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(singletonList(applicantRole));
+        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
@@ -237,7 +236,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role compAdminRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findByName(COMP_ADMIN.getName())).thenReturn(singletonList(compAdminRole));
+        when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(compAdminRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         User expectedCreatedUser = createLambdaMatcher(user -> {
@@ -299,7 +298,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         CompAdminEmail compAdminEmail = newCompAdminEmail().withEmail("email@example.com").build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findByName(COMP_ADMIN.getName())).thenReturn(emptyList());
+        when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(null);
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(compAdminEmail);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
@@ -324,7 +323,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role projectFinanceRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findByName(PROJECT_FINANCE.getName())).thenReturn(singletonList(projectFinanceRole));
+        when(roleRepositoryMock.findOneByName(PROJECT_FINANCE.getName())).thenReturn(projectFinanceRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         User expectedCreatedUser = createLambdaMatcher(user -> {

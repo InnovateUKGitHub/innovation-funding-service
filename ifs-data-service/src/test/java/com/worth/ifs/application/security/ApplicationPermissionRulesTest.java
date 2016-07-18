@@ -91,7 +91,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(applicationRepositoryMock.exists(null)).thenReturn(false);
 
         when(roleRepositoryMock.findByNameIn(anyList())).thenReturn(applicantRoles);
-        when(roleRepositoryMock.findByName(leadApplicantRole.getName())).thenReturn(singletonList(leadApplicantRole));
+        when(roleRepositoryMock.findOneByName(leadApplicantRole.getName())).thenReturn(leadApplicantRole);
 
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource1.getId())).thenReturn(processRole1);
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource2.getId())).thenReturn(null);

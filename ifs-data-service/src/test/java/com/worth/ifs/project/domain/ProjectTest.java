@@ -2,7 +2,6 @@ package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +17,6 @@ public class ProjectTest {
     LocalDate startDate;
     Address address;
     Long durationInMonths;
-    ProcessRole projectManager;
     String name;
     LocalDateTime submittedDate;
 
@@ -29,10 +27,9 @@ public class ProjectTest {
         startDate = LocalDate.now();
         address = new Address();
         durationInMonths = 12L;
-        projectManager = new ProcessRole();
         name = "My Project";
         submittedDate = LocalDateTime.now();
-        project = new Project(id, application, startDate, address, durationInMonths, projectManager, name, submittedDate);
+        project = new Project(id, application, startDate, address, durationInMonths, name, submittedDate);
     }
 
     @Test
@@ -42,7 +39,6 @@ public class ProjectTest {
         assertEquals(project.getTargetStartDate(), startDate);
         assertEquals(project.getAddress(), address);
         assertEquals(project.getDurationInMonths(), durationInMonths);
-        assertEquals(project.getProjectManager(), projectManager);
         assertEquals(project.getName(), name);
         assertEquals(project.getSubmittedDate(), submittedDate);
     }
