@@ -71,22 +71,18 @@ public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuil
     }
 
     @Override
-    public List<ProjectUser> build(int numberToBuild) {
-        List<ProjectUser> built = super.build(numberToBuild);
+    public void postProcess(int index, ProjectUser projectUser) {
 
-        built.forEach(projectUser -> {
-            Project project = projectUser.getProject();
+        Project project = projectUser.getProject();
 
-            if (project != null){
-                if (project.getProjectUsers() == null){
-                    project.setProjectUsers(new ArrayList<>());
-                }
-                if (!project.getProjectUsers().contains(projectUser)){
-                    project.addProjectUser(projectUser);
-                }
+        if (project != null) {
+
+            if (project.getProjectUsers() == null) {
+                project.setProjectUsers(new ArrayList<>());
             }
-        });
-
-        return built;
+            if (!project.getProjectUsers().contains(projectUser)) {
+                project.addProjectUser(projectUser);
+            }
+        }
     }
 }

@@ -1,17 +1,15 @@
 package com.worth.ifs.user.builder;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationSize;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.resource.OrganisationSize;
-import com.worth.ifs.user.resource.OrganisationResource;
+import static com.worth.ifs.BuilderAmendFunctions.*;
+import static java.util.Collections.emptyList;
 
 /**
  * Builder for OrganisationResource entities.
@@ -68,22 +66,5 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
     
     public OrganisationResourceBuilder withAddress(List<OrganisationAddressResource>... organisationAddressResource) {
     	return withArray((orgAddress, organisation) -> setField("addresses", orgAddress, organisation), organisationAddressResource);
-    }
-
-    @Override
-    public List<OrganisationResource> build(int numberToBuild) {
-        List<OrganisationResource> built = super.build(numberToBuild);
-
-        // now add back-refs where appropriate
-        built.forEach(organisation -> {
-            List<Long> users = organisation.getUsers();
-            users.forEach(user -> {
-                // TODO DW - INFUND-1556 - when OrganisationResource users are refactored to just be userIds, remove the code below that is creating a shell Organisation
-                // based on the OrganisationResource
-                //user.addUserOrganisation(new Organisation(organisation.getId(), organisation.getName(), organisation.getCompanyHouseNumber(), organisation.getOrganisationSize()));
-            });
-        });
-
-        return built;
     }
 }
