@@ -75,7 +75,7 @@ Upload a file to an unsuccessful application
 Download the file
     [Documentation]    INFUND-2602
     [Tags]    Pending    HappyPath
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}

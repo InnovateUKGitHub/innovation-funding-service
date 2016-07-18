@@ -20,7 +20,7 @@ ${cookie_info_link}         https://www.gov.uk/help/cookies
 The cookie warning appears for a new user
     [Documentation]     INFUND-1943
     [Tags]  Pending
-    # Pending until the next shib image drop shows the cookie message on dev
+    # TODO Pending until the next shib image drop shows the cookie message on dev
     When the guest user opens the browser
     Then the user should see the text in the page           ${cookie_popup_message}
     And the user should see the element                     xpath=//a[contains(@href, '${cookie_info_link')]
@@ -28,7 +28,7 @@ The cookie warning appears for a new user
 The warning disappears on refresh
     [Documentation]     INFUND-1943
     [Tags]      Pending
-    # Pending until the next shib image drop shows the cookie message on dev
+    # TODO Pending until the next shib image drop shows the cookie message on dev
     When the user reloads the page
     Then the user should not see the text in the page       ${cookie_popup_message}
     And the user should not see the element                 xpath=//a[contains(@href, '${cookie_info_link')]

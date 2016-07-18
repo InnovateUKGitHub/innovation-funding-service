@@ -13,6 +13,10 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...               INFUND-2630 As a Competitions team member I want to be able to enter the details of a Monitoring Officer to assign them to the project and share their contact details with the consortium
 ...
 ...               INFUND-2632 As a Competitions team member I want to send an email to a Monitoring Officer so they are aware I have assigned them to a project
+...
+...               INFUND-3010 As a partner I want to be able to supply bank details for my business so that Innovate UK can verify its suitability for funding purposes
+...
+...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
@@ -30,6 +34,59 @@ ${unsuccessful_application_comp_admin_view}    ${server}/management/competition/
 ${Successful_Monitoring_Officer_Page}    ${server}/management/project/4/monitoring-officer
 
 *** Test Cases ***
+
+
+
+Comp admin can view uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]    HappyPath
+    [Setup]
+    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${successful_application_comp_admin_view}
+    And the user should see the text in the page    ${valid_pdf}
+    And the user clicks the button/link    link=testing.pdf (7.94 KB)
+    Then the user should not see an error in the page
+    [Teardown]     The user goes back to the previous page
+
+
+Comp admin can view unsuccessful uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]
+    Given the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+    When the user should see the text in the page    ${valid_pdf}
+    And the user clicks the button/link    link=testing.pdf (7.94 KB)
+    Then the user should not see an error in the page
+    And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+    [Teardown]    Logout as user
+
+Unsuccessful applicant can view the uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]
+    [Setup]    guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
+    Given the user navigates to the page    ${unsuccessful_application_overview}
+    When the user should see the text in the page    ${valid_pdf}
+    And the user clicks the button/link    link=testing.pdf (7.94 KB)
+    Then the user should not see an error in the page
+    [Teardown]    the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+
+Unsuccessful applicant cannot remove the uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]
+    When the user should see the text in the page    ${valid_pdf}
+    Then the user should not see the text in the page    Remove
+    And the user should not see the element    link=Remove
+
+
+Unsuccessful applicant can download the uploaded feedback
+    [Documentation]    INFUND-2607
+    [Tags]    Pending
+    # TODO Pending until download functionality has been plugged in
+    Given the user should see the text in the page    ${valid_pdf}
+    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
+    Then the file should be downloaded    ${valid_pdf}
+    [Teardown]    Remove File    ${valid_pdf}
+
+
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
@@ -50,7 +107,7 @@ Partner cannot remove the uploaded feedback
 Partner can download the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    Pending    HappyPath
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -83,6 +140,7 @@ Lead partner can see the overview of the project details
 Submit button is disabled if the details are not fully filled out
     [Documentation]    INFUND-3467
     [Tags]    Pending
+    # TODO
     When the user should see the element    xpath=//span[contains(text(), 'No')]
     Then the submit button should be disabled
 
@@ -179,6 +237,7 @@ Project details submission flow
     [Tags]    HappyPath
     When The user should not see the element    xpath=//span[contains(text(), 'No')]
     And the applicant clicks the submit button and the clicks cancel in the submit modal
+    And the user should not see the text in the page      The project details have been submitted to Innovate UK
     Then the applicant clicks the submit button in the modal
     And the user should see the text in the page    The project details have been submitted to Innovate UK
     Then the user navigates to the page    ${successful_project_page}
@@ -218,56 +277,79 @@ Non-lead partner cannot change any project details
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${successful_project_page}
 
-Comp admin can view uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    HappyPath
-    [Setup]    Run Keywords    Logout as user
-    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page    ${successful_application_comp_admin_view}
-    And the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    Then the user should not see an error in the page
 
-Comp admin can view unsuccessful uploaded feedback
-    [Documentation]    INFUND-2607
+Bank details server side validations
+    [Documentation]    INFUND-3010
     [Tags]
-    Given the user navigates to the page    ${unsuccessful_application_comp_admin_view}
-    When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    Then the user should not see an error in the page
-    And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
-    [Teardown]    Logout as user
+    [Setup]   logout as user
+    Given guest user log-in       steve.smith@empire.com     Passw0rd
+    And the user clicks the button/link      link=00000004: Cheese is good
+    And the user clicks the button/link     link=Bank details
+    When the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
+    Then the user should see an error       Please enter an account number
+    And the user should see an error        Please enter a sort code
+    And the user should see an error        You need to select a bank address before you can continue
 
-Unsuccessful applicant can view the uploaded feedback
-    [Documentation]    INFUND-2607
+
+Bank details client side validations
+    [Documentation]     INFUND-3010
     [Tags]
-    [Setup]    guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
-    Given the user navigates to the page    ${unsuccessful_application_overview}
-    When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=testing.pdf (7.94 KB)
-    Then the user should not see an error in the page
-    [Teardown]    the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+    When the user enters text to a text field     name=accountNumber      1234567
+    And the user moves focus away from the element     name=accountNumber
+    Then the user should not see the text in the page        Please enter an account number
+    And the user should see an error       Please enter a valid account number
+    When the user enters text to a text field      name=accountNumber    12345678
+    And the user moves focus away from the element     name=accountNumber
+    Then the user should not see the text in the page    Please enter an account number
+    And the user should not see the text in the page     Please enter a valid account number
+    When the user enters text to a text field      name=sortCode     12345
+    And the user moves focus away from the element    name=sortCode
+    Then the user should see an error     Please enter a valid sort code
+    When the user enters text to a text field     name=sortCode    123456
+    And the user moves focus away from the element      name=sortCode
+    Then the user should not see the text in the page      Please enter a sort code
+    And the user should not see the text in the page      Please enter a valid sort code
+    When the user selects the radio button      addressType    REGISTERED
+    Then the user should not see the text in the page      You need to select a bank address before you can continue
 
-Unsuccessful applicant cannot remove the uploaded feedback
-    [Documentation]    INFUND-2607
+
+Bank account postcode lookup
+    [Documentation]    INFUND-3282
     [Tags]
-    When the user should see the text in the page    ${valid_pdf}
-    Then the user should not see the text in the page    Remove
-    And the user should not see the element    link=Remove
+    When the user selects the radio button     addressType   ADD_NEW
+    When the user enters text to a text field    name=addressForm.postcodeInput    ${EMPTY}
+    # the following two steps have been commented out as they are
+    # Pending due to INFUND-4043
+    # And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    # Then the user should see the element    css=.form-label .error-message
+    When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT/
+    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    Then the user should see the element    name=addressForm.selectedPostcodeIndex
+    When the user selects the radio button      addressType    ADD_NEW
+    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    id=postcode-lookup
+    Then the user should see the element    css=#select-address-block
+    And the user clicks the button/link    css=#select-address-block > button
+    And the address fields should be filled
 
-Unsuccessful applicant can download the uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    Pending
-    # Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
+
+Bank details submission
+    [Documentation]     INFUND-3010
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link    jquery=button:contains("Cancel")
+    And the user should not see the text in the page      Your bank account details have been submitted to Innovate UK
+    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link    jquery=button:contains("Submit")
+    And the user should see the text in the page    Your bank account details have been submitted to Innovate UK
+    And the user should see the element       css=.success-alert
+    Then the user navigates to the page    ${successful_project_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(2)
 
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-3349
     [Tags]    Pending    HappyPath
-    # Pending due to INFUND-3963
+    # TODO Pending due to INFUND-3963
     Given the user navigates to the page    ${successful_project_page}
     When the user clicks the button/link      link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
@@ -276,11 +358,11 @@ Before Monitoring Officer is assigned
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-3330
     [Tags]    Pending    HappyPath
-    # Pending due to INFUND-3963
-    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as user    &{Comp_admin1_credentials}
+    # TODO Pending due to work in progress
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Cheese is good
-    # And the user should see the text in the page (for "Area" message)
+    And the user should see the text in the page    Earth Observation
     And the user should see the text in the page    1 Cheese Road, Bath, BA1 5LR
     And the user should see the text in the page    1st Oct 2020
     And the user should see the text in the page    Steve Smith
@@ -288,55 +370,37 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Ludlow
     And the user should see the text in the page    EGGS
 
-Standard verification for email address
+MO client-side validation
     [Documentation]    INFUND-3330
     [Tags]    Pending    HappyPath
-    # Pending due to INFUND-3963
-    When the user enters text to a text field    id=emailAddress    ${EMPTY}
-    Then the user should see an error    Please enter your email
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_username}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_format}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${valid_email}
-    Then the user should see an error    Email address is already in use
+    # TODO Pending due to work in progress
 
-Standard verification for Phone number
+MO server-side validation
     [Documentation]    INFUND-3330
-    [Tags]    Pending
-    # Pending due to INFUND-3963
-    When the user enters text to a text field    id=phoneNumber    ${EMPTY}
-    Then the user should see an error    Please enter a phone number
-    And the user enters text to a text field    id=phoneNumber    invalidphone
-    Then the user should see an error    Please enter a valid phone number
-    And the user enters text to a text field    id=phoneNumber    0123
-    Then the user should see an error    Input for your phone number has a minimum length of 8 characters
+    [Tags]    Pending    HappyPath
+    # TODO Pending due to work in progress
+    When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+
 
 MO details can be added and updated
     [Documentation]    INFUND-3330, INFUND-3334
-    [Tags]   Pending
+    [Tags]
     Given guest user log-in    john.doe@innovateuk.test    Passw0rd
     And the user navigates to the page  ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     When the user enters text to a text field    id=firstName    Pradha
     And the user enters text to a text field    id=lastName    Muniraj
-    And the user enters text to a text field    id=emailAddress    worth.email.test+monitoringofficer@gmail.com
+    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
     And the user enters text to a text field    id=phoneNumber    07438620303
     Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
     Then the user should see the text in the page    A Monitoring Officer has been assigned.
-    And Open mailbox and confirm received email    worth.email.test+monitoringofficer@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    New Monitoring Officer assignment
+    And Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    testtest1    has been assigned to you
 
 MO details can be edited and updated
     [Documentation]    INFUND-3330
     [Tags]    Pending
-    # Pending due to INFUND-3963
+    # TODO Pending due to work in progress
     Given the user clicks the button/link    link=Change Monitoring Officer
     And the user enters text to a text field    id=firstName    Pradha
     And the user enters text to a text field    id=lastName    Jagankumar
@@ -350,7 +414,7 @@ MO details can be edited and updated
 MO details can be viewed on the page after editting
     [Documentation]    INFUND-3330
     [Tags]    Pending
-    # Pending due to INFUND-3963
+    # TODO Pending due to work in progress
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Pradha
     And the user should see the text in the page    Jagankumar
@@ -360,7 +424,7 @@ MO details can be viewed on the page after editting
 MO details accessible/seen by all partners
     [Documentation]    INFUND-3349
     [Tags]    Pending    HappyPath
-    # Pending due to INFUND-3963
+    # TODO Pending due to work in progress
     Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    [greeen tick mark element]
@@ -403,6 +467,30 @@ the user should see the dummy data
 the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Submit project details")
 
+standard verification for email address follows
+    When the user enters text to a text field    id=emailAddress    ${EMPTY}
+    Then the user should see an error    Please enter your email
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_username}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_format}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
+    Then the user should see an error    Please enter a valid email address
+    And the user enters text to a text field    id=emailAddress    ${valid_email}
+    Then the user should see an error    Email address is already in use
+
+standard verification for Phone number follows
+    When the user enters text to a text field    id=phoneNumber    ${EMPTY}
+    Then the user should see an error    Please enter a phone number
+    And the user enters text to a text field    id=phoneNumber    invalidphone
+    Then the user should see an error    Please enter a valid phone number
+    And the user enters text to a text field    id=phoneNumber    0123
+    Then the user should see an error    Input for your phone number has a minimum length of 8 characters
+
 the applicant clicks the submit button and the clicks cancel in the submit modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
@@ -412,3 +500,10 @@ the applicant clicks the submit button in the modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=button:contains("Submit")
+
+
+
+the user moves focus away from the element
+    [Arguments]    ${element}
+    mouse out       ${element}
+    focus         jQuery=.button:contains("Submit bank account details")
