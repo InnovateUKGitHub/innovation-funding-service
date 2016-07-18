@@ -231,6 +231,111 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testCreateCollaborationAgreementFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.createCollaborationAgreementFileEntry(123L, null, null), () -> {
+            verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileEntryDetails() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getCollaborationAgreementFileEntryDetails(123L), () -> {
+            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileEntryContents() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getCollaborationAgreementFileEntryContents(123L), () -> {
+            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testDeleteCollaborationAgreementFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.deleteCollaborationAgreementFileEntry(123L), () -> {
+            verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+
+    @Test
+    public void testCreateExploitationPlanFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.createExploitationPlanFileEntry(123L, null, null), () -> {
+            verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetExploitationPlanFileEntryDetails() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getExploitationPlanFileEntryDetails(123L), () -> {
+            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetExploitationPlanFileEntryContents() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getExploitationPlanFileEntryContents(123L), () -> {
+            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testDeleteExploitationPlanFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.deleteExploitationPlanFileEntry(123L), () -> {
+            verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getServiceClass() {
         return TestProjectService.class;
@@ -326,52 +431,52 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(long projectId) {
+        public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(Long projectId) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long applicationId) {
+        public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        public ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> deleteCollaborationAgreementFileEntry(long applicationId) {
+        public ServiceResult<Void> deleteCollaborationAgreementFileEntry(Long projectId) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(long projectId) {
+        public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(Long projectId) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long applicationId) {
+        public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        public ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> deleteExploitationPlanFileEntry(long applicationId) {
+        public ServiceResult<Void> deleteExploitationPlanFileEntry(Long projectId) {
             return null;
         }
     }

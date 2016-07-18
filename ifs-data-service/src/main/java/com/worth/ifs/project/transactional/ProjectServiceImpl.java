@@ -252,15 +252,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
     }
 
-@Override
-    public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    @Override
+    public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     @Override
-    public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(long projectId) {
+    public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
@@ -275,7 +275,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long projectId) {
+    public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
@@ -289,14 +289,14 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     @Override
-    public ServiceResult<Void> deleteCollaborationAgreementFileEntry(long projectId) {
+    public ServiceResult<Void> deleteCollaborationAgreementFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(project ->
                 getCollaborationAgreement(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
@@ -304,14 +304,14 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
     }
 
     @Override
-    public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(long projectId) {
+    public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getExploitationPlan();
@@ -326,7 +326,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long projectId) {
+    public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getExploitationPlan();
@@ -340,14 +340,14 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
     }
 
     @Override
-    public ServiceResult<Void> deleteExploitationPlanFileEntry(long projectId) {
+    public ServiceResult<Void> deleteExploitationPlanFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(project ->
                 getExploitationPlan(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->

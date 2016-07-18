@@ -29,17 +29,17 @@ import java.util.function.Supplier;
 public interface ProjectService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProjectResource> getProjectById(@P("projectId") final Long projectId);
+    ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") final Long applicationId);
+    ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findAll();
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin is able to create a project (by making decision)" )
-    ServiceResult<ProjectResource> createProjectFromApplication(final Long applicationId);
+    ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin is able to create a projects (by making decisions)" )
@@ -55,7 +55,7 @@ public interface ProjectService {
     ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<ProjectResource>> findByUserId(final Long userId);
+    ServiceResult<List<ProjectResource>> findByUserId(Long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
@@ -64,50 +64,50 @@ public interface ProjectService {
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date);
+    ServiceResult<Void> saveProjectSubmitDateTime(Long projectId, LocalDateTime date);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
-    ServiceResult<Boolean> isSubmitAllowed(final Long projectId);
+    ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
-    ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource);
+    ServiceResult<Void> saveMonitoringOfficer(Long projectId, MonitoringOfficerResource monitoringOfficerResource);
 
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(final Long projectId, final Long userId);
+    ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     @PreAuthorize("hasPermission(#monitoringOfficer.project, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
     ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(long projectId);
+    ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
-    ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(long projectId);
+    ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<FileEntryResource> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
-    ServiceResult<Void> deleteCollaborationAgreementFileEntry(long projectId);
+    ServiceResult<Void> deleteCollaborationAgreementFileEntry(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileEntryResource> createExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(long projectId);
+    ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
-    ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(long applicationId);
+    ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<FileEntryResource> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
-    ServiceResult<Void> deleteExploitationPlanFileEntry(long applicationId);
+    ServiceResult<Void> deleteExploitationPlanFileEntry(Long projectId);
 }
