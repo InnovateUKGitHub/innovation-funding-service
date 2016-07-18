@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -43,13 +42,13 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
@@ -264,7 +263,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     private void initializeInvitee(Invite invite, User user) {
         Application application = invite.getApplication();
-        Role role = roleRepository.findByName("collaborator").get(0);
+        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application, role, organisation);
         processRoleRepository.save(processRole);
