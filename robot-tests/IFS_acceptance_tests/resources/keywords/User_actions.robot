@@ -552,10 +552,10 @@ Open mailbox and confirm received email
     # TODO
     #  this keyword has the same functionality as the Open mailbox and verify the content
     #  once this is reviewed we can remove one of them
-    [Arguments]    ${USER}    ${PASSWORD}    ${FROM_EMAIL}    ${PATTERN}
+    [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
     [Documentation]    This Keyword searches the correct email using regex
     Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
-    ${WHICH_EMAIL}=    Wait for Mail    fromEmail=${FROM_EMAIL}    toEmail=${USER}    timeout=150
+    ${WHICH_EMAIL}=    wait for email    toEmail=${USER}    timeout=150
     ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
     Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
