@@ -7,12 +7,12 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.rest.ErrorControllerAdvice;
 import com.worth.ifs.rest.RestResultHandlingHttpMessageConverter;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
@@ -49,7 +50,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -256,49 +256,51 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return resultActions;
     }
 
-    protected <T> void assertGetFileDetails(String url, Object[] urlParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
+    protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
 
         FileEntryResource fileToReturn = newFileEntryResource().build();
 
         when(getFileFn.apply(serviceToCall, fileToReturn)).thenReturn(serviceSuccess(fileToReturn));
 
-        mockMvc.perform(get(url, urlParams)).
+        ResultActions resultActions = mockMvc.perform(get(url, urlParams)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(fileToReturn)));
 
         getFileFn.apply(verify(serviceToCall), fileToReturn);
+
+        return resultActions;
     }
 
+    protected <T> ResultActions assertDeleteFileDetails(String url, Object[] urlParams, T serviceToCall, Function<T, ServiceResult<Void>> deleteFileFn) throws Exception {
 
-    @Test
-    public void getCollaborationAgreementFileContent() throws Exception {
+        when(deleteFileFn.apply(serviceToCall)).thenReturn(serviceSuccess());
 
-        Long projectId = 123L;
+        ResultActions resultActions = mockMvc.perform(get(url, urlParams)).
+                andExpect(status().isNoContent()).
+                andExpect(content().string(""));
+
+        deleteFileFn.apply(verify(serviceToCall));
+
+        return resultActions;
+    }
+
+    protected <T> ResultActions assertGetFileContents(String url, Object[] urlParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileAndContents>> getFileFn) throws Exception {
 
         FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
 
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
-        BasicFileAndContents getResult = new BasicFileAndContents(expectedFileEntryResource, inputStreamSupplier);
-        when(projectServiceMock.getCollaborationAgreementFileEntryContents(projectId)).thenReturn(serviceSuccess(getResult));
+        FileAndContents getResult = new BasicFileAndContents(expectedFileEntryResource, inputStreamSupplier);
+        when(getFileFn.apply(serviceToCall, expectedFileEntryResource)).thenReturn(serviceSuccess(getResult));
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/collaboration-agreement", projectId)).
-                andExpect(status().isOk()).
-                andReturn();
+        ResultActions resultActions = mockMvc.perform(get(url, urlParams)).
+                andExpect(status().isOk());
+
+        MvcResult result = resultActions.andReturn();
 
         assertEquals("The returned binary file data", result.getResponse().getContentAsString());
-    }
 
-    @Test
-    public void deleteCollaborationAgreementFileDetails() throws Exception {
-
-        Long projectId = 123L;
-
-        when(projectServiceMock.deleteCollaborationAgreementFileEntry(projectId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(delete("/project/{projectId}/collaboration-agreement", projectId)).
-                andExpect(status().isNoContent()).
-                andExpect(content().string(""));
+        return resultActions;
     }
 
     protected Supplier<InputStream> fileUploadInputStreamExpectations(String expectedContent) {
