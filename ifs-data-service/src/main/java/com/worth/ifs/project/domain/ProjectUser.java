@@ -3,6 +3,8 @@ package com.worth.ifs.project.domain;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
@@ -92,5 +94,33 @@ public class ProjectUser {
 
     public boolean isPartner() {
         return getRole().isPartner();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectUser that = (ProjectUser) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(user, that.user)
+                .append(project, that.project)
+                .append(role, that.role)
+                .append(organisation, that.organisation)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(user)
+                .append(project)
+                .append(role)
+                .append(organisation)
+                .toHashCode();
     }
 }

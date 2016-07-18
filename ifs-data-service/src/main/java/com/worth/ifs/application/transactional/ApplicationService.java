@@ -1,5 +1,18 @@
 package com.worth.ifs.application.transactional;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -8,29 +21,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.CompletedPercentageResource;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.user.resource.UserRoleType;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 /**
  * Transactional and secure service for Application processing work
  */
 public interface ApplicationService {
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
+    @SecuredBySpring(value = "CREATE",
+            description = "Any logged in user with Global roles or user with system registra role can create and application",
+            securedType = ApplicationResource.class)
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
@@ -53,7 +52,6 @@ public interface ApplicationService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
-
     /**
      * This method saves only a few application attributes that
      * the user is able to modify on the application form.
@@ -78,13 +76,6 @@ public interface ApplicationService {
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                      final Long userId,
                                                                                      final UserRoleType role);
-
-    //@NotSecured("user only has to be authenticated")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            final Long competitionId,
-            final Long userId,
-            String applicationName);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
