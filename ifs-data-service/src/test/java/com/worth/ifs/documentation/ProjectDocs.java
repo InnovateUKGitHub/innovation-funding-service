@@ -18,7 +18,6 @@ public class ProjectDocs {
             fieldWithPath("targetStartDate").description("Expected target start date for the project"),
             fieldWithPath("address").description("Address where the project is expected to be executed from"),
             fieldWithPath("durationInMonths").description("Duration that the project is expected to last"),
-            fieldWithPath("projectManager").description("Project manager designated for the project"),
             fieldWithPath("name").description("The Project's name"),
             fieldWithPath("projectUsers").description("The ids of users with Roles on the Project"),
             fieldWithPath("submittedDate").description("Date that project details were submitted by lead partner. Null means the details have not yet been submitted")
@@ -41,6 +40,5 @@ public class ProjectDocs {
             .withTargetStartDate(LocalDate.now())
             .withAddress(new AddressResource())
             .withDuration(1L)
-            .withProjectManager(1L)
             .withProjectUsers(asList(12L, 13L, 14L));
 }

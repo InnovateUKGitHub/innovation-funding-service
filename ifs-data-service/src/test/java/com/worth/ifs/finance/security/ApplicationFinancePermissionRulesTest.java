@@ -4,9 +4,9 @@ import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,6 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -48,11 +47,6 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
         // Create a compAdmin
         compAdmin = this.compAdminUser();
-
-        // Set up global role method mocks
-        for (Role role : allRoles) {
-            when(roleRepositoryMock.findByName(role.getName())).thenReturn(asList(role));
-        }
 
         {
             // Set up users on an organisation and application

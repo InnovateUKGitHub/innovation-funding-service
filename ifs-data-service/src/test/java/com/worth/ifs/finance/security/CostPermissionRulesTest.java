@@ -8,7 +8,6 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,6 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.math.BigDecimal.ZERO;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -49,11 +47,6 @@ public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermiss
 
         // Create a compAdmin
         compAdmin = compAdminUser();
-
-        // Set up global role method mocks
-        for (Role role : allRoles) {
-            when(roleRepositoryMock.findByName(role.getName())).thenReturn(asList(role));
-        }
         {
             // Set up users on an organisation and application
             final Long applicationId = 1L;

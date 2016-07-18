@@ -20,6 +20,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.mockito.Mockito.when;
 
 /**
  * A base class for testing @PermissionRules-annotated classes
@@ -60,6 +61,11 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         allRoles = newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
         allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
         allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
+
+        // Set up global role method mocks
+        for (Role role : allRoles) {
+            when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
+        }
     }
 
     private UserResource createUserWithRoles(UserRoleType... types) {

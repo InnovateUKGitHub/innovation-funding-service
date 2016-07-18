@@ -105,7 +105,7 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
 
         when(applicationStatusRepositoryMock.findByName(applicationStatus.getName())).thenReturn(Arrays.asList(applicationStatus));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(roleRepositoryMock.findByName(role.getName())).thenReturn(Arrays.asList(role));
+        when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
         Application applicationExpectations = argThat(lambdaMatches(created -> {
@@ -118,7 +118,7 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
         when(applicationRepositoryMock.save(applicationExpectations)).thenReturn(applicationExpectations);
         when(applicationMapperMock.mapToResource(applicationExpectations)).thenReturn(newApplication);
 
-        ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName).getSuccessObject();
+        ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccessObject();
         assertEquals(newApplication, created);
     }
 }
