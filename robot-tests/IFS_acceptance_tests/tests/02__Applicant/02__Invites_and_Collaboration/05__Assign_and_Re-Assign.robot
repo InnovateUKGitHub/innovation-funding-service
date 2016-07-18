@@ -12,7 +12,7 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-3288: Assigning questions more than once leads to an internal server error
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
-Force Tags
+Force Tags        Applicant    Collaboration
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -24,7 +24,7 @@ Lead applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
@@ -73,7 +73,7 @@ Collaborator should see the review button instead of the review and submit
     [Documentation]    INFUND-2451
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should not see the element    jQuery=.button:contains("Review & submit")
@@ -82,11 +82,11 @@ Collaborator should see the review button instead of the review and submit
     And the user should not see the element    jQuery=.button:contains("Submit application")
     [Teardown]
 
-Collaborator should b able to edit the assigned question
+Collaborator should be able to edit the assigned question
     [Documentation]    INFUND-2302
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     When the user clicks the button/link    jQuery=button:contains("Public description")
     And the user should see the element    jQuery=button:contains("Ready for review")
 
@@ -94,7 +94,7 @@ Last update message is correctly updating
     [Documentation]    INFUND-280
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
@@ -105,7 +105,7 @@ Collaborators cannot assign a question
     [Documentation]    INFUND-839
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
@@ -124,7 +124,7 @@ Collaborator cannot edit after marking ready for review
     [Documentation]    INFUND-275
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     #When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the user should see the element    css=#form-input-12 .readonly
     [Teardown]
@@ -146,7 +146,7 @@ The question should be reassigned to the lead applicant
     [Documentation]    INFUND-275
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
@@ -196,7 +196,7 @@ The question is disabled for other collaborators
     [Documentation]    INFUND-275
     ...
     ...    This test case is still using the old application
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Steve smith assigns a questions to the collaborator
     Guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}

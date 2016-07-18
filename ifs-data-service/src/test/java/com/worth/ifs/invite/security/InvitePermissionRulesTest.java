@@ -9,7 +9,6 @@ import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.builder.OrganisationBuilder;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -46,11 +44,6 @@ public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePer
 
     @Before
     public void setup() throws Exception {
-
-        // Set up global role method mocks
-        for (Role role : allRoles) {
-            when(roleRepositoryMock.findByName(role.getName())).thenReturn(asList(role));
-        }
 
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();

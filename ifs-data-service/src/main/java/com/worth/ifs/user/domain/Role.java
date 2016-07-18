@@ -9,9 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 
 /**
  * Role defines database relations and a model to use client side and server side.
@@ -134,4 +132,7 @@ public class Role {
         return isOfType(COLLABORATOR);
     }
 
+    public boolean isProjectManager() {
+        return isOfType(PROJECT_MANAGER);
+    }
 }

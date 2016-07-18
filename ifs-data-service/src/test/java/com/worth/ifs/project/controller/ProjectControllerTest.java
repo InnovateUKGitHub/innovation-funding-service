@@ -14,10 +14,12 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.worth.ifs.JsonTestUtil.fromJson;
 import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -30,8 +32,10 @@ import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuil
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -261,16 +265,22 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Error phoneNumberError = fieldError("phoneNumber", "Pattern");
         Error phoneNumberLengthError = fieldError("phoneNumber", "Size");
 
-        RestErrorResponse expectedErrors = new RestErrorResponse(asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError));
-
-        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+        MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(monitoringOfficerResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(expectedErrors)));
+                .andReturn();
+
+        RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
+        assertEquals(5, response.getErrors().size());
+        asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError).forEach(e -> {
+            String fieldName = e.getFieldName();
+            String errorKey = e.getErrorKey();
+            List<Error> matchingErrors = simpleFilter(response.getErrors(), error -> fieldName.equals(error.getFieldName()) && errorKey.equals(error.getErrorKey()));
+            assertEquals(1, matchingErrors.size());
+        });
 
         verify(projectServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-
     }
 
     @Test

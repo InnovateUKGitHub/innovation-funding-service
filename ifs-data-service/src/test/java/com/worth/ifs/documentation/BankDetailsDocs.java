@@ -15,6 +15,9 @@ public class BankDetailsDocs {
             fieldWithPath("sortCode").description("Sort code for the bank, identifying a specific branch"),
             fieldWithPath("accountNumber").description("Bank account number"),
             fieldWithPath("organisationAddress").description("Banking address used by organisation"),
+            fieldWithPath("organisationType").description("The type of organisation"),
+            fieldWithPath("companyName").description("The company name"),
+            fieldWithPath("registrationNumber").description("The registration number"),
     };
 
     @SuppressWarnings("unchecked")

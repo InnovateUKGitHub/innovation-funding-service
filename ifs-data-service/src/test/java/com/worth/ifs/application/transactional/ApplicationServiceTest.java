@@ -105,7 +105,7 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
 
         when(applicationStatusRepositoryMock.findByName(applicationStatus.getName())).thenReturn(Arrays.asList(applicationStatus));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(roleRepositoryMock.findByName(role.getName())).thenReturn(Arrays.asList(role));
+        when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
         Application applicationExpectations = argThat(lambdaMatches(created -> {

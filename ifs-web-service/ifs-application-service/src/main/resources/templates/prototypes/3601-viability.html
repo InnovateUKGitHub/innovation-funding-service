@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Viability'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="success-alert">
+			The partner finance eligibility has been approved
+		</div>
+	</th:block>
+
+	<h2 class="heading-medium">Finances overview</h2>
+
+	<div class="table-overflow">
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Total costs</th>
+					<th scope="col">% grant</th>
+					<th scope="col">Funding sought</th>
+					<th scope="col">Other public sector funding</th>
+					<th scope="col">Contribution to project</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>&pound;286,283</td>
+					<td>55%</td>
+					<td>&pound;180,399</td>
+					<td>20,000</td>
+					<td>&pound;85,885</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2 class="heading-medium">Organisation information</h2>
+
+	<dl class="standard-definition-list">
+		<dt>Company name</dt>
+		<dd>Aptrans Ltd</dd>
+
+		<dt>Company registration number</dt>
+		<dd>0123456789</dd>
+
+		<dt>Turnover</dt>
+		<dd>-</dd>
+
+		<dt>Head count</dt>
+		<dd>-</dd>
+
+		<dt>Organisation size</dt>
+		<dd>Medium</dd>
+
+		<dt>On FTSE 100</dt>
+		<dd>No</dd>
+	</dl>
+
+	<a href="#">Change organisation size</a>
+
+
+	<h2 class="heading-medium">Mint details</h2>
+
+	<dl class="standard-definition-list">
+		<dt>Date ofincorporation</dt>
+		<dd>12/04/1990</dd>
+
+		<dt>Latest accounts date</dt>
+		<dd>01/07/2015</dd>
+
+		<dt>Liquidity ratio</dt>
+		<dd>5</dd>
+
+		<dt>Net worth</dt>
+		<dd>&pound;10,000</dd>
+
+		<dt>Bank &#38; deposits</dt>
+		<dd>&pound;5,000</dd>
+
+		<dt>Credit score</dt>
+		<dd>7</dd>
+
+		<dt>Likelihood of failure</dt>
+		<dd>3</dd>
+	</dl>
+
+
+	<h2 class="heading-medium">Mint report</h2>
+	 <div class="form-group">
+    	<label class="block-label" for="costs-reviewed">
+	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
+	     	A Mint report has been used in conjunction with the viability information presented here and has been stored in accordance with Innovate UK audit requirements.
+	    </label>
+    </div>
+
+	<div class="extra-margin">
+    	<a href="#" class="button button-secondary">Queries</a>
+    </div>
+
+	<h3 class="heading-medium">Approve viability</h3>
+    <p>After any required alterations have been made, viability should be approved, and the supporting Mint report uploaded.</p>
+    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+
+    <div class="form-group">
+    	<label class="block-label" for="costs-reviewed">
+	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
+	     	Aptrans Ltd is viable for this project
+	    </label>
+    </div>
+
+    <input class="button" type="submit" value="Confirm viability" />
+
+
+	<hr />
+
+	<div class="extra-margin">
+		<a href="/prototypes/1199-project-finances" class="button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery('input#admin-support-radio-1').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").show();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-2').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").show();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-3').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").show();
+			jQuery("#admin-support-4").hide();
+		}
+	});
+
+	jQuery('input#admin-support-radio-4').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#admin-support-1").hide();
+			jQuery("#admin-support-2").hide();
+			jQuery("#admin-support-3").hide();
+			jQuery("#admin-support-4").show();
+		}
+	});
+
+	// ]]>
+</script>
+</body>
+</html>

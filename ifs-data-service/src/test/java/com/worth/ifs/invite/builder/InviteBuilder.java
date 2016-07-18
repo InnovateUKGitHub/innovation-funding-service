@@ -41,17 +41,13 @@ public class InviteBuilder extends BaseBuilder<Invite, InviteBuilder> {
     }
 
     @Override
-    public List<Invite> build(int numberToBuild) {
-        List<Invite> invites = super.build(numberToBuild);
+    public void postProcess(int index, Invite invite) {
 
         // add back-refs to InviteOrganisations
-        invites.forEach(invite -> {
-            InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
-            if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), Invite::getId).contains(invite.getId())) {
-                inviteOrganisation.getInvites().add(invite);
-            }
-        });
-        return invites;
+        InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
+        if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), Invite::getId).contains(invite.getId())) {
+            inviteOrganisation.getInvites().add(invite);
+        }
     }
 
     @Override
