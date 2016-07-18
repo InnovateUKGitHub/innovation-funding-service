@@ -1,9 +1,12 @@
 package com.worth.ifs.file.controller;
 
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.file.transactional.FileHeaderAttributes;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,6 +16,7 @@ import org.springframework.util.StreamUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -25,18 +29,11 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class FileControllerUtils {
 
-    public static Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
-        return () -> {
-            try {
-                return request.getInputStream();
-            } catch (IOException e) {
-                LOG.error("Unable to open an input stream from request", e);
-                throw new RuntimeException("Unable to open an input stream from request", e);
-            }
-        };
-    }
-
+    /**
+     * A convenience method to create a response to a file download request, given a supplier of a FileAndContents
+     */
     public static ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
+
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
 
@@ -64,5 +61,46 @@ public class FileControllerUtils {
             LOG.error("Error retrieving file", e);
             return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * A convenience method to process a file upload request given a standard pattern of header validation and processing,
+     * given a function that can perform the actual file upload
+     */
+    public static <T> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
+                                                 FileHttpHeadersValidator fileValidator, HttpServletRequest request,
+                                                 BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
+
+        return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, request, uploadFileActionFn).toPostCreateResponse();
+    }
+
+    /**
+     * A convenience method to process a file upload (as an update) request given a standard pattern of header
+     * validation and processing, given a function that can perform the actual file upload
+     */
+    public static RestResult<Void> handleFileUpdate(String contentType, String contentLength, String originalFilename,
+                                                                 FileHttpHeadersValidator fileValidator, HttpServletRequest request,
+                                                                 BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<?>> uploadFileActionFn) {
+
+        BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<Void>> voidReturner = (fileAttributes, inputStreamSupplier) ->
+            uploadFileActionFn.apply(fileAttributes, inputStreamSupplier).andOnSuccessReturnVoid();
+
+        return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, request, voidReturner).toPutResponse();
+    }
+
+    private static <T> ServiceResult<T> handleFileUploadWithServiceCall(String contentType, String contentLength, String originalFilename, FileHttpHeadersValidator fileValidator, HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
+        return fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(
+                fileAttributes -> uploadFileActionFn.apply(fileAttributes, inputStreamSupplier(request)));
+    }
+
+    private static Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
+        return () -> {
+            try {
+                return request.getInputStream();
+            } catch (IOException e) {
+                LOG.error("Unable to open an input stream from request", e);
+                throw new RuntimeException("Unable to open an input stream from request", e);
+            }
+        };
     }
 }

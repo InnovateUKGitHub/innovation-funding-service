@@ -136,7 +136,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
         long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -161,7 +161,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    private ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile, FormInputResponse existingResponse, long processRoleId, long applicationId, long formInputId, FormInputResponseFileEntryResource formInputResponseFile) {
+    private ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile, FormInputResponse existingResponse, long processRoleId, long applicationId, long formInputId, FormInputResponseFileEntryResource formInputResponseFile) {
         FileEntry fileEntry = successfulFile.getValue();
 
         if (existingResponse != null) {
@@ -169,7 +169,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingResponse.setFileEntry(fileEntry);
             formInputResponseRepository.save(existingResponse);
             FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
-            return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+            return serviceSuccess(fileEntryResource);
 
         }
 
@@ -178,12 +178,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
             formInputResponseRepository.save(newFormInputResponse);
             FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-            return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+            return serviceSuccess(fileEntryResource);
         });
     }
 
     @Override
-    public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<Void> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         ServiceResult<FormInputResponseFileAndContents> existingFileResult =
                 getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
@@ -195,9 +195,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
             FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
             FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
-            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturn(updatedFile ->
-                            Pair.of(updatedFile.getKey(), existingFormInputResource)
-            );
+
+            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturnVoid();
         });
     }
 

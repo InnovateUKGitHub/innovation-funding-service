@@ -11,8 +11,6 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
-import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
-import static com.worth.ifs.file.controller.FileControllerUtils.inputStreamSupplier;
+import static com.worth.ifs.file.controller.FileControllerUtils.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -34,8 +31,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationFinanceController.class);
 
     public static final String RESEARCH_PARTICIPATION_PERCENTAGE = "researchParticipationPercentage";
 
@@ -111,11 +106,8 @@ public class ApplicationFinanceController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> fileAddedResult =
-                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                costService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return fileAddedResult.toPostCreateResponse();
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                costService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @RequestMapping(value = "/financeDocument", method = PUT, produces = "application/json")
@@ -126,10 +118,8 @@ public class ApplicationFinanceController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                costService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return updateResult.toPutResponse();
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                costService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @RequestMapping(value = "/financeDocument", method = DELETE, produces = "application/json")

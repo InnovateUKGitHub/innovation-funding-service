@@ -5,7 +5,6 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
@@ -26,8 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
-import static com.worth.ifs.file.controller.FileControllerUtils.inputStreamSupplier;
+import static com.worth.ifs.file.controller.FileControllerUtils.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -128,14 +126,12 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/{projectId}/bank-details", method = POST)
-    public RestResult<Void> updateBanksDetail(@PathVariable("projectId") final Long projectId,
-                                              @RequestBody @Valid final BankDetailsResource bankDetailsResource){
+    public RestResult<Void> updateBanksDetail(@RequestBody @Valid final BankDetailsResource bankDetailsResource) {
         return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/bank-details", method = GET, params = "bankDetailsId")
-    public RestResult<BankDetailsResource> getBankDetails(@PathVariable("projectId") final Long projectId,
-                                                          @RequestParam("bankDetailsId") final Long bankDetailsId){
+    public RestResult<BankDetailsResource> getBankDetails(@RequestParam("bankDetailsId") final Long bankDetailsId) {
         return bankDetailsService.getById(bankDetailsId).toGetResponse();
     }
 
@@ -153,11 +149,9 @@ public class ProjectController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> fileAddedResult =
-                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                        projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return fileAddedResult.toPostCreateResponse();
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+            projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+        );
     }
 
     @RequestMapping(value = "/{projectId}/collaboration-agreement", method = GET)
@@ -184,10 +178,8 @@ public class ProjectController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                projectService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return updateResult.toPutResponse();
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @RequestMapping(value = "/{projectId}/collaboration-agreement", method = DELETE, produces = "application/json")
@@ -205,11 +197,8 @@ public class ProjectController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> fileAddedResult =
-                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                        projectService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return fileAddedResult.toPostCreateResponse();
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @RequestMapping(value = "/{projectId}/exploitation-plan", method = GET)
@@ -235,17 +224,14 @@ public class ProjectController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                projectService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return updateResult.toPutResponse();
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @RequestMapping(value = "/{projectId}/exploitation-plan", method = DELETE, produces = "application/json")
     public RestResult<Void> deleteExploitationPlanDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        ServiceResult<Void> deleteResult = projectService.deleteExploitationPlanFileEntry(projectId);
-        return deleteResult.toDeleteResponse();
+        return projectService.deleteExploitationPlanFileEntry(projectId).toDeleteResponse();
     }
 }

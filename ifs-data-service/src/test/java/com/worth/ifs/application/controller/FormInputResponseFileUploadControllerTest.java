@@ -14,7 +14,6 @@ import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -72,7 +71,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         String dummyContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
 
         FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L);
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> successResponse = serviceSuccess(Pair.of(new File(""), createdResource));
+        ServiceResult<FormInputResponseFileEntryResource> successResponse = serviceSuccess(createdResource);
 
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "original.pdf");
         when(fileValidatorMock.validateFileHeaders("application/pdf", "1000", "original.pdf")).thenReturn(serviceSuccess(fileAttributesAfterValidation));
@@ -140,8 +139,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testCreateFileButApplicationServiceCallFails() throws Exception {
 
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                serviceFailure(generalError);
+        ServiceResult<FormInputResponseFileEntryResource> failureResponse = serviceFailure(generalError);
 
         when(fileValidatorMock.validateFileHeaders(isA(String.class), isA(String.class), isA(String.class))).thenReturn(serviceSuccess(new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000, "original.pdf")));
         when(applicationServiceMock.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenReturn(failureResponse);
@@ -295,8 +293,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         // than JSON and XML
         String dummyContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
 
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> successResponse =
-                serviceSuccess(Pair.of(new File(""), new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), 123L, 456L, 789L)));
+        ServiceResult<Void> successResponse = serviceSuccess();
 
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "updated.pdf");
         when(fileValidatorMock.validateFileHeaders("application/pdf", "1000", "updated.pdf")).thenReturn(serviceSuccess(fileAttributesAfterValidation));
@@ -340,8 +337,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testUpdateFileButApplicationServiceCallFails() throws Exception {
 
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse =
-                serviceFailure(internalServerErrorError("Error updating file"));
+        ServiceResult<Void> failureResponse = serviceFailure(internalServerErrorError("Error updating file"));
 
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "original.pdf");
         when(fileValidatorMock.validateFileHeaders("application/pdf", "1000", "original.pdf")).thenReturn(serviceSuccess(fileAttributesAfterValidation));
@@ -821,7 +817,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertCreateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = serviceFailure(errorToReturn);
+        ServiceResult<FormInputResponseFileEntryResource> failureResponse = serviceFailure(errorToReturn);
 
         when(fileValidatorMock.validateFileHeaders(isA(String.class), isA(String.class), isA(String.class))).thenReturn(serviceSuccess(new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000, "original.pdf")));
         when(applicationServiceMock.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenReturn(failureResponse);
@@ -854,7 +850,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertUpdateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
 
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> failureResponse = serviceFailure(errorToReturn);
+        ServiceResult<Void> failureResponse = serviceFailure(errorToReturn);
 
         when(fileValidatorMock.validateFileHeaders(isA(String.class), isA(String.class), isA(String.class))).thenReturn(serviceSuccess(new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000, "original.pdf")));
         when(applicationServiceMock.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenReturn(failureResponse);

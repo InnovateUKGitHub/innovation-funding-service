@@ -10,20 +10,15 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.form.domain.FormInputResponse;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 
-import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
-import static com.worth.ifs.file.controller.FileControllerUtils.inputStreamSupplier;
+import static com.worth.ifs.file.controller.FileControllerUtils.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -32,8 +27,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping("/forminputresponse")
 public class FormInputResponseFileUploadController {
-
-    private static final Log LOG = LogFactory.getLog(FormInputResponseFileUploadController.class);
 
     @Autowired
     private ApplicationService applicationService;
@@ -52,12 +45,11 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        ServiceResult<FormInputResponseFileEntryCreatedResponse> creationResult =
-                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                createFormInputResponseFile(fileAttributes, formInputId, applicationId, processRoleId, request)).
-                andOnSuccessReturn(entry -> new FormInputResponseFileEntryCreatedResponse(entry.getValue().getFileEntryResource().getId()));
-
-        return creationResult.toPostCreateResponse();
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) -> {
+            FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
+            ServiceResult<FormInputResponseFileEntryResource> uploadResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
+            return uploadResult.andOnSuccessReturn(file -> new FormInputResponseFileEntryCreatedResponse(file.getFileEntryResource().getId()));
+        });
     }
 
     @RequestMapping(value = "/file", method = PUT, produces = "application/json")
@@ -70,11 +62,10 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        ServiceResult<FormInputResponseFileEntryResource> updateResult =
-                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                updateFormInputResponseFile(fileAttributes, formInputId, applicationId, processRoleId, request));
-
-        return updateResult.toPutResponse();
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) -> {
+            FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
+            return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
+        });
     }
 
     @RequestMapping(value = "/file", method = GET)
@@ -110,17 +101,6 @@ public class FormInputResponseFileUploadController {
     private ServiceResult<FormInputResponseFileAndContents> doGetFile(long formInputId, long applicationId, long processRoleId) {
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
         return applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
-    }
-
-    private ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFile(FileHeaderAttributes fileAttributes, long formInputId, long applicationId, long processRoleId, HttpServletRequest request) {
-        FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
-        return applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
-    }
-
-    private ServiceResult<FormInputResponseFileEntryResource> updateFormInputResponseFile(FileHeaderAttributes fileAttributes, long formInputId, long applicationId, long processRoleId, HttpServletRequest request) {
-        FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
-        return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request)).
-                andOnSuccessReturn(Pair::getValue);
     }
 
     private FormInputResponseFileEntryResource createFormInputResponseFileEntry(FileHeaderAttributes fileAttributes, long formInputId, long applicationId, long processRoleId) {

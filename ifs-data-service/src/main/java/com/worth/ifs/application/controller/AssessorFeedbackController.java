@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
-import static com.worth.ifs.file.controller.FileControllerUtils.inputStreamSupplier;
+import static com.worth.ifs.file.controller.FileControllerUtils.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
@@ -36,11 +35,8 @@ public class AssessorFeedbackController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> fileAddedResult =
-                fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                assessorFeedbackService.createAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return fileAddedResult.toPostCreateResponse();
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                assessorFeedbackService.createAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @RequestMapping(value = "/assessorFeedbackDocument", method = GET)
@@ -67,10 +63,8 @@ public class AssessorFeedbackController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        ServiceResult<FileEntryResource> updateResult = fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(fileAttributes ->
-                assessorFeedbackService.updateAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier(request)));
-
-        return updateResult.toPutResponse();
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                assessorFeedbackService.updateAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @RequestMapping(value = "/assessorFeedbackDocument", method = DELETE, produces = "application/json")
