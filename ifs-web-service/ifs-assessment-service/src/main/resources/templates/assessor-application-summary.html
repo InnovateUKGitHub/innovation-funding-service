@@ -41,27 +41,23 @@
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">
-                <div th:each="question,iteration : ${model.questions}" th:remove="tag">
+                <div th:each="question : ${model.questions}" th:remove="tag">
                     <div th:include="fragments/assessment :: assessment-summary-section (question=${question})" th:remove="tag" />
                 </div>
             </div>
 
             <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
 
-            <form>
-            <!--form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate"-->
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+
                 <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
                 <fieldset class="inline">
                     <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
                     <div class="form-group">
-                        <label class="block-label" for="assessor-question-confirmation-yes">
-                            <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
-                            Yes
-                        </label>
-                        <label class="block-label" for="assessor-question-confirmation-no">
-                            <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
-                            No
+                        <label class="block-label" th:each="option : ${ { true, false } }">
+                            <input th:field="*{fundingConfirmation}" th:value="${option}" type="radio" th:checked="${option == fundingConfirmation}" />
+                            <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
                         </label>
                     </div>
                 </fieldset>
@@ -69,31 +65,30 @@
                 <fieldset>
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="form-group">
-                        <div class="form-group">
-                            <label class="form-label form-label-bold" for="assessor-application-feedback-text">
-                                Your feedback
-                                <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
-                            </label>
+                        <label class="form-label form-label-bold" th:for="${#ids.next('feedback')}">
+                            Your feedback
+                            <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                        </label>
 
-                            <div class="textarea-wrapped word-count">
-                                <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-feedback-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
-                                <div class="textarea-footer">
-                                    <span class="count-label">
-                                        <span class="count-message">Words remaining:</span>
-                                        <span class="count-down positive" aria-live="polite">349</span>
-                                    </span>
-                                </div>
+                        <div class="textarea-wrapped word-count">
+                            <textarea th:field="*{feedback}" rows="3" cols="60" data-max_words="350" aria-hidden="true"></textarea>
+                            <div class="textarea-footer">
+                                <span class="count-label">
+                                    <span class="count-message">Words remaining:</span>
+                                    <span class="count-down positive" aria-live="polite">349</span>
+                                </span>
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="form-group">
-                            <label class="form-label form-label-bold" for="assessor-application-comments-text">
+                            <label class="form-label form-label-bold" th:for="${#ids.next('comments')}">
                                 Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea rows="3" cols="60" data-max_words="350" id="assessor-application-comments-text" name="assessor-application-feedback-text" aria-hidden="true"></textarea>
+                                <textarea th:field="*{comments}" rows="3" cols="60" data-max_words="350" aria-hidden="true"></textarea>
                                 <div class="textarea-footer">
                                     <span class="count-label">
                                         <span class="count-message">Words remaining:</span>
@@ -104,9 +99,7 @@
                         </div>
                     </div>
 
-                    <p class="icon-info">
-                        You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.
-                    </p>
+                    <p class="icon-info">You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.</p>
 
                     <div class="alignright">
                         <button type="submit" class="button button-large" name="confirm-submission">Save assessment</button>
