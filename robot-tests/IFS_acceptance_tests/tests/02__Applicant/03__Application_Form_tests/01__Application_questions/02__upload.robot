@@ -18,7 +18,7 @@ ${virus_scanning_warning}    This file is awaiting virus scanning
 *** Test Cases ***
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -28,7 +28,7 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -57,7 +57,7 @@ Lead applicant can view a file
 Lead applicant can download a pdf file
     [Documentation]    INFUND-2720
     [Tags]    Pending    HappyPath
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -78,7 +78,7 @@ Collaborators can view a file
 Collaborators can download a pdf file
     [Documentation]    INFUND-2720
     [Tags]    Pending
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -126,7 +126,7 @@ Collaborators can view a file when the question is assigned
 Collaborator can download a file when the question is assigned
     [Documentation]    INFUND-2720
     [Tags]    Pending
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -134,7 +134,7 @@ Collaborator can download a file when the question is assigned
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
     [Tags]    Pending
-    #pending INFUND-3259
+    # TODO pending INFUND-3259
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach

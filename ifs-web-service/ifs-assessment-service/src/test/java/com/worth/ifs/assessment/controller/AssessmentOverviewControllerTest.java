@@ -29,6 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
@@ -52,8 +54,9 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -186,6 +189,25 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getApplicationFinancesByOrganisation()))
                 .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()))
         ;
+    }
+
+    @Test
+    public void testRejectApplication() throws Exception {
+        final String reason = "reason";
+        final String comment = "comment";
+        final Long assessmentId = 1L;
+
+        when(assessmentService.rejectApplication(assessmentId, "reason", "comment")).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/{assessmentId}/status", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", reason)
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(view().name("assessor/assessor-dashboard"))
+                .andReturn();
+
+        verify(assessmentService, only()).rejectApplication(assessmentId, reason, comment);
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {

@@ -3,7 +3,7 @@ Documentation     INFUND-544: As an applicant I want the â€˜Application summaryâ
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
 Force Tags        Pending
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot       # TODO
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
