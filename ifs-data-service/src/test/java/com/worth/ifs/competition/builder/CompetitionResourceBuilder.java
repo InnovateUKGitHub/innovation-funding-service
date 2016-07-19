@@ -1,19 +1,19 @@
 package com.worth.ifs.competition.builder;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.competition.resource.CollaborationLevel;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.LeadApplicantType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CollaborationLevel;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.competition.resource.LeadApplicantType;
+import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource, CompetitionResourceBuilder> {
 
@@ -142,12 +142,12 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((innovateBudget, object) -> setField("innovateBudget", innovateBudget, object), innovateBudgets);
     }
 
-    public CompetitionResourceBuilder withCoFunders(String... coFundersMultiple) {
-        return withArray((coFunders, object) -> setField("coFunders", coFunders, object), coFundersMultiple);
+    public CompetitionResourceBuilder withFunder(String... fundersMultiple) {
+        return withArray((funder, object) -> setField("funder", funder, object), fundersMultiple);
     }
 
-    public CompetitionResourceBuilder withCoFundersBudget(String... coFundersBudgets) {
-        return withArray((coFundersBudget, object) -> setField("coFundersBudget", coFundersBudget, object), coFundersBudgets);
+    public CompetitionResourceBuilder withCoFundersBudget(String... funderBudgets) {
+        return withArray((funderBudget, object) -> setField("funderBudget", funderBudget, object), funderBudgets);
     }
 
     @Override

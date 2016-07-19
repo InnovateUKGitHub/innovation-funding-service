@@ -1,14 +1,13 @@
 package com.worth.ifs.documentation;
 
-import static com.google.common.primitives.Longs.asList;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDateTime;
 
-import org.springframework.restdocs.payload.FieldDescriptor;
-
-import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import static com.google.common.primitives.Longs.asList;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
@@ -44,8 +43,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
-            fieldWithPath("coFunders").description("the co-funders entered during competition setup"),
-            fieldWithPath("coFundersBudget").description("the co-funders budget entered during competition setup")
+            fieldWithPath("funder").description("the funder entered during competition setup"),
+            fieldWithPath("funderBudget").description("the funder budget entered during competition setup")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -72,6 +71,6 @@ public class CompetitionResourceDocs {
             .withBudgetCode("BUDGET-456")
             .withActivityCode("Activity-Code")
             .withInnovateBudget("INNOVATE-Budget")
-            .withCoFunders("Cofunder, Cofunder")
+            .withFunder("funder, funder")
             .withCoFundersBudget("1234, 23423");
 }

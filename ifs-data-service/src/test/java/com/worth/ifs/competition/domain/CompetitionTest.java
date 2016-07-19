@@ -38,8 +38,8 @@ public class CompetitionTest {
 
     private String activityCode;
     private String innovateBudget;
-    private String coFunders;
-    private String coFundersBudget;
+    private String funder;
+    private Double funderBudget;
 
     @Before
     public void setUp() throws Exception {
@@ -58,8 +58,8 @@ public class CompetitionTest {
         budgetCode = "BudgetCode";
         activityCode = "ActivityCode";
         innovateBudget = "Innovate Budget";
-        coFunders = "CoFunders";
-        coFundersBudget = "CoFundersBudget";
+        funder = "Funder";
+        funderBudget = 0.0;
 
         sections = new ArrayList<>();
         sections.add(new Section());
@@ -76,8 +76,8 @@ public class CompetitionTest {
         competition.setBudgetCode(budgetCode);
         competition.setActivityCode(activityCode);
         competition.setInnovateBudget(innovateBudget);
-        competition.setCoFunders(coFunders);
-        competition.setCoFundersBudget(coFundersBudget);
+        competition.setFunder(funder);
+        competition.setFunderBudget(funderBudget);
     }
 
     @Test
@@ -92,8 +92,8 @@ public class CompetitionTest {
         assertEquals(competition.getBudgetCode(), budgetCode);
         assertEquals(competition.getActivityCode(), activityCode);
         assertEquals(competition.getInnovateBudget(), innovateBudget);
-        assertEquals(competition.getCoFunders(), coFunders);
-        assertEquals(competition.getCoFundersBudget(), coFundersBudget);
+        assertEquals(competition.getFunder(), funder);
+        assertEquals(competition.getFunderBudget(), funderBudget);
     }
 
     @Test
