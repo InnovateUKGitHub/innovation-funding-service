@@ -396,7 +396,11 @@ MO details can be added and updated
     Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
     Then the user should see the text in the page    A Monitoring Officer has been assigned.
-    And Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    testtest1    has been assigned to you
+
+MO details(email step)
+    [Documentation]     INFUND-3330, INFUND-3334
+    [Tags]     Email
+    When open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    testtest1    has been assigned to you
 
 MO details can be edited and updated
     [Documentation]    INFUND-3330
