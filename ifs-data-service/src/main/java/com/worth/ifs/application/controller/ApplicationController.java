@@ -90,7 +90,7 @@ public class ApplicationController {
 
         String name = jsonObj.get("name").textValue();
         ServiceResult<ApplicationResource> applicationResult =
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, name);
+                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
         return applicationResult.toPostCreateResponse();
     }
 }

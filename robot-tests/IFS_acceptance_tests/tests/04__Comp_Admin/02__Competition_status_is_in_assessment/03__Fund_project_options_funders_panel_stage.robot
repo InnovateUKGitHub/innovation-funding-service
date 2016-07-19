@@ -2,7 +2,7 @@
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Comp admin    Funders Panel
+Force Tags        Funders Panel    CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -18,6 +18,7 @@ ${email_failure_message}    Unfortunately Innovate UK is unable to fund
 *** Test Cases ***
 Comp admin can visit a competition page at "Funder's Panel" stage and the option to notify applicants is disabled
     [Documentation]    INFUND-2601
+    [Tags]    HappyPath
     When the user navigates to the page    ${funders_panel_competition_url}
     Then the user should see the text in the page    Funders Panel
     And the user should see the element    css=h2.bold-small.blue-block
@@ -25,7 +26,7 @@ Comp admin can visit a competition page at "Funder's Panel" stage and the option
 
 If a Fund Project option is chosen for each application then the option to notify applicants is enabled
     [Documentation]    INFUND-2601
-    [Tags]
+    [Tags]    HappyPath
     When the user selects the option from the drop-down menu    Yes    id=fund16
     And the user selects the option from the drop-down menu    No    id=fund17
     Then the option to notify applicants is enabled
@@ -51,7 +52,7 @@ Comp admin can unselect a Fund Project and the option to notify applicants becom
 
 Pushing the notify applicants button brings up a warning dialogue
     [Documentation]    INFUND-2646
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    The user selects the option from the drop-down menu    Yes    id=fund16
     When the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     Then the user should see the text in the page    ${dialogue_warning_message}
@@ -68,30 +69,28 @@ Choosing cancel on the dialogue goes back to the Funder's Panel page
 
 Choosing Notify applicants on the dialogue redirects to the Assessor feedback page
     [Documentation]    INFUND-2646
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    name=publish
     Then the user should be redirected to the correct page    ${funders_panel_competition_url}
 
-
 Once applicants are notified, the whole state of the competition changes to Assessor feedback
     [Documentation]    INFUND-2646
-    [Tags]
+    [Tags]    HappyPath
     Then the user should see the text in the page    Assessor Feedback
 
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    worth.email.test@gmail.com   testtest1       ${email_success_message}
+    Then the user should get a confirmation email    worth.email.test@gmail.com    testtest1    ${email_success_message}
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    worth.email.test.two@gmail.com    testtest1      ${email_failure_message}
-
+    Then the user should get a confirmation email    worth.email.test.two@gmail.com    testtest1    ${email_failure_message}
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{successful_applicant_credentials}
     When the user navigates to the page    ${server}
     Then the user should see the text in the page    Projects in setup
@@ -100,10 +99,10 @@ Successful applicants can see the assessment outcome on the dashboard page
 
 Successful applicants can see the assessment outcome on the overview page
     [Documentation]    INFUND-2605, INFUND-2611
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    link=00000004: Cheese is good
     Then the user should see the text in the page    Project setup status
-    And the user should be redirected to the correct page     ${SUCCESSFUL_PROJECT_PAGE}
+    And the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
     [Teardown]    Logout as user
 
 Unsuccessful applicants can see the assessment outcome on the dashboard page
@@ -130,7 +129,7 @@ The option to notify applicants is enabled
     the user should not see the element    css=#publish-funding-decision.button.disabled
 
 the user should get a confirmation email
-    [Arguments]    ${email_username}       ${email_password}     ${message}
+    [Arguments]    ${email_username}    ${email_password}    ${message}
     Open Mailbox    server=imap.googlemail.com    user=${email_username}    password=${email_password}
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}

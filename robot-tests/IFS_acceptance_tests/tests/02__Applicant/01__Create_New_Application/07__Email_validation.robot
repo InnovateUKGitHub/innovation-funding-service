@@ -97,7 +97,7 @@ Invalid email no @ symbol
 
 User can not login with the invalid email
     [Tags]    Pending
-    # Pending due to INFUND-3995
+    # TODO Pending due to INFUND-3995
     Then the user cannot login with the invalid email    ${invalid_email_no_at}
 
 Valid account creation

@@ -6,7 +6,7 @@
 
 </head>
 
-<body>
+<body class="project-setup">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -68,13 +68,13 @@
 			<tr>
 				<th scope="row">
 					Aptrans<br />
-					Lead partner
+					<small>Lead partner</small>
 				</th>
 				<td>
 					Green
 				</td>
 				<td class="status action">
-					<a href="#" title="Viability"><span class="visuallyhidden">Viability</span></a>
+					<a href="/prototypes/3601-viability" title="Viability"><span class="visuallyhidden">Viability</span></a>
 				</td>
 				<td>
 					Green
@@ -92,7 +92,7 @@
 			<tr>
 				<th scope="row">
 					Biotech Corp<br />
-					Partner
+					<small>Partner</small>
 				</th>
 				<td>
 					Amber
@@ -116,7 +116,7 @@
 			<tr>
 				<th scope="row">
 					University of Cardiff<br />
-					Partner
+					<small>Partner</small>
 				</th>
 				<td>
 					Red
@@ -141,7 +141,7 @@
 	</table>
 
 	<div class="extra-margin">
-		<a href="#">Project finance overview</a>
+		<a href="/prototypes/1199-project-finances-overview">Project finance overview</a>
 	</div>
 
 	<h3 class="heading-medium">Generate spend profile</h3>
