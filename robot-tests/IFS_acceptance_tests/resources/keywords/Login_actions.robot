@@ -35,8 +35,6 @@ The guest user clicks the log-in button
 
 The guest user opens the browser
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'   Start Virtual Display    1920    1080
-    Run keyword if    '${DOCKER} == 'true'      Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    None    http://${SELENIUM_HUB_URL}/wd/hub    ff_profile_dir=${FF_PROFILE}
-        ...    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}

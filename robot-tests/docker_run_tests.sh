@@ -1,6 +1,6 @@
 #!/bin/bash
 
-setEnv() {
+function setEnv() {
     case $OSTYPE in
         darwin*)
             echo "Mac detected"
@@ -36,7 +36,7 @@ function coloredEcho(){
     tput sgr0;
 }
 
-function addTestFiles {
+function addTestFiles() {
     echo "***********Adding test files***************"
     echo "***********Making the quarantined directory ***************"
     docker-compose exec data mkdir -p ${virusScanQuarantinedFolder}
@@ -45,7 +45,7 @@ function addTestFiles {
 }
 
 
-function buildAndDeploy {
+function buildAndDeploy() {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
     cd ${dataServiceCodeDir}
     ## Before we start the build we need to have an webtest test build environment
@@ -64,12 +64,12 @@ function buildAndDeploy {
 
 }
 
-function resetLDAP {
+function resetLDAP() {
     cd ../setup-files/scripts/docker
     ./syncShib.sh
 }
 
-function startServers {
+function startServers() {
     pwd
     cd ../setup-files/scripts/docker
     ./startup.sh
@@ -92,21 +92,24 @@ function startServers {
     resetLDAP
 }
 
-function startSeleniumGrid {
+function startSeleniumGrid() {
     cd ../robot-tests
     cd ${testDirectory}
     cd ${scriptDir}
+    declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
+    echo ${suiteCount}
     docker-compose up -d
-    docker-compose scale chrome=5
+    docker-compose scale chrome=${suiteCount}
+    unset suiteCount
 }
 
-function startPybot {
+function startPybot() {
     echo "********** starting pybot for ${1} **************"
     targetDir=`basename ${1}`
-    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
+    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
 }
 
-function runTests {
+function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
@@ -164,12 +167,10 @@ echo "webBase:           ${webBase}"
 unset opt
 unset quickTest
 unset testScrub
-unset remoteRun
-unset startServersInDebugMode
 
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :t :r :d: :D" opt ; do
+while getopts ":q :t :d:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -177,14 +178,8 @@ while getopts ":q :t :r :d: :D" opt ; do
         t)
          testScrub=1
         ;;
-        r)
-         remoteRun=1
-        ;;
         d)
          testDirectory="$OPTARG"
-        ;;
-        D)
-         startServersInDebugMode=true
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
@@ -218,10 +213,6 @@ then
     buildAndDeploy
     startServers
     addTestFiles
-elif [ "$remoteRun" ]
-then
-    echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
-    runTestsRemotely
 else
     echo "using quickTest:   FALSE" >&2
     buildAndDeploy
