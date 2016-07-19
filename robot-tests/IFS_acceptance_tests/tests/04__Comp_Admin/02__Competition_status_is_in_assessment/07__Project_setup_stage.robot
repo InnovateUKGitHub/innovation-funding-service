@@ -438,7 +438,7 @@ MO details can be added
 
 MO details(email step)
     [Documentation]     INFUND-3330, INFUND-3334
-    [Tags]     Email
+    [Tags]     Email    Pending
     When Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    testtest1    has been assigned to you
 
 MO details can be edited and Viewed in the Project setup status page
