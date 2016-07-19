@@ -18,6 +18,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
@@ -45,12 +46,17 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
 
     private MonitoringOfficerResource monitoringOfficerResource;
+
+    private RestDocumentationResultHandler document;
 
     @Before
     public void setUp() {
@@ -63,6 +69,12 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withEmail("abc.xyz@gmail.com")
                 .withPhoneNumber("078323455")
                 .build();
+    }
+
+    @Before
+    public void setUpDocumentation() throws Exception {
+        this.document = document("project/{method-name}",
+                preprocessResponse(prettyPrint()));
     }
 
     @Override
@@ -356,7 +368,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload);
+        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUploadMethod(document));
     }
 
     @Test

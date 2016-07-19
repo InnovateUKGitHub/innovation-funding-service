@@ -7,6 +7,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,12 +19,16 @@ import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.asListOfPairs;
 import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
@@ -31,6 +36,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<AssessorFeedbackController> {
+
+    private RestDocumentationResultHandler document;
+
+    @Before
+    public void setUpDocumentation() throws Exception {
+        this.document = document("assessorfeedback/assessorFeedbackDocument_{method-name}",
+                preprocessResponse(prettyPrint()));
+    }
 
     @Test
     public void testCreateAssessorFeedback() throws Exception {
@@ -41,7 +54,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         assertFileUploadProcess("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
                 asMap("applicationId", "123"),
                 assessorFeedbackServiceMock,
-                serviceCall);
+                serviceCall).andDo(documentFileUploadMethod(document, asListOfPairs("applicationId", "123"), emptyList()));
     }
 
     @Test
