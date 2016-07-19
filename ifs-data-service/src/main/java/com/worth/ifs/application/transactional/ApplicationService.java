@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -26,7 +27,10 @@ import java.util.function.Supplier;
  */
 public interface ApplicationService {
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
+    @SecuredBySpring(value = "CREATE",
+            description = "Any logged in user with Global roles or user with system registra role can create and application",
+            securedType = ApplicationResource.class)
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
@@ -84,7 +88,6 @@ public interface ApplicationService {
     @PreAuthorize("hasAuthority('comp_admin')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
 
-    // TODO DW - INFUND-1555 - deal with rest results
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
 }
