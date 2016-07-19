@@ -38,7 +38,7 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
 
     @Override
     public RestResult<Void> delete(Long costId) {
-        return deleteWithRestResult(costRestURL + "/delete/" + costId, Void.class);
+        return deleteWithRestResult(costRestURL + "/delete/" + costId);
     }
 
     @Override

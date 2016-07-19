@@ -6,6 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.UserNotificationTarget;
@@ -152,14 +153,14 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         //
         // Call the method under test
         //
-        ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> result = service.getAssessorFeedbackFileEntryContents(application.getId());
+        ServiceResult<FileAndContents> result = service.getAssessorFeedbackFileEntryContents(application.getId());
 
         //
         // Assert that the result of our service call was successful and contains the resource returned from the mapper
         //
         assertTrue(result.isSuccess());
-        assertEquals(retrievedFileEntryResource, result.getSuccessObject().getKey());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getValue());
+        assertEquals(retrievedFileEntryResource, result.getSuccessObject().getFileEntry());
+        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
 
         verify(applicationRepositoryMock).findOne(application.getId());
         verifyNoMoreInteractions(addressRepositoryMock);
@@ -184,13 +185,12 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         //
         // Call the method under test
         //
-        ServiceResult<FileEntryResource> result = service.updateAssessorFeedbackFileEntry(application.getId(), fileEntryToUpdate, inputStreamSupplier);
+        ServiceResult<Void> result = service.updateAssessorFeedbackFileEntry(application.getId(), fileEntryToUpdate, inputStreamSupplier);
 
         //
         // Assert that the result of our service call was successful and contains the resource returned from the mapper
         //
         assertTrue(result.isSuccess());
-        assertEquals(updatedFileEntryResource, result.getSuccessObject());
 
         // assert that the application entity got its Assessor Feedback file entry updated to match the FileEntry returned by
         // the FileService
