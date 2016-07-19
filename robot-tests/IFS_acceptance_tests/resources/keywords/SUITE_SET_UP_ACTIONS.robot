@@ -198,8 +198,7 @@ the user marks the finances as complete
 
 Make the finances ready for mark as complete
     Applicant navigates to the finances of the Robot application
-    The user clicks the button/link    jQuery=label:contains(Medium - claim up to 60%) input
-    Input Text    id=cost-financegrantclaim    20
+    the user selects the radio button    financePosition-organisationSize    SMALL
     The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
 
 The user navigates to the academic application finances
