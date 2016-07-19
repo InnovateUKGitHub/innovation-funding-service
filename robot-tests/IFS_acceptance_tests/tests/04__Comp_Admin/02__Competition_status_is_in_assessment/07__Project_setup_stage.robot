@@ -207,6 +207,9 @@ Lead partner can change the project manager
     And the user should not see the text in the page      You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    test ten
+    And the user clicks the button/link      link=Project manager
+    And the user selects the radio button     projectManager       projectManager1
+    And the user clicks the button/link     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
     And the matching status checkbox is updated    project-details    3    yes
 
