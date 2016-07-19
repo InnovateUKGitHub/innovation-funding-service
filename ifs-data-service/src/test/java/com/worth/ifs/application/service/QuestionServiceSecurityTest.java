@@ -7,6 +7,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.security.QuestionPermissionRules;
+import com.worth.ifs.application.security.QuestionResourceLookupStrategy;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -24,6 +25,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing how the secured methods in QuestionService interact with Spring Security
@@ -31,11 +33,13 @@ import static org.mockito.Mockito.verify;
 public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<QuestionService> {
 
     private QuestionPermissionRules questionPermissionRules;
+    private QuestionResourceLookupStrategy questionResourceLookupStrategy;
 
 
     @Before
     public void lookupPermissionRules() {
         questionPermissionRules = getMockPermissionRulesBean(QuestionPermissionRules.class);
+        questionResourceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(QuestionResourceLookupStrategy.class);
     }
 
     @Test
@@ -44,6 +48,17 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         service.findByCompetition(competitionId);
         verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
     }
+
+    @Test
+    public void testGetQuestionById() {
+        final Long questionId = 1L;
+        when(questionResourceLookupStrategy.findResourceById(questionId)).thenReturn(newQuestionResource().build());
+        assertAccessDenied(
+                () -> service.getQuestionById(questionId),
+                () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
+        );
+    }
+
 
     @Test
     public void testGetNextQuestion() {

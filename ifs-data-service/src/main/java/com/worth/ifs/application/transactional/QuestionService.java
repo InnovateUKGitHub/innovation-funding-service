@@ -21,8 +21,7 @@ import com.worth.ifs.security.NotSecured;
  */
 public interface QuestionService {
 
-    // @NotSecured("Any loggedIn user can read a question")
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.application.resource.QuestionResource', 'READ')")
     ServiceResult<QuestionResource> getQuestionById(final Long id);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")

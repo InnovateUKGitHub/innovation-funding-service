@@ -10,7 +10,7 @@ Resource          ../resources/keywords/User_actions.robot
 *** Test Cases ***
 Go through the applicant process
     [Tags]    Pending
-    # This test is for benchmarking only - please do not remove Pending tag or delete!
+    # TODO This test is for benchmarking only - please do not remove Pending tag or delete!
     Given benchmarking is set up
     And the guest logs in as lead applicant
     And the applicant views the overview page for the first application
@@ -18,7 +18,7 @@ Go through the applicant process
 
 Go through the assessor journey
     [Tags]    Pending
-    # This test is for benchmarking only - please do not remove Pending tag or delete!
+    # TODO This test is for benchmarking only - please do not remove Pending tag or delete!
     Given the guest logs in as an assessor
     And the assessor can visit the competition dashboard
     And the assessor can visit the application details

@@ -324,7 +324,7 @@ IFS.core.formValidation = (function(){
         checkMinLength : function(field,showMessage){
             var errorMessage = IFS.core.formValidation.getErrorMessage(field,'minlength');
             var minlength = parseInt(field.attr('minlength'),10);
-            if(field.val().length < minlength){
+            if((field.val().length > 0) && (field.val().length < minlength)){
               if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
               return false;
             }
