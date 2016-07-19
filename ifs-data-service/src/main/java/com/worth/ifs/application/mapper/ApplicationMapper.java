@@ -34,15 +34,18 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
     }
 
     @Mappings({
-            @Mapping(source = "competition.name", target = "competitionName"),
-            @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
-            @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
-            @Mapping(target = "applicationStatusConstant", ignore = true)
-    })
-    @Override
-    public abstract ApplicationResource mapToResource(Application domain);
-    
-    @Mapping(target = "fundingDecision", ignore = true)
-    @Override
-    public abstract Application mapToDomain(ApplicationResource resource);
-}
+        @Mapping(source = "competition.name", target = "competitionName"),
+        @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
+        @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
+        @Mapping(target = "applicationStatusConstant", ignore = true)
+		})
+		@Override
+		public abstract ApplicationResource mapToResource(Application domain);
+		
+		@Mappings({
+			@Mapping(target = "fundingDecision", ignore = true),
+			@Mapping(target = "formInputResponses", ignore = true)
+		})
+		@Override
+		public abstract Application mapToDomain(ApplicationResource resource);
+		}
