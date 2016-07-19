@@ -222,8 +222,7 @@
         <h1 class="heading-xlarge no-margin">Funding information</h1>
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:with="coFundersCount=0">
+    <form th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-2-edit">
             <legend class="visuallyhidden">Funding information</legend>
@@ -255,10 +254,8 @@
                     </span>
                         </label>
                         <input th:class="${#fields.hasErrors('funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                               type="text"
-                               th:field="${competitionSetupForm.funderBudget}"
-                               maxlength="255"
-                               data-maxlength-errormessage="Co-funders budget has a maximum length of 255 characters" />
+                               type="number" min="0"
+                               th:field="${competitionSetupForm.funderBudget}" />
                     </div>
 
                 </div>
@@ -266,7 +263,7 @@
 
             <div  th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})" class="grid-row" id="co-funder-row-2">
                 <div class="column-half">
-                    <div class="form-group">
+                    <div th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder')}? 'form-group error':'form-group'">
                         <label class="form-label visuallyhidden" for="comp-co-funder-2">
                             <span class="form-label-bold">Funder</span>
                         </label>
@@ -275,15 +272,14 @@
                 </div>
 
                 <div class="column-half">
-                    <div class="form-group">
+                    <div th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget')}? 'form-group error':'form-group'">
                         <label class="form-label visuallyhidden" for="comp-co-funders-budget-2">
                             <span class="form-label-bold">Budget</span>
                         </label>
-                        <input class="form-control width-x-large" id="comp-co-funders-budget-2" name="comp-co-funders-budget-2"
+                        <input type="number" min="0"  class="form-control width-x-large" id="comp-co-funders-budget-2" name="comp-co-funders-budget-2"
                                th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value="" />
                     </div>
                 </div>
-                <div th:with="coFundersCount=${iteration.index}"></div>
             </div>
 
 
@@ -297,7 +293,7 @@
                     <div class="alignright">
                         <!--<a id="add-cofunder-1"  th:href="@{/competition/setup/{competitionId}/section/additional/add-co-funder(competitionId=${competition.id})}">+Add co-funder</a>-->
 
-                        <input type="hidden" name="coFunderCount" id="co-funder-count" th:value="${coFundersCount}" />
+                        <input type="hidden" name="coFunderCount" id="co-funder-count" th:value="${competitionSetupForm.coFundersCount}" />
                         <a id="add-cofunder" href="#">+Add co-funder</a>
 
                     </div>
@@ -353,6 +349,7 @@
                     maxlength="255"
                     data-maxlength-errormessage="Activity code has a maximum length of 255 characters" />
                 </div>
+
 
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
