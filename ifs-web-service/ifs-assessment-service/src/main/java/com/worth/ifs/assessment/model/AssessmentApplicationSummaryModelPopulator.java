@@ -4,10 +4,10 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.service.AssessmentFeedbackService;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentApplicationSummaryQuestionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentApplicationSummaryViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -22,10 +22,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -35,7 +35,7 @@ import static java.util.stream.Collectors.toList;
 public class AssessmentApplicationSummaryModelPopulator {
 
     @Autowired
-    private AssessmentFeedbackService assessmentFeedbackService;
+    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Autowired
     private AssessmentService assessmentService;
@@ -87,25 +87,25 @@ public class AssessmentApplicationSummaryModelPopulator {
     }
 
     private List<AssessmentApplicationSummaryQuestionViewModel> getSummaryQuestions(Long assessmentId) throws ExecutionException, InterruptedException {
-        Map<Long, AssessmentFeedbackResource> allAssessmentFeedback = getAssessmentFeedbackForAssessment(assessmentId);
+        Map<Long, List<AssessorFormInputResponseResource>> assessorResponses = getAssessorResponses(assessmentId);
         return simpleMap(getQuestionsForAssessment(assessmentId), question -> {
             String displayLabel = question.getShortName();
             String displayLabelShort = getSummaryQuestionDisplayLabelShort(question);
             boolean requireScore = true;
             Integer scorePossible = requireScore ? getScorePossible(question) : null;
-            AssessmentFeedbackResource assessmentFeedback = allAssessmentFeedback.get(question.getId());
-            Map<String, String> values = getSummaryQuestionValues(assessmentFeedback);
-            boolean complete = isComplete(assessmentFeedback);
+            Map<String, String> values = getSummaryQuestionValues(assessorResponses.get(question.getId()));
+            boolean complete = isComplete();
             return new AssessmentApplicationSummaryQuestionViewModel(question.getId(), displayLabel, displayLabelShort, requireScore, scorePossible, values, complete);
         });
     }
 
-    private Map<Long, AssessmentFeedbackResource> getAssessmentFeedbackForAssessment(Long assessmentId) {
-        return simpleToMap(assessmentFeedbackService.getAllAssessmentFeedback(assessmentId), AssessmentFeedbackResource::getQuestion);
+    private Map<Long, List<AssessorFormInputResponseResource>> getAssessorResponses(Long assessmentId) {
+        List<AssessorFormInputResponseResource> assessorResponses = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId);
+        return assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
     }
 
     private List<QuestionResource> getQuestionsForAssessment(Long assessmentId) throws ExecutionException, InterruptedException {
-        // TODO can 2L be relied on?
+        // TODO cannot rely on section 2L!
         return assessmentService.getAllQuestionsById(assessmentId).stream().filter(questionResource -> Long.valueOf(2L).equals(questionResource.getSection())).sorted(comparing(QuestionResource::getPriority)).collect(toList());
     }
 
@@ -113,12 +113,12 @@ public class AssessmentApplicationSummaryModelPopulator {
         return format("Q%s", question.getQuestionNumber());
     }
 
-    private boolean isComplete(AssessmentFeedbackResource assessmentFeedback) {
+    private boolean isComplete() {
         // TODO determine if the assessment of this question is complete
         return false;
     }
 
-    private Map<String, String> getSummaryQuestionValues(AssessmentFeedbackResource assessmentFeedback) {
+    private Map<String, String> getSummaryQuestionValues(List<AssessorFormInputResponseResource> assessorFormInputResponses) {
         // TODO map each of the assessors answers
         return asMap(
                 "SCORE", "3",

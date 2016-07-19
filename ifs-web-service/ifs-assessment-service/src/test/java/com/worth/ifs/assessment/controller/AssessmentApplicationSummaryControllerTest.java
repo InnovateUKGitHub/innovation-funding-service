@@ -4,9 +4,9 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.assessment.model.AssessmentApplicationSummaryModelPopulator;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
-import com.worth.ifs.assessment.service.AssessmentFeedbackService;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentApplicationSummaryQuestionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentApplicationSummaryViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -24,12 +24,11 @@ import java.util.List;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
-import static com.worth.ifs.assessment.builder.AssessmentFeedbackResourceBuilder.newAssessmentFeedbackResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static com.worth.ifs.util.MapFunctions.asMap;
-import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -45,7 +44,7 @@ public class AssessmentApplicationSummaryControllerTest extends BaseControllerMo
     private AssessmentService assessmentService;
 
     @Mock
-    private AssessmentFeedbackService assessmentFeedbackService;
+    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Spy
     @InjectMocks
@@ -82,7 +81,7 @@ public class AssessmentApplicationSummaryControllerTest extends BaseControllerMo
                 .build();
         when(competitionService.getById(competitionId)).thenReturn(expectedCompetition);
 
-        List<AssessmentFeedbackResource> assessmentFeedback = newAssessmentFeedbackResource()
+        List<AssessorFormInputResponseResource> assessorResponses = newAssessorFormInputResponseResource()
                 .withQuestion(1L, 2L)
                 .build(2);
 
@@ -93,8 +92,8 @@ public class AssessmentApplicationSummaryControllerTest extends BaseControllerMo
                 .withShortName("Business opportunity", "Potential market")
                 .build(2);
 
-        when(assessmentFeedbackService.getAllAssessmentFeedback(assessmentId))
-                .thenReturn(assessmentFeedback);
+        when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId))
+                .thenReturn(assessorResponses);
         when(assessmentService.getAllQuestionsById(assessmentId)).thenReturn(questions);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/summary", assessmentId))
