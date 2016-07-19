@@ -64,8 +64,39 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                                 parameterWithName("postcode").description("Postcode to look up")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("list with the addresses the requesting user has access to. ")
+                                fieldWithPath("[]id").description("Address Id"),
+                                fieldWithPath("[]addressLine1").description("Address line1"),
+                                fieldWithPath("[]addressLine2").description("Address line2"),
+                                fieldWithPath("[]addressLine3").description("Address Line3"),
+                                fieldWithPath("[]town").description("Town"),
+                                fieldWithPath("[]county").description("County"),
+                                fieldWithPath("[]postcode").description("Postcode"),
+                                fieldWithPath("[]organisations[]").description("List of Organisations with this address")
                         )
                 ));
     }
+    @Test
+    public void findOne() throws Exception {
+        long id = 1;
+        AddressResource addressResource = addressResourceBuilder.build();
+        when(addressService.getById(id)).thenReturn(serviceSuccess(addressResource));
+
+        mockMvc.perform(get("/address/{id}", id))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of Address to find")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("Address Id"),
+                                fieldWithPath("addressLine1").description("Address line1"),
+                                fieldWithPath("addressLine2").description("Address line2"),
+                                fieldWithPath("addressLine3").description("Address Line3"),
+                                fieldWithPath("town").description("Town"),
+                                fieldWithPath("county").description("County"),
+                                fieldWithPath("postcode").description("Postcode"),
+                                fieldWithPath("organisations[]").description("List of Organisations with this address")
+                        )
+                ));
+    }
+
 }
