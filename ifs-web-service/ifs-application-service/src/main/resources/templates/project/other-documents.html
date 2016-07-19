@@ -17,6 +17,18 @@
         <h1 class="heading-xlarge">Other documents</h1>
     </div>
 
+    <div th:if="${model.isShowApprovedMessage()}" class="success-alert" >
+        <h2 class="heading-small no-margin">These documents have been approved by Innovate UK.</h2>
+    </div>
+
+    <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
+      <h2 class="heading-small">These documents have been returned to the project team, the following reason was given;</h2>
+      <ul class="list-bullet">
+        <li th:each="${reason : model.getRejectionReasons()}" th:text="${reason}" />
+      </ul>
+    </div>
+
+
     <th:block th:if="${model.leadPartner}">
 			<p>As the lead partner in this project you must supply additional documents to support your grant application.</p>
 			<p>These documents are:</p>
@@ -27,9 +39,6 @@
 			<p>You should review these documents with the other partners in the project.</p>
 			<p>Further details on what is required from these documents is available below.</p>
     </th:block>
-
-
-    <form th:action="@{/project/{id}/other-documents(id=${model.projectId})}" th:if="${model.isEditable()}" th:object="${form}" method="post" enctype="multipart/form-data">
 
         <div class="upload-section">
             <h2 class="heading-medium no-margin">Collaboration agreement</h2>
@@ -53,11 +62,18 @@
                 </div>
               </details>
 
-                <th:block th:unless="${model.collaborationAgreementFileDetails}">
+              <!--/* allowed to edit */-->
+              <form th:action="@{/project/{id}/other-documents(id=${model.projectId})}" th:if="${model.isEditable()}" th:object="${form}" method="post" enctype="multipart/form-data">
+
+                <!-- /* file is not uploaded */-->
+                <div th:classappend="${#fields.hasErrors('collaborationAgreement') ? 'error' : ''}"  th:unless="${model.collaborationAgreementFileDetails}">
+                  <th:block th:if="${#fields.hasErrors('collaborationAgreement')}">
+                      <span class="error-message" th:each="err : ${#fields.errors('collaborationAgreement')}" th:text="${err}" />
+                  </th:block>
                   <input th:field="*{collaborationAgreement}" type="file" id="collaborationAgreement" class="inputfile" />
                   <label for="collaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
                   <button name="uploadCollaborationAgreementClicked" class="button-secondary" type="submit" data-for-file-upload="collaborationAgreement">Save</button>
-                </th:block>
+                </div>
 
                 <!--/* file is uploaded */-->
                 <th:block th:if="${model.collaborationAgreementFileDetails}">
@@ -65,6 +81,12 @@
                   <button name="removeCollaborationAgreementClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
                 </th:block>
 
+              </form>
+              <!--/* not allowed to edit */-->
+              <th:block th:unless="${model.isEditable()}">
+                <a th:if="${model.exploitationPlanFileDetails}" th:href="@{/project/{id}/other-documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by lead partner</p>
+              </th:block>
         </div>
 
           <div class="upload-section">
@@ -90,25 +112,37 @@
                   </div>
               </details>
 
-              <!--/* file is not uploaded */-->
-              <th:block th:unless="${model.exploitationPlanFileDetails}">
-                <input th:field="*{exploitationPlan}" type="file" id="exploitationPlan" class="inputfile" />
-                <label for="exploitationPlan" class="button-secondary extra-margin">+ Upload</label>
-                <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit" data-for-file-upload="exploitationPlan">Save</button>
-              </th:block>
+              <!--/* allowed to edit */-->
+              <form th:action="@{/project/{id}/other-documents(id=${model.projectId})}" th:if="${model.isEditable()}" th:object="${form}" method="post" enctype="multipart/form-data">
+                <!--/* file is not uploaded */-->
+                <div th:classappend="${#fields.hasErrors('exploitationPlan') ? 'error' : ''}" th:unless="${model.exploitationPlanFileDetails}">
+                  <th:block th:if="${#fields.hasErrors('exploitationPlan')}">
+                      <span class="error-message" th:each="err : ${#fields.errors('exploitationPlan')}" th:text="${err}" />
+                  </th:block>
 
-              <!--/* file is uploaded */-->
-              <th:block th:if="${model.exploitationPlanFileDetails}">
-                <a th:href="@{/project/{id}/other-documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                <button name="removeExploitationPlanClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
+                  <input th:errorclass="field-error" th:field="*{exploitationPlan}" type="file" id="exploitationPlan" class="inputfile" />
+                  <label for="exploitationPlan" class="button-secondary extra-margin">+ Upload</label>
+                  <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit" data-for-file-upload="exploitationPlan">Save</button>
+                </div>
+
+                <!--/* file is uploaded */-->
+                <th:block th:if="${model.exploitationPlanFileDetails}">
+                  <a th:href="@{/project/{id}/other-documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                  <button name="removeExploitationPlanClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
+                </th:block>
+              </form>
+              <!--/* not allowed to edit */-->
+              <th:block th:unless="${model.isEditable()}">
+                <a th:if="${model.exploitationPlanFileDetails}" th:href="@{/project/{id}/other-documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by lead partner</p>
               </th:block>
           </div>
-    </form>
 
-    <th:block th:unless="${model.isEditable()}">
-
-    </th:block>
-
+      <form th:if="${model.isShowSubmitDocumentsButton()}" action="#">
+          <p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
+          <!--/* todo for mr Brent, js-modal */-->
+          <button class="button">Submit documents</button>
+      </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
