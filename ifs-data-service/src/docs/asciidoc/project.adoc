@@ -155,7 +155,7 @@ include::{snippets}/project/update-banks-detail/curl-request.adoc[]
 include::{snippets}/project/update-banks-detail-with-invalid-details-returns-errors/http-response.adoc[]
 
 
-=== Upload Collaboration Document during Project Setup
+=== Upload Collaboration Agreement Document during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
 ==== Request
@@ -169,3 +169,18 @@ include::{snippets}/project/add-collaboration-agreement/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/add-collaboration-agreement/curl-request.adoc[]
+
+
+=== Update Collaboration Agreement document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/update-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/update-collaboration-agreement/request-parameters.adoc[]
+include::{snippets}/project/update-collaboration-agreement/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/update-collaboration-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-collaboration-agreement/curl-request.adoc[]

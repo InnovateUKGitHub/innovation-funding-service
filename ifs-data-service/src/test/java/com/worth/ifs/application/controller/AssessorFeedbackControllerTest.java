@@ -66,7 +66,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         assertFileUpdateProcess("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
                 asMap("applicationId", "123"),
                 assessorFeedbackServiceMock, updateCall).
-                andDo(documentUpdateAssessorFeedbackDocument());
+                andDo(documentFileUpdateMethod(document, asListOfPairs("applicationId", "123"), emptyList()));
     }
 
     @Test

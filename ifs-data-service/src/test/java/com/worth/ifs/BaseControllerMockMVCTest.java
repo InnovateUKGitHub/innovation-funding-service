@@ -59,15 +59,11 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -383,6 +379,34 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                         fieldWithPath("mediaType").description("Media type of the FileEntry that was created"),
                         fieldWithPath("filesizeBytes").description("File size in bytes of the FileEntry that was created")
                 ));
+    }
+
+    protected RestDocumentationResultHandler documentFileUpdateMethod(RestDocumentationResultHandler document) {
+        return documentFileUpdateMethod(document, emptyList(), emptyList());
+    }
+
+    protected RestDocumentationResultHandler documentFileUpdateMethod(RestDocumentationResultHandler document,
+                                                                    List<Pair<String, String>> additionalRequestParameters,
+                                                                    List<Pair<String, String>> additionalHeaders) {
+
+        List<ParameterDescriptor> requestParameters = new ArrayList<>();
+        requestParameters.add(parameterWithName("filename").description("The filename of the file being uploaded"));
+        additionalRequestParameters.forEach(nvp -> requestParameters.add(parameterWithName(nvp.getKey()).description(nvp.getValue())));
+
+        List<HeaderDescriptor> headers = new ArrayList<>();
+        headers.add(headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf"));
+        headers.add(headerWithName("Content-Length").description("The Content Length of the binary file data being uploaded in bytes"));
+        headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
+        additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
+
+        return document.snippets(
+                requestParameters(
+                        requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
+                ),
+                requestHeaders(
+                        additionalHeaders.toArray(new HeaderDescriptor[additionalHeaders.size()])
+                ),
+                requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")));
     }
 
     protected Supplier<InputStream> fileUploadInputStreamExpectations(String expectedContent) {

@@ -380,7 +380,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         BiFunction<ProjectService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
                 (service, fileToUpload) -> service.updateCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload);
+        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUpdateMethod(document));
     }
 
     @Test
