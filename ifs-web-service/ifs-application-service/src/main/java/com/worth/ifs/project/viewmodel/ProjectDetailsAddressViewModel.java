@@ -3,7 +3,7 @@ package com.worth.ifs.project.viewmodel;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 
-public class ProjectDetailsAddressViewModel {
+public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewModel {
     private Long projectId;
     private String projectNumber;
     private String projectName;

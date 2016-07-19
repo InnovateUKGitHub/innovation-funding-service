@@ -98,7 +98,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
     
     @Test
-    public void testCompetitionDetailsProjectManager() throws Exception {
+    public void testProjectDetailsProjectManager() throws Exception {
     	Long projectId = 20L;
 
         CompetitionResource competitionResource = newCompetitionResource().build();
@@ -117,6 +117,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
 
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())

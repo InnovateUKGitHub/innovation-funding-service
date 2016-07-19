@@ -3,11 +3,11 @@ package com.worth.ifs.finance.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.domain.Organisation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -140,7 +140,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         FileEntryResource fileEntry = newFileEntryResource().build();
 
-        when(costServiceMock.getFileContents(123)).thenReturn(serviceSuccess(Pair.of(fileEntry, () -> null)));
+        when(costServiceMock.getFileContents(123)).thenReturn(serviceSuccess(new BasicFileAndContents(fileEntry, () -> null)));
 
         mockMvc.perform(get("/applicationfinance/financeDocument/fileentry?applicationFinanceId=123"))
                 .andExpect(status().isOk())

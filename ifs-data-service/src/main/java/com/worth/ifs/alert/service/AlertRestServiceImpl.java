@@ -47,11 +47,11 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
 
     @Override
     public RestResult<Void> delete(final Long id) {
-        return deleteWithRestResult(alertRestURL + "/" + id, Void.class);
+        return deleteWithRestResult(alertRestURL + "/" + id);
     }
 
     @Override
     public RestResult<Void> deleteAllByType(final AlertType type) {
-        return deleteWithRestResult(alertRestURL + "/delete/" + type.name(), Void.class);
+        return deleteWithRestResult(alertRestURL + "/delete/" + type.name());
     }
 }
