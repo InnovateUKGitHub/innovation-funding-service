@@ -23,13 +23,12 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public void update(MilestoneResource milestone) {
-       // milestoneRestService.update(milestone).getSuccessObjectOrThrowException();
+    public void update(MilestoneResource milestone, Long competitionId) {
+        milestoneRestService.update(milestone, competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public void create(MilestoneResource milestone) {
-
+    public MilestoneResource create() {
+        return milestoneRestService.create().getSuccessObjectOrThrowException();
     }
-
 }

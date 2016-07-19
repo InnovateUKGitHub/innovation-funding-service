@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Integration test for testing the rest services of the milestone controller
@@ -39,7 +39,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Rollback
     @Test
-    public void test_getAllDatesByCompetitionId() throws Exception {
+    public void testGetAllDatesByCompetitionId() throws Exception {
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
@@ -49,7 +49,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Rollback
     @Test
-    public void testEmpty_getAllDatesByCompetitionId() throws Exception {
+    public void testEmptyGetAllDatesByCompetitionId() throws Exception {
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(COMPETITION_ID_INVALID);
         assertTrue(milestoneResult.isSuccess());
         List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
@@ -62,23 +62,36 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     public void testCreateMilestone() throws Exception {
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
-        List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
-        assertNotNull(milestone);
-        assertTrue(milestone.size() == 5);
-        createNewMilestone();
-        List<MilestoneResource> milestones = (List<MilestoneResource>) controller.getAllDatesByCompetitionId(COMPETITION_ID_VALID);
-        assertTrue(milestones.size() == 6L);
 
+        List<MilestoneResource> milestones = milestoneResult.getSuccessObject();
+        assertNotNull(milestones);
+        assertTrue(milestones.size() == 5);
+        Long id = milestones.get(milestones.size() -1).getId();
 
+        MilestoneResource newMilestone = createNewMilestone();
+        assertNotNull(newMilestone.getId());
+        assertNull(newMilestone.getName());
+        assertNull(newMilestone.getDate());
+        assertNull(newMilestone.getCompetition());
+    }
+
+    @Rollback
+    @Test
+    public void testUpdateMilestone() throws Exception {
+
+        RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(COMPETITION_ID_VALID);
+        assertTrue(milestoneResult.isSuccess());
+        List<MilestoneResource> milestones = milestoneResult.getSuccessObject();
+
+        MilestoneResource milestone = milestones.get(0);
+        milestone.setName("testUpdate");
+        milestone.setDate(LocalDateTime.now());
 
     }
 
     private MilestoneResource createNewMilestone() {
         RestResult<MilestoneResource> milestoneResult = controller.create();
         assertTrue(milestoneResult.isSuccess());
-        MilestoneResource milestone = milestoneResult.getSuccessObject();
-        assertThat(milestone.getName(), isEmptyOrNullString());
-        return milestone;
-
+        return  milestoneResult.getSuccessObject();
     }
 }
