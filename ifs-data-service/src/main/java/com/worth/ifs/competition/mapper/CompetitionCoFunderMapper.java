@@ -17,7 +17,9 @@ public abstract class CompetitionCoFunderMapper {
         CompetitionCoFunderResource resource = new CompetitionCoFunderResource();
         resource.setCoFunder(domain.getCoFunder());
         resource.setCoFunderBudget(domain.getCoFunderBudget());
-        resource.setCompetitionId(domain.getCompetition().getId());
+        if (domain.getCompetition() != null) {
+            resource.setCompetitionId(domain.getCompetition().getId());
+        }
         return resource;
     }
 

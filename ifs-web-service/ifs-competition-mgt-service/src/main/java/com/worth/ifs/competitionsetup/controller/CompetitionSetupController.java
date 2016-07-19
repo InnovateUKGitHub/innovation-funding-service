@@ -98,7 +98,7 @@ public class CompetitionSetupController {
 
         return "competition/setup";
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/initial", method = RequestMethod.POST)
     public String submitInitialSectionDetails(@Valid @ModelAttribute("competitionSetupForm") InitialDetailsForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -204,5 +204,6 @@ public class CompetitionSetupController {
 
         return "competition/setup";
     }
+
 
 }

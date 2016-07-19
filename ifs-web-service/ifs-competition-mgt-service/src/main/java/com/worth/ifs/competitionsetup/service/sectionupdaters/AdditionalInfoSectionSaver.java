@@ -1,6 +1,7 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
@@ -32,6 +33,13 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 		competition.setBudgetCode(additionalInfoForm.getBudgetCode());
 		competition.setPafCode(additionalInfoForm.getPafNumber());
 		additionalInfoForm.setCompetitionCode(competition.getCode());
+
+		additionalInfoForm.getCoFunders().forEach(coFunderForm -> {
+			CompetitionCoFunderResource competitionCoFunderResource = new CompetitionCoFunderResource();
+			competitionCoFunderResource.setCoFunder(coFunderForm.getCoFunder());
+			competitionCoFunderResource.setCoFunderBudget(coFunderForm.getCoFunderBudget());
+			competition.getCoFunders().add(competitionCoFunderResource);
+		});
 
         competitionService.update(competition);
 	}
