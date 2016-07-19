@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
 
 import java.util.List;
@@ -10,10 +11,10 @@ import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResource
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessorFormInputResponseResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServiceUnitTest<AssessorFormInputResponseRestServiceImpl> {
-
     private static String assessorFormInputResponseRestUrl = "/assessment";
 
     @Override
@@ -24,7 +25,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     }
 
     @Test
-    public void getAllAssessorFormInputResponses() throws Exception {
+    public void testGetAllAssessorFormInputResponses() throws Exception {
         List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
                 .build(2);
 
@@ -36,7 +37,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     }
 
     @Test
-    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
+    public void testGetAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
         List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
                 .build(2);
 
@@ -46,5 +47,16 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         setupGetWithRestResultExpectations(format("%s/assessment/%s/question/%s", assessorFormInputResponseRestUrl, assessmentId, questionId), assessorFormInputResponseResourceListType(), expected, OK);
         List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).getSuccessObject();
         assertSame(expected, response);
+    }
+
+    @Test
+    public void testUpdateFormInputResponse() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+        String value = "Feedback";
+
+        setupPutWithRestResultExpectations(format("%s/%s/%s", assessorFormInputResponseRestUrl, formInputId, assessmentId), value, OK);
+        final RestResult<Void> response = service.updateFormInputResponse(assessmentId, formInputId, value);
+        assertTrue(response.isSuccess());
     }
 }

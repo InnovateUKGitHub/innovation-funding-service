@@ -36,5 +36,10 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(Long assessmentId, Long questionId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> updateFormInputResponse(Long assessmentId, Long formInputId, String value) {
+            return null;
+        }
     }
 }

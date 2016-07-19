@@ -33,4 +33,9 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(Long assessmentId, Long questionId) {
         return getWithRestResult(format("%s/assessment/%s/question/%s", assessorFormInputResponseRestUrl, assessmentId, questionId), assessorFormInputResponseResourceListType());
     }
+
+    @Override
+    public RestResult<Void> updateFormInputResponse(Long assessmentId, Long formInputId, String value) {
+        return putWithRestResult(format("%s/%s/%s", assessorFormInputResponseRestUrl, formInputId, assessmentId), value, Void.class);
+    }
 }

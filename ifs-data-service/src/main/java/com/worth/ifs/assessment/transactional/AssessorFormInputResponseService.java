@@ -17,4 +17,6 @@ public interface AssessorFormInputResponseService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(Long assessmentId, Long questionId);
 
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> updateFormInputResponse(Long assessmentId, Long formInputId, String value);
 }

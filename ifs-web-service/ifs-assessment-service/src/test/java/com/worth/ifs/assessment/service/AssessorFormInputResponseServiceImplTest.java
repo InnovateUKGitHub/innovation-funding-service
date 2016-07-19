@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -10,10 +11,10 @@ import java.util.List;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AssessorFormInputResponseServiceImplTest extends BaseServiceUnitTest<AssessorFormInputResponseService> {
-
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
@@ -21,7 +22,6 @@ public class AssessorFormInputResponseServiceImplTest extends BaseServiceUnitTes
     protected AssessorFormInputResponseService supplyServiceUnderTest() {
         return new AssessorFormInputResponseServiceImpl();
     }
-
 
     @Test
     public void testGetAllAssessorFormInputResponses() throws Exception {
@@ -38,6 +38,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseServiceUnitTes
         verify(assessorFormInputResponseRestService, only()).getAllAssessorFormInputResponses(assessmentId);
     }
 
+
     @Test
     public void testGetAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
         List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
@@ -52,6 +53,20 @@ public class AssessorFormInputResponseServiceImplTest extends BaseServiceUnitTes
 
         assertSame(expected, response);
         verify(assessorFormInputResponseRestService, only()).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
+    }
+
+    @Test
+    public void updateFormInputResponse() throws Exception {
+        final Long assessmentId = 1L;
+        final Long formInputId = 2L;
+        final String value = "Feedback";
+
+        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value)).thenReturn(restSuccess());
+
+        final ServiceResult<Void> result = service.updateFormInputResponse(assessmentId, formInputId, value);
+        assertTrue(result.isSuccess());
+
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessmentId, formInputId, value);
     }
 
 }
