@@ -46,7 +46,7 @@ Password all lower case
 
 Password all upper case
     [Documentation]    INFUND-1147
-    [Tags]    Pending
+    [Tags]    Pending   # TODO
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567

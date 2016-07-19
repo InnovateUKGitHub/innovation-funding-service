@@ -1,46 +1,90 @@
-<!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-</head>
-<body class="assessment-details">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Funding'"  th:remove="tag"></div>
+    </head>
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+    <body th:with="context='assessment'" class="assessment assessment-finances-summary">
+        <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+        <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${assessmentId})},daysPercentage=${currentCompetition.assessmentDaysLeftPercentage},daysLeft=${currentCompetition.assessmentDaysLeft}" th:remove="tag" />
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+            <div class="page-title">
+                <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+                <h1 class="heading-xlarge">Funding</h1>
+            </div>
 
-	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Funding'})" th:remove="tag" />
+            <h2 class="heading-medium">Finances summary</h2>
+            <div class="form-group">
+                <div style="overflow: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">&nbsp;</th>
+                                <th scope="col" class="numeric">Total costs</th>
+                                <th scope="col" class="numeric width-small">
+                                % Grant
+                            </th>
+                            <th scope="col" class="numeric width-small-medium">
+                                Funding sought
+                            </th>
+                            <th scope="col" class="numeric width-medium">
+                                Other public sector funding
+                            </th>
+                            <th scope="col" class="numeric width-small-medium">
+                                Contribution to project
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="applicationOrganisation : ${applicationOrganisations}">
+                                <th scope="row">
+                                    <div>
+                                        <div th:text="${applicationOrganisation.name}" />
+                                        <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}">
+                                            <small>Lead organisation</small>
+                                        </div>
+                                        <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
+                                            <small>Partner</small>
+                                        </div>
+                                    </div>
+                                </th>
+                                <div th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                                    <td class="numeric">
+                                        <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
+                                    </td>
+                                    <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
+                                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
+                                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
+                                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                                </div>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total</th>
+                                <td class="numeric">
+                                    <strong th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
+                                </td>
+                                <td />
+                                <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalFundingSought, 0, 'COMMA', 0, 'POINT')}" />
+                                <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" />
+                                <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalContribution, 0, 'COMMA', 0, 'POINT')}" />
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <div class="cf">
-        <div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
-        <div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag"/>
-    </div>
-    
+            <h2 class="heading-medium extra-margin">Project cost breakdown</h2>
+            <div th:include="finance/finance-summary :: financial_summary_table" th:remove="tag"/>
 
-    <ul class="pagination extra-margin">
-        <li class="prev">
-            <a rel="prev" title="Navigate to previous part" href="/prototypes/984-assessor-question9">
-                <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">9. Funding</span>
-            </a>
-        </li>
-    </ul>
+            <a class="button-secondary" th:href="@{/{id}(id=${assessmentId})}">Return to assessment overview</a>
 
-<a href="/prototypes/984-assessor-application-overview" class="button-secondary">Save and return to assessment overview</a>
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+        </main>
 
-	<!-- END OFHARDCODED PROTOTYPE HTML -->
-
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-</main>
-
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
-</body>
+        <div th:include="fragments/layout :: footer" th:remove="tag"></div>
+        <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+    </body>
 </html>
