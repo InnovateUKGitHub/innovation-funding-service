@@ -35,8 +35,6 @@ Error should not be visible when the text area is not empty
 *** Keywords ***
 the "Project Summary" question is empty
     the user enters text to a text field     css=#form-input-11 .editor     ${empty}
-    # Clear Element Text    css=#form-input-11 .editor
-    # Press Key    css=#form-input-11 .editor    \\8
 
 the applicant marks the public description question as complete
     the user clicks the button/link    css=#form-input-11 .buttonlink[name="mark_as_complete"]
