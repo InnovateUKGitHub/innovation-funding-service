@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
@@ -21,7 +22,9 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
     }
 
     public static ProjectResourceBuilder newProjectResource() {
-        return new ProjectResourceBuilder(emptyList()).with(uniqueIds());
+        return new ProjectResourceBuilder(emptyList()).
+                with(uniqueIds()).
+                with(idBasedNames("Project "));
     }
 
     @Override

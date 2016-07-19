@@ -10,8 +10,6 @@ import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewM
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/project/{projectId}/other-documents")
 public class ProjectOtherDocumentsController {
 
-    private static final Log LOG = LogFactory.getLog(ProjectOtherDocumentsController.class);
     private static final String FORM_ATTR = "form";
 
     @Autowired
