@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  th:remove="tag"></div>
 </head>
-<body class="assessment assessment-overview">
+<body th:with="context='assessment'" class="assessment assessment-overview">
 
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 <div th:include="fragments/modals :: reject-assesment-modal" th:remove="tag" />
@@ -13,14 +13,14 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-    <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor-comp-dashboard},daysPercentage=${daysLeftPercentage},daysLeft=${daysLeft}"  th:remove="tag"></div>
+    <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${currentCompetition.id})},daysPercentage=${daysLeftPercentage},daysLeft=${daysLeft}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+        <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
         <h1 class="heading-xlarge">Assessment overview</h1>
     </div>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="assesment-overview">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="assessment-overview">
 
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
@@ -29,15 +29,14 @@
               <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
-                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication})"></div>
+                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication}, assessmentId=${assessmentId})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
                     <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}"  th:if="${childSection.id == 8}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="'/assessment/'+${currentApplication.id}+'/question/'+${childSection.id}"
-                                       th:text="${childSection.name}" />
+                                    <a th:href="@{/{id}/finances(id=${assessmentId})}" th:text="${childSection.name}" />
                                 </h3>
                             </div>
                         </li>
@@ -57,7 +56,7 @@
     </form>
 
     <div class="alignright">
-        <a class="button large" href="#">Review assesment</a>
+        <a class="button large" href="#">Review assessment</a>
    </div>
 
    <details>

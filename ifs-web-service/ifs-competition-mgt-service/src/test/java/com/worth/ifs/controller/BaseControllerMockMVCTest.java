@@ -3,7 +3,7 @@ package com.worth.ifs.controller;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.controller.ErrorControllerAdvice;
+import com.worth.ifs.competition.controller.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
@@ -53,6 +53,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .addFilter(new CookieFlashMessageFilter())
                 .setLocaleResolver(localeResolver)
                 .setHandlerExceptionResolvers(createExceptionResolver())
+                .setCustomArgumentResolvers(new ValidationHandlerMethodArgumentResolver())
                 .setViewResolvers(viewResolver())
                 .build();
         

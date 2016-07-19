@@ -2,22 +2,31 @@ package com.worth.ifs.project.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static com.worth.ifs.file.controller.FileControllerUtils.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -28,6 +37,13 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private BankDetailsService bankDetailsService;
+
+    @Autowired
+    @Qualifier("projectSetupOtherDocumentsFileValidator")
+    private FileHttpHeadersValidator fileValidator;
 
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -97,8 +113,125 @@ public class ProjectController {
 
 	@RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
-                                                  @RequestBody MonitoringOfficerResource monitoringOfficerResource) {
+                                                  @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
 
-        return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource).toPutResponse();
+        return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
+                .andOnSuccess(() -> projectService.notifyMonitoringOfficer(monitoringOfficerResource))
+                .toPutResponse();
+    }
+    @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
+    public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
+                                                                            @PathVariable("userId") final Long userId){
+        return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details", method = POST)
+    public RestResult<Void> updateBanksDetail(@RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+        return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details", method = GET, params = "bankDetailsId")
+    public RestResult<BankDetailsResource> getBankDetails(@RequestParam("bankDetailsId") final Long bankDetailsId) {
+        return bankDetailsService.getById(bankDetailsId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details", method = GET, params = "organisationId")
+    public RestResult<BankDetailsResource> getBankDetailsByOrganisationId(@PathVariable("projectId") final Long projectId,
+                                                                          @RequestParam("organisationId") final Long organisationId){
+        return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = POST, produces = "application/json")
+    public RestResult<FileEntryResource> addCollaborationAgreementDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @PathVariable(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+            projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+        );
+    }
+
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = GET)
+    public @ResponseBody
+    ResponseEntity<Object> getCollaborationAgreementFileContents(
+            @PathVariable("projectId") long projectId) throws IOException {
+
+        return handleFileDownload(() -> projectService.getCollaborationAgreementFileContents(projectId));
+    }
+
+    @RequestMapping(value = "/{projectId}/collaboration-agreement/details", method = GET, produces = "application/json")
+    public RestResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(
+            @PathVariable("projectId") long projectId) throws IOException {
+
+        return projectService.getCollaborationAgreementFileEntryDetails(projectId).toGetResponse();
+    }
+
+
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = PUT, produces = "application/json")
+    public RestResult<Void> updateCollaborationAgreementDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @PathVariable(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+    }
+
+    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = DELETE, produces = "application/json")
+    public RestResult<Void> deleteCollaborationAgreementDocument(
+            @PathVariable("projectId") long projectId) throws IOException {
+
+        return projectService.deleteCollaborationAgreementFile(projectId).toDeleteResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = POST, produces = "application/json")
+    public RestResult<FileEntryResource> addExploitationPlanDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @PathVariable(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+    }
+
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = GET)
+    public @ResponseBody
+    ResponseEntity<Object> getExploitationPlanFileContents(
+            @PathVariable("projectId") long projectId) throws IOException {
+
+        return handleFileDownload(() -> projectService.getExploitationPlanFileContents(projectId));
+    }
+
+    @RequestMapping(value = "/{projectId}/exploitation-plan/details", method = GET, produces = "application/json")
+    public RestResult<FileEntryResource> getExploitationPlanFileEntryDetails(
+            @PathVariable("projectId") long projectId) throws IOException {
+
+        return projectService.getExploitationPlanFileEntryDetails(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = PUT, produces = "application/json")
+    public RestResult<Void> updateExploitationPlanDocument(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @PathVariable(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+    }
+
+    @RequestMapping(value = "/{projectId}/exploitation-plan", method = DELETE, produces = "application/json")
+    public RestResult<Void> deleteExploitationPlanDocument(
+            @PathVariable("projectId") long projectId) throws IOException {
+
+        return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 }

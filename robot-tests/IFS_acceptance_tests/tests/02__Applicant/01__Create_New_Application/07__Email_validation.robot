@@ -2,6 +2,7 @@
 Documentation     -INFUND-885: As an applicant I want to be able to submit a username (email address) and password combination to create a new profile so I can log into the system
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -95,12 +96,14 @@ Invalid email no @ symbol
     And the user should see an error    Please enter a valid email address
 
 User can not login with the invalid email
+    [Tags]    Pending
+    # TODO Pending due to INFUND-3995
     Then the user cannot login with the invalid email    ${invalid_email_no_at}
 
 Valid account creation
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
-    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -111,7 +114,7 @@ Valid account creation
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]
+    [Tags]    HappyPath
     Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith

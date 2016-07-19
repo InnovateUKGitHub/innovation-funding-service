@@ -32,6 +32,10 @@
 	h2 + [aria-hidden="false"] {
  		padding: 0 0 15px 0;
 	}
+	
+	.collapsible-content{
+		margin-bottom: 3em;
+	}
 
 	.question{
 		margin: 0 20px 20px 20px;
@@ -55,6 +59,19 @@
      	width: 90px;
      	text-align: right;
     }
+
+    .section-percentage{
+    	float: right;
+
+    	@include media-down(mobile) {
+			float: none;
+    	}
+    }
+
+    span[data-mirror]{
+		width: 180px;
+		text-align: right;
+	}
 
     @include media-down(mobile) {
 		span{

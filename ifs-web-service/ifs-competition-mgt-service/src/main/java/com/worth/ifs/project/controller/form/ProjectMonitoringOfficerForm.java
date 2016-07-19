@@ -1,10 +1,12 @@
 package com.worth.ifs.project.controller.form;
 
+import com.worth.ifs.commons.validation.ValidationConstants;
 import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
 /**
@@ -12,17 +14,22 @@ import java.util.Optional;
  */
 public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "Please provide a first name")
+    @NotEmpty(message = "Please enter a first name")
     private String firstName;
 
-    @NotEmpty(message = "Please provide a last name")
+    @NotEmpty(message = "Please enter a last name")
     private String lastName;
 
-    @NotEmpty(message = "Please provide an email address")
-    @Email(message = "Please provide a valid email address")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
+    @NotEmpty(message = "Please enter your email")
+    @Size(max = 256, message = "Your email address has a maximum length of 256 characters")
     private String emailAddress;
 
-    @NotEmpty(message = "Please provide a phone number")
+    @NotEmpty(message = "Please enter a phone number")
+    @Size.List ({
+            @Size(min=8, message="Input for your phone number has a minimum length of 8 characters"),
+            @Size(max=20, message="Input for your phone number has a maximum length of 20 characters")
+    })
     private String phoneNumber;
 
     // for spring form binding

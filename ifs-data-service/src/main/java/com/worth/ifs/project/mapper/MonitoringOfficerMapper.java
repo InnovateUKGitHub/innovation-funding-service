@@ -6,9 +6,6 @@ import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import org.mapstruct.Mapper;
 
-/**
- * Created by bronnyl on 6/27/16.
- */
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {

@@ -24,9 +24,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.*;
 
@@ -141,7 +139,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals("question", messages.getObjectName());
 
         assertThat(messages.getErrors(),
-                containsInAnyOrder(
+                contains(
                         allOf(
                                 hasProperty("errorKey", is("")),
                                 hasProperty("errorMessage", is("You should provide at least 1 source of other funding"))

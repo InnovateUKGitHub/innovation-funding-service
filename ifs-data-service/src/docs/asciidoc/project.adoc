@@ -90,6 +90,29 @@ include::{snippets}/project/get-project-users/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/get-project-users/curl-request.adoc[]
 
+=== Save Monitoring Officer
+==== Success
+===== Request
+include::{snippets}/project/save-monitoring-officer/http-request.adoc[]
+include::{snippets}/project/save-monitoring-officer/path-parameters.adoc[]
+include::{snippets}/project/save-monitoring-officer/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/save-monitoring-officer/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-monitoring-officer/curl-request.adoc[]
+
+==== Failure cases
+===== Save Monitoring Officer when project id in url does not match the project id in Monitoring Officer resource
+include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/http-response.adoc[]
+
+==== Save Monitoring Officer when project details are not yet submitted
+include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-response.adoc[]
+
+==== Save Monitoring Officer when unable to send notifications
+include::{snippets}/project/save-mo-when-unable-to-send-notifications/http-response.adoc[]
+
 === Is Submit Allowed
 ==== Success
 ===== Request
@@ -113,3 +136,170 @@ include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-pro
 
 ====== Curl Example
 include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]
+
+=== Update Bank Details
+==== Success
+===== Request
+include::{snippets}/project/update-banks-detail/http-request.adoc[]
+include::{snippets}/project/update-banks-detail/path-parameters.adoc[]
+include::{snippets}/project/update-banks-detail/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/update-banks-detail/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/update-banks-detail/curl-request.adoc[]
+
+==== Failure cases
+===== Update Bank Details with invalid input
+include::{snippets}/project/update-banks-detail-with-invalid-details-returns-errors/http-response.adoc[]
+
+
+=== Upload Collaboration Agreement Document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/add-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/add-collaboration-agreement/request-parameters.adoc[]
+include::{snippets}/project/add-collaboration-agreement/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/add-collaboration-agreement/http-response.adoc[]
+include::{snippets}/project/add-collaboration-agreement/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/add-collaboration-agreement/curl-request.adoc[]
+
+
+=== Get Collaboration Agreement file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-collaboration-agreement-file-details/http-request.adoc[]
+include::{snippets}/project/get-collaboration-agreement-file-details/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-collaboration-agreement-file-details/http-response.adoc[]
+include::{snippets}/project/get-collaboration-agreement-file-details/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-collaboration-agreement-file-details/curl-request.adoc[]
+
+
+
+=== Get Collaboration Agreement file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-collaboration-agreement-file-content/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-collaboration-agreement-file-content/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-collaboration-agreement-file-content/curl-request.adoc[]
+
+
+
+=== Update Collaboration Agreement document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/update-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/update-collaboration-agreement/request-parameters.adoc[]
+include::{snippets}/project/update-collaboration-agreement/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/update-collaboration-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-collaboration-agreement/curl-request.adoc[]
+
+
+=== Delete Collaboration Agreement document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/delete-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/delete-collaboration-agreement/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/delete-collaboration-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/delete-collaboration-agreement/curl-request.adoc[]
+
+
+=== Upload Exploitation Plan Document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/add-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/add-exploitation-plan/request-parameters.adoc[]
+include::{snippets}/project/add-exploitation-plan/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/add-exploitation-plan/http-response.adoc[]
+include::{snippets}/project/add-exploitation-plan/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/add-exploitation-plan/curl-request.adoc[]
+
+
+=== Get Exploitation Plan file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-exploitation-plan-file-details/http-request.adoc[]
+include::{snippets}/project/get-exploitation-plan-file-details/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-exploitation-plan-file-details/http-response.adoc[]
+include::{snippets}/project/get-exploitation-plan-file-details/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-exploitation-plan-file-details/curl-request.adoc[]
+
+
+
+=== Get Exploitation Plan file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-exploitation-plan-file-content/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-exploitation-plan-file-content/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-exploitation-plan-file-content/curl-request.adoc[]
+
+
+
+=== Update Exploitation Plan document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/update-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/update-exploitation-plan/request-parameters.adoc[]
+include::{snippets}/project/update-exploitation-plan/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/update-exploitation-plan/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-exploitation-plan/curl-request.adoc[]
+
+
+=== Delete Exploitation Plan document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/delete-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/delete-exploitation-plan/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/delete-exploitation-plan/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/delete-exploitation-plan/curl-request.adoc[]

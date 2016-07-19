@@ -13,12 +13,12 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
@@ -48,9 +48,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(profileController)
-                .setViewResolvers(viewResolver())
-                .build();
+        mockMvc = setupMockMvc(profileController, () -> loggedInUser, env, messageSource);
 
         user = newUserResource()
                 .withTitle("title")

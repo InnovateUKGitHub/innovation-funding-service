@@ -1,9 +1,9 @@
 *** Settings ***
 Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question
 Suite Setup       Run keywords    log in and create new application if there is not one already
-...               AND    Applicant goe to the application details page of the Robot application
+...               AND    Applicant goes to the application details page of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Pending    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -12,101 +12,129 @@ Resource          ../../../../resources/keywords/User_actions.robot
 Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
-Empty project title field
-    [Documentation]    -INFUND-43
-    [Tags]
-    # pending INFUND-2707
-    When the applicant clears the application title field
-    Then The applicant should get a validation error message    Please enter the full title of the project.
+Title field client side
+    [Documentation]    INFUND-43
+    ...
+    ...    INFUND-2843
+    Given the user should see the text in the page    Application details
+    When the user enters text to a text field    id=application_details-title    ${EMPTY}
+    And the user should see an error    Please enter the full title of the project
+    And the user enters text to a text field    id=application_details-title    Robot test application
+    And the applicant should not see the validation error any more
 
-Invalid date (Year)
-    [Documentation]    -INFUND-43
+Day field client side
+    [Documentation]    INFUND-43
+    ...
+    ...    INFUND-2843
     [Tags]    HappyPath
-    # pending INFUND-2707
-    And the applicant inserts an invalid date "18-11-2015"
-    Then the applicant should get a validation error message    Please enter a future date
-    And the field is empty    id=application_details-startdate_year
-    Then the applicant should get a validation error message    This field should be a number
-    And the applicant inserts "2016" in the Year field(valid date)
-    And the applicant should not see the validation error any more
+    [Setup]    The applicant inserts a valid date
+    When the user enters text to a text field    id=application_details-startdate_day    32
+    Then the user should see an error    Please enter a valid date
+    When the user enters text to a text field    id=application_details-startdate_day    0
+    Then the user should see an error    Please enter a valid date
+    When the user enters text to a text field    id=application_details-startdate_day    -1
+    Then the user should see an error    Please enter a valid date
+    When the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
+    Then the user should see an error    Please enter a valid date
+    When the applicant inserts a valid date
+    Then the applicant should not see the validation error any more
 
-Invalid date (day)
-    [Documentation]    -INFUND-43
+Month field client side
+    [Documentation]    INFUND-43
+    ...
+    ...    INFUND-2843
     [Tags]
-    # pending INFUND-2707
-    And the applicant inserts an input    id=application_details-startdate_day    32
-    And the applicant should get a validation error message    Please enter a valid date
-    And the applicant inserts an input    id=application_details-startdate_day    0
-    And the applicant should get a validation error message    Please enter a valid date
-    And the applicant inserts an input    id=application_details-startdate_day    -1
-    Then the applicant should get a validation error message    Please enter a valid date
-    And the field is empty    id=application_details-startdate_day
-    Then the applicant should get a validation error message    This field should be a number
-    And the applicant inserts an input    id=application_details-startdate_day    15
-    And the applicant should not see the validation error any more
+    [Setup]    The applicant inserts a valid date
+    When the user enters text to a text field    id=application_details-startdate_month    0
+    Then the user should see an error    Please enter a valid date
+    When the user enters text to a text field    id=application_details-startdate_month    13
+    Then the user should see an error    Please enter a valid date
+    When the user enters text to a text field    id=application_details-startdate_month    -1
+    Then the user should see an error    Please enter a valid date
+    When the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
+    Then the user should see an error    Please enter a valid date
+    When the applicant inserts a valid date
+    Then the applicant should not see the validation error any more
 
-Invalid date (month)
-    [Documentation]    -INFUND-43
-    [Tags]
-    # pending INFUND-2707
-    And the applicant inserts an input    id=application_details-startdate_month    0
-    And the applicant should get a validation error message    Please enter a valid date
-    When the applicant inserts an input    id=application_details-startdate_month    13
-    And the applicant should get a validation error message    Please enter a valid date
-    And the applicant inserts an input    id=application_details-startdate_month    -1
-    Then the applicant should get a validation error message    Please enter a valid date
-    ANd the field is empty    id=application_details-startdate_month
-    And the applicant should get a validation error message    This field should be a number
-    And the applicant inserts an input    id=application_details-startdate_month    09
-    And the applicant should not see the validation error any more
+Year field client side
+    [Documentation]    INFUND-43
+    ...
+    ...    INFUND-2843
+    [Tags]    HappyPath
+    [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+    ...    AND    the user enters text to a text field    id=application_details-duration    15
+    When the applicant inserts an invalid date
+    Then the user should see an error    Please enter a future date
+    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
+    Then the user should see an error    Please enter a future date
+    When the applicant inserts a valid date
+    Then the applicant should not see the validation error any more
 
-Invalid duration field
-    [Documentation]    -INFUND-43
-    [Tags]
-    # pending INFUND-2707
-    And the applicant inserts an input    id=application_details-duration    0
-    And the applicant should get a validation error message    Your project should last between 1 and 36 months
-    When the applicant inserts an input    id=application_details-duration    -1
-    And the applicant should get a validation error message    Your project should last between 1 and 36 months
-    And the field is empty    id=application_details-duration
-    Then the applicant should get a validation error message    This field should be a number
-    And the applicant inserts an input    id=application_details-duration    15
-    And the applicant should not see the validation error any more
+Duration field client side
+    [Documentation]    INFUND-43
+    ...
+    ...    INFUND-2843
+    [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+    ...    AND    the applicant inserts a valid date
+    When the user enters text to a text field    id=application_details-duration    0
+    Then the user should see an error    Please enter a valid duration between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    -1
+    Then the user should see an error    Please enter a valid duration between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
+    Then the user should see an error    Please enter a valid value
+    And the user enters text to a text field    id=application_details-duration    15
+    And the applicant should not see the validation error of the duration any more
+
+Application details server side
+    [Documentation]    INFUND-2843
+    [Tags]    Pending    HappyPath
+    # TODO pending INFUND-3999
+    Given the user should see the text in the page    Application details
+    When the user enters text to a text field    id=application_details-title    ${EMPTY}
+    Then the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
+    And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
+    And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
+    And the user enters text to a text field    id=application_details-duration    ${EMPTY}
+    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    Then The user should see an error    Please enter the full title of the project
+    And the user should see an error    Please enter a future date
+    And the user should see an error    Your project should last between 1 and 36 months
+    And the user should see the element    css=.error-summary-list
+    [Teardown]    And the user enters text to a text field    id=application_details-title    Robot test application
 
 Empty text area
-    [Documentation]    -INFUND-43
+    [Documentation]    INFUND-43
     [Tags]
-    # pending INFUND-2707
+    Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
-    Then the applicant should get a validation error message    Please enter some text
+    Then the user should see an error    Please enter some text
+    And the user enters some text in the text area
+    Then the applicant should not see the validation error any more
 
 *** Keywords ***
-the applicant inserts an input
-    [Arguments]    ${FIELD}    ${INPUT}
-    Clear Element Text    ${FIELD}
-    Input Text    ${FIELD}    ${INPUT}
-    focus    jQuery=button:contains("Save and")
-
-the field is empty
-    [Arguments]    ${EMPTY_FIELD}
-    Clear Element Text    ${EMPTY_FIELD}
-
 the applicant should not see the validation error any more
     Focus    css=.app-submit-btn
+    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error    mouse out    css=.editor
+    Focus    css=.app-submit-btn
+    sleep    300ms
+    wait until element is not visible    css=.error-message
 
-    the user should not see the element   css=.error-message
+the applicant inserts a valid date
+    Clear Element Text    id=application_details-startdate_day
+    Input Text    id=application_details-startdate_day    20
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    11
+    Clear Element Text    id=application_details-startdate_year
+    Input Text    id=application_details-startdate_year    2020
 
-the applicant inserts an invalid date "18-11-2015"
+the applicant inserts an invalid date
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    18
     Clear Element Text    id=application_details-startdate_year
     Input Text    id=application_details-startdate_year    2015
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    11
-
-the applicant inserts "2016" in the Year field(valid date)
-    Clear Element Text    id=application_details-startdate_year
-    Input Text    id=application_details-startdate_year    2016
 
 the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
@@ -115,16 +143,19 @@ the applicant clears the text area of the "Project Summary"
     Comment    Click Element    css=.fa-bold
     Sleep    300ms
 
-the applicant clears the application title field
-    Clear Element Text    id=application_details-title
-
-The applicant should get a validation error message
-    [Arguments]    ${validation error}
-    focus    jQuery=button:contains("Save and")
-    sleep    300ms
-    Run Keyword and ignore error    Wait Until Page Contains    ${validation_error}
-
-Applicant goe to the application details page of the Robot application
+Applicant goes to the application details page of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Application details
+
+the user enters some text in the text area
+    Input Text    css=#form-input-11 .editor    Test text
+    Mouse Out    css=#form-input-11 .editor
+
+the applicant should not see the validation error of the duration any more
+    Focus    css=.app-submit-btn
+    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error    mouse out    css=.editor
+    Focus    css=.app-submit-btn
+    sleep    300ms
+    Wait Until Page Does Not Contain    Please enter a valid value

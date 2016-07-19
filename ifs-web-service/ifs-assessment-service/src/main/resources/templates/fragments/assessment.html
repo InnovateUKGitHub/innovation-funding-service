@@ -2,6 +2,25 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 
+<!-- ======== Assessment - assessor feedback textarea and word count ======= -->
+<div th:fragment="assessment-form-textarea-wordcount (id, name, value, readonly, maxWords, currentWordsLeft)">
+    <div class="textarea-wrapped word-count">
+        <textarea th:id="'form-textarea-'+${id}"
+              th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+              th:field="*{value}"
+              th:readonly="${readonly}"
+              th:attrappend="data-max_words=${maxWords != null}?@{${maxWords}}"
+              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
+              >
+        </textarea>
+
+        <div class="textarea-footer">
+            <div th:include="question-type/form-elements :: form-word-count (maxWords=${maxWords}, currentWordsLeft=${currentWordsLeft})" th:remove="tag"/>
+        </div>
+    </div>
+</div>
+
+
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
 <div th:fragment="assessment-header-sub">
     <div class="sub-header">
@@ -33,9 +52,9 @@
 
 <!-- =================== Assessment feedback scope ============================== -->
 <div th:fragment="assessment-feedback-scope">
-    <h2 class="heading-small" th:text="${confirmationQuestion}"></h2>
+    <h2 class="heading-small">Is this application in scope?</h2>
     <fieldset class="inline">
-        <legend class="visuallyhidden" th:text="${confirmationQuestion}"></legend>
+        <legend class="visuallyhidden">Is this application in scope?</legend>
         <div class="form-group">
             <label class="block-label" for="assessor-question-confirmation-yes">
                 <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
@@ -72,9 +91,9 @@
         <div class="column-half">
             <h3 class="heading-small">Project timescales</h3>
             <p>Project start date:<br/>
-            <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
+            <span th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
             </p>
-            <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+            <p>Duration:<br/><span th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
         </div>
     </div>
 </div>

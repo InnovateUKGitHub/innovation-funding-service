@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INNFUND-1040: As an applicant I want to be able to create more than one application so that i can enter the same competition more than once
 Suite Setup       Delete the emails from both test mailboxes
-Force Tags        Create application
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -13,7 +13,7 @@ Logged in user can create a new application
     [Documentation]    INFUND-1040
     ...
     ...    INFUND-1223
-    [Tags]
+    [Tags]    HappyPath
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
@@ -31,7 +31,7 @@ Logged in user can create a new application
 
 Logged in user can choose to continue with an existing application
     [Documentation]    INFUND-1040
-    [Tags]
+    [Tags]    HappyPath
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")

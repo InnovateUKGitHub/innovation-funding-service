@@ -1,8 +1,9 @@
 *** Settings ***
-Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
+Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags
+Force Tags        Collaboration    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -51,7 +52,7 @@ The type of organisation navigates to the correct page
     [Documentation]    INFUND-1780
     ...
     ...    INFUND-1231
-    [Tags]    HappyPath
+    [Tags]
     When the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Find your business on Companies House
@@ -102,7 +103,7 @@ The type of the sub organisation navigates to the correct page
 
 Catapult search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult
+    [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    2
@@ -123,7 +124,7 @@ Catapult search (empty, invalid & valid inputs)
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
@@ -132,8 +133,8 @@ Catapult search (accept invitation flow)
 
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult    Email
-    Given the user opens the mailbox and verifies the email from
+    [Tags]    Email    HappyPath
+    Given the user opens the mailbox and verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd123
@@ -152,7 +153,7 @@ the radio button should have the new selection
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
 
 the user verifies the email
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}

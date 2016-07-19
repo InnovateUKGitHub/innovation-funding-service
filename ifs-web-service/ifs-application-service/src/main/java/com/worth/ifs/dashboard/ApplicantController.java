@@ -94,7 +94,8 @@ public class ApplicantController {
     }
 
     // TODO DW - INFUND-1555 - handle rest result
-    private Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
+    @SafeVarargs
+    private final Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(
@@ -104,7 +105,8 @@ public class ApplicantController {
             );
     }
 
-    private Map<Long, CompetitionResource> createCompetitionMap(List<ApplicationResource>... resources){
+    @SafeVarargs
+    private final Map<Long, CompetitionResource> createCompetitionMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(

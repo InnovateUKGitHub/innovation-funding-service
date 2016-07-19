@@ -4,19 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.stringsListType;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.form.domain.FormInputResponse}'s.
@@ -34,11 +33,11 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<String>> saveQuestionResponse(Long userId,
-                                                         Long applicationId,
-                                                         Long formInputId,
-                                                         String value,
-                                                         boolean ignoreEmpty) {
+    public RestResult<ValidationMessages> saveQuestionResponse(Long userId,
+                                                               Long applicationId,
+                                                               Long formInputId,
+                                                               String value,
+                                                               boolean ignoreEmpty) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("userId", userId);
@@ -46,7 +45,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
         node.put("ignoreEmpty", ignoreEmpty);
-        return postWithRestResult(formInputResponseRestURL + "/saveQuestionResponse/", node, stringsListType());
+        return postWithRestResult(formInputResponseRestURL + "/saveQuestionResponse/", node, ValidationMessages.class);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                 "&processRoleId=" + processRoleId +
                 "&filename=" + originalFilename;
 
-        final HttpHeaders headers = createHeader(contentType,  contentLength);
+        final HttpHeaders headers = createFileUploadHeader(contentType,  contentLength);
 
         return postWithRestResult(url, file, headers, FileEntryResource.class);
     }
@@ -71,7 +70,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                 "&applicationId=" + applicationId +
                 "&processRoleId=" + processRoleId;
 
-        return deleteWithRestResult(url, Void.class);
+        return deleteWithRestResult(url);
     }
 
     @Override
@@ -98,12 +97,5 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId) {
         String url = formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/" + formInputId + "/" + applicationId;
         return getWithRestResult(url, formInputResponseListType());
-    }
-
-    private HttpHeaders createHeader(String contentType, long contentLength){
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(contentType));
-        headers.setContentLength(contentLength);
-        return headers;
     }
 }

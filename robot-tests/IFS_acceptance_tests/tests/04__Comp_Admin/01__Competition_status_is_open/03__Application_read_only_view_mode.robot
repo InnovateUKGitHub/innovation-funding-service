@@ -5,7 +5,7 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
 ...               AND    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
 Suite Teardown    the user closes the browser
-Force Tags
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -14,8 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
-${valid_pdf_excerpt}    Adobe PDF is an ideal format for electronic document distribution
-${quarantine_warning}   This file has been quarantined by the virus scanner
+${quarantine_warning}    This file has been quarantined by the virus scanner
 
 *** Test Cases ***
 Comp admin can open the view mode of the application
@@ -24,23 +23,22 @@ Comp admin can open the view mode of the application
     ...    INFUND-2304
     ...
     ...    INFUND-2435
-    [Tags]    Competition management
+    [Tags]    HappyPath
     [Setup]    Run keywords    Log in as user    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
     ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
-
     Given log in as user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     When the user clicks the button/link    link=00000001
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element    link=Print application
     And the user should see the text in the page    A novel solution to an old problem
-    And the user should see the text in the page   ${valid_pdf}
+    And the user should see the text in the page    ${valid_pdf}
     And the user can view this file without any errors
-    # And the user should see the text in the page         ${quarantine_pdf}
+    # And the user should see the text in the page    ${quarantine_pdf}
     # nad the user cannot see this file but gets a quarantined message
 
-Comp admin should not be able to edit the finances and should view the detailed finance section for every partner
+Comp admin should not able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443
     ...    INFUND-2483
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
@@ -49,6 +47,16 @@ Comp admin should not be able to edit the finances and should view the detailed 
     And the user should see the text in the page    Funding breakdown
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
+    Then Logout as user
+    When Log in as user    &{collaborator1_credentials}
+    Then the user navigates to the page    ${YOUR_FINANCES_URL}
+    And the applicant edits the Subcontracting costs section
+    And the user reloads the page
+    And Logout as user
+    When Log in as user    &{Comp_admin1_credentials}
+    And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    And the user clicks the button/link    jQuery=button:contains("Finances Summary")
+    Then the user should see the correct finances change
 
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
@@ -59,17 +67,17 @@ the user uploads the file to the 'technical approach' question
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
-    the user should see the text in the page        Upload
+    the user should see the text in the page    Upload
 
 the user can view this file without any errors
-    the user clicks the button/link         link=testing.pdf(7 KB)
-    the user should see the text in the page    ${valid_pdf_excerpt}
+    the user clicks the button/link    link=testing.pdf(7 KB)
+    the user should not see an error in the page
     the user goes back to the previous page
 
 the user cannot see this file but gets a quarantined message
-    the user clicks the button/link      link=test_quarantine.pdf(7 KB)
-    the user should not see the text in the page    ${valid_pdf_excerpt}
-    the user should see the text in the page        ${quarantine_warning}
+    the user clicks the button/link    link=test_quarantine.pdf(7 KB)
+    the user should not see an error in the page
+    the user should see the text in the page    ${quarantine_warning}
 
 the finance summary calculations should be correct
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)    £127,059
@@ -83,3 +91,19 @@ the finance summary calculations should be correct
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £127,059
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+
+the applicant edits the Subcontracting costs section
+    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
+    the user should see the text in the page    Subcontractor name
+    Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    2000
+    input text    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
+    input text    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
+    input text    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
+    Mouse Out    css=input
+    focus    css=.app-submit-btn
+
+the user should see the correct finances change
+    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)    £129,059
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £129,059
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £2,000

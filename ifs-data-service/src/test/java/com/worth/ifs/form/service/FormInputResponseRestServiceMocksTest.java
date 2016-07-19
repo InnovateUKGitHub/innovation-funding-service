@@ -3,18 +3,18 @@ package com.worth.ifs.form.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.stringsListType;
-import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -49,12 +49,13 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
                 put("value", "Very good answer!").
                 put("ignoreEmpty", false);
 
-        List<String> returnedResponses = asList("A returned string", "A returned string 2");
+        List<Error> returnedResponses = asList(new Error("A returned string", BAD_REQUEST), new Error("A returned string 2", BAD_REQUEST));
+        ValidationMessages validationMessages = new ValidationMessages(returnedResponses);
 
-        setupPostWithRestResultExpectations(formInputResponseRestURL + "/saveQuestionResponse/", stringsListType(), entityUpdates, returnedResponses, OK);
+        setupPostWithRestResultExpectations(formInputResponseRestURL + "/saveQuestionResponse/", ValidationMessages.class, entityUpdates, validationMessages, OK);
 
-        List<String> responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccessObject();
-        assertEquals(returnedResponses, responses);
+        ValidationMessages responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccessObject();
+        assertEquals(returnedResponses, responses.getErrors());
     }
 
     @Test

@@ -2,7 +2,7 @@
 Documentation     INFUND-2602 As a competition administrator I want a view of the Application Overview page that allows me to upload the assessor feedback document so that this can be shared with the applicants
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Comp admin    Upload
+Force Tags        Upload    CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -30,17 +30,17 @@ Invalid Non pdf
 
 Valid upload to a successful application
     [Documentation]    INFUND-2602
-    [Tags]
+    [Tags]    HappyPath
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     And the user uploads the file    ${valid_pdf}
 
 Open and view the file
     [Documentation]    INFUND-2602
-    [Tags]
+    [Tags]    HappyPath
     Given the user should see the text in the page    ${valid_pdf}
     And the file has been scanned for viruses
     When the user clicks the button/link    link=${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf_excerpt}
+    Then the user should not see an error in the page
     [Teardown]    The user navigates to the page    ${successful_application_overview}
 
 Upload more than one file is impossible
@@ -51,7 +51,7 @@ Upload more than one file is impossible
 
 Remove the file
     [Documentation]    INFUND-2602
-    [Tags]
+    [Tags]    HappyPath
     Given the user should see the text in the page    ${valid_pdf}
     And the user should see the text in the page    Remove
     When the user clicks the button/link    name=removeAssessorFeedback
@@ -60,7 +60,7 @@ Remove the file
 
 Re-upload after removing
     [Documentation]    INFUND-2602
-    [Tags]
+    [Tags]    HappyPath
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     And the user uploads the file    ${valid_pdf}
     [Teardown]    the user clicks the button/link    name=removeAssessorFeedback
@@ -74,8 +74,8 @@ Upload a file to an unsuccessful application
 
 Download the file
     [Documentation]    INFUND-2602
-    [Tags]    Pending
-    # Pending until download functionality has been plugged in
+    [Tags]    Pending    HappyPath
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}

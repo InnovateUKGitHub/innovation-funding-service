@@ -1,6 +1,5 @@
 package com.worth.ifs.assessment.model;
 
-
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.form.AssessmentOverviewForm;
@@ -15,15 +14,11 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputRestService;
-import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -40,8 +35,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class AssessmentOverviewModelPopulator {
-    private static final Log LOG = LogFactory.getLog(AssessmentOverviewModelPopulator.class);
-
     @Autowired
     private ApplicationService applicationService;
     @Autowired
@@ -51,15 +44,9 @@ public class AssessmentOverviewModelPopulator {
     @Autowired
     private OrganisationService organisationService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private QuestionService questionService;
     @Autowired
-    private InviteRestService inviteRestService;
-    @Autowired
     private SectionService sectionService;
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
     @Autowired
     private ProjectService projectService;
     @Autowired
@@ -72,7 +59,6 @@ public class AssessmentOverviewModelPopulator {
     private FileEntryRestService fileEntryRestService;
     @Autowired
     private FormInputResponseService formInputResponseService;
-
 
     public void populateModel(Long assessmentId, Long userId, AssessmentOverviewForm form, Model model) throws InterruptedException, ExecutionException {
         final ApplicationResource application = getApplicationForAssessment(assessmentId);
@@ -93,8 +79,9 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
-        model.addAttribute(("daysLeftPercentage"),competition.getAssessmentDaysLeftPercentage());
-        model.addAttribute(("daysLeft"),competition.getAssessmentDaysLeft());
+        model.addAttribute("daysLeftPercentage",competition.getAssessmentDaysLeftPercentage());
+        model.addAttribute("daysLeft",competition.getAssessmentDaysLeft());
+        model.addAttribute("assessmentId",assessmentId);
 
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(application.getId());
         addAppendices(application.getId(), responses, model);
@@ -157,7 +144,7 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private Future<ProcessRoleResource> getProcessRoleForAssessment(final AssessmentResource assessment) {
-        return processRoleService.getById(assessment.getId());
+        return processRoleService.getById(assessment.getProcessRole());
     }
 
     private Long getApplicationIdForProcessRole(final Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {

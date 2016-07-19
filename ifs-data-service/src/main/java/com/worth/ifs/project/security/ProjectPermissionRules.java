@@ -37,4 +37,53 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Comp admins can view Monitoring Officers on any Project")
+    public boolean compAdminsCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Partners can view monitoring officers on Projects that they are partners on")
+    public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "ASSIGN_MONITORING_OFFICER",
+            description = "Comp admins can assign Monitoring Officers on any Project")
+    public boolean compAdminsCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "UPLOAD_OTHER_DOCUMENTS",
+            description = "The lead partners can upload Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
+    public boolean leadPartnersCanUploadOtherDocuments(ProjectResource project, UserResource user) {
+        return isLeadPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_OTHER_DOCUMENTS",
+            description = "Partners can download Other Documents (Collaboration Agreement, Exploitation Plan) that their lead partners have uploaded")
+    public boolean partnersCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_OTHER_DOCUMENTS_DETAILS",
+            description = "Partners can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
+    public boolean partnersCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "DELETE_OTHER_DOCUMENTS",
+            description = "The lead partners can delete Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
+    public boolean leadPartnersCanDeleteOtherDocuments(ProjectResource project, UserResource user) {
+        return isLeadPartner(project.getId(), user.getId());
+    }
 }

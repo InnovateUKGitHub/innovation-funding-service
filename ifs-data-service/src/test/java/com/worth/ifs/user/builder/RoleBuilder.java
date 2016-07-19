@@ -20,6 +20,10 @@ public class RoleBuilder extends BaseBuilder<Role, RoleBuilder> {
         return new RoleBuilder(emptyList()).with(uniqueIds());
     }
 
+    public static RoleBuilder newRole(UserRoleType roleType) {
+        return newRole().withType(roleType);
+    }
+
     @Override
     protected RoleBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Role>> actions) {
         return new RoleBuilder(actions);

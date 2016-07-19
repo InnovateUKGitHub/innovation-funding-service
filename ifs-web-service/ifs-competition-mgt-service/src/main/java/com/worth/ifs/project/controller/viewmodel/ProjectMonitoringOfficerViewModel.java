@@ -6,11 +6,14 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 /**
  * View model to back the Monitoring Officer page
  */
 public class ProjectMonitoringOfficerViewModel {
 
+    private Long projectId;
     private String projectTitle;
     private String area;
     private LocalDate targetProjectStartDate;
@@ -21,16 +24,21 @@ public class ProjectMonitoringOfficerViewModel {
     private boolean editMode;
     private List<String> primaryAddressLines;
 
-    public ProjectMonitoringOfficerViewModel(String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames, CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer, boolean editMode) {
+    public ProjectMonitoringOfficerViewModel(Long projectId, String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames, CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer, boolean editMode) {
+        this.projectId = projectId;
         this.projectTitle = projectTitle;
         this.area = area;
-        this.primaryAddressLines = primaryAddress.getNonEmptyLines();
+        this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLines() : emptyList();
         this.targetProjectStartDate = targetProjectStartDate;
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.competitionSummary = competitionSummary;
         this.existingMonitoringOfficer = existingMonitoringOfficer;
         this.editMode = editMode;
+    }
+
+    public Long getProjectId() {
+        return projectId;
     }
 
     public String getProjectTitle() {
@@ -81,7 +89,7 @@ public class ProjectMonitoringOfficerViewModel {
         return isReadOnly();
     }
 
-    public boolean isDisplayAssignMonitoringOfficerLink() {
+    public boolean isDisplayAssignMonitoringOfficerButton() {
         return isEditMode();
     }
 }

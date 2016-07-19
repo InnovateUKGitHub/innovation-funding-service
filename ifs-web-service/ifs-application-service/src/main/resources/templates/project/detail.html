@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
 </head>
-<body class="project-detail">
+<body th:with="context='applicant'" class="project-detail">
 
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
 <div th:include="fragments/modals :: modal-project-details" th:remove="tag" />
@@ -16,7 +16,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <p class="subtitle" th:text="${#numbers.formatInteger(model.project.id,8)} + ': ' + ${model.app.getApplicationDisplayName()} "/>
+        <div th:include="fragments/elements :: project-title (projectId=${model.project.id}, projectName=${model.project.name})" th:remove="tag" />
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 

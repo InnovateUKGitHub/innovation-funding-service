@@ -164,7 +164,7 @@ the user should see the dropdown option selected
 the user submits the form
     Submit Form
     Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
+    Page Should Not Contain Button    something went wrong
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
@@ -210,11 +210,12 @@ The user enters text to a text field
     Wait Until Element Is Visible    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Mouse Out    ${TEXT_FIELD}
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
-    Wait Until Element Is Visible    ${BUTTON}
     click element    ${BUTTON}
 
 The user should see the text in the page
@@ -238,6 +239,9 @@ the user should not see an error in the page
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
+    Run Keyword And Ignore Error    Mouse Out    css=input
+    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    sleep    300ms
     wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
@@ -309,6 +313,20 @@ The element should be disabled
     Element Should Be Disabled    ${ELEMENT}
 
 the user opens the mailbox and verifies the email from
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+the user opens the mailbox and verifies the email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
@@ -323,15 +341,15 @@ the user opens the mailbox and verifies the email from
     close mailbox
 
 the user opens the mailbox and accepts the invitation to collaborate
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${ACCEPT_INVITE}=    Get From List    ${LINK}    1
-    log    ${ACCEPT_INVITE}
-    go to    ${ACCEPT_INVITE}
+    ${IFS_LINK}=    Get From List    ${LINK}    1
+    log    ${IFS_LINK}
+    go to    ${IFS_LINK}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
@@ -340,8 +358,17 @@ the user downloads the file from the link
     [Arguments]    ${filename}    ${download_link}
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${download_link}
-    sleep    2s
+    Download File    ${ALL_COOKIES}    ${download_link}    ${filename}
+    wait until keyword succeeds   300ms    1 seconds    Download should be done
+
+Download should be done
+    [Documentation]    Verifies that the directory has only one folder
+    ...                Returns path to the file
+    ${files}    List Files In Directory   ${DOWNLOAD_FOLDER}
+    Length Should Be    ${files}    1    Should be only one file in the download folder
+    ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
+    Log    File was successfully downloaded to ${file}
+    [Return]    ${file}
 
 the file should be downloaded
     [Arguments]    ${filename}
@@ -362,6 +389,19 @@ the user cannot see the option to upload a file on the page
     the user should not see the text in the page    Upload
 
 Delete the emails from both test mailboxes
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    Delete All Emails
+    close mailbox
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
+    Delete All Emails
+    close mailbox
+
+Delete the emails from the main test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
+Delete the emails from both main test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
@@ -500,10 +540,23 @@ the lead applicant invites a registered user
     The guest user opens the browser
 
 Open mailbox and verify the content
-    [Arguments]    ${USER}    ${CONTENT}
+    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
     [Documentation]    This Keyword checks the content of the 1st email in a given inbox
-    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
     ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    Delete All Emails
+    close mailbox
+
+Open mailbox and confirm received email
+    # TODO
+    #  this keyword has the same functionality as the Open mailbox and verify the content
+    #  once this is reviewed we can remove one of them
+    [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
+    [Documentation]    This Keyword searches the correct email using regex
+    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
+    ${WHICH_EMAIL}=    wait for email    toEmail=${USER}    timeout=150
+    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
     Should Not Be Empty    ${EMAIL_MATCH}
     Delete All Emails
     close mailbox

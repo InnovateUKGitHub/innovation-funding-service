@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Thank you for submitting your application'"  th:remove="tag" />
 </head>
-<body class="app-submitted">
+<body th:with="context='applicant'" class="app-submitted">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />

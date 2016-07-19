@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
@@ -21,7 +22,9 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
     }
 
     public static ProjectResourceBuilder newProjectResource() {
-        return new ProjectResourceBuilder(emptyList()).with(uniqueIds());
+        return new ProjectResourceBuilder(emptyList()).
+                with(uniqueIds()).
+                with(idBasedNames("Project "));
     }
 
     @Override
@@ -38,12 +41,16 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((id, project) -> setField("id", id, project), ids);
     }
 
-    public ProjectResourceBuilder withName(String name){
-        return with((project) -> project.setName(name));
+    public ProjectResourceBuilder withName(String... name){
+        return withArray((n, project) -> project.setName(n), name);
     }
 
     public ProjectResourceBuilder withApplication(ApplicationResource applicationResource){
         return with(project -> project.setApplication(applicationResource.getId()));
+    }
+
+    public ProjectResourceBuilder withApplication(Long... application){
+        return withArray((applicationId, project) -> project.setApplication(applicationId), application);
     }
 
     public ProjectResourceBuilder withTargetStartDate(LocalDate... dates) {
@@ -52,10 +59,6 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
 
     public ProjectResourceBuilder withAddress(AddressResource address) {
         return with(project -> project.setAddress(address));
-    }
-
-    public ProjectResourceBuilder withProjectManager(Long projectManager) {
-        return with(project -> project.setProjectManager(projectManager));
     }
 
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {

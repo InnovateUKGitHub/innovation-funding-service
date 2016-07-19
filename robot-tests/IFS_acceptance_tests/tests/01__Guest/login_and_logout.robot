@@ -18,7 +18,7 @@ Resource          ../../resources/keywords/User_actions.robot
 Log-out
     [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    Given the user should see the element        link=Sign out
+    Given the user should see the element    link=Sign out
     Logout as user
 
 Invalid Login
@@ -33,7 +33,7 @@ Valid login as Applicant
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Sign out
+    Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
@@ -42,93 +42,77 @@ Valid login as Collaborator
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Sign out
+    Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor    HappyPath     Pending
-    # Pending until Assessor Journey is completed
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Sign out
+    Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And the user should be logged-in as an Assessor
     [Teardown]    Logout as user
 
 Valid login as Comp Admin
     [Documentation]    INFUND-2130
-    [Tags]
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Sign out
+    Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
 Valid login as Project Finance role
-    [Documentation]     INFUND-2609
+    [Documentation]    INFUND-2609
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials   project.finance1@innovateuk.test    Passw0rd
-    And the user clicks the button/link     css=button[name="_eventId_proceed"]
-    Then the user should be redirected to the correct page without error checking   ${PROJECT_FINANCE_DASHBOARD_URL}
+    When the guest user enters the log in credentials    project.finance1@innovateuk.test    Passw0rd
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
     # note that I haven't used error checking on this redirect as this page will currently produce an error
-    # in sprint 9 PS we have created the role, which redirects to a page which will be created in sprint 10 PS
     # at that point this can be changed to include error checking
-
-
-
-Reset password (psw does not match)
-    [Documentation]    INFUND-1889
-    [Tags]    Email     Pending
-    # Pending until shib image drop 14
-    [Setup]    The guest user opens the browser
-    Given the user navigates to the page    ${LOGIN_URL}
-    When the user clicks the button/link    link=forgot your password?
-    And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
-    And the user clicks the button/link    css=input.button
-    Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user opens the mailbox and clicks the reset link
-    And the user should see the text in the page    Password reset
-    And the user enters text to a text field    id=id_password    Passw0rdnew
-    And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
-    And browser validations have been disabled
-    And the user clicks the button/link    jQuery=input[value*="Save password"]
-    And the user should see an error    Passwords must match
-    [Teardown]    TestTeardown User closes the browser
+    [Teardown]     the user closes the browser
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    HappyPath     Pending
-    # Pending until shib image drop 14
-    [Setup]    The guest user opens the browser
+    [Tags]    Email    HappyPath
+    [Setup]       Run Keywords    delete the emails from the main test mailbox
+    ...           AND             the guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
-    When the user clicks the button/link    link=forgot your password?
+    When the user clicks the button/link    link=Forgot your password?
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-
-Reset password (email step)
-    [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath    Pending
-    # Pending until shib image drop 14
-    [Setup]    The guest user opens the browser
     And the user opens the mailbox and clicks the reset link
     And the user should see the text in the page    Password reset
-    And the user enters text to a text field    id=id_password    Passw0rdnew
+
+Reset password validations
+    [Documentation]    INFUND-1889
+    [Tags]     Email
+    When the user enters text to a text field    id=id_password    Passw0rdnew
+    And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
+    And the user clicks the button/link    jQuery=input[value*="Save password"]
+    Then the user should see an error    Passwords must match
+
+Reset password user enters new psw
+    [Documentation]    INFUND-1889
+    [Tags]    Email    HappyPath
+    [Setup]    Clear the login fields
+    When the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    Passw0rdnew
     And the user clicks the button/link    jQuery=input[value*="Save password"]
-    And the user should see the text in the page    Your password is updated, you can now sign in with your new password
+    Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rd
+    And the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
     When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element        link=Sign out
+    Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
 
 *** Keywords ***
@@ -137,14 +121,29 @@ the user is not logged-in
     the user should not see the element    link=Sign out
 
 the guest user should get an error message
-    the user should see the text in the page    ${unsuccessful_login_message}
     the user should see the text in the page    Your username/password combination doesn't seem to work
     the user should not see the element    link=Sign out
-
 
 the user should be logged-in as an Assessor
     Title Should Be    Assessor Dashboard - Innovation Funding Service
 
 the user opens the mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    And the user opens the mailbox and verifies the email from
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+Clear the login fields
+    Reload Page
+    When the user enters text to a text field    id=id_password    ${EMPTY}
+    And the user enters text to a text field    id=id_retypedPassword    ${EMPTY}
+    Mouse Out    id=id_retypedPassword
+    sleep    200ms

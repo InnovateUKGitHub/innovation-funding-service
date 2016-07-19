@@ -1,5 +1,31 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.UserNotificationTarget;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
@@ -23,41 +49,9 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.UserNotificationTarget;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import static org.mockito.Mockito.*;
 
 public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<AssessorFeedbackServiceImpl> {
 
@@ -159,14 +153,14 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         //
         // Call the method under test
         //
-        ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> result = service.getAssessorFeedbackFileEntryContents(application.getId());
+        ServiceResult<FileAndContents> result = service.getAssessorFeedbackFileEntryContents(application.getId());
 
         //
         // Assert that the result of our service call was successful and contains the resource returned from the mapper
         //
         assertTrue(result.isSuccess());
-        assertEquals(retrievedFileEntryResource, result.getSuccessObject().getKey());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getValue());
+        assertEquals(retrievedFileEntryResource, result.getSuccessObject().getFileEntry());
+        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
 
         verify(applicationRepositoryMock).findOne(application.getId());
         verifyNoMoreInteractions(addressRepositoryMock);
@@ -191,13 +185,12 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         //
         // Call the method under test
         //
-        ServiceResult<FileEntryResource> result = service.updateAssessorFeedbackFileEntry(application.getId(), fileEntryToUpdate, inputStreamSupplier);
+        ServiceResult<Void> result = service.updateAssessorFeedbackFileEntry(application.getId(), fileEntryToUpdate, inputStreamSupplier);
 
         //
         // Assert that the result of our service call was successful and contains the resource returned from the mapper
         //
         assertTrue(result.isSuccess());
-        assertEquals(updatedFileEntryResource, result.getSuccessObject());
 
         // assert that the application entity got its Assessor Feedback file entry updated to match the FileEntry returned by
         // the FileService
@@ -330,7 +323,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
                 thenReturn(asList(fundedApplication1, unfundedApplication2, fundedApplication3));
 
-        when(roleRepositoryMock.findByName(LEADAPPLICANT.getName())).thenReturn(singletonList(leadApplicantRole));
+        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
 
         leadApplicantProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
@@ -374,7 +367,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
                 withRole(leadApplicantRole, collaboratorRole, leadApplicantRole, collaboratorRole).
                 build(3);
 
-        List<NotificationTarget> expectedFundedLeadApplicants = asList(new UserNotificationTarget(fundedApplication1LeadApplicant));
+        List<NotificationTarget> expectedFundedLeadApplicants = singletonList(new UserNotificationTarget(fundedApplication1LeadApplicant));
         Notification expectedFundedNotification =
                 new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED, emptyMap());
 
@@ -390,7 +383,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
                 when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
         );
 
-        when(roleRepositoryMock.findByName(LEADAPPLICANT.getName())).thenReturn(singletonList(leadApplicantRole));
+        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
 
         allProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))

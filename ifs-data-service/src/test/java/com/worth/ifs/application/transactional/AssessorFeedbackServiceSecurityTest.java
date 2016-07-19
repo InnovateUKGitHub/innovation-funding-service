@@ -6,9 +6,9 @@ import com.worth.ifs.application.security.ApplicationLookupStrategy;
 import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserRoleType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -221,12 +221,12 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getAssessorFeedbackFileEntryContents(long applicationId) {
+        public ServiceResult<FileAndContents> getAssessorFeedbackFileEntryContents(long applicationId) {
             return null;
         }
 
         @Override
-        public ServiceResult<FileEntryResource> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        public ServiceResult<Void> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 

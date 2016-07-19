@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'" th:remove="tag"/>
 </head>
-<body class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+<body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 <div th:include="fragments/layout :: body-start" th:remove="tag"/>
 <div th:include="fragments/layout :: global-header" th:remove="tag"/>
@@ -27,7 +27,7 @@
   </div>
   <div class="grid-container constrain-width">
     <div class="page-title">
-        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+        <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag"/>
         <h1 class="heading-xlarge no-margin">Application Overview</h1>
     </div>
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" class="form-serialize-js section-overview">

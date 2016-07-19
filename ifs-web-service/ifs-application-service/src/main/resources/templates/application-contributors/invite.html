@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'" th:remove="tag"></div>
 </head>
-<body class="app-invite">
+<body th:with="context='applicant'" class="app-invite">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
 <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
@@ -15,7 +15,7 @@
     <div th:if="${param.newApplication == null}" th:remove="tag">
       <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/application/{id}/contributors(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
       <div class="page-title">
-          <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+          <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
           <h1 class="heading-xlarge">Manage Contributors</h1>
       </div>
       <p>From this page you are able to invite contributors to your application. To save your changes, please click on 'save changes' at the bottom of the page.</p>

@@ -1,18 +1,36 @@
 package com.worth.ifs.project.resource;
 
-/**
- * Created by bronnyl on 6/27/16.
- */
+import com.worth.ifs.commons.validation.ValidationConstants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class MonitoringOfficerResource {
 
     private Long id;
 
+    @NotEmpty(message = "Please enter a first name")
     private String firstName;
 
+    @NotEmpty(message = "Please enter a last name")
     private String lastName;
 
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
+    @NotEmpty(message = "Please enter an email")
+    @Size(max = 256, message = "The email address has a maximum length of 256 characters")
     private String email;
 
+    @NotEmpty(message = "Please enter a phone number")
+    @Size.List ({
+            @Size(min=8, message="Input for the phone number has a minimum length of 8 characters"),
+            @Size(max=20, message="Input for the phone number has a maximum length of 20 characters")
+    })
+    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
     private String phoneNumber;
 
     private Long project;
@@ -74,6 +92,36 @@ public class MonitoringOfficerResource {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @JsonIgnore
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MonitoringOfficerResource that = (MonitoringOfficerResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(email, that.email)
+                .append(phoneNumber, that.phoneNumber)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(phoneNumber)
+                .toHashCode();
     }
 
 }

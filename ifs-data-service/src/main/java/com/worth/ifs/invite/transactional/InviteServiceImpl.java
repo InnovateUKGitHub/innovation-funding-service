@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -49,6 +48,7 @@ import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
@@ -208,12 +208,20 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-        return findByApplicationId(applicationId).andOnSuccessReturn(invites -> {
+        Set<InviteOrganisation> inviteOrganisations = new HashSet();
 
-            List<Long> inviteOrganisationIds = invites.stream().map(i -> i.getInviteOrganisation().getId()).collect(Collectors.toList());
-            Iterable<InviteOrganisation> inviteOrganisations = inviteOrganisationRepository.findAll(inviteOrganisationIds);
-            return Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations));
-        });
+        for(InviteOrganisation inviteOrganisation : inviteOrganisationRepository.findByInvitesApplicationId(applicationId)) {
+            List<Invite> invitesFiltered = inviteOrganisation.getInvites().stream().filter(invite -> invite.getApplication().getId().equals(applicationId)).collect(Collectors.toList());
+            inviteOrganisation.setInvites(invitesFiltered);
+            inviteOrganisations.add(inviteOrganisation);
+        }
+
+        if(inviteOrganisations.size() > 0) {
+           return serviceSuccess(Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations)));
+        } else {
+            return serviceSuccess(new HashSet());
+        }
+
     }
 
     @Override
@@ -255,7 +263,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     private void initializeInvitee(Invite invite, User user) {
         Application application = invite.getApplication();
-        Role role = roleRepository.findByName("collaborator").get(0);
+        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application, role, organisation);
         processRoleRepository.save(processRole);
@@ -290,6 +298,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {
+        LOG.debug("Invites found by application id: " + applicationId + " are: " + inviteRepository.findByApplicationId(applicationId).stream().count());
         return serviceSuccess(inviteRepository.findByApplicationId(applicationId));
     }
 

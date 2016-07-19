@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 
+import com.worth.ifs.competition.controller.CompetitionManagementController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ import com.worth.ifs.application.service.AssessorFeedbackService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.service.ApplicationSummarySortFieldService;
+import com.worth.ifs.competition.service.ApplicationSummarySortFieldService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementControllerTest  {

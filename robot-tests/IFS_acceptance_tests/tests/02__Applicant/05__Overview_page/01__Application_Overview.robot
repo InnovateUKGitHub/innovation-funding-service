@@ -30,12 +30,12 @@ Navigation to the Overview page
 Review and submit button
     [Documentation]    -INFUND-195
     ...    -INFUND-214
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Review & submit
     Then the user redirects to the page    You will not be able to make changes to your application or resubmit after this point    Application Summary
 
 List with the sections
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the overview page of the Robot test application
     Then the applicant should see three sections
 
@@ -58,7 +58,7 @@ The Progress bar is visible
 
 User can print the application
     [Documentation]    INFUND-1162
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the page without the usual headers    ${SERVER}/application/1/print?noprint    #This URL its only for testing purposes
     Then the user should see the element    jQuery=.button:contains("Print your application")
     And The user navigates to the overview page of the Robot test application

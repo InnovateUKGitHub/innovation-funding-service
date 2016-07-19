@@ -2,6 +2,7 @@
 Documentation     INFUND-887 : As an applicant I want the option to look up my business organisation's details using Companies House lookup so I don’t have to type it in manually as part of the registration process
 Suite Setup       Applicant goes to the create organisation page
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -11,7 +12,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Valid company name
     [Documentation]    INFUND-887
-    [Tags]    HappyPath
+    [Tags]
     When the user enters text to a text field    id=organisationSearchName    innovate
     And the user clicks the button/link    id=org-search
     Then the search criteria should be displayed
@@ -47,22 +48,27 @@ Invalid registration number
 
 Company with spaces in the name
     [Documentation]    INFUND-1757
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
     Then the user should see the element    Link=HIVE IT LIMITED
 
-Invalid characters
-    [Documentation]    INFUND-887
-    [Tags]
-    When the user enters text to a text field    id=organisationSearchName    {}
-    And the user clicks the button/link    id=org-search
-    Then the user should see an error    Please enter valid characters
-
 Empty company name field
+    Given the user should see the text in the page    Create your account
     When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
     And the user clicks the button/link    id=org-search
     Then the user should see an error    ${empty_field_warning_message}
+
+Other characters
+    [Documentation]    INFUND-2960
+    [Tags]
+    When the user enters text to a text field    id=organisationSearchName    innovate\\
+    # Robot trims the backslash, if you want to use it it needs to be escaped.
+    And the user clicks the button/link    id=org-search
+    Then the user should see the text in the page    No results found.
+    When the user enters text to a text field    id=organisationSearchName    innovate/
+    And the user clicks the button/link    id=org-search
+    Then the search criteria should be displayed
 
 *** Keywords ***
 the search criteria should be displayed

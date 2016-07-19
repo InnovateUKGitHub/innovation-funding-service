@@ -41,11 +41,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         UserResource user = newUserResource().build();
 
         ProjectResource project = newProjectResource().build();
-        Role partnerRole = newRole().build();
-        List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
+        setupUserAsPartner(project, user);
 
         assertTrue(rules.partnersOnProjectCanView(project, user));
     }
@@ -81,10 +77,26 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     @Test
     public void testLeadPartnersCanUpdateTheBasicProjectDetails() {
 
-        Application originalApplication = newApplication().build();
         ProjectResource project = newProjectResource().build();
-        Project projectEntity = newProject().withApplication(originalApplication).build();
         UserResource user = newUserResource().build();
+
+        setupUserAsLeadPartner(project, user);
+
+        assertTrue(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
+    }
+
+    private void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
+        setupLeadPartnerExpectations(project, user, true);
+    }
+
+    private void setupUserNotAsLeadPartner(ProjectResource project, UserResource user) {
+        setupLeadPartnerExpectations(project, user, false);
+    }
+
+    private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
+
+        Application originalApplication = newApplication().build();
+        Project projectEntity = newProject().withApplication(originalApplication).build();
         Role leadApplicantRole = newRole().build();
         Role partnerRole = newRole().build();
         Organisation leadOrganisation = newOrganisation().build();
@@ -98,9 +110,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         // see if the user is a partner on the lead organisation
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(
-                project.getId(), user.getId(), leadOrganisation.getId(), partnerRole.getId())).thenReturn(newProjectUser().build());
-
-        assertTrue(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
+                project.getId(), user.getId(), leadOrganisation.getId(), partnerRole.getId())).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }
 
     @Test
@@ -133,11 +143,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
-        Role partnerRole = newRole().build();
-        List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
+        setupUserAsPartner(project, user);
 
         assertTrue(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, user));
     }
@@ -153,5 +159,162 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(emptyList());
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, user));
+    }
+
+    @Test
+    public void testCompAdminsCanViewMonitoringOfficersOnProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
+                assertTrue(rules.compAdminsCanViewMonitoringOfficersForAnyProject(project, user));
+            } else {
+                assertFalse(rules.compAdminsCanViewMonitoringOfficersForAnyProject(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjects() {
+
+        UserResource user = newUserResource().build();
+        ProjectResource project = newProjectResource().build();
+
+        setupUserAsPartner(project, user);
+
+        assertTrue(rules.partnersCanViewMonitoringOfficersOnTheirProjects(project, user));
+    }
+
+    @Test
+    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjectsButUserNotPartner() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        Role partnerRole = newRole().build();
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(emptyList());
+
+        assertFalse(rules.partnersCanViewMonitoringOfficersOnTheirProjects(project, user));
+    }
+
+    @Test
+    public void testCompAdminsCanEditMonitoringOfficersOnProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
+                assertTrue(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
+            } else {
+                assertFalse(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testLeadPartnersCanCreateOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsLeadPartner(project, user);
+
+        assertTrue(rules.leadPartnersCanUploadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testNonLeadPartnersCannotCreateOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserNotAsLeadPartner(project, user);
+
+        assertFalse(rules.leadPartnersCanUploadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testPartnersCanViewOtherDocumentsDetails() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsPartner(project, user);
+
+        assertTrue(rules.partnersCanViewOtherDocumentsDetails(project, user));
+    }
+
+    @Test
+    public void testNonPartnersCannotViewOtherDocumentsDetails() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserNotAsPartner(project, user);
+
+        assertFalse(rules.partnersCanViewOtherDocumentsDetails(project, user));
+    }
+
+    @Test
+    public void testPartnersCanDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsPartner(project, user);
+
+        assertTrue(rules.partnersCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testNonPartnersCannotDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserNotAsPartner(project, user);
+
+        assertFalse(rules.partnersCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testLeadPartnersCanDeleteOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsLeadPartner(project, user);
+
+        assertTrue(rules.leadPartnersCanDeleteOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testNonLeadPartnersCannotDeleteOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserNotAsLeadPartner(project, user);
+
+        assertFalse(rules.leadPartnersCanDeleteOtherDocuments(project, user));
+    }
+
+    private void setupUserAsPartner(ProjectResource project, UserResource user) {
+        setupPartnerExpectations(project, user, true);
+    }
+
+    private void setupUserNotAsPartner(ProjectResource project, UserResource user) {
+        setupPartnerExpectations(project, user, false);
+    }
+
+    private void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
+        Role partnerRole = newRole().build();
+        List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
 }

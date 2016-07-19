@@ -8,6 +8,8 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.BasicFileAndContents;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -35,7 +37,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -49,7 +50,6 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static org.apache.commons.lang3.tuple.Pair.of;
 
 @Service
 public class CostServiceImpl extends BaseTransactionalService implements CostService {
@@ -323,10 +323,10 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     @Override
-    public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinanceId) {
+    public ServiceResult<FileAndContents> getFileContents(long applicationFinanceId) {
         return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId)
                 .andOnSuccess(fileEntry -> fileService.getFileByFileEntryId(fileEntry.getId())
-                        .andOnSuccessReturn(stream -> of(fileEntry, stream)));
+                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream)));
     }
 
     private ServiceResult<ApplicationFinanceResource> removeFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
