@@ -24,10 +24,9 @@
     <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
       <h2 class="heading-small">These documents have been returned to the project team, the following reason was given;</h2>
       <ul class="list-bullet">
-        <li th:each="${reason : model.getRejectionReasons()}" th:text="${reason}" />
+        <li th:each="reason : ${model.rejectionReasons}" th:text="${reason}" />
       </ul>
     </div>
-
 
     <th:block th:if="${model.leadPartner}">
 			<p>As the lead partner in this project you must supply additional documents to support your grant application.</p>
