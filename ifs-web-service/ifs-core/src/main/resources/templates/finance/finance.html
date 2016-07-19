@@ -476,6 +476,7 @@
 	                        th:class="'buttonlink js-remove-row'"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
+	                <span th:if="${cost.id == null}" th:id="${'cost-materials-'+costIdentifier+'-buttonplaceholder'}"></span>
 	            </td>
 	        </tr>
         </div>
@@ -648,6 +649,7 @@
 	                    th:value="${cost.id}"
 	                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	            </button>
+	            <span th:if="${cost.id == null}" th:id="${'cost-capital_usage-'+costIdentifier+'-buttonplaceholder'}"></span>
 	        </div>
         </div>
     </div>
@@ -750,6 +752,7 @@
 	                    th:value="${cost.id}"
 	                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	            </button>
+	            <span th:if="${cost.id == null}" th:id="${'cost-subcontracting-'+costIdentifier+'-buttonplaceholder'}"></span>
 	        </div>
         </div>
     </div>
@@ -873,6 +876,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
+	                <span th:if="${cost.id == null}" th:id="${'cost-'+type+'-'+costIdentifier+'-buttonplaceholder'}"></span>
 	            </td>
 	        </tr>
         </div>
@@ -952,6 +956,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
+	                <span th:if="${cost.id == null}" th:id="${'cost-'+type+'-'+costIdentifier+'-buttonplaceholder'}"></span>
 	            </td>
 	        </tr>
         </div>
@@ -1106,6 +1111,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
+	                <span th:if="${cost.id == null}" th:id="${'cost-'+type+'-'+costIdentifier+'-buttonplaceholder'}"></span>
 	            </td>
 	        </tr>
         </div>
