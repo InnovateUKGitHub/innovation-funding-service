@@ -64,8 +64,8 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((cost, object) -> setField("costs", cost, object), costs);
     }
 
-    public QuestionResourceBuilder withQuestionNumber(String value) {
-        return with(question -> setField("questionNumber", value, question));
+    public QuestionResourceBuilder withQuestionNumber(String... questionNumbers) {
+        return withArray((questionNumber, object) -> setField("questionNumber", questionNumber, object), questionNumbers);
     }
 
     public QuestionResourceBuilder withPriority(int priority) {

@@ -111,7 +111,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testAssessmentDetails() throws Exception {
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
-        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplicationId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
@@ -157,7 +157,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testAssessmentFinance() throws Exception {
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
-        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplicationId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
