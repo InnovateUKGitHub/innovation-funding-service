@@ -104,12 +104,22 @@ IFS.core.autoSave = (function(){
                 	if(data.field_id !== null) {
                     	var name = field.attr('name');
                     	var nameDashSplit = name.split('-');
-                    	if (nameDashSplit.length == 4 && nameDashSplit[3].length > 7 && nameDashSplit[3].substring(0, 7) === 'unsaved') {
-                    		var fieldsForUnsavedCost = jQuery('input[name*=' + nameDashSplit[3] + ']');
+                    	var unsavedCostId = nameDashSplit[3];
+                    	if (nameDashSplit.length == 4 && unsavedCostId.length > 7 && unsavedCostId.substring(0, 7) === 'unsaved') {
+                    		var fieldsForUnsavedCost = jQuery('input[name*="' + unsavedCostId + '"]');
                     		fieldsForUnsavedCost.each(function(){
-                    			var thisFieldSplit = jQuery(this).attr('name').split('-');
-                    			jQuery(this).attr('name', thisFieldSplit[0] + '-' + thisFieldSplit[1] + '-' + thisFieldSplit[2] + '-' + data.field_id);
+                    			var thisFieldNameSplit = jQuery(this).attr('name').split('-');
+                    			jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + data.field_id);
                     		});
+                    		
+                    		var costRows = jQuery('tr[data-repeatable-row="' + unsavedCostId + '"]');
+                			costRows.attr('data-repeatable-row', data.field_id);
+                    		
+                    		var buttonPlaceholder = jQuery('span[id*="' + unsavedCostId + '"]');
+                    		if(buttonPlaceholder !== null) {
+                    			var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + data.field_id + '">Remove</button>';
+                    			buttonPlaceholder.replaceWith(buttonHtml);
+                    		}
                     	}
                 	}
                 	

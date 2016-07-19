@@ -230,6 +230,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
+	                <span th:if="${cost.id == null}" th:id="${'cost-labour-'+costIdentifier+'-buttonplaceholder'}"></span>
 	            </td>
 	        </tr>
 	        <tr th:attr="data-repeatable-row=${costIdentifier}">
