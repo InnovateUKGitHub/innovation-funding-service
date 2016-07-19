@@ -404,7 +404,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 123L;
 
         BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getCollaborationAgreementFileEntryContents(projectId);
+                (service, fileToUpload) -> service.getCollaborationAgreementFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).
@@ -417,7 +417,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 123L;
 
         Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
-                service -> service.deleteCollaborationAgreementFileEntry(projectId);
+                service -> service.deleteCollaborationAgreementFile(projectId);
 
         assertDeleteFile("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToDelete).
@@ -469,7 +469,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 123L;
 
         BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getExploitationPlanFileEntryContents(projectId);
+                (service, fileToUpload) -> service.getExploitationPlanFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).
@@ -482,7 +482,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 123L;
 
         Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
-                service -> service.deleteExploitationPlanFileEntry(projectId);
+                service -> service.deleteExploitationPlanFile(projectId);
 
         assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToDelete).

@@ -263,7 +263,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(Long projectId) {
+    public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
@@ -299,7 +299,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> deleteCollaborationAgreementFileEntry(Long projectId) {
+    public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
         return getProject(projectId).andOnSuccess(project ->
                 getCollaborationAgreement(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
@@ -314,7 +314,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(Long projectId) {
+    public ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getExploitationPlan();
@@ -350,7 +350,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> deleteExploitationPlanFileEntry(Long projectId) {
+    public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
         return getProject(projectId).andOnSuccess(project ->
                 getExploitationPlan(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->

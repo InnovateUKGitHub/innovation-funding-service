@@ -264,7 +264,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getCollaborationAgreementFileEntryContents(123L), () -> {
+        assertAccessDenied(() -> service.getCollaborationAgreementFileContents(123L), () -> {
             verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -277,7 +277,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.deleteCollaborationAgreementFileEntry(123L), () -> {
+        assertAccessDenied(() -> service.deleteCollaborationAgreementFile(123L), () -> {
             verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -317,7 +317,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getExploitationPlanFileEntryContents(123L), () -> {
+        assertAccessDenied(() -> service.getExploitationPlanFileContents(123L), () -> {
             verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -330,7 +330,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.deleteExploitationPlanFileEntry(123L), () -> {
+        assertAccessDenied(() -> service.deleteExploitationPlanFile(123L), () -> {
             verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -436,7 +436,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(Long projectId) {
+        public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
             return null;
         }
 
@@ -451,7 +451,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> deleteCollaborationAgreementFileEntry(Long projectId) {
+        public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
             return null;
         }
 
@@ -461,7 +461,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(Long projectId) {
+        public ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId) {
             return null;
         }
 
@@ -476,7 +476,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> deleteExploitationPlanFileEntry(Long projectId) {
+        public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
             return null;
         }
     }

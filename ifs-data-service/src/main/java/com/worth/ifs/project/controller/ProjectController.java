@@ -159,7 +159,7 @@ public class ProjectController {
     ResponseEntity<Object> getCollaborationAgreementFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return handleFileDownload(() -> projectService.getCollaborationAgreementFileEntryContents(projectId));
+        return handleFileDownload(() -> projectService.getCollaborationAgreementFileContents(projectId));
     }
 
     @RequestMapping(value = "/{projectId}/collaboration-agreement/details", method = GET, produces = "application/json")
@@ -186,7 +186,7 @@ public class ProjectController {
     public RestResult<Void> deleteCollaborationAgreementDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectService.deleteCollaborationAgreementFileEntry(projectId).toDeleteResponse();
+        return projectService.deleteCollaborationAgreementFile(projectId).toDeleteResponse();
     }
 
     @RequestMapping(value = "/{projectId}/exploitation-plan", method = POST, produces = "application/json")
@@ -206,7 +206,7 @@ public class ProjectController {
     ResponseEntity<Object> getExploitationPlanFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return handleFileDownload(() -> projectService.getExploitationPlanFileEntryContents(projectId));
+        return handleFileDownload(() -> projectService.getExploitationPlanFileContents(projectId));
     }
 
     @RequestMapping(value = "/{projectId}/exploitation-plan/details", method = GET, produces = "application/json")
@@ -232,6 +232,6 @@ public class ProjectController {
     public RestResult<Void> deleteExploitationPlanDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectService.deleteExploitationPlanFileEntry(projectId).toDeleteResponse();
+        return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 }

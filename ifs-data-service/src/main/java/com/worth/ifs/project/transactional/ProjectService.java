@@ -85,7 +85,7 @@ public interface ProjectService {
     ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileAndContents> getCollaborationAgreementFileEntryContents(Long projectId);
+    ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
     ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId);
@@ -94,13 +94,13 @@ public interface ProjectService {
     ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
-    ServiceResult<Void> deleteCollaborationAgreementFileEntry(Long projectId);
+    ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
-    ServiceResult<FileAndContents> getExploitationPlanFileEntryContents(Long projectId);
+    ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
     ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId);
@@ -109,5 +109,5 @@ public interface ProjectService {
     ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
-    ServiceResult<Void> deleteExploitationPlanFileEntry(Long projectId);
+    ServiceResult<Void> deleteExploitationPlanFile(Long projectId);
 }
