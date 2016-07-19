@@ -29,6 +29,7 @@ import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentService> {
@@ -102,8 +103,7 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         processOutcome.setComment(comment);
         processOutcome.setDescription(reason);
         when(assessmentRestService.updateStatus(assessmentId,processOutcome)).thenReturn(restSuccess());
-
-        service.rejectApplication(assessmentId,reason,comment);
+        assertTrue(service.rejectApplication(assessmentId,reason,comment).isSuccess());
         verify(assessmentRestService, only()).updateStatus(assessmentId,processOutcome);
     }
 }
