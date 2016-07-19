@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.form.AssessmentFeedbackForm;
 import com.worth.ifs.assessment.model.AssessmentFeedbackApplicationDetailsModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.service.AssessmentFeedbackService;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
@@ -26,9 +26,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
 
 @Controller
@@ -40,9 +42,6 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
 
     @Autowired
     private AssessmentService assessmentService;
-
-    @Autowired
-    private AssessmentFeedbackService assessmentFeedbackService;
 
     @Autowired
     private AssessmentFeedbackModelPopulator assessmentFeedbackModelPopulator;
@@ -57,76 +56,85 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
-    public String getQuestion(final Model model,
-                              final HttpServletResponse response,
-                              @ModelAttribute(MODEL_ATTRIBUTE_FORM) final AssessmentFeedbackForm form,
-                              final BindingResult bindingResult,
-                              @PathVariable("assessmentId") final Long assessmentId,
-                              @PathVariable("questionId") final Long questionId) throws InterruptedException, ExecutionException {
+    public String getQuestion(Model model,
+                              HttpServletResponse response,
+                              @ModelAttribute(MODEL_ATTRIBUTE_FORM) Form form,
+                              BindingResult bindingResult,
+                              @PathVariable("assessmentId") Long assessmentId,
+                              @PathVariable("questionId") Long questionId) throws InterruptedException, ExecutionException {
         if (isApplicationDetailsQuestion(questionId)) {
             return getApplicationDetails(model, assessmentId, questionId);
         }
 
-        final AssessmentFeedbackResource assessmentFeedback = getAssessmentFeedbackForQuestion(assessmentId, questionId);
-        form.setScore(assessmentFeedback.getScore());
-        form.setValue(assessmentFeedback.getFeedback());
+        ApplicationResource application = getApplicationForAssessment(assessmentId);
+        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, questionId, application);
 
-        final ApplicationResource application = getApplicationForAssessment(assessmentId);
-        model.addAttribute("model", assessmentFeedbackModelPopulator.populateModel(application, questionId, assessmentFeedback));
+        Map<Long, AssessorFormInputResponseResource> mappedResponses = viewModel.getAssessorResponses();
+        mappedResponses.forEach((k, v) ->
+                form.addFormInput(k.toString(), v.getValue())
+        );
+
+        model.addAttribute("model", viewModel);
         model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
 
         return QUESTION;
     }
 
     @RequestMapping(value = "/question/{questionId}/feedback-value", method = RequestMethod.POST)
-    public @ResponseBody JsonNode updateFeedbackValue(
-            final Model model,
-            final HttpServletResponse response,
-            @ModelAttribute(MODEL_ATTRIBUTE_FORM) final AssessmentFeedbackForm form,
-            final BindingResult bindingResult,
-            @PathVariable("assessmentId") final Long assessmentId,
-            @PathVariable("questionId") final Long questionId) {
+    public
+    @ResponseBody
+    JsonNode updateFeedbackValue(
+            Model model,
+            HttpServletResponse response,
+            @ModelAttribute(MODEL_ATTRIBUTE_FORM) Form form,
+            BindingResult bindingResult,
+            @PathVariable("assessmentId") Long assessmentId,
+            @PathVariable("questionId") Long questionId) {
         // TODO validation
-        final ServiceResult<Void> result = assessmentFeedbackService.updateFeedbackValue(assessmentId, questionId, form.getValue());
+        //ServiceResult<Void> result = assessmentFeedbackService.updateFeedbackValue(assessmentId, questionId, form.getValue());
+        ServiceResult<Void> result = serviceSuccess();
         // TODO handle service errors
         return createJsonObjectNode(result.isSuccess(), asList());
     }
 
     @RequestMapping(value = "/question/{questionId}/feedback-score", method = RequestMethod.POST)
-    public @ResponseBody JsonNode updateScore(
-            final Model model,
-            final HttpServletResponse response,
-            @ModelAttribute(MODEL_ATTRIBUTE_FORM) final AssessmentFeedbackForm form,
-            final BindingResult bindingResult,
-            @PathVariable("assessmentId") final Long assessmentId,
-            @PathVariable("questionId") final Long questionId) {
+    public
+    @ResponseBody
+    JsonNode updateScore(
+            Model model,
+            HttpServletResponse response,
+            @ModelAttribute(MODEL_ATTRIBUTE_FORM) Form form,
+            BindingResult bindingResult,
+            @PathVariable("assessmentId") Long assessmentId,
+            @PathVariable("questionId") Long questionId) {
         // TODO validation
-        final ServiceResult<Void> result = assessmentFeedbackService.updateFeedbackScore(assessmentId, questionId, form.getScore());
+        //ServiceResult<Void> result = assessmentFeedbackService.updateFeedbackScore(assessmentId, questionId, form.getScore());
+        ServiceResult<Void> result = serviceSuccess();
         // TODO handle service errors
         return createJsonObjectNode(result.isSuccess(), asList());
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
     public String save(
-            final Model model,
-            final HttpServletResponse response,
-            @ModelAttribute(MODEL_ATTRIBUTE_FORM) final AssessmentFeedbackForm form,
-            final BindingResult bindingResult,
-            @PathVariable("assessmentId") final Long assessmentId,
-            @PathVariable("questionId") final Long questionId) {
+            Model model,
+            HttpServletResponse response,
+            @ModelAttribute(MODEL_ATTRIBUTE_FORM) Form form,
+            BindingResult bindingResult,
+            @PathVariable("assessmentId") Long assessmentId,
+            @PathVariable("questionId") Long questionId) {
         // TODO validation
-        final ServiceResult<Void> result = assessmentFeedbackService.updateAssessmentFeedback(assessmentId, questionId, form.getValue(), form.getScore());
+        //ServiceResult<Void> result = assessmentFeedbackService.updateAssessmentFeedback(assessmentId, questionId, form.getValue(), form.getScore());
         // TODO handle service errors
         return "redirect:/" + assessmentId;
     }
 
-    private boolean isApplicationDetailsQuestion(final Long questionId) {
-        final List<FormInputResource> questionFormInputs = getQuestionFormInputs(questionId);
-        return questionFormInputs.stream().anyMatch(formInputResource -> "application_details".equals(formInputResource.getFormInputTypeTitle()));
+    private boolean isApplicationDetailsQuestion(Long questionId) {
+        List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
+        return applicationFormInputs.stream().anyMatch(formInputResource -> "application_details".equals(formInputResource.getFormInputTypeTitle()));
     }
 
-    private String getApplicationDetails(final Model model, final Long assessmentId, final Long questionId) throws InterruptedException, ExecutionException {
-        final ApplicationResource application = getApplicationForAssessment(assessmentId);
+    private String getApplicationDetails(Model model, Long assessmentId, Long questionId) throws InterruptedException, ExecutionException {
+        ApplicationResource application = getApplicationForAssessment(assessmentId);
         model.addAttribute("model", assessmentFeedbackApplicationDetailsModelPopulator.populateModel(application, questionId));
         model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
         organisationDetailsModelPopulator.populateModel(model, application.getId());
@@ -134,35 +142,31 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         return APPLICATION_DETAILS;
     }
 
-    private AssessmentResource getAssessment(final Long assessmentId) {
+    private AssessmentResource getAssessment(Long assessmentId) {
         return assessmentService.getById(assessmentId);
     }
 
-    private ApplicationResource getApplication(final Long applicationId) {
+    private ApplicationResource getApplication(Long applicationId) {
         return applicationService.getById(applicationId);
     }
 
-    private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
+    private ApplicationResource getApplicationForAssessment(Long assessmentId) throws InterruptedException, ExecutionException {
         return getApplication(getApplicationIdForProcessRole(getProcessRoleForAssessment(getAssessment(assessmentId))));
     }
 
-    private Future<ProcessRoleResource> getProcessRoleForAssessment(final AssessmentResource assessment) {
+    private Future<ProcessRoleResource> getProcessRoleForAssessment(AssessmentResource assessment) {
         return processRoleService.getById(assessment.getProcessRole());
     }
 
-    private Long getApplicationIdForProcessRole(final Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {
+    private Long getApplicationIdForProcessRole(Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {
         return processRoleResource.get().getApplication();
     }
 
-    private List<FormInputResource> getQuestionFormInputs(final Long questionId) {
-        return formInputService.findByQuestion(questionId);
+    private List<FormInputResource> getApplicationFormInputs(Long questionId) {
+        return formInputService.findApplicationInputsByQuestion(questionId);
     }
 
-    private AssessmentFeedbackResource getAssessmentFeedbackForQuestion(final Long assessmentId, final Long questionId) {
-        return assessmentFeedbackService.getAssessmentFeedbackByAssessmentAndQuestion(assessmentId, questionId);
-    }
-
-    private ObjectNode createJsonObjectNode(final boolean success, final List<String> errors) {
+    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");

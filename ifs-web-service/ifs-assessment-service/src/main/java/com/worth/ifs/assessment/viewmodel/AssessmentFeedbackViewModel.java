@@ -1,8 +1,13 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import com.worth.ifs.form.resource.FormInputResource;
+
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -20,23 +25,18 @@ public class AssessmentFeedbackViewModel {
     private final String questionNumber;
     private final String questionShortName;
     private final String questionName;
-    private final String questionResponse;
-    private final boolean requireScore;
-    private final boolean requireFeedback;
-    private final boolean requireCategory;
-    private final boolean requireScopeConfirmation;
-    private final String assessorGuidanceQuestion;
-    private final String assessorGuidanceAnswer;
-    private final Integer feedbackWordsLimit;
-    private final Integer feedbackWordsRemaining;
+    private final Integer maximumScore;
+    private final String applicantResponse;
+    private final List<FormInputResource> assessmentFormInputs;
+    private final Map<Long, AssessorFormInputResponseResource> assessorResponses;
     private final boolean appendixExists;
     private final FileDetailsViewModel appendixDetails;
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining) {
-        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, questionResponse, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, assessorGuidanceQuestion, assessorGuidanceAnswer, feedbackWordsLimit, feedbackWordsRemaining, false, null);
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, Map<Long, AssessorFormInputResponseResource> assessorResponses) {
+        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, maximumScore, applicantResponse, assessmentFormInputs, assessorResponses, false, null);
     }
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining, boolean appendixExists, FileDetailsViewModel appendixDetails) {
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, Map<Long, AssessorFormInputResponseResource> assessorResponses, boolean appendixExists, FileDetailsViewModel appendixDetails) {
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.competition = competition;
@@ -45,15 +45,10 @@ public class AssessmentFeedbackViewModel {
         this.questionNumber = questionNumber;
         this.questionShortName = questionShortName;
         this.questionName = questionName;
-        this.questionResponse = questionResponse;
-        this.requireScore = requireScore;
-        this.requireFeedback = requireFeedback;
-        this.requireCategory = requireCategory;
-        this.requireScopeConfirmation = requireScopeConfirmation;
-        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
-        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
-        this.feedbackWordsLimit = feedbackWordsLimit;
-        this.feedbackWordsRemaining = feedbackWordsRemaining;
+        this.maximumScore = maximumScore;
+        this.applicantResponse = applicantResponse;
+        this.assessmentFormInputs = assessmentFormInputs;
+        this.assessorResponses = assessorResponses;
         this.appendixExists = appendixExists;
         this.appendixDetails = appendixDetails;
     }
@@ -90,40 +85,20 @@ public class AssessmentFeedbackViewModel {
         return questionName;
     }
 
-    public String getQuestionResponse() {
-        return questionResponse;
+    public Integer getMaximumScore() {
+        return maximumScore;
     }
 
-    public boolean isRequireScore() {
-        return requireScore;
+    public String getApplicantResponse() {
+        return applicantResponse;
     }
 
-    public boolean isRequireFeedback() {
-        return requireFeedback;
+    public List<FormInputResource> getAssessmentFormInputs() {
+        return assessmentFormInputs;
     }
 
-    public boolean isRequireCategory() {
-        return requireCategory;
-    }
-
-    public boolean isRequireScopeConfirmation() {
-        return requireScopeConfirmation;
-    }
-
-    public String getAssessorGuidanceQuestion() {
-        return assessorGuidanceQuestion;
-    }
-
-    public String getAssessorGuidanceAnswer() {
-        return assessorGuidanceAnswer;
-    }
-
-    public Integer getFeedbackWordsLimit() {
-        return feedbackWordsLimit;
-    }
-
-    public Integer getFeedbackWordsRemaining() {
-        return feedbackWordsRemaining;
+    public Map<Long, AssessorFormInputResponseResource> getAssessorResponses() {
+        return assessorResponses;
     }
 
     public boolean isAppendixExists() {

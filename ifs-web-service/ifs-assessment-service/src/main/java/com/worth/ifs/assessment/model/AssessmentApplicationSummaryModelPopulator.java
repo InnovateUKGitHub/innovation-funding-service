@@ -91,7 +91,7 @@ public class AssessmentApplicationSummaryModelPopulator {
         return simpleMap(getQuestionsForAssessment(assessmentId), question -> {
             String displayLabel = question.getShortName();
             String displayLabelShort = getSummaryQuestionDisplayLabelShort(question);
-            boolean requireScore = question.isNeedingAssessorScore();
+            boolean requireScore = true;
             Integer scorePossible = requireScore ? getScorePossible(question) : null;
             AssessmentFeedbackResource assessmentFeedback = allAssessmentFeedback.get(question.getId());
             Map<String, String> values = getSummaryQuestionValues(assessmentFeedback);

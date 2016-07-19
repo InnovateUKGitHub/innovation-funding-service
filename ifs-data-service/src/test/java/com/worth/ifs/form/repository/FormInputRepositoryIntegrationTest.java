@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.*;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 /**
@@ -39,42 +40,71 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     }
 
     @Test
-    public void test_findByCompetitionId() {
+    public void test_findOne_nonExistentInput() {
+        assertEquals(null, repository.findOne(Long.MAX_VALUE));
+    }
 
+    @Test
+    public void test_findByCompetitionId() {
         List<FormInput> competitionInputs = repository.findByCompetitionId(1L);
-        assertEquals(38, competitionInputs.size());
+        assertEquals(61, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
 
-        FormInput last = competitionInputs.get(34);
-        assertEquals(Long.valueOf(38), last.getId());
+        FormInput last = competitionInputs.get(competitionInputs.size() - 1);
+        assertEquals(Long.valueOf(65), last.getId());
     }
 
     @Test
     public void test_findByCompetitionId_nonExistentCompetition() {
-
         List<FormInput> competitionInputs = repository.findByCompetitionId(999L);
         assertEquals(0, competitionInputs.size());
     }
 
     @Test
+    public void test_findByCompetitionIdAndScope() {
+        List<FormInput> competitionInputs = repository.findByCompetitionIdAndScope(1L, APPLICATION);
+        assertEquals(38, competitionInputs.size());
+
+        FormInput first = competitionInputs.get(0);
+        assertEquals(Long.valueOf(1), first.getId());
+
+        FormInput last = competitionInputs.get(competitionInputs.size() - 1);
+        assertEquals(Long.valueOf(42), last.getId());
+    }
+
+    @Test
+    public void test_findByCompetitionIdAndScope_nonExistingCompetition() {
+        List<FormInput> competitionInputs = repository.findByCompetitionIdAndScope(999L, APPLICATION);
+        assertTrue(competitionInputs.isEmpty());
+    }
+
+    @Test
     public void test_findByQuestionId() {
         List<FormInput> questionInputs = repository.findByQuestionId(1L);
+        assertThat(questionInputs, hasSize(3));
+        assertEquals(Long.valueOf(1), questionInputs.get(0).getId());
+        assertEquals(Long.valueOf(43), questionInputs.get(1).getId());
+        assertEquals(Long.valueOf(44), questionInputs.get(2).getId());
+    }
+
+    @Test
+    public void test_findByQuestionId_nonExistingQuestion() {
+        List<FormInput> formInputs = repository.findByQuestionId(999L);
+        assertTrue(formInputs.isEmpty());
+    }
+
+    @Test
+    public void test_findByQuestionIdAndScope() {
+        List<FormInput> questionInputs = repository.findByQuestionIdAndScope(1L, APPLICATION);
         FormInput first = questionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
     }
 
     @Test
-    public void test_findByQuestionId_nonExistingQuestion() {
-        List<FormInput> questionInputs = repository.findByQuestionId(999L);
-        assertEquals(0, questionInputs.size());
+    public void test_findByQuestionIdAndScope_nonExistingQuestion() {
+        List<FormInput> questionInputs = repository.findByQuestionIdAndScope(999L, APPLICATION);
+        assertTrue(questionInputs.isEmpty());
     }
-
-    @Test
-    public void test_findOne_nonExistentInput() {
-
-        assertEquals(null, repository.findOne(Long.MAX_VALUE));
-    }
-
 }

@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,6 +29,8 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -75,6 +79,9 @@ public class Application {
     @ManyToOne
     @JoinColumn(name="assessorFeedbackFileEntryId", referencedColumnName="id")
     private FileEntry assessorFeedbackFileEntry;
+    
+    @OneToMany(mappedBy="application", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
     public Application() {
         /*default constructor*/}
@@ -230,6 +237,30 @@ public class Application {
     public void setAssessorFeedbackFileEntry(FileEntry assessorFeedbackFileEntry) {
         this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
     }
+    
+    public List<FormInputResponse> getFormInputResponses() {
+		return formInputResponses;
+	}
+    
+    public void setFormInputResponses(List<FormInputResponse> formInputResponses) {
+		this.formInputResponses = formInputResponses;
+	}
+    
+    public void addFormInputResponse(FormInputResponse formInputResponse) {
+    	Optional<FormInputResponse> existing = getFormInputResponseByFormInput(formInputResponse.getFormInput());
+    	if(existing.isPresent()) {
+    		existing.get().setFileEntry(formInputResponse.getFileEntry());
+    		existing.get().setUpdateDate(formInputResponse.getUpdateDate());
+    		existing.get().setUpdatedBy(formInputResponse.getUpdatedBy());
+    		existing.get().setValue(formInputResponse.getValue());
+    	} else {
+        	formInputResponses.add(formInputResponse);
+    	}
+    }
+
+	public Optional<FormInputResponse> getFormInputResponseByFormInput(FormInput formInput) {
+		return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+	}
 
     public BigDecimal getCompletion() {
         return completion;

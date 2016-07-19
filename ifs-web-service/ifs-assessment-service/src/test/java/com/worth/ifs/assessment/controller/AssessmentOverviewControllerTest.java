@@ -8,8 +8,9 @@ import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.service.AssessmentFeedbackService;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
@@ -28,6 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
@@ -38,20 +40,23 @@ import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static com.worth.ifs.assessment.builder.AssessmentFeedbackResourceBuilder.newAssessmentFeedbackResource;
+import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -68,7 +73,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     private AssessmentService assessmentService;
 
     @Mock
-    private AssessmentFeedbackService assessmentFeedbackService;
+    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Mock
     private FormInputRestService formInputRestService;
@@ -112,9 +117,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
                 .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
                 .build();
-        AssessmentFeedbackResource assessmentFeedback = newAssessmentFeedbackResource().withId(1L).withQuestion(1L).withAssessment(1L).build();
-        List<AssessmentFeedbackResource> assessmentFeedbackList = new ArrayList<>();
-        assessmentFeedbackList.add(assessmentFeedback);
+
+        List<AssessorFormInputResponseResource> assessorResponses = newAssessorFormInputResponseResource()
+                .withAssessment(1L, 1L, 1L, 1L)
+                .withQuestion(1L, 1L, 2L, 2L)
+                .withFormInput(1L, 2L, 3L, 4L)
+                .withValue("Response to Q1 Form Input 1", "Response to Q1 Form Input 2", "Response to Q2 Form Input 1", "Response to Q2 Form Input 2")
+                .build(4);
 
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
@@ -125,20 +134,19 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(processRoleService.getById(assessment.getProcessRole())).thenReturn(settable(processRole));
-        when(assessmentFeedbackService.getAllAssessmentFeedback(assessment.getId())).thenReturn(assessmentFeedbackList);
-        Map<Long, AssessmentFeedbackResource> feedbackMap = new HashMap<>();
-        feedbackMap.put(1L, assessmentFeedback);
+        when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
+        Map<Long, List<AssessmentFeedbackResource>> assessorResponsesMap = asMap(1L, asList(assessorResponses.get(0), assessorResponses.get(1)), 2L, asList(assessorResponses.get(2), assessorResponses.get(3)));
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResource formInput = newFormInputResource().withId(1L).build();
-        setupFormInputAndFileEntry(fileEntry,formInput, app);
-        List<AppendixResource> appendices = setUpAppendices(fileEntry,formInput, app);
+        setupFormInputAndFileEntry(fileEntry, formInput, app);
+        List<AppendixResource> appendices = setUpAppendices(fileEntry, formInput, app);
 
         mockMvc.perform(get("/" + assessment.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-application-overview"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("questionFeedback", feedbackMap))
+                .andExpect(model().attribute("questionFeedback", assessorResponsesMap))
                 .andExpect(model().attribute("appendices", appendices))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("daysLeft", 3L))
@@ -163,9 +171,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResource formInput = newFormInputResource().withId(1L).build();
-        setupFormInputAndFileEntry(fileEntry,formInput, app);
+        setupFormInputAndFileEntry(fileEntry, formInput, app);
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
-        List<ApplicationFinanceResource> appFinanceList = setupFinances(app,orgSet);
+        List<ApplicationFinanceResource> appFinanceList = setupFinances(app, orgSet);
         OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
                 .withApplicationId(app.getId())
                 .withOrganisationFinances(appFinanceList)
@@ -176,14 +184,33 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessor-finances-summary"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("assessmentId",assessment.getId()))
-                .andExpect(model().attribute("applicationOrganisations",orgSet))
-                .andExpect(model().attribute("organisationFinances",organisationFinanceOverview.getApplicationFinancesByOrganisation()))
-                .andExpect(model().attribute("financeTotal",organisationFinanceOverview.getTotal()))
+                .andExpect(model().attribute("assessmentId", assessment.getId()))
+                .andExpect(model().attribute("applicationOrganisations", orgSet))
+                .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getApplicationFinancesByOrganisation()))
+                .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()))
         ;
     }
 
-    private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet ) {
+    @Test
+    public void testRejectApplication() throws Exception {
+        final String reason = "reason";
+        final String comment = "comment";
+        final Long assessmentId = 1L;
+
+        when(assessmentService.rejectApplication(assessmentId, "reason", "comment")).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/{assessmentId}/status", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", reason)
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(view().name("assessor/assessor-dashboard"))
+                .andReturn();
+
+        verify(assessmentService, only()).rejectApplication(assessmentId, reason, comment);
+    }
+
+    private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
         List<OrganisationResource> orgList = orgSet.stream().collect(Collectors.toList());
         List<ApplicationFinanceResource> appFinanceList = new ArrayList<>();
         appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(), OrganisationSize.LARGE));
@@ -209,7 +236,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         return orgSet;
     }
 
-    private void setupFormInputAndFileEntry(FileEntryResource fileEntry,FormInputResource formInput, ApplicationResource app) {
+    private void setupFormInputAndFileEntry(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app) {
         FormInputResponseResource formInputResponse = newFormInputResponseResource().withFormInputs(1L).withFileEntry(fileEntry).build();
         List<FormInputResponseResource> responses = new ArrayList<>();
         responses.add(formInputResponse);
@@ -219,7 +246,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(fileEntryRestService.findOne(formInputResponse.getFileEntry())).thenReturn(restSuccess(fileEntry));
     }
 
-    private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry,FormInputResource formInput, ApplicationResource app) {
+    private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app) {
         return asList(new AppendixResource(app.getId(), formInput.getId(), "test", fileEntry));
     }
 }

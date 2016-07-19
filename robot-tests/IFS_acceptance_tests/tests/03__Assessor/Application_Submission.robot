@@ -3,7 +3,7 @@ Documentation     INFUND-248: As an assessor I want to submit my assessments one
 Suite Setup       Guest user log-in    &{assessor_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Pending
-Resource          ../../resources/GLOBAL_LIBRARIES.robot    # Pending due to upcoming refactoring work for the assessor story
+Resource          ../../resources/GLOBAL_LIBRARIES.robot    # TODO Pending due to upcoming refactoring work for the assessor story
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot

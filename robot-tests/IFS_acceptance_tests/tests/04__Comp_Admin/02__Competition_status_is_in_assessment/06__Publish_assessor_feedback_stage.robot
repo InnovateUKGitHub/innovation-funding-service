@@ -38,7 +38,7 @@ The publish feedback should be enabled
 
 Remove the upload then feedback button becomes disabled
     [Documentation]    INFUND-2672
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${successful_application_overview}
     And the user should see the text in the page    Remove
     When the user clicks the button/link    name=removeAssessorFeedback
@@ -73,12 +73,12 @@ Choosing to Notify the applicants in the dialogue
 Successful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    Following the success of your application
+    Then Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    Following the success of your application
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then Open mailbox and confirm received email    worth.email.test.two@gmail.com    testtest1    dev-dwatson-liferay-portal@hiveit.co.uk    Following the submission of your application
+    Then Open mailbox and confirm received email    worth.email.test.two@gmail.com    testtest1    Following the submission of your application
     [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup

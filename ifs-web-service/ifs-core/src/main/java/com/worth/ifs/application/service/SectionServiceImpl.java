@@ -122,7 +122,7 @@ public class SectionServiceImpl implements SectionService {
     public void removeSectionsQuestionsWithType(SectionResource section, String name) {
         List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
         List<SectionResource> sections = this.getAllByCompetitionId(section.getCompetition());
-        List<FormInputResource> formInputResources = formInputService.findByCompetitionId(section.getCompetition());
+        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(section.getCompetition());
         filterByIdList(section.getChildSections(), sections).stream()
                 .forEach(
                 s -> s.setQuestions(

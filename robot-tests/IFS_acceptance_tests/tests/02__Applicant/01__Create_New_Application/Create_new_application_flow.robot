@@ -149,7 +149,7 @@ Special Project Finance role (email step)
     [Documentation]    INFUND-2609
     [Tags]    Email    Pending
     [Setup]    The guest user opens the browser
-    # Pending ongoing work on the project finance role
+    # TODO Pending ongoing work on the project finance role
     Given the user opens the mailbox and verifies the email from
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
