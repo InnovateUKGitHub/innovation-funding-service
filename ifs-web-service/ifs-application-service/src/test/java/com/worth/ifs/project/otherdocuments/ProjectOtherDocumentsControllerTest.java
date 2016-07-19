@@ -10,19 +10,24 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -188,6 +193,91 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertEquals("My content!", result.getResponse().getContentAsString());
         assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
                 result.getResponse().getHeader("Content-Disposition"));
+    }
+
+    @Test
+    public void testUploadCollaborationAgreement() throws Exception {
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "My content!".getBytes());
+
+        when(projectService.addCollaborationAgreementDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceSuccess(createdFileDetails));
+
+        mockMvc.perform(
+                fileUpload("/project/123/other-documents").
+                        file(uploadedFile).
+                        param("uploadCollaborationAgreementClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/other-documents"));
+    }
+
+    @Test
+    public void testRemoveCollaborationAgreement() throws Exception {
+
+        when(projectService.removeCollaborationAgreementDocument(123L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                post("/project/123/other-documents").
+                        param("removeCollaborationAgreementClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/other-documents"));
+
+        verify(projectService).removeCollaborationAgreementDocument(123L);
+    }
+
+    @Test
+    public void testDownloadExploitationPlan() throws Exception {
+
+        FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
+        ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
+
+        when(projectService.getExploitationPlanFile(123L)).
+                thenReturn(Optional.of(fileContents));
+
+        when(projectService.getExploitationPlanFileDetails(123L)).
+                thenReturn(Optional.of(fileDetails));
+
+        MvcResult result = mockMvc.perform(get("/project/123/other-documents/exploitation-plan")).
+                andExpect(status().isOk()).
+                andReturn();
+
+        assertEquals("My content!", result.getResponse().getContentAsString());
+        assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
+                result.getResponse().getHeader("Content-Disposition"));
+    }
+
+    @Test
+    public void testUploadExploitationPlan() throws Exception {
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("exploitationPlan", "filename.txt", "text/plain", "My content!".getBytes());
+
+        when(projectService.addExploitationPlanDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceSuccess(createdFileDetails));
+
+        mockMvc.perform(
+                fileUpload("/project/123/other-documents").
+                        file(uploadedFile).
+                        param("uploadExploitationPlanClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/other-documents"));
+    }
+
+    @Test
+    public void testRemoveExploitationPlan() throws Exception {
+
+        when(projectService.removeExploitationPlanDocument(123L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                post("/project/123/other-documents").
+                        param("removeExploitationPlanClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/other-documents"));
+
+        verify(projectService).removeExploitationPlanDocument(123L);
     }
 
     @Override
