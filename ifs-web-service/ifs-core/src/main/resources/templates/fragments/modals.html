@@ -105,17 +105,17 @@
         <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'status'}" method="post" th:object="${form}" novalidate="novalidate">
             <div th:include="fragments/modals :: close-button" th:remove="tag" />
             <div class="form-group">
-                <label class="form-label" th:for="${#ids.next('rejectInformation')}">Please select a reason for rejecting the application</label>
-                <select class="form-control" required="required" th:field="*{rejectInformation}">
-                    <option value="" selected="selected">Please select one reason</option>
-                    <option th:selected="${'conflict-of-interest' == rejectInformation}" value="conflict-of-interest">Conflict of interest</option>
-                    <option th:selected="${'not-my-area-of-interest' == rejectInformation}" value="not-my-area-of-interest">Not my area of expertise</option>
-                    <option th:selected="${'too-many-assessments' == rejectInformation}" value="too-many-assessments">Too many assessments</option>
+                <label class="form-label" th:for="${#ids.next('rejectReason')}">Please select a reason for rejecting the application</label>
+                <select class="form-control" required="required" th:field="*{rejectReason}">
+                    <option value="" th:selected="${rejectReason == null}">Please select one reason</option>
+                    <option th:selected="${rejectReason == 'conflict-of-interest'}" value="conflict-of-interest">Conflict of interest</option>
+                    <option th:selected="${rejectReason == 'not-my-area-of-interest'}" value="not-my-area-of-interest">Not my area of expertise</option>
+                    <option th:selected="${rejectReason == 'too-many-assessments'}" value="too-many-assessments">Too many assessments</option>
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label" th:for="${#ids.next('rejectReason')}">Use this space to provide more information</label>
-                <textarea class="form-control width-full" rows="4" th:field="*{rejectReason}"></textarea>
+                <label class="form-label" th:for="${#ids.next('rejectInformation')}">Use this space to provide more information</label>
+                <textarea class="form-control width-full" rows="4" th:field="*{rejectInformation}"></textarea>
             </div>
             <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
         </form>
