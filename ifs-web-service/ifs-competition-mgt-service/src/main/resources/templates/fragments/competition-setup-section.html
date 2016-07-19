@@ -218,27 +218,26 @@
 
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <div th:fragment="section-additional">
-    <div class="hgroup extra-margin-bottom">
-        <h1 class="heading-xlarge no-margin">Funding information</h1>
+    <div class="page-title">
+        <h1 class="heading-xlarge">Funding information</h1>
     </div>
 
     <form th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
           th:with="coFundersCount=0">
 
-        <fieldset th:if="${editable}" id="section-2-edit">
+        <fieldset th:if="${editable}">
             <legend class="visuallyhidden">Funding information</legend>
-
-
-            <div class="grid-row" id="co-funder-row-1">
+            <div class="grid-row">
                 <div class="column-half">
                 <div th:class="${#fields.hasErrors('funder')}? 'form-group error':'form-group'">
                     <label class="form-label" for="competitionSetupForm.funder">
                         <span class="form-label-bold">Funder</span>
-                    <span th:if="${#fields.hasErrors('funder')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('funder')}" th:text="${err}" />
-                    </span>
+                        <th:block th:if="${#fields.hasErrors('funder')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('funder')}" th:text="${err}" />
+                        </th:block>
                     </label>
-                    <input th:class="${#fields.hasErrors('funder') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                    <input class="form-control width-x-large"
+                           th:errorclass="field-error"
                            type="text"
                            th:field="${competitionSetupForm.funder}"
                            maxlength="255"
@@ -250,27 +249,27 @@
                     <div th:class="${#fields.hasErrors('funderBudget')}? 'form-group error':'form-group'">
                         <label class="form-label" for="competitionSetupForm.funderBudget">
                             <span class="form-label-bold">Budget</span>
-                    <span th:if="${#fields.hasErrors('funderBudget')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('funderBudget')}" th:text="${err}" />
-                    </span>
+                            <th:block th:if="${#fields.hasErrors('funderBudget')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('funderBudget')}" th:text="${err}" />
+                            </th:block>
                         </label>
-                        <input th:class="${#fields.hasErrors('funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                               type="text"
+                        <input class="form-control width-x-large"
+                               th:errorclass="field-error"
+                               type="number"
                                th:field="${competitionSetupForm.funderBudget}"
                                maxlength="255"
                                data-maxlength-errormessage="Co-funders budget has a maximum length of 255 characters" />
                     </div>
-
                 </div>
             </div>
 
             <div  th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})" class="grid-row" id="co-funder-row-2">
                 <div class="column-half">
                     <div class="form-group">
-                        <label class="form-label visuallyhidden" for="comp-co-funder-2">
-                            <span class="form-label-bold">Funder</span>
+                        <label class="form-label" for="comp-co-funder-2">
+                            <span class="visuallyhidden">Funder</span>
                         </label>
-                        <input class="form-control width-x-large" id="comp-co-funder-2" th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunder}" name="comp-co-funder-1" value="" />
+                        <input class="form-control width-x-large" th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunder}" name="comp-co-funder-1" value="" />
                     </div>
                 </div>
 
@@ -279,7 +278,7 @@
                         <label class="form-label visuallyhidden" for="comp-co-funders-budget-2">
                             <span class="form-label-bold">Budget</span>
                         </label>
-                        <input class="form-control width-x-large" id="comp-co-funders-budget-2" name="comp-co-funders-budget-2"
+                        <input type="number" class="form-control width-x-large" id="comp-co-funders-budget-2" name="comp-co-funders-budget-2"
                                th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value="" />
                     </div>
                 </div>
@@ -292,7 +291,7 @@
                     &nbsp;
                 </div>
                 <div class="column-half">
-                    <p class="heading-small no-margin">Total: £ <span>0</span></p>
+                    <p class="heading-small no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]">£ 0</span></p>
 
                     <div class="alignright">
                         <!--<a id="add-cofunder-1"  th:href="@{/competition/setup/{competitionId}/section/additional/add-co-funder(competitionId=${competition.id})}">+Add co-funder</a>-->
@@ -353,7 +352,6 @@
                     maxlength="255"
                     data-maxlength-errormessage="Activity code has a maximum length of 255 characters" />
                 </div>
-
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
                     <label class="form-label" for="competitionCode">
