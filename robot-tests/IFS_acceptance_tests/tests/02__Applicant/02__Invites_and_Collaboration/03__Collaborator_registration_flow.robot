@@ -1,7 +1,6 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
 ...
-...
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Collaboration    Applicant
@@ -53,7 +52,7 @@ The type of organisation navigates to the correct page
     [Documentation]    INFUND-1780
     ...
     ...    INFUND-1231
-    [Tags]    HappyPath
+    [Tags]
     When the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Find your business on Companies House
