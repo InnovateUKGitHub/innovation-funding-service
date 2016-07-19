@@ -409,6 +409,30 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")));
     }
 
+    protected RestDocumentationResultHandler documentFileDeleteMethod(RestDocumentationResultHandler document) {
+        return documentFileDeleteMethod(document, emptyList(), emptyList());
+    }
+
+    protected RestDocumentationResultHandler documentFileDeleteMethod(RestDocumentationResultHandler document,
+                                                                    List<Pair<String, String>> additionalRequestParameters,
+                                                                    List<Pair<String, String>> additionalHeaders) {
+
+        List<ParameterDescriptor> requestParameters = new ArrayList<>();
+        additionalRequestParameters.forEach(nvp -> requestParameters.add(parameterWithName(nvp.getKey()).description(nvp.getValue())));
+
+        List<HeaderDescriptor> headers = new ArrayList<>();
+        headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
+        additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
+
+        return document.snippets(
+            requestParameters(
+                    requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
+            ),
+            requestHeaders(
+                    additionalHeaders.toArray(new HeaderDescriptor[additionalHeaders.size()])
+            ));
+    }
+
     protected Supplier<InputStream> fileUploadInputStreamExpectations(String expectedContent) {
         return createLambdaMatcher(is -> {
             assertInputStreamContents(is.get(), expectedContent);

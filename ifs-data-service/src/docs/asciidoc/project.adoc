@@ -184,3 +184,17 @@ include::{snippets}/project/update-collaboration-agreement/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/update-collaboration-agreement/curl-request.adoc[]
+
+
+=== Delete Collaboration Agreement document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/delete-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/delete-collaboration-agreement/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/delete-collaboration-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/delete-collaboration-agreement/curl-request.adoc[]

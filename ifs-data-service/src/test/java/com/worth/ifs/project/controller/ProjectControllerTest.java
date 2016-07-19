@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.worth.ifs.JsonTestUtil.fromJson;
 import static com.worth.ifs.JsonTestUtil.toJson;
@@ -409,14 +410,15 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void deleteCollaborationAgreementFileDetails() throws Exception {
+    public void deleteCollaborationAgreement() throws Exception {
 
         Long projectId = 123L;
 
-        when(projectServiceMock.deleteCollaborationAgreementFileEntry(projectId)).thenReturn(serviceSuccess());
+        Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
+                service -> service.deleteCollaborationAgreementFileEntry(projectId);
 
-        mockMvc.perform(delete("/project/{projectId}/collaboration-agreement", projectId)).
-                andExpect(status().isNoContent()).
-                andExpect(content().string(""));
+        assertDeleteFileDetails("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
+                emptyMap(), projectServiceMock, serviceCallToDelete).
+                andDo(documentFileDeleteMethod(document));
     }
 }

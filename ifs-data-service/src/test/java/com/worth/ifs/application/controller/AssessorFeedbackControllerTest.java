@@ -78,7 +78,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         assertDeleteFileDetails("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
                 asMap("applicationId", "123"),
                 assessorFeedbackServiceMock, deleteCall).
-                andDo(documentDeleteAssessorFeedbackDocument());
+                andDo(documentFileDeleteMethod(document, asListOfPairs("applicationId", "123"), emptyList()));
 
         verify(assessorFeedbackServiceMock).deleteAssessorFeedbackFileEntry(123L);
     }
@@ -223,17 +223,6 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                         headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
                 ),
                 requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")));
-    }
-
-    private RestDocumentationResultHandler documentDeleteAssessorFeedbackDocument() {
-
-        return document("assessor-feedback/assessorFeedbackDocument_delete",
-                requestParameters(
-                        parameterWithName("applicationId").description("Id of the Application that the Assessor Feedback document is being deleted from")
-                ),
-                requestHeaders(
-                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                ));
     }
     
     private RestDocumentationResultHandler documentAssessorFeedbackUploaded() {
