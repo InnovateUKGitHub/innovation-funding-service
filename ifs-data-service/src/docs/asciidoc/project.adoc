@@ -187,6 +187,20 @@ include::{snippets}/project/get-collaboration-agreement-file-details/curl-reques
 
 
 
+=== Get Collaboration Agreement file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-collaboration-agreement-file-content/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-collaboration-agreement-file-content/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-collaboration-agreement-file-content/curl-request.adoc[]
+
+
+
 === Update Collaboration Agreement document during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 

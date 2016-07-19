@@ -60,6 +60,21 @@ include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-
 
 
 
+=== Get Assessor Feedback document content for an Application
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/http-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/curl-request.adoc[]
+
+
+
 === Update Assessor Feedback document for an Application
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 

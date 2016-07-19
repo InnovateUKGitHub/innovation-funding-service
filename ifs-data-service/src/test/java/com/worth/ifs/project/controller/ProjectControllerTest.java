@@ -407,7 +407,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 (service, fileToUpload) -> service.getCollaborationAgreementFileEntryContents(projectId);
 
         assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
-                emptyMap(), projectServiceMock, serviceCallToUpload);
+                emptyMap(), projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetContentsMethod(document));
     }
 
     @Test
@@ -418,7 +419,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
                 service -> service.deleteCollaborationAgreementFileEntry(projectId);
 
-        assertDeleteFileDetails("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
+        assertDeleteFile("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToDelete).
                 andDo(documentFileDeleteMethod(document));
     }

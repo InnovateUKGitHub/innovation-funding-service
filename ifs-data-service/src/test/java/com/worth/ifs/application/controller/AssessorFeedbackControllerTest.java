@@ -73,7 +73,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         Function<AssessorFeedbackService, ServiceResult<Void>> deleteCall =
                 service -> assessorFeedbackServiceMock.deleteAssessorFeedbackFileEntry(123L);
 
-        assertDeleteFileDetails("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
+        assertDeleteFile("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
                 asMap("applicationId", "123"),
                 assessorFeedbackServiceMock, deleteCall).
                 andDo(documentFileDeleteMethod(document, asListOfPairs("applicationId", "123"), emptyList()));
@@ -90,7 +90,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         assertGetFileContents("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
                 asMap("applicationId", "123"),
                 assessorFeedbackServiceMock, getFileAction).
-                andDo(documentGetAssessorFeedbackDocumentationContents());
+                andDo(documentFileGetContentsMethod(document, asListOfPairs("applicationId", "123"), emptyList()));
     }
 
     @Test
@@ -159,17 +159,6 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         verify(assessorFeedbackServiceMock, never()).notifyLeadApplicantsOfAssessorFeedback(123L);
     }
 
-    private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationContents() {
-
-        return document("assessor-feedback/assessorFeedbackDocument_getFileContents",
-                requestParameters(
-                        parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to")
-                ),
-                requestHeaders(
-                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                ));
-    }
-
     private RestDocumentationResultHandler documentAssessorFeedbackUploaded() {
     	return document("assessor-feedback/assessorFeedbackUploaded",
     			requestParameters(
@@ -179,7 +168,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                         headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
                 ));
     }
-    
+
     private RestDocumentationResultHandler documentSubmitAssessorFeedback() {
     	return document("assessor-feedback/submitAssessorFeedback",
                 requestHeaders(

@@ -285,6 +285,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return resultActions;
     }
 
+    /**
+     * A useful shorthand way of testing a Controller method for simple getting of a file's details (a FileEntryResource)
+     */
     protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
 
         FileEntryResource fileToReturn = newFileEntryResource().
@@ -309,7 +312,10 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return resultActions;
     }
 
-    protected <T> ResultActions assertDeleteFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, Function<T, ServiceResult<Void>> deleteFileFn) throws Exception {
+    /**
+     * A useful shorthand way of testing a Controller method for simple deleting of a file
+     */
+    protected <T> ResultActions assertDeleteFile(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, Function<T, ServiceResult<Void>> deleteFileFn) throws Exception {
 
         when(deleteFileFn.apply(serviceToCall)).thenReturn(serviceSuccess());
 
@@ -327,6 +333,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return resultActions;
     }
 
+    /**
+     * A useful shorthand way of testing a Controller method for simple getting of a file's contents (binary data)
+     */
     protected <T> ResultActions assertGetFileContents(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileAndContents>> getFileFn) throws Exception {
 
         FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
@@ -350,12 +359,16 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return resultActions;
     }
 
-
-
+    /**
+     * A useful shorthand way of documenting a Controller method for simple uploading of a file (binary data and metadata)
+     */
     protected RestDocumentationResultHandler documentFileUploadMethod(RestDocumentationResultHandler document) {
         return documentFileUploadMethod(document, emptyList(), emptyList());
     }
 
+    /**
+     * A useful shorthand way of documenting a Controller method for simple uploading of a file (binary data and metadata)
+     */
     protected RestDocumentationResultHandler documentFileUploadMethod(RestDocumentationResultHandler document,
                                                                       List<Pair<String, String>> additionalRequestParameters,
                                                                       List<Pair<String, String>> additionalHeaders) {
@@ -386,10 +399,16 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 ));
     }
 
+    /**
+     * A useful shorthand way of documenting a Controller method for simple updating of a file (binary data and metadata)
+     */
     protected RestDocumentationResultHandler documentFileUpdateMethod(RestDocumentationResultHandler document) {
         return documentFileUpdateMethod(document, emptyList(), emptyList());
     }
 
+    /**
+     * A useful shorthand way of documenting a Controller method for simple updating of a file (binary data and metadata)
+     */
     protected RestDocumentationResultHandler documentFileUpdateMethod(RestDocumentationResultHandler document,
                                                                     List<Pair<String, String>> additionalRequestParameters,
                                                                     List<Pair<String, String>> additionalHeaders) {
@@ -414,34 +433,33 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")));
     }
 
+    /**
+     * A useful shorthand way of documenting a Controller method for simple deleting of a file
+     */
     protected RestDocumentationResultHandler documentFileDeleteMethod(RestDocumentationResultHandler document) {
         return documentFileDeleteMethod(document, emptyList(), emptyList());
     }
 
+    /**
+     * A useful shorthand way of documenting a Controller method for simple deleting of a file
+     */
     protected RestDocumentationResultHandler documentFileDeleteMethod(RestDocumentationResultHandler document,
                                                                     List<Pair<String, String>> additionalRequestParameters,
                                                                     List<Pair<String, String>> additionalHeaders) {
 
-        List<ParameterDescriptor> requestParameters = new ArrayList<>();
-        additionalRequestParameters.forEach(nvp -> requestParameters.add(parameterWithName(nvp.getKey()).description(nvp.getValue())));
-
-        List<HeaderDescriptor> headers = new ArrayList<>();
-        headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
-        additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
-
-        return document.snippets(
-            requestParameters(
-                    requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
-            ),
-            requestHeaders(
-                    additionalHeaders.toArray(new HeaderDescriptor[additionalHeaders.size()])
-            ));
+        return documentFileMethodWithEmptyResponseBody(document, additionalRequestParameters, additionalHeaders);
     }
 
+    /**
+     * A useful shorthand way of documenting a Controller method for simple getting of a file's details (a FileEntryResource)
+     */
     protected RestDocumentationResultHandler documentFileGetDetailsMethod(RestDocumentationResultHandler document) {
         return documentFileGetDetailsMethod(document, emptyList(), emptyList());
     }
 
+    /**
+     * A useful shorthand way of documenting a Controller method for simple getting of a file's details (a FileEntryResource)
+     */
     protected RestDocumentationResultHandler documentFileGetDetailsMethod(RestDocumentationResultHandler document,
                                                                           List<Pair<String, String>> additionalRequestParameters,
                                                                           List<Pair<String, String>> additionalHeaders) {
@@ -465,6 +483,41 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                         fieldWithPath("name").description("Name of the FileEntry that was looked up"),
                         fieldWithPath("mediaType").description("Media type of the FileEntry that was looked up"),
                         fieldWithPath("filesizeBytes").description("File size in bytes of the FileEntry that was looked up")
+                ));
+    }
+
+    /**
+     * A useful shorthand way of documenting a Controller method for simple getting of a file's contents (binary data)
+     */
+    protected RestDocumentationResultHandler documentFileGetContentsMethod(RestDocumentationResultHandler document) {
+        return documentFileGetContentsMethod(document, emptyList(), emptyList());
+    }
+
+    /**
+     * A useful shorthand way of documenting a Controller method for simple getting of a file's contents (binary data)
+     */
+    protected RestDocumentationResultHandler documentFileGetContentsMethod(RestDocumentationResultHandler document,
+                                                                           List<Pair<String, String>> additionalRequestParameters,
+                                                                           List<Pair<String, String>> additionalHeaders) {
+
+        return documentFileMethodWithEmptyResponseBody(document, additionalRequestParameters, additionalHeaders);
+    }
+
+    private RestDocumentationResultHandler documentFileMethodWithEmptyResponseBody(RestDocumentationResultHandler document, List<Pair<String, String>> additionalRequestParameters, List<Pair<String, String>> additionalHeaders) {
+
+        List<ParameterDescriptor> requestParameters = new ArrayList<>();
+        additionalRequestParameters.forEach(nvp -> requestParameters.add(parameterWithName(nvp.getKey()).description(nvp.getValue())));
+
+        List<HeaderDescriptor> headers = new ArrayList<>();
+        headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
+        additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
+
+        return document.snippets(
+                requestParameters(
+                        requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
+                ),
+                requestHeaders(
+                        additionalHeaders.toArray(new HeaderDescriptor[additionalHeaders.size()])
                 ));
     }
 
