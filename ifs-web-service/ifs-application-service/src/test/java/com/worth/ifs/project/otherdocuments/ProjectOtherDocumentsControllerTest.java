@@ -59,10 +59,58 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isReadOnly());
         assertTrue(model.isEditable());
         assertTrue(model.isLeadPartner());
+        assertTrue(model.isShowLeadPartnerGuidanceInformation());
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
         assertTrue(model.isShowSubmitDocumentsButton());
+
+        // test the form for the file uploads
+        assertNull(form.getCollaborationAgreement());
+        assertNull(form.getExploitationPlan());
+    }
+
+    @Test
+    public void testViewOtherDocumentsPageAsPartner() throws Exception {
+
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource().withId(projectId).build();
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
+
+        when(projectService.getById(projectId)).thenReturn(project);
+
+
+        when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(false);
+
+        MvcResult result = mockMvc.perform(get("/project/123/other-documents")).
+                andExpect(view().name("project/other-documents")).
+                andReturn();
+
+        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+
+        // test the view model
+        assertEquals(project.getId(), model.getProjectId());
+        assertEquals(project.getName(), model.getProjectName());
+        assertNull(model.getCollaborationAgreementFileDetails());
+        assertNull(model.getExploitationPlanFileDetails());
+        assertEquals(emptyList(), model.getRejectionReasons());
+        assertEquals(simpleMap(partnerOrganisations, OrganisationResource::getName),
+                model.getPartnerOrganisationNames());
+
+        // test flags that help to drive the page
+        assertTrue(model.isReadOnly());
+        assertFalse(model.isEditable());
+        assertFalse(model.isLeadPartner());
+        assertFalse(model.isShowLeadPartnerGuidanceInformation());
+        assertFalse(model.isShowApprovedMessage());
+        assertFalse(model.isShowDocumentsBeingReviewedMessage());
+        assertFalse(model.isShowRejectionMessages());
+        assertFalse(model.isShowSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
