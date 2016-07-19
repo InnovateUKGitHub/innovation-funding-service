@@ -19,7 +19,7 @@ public class FormInputTemplateBuilder extends BaseBuilder<FormInputTemplate, For
         super(newMultiActions);
     }
 
-    public static FormInputTemplateBuilder newCompetitionTemplate() {
+    public static FormInputTemplateBuilder newFormInputTemplate() {
         return new FormInputTemplateBuilder(emptyList()).with(uniqueIds());
     }
 

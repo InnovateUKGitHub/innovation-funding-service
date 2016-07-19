@@ -17,7 +17,7 @@ public class QuestionTemplateBuilder extends BaseBuilder<QuestionTemplate, Quest
         super(newMultiActions);
     }
 
-    public static QuestionTemplateBuilder newCompetitionTemplate() {
+    public static QuestionTemplateBuilder newQuestionTemplate() {
         return new QuestionTemplateBuilder(emptyList()).with(uniqueIds());
     }
 

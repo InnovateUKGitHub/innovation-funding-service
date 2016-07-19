@@ -19,7 +19,7 @@ public class SectionTemplateBuilder extends BaseBuilder<SectionTemplate, Section
         super(newMultiActions);
     }
 
-    public static SectionTemplateBuilder newCompetitionTemplate() {
+    public static SectionTemplateBuilder newSectionTemplate() {
         return new SectionTemplateBuilder(emptyList()).with(uniqueIds());
     }
 
@@ -28,7 +28,7 @@ public class SectionTemplateBuilder extends BaseBuilder<SectionTemplate, Section
     }
 
     public SectionTemplateBuilder withSectionType(SectionType sectionType) {
-        return with(sectionTemplate -> setField("sectionType", sectionType, sectionTemplate));
+        return with(sectionTemplate -> setField("type", sectionType, sectionTemplate));
     }
     
     public SectionTemplateBuilder withName(String name) {

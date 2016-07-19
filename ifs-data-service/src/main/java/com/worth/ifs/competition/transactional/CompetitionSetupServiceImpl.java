@@ -5,8 +5,10 @@ import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COM
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -156,16 +158,21 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 		Competition competition = competitionRepository.findById(competitionId);
 		//TODO check competition status
 		List<SectionTemplate> sectionsWithoutParentSections = template.getSectionTemplates().stream().filter(s -> s.getParentSectionTemplate() == null).collect(Collectors.toList());
-		competition.setSections(createSections(competition, sectionsWithoutParentSections, null));
 		
+		attachSections(competition, template.getSectionTemplates(), null);
+		
+		competition.setCompetitionType(template.getCompetitionType());
 		return serviceSuccess();
 	}
 
-	private List<Section> createSections(Competition competition, List<SectionTemplate> sectionTemplates, Section parentSection) {
-		return sectionTemplates.stream().map(createSection(competition, parentSection)).collect(Collectors.toList());
+	private void attachSections(Competition competition, List<SectionTemplate> sectionTemplates, Section parentSection) {
+		if(sectionTemplates == null) {
+			return;
+		}
+		sectionTemplates.forEach(attachSection(competition, parentSection));
 	}
 	
-	private Function<SectionTemplate, Section> createSection(Competition competition, Section parentSection) {
+	private Consumer<SectionTemplate> attachSection(Competition competition, Section parentSection) {
 		return (SectionTemplate sectionTemplate) -> {
 			Section section = new Section();
 			section.setType(sectionTemplate.getType());
@@ -173,10 +180,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			section.setDescription(sectionTemplate.getDescription());
 			section.setAssessorGuidanceDescription(sectionTemplate.getAssessorGuidanceDescription());
 			section.setCompetition(competition);
+			if(!competition.getSections().contains(section)){
+				competition.getSections().add(section);
+			}
 			section.setQuestions(createQuestions(competition, section, sectionTemplate.getQuestionTemplates()));
-			section.setChildSections(createSections(competition, sectionTemplate.getChildSectionTemplates(), section));
+			
+			attachSections(competition, sectionTemplate.getChildSectionTemplates(), section);
+			
 			section.setParentSection(parentSection);
-			return section;
+			if(parentSection != null) {
+				if(parentSection.getChildSections() == null) {
+					parentSection.setChildSections(new ArrayList<>());
+				}
+				parentSection.getChildSections().add(section);
+			}
 		};
 	}
 	
