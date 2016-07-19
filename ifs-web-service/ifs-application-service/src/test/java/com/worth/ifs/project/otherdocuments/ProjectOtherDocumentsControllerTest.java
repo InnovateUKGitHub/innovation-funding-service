@@ -196,6 +196,20 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
+    public void testDownloadCollaborationAgreementButFileDoesntExist() throws Exception {
+
+        when(projectService.getExploitationPlanFile(123L)).
+                thenReturn(Optional.empty());
+
+        when(projectService.getExploitationPlanFileDetails(123L)).
+                thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/project/123/other-documents/exploitation-plan")).
+                andExpect(status().isNotFound()).
+                andExpect(view().name("404"));
+    }
+
+    @Test
     public void testUploadCollaborationAgreement() throws Exception {
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
@@ -246,6 +260,20 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertEquals("My content!", result.getResponse().getContentAsString());
         assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
                 result.getResponse().getHeader("Content-Disposition"));
+    }
+
+    @Test
+    public void testDownloadExploitationPlanButFileDoesntExist() throws Exception {
+
+        when(projectService.getExploitationPlanFile(123L)).
+                thenReturn(Optional.empty());
+
+        when(projectService.getExploitationPlanFileDetails(123L)).
+                thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/project/123/other-documents/exploitation-plan")).
+                andExpect(status().isNotFound()).
+                andExpect(view().name("404"));
     }
 
     @Test
