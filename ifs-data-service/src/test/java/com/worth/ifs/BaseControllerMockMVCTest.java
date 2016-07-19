@@ -287,7 +287,12 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
 
-        FileEntryResource fileToReturn = newFileEntryResource().build();
+        FileEntryResource fileToReturn = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(dummyFileContent.length()).
+                withName("filename.txt").
+                withMediaType("text/plain").
+                build();
 
         when(getFileFn.apply(serviceToCall, fileToReturn)).thenReturn(serviceSuccess(fileToReturn));
 
@@ -431,6 +436,36 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             requestHeaders(
                     additionalHeaders.toArray(new HeaderDescriptor[additionalHeaders.size()])
             ));
+    }
+
+    protected RestDocumentationResultHandler documentFileGetDetailsMethod(RestDocumentationResultHandler document) {
+        return documentFileGetDetailsMethod(document, emptyList(), emptyList());
+    }
+
+    protected RestDocumentationResultHandler documentFileGetDetailsMethod(RestDocumentationResultHandler document,
+                                                                          List<Pair<String, String>> additionalRequestParameters,
+                                                                          List<Pair<String, String>> additionalHeaders) {
+
+        List<ParameterDescriptor> requestParameters = new ArrayList<>();
+        additionalRequestParameters.forEach(nvp -> requestParameters.add(parameterWithName(nvp.getKey()).description(nvp.getValue())));
+
+        List<HeaderDescriptor> headers = new ArrayList<>();
+        headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
+        additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
+
+        return document.snippets(
+                requestParameters(
+                        requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
+                ),
+                requestHeaders(
+                        additionalHeaders.toArray(new HeaderDescriptor[additionalHeaders.size()])
+                ),
+                responseFields(
+                        fieldWithPath("id").description("Id of the FileEntry that was looked up"),
+                        fieldWithPath("name").description("Name of the FileEntry that was looked up"),
+                        fieldWithPath("mediaType").description("Media type of the FileEntry that was looked up"),
+                        fieldWithPath("filesizeBytes").description("File size in bytes of the FileEntry that was looked up")
+                ));
     }
 
     protected Supplier<InputStream> fileUploadInputStreamExpectations(String expectedContent) {

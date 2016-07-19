@@ -6,7 +6,6 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -29,7 +28,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -104,7 +102,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         assertGetFileDetails("/assessorfeedback/assessorFeedbackDocument/fileentry", new Object[] {},
                 asMap("applicationId", "123"),
                 assessorFeedbackServiceMock, getFileAction).
-                andDo(documentGetAssessorFeedbackDocumentationContents());
+                andDo(documentFileGetDetailsMethod(document, asListOfPairs("applicationId", "123"), emptyList()));
     }
     
     @Test
@@ -161,23 +159,6 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
         verify(assessorFeedbackServiceMock, never()).notifyLeadApplicantsOfAssessorFeedback(123L);
     }
 
-    private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationFileEntry() {
-
-        return document("assessor-feedback/assessorFeedbackDocument_getFileEntry",
-                requestParameters(
-                        parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to")
-                ),
-                requestHeaders(
-                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                ),
-                responseFields(
-                        fieldWithPath("id").description("Id of the FileEntry that was looked up"),
-                        fieldWithPath("name").description("Name of the FileEntry that was looked up"),
-                        fieldWithPath("mediaType").description("Media type of the FileEntry that was looked up"),
-                        fieldWithPath("filesizeBytes").description("File size in bytes of the FileEntry that was looked up")
-                ));
-    }
-
     private RestDocumentationResultHandler documentGetAssessorFeedbackDocumentationContents() {
 
         return document("assessor-feedback/assessorFeedbackDocument_getFileContents",
@@ -189,42 +170,6 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 ));
     }
 
-    private RestDocumentationResultHandler documentCreateAssessorFeedbackDocument() {
-
-        return document("assessor-feedback/assessorFeedbackDocument_create",
-                requestParameters(
-                        parameterWithName("applicationId").description("Id of the Application that the Assessor Feedback document is being applied to"),
-                        parameterWithName("filename").description("The filename of the file being uploaded")
-                ),
-                requestHeaders(
-                        headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf"),
-                        headerWithName("Content-Length").description("The Content Length of the binary file data being uploaded in bytes"),
-                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                ),
-                requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")),
-                responseFields(
-                        fieldWithPath("id").description("Id of the FileEntry that was created"),
-                        fieldWithPath("name").description("Name of the FileEntry that was created"),
-                        fieldWithPath("mediaType").description("Media type of the FileEntry that was created"),
-                        fieldWithPath("filesizeBytes").description("File size in bytes of the FileEntry that was created")
-                ));
-    }
-
-    private RestDocumentationResultHandler documentUpdateAssessorFeedbackDocument() {
-
-        return document("assessor-feedback/assessorFeedbackDocument_update",
-                requestParameters(
-                        parameterWithName("applicationId").description("Id of the Application that the Assessor Feedback document is being applied to"),
-                        parameterWithName("filename").description("The filename of the file being uploaded")
-                ),
-                requestHeaders(
-                        headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf"),
-                        headerWithName("Content-Length").description("The Content Length of the binary file data being uploaded in bytes"),
-                        headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                ),
-                requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")));
-    }
-    
     private RestDocumentationResultHandler documentAssessorFeedbackUploaded() {
     	return document("assessor-feedback/assessorFeedbackUploaded",
     			requestParameters(
@@ -240,10 +185,6 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 requestHeaders(
                         headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
                 ));
-    }
-
-    private FileEntryResource createFileEntryResourceExpectations(FileHeaderAttributes expectedAttributes) {
-        return eq(expectedAttributes.toFileEntryResource());
     }
 
     @Override

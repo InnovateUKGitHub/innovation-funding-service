@@ -171,6 +171,22 @@ include::{snippets}/project/add-collaboration-agreement/response-fields.adoc[]
 include::{snippets}/project/add-collaboration-agreement/curl-request.adoc[]
 
 
+=== Get Collaboration Agreement file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-collaboration-agreement-file-details/http-request.adoc[]
+include::{snippets}/project/get-collaboration-agreement-file-details/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-collaboration-agreement-file-details/http-response.adoc[]
+include::{snippets}/project/get-collaboration-agreement-file-details/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-collaboration-agreement-file-details/curl-request.adoc[]
+
+
+
 === Update Collaboration Agreement document during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 

@@ -394,7 +394,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 (service, fileToUpload) -> service.getCollaborationAgreementFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId}, emptyMap(),
-                projectServiceMock, serviceCallToUpload);
+                projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetDetailsMethod(document));
     }
 
     @Test
