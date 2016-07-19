@@ -91,7 +91,6 @@ public class AssessmentApplicationSummaryControllerTest extends BaseControllerMo
                 .withSection(2L, 2L)
                 .withQuestionNumber("1", "2")
                 .withShortName("Business opportunity", "Potential market")
-                .withNeedingAssessorScore(TRUE, TRUE)
                 .build(2);
 
         when(assessmentFeedbackService.getAllAssessmentFeedback(assessmentId))
