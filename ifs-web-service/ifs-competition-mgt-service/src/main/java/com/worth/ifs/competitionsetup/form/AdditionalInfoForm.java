@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,7 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     private String innovateBudget;
     @Size(max = 255, message = "Funder has a maximum length of 255 characters")
     private String funder;
-
-    //TODO add validation for numeric
-    //@Size(max = 255, message = "Funder budget has a maximum length of 255 characters")
+    @Min(value=0, message = "Please a valid number.")
     private Double funderBudget;
     @NotEmpty(message = "Please enter a PAF number")
     private String pafNumber;
@@ -103,5 +102,9 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
 
     public void setCoFunders(List<CoFunderForm> coFunders) {
         this.coFunders = coFunders;
+    }
+
+    public int getCoFundersCount() {
+        return coFunders.size();
     }
 }

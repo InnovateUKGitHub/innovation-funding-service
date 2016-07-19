@@ -15,7 +15,7 @@ public class CompetitionCoFunder extends DomainObject {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="competitionId", referencedColumnName="id")
+    @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 
     @Column(name = "co_funder")

@@ -9,6 +9,8 @@ import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * Competition setup section saver for the additional info section.
  */
@@ -33,7 +35,7 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 		competition.setBudgetCode(additionalInfoForm.getBudgetCode());
 		competition.setPafCode(additionalInfoForm.getPafNumber());
 		additionalInfoForm.setCompetitionCode(competition.getCode());
-
+		competition.setCoFunders(new ArrayList<>());
 		additionalInfoForm.getCoFunders().forEach(coFunderForm -> {
 			CompetitionCoFunderResource competitionCoFunderResource = new CompetitionCoFunderResource();
 			competitionCoFunderResource.setCoFunder(coFunderForm.getCoFunder());

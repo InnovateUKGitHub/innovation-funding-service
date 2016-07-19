@@ -2,6 +2,7 @@ package com.worth.ifs.competition.repository;
 
 import com.worth.ifs.competition.domain.CompetitionCoFunder;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ import java.util.List;
 public interface CompetitionCoFunderRepository extends CrudRepository<CompetitionCoFunder, Long> {
 
     List<CompetitionCoFunder> findByCompetitionId(Long competitionId);
+
+    void deleteByCompetitionId(@Param("competitionId") Long competitionId);
 
 }
