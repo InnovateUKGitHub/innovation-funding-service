@@ -423,4 +423,69 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 emptyMap(), projectServiceMock, serviceCallToDelete).
                 andDo(documentFileDeleteMethod(document));
     }
+
+
+
+    @Test
+    public void addExploitationPlan() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.createExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUploadProcess("/project/" + projectId + "/exploitation-plan", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUploadMethod(document));
+    }
+
+    @Test
+    public void updateExploitationPlan() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
+                (service, fileToUpload) -> service.updateExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUpdateProcess("/project/" + projectId + "/exploitation-plan", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUpdateMethod(document));
+    }
+
+    @Test
+    public void getExploitationPlanFileDetails() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.getExploitationPlanFileEntryDetails(projectId);
+
+        assertGetFileDetails("/project/{projectId}/exploitation-plan/details", new Object[] {projectId}, emptyMap(),
+                projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetDetailsMethod(document));
+    }
+
+    @Test
+    public void getExploitationPlanFileContent() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service, fileToUpload) -> service.getExploitationPlanFileEntryContents(projectId);
+
+        assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
+                emptyMap(), projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetContentsMethod(document));
+    }
+
+    @Test
+    public void deleteExploitationPlan() throws Exception {
+
+        Long projectId = 123L;
+
+        Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
+                service -> service.deleteExploitationPlanFileEntry(projectId);
+
+        assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[] {projectId},
+                emptyMap(), projectServiceMock, serviceCallToDelete).
+                andDo(documentFileDeleteMethod(document));
+    }
 }

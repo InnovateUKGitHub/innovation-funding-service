@@ -228,3 +228,78 @@ include::{snippets}/project/delete-collaboration-agreement/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/delete-collaboration-agreement/curl-request.adoc[]
+
+
+=== Upload Exploitation Plan Document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/add-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/add-exploitation-plan/request-parameters.adoc[]
+include::{snippets}/project/add-exploitation-plan/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/add-exploitation-plan/http-response.adoc[]
+include::{snippets}/project/add-exploitation-plan/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/add-exploitation-plan/curl-request.adoc[]
+
+
+=== Get Exploitation Plan file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-exploitation-plan-file-details/http-request.adoc[]
+include::{snippets}/project/get-exploitation-plan-file-details/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-exploitation-plan-file-details/http-response.adoc[]
+include::{snippets}/project/get-exploitation-plan-file-details/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-exploitation-plan-file-details/curl-request.adoc[]
+
+
+
+=== Get Exploitation Plan file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-exploitation-plan-file-content/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-exploitation-plan-file-content/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-exploitation-plan-file-content/curl-request.adoc[]
+
+
+
+=== Update Exploitation Plan document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/update-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/update-exploitation-plan/request-parameters.adoc[]
+include::{snippets}/project/update-exploitation-plan/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/update-exploitation-plan/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-exploitation-plan/curl-request.adoc[]
+
+
+=== Delete Exploitation Plan document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/delete-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/delete-exploitation-plan/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/delete-exploitation-plan/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/delete-exploitation-plan/curl-request.adoc[]
