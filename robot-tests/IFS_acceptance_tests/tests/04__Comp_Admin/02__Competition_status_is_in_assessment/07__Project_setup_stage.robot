@@ -17,6 +17,8 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...               INFUND-3010 As a partner I want to be able to supply bank details for my business so that Innovate UK can verify its suitability for funding purposes
 ...
 ...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
+...
+...               INFUND-3382 As a partner I want to be able to view our project details after they have been submitted so that I can use them for reference
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
@@ -236,25 +238,40 @@ Lead partner can change the project address
 Project details submission flow
     [Documentation]    INFUND-3467
     [Tags]    HappyPath
-    When The user should not see the element    xpath=//span[contains(text(), 'No')]
+    When all the fields are completed
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the user should not see the text in the page      The project details have been submitted to Innovate UK
     Then the applicant clicks the submit button in the modal
     And the user should see the text in the page    The project details have been submitted to Innovate UK
     Then the user navigates to the page    ${successful_project_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
+    And the user should see the element    jQuery=ul li.require-action:nth-child(4)
 
 Project details submitted is read only
     [Documentation]    INFUND-3467
     [Tags]
     When the user clicks the button/link    link=Project details
-    Then The user should not see the element    xpath=//span[contains(text(), 'No')]
+    Then all the fields are completed
     And The user should not see the element    link=Start date
     And The user should not see the element    link=Project address
     And The user should not see the element    link=Project manager
     And The user should not see the element    link=Ludlow
     And The user should not see the element    link=EGGS
     And The user should not see the element    link=Cheeseco
+
+All partners can view submited project details
+    [Documentation]    INFUND-3471
+    [Setup]  the user logs out if they are logged in
+    When guest user log-in                      jessica.doe@ludlow.co.uk    Passw0rd
+    And the user navigates to the page          ${successful_project_page}/details
+    Then the user should not see the element    link=Ludlow
+    And all the fields are completed
+    Then the user logs out if they are logged in
+    When guest user log-in                      pete.tom@egg.com    Passw0rd
+    And the user navigates to the page          ${successful_project_page}/details
+    Then the user should not see the element    link=EGGS
+    And all the fields are completed
+
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
@@ -512,3 +529,11 @@ the user moves focus away from the element
     [Arguments]    ${element}
     mouse out       ${element}
     focus         jQuery=.button:contains("Submit bank account details")
+
+all the fields are completed
+    the matching status checkbox is updated    project-details    1    yes
+    the matching status checkbox is updated    project-details    2    yes
+    the matching status checkbox is updated    project-details    3    yes
+    the matching status checkbox is updated    project-details-finance    1    yes
+    the matching status checkbox is updated    project-details-finance    2    yes
+    the matching status checkbox is updated    project-details-finance    3    yes
