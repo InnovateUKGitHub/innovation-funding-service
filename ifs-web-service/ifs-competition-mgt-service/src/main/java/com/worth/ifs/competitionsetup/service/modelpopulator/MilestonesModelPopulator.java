@@ -17,7 +17,5 @@ public class MilestonesModelPopulator implements CompetitionSetupSectionModelPop
     @Override
     public void populateModel(Model model, CompetitionResource competitionResource) {
 
-
-
     }
 }
