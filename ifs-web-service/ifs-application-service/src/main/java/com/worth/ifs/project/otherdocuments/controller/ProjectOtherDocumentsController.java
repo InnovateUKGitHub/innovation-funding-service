@@ -51,9 +51,14 @@ public class ProjectOtherDocumentsController {
     public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
+        return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
+    }
+
+    private String doViewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser, ProjectOtherDocumentsForm form) {
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
-        model.addAttribute("form", new ProjectOtherDocumentsForm());
+        model.addAttribute("form", form);
         return "project/other-documents";
     }
 
@@ -76,7 +81,7 @@ public class ProjectOtherDocumentsController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", () -> {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form, () -> {
 
             MultipartFile file = form.getCollaborationAgreement();
 
@@ -93,7 +98,7 @@ public class ProjectOtherDocumentsController {
                                              Model model,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement",
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form,
                 () -> projectService.removeCollaborationAgreementDocument(projectId));
     }
 
@@ -115,7 +120,7 @@ public class ProjectOtherDocumentsController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", () -> {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form, () -> {
 
             MultipartFile file = form.getExploitationPlan();
 
@@ -132,14 +137,14 @@ public class ProjectOtherDocumentsController {
                                              Model model,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan",
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form,
                 () -> projectService.removeExploitationPlanDocument(projectId));
     }
 
-    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToOtherDocumentsPage(projectId);
-        Supplier<String> failureView = () -> viewOtherDocumentsPage(projectId, model, loggedInUser);
+        Supplier<String> failureView = () -> doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
 
         return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
     }
