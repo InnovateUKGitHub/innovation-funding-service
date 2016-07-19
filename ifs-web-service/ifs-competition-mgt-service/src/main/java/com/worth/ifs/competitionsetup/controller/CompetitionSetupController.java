@@ -187,7 +187,7 @@ public class CompetitionSetupController {
         return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
       }
       else {
-        return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the &quot;Initial Details&quot; section");
+        return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
       }
     }
 
