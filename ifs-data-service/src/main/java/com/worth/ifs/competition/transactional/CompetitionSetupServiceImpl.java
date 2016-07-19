@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -15,20 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.worth.ifs.category.repository.CategoryLinkRepository;
-import com.worth.ifs.category.repository.CategoryRepository;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
-import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competitiontemplate.domain.CompetitionTemplate;
+import com.worth.ifs.competitiontemplate.domain.FormInputTemplate;
+import com.worth.ifs.competitiontemplate.domain.QuestionTemplate;
+import com.worth.ifs.competitiontemplate.domain.SectionTemplate;
+import com.worth.ifs.competitiontemplate.repository.CompetitionTemplateRepository;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.transactional.BaseTransactionalService;
 
 /**
@@ -37,12 +43,6 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 @Service
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
-    @Autowired
-    private CategoryLinkRepository categoryLinkRepository;
-    @Autowired
-    private CompetitionRepository competitionRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
     @Autowired
     private CategoryLinkService categoryLinkService;
     @Autowired
@@ -53,8 +53,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionTypeMapper competitionTypeMapper;
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
-
-
+    @Autowired
+    private CompetitionTemplateRepository competitionTemplateRepository;
+    
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
@@ -147,4 +148,73 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
         return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAll()));
     }
+
+	@Override
+	public ServiceResult<Void> initialiseFormForCompetitionType(Long competitionId, Long competitionTypeId) {
+		CompetitionTemplate template = competitionTemplateRepository.findByCompetitionTypeId(competitionTypeId);
+		//TODO check not null
+		Competition competition = competitionRepository.findById(competitionId);
+		//TODO check competition status
+		List<SectionTemplate> sectionsWithoutParentSections = template.getSectionTemplates().stream().filter(s -> s.getParentSectionTemplate() == null).collect(Collectors.toList());
+		competition.setSections(createSections(competition, sectionsWithoutParentSections, null));
+		
+		return serviceSuccess();
+	}
+
+	private List<Section> createSections(Competition competition, List<SectionTemplate> sectionTemplates, Section parentSection) {
+		return sectionTemplates.stream().map(createSection(competition, parentSection)).collect(Collectors.toList());
+	}
+	
+	private Function<SectionTemplate, Section> createSection(Competition competition, Section parentSection) {
+		return (SectionTemplate sectionTemplate) -> {
+			Section section = new Section();
+			section.setType(sectionTemplate.getType());
+			section.setName(sectionTemplate.getName());
+			section.setDescription(sectionTemplate.getDescription());
+			section.setAssessorGuidanceDescription(sectionTemplate.getAssessorGuidanceDescription());
+			section.setCompetition(competition);
+			section.setQuestions(createQuestions(competition, section, sectionTemplate.getQuestionTemplates()));
+			section.setChildSections(createSections(competition, sectionTemplate.getChildSectionTemplates(), section));
+			section.setParentSection(parentSection);
+			return section;
+		};
+	}
+	
+	private List<Question> createQuestions(Competition competition, Section section, List<QuestionTemplate> questions) {
+		return questions.stream().map(createQuestion(competition, section)).collect(Collectors.toList());
+	}
+
+	private Function<QuestionTemplate, Question> createQuestion(Competition competition, Section section) {
+		return (QuestionTemplate questionTemplate) -> {
+			Question question = new Question();
+			question.setAssessorGuidanceAnswer(questionTemplate.getAssessorGuidanceAnswer());
+			question.setAssessorGuidanceQuestion(questionTemplate.getAssessorGuidanceQuestion());
+			question.setDescription(questionTemplate.getDescription());
+			question.setName(questionTemplate.getName());
+			question.setShortName(questionTemplate.getShortName());
+			question.setCompetition(competition);
+			question.setSection(section);
+			question.setFormInputs(createFormInputs(competition, question, questionTemplate.getFormInputTemplates()));
+			return question;
+		};
+	}
+	
+	private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInputTemplate> formInputTemplates) {
+		return formInputTemplates.stream().map(createFormInput(competition, question)).collect(Collectors.toList());
+	}
+	
+	private Function<FormInputTemplate, FormInput> createFormInput(Competition competition, Question question) {
+		return (FormInputTemplate formInputTemplate) -> {
+			FormInput formInput = new FormInput();
+			formInput.setDescription(formInputTemplate.getDescription());
+			formInput.setGuidanceAnswer(formInputTemplate.getGuidanceAnswer());
+			formInput.setGuidanceQuestion(formInputTemplate.getGuidanceQuestion());
+			formInput.setFormInputType(formInputTemplate.getFormInputType());
+			formInput.setIncludedInApplicationSummary(formInputTemplate.getIncludedInApplicationSummary());
+			formInput.setInputValidators(formInputTemplate.getInputValidators());
+			formInput.setCompetition(competition);
+			formInput.setQuestion(question);
+			return formInput;
+		};
+	}
 }

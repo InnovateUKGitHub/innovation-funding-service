@@ -5,10 +5,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
@@ -36,6 +38,10 @@ public class QuestionTemplate {
     @OrderColumn(name = "priority", nullable = false)
     private List<FormInputTemplate> formInputTemplates = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionTemplateId", referencedColumnName = "id")
+    private SectionTemplate sectionTemplate;
+    
 	public Long getId() {
 		return id;
 	}

@@ -24,7 +24,7 @@ public class SectionTemplate {
     
     @OneToMany(mappedBy="sectionTemplate")
     @OrderBy("priority ASC")
-    private List<QuestionTemplate> questions = new ArrayList<>();
+    private List<QuestionTemplate> questionTemplates = new ArrayList<>();
     
     @Enumerated(EnumType.STRING)
     @Column(name="section_type")
@@ -58,12 +58,12 @@ public class SectionTemplate {
 		this.id = id;
 	}
 
-	public List<QuestionTemplate> getQuestions() {
-		return questions;
+	public List<QuestionTemplate> getQuestionTemplates() {
+		return questionTemplates;
 	}
 
-	public void setQuestions(List<QuestionTemplate> questions) {
-		this.questions = questions;
+	public void setQuestionTemplates(List<QuestionTemplate> questionTemplates) {
+		this.questionTemplates = questionTemplates;
 	}
 
 	public SectionType getType() {

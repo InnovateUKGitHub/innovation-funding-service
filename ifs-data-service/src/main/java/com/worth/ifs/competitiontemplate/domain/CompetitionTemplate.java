@@ -1,5 +1,6 @@
 package com.worth.ifs.competitiontemplate.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -26,7 +27,7 @@ public class CompetitionTemplate {
     
     @OneToMany(mappedBy="competitionTemplate")
     @OrderBy("priority ASC")
-    private List<SectionTemplate> sectionTemplates;
+    private List<SectionTemplate> sectionTemplates = new ArrayList<>();
 
 	public Long getId() {
 		return id;
