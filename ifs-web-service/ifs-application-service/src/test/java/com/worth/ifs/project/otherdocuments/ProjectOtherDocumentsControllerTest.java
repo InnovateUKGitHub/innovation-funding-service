@@ -9,6 +9,7 @@ import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewM
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTest<ProjectOtherDocumentsController> {
@@ -165,6 +167,27 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
         assertNull(form.getExploitationPlan());
+    }
+
+    @Test
+    public void testDownloadCollaborationAgreement() throws Exception {
+
+        FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
+        ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
+
+        when(projectService.getCollaborationAgreementFile(123L)).
+                thenReturn(Optional.of(fileContents));
+
+        when(projectService.getCollaborationAgreementFileDetails(123L)).
+                thenReturn(Optional.of(fileDetails));
+
+        MvcResult result = mockMvc.perform(get("/project/123/other-documents/collaboration-agreement")).
+                andExpect(status().isOk()).
+                andReturn();
+
+        assertEquals("My content!", result.getResponse().getContentAsString());
+        assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
+                result.getResponse().getHeader("Content-Disposition"));
     }
 
     @Override

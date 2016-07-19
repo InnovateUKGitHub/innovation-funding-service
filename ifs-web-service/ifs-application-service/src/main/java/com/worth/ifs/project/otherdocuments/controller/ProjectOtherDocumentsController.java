@@ -1,5 +1,6 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -30,6 +31,7 @@ import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFil
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -59,10 +61,10 @@ public class ProjectOtherDocumentsController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId) {
 
-        // TODO DW - remove these gets()
-        final ByteArrayResource resource = projectService.getCollaborationAgreementFile(projectId).get();
-        final FileEntryResource fileDetails = projectService.getCollaborationAgreementFileDetails(projectId).get();
-        return getFileResponseEntity(resource, fileDetails);
+        final Optional<ByteArrayResource> content = projectService.getCollaborationAgreementFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectService.getCollaborationAgreementFileDetails(projectId);
+
+        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
     @RequestMapping(params = "uploadCollaborationAgreementClicked", method = POST)
@@ -99,10 +101,9 @@ public class ProjectOtherDocumentsController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId) {
 
-        // TODO DW - remove these gets()
-        final ByteArrayResource resource = projectService.getExploitationPlanFile(projectId).get();
-        final FileEntryResource fileDetails = projectService.getExploitationPlanFileDetails(projectId).get();
-        return getFileResponseEntity(resource, fileDetails);
+        final Optional<ByteArrayResource> content = projectService.getExploitationPlanFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectService.getExploitationPlanFileDetails(projectId);
+        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
     @RequestMapping(params = "uploadExploitationPlanClicked", method = POST)
@@ -167,6 +168,14 @@ public class ProjectOtherDocumentsController {
                 partnerOrganisationNames, rejectionReasons,
                 leadPartner, otherDocumentsSubmitted, otherDocumentsApproved
         );
+    }
+
+    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(@PathVariable("projectId") Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
+        if (content.isPresent() && fileDetails.isPresent()) {
+            return getFileResponseEntity(content.get(), fileDetails.get());
+        } else {
+            throw new ObjectNotFoundException("Could not find Collaboration Agreement for project " + projectId, singletonList(projectId));
+        }
     }
 
     private String redirectToOtherDocumentsPage(Long projectId) {
