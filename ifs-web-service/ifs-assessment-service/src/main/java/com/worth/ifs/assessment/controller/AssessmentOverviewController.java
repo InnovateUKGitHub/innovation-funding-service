@@ -4,11 +4,14 @@ import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.assessment.form.AssessmentOverviewForm;
 import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
+import com.worth.ifs.assessment.service.AssessmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,12 +26,17 @@ public class AssessmentOverviewController extends AbstractApplicationController 
     private static final Log LOG = LogFactory.getLog(AssessmentOverviewController.class);
     private static final String OVERVIEW = "assessor-application-overview";
     private static final String FINANCES_SUMMARY = "assessor-finances-summary";
+    private static final String DASHBOARD = "assessor/assessor-dashboard";
+
 
     @Autowired
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
 
     @Autowired
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
+
+    @Autowired
+    private AssessmentService assessmentService;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/{assessmentId}")
@@ -49,4 +57,19 @@ public class AssessmentOverviewController extends AbstractApplicationController 
 
         return FINANCES_SUMMARY;
     }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{assessmentId}/status")
+    public String rejectApplication(
+            final Model model,
+            final HttpServletResponse response,
+            @ModelAttribute(MODEL_ATTRIBUTE_FORM) final AssessmentOverviewForm form,
+            final BindingResult bindingResult,
+            @PathVariable("assessmentId") final Long assessmentId) {
+
+        assessmentService.rejectApplication(assessmentId,form.getRejectReason(),form.getRejectComment());
+
+        return DASHBOARD;
+    }
+
 }

@@ -118,7 +118,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
 
         tokenService.handleExtraAttributes(token);
 
-        verify(applicationServiceMock, only()).createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, EMPTY);
+        verify(applicationServiceMock, only()).createApplicationByApplicationNameForUserIdAndCompetitionId(EMPTY, competitionId, userId);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
 
         tokenService.handleExtraAttributes(token);
 
-        verify(applicationServiceMock, never()).createApplicationByApplicationNameForUserIdAndCompetitionId(isA(Long.class), isA(Long.class), isA(String.class));
+        verify(applicationServiceMock, never()).createApplicationByApplicationNameForUserIdAndCompetitionId(isA(String.class), isA(Long.class), isA(Long.class));
     }
 
     /**

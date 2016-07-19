@@ -3,7 +3,7 @@ Documentation     INFUND-550: As an assessor I want the ‘Assessment summary’
 Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Pending
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot    # TODO
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
