@@ -136,7 +136,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     }
 
     @Override
-    public CostItem addCost(Long applicationId, Long userId, Long questionId) {
+    public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         return costService.add(applicationFinance.getId(), questionId, null);
     }
@@ -270,8 +270,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             			CostItem costItem = costHandler.toCostItem(null, fieldGroup);
                         if (costItem != null && fieldGroup.size() > 0) {
                     		Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
-                        	CostItem added = costService.add(applicationFinanceId, questionId, costItem);
-                            Either<CostItem, ValidationMessages> either = Either.left(added);
+                    		ValidationMessages addResult = costService.add(applicationFinanceId, questionId, costItem);
+                    		Either<CostItem, ValidationMessages> either;
+                    		if(addResult.hasErrors()) {
+                    			either = Either.right(addResult);
+                    		} else {
+                    			CostItem added = costService.findById(addResult.getObjectId());
+                    			either = Either.left(added);
+                    		}
+                            
                             costItems.add(either);
                         }
             		}
@@ -349,10 +356,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     private ValidationMessages storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
 
         if (costItem.getId().equals(0L)) {
-            Long objectId = addCostItem(costItem, userId, applicationId, question);
-            ValidationMessages validationMessages = new ValidationMessages();
-            validationMessages.setObjectId(objectId);
-            return validationMessages;
+            return addCostItem(costItem, userId, applicationId, question);
         } else {
             RestResult<ValidationMessages> messages = costService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccessObject();
@@ -368,21 +372,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
     }
 
-    private void logValidationMessages(ValidationMessages validationMessages) {
-        if (validationMessages.hasErrors()) {
-            validationMessages.getErrors().forEach(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
-        } else {
-            LOG.debug("no validation errors on cost items");
-        }
-    }
-
-    private Long addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private ValidationMessages addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            CostItem added = costService.add(applicationFinanceResource.getId(), questionId, costItem);
-            return added.getId();
+            return costService.add(applicationFinanceResource.getId(), questionId, costItem);
         }
         return null;
     }

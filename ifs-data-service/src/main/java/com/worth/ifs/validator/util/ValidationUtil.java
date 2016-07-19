@@ -122,7 +122,6 @@ public class ValidationUtil {
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         LOG.debug("VALIDATE SECTION " + section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        boolean allQuestionsValid = true;
         for (Question question : section.fetchAllChildQuestions()) {
             if (question.getMarkAsCompletedEnabled()) {
                 validationMessages.addAll(isQuestionValid(question, application, markedAsCompleteById));
@@ -176,7 +175,7 @@ public class ValidationUtil {
 
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
-            CostType costType = CostType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
+            CostType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
             validationMessages.addAll(validatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
@@ -199,7 +198,7 @@ public class ValidationUtil {
 
         List<ValidationMessages> results = costItems.stream()
                 .map(this::validateCostItem)
-                .filter(Objects::nonNull)
+                .filter(this::nonEmpty)
                 .collect(Collectors.toList());
 
         ValidationMessages emptyRowMessages = invokeEmptyRowValidatorAndReturnMessages(costItems, question);
@@ -208,6 +207,10 @@ public class ValidationUtil {
         }
 
         return results;
+    }
+    
+    private boolean nonEmpty(ValidationMessages validationMessages) {
+    	return validationMessages != null && validationMessages.hasErrors();
     }
 
     public ValidationMessages validateCostItem(CostItem costItem) {
@@ -223,7 +226,9 @@ public class ValidationUtil {
             return new ValidationMessages(messageSource, costItem.getId(), bindingResult);
         } else {
             LOG.debug("validated, no messages");
-            return null;
+            ValidationMessages validationMessages = new ValidationMessages();
+            validationMessages.setObjectId(costItem.getId());
+            return validationMessages;
         }
     }
 

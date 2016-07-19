@@ -217,8 +217,8 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
     @Test
     public void testAjaxRemoveCost() throws Exception {
-        CostItem costItem = new Materials();
-        when(costService.add(anyLong(),anyLong(), any())).thenReturn(costItem);
+        ValidationMessages costItemMessages = new ValidationMessages();
+        when(costService.add(anyLong(),anyLong(), any())).thenReturn(costItemMessages);
         mockMvc.perform(
             get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
         );

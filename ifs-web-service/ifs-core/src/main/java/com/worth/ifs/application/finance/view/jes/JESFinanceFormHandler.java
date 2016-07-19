@@ -234,7 +234,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     @Override
-    public CostItem addCost(Long applicationId, Long userId, Long questionId) {
+    public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
         // not to be implemented, can't add extra rows of finance to the JES form
         throw new NotImplementedException("Can't add extra rows of finance to the JES form");
     }

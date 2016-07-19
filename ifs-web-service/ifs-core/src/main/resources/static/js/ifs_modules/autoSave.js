@@ -97,31 +97,30 @@ IFS.core.autoSave = (function(){
                 // set the form-saved-state
                 jQuery('body').trigger('updateSerializedFormState');
 
-                 
-                if(data.success == 'true'){
-                	
-                	// set field_id on field name
-                	if(data.field_id !== null) {
-                    	var name = field.attr('name');
-                    	var nameDashSplit = name.split('-');
-                    	var unsavedCostId = nameDashSplit[3];
-                    	if (nameDashSplit.length == 4 && unsavedCostId.length > 7 && unsavedCostId.substring(0, 7) === 'unsaved') {
-                    		var fieldsForUnsavedCost = jQuery('input[name*="' + unsavedCostId + '"]');
-                    		fieldsForUnsavedCost.each(function(){
-                    			var thisFieldNameSplit = jQuery(this).attr('name').split('-');
-                    			jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + data.field_id);
-                    		});
-                    		
-                    		var costRows = jQuery('tr[data-repeatable-row="' + unsavedCostId + '"]');
-                			costRows.attr('data-repeatable-row', data.field_id);
-                    		
-                    		var buttonPlaceholder = jQuery('span[id*="' + unsavedCostId + '"]');
-                    		if(buttonPlaceholder !== null) {
-                    			var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + data.field_id + '">Remove</button>';
-                    			buttonPlaceholder.replaceWith(buttonHtml);
-                    		}
-                    	}
+            	// set field_id on field name
+            	if(data.field_id !== null) {
+                	var name = field.attr('name');
+                	var nameDashSplit = name.split('-');
+                	var unsavedCostId = nameDashSplit[3];
+                	if (nameDashSplit.length == 4 && unsavedCostId.length > 7 && unsavedCostId.substring(0, 7) === 'unsaved') {
+                		var fieldsForUnsavedCost = jQuery('input[name*="' + unsavedCostId + '"]');
+                		fieldsForUnsavedCost.each(function(){
+                			var thisFieldNameSplit = jQuery(this).attr('name').split('-');
+                			jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + data.field_id);
+                		});
+                		
+                		var costRows = jQuery('tr[data-repeatable-row="' + unsavedCostId + '"]');
+            			costRows.attr('data-repeatable-row', data.field_id);
+                		
+                		var buttonPlaceholder = jQuery('span[id*="' + unsavedCostId + '"]');
+                		if(buttonPlaceholder !== null) {
+                			var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + data.field_id + '">Remove</button>';
+                			buttonPlaceholder.replaceWith(buttonHtml);
+                		}
                 	}
+            	}
+            	
+                if(data.success == 'true'){
                 	
                 	//save message
                     setTimeout(function(){
