@@ -9,6 +9,8 @@ import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
+import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.CharSet;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
@@ -111,7 +114,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         assertEquals("flashMessage", cookies[0].getName());
         assertEquals("", cookies[0].getValue());
         assertEquals("organisationType", cookies[1].getName());
-        assertEquals("{\"organisationType\":1}", cookies[1].getValue());
+        assertEquals(URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8), cookies[1].getValue());
     }
 
     @Test

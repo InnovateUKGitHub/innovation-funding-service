@@ -1,5 +1,6 @@
 package com.worth.ifs.util;
 
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Configurable
@@ -30,7 +32,7 @@ public final class CookieUtil {
         if (StringUtils.hasText(fieldName)){
             Cookie cookie = null;
             try {
-                cookie = new Cookie(fieldName, URLEncoder.encode(fieldValue, "UTF-8"));
+                cookie = new Cookie(fieldName, URLEncoder.encode(fieldValue, CharEncoding.UTF_8));
             } catch (UnsupportedEncodingException e) {
                 LOG.error(e);
                 return;
@@ -62,7 +64,7 @@ public final class CookieUtil {
         Optional<Cookie> cookie = getCookie(request, fieldName);
         if(cookie.isPresent()){
             try {
-                return URLDecoder.decode(cookie.get().getValue(), "UTF-8");
+                return URLDecoder.decode(cookie.get().getValue(), CharEncoding.UTF_8);
             } catch (UnsupportedEncodingException ignore) {
                 LOG.error(ignore);
                 //Do nothing
