@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public Map<String, String> getInvalidInviteMessages(UserResource loggedInUser, InviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
         Map<String, String> modelAttributes = new HashMap<>();
 
-        if (!inviteResource.getEmail().equals(loggedInUser.getEmail())) {
+        if (!inviteResource.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
             // Invite is for different emailaddress then current logged in user.
             modelAttributes.put("failureMessageKey", "registration.LOGGED_IN_WITH_OTHER_ACCOUNT");
         } else if (inviteOrganisation.getOrganisation() != null && !inviteOrganisation.getOrganisation().equals(loggedInUser.getOrganisations().get(0))) {

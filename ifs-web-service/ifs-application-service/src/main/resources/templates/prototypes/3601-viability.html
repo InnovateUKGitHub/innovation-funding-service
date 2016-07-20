@@ -15,11 +15,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Viability'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Aptrans Ltd'}, ${'Viability'})" th:with="partner=lead" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
@@ -27,27 +27,37 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
-			The partner finance eligibility has been approved
+			The partner's viability has been approved
 		</div>
 	</th:block>
+	
+	<th:block th:if="${param.compName != null and param.compName[0] == 'updated'}">
+		<div class="panel-indent" th:unless="${param.status != null and param.status[0] == 'approved'}">
+			<h2 class="heading-medium no-margin-top">Company name updated since original application</h2>
 
-	<div class="panel-indent">
-		<h2 class="heading-medium no-margin-top">Company name updated since original application</h2>
+			<dl class="standard-definition-list">
+				<dt>Name in application</dt>
+				<dd>Aptran</dd>
+			</dl>
 
-		<dl class="standard-definition-list">
-			<dt>Name in application</dt>
-			<dd>Aptrans Ltd</dd>
-		</dl>
-
-		<div class="form-group">
-			<label for="company-reviewed" class="block-label">
-				The updated company details have been reviewed
-				<input type="checkbox" id="company-reviewed" name="company-reviewed" />
-			</label>
+			<div class="form-group">
+				<label for="company-reviewed" class="block-label">
+					The updated company details have been reviewed
+					<input type="checkbox" id="company-reviewed" name="company-reviewed" />
+				</label>
+			</div>
 		</div>
+		
+		<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+			<div class="panel-indent">
+				<dl class="standard-definition-list">
+					<dt>Name in application</dt>
+					<dd>Aptran</dd>
+				</dl>
+			</div>
+		</th:block>
 
-	</div>
-
+	</th:block>
 
 	<h2 class="heading-medium">Finances overview</h2>
 
@@ -56,19 +66,19 @@
 			<thead>
 				<tr>
 					<th scope="col">Total costs</th>
-					<th scope="col">% grant</th>
-					<th scope="col">Funding sought</th>
-					<th scope="col">Other public sector funding</th>
-					<th scope="col">Contribution to project</th>
+					<th scope="col" class="numeric">% grant</th>
+					<th scope="col" class="numeric">Funding sought</th>
+					<th scope="col" class="numeric">Other public sector funding</th>
+					<th scope="col" class="numeric">Contribution to project</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td>&pound;286,283</td>
-					<td>55%</td>
-					<td>&pound;180,399</td>
-					<td>20,000</td>
-					<td>&pound;85,885</td>
+					<td class="numeric">55%</td>
+					<td class="numeric">&pound;180,399</td>
+					<td class="numeric">20,000</td>
+					<td class="numeric">&pound;85,885</td>
 				</tr>
 			</tbody>
 		</table>
@@ -92,49 +102,76 @@
 		<dt>Organisation size</dt>
 		<dd>Medium</dd>
 
-		<dt>On FTSE 100</dt>
-		<dd>No</dd>
 	</dl>
 
 
-	<th:block th:if="${param.status != null and param.status[0] == 'orgSizeChanged'}">
-		<div class="panel-indent">
-			<h3 class="heading-small no-margin">Business size has been changed from Medium (60%) to Large (50% Grant).</h3>
+	<th:block th:if="${param.status != null and param.status[0] == 'orgSizeChanged' or param.status != null and param.status[0] == 'approved' and param.orgSizeGroup != null}">
+		
+			<th:block th:if="${param.orgSizeGroup != null and param.orgSizeGroup[0] == 'Large'}">
 
-			<dl class="standard-definition-list extra-margin">
-				<dt>The % Grant has been set to</dt>
-				<dd>50%</dd>
+				<div class="panel-indent">
 
-				<dt>Funding sought</dt>
-				<dd>&pound;50,000</dd>
+					<h3 class="heading-small no-margin">Business size has been changed from Medium (60%) to Large (50% Grant).</h3>
 
-				<dt>Funding granted</dt>
-				<dd>&pound;40,000</dd>
-			</dl>
-		</div>
+					<dl class="standard-definition-list extra-margin">
+						<dt>The % Grant has been set to</dt>
+						<dd>50%</dd>
+
+						<dt>Funding sought</dt>
+						<dd>&pound;50,000</dd>
+
+						<dt>Funding granted</dt>
+						<dd>&pound;40,000</dd>
+					</dl>
+
+				</div>
+
+			</th:block>
+
+			<th:block th:if="${param.orgSizeGroup != null and param.orgSizeGroup[0] == 'Micro'}">
+
+				<div class="panel-indent">
+
+					<h3 class="heading-small no-margin">Changing the business size from Medium (60% Grant) to Small (70% Grant).</h3>
+					
+					<dl class="standard-definition-list extra-margin">
+						<dt>The % Grant will remain at</dt>
+						<dd>55%</dd>
+
+						<dt>Funding sought</dt>
+						<dd>&pound;50,000</dd>
+
+					</dl>
+
+					<p>The applicant  could have claimed more funding, but this cannot be increased due as the maximum funding amount has been aproved.</p>
+
+				</div>
+
+			</th:block>
+
 	</th:block>
 
-	<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'changeOrgSize'}">
+	<div th:unless="${param.status != null and param.status[0] == 'changeOrgSize' or param.status != null and param.status[0] == 'approved'}">
 		<a th:href="@{'?status=changeOrgSize#change-org-title'}">Change organisation size</a>
 	</div>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'changeOrgSize'}">
 
-		<form action="">
+		<form>
 			<fieldset class="extra-margin">
 				<legend class="heading-medium" id="change-org-title">Change organisation size</legend>
 				<p class="form-hint">If the Mint report has uncovered that the Business has not self declared correctly please update theri business size. this should only be done after communication with the partner. Increasing the size ofthe Business will reduce theri grant amount.</p>
 				<div class="form-block">
-					<label class="block-label" for="org-size-small">
-						<input id="org-size-small" type="radio" name="org-size-group" value="Micro"/>
+					<label class="block-label" for="orgSizeSmall">
+						<input id="orgSizeSmall" type="radio" name="orgSizeGroup" value="Micro"/>
 						Micro / small - claim up to 70%
 					</label>
-					<label class="block-label" for="org-size-medium">
-						<input id="org-size-medium" type="radio" name="org-size-group" value="Medium" checked="checked" />
+					<label class="block-label" for="orgSizeMedium">
+						<input id="orgSizeMedium" type="radio" name="orgSizeGroup" value="Medium" checked="checked" />
 						Medium - claim up to 60%
 					</label>
-					<label class="block-label" for="org-size-large">
-						<input id="org-size-large" type="radio" name="org-size-group" value="Large"/>
+					<label class="block-label" for="orgSizeLarge">
+						<input id="orgSizeLarge" type="radio" name="orgSizeGroup" value="Large"/>
 						Large - claim up to 50%
 					</label>
 				</div>
@@ -197,7 +234,12 @@
 		</form>
 
 	</th:block>
-
+	
+	<dl class="standard-definition-list extra-margin">
+		<dt>On FTSE 100</dt>
+		<dd>No</dd>
+	</dl>
+		
 	<h2 class="heading-medium">Mint details</h2>
 
 	<dl class="standard-definition-list">
@@ -227,7 +269,7 @@
 	<h2 class="heading-medium">Mint report</h2>
 	 <div class="form-group">
     	<label class="block-label" for="costs-reviewed">
-	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
+	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" th:disabled="${param.status != null and param.status[0] == 'approved'}" th:checked="${param.status != null and param.status[0] == 'approved'}" />
 	     	A Mint report has been used in conjunction with the viability information presented here and has been stored in accordance with Innovate UK audit requirements.
 	    </label>
     </div>
@@ -236,19 +278,57 @@
     	<a href="#" class="button button-secondary">Queries</a>
     </div>
 
-	<h3 class="heading-medium">Approve viability</h3>
-    <p>After any required alterations have been made, viability should be approved, and the supporting Mint report uploaded.</p>
-    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+    <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
-    <div class="form-group">
-    	<label class="block-label" for="costs-reviewed">
-	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
-	     	Aptrans Ltd is viable for this project
-	    </label>
-    </div>
+			<h3 class="heading-medium">Approve viability</h3>
+		    <p>After any required alterations have been made, viability should be approved, and the supporting Mint report uploaded.</p>
+		    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
 
-    <input class="button" type="submit" value="Confirm viability" />
+		    <div class="form-group">
+		    	<label class="block-label" for="project-viable">
+			      <input id="project-viable" value="project-viable" type="checkbox" />
+			     	Aptrans Ltd is viable for this project
+			    </label>
+		    </div>
 
+			<div class="extra-margin">
+				<button data-js-modal="confirm-viability-modal" id="confirm-viability" class="button" disabled="disabled">Confirm viability</button>
+			</div>
+			
+			<div class="confirm-viability-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+
+		        	<h2 class="heading-medium no-margin-top">Confirm viability</h2>
+					
+					<p>TEXT REQUIRED</p>
+					
+					<hr />
+
+		        	<div class="alignright-button">
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+						<form>
+							<input type="hidden" id="status" name="status" value="approved" />
+
+							<th:block th:if="${param.status != null and param.status[0] == 'orgSizeChanged'}">
+								<input type="hidden" name="orgSizeGroup" th:value="${param.orgSizeGroup[0]}" />
+							</th:block>
+
+							<th:block th:if="${param.compName != null and param.compName[0] == 'updated'}">
+								<input type="hidden" name="compName" th:value="${param.compName[0]}" />
+							</th:block>
+						
+							<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Confirm viability</button>
+						</form>
+		        		
+		        	</div>
+
+		        </div>
+		    </div>
+
+	</th:block>
 
 	<hr />
 
@@ -267,7 +347,7 @@
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery('input#org-size-small').on('click',function(e){
+	jQuery('input#orgSizeSmall').on('click',function(e){
 
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#org-text-small").show();
@@ -276,7 +356,7 @@
 		}
 	});
 
-	jQuery('input#org-size-large').on('click',function(e){ 
+	jQuery('input#orgSizeLarge').on('click',function(e){ 
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#org-text-large").show();
 			jQuery("#org-text-small").hide();
@@ -284,11 +364,19 @@
 		}
 	});
 
-	jQuery('input#org-size-medium').on('click',function(e){ 
+	jQuery('input#orgSizeMedium').on('click',function(e){ 
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#org-text-large").hide();
 			jQuery("#org-text-small").hide();
 			jQuery("#change-org-button").attr('disabled','disabled');
+		}
+	});
+
+	jQuery('input#project-viable').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#confirm-viability").removeAttr('disabled');
+		}else{
+			jQuery("#confirm-viability").attr('disabled','disabled');
 		}
 	});
 	// ]]>

@@ -32,20 +32,20 @@
 			<tr>
 				<th scope="col">Start date</th>
 				<th scope="col">Duration</th>
-				<th scope="col">Total project cost</th>
-				<th scope="col">Grant applied for</th>
-				<th scope="col">Other public sector funding</th>
-				<th scope="col">Total % grant</th>
+				<th scope="col" class="numeric">Total project cost</th>
+				<th scope="col" class="numeric">Grant applied for</th>
+				<th scope="col" class="numeric">Other public sector funding</th>
+				<th scope="col" class="numeric">Total % grant</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td>1st June 2016</td>
 				<td>36 months</td>
-				<td>&pound;400,000</td>
-				<td>&pound;200,000</td>
-				<td>&pound;0</td>
-				<td>50%</td>
+				<td class="numeric">&pound;400,000</td>
+				<td class="numeric">&pound;200,000</td>
+				<td class="numeric">&pound;0</td>
+				<td class="numeric">50%</td>
 			</tr>
 		</tbody>
 	</table>
@@ -148,7 +148,33 @@
 
 	<p>To generate spend profiles both the viability and eligibility sections must be approved for all partners. This will create individual flat profile spends for all the partners, which they can edit to reflect their planned spend during the project.</p>
 
-	<a href="#" class="button button-large">Generate spend profile</a>
+	<a href="#" class="button button-large" data-js-modal="generate-spend-profile">Generate spend profile</a>
+
+	<div class="generate-spend-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+
+			<h2 class="heading-medium no-margin">Generate spend profile</h2>
+
+			<p>This will generate a flat spend profile for all the project partners, and will lock the finance checks. Generating the spend profile indicates that the Finance checks have been completed for all applicants.</p>
+
+			<p>Finance Contacts will be notified that they can now create their spend profile</p>
+
+			<hr />
+
+        	<div class="alignright-button">
+				
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+				<input type="hidden" id="status" name="status" value="orgSizeChanged" />
+
+        		<a class="button" th:href="@{${#httpServletRequest.requestURI}}">Generate spend profile</a>
+
+        	</div>
+
+        </div>
+    </div>
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
