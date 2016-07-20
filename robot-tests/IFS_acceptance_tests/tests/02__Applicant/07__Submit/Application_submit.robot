@@ -29,14 +29,14 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Review & submit")
     Then the submit button should be disabled
     [Teardown]    the applicant marks the first section as complete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot submit test application
     Given the user clicks the button/link    link=Your finances
