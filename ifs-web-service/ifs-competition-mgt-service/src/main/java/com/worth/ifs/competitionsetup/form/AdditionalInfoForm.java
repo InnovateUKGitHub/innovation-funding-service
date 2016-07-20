@@ -107,4 +107,9 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     public int getCoFundersCount() {
         return coFunders.size();
     }
+
+    public Double getTotalFunding() {
+        double totalFunding = coFunders.stream().filter(o -> o.getCoFunderBudget() != null).mapToDouble(o -> o.getCoFunderBudget()).sum();
+        return funderBudget != null ? (totalFunding + funderBudget) : totalFunding;
+    }
 }
