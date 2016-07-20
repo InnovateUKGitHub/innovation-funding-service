@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 
 <!-- ======== Assessment - research category ======= -->
-<div th:fragment="assessor_research_category">
+<div th:fragment="assessor_research_category (field)">
     <div class="form-group extra-margin">
         <label class="form-label" for="research-category">
             <span class="form-label-bold">Please select the research category for this project</span>
         </label>
-        <select class="form-control" id="research-category" name="research-category">
+        <select class="form-control" id="research-category" th:field="*{formInput[__${field.id}__]}">
             <option value="">Please select...</option>
             <option value="Technical feasibility studies">Technical feasibility studies</option>
             <option value="Industrial research">Industrial research</option>
@@ -37,7 +37,7 @@
                 </details>
 
                 <div class="textarea-wrapped word-count">
-                    <textarea th:field="*{formInput[__${field.id}__]}" th:attrappend="data-max_words=${maxWords != null}?@{${maxWords}}">
+                    <textarea th:field="*{formInput[__${field.id}__]}" id="assessor-question-feedback-text" th:attrappend="data-max_words=${maxWords != null}?@{${maxWords}}">
                     </textarea>
 
                     <div class="textarea-footer">
@@ -56,7 +56,7 @@
         <legend class="visuallyhidden">Question score</legend> 
         <div class="form-group">
             <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
-            <select class="form-control width-medium" th:field="*{formInput}" id="assessor-question-score">
+            <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
                 <option value="">Set score</option>
                 <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" />
             </select> / 10
@@ -72,7 +72,7 @@
         <legend class="visuallyhidden">Is this application in scope?</legend>
         <div class="form-group">
             <label class="block-label" th:each="option : ${ { true, false } }">
-                <input th:field="*{formInput[__${formInput.id}__]}" th:value="${option}" type="radio" />
+                <input th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
             </label>
         </div>
