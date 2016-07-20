@@ -110,8 +110,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                 .andDo(this.document.snippets(
                     pathParameters(
                             parameterWithName("id").description("Id of the application that needs to be saved")
-                    )//,
-                    //responseFields(applicationResourceFields)
+                    )
                 ));
     }
 
