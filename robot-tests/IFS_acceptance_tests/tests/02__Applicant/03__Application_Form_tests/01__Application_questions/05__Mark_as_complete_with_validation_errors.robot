@@ -15,7 +15,7 @@ Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 Mark as complete is impossible for empty questions
     [Documentation]    -INFUND-406
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Pending
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Project summary
@@ -26,7 +26,7 @@ Mark as complete is impossible for empty questions
 
 Error should not be visible when the text area is not empty
     [Documentation]    -INFUND-406
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Pending
     When the "Project Summary" question is empty
     And the applicant inserts some text again in the "Project Summary" question
     Then applicant should be able to mark the question as complete
@@ -35,6 +35,12 @@ Error should not be visible when the text area is not empty
 *** Keywords ***
 the "Project Summary" question is empty
     the user enters text to a text field     css=#form-input-11 .editor     ${empty}
+    mouse out      css=#form-input-11 .editor
+    focus      name=mark_as_complete
+    sleep    5s
+    capture page screenshot
+    the user reloads the page
+    capture page screenshot
 
 the applicant marks the public description question as complete
     the user clicks the button/link    css=#form-input-11 .buttonlink[name="mark_as_complete"]
