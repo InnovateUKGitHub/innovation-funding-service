@@ -244,7 +244,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         LOG.error(String.format("acceptInvite %s => %s ", inviteHash, userId));
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
 
-            if(invite.getEmail().equals(user.getEmail())){
+            if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
                 invite.setStatus(InviteStatusConstants.ACCEPTED);
 
                 if(invite.getInviteOrganisation().getOrganisation()==null && !user.getOrganisations().isEmpty()){

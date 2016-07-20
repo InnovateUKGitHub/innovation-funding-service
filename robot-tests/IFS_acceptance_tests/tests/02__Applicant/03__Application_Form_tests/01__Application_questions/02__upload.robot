@@ -16,6 +16,22 @@ ${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/downloa
 ${virus_scanning_warning}    This file is awaiting virus scanning
 
 *** Test Cases ***
+Appendices available only for the correct questions
+    [Documentation]    INFUND-832
+    [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    ## Please leave this test case on top. It checks the appearance of the Upload button for pdfs before other tests do an actual upload
+    the user cannot see the option to upload a file on the question    link=1. Business opportunity
+    the user cannot see the option to upload a file on the question    link=2. Potential market
+    the user cannot see the option to upload a file on the question    link=3. Project exploitation
+    the user cannot see the option to upload a file on the question    link=4. Economic benefit
+    the user can see the option to upload a file on the question       link=5. Technical approach
+    the user can see the option to upload a file on the question       link=6. Innovation
+    the user cannot see the option to upload a file on the question    link=7. Risks
+    the user can see the option to upload a file on the question       link=8. Project team
+    the user cannot see the option to upload a file on the question    link=9. Funding
+    the user cannot see the option to upload a file on the question    link=10. Adding value
+
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]    HappyPath
@@ -151,20 +167,6 @@ Collaborators can upload a file when the question is assigned
     When the user should see the text in the page    Upload
     Then the user uploads the file to the 'Innovation' question    ${valid_pdf}
     And the user can re-assign the question back to the lead applicant
-
-Appendices available only for the correct questions
-    [Documentation]    INFUND-832
-    [Tags]
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    the user cannot see the option to upload a file on the question    link=1. Business opportunity
-    the user cannot see the option to upload a file on the question    link=2. Potential market
-    the user cannot see the option to upload a file on the question    link=3. Project exploitation
-    the user cannot see the option to upload a file on the question    link=4. Economic benefit
-    # the user can see the option to upload a file on the question    link=6. Innovation [Have commented this for implementing INFUND-3007 by Pradha]
-    the user cannot see the option to upload a file on the question    link=7. Risks
-    the user can see the option to upload a file on the question    link=8. Project team
-    the user cannot see the option to upload a file on the question    link=9. Funding
-    the user cannot see the option to upload a file on the question    link=10. Adding value
 
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
