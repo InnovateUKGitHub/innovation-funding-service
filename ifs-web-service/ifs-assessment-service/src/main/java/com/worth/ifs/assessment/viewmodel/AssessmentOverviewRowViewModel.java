@@ -28,6 +28,7 @@ public class AssessmentOverviewRowViewModel {
         if (formInputs.isEmpty()) {
             this.hasInput = false;
         } else {
+            this.hasInput = true;
             setInputFields(allAssessorFormInputResponses, question, formInputs);
         }
     }
@@ -38,21 +39,20 @@ public class AssessmentOverviewRowViewModel {
                                                                                 AssessorFormInputResponseResource :: getFormInput);
 
         formInputs.forEach(input -> {
-            if (input.getFormInputTypeTitle().equals(SCOPE_INPUT_TYPE)) {
-                this.hasScope = true;
-                if (formInputResponseMap.get(input.getId()) != null) {
+            if (formInputResponseMap.get(input.getId()) != null) {
+                if (input.getFormInputTypeTitle().equals(SCOPE_INPUT_TYPE)) {
+                    this.hasScope = true;
                     this.assessedScore = formInputResponseMap.get(input.getId()).getValue();
-                }
-            } else if (input.getFormInputTypeTitle().equals(SCORE_INPUT_TYPE)) {
-                this.maximumScore = String.valueOf(question.getAssessorMaximumScore());
-                if (formInputResponseMap.get(input.getId()) != null) {
+                } else if (input.getFormInputTypeTitle().equals(SCORE_INPUT_TYPE)) {
+                    this.maximumScore = String.valueOf(question.getAssessorMaximumScore());
                     this.assessedScore = formInputResponseMap.get(input.getId()).getValue();
                 }
             }
         });
 
+        this.hasBeenCompleted = true;
         formInputs.forEach(input -> {
-            if (formInputResponseMap.get(input.getId()) != null &&
+            if (formInputResponseMap.get(input.getId()) == null ||
                 formInputResponseMap.get(input.getId()).getValue().isEmpty()) {
                 this.hasBeenCompleted = false;
             }
@@ -84,10 +84,10 @@ public class AssessmentOverviewRowViewModel {
     }
 
     public String getScopeAnswer() {
-        if (this.hasBeenCompleted) {
-            return this.assessedScore.equals("1") ? "Yes" : "No";
-        } else {
+        if (this.assessedScore.isEmpty()) {
             return "";
+        } else {
+            return this.assessedScore.equals("1") ? "Yes" : "No";
         }
     }
 }

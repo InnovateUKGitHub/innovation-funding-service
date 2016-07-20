@@ -25,14 +25,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
-import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
@@ -95,7 +96,6 @@ public class AssessmentOverviewModelPopulator {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
         final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
-        //final List<AssessorFormInputResponseResource> assessorResponses = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId);
 
         final Map<Long, SectionResource> sections =
                 parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
@@ -115,8 +115,6 @@ public class AssessmentOverviewModelPopulator {
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
         final List<AssessmentOverviewRowViewModel> rows = getOverviewRows(assessmentId, questions);
-        //Map<Long, AssessmentOverviewRowViewModel> questionFeedback = rows.stream().collect(groupingBy(AssessmentOverviewRowViewModel::getQuestion));
-
         final Map<Long, AssessmentOverviewRowViewModel> questionFeedback = rows.stream()
                 .collect(Collectors.toMap(
                         AssessmentOverviewRowViewModel::getQuestion,
@@ -179,47 +177,6 @@ public class AssessmentOverviewModelPopulator {
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
-
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
-
-        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
-        model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
-        model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
-        model.addAttribute("markedAsComplete", markedAsComplete);
-
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
-        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation, completedSectionsByOrganisation);
-        model.addAttribute("userFinanceSectionCompleted", userFinanceSectionCompleted);
-
-    }
-
-    private Boolean isUserFinanceSectionCompleted(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
-
-        Long eachCollaboratorFinanceSectionId = null;
-        if (!eachOrganisationFinanceSections.isEmpty()) {
-            eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
-        }
-        return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
-    }
-
-    private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type) {
-        return simpleFilter(list, s -> type.equals(s.getType()));
-    }
-
-    private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId = 0L;
-        if (userOrganisation.isPresent()) {
-            organisationId = userOrganisation.get().getId();
-        }
-        return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
