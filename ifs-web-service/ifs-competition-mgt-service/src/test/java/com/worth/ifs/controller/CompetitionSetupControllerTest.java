@@ -104,15 +104,14 @@ public class CompetitionSetupControllerTest {
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/setup"));
     }
 
     @Test
     public void editCompetitionSetupSectionInitial() throws Exception{
 
         InitialDetailsForm competitionSetupInitialDetailsForm = new InitialDetailsForm();
-        competitionSetupInitialDetailsForm.setCompetitionCode("Code");
         competitionSetupInitialDetailsForm.setTitle("Test competition");
         competitionSetupInitialDetailsForm.setCompetitionTypeId(2L);
 
@@ -160,12 +159,15 @@ public class CompetitionSetupControllerTest {
     @Test
     public void generateCompetitionCode() throws Exception {
         LocalDateTime time = LocalDateTime.of(2016, 12, 1, 0, 0);
-
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
+        competition.setStartDate(time);
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionService.generateCompetitionCode(COMPETITION_ID, time)).thenReturn("1612-1");
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/generateCompetitionCode?day=01&month=12&year=2016"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(is("1612-1")));
+                .andExpect(jsonPath("message", is("1612-1")));
+                //.andExpect(content().string(is("1612-1")));
     }
 
     @Test

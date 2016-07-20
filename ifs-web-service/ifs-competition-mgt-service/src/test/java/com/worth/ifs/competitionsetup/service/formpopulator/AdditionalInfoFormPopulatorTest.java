@@ -24,8 +24,11 @@ public class AdditionalInfoFormPopulatorTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withActivityCode("Activity Code")
 				.withInnovateBudget("Innovate Budget")
-				.withCoFunders("Funders")
-				.withCoFundersBudget("Funders budget")
+				.withFunder("Funder")
+				.withFunderBudget(1234D)
+				.withCompetitionCode("c123")
+				.withPafCode("p123")
+				.withBudgetCode("b123")
 				.withId(8L).build();
 
 		CompetitionSetupForm result = service.populateForm(competition);
@@ -34,7 +37,10 @@ public class AdditionalInfoFormPopulatorTest {
         AdditionalInfoForm form = (AdditionalInfoForm) result;
 		assertEquals("Activity Code", form.getActivityCode());
 		assertEquals("Innovate Budget", form.getInnovateBudget());
-		assertEquals("Funders", form.getFunder());
-		assertEquals("Funders budget", form.getFunderBudget());
+		assertEquals("Funder", form.getFunder());
+		assertEquals(Double.valueOf(1234.0), form.getFunderBudget());
+		assertEquals("c123", form.getCompetitionCode());
+		assertEquals("p123", form.getPafNumber());
+		assertEquals("b123", form.getBudgetCode());
 	}
 }

@@ -1,11 +1,7 @@
--- Competition Table update
-
-ALTER TABLE `ifs`.`competition` 
+ALTER TABLE competition
 CHANGE COLUMN `co_funders` `funder` VARCHAR(255) NULL DEFAULT NULL ,
-CHANGE COLUMN `co_funders_budget` `funder_budget` DECIMAL(10,2) NULL DEFAULT NULL ;
+CHANGE COLUMN `co_funders_budget` `funder_budget` DECIMAL(10,2) NULL DEFAULT NULL;
 
-
--- Competition Co-Funders table.
 
 CREATE TABLE `competition_co_funder` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

@@ -146,7 +146,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((funder, object) -> setField("funder", funder, object), fundersMultiple);
     }
 
-    public CompetitionResourceBuilder withCoFundersBudget(String... funderBudgets) {
+    public CompetitionResourceBuilder withFunderBudget(Double... funderBudgets) {
         return withArray((funderBudget, object) -> setField("funderBudget", funderBudget, object), funderBudgets);
     }
 

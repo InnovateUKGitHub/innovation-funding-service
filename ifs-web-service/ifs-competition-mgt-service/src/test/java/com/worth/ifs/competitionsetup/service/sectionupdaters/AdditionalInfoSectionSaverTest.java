@@ -30,11 +30,11 @@ public class AdditionalInfoSectionSaverTest {
 				.withId(1L).build();
 
 		service.saveSection(competition, competitionSetupForm);
-		
+
 		assertEquals("Activity", competition.getActivityCode());
 		assertEquals("Innovate", competition.getInnovateBudget());
 		assertEquals("Funder", competition.getFunder());
-		assertEquals("Funder Budget", competition.getFunderBudget());
+		assertEquals(Double.valueOf(0), competition.getFunderBudget());
 
 		verify(competitionService).update(competition);
 	}

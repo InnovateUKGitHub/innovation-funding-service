@@ -18,20 +18,6 @@
     </div>
 </div>
 
-
-<!-- TODO - Need to remove the below fragment -->
-<!-- =================Tabbed navigation competion setup=========================== -->
-<div th:fragment="old-comp-setup-navigation(sections, completedStatuses, currentSection, competition)">
-    <ul class="inline-nav">
-        <!-- /* Select the first section if currentSection is not defined */ -->
-        <li th:each="(section, iteration : ${sections})" th:classappend="${(section == currentSection) || (currentSection == null and iteration.index==0) ? 'selected' : ''} + '' + ${completedStatuses.contains(section) ? 'marked-as-complete' : ''}">
-            <a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
-               th:text="${section.name}">Section Name</a>
-        </li>
-    </ul>
-</div>
-
-
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="comp-admin-page-title-subheading(subtitle, heading, subheading)">
   <div class="page-title">

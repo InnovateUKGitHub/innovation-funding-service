@@ -44,7 +44,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
             fieldWithPath("funder").description("the funder entered during competition setup"),
-            fieldWithPath("funderBudget").description("the funder budget entered during competition setup")
+            fieldWithPath("funderBudget").description("the funder budget entered during competition setup"),
+            fieldWithPath("coFunders").description("the Co-Funders for this competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -72,5 +73,5 @@ public class CompetitionResourceDocs {
             .withActivityCode("Activity-Code")
             .withInnovateBudget("INNOVATE-Budget")
             .withFunder("funder, funder")
-            .withCoFundersBudget("1234, 23423");
+            .withFunderBudget(1234D, 23423D);
 }
