@@ -2,6 +2,7 @@ package com.worth.ifs.competition.resource;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,6 +161,11 @@ public class CompetitionResource {
 
     public LocalDateTime getAssessmentEndDate() {
         return assessmentEndDate;
+    }
+
+    public String assementEndDateDisplay() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM YYYY");
+        return getAssessmentEndDate().format(formatter);
     }
 
     public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
