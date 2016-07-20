@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.EXPERIAN_VALIDATION_FAILED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.EXPERIAN_VERIFICATION_FAILED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -50,6 +51,11 @@ public class RestSilExperianEndpoint implements SilExperianEndpoint {
 
     @Override
     public ServiceResult<VerificationResult> verify(AccountDetails accountDetails) {
-        return null;
+        final Either<ResponseEntity<VerificationResult>, ResponseEntity<SilError>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianVerify, accountDetails, SilError.class, VerificationResult.class, HttpStatus.ACCEPTED);
+        if(response.isLeft()){
+            return serviceSuccess(response.getLeft().getBody());
+        } else {
+            return serviceFailure(new Error(EXPERIAN_VERIFICATION_FAILED));
+        }
     }
 }

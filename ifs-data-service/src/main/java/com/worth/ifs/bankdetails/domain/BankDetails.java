@@ -33,6 +33,16 @@ public class BankDetails {
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
+    private short companyNameScore;
+
+    private boolean registrationNumberMatched;
+
+    private short addressScore;
+
+    private boolean manualApproval;
+
+    private boolean verified;
+
     public Long getId() {
         return id;
     }
@@ -81,6 +91,46 @@ public class BankDetails {
         this.organisation = organisation;
     }
 
+    public short getCompanyNameScore() {
+        return companyNameScore;
+    }
+
+    public void setCompanyNameScore(short companyNameScore) {
+        this.companyNameScore = companyNameScore;
+    }
+
+    public boolean getRegistrationNumberMatched() {
+        return registrationNumberMatched;
+    }
+
+    public void setRegistrationNumberMatched(boolean registrationNumberMatched) {
+        this.registrationNumberMatched = registrationNumberMatched;
+    }
+
+    public short getAddressScore() {
+        return addressScore;
+    }
+
+    public void setAddressScore(short addressScore) {
+        this.addressScore = addressScore;
+    }
+
+    public boolean isManualApproval() {
+        return manualApproval;
+    }
+
+    public void setManualApproval(boolean manualApproval) {
+        this.manualApproval = manualApproval;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +140,11 @@ public class BankDetails {
         BankDetails that = (BankDetails) o;
 
         return new EqualsBuilder()
+                .append(companyNameScore, that.companyNameScore)
+                .append(registrationNumberMatched, that.registrationNumberMatched)
+                .append(addressScore, that.addressScore)
+                .append(manualApproval, that.manualApproval)
+                .append(verified, that.verified)
                 .append(id, that.id)
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
@@ -108,6 +163,11 @@ public class BankDetails {
                 .append(project)
                 .append(organisationAddress)
                 .append(organisation)
+                .append(companyNameScore)
+                .append(registrationNumberMatched)
+                .append(addressScore)
+                .append(manualApproval)
+                .append(verified)
                 .toHashCode();
     }
 }

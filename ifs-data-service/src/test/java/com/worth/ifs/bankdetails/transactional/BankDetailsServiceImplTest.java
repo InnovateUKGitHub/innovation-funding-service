@@ -13,6 +13,7 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.ValidationResult;
+import com.worth.ifs.sil.experian.resource.VerificationResult;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,8 +52,8 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         Address address = newAddress().build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddress(addressResource).build();
         OrganisationAddress organisationAddress = newOrganisationAddress().build();
-        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganiationAddress(organisationAddressResource).build();
-        bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganiationAddress(organisationAddress).build();
+        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withOrganiationAddress(organisationAddressResource).build();
+        bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganisation(organisation).withOrganiationAddress(organisationAddress).build();
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
         when(organisationAddressRepositoryMock.findOne(organisationAddressResource.getId())).thenReturn(organisationAddress);
@@ -86,6 +87,9 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ValidationResult validationResult = new ValidationResult();
         validationResult.setCheckPassed(true);
         when(silExperianEndpointMock.validate(accountDetails)).thenReturn(serviceSuccess(validationResult));
+        VerificationResult verificationResult = new VerificationResult();
+        when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
         ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
         assertTrue(result.isSuccess());
     }

@@ -14,9 +14,9 @@ public class SILBankDetailsMapper {
 
         if(bankDetailsResource.getOrganisationAddress() != null && bankDetailsResource.getOrganisationAddress().getAddress() != null){
             AddressResource addressResource = bankDetailsResource.getOrganisationAddress().getAddress();
-            address = new Address(addressResource.getAddressLine1(),
+            address = new Address(null,
+                    addressResource.getAddressLine1(),
                     addressResource.getAddressLine2(),
-                    addressResource.getAddressLine3(),
                     null ,
                     addressResource.getTown(),
                     addressResource.getPostcode());
@@ -25,10 +25,8 @@ public class SILBankDetailsMapper {
         return new AccountDetails(
                 bankDetailsResource.getSortCode(),
                 bankDetailsResource.getAccountNumber(),
-                null,
-                null,
-                //bankDetailsResource.getOrganisationName(), (to be added on another branch)
-                //bankDetailsResource.getOrganisationCompanyHouseNumber(), (to be added on another branch)
+                bankDetailsResource.getCompanyName(),
+                bankDetailsResource.getRegistrationNumber(),
                 address
         );
     }

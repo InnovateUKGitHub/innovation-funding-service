@@ -1,20 +1,18 @@
 package com.worth.ifs.sil.experian.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.sil.experian.resource.AccountDetails;
-import com.worth.ifs.sil.experian.resource.Condition;
-import com.worth.ifs.sil.experian.resource.ValidationResult;
+import com.worth.ifs.sil.experian.resource.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hibernate.jpa.internal.QueryImpl.LOG;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -29,6 +27,8 @@ public class ExperianEndpointController {
     private Boolean validateFromSilStub;
 
     private static HashMap<String, List<Condition>> errorExamples;
+    private static HashMap<AccountDetails, VerificationResult> verificationResults;
+    private static VerificationResult defaultVerificationResult;
 
     static {
         final String WARNING = "warning";
@@ -45,6 +45,25 @@ public class ExperianEndpointController {
         errorExamples.put("000003-22345683", singletonList(new Condition(WARNING, "78", "Account does not support AUDDIS transactions")));
         errorExamples.put("000004-22345610", singletonList(new Condition(INFO, "78", "Alternate information is available for this account")));
         errorExamples.put("123456-12345678", asList(new Condition(WARNING, "2", "Modulus check algorithm is unavailable for these account details"), new Condition(ERROR, "6", "Modulus check algorithm is unavailable for these account details")));
+
+        verificationResults = new HashMap<>();
+        verificationResults.put(
+                new AccountDetails("404750","51406795", "Vitruvius Stonework Limited","M60674010",
+                        new Address("", "Springbank Chapelgreen", "Charlmont Road", "", "", "SW17 9AB")
+                ),
+                new VerificationResult("7", "8", "9", "No Match",
+                        singletonList(new Condition("warning", "2", "Modulus check algorithm is unavailable for these account details"))
+                )
+        );
+
+        verificationResults.put(
+                new AccountDetails("090127","78132557", "Consumed By Riffage Ltd","06477798",
+                        new Address(null, "1", "Riff Street", null, "Bath", "BA1 5LR")
+                ),
+                new VerificationResult("9", "8", "6", "No Match", emptyList())
+        );
+
+        defaultVerificationResult = new VerificationResult("7", "7", "7", "Match", emptyList());
     }
 
     @RequestMapping(value="/experianValidate", method = POST)
@@ -59,15 +78,18 @@ public class ExperianEndpointController {
             validationResult.setConditions(invalidConditions);
         } else {
             validationResult.setCheckPassed(true);
-            validationResult.setConditions(Collections.emptyList());
+            validationResult.setConditions(emptyList());
         }
         return restSuccess(validationResult);
     }
 
     @RequestMapping(value="/experianVerify", method = POST)
-    public RestResult<Void> experianVerify(@RequestBody AccountDetails accountDetails){
-        return null;
+    public RestResult<VerificationResult> experianVerify(@RequestBody AccountDetails accountDetails){
+        VerificationResult verificationResult = verificationResults.get(accountDetails);
+        if(verificationResult != null) {
+            return restSuccess(verificationResult);
+        } else {
+            return restSuccess(defaultVerificationResult);
+        }
     }
-
-
 }

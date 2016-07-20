@@ -87,8 +87,10 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Project Bank details
      */
     BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS("Project details must be submitted before bank details", BAD_REQUEST),
+    BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE("Bank details can only be submitted once", BAD_REQUEST),
     BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION("Bank details don't exist on project {0} for organisation {1}", NOT_FOUND),
     EXPERIAN_VALIDATION_FAILED("Experian validation failed", BAD_REQUEST),
+    EXPERIAN_VERIFICATION_FAILED("Experian verification failed", BAD_REQUEST),
 
 
     /**

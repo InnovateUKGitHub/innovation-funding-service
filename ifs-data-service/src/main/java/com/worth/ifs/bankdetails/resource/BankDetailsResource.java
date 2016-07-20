@@ -36,6 +36,16 @@ public class BankDetailsResource {
 
     private String registrationNumber;
 
+    private short companyNameScore;
+
+    private boolean registrationNumberMatched;
+
+    private short addressScore;
+
+    private boolean manualApproval;
+
+    private boolean verified;
+
     public Long getId() {
         return id;
     }
@@ -102,7 +112,7 @@ public class BankDetailsResource {
 
     @JsonIgnore
     public boolean isApproved(){
-        return true;
+        return false;
     }
 
     public String getOrganisationTypeName() {
@@ -111,6 +121,46 @@ public class BankDetailsResource {
 
     public void setOrganisationTypeName(String organisationTypeName) {
         this.organisationTypeName = organisationTypeName;
+    }
+
+    public short getCompanyNameScore() {
+        return companyNameScore;
+    }
+
+    public void setCompanyNameScore(short companyNameScore) {
+        this.companyNameScore = companyNameScore;
+    }
+
+    public boolean getRegistrationNumberMatched() {
+        return registrationNumberMatched;
+    }
+
+    public void setRegistrationNumberMatched(boolean registrationNumberMatched) {
+        this.registrationNumberMatched = registrationNumberMatched;
+    }
+
+    public short getAddressScore() {
+        return addressScore;
+    }
+
+    public void setAddressScore(short addressScore) {
+        this.addressScore = addressScore;
+    }
+
+    public boolean isManualApproval() {
+        return manualApproval;
+    }
+
+    public void setManualApproval(boolean manualApproval) {
+        this.manualApproval = manualApproval;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     @Override
@@ -122,6 +172,11 @@ public class BankDetailsResource {
         BankDetailsResource that = (BankDetailsResource) o;
 
         return new EqualsBuilder()
+                .append(companyNameScore, that.companyNameScore)
+                .append(registrationNumberMatched, that.registrationNumberMatched)
+                .append(addressScore, that.addressScore)
+                .append(manualApproval, that.manualApproval)
+                .append(verified, that.verified)
                 .append(id, that.id)
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
@@ -146,6 +201,11 @@ public class BankDetailsResource {
                 .append(organisationTypeName)
                 .append(companyName)
                 .append(registrationNumber)
+                .append(companyNameScore)
+                .append(registrationNumberMatched)
+                .append(addressScore)
+                .append(manualApproval)
+                .append(verified)
                 .toHashCode();
     }
 }

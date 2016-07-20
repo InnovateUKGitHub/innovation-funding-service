@@ -18,6 +18,11 @@ public class BankDetailsDocs {
             fieldWithPath("organisationTypeName").description("The type of organisation"),
             fieldWithPath("companyName").description("The company name"),
             fieldWithPath("registrationNumber").description("The registration number"),
+            fieldWithPath("companyNameScore").description("Score returned by experian SIL API for company name"),
+            fieldWithPath("registrationNumberMatched").description("Score returned by experian SIL API for company's registration number"),
+            fieldWithPath("addressScore").description("Score returned by experian SIL API for company's banking address"),
+            fieldWithPath("manualApproval").description("Flag to verify bank details are valid manually by IFS finance staff"),
+            fieldWithPath("verified").description("Flag to signify that experian validation has been completed sucessfully")
     };
 
     @SuppressWarnings("unchecked")
