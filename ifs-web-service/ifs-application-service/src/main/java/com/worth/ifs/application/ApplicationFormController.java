@@ -40,7 +40,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -282,25 +281,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .anyMatch(questionStatusResource -> (
                         questionStatusResource.getAssignee() == null || questionStatusResource.getAssigneeUserId().equals(userId))
                         && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
-    }
-
-    private BindingResult removeDuplicateFieldErrors(BindingResult bindingResult) {
-        BindingResult br = new BeanPropertyBindingResult(this, "form");
-        bindingResult.getFieldErrors().stream().distinct()
-                .filter(e -> {
-                    for (FieldError fieldError : br.getFieldErrors(e.getField())) {
-                        if(fieldError.getDefaultMessage().equals(e.getDefaultMessage())){
-                            return false;
-                        }else{
-                            return true;
-                        }
-                    }
-                    return true;
-                })
-                .forEach(e -> br.addError(e));
-        bindingResult.getGlobalErrors().stream().forEach(e -> br.addError(e));
-        bindingResult = br;
-        return bindingResult;
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {

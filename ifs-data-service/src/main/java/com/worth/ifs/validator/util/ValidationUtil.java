@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class ValidationUtil {
-    public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
+    private final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     private MessageSource messageSource;
     private ValidatorService validatorService;
     private MinRowCountValidator minRowCountValidator;
