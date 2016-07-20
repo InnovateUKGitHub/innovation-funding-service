@@ -10,7 +10,6 @@ import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.CharSet;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

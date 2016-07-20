@@ -15,7 +15,6 @@ import org.springframework.validation.Validator;
 import javax.servlet.http.Cookie;
 
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
