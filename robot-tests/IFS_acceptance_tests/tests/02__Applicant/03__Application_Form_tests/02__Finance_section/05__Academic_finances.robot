@@ -50,7 +50,7 @@ Academic finance calculations
     ...
     ...    INFUND-2399
     [Tags]    HappyPath
-    [Setup]
+    [Setup]     Guest user log-in     ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given The user navigates to the academic application finances
     When the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
