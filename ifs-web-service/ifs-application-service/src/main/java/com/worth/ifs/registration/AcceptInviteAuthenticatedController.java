@@ -114,7 +114,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
     }
 
     static boolean invalidInvite(Model model, UserResource loggedInUser, InviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
-        if (!inviteResource.getEmail().equals(loggedInUser.getEmail())) {
+        if (!inviteResource.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
             // Invite is for different emailaddress then current logged in user.
             model.addAttribute("failureMessageKey", "registration.LOGGED_IN_WITH_OTHER_ACCOUNT");
             return true;
