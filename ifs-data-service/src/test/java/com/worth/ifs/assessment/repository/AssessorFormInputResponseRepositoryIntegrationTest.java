@@ -39,6 +39,8 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
     @Test
     public void testFindAll() throws Exception {
+        repository.deleteAll();
+
         Assessment assessment = assessmentRepository.save(new Assessment());
 
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -131,5 +133,40 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
         List<AssessorFormInputResponse> foundForQuestion2 = repository.findByAssessmentIdAndFormInputQuestionId(assessment.getId(), questions.get(1).getId());
         assertEquals(expectedForQuestion1, foundForQuestion1);
         assertEquals(expectedForQuestion2, foundForQuestion2);
+    }
+
+    @Test
+    public void testFindByAssessmentIdAndFormInputId() throws Exception {
+        List<Assessment> assessments = asList(new Assessment(), new Assessment()).stream().map(assessment -> assessmentRepository.save(assessment)).collect(toList());
+
+        // Save a question
+        Question question = questionRepository.save(new Question());
+
+        // Save two form inputs for the question
+        List<FormInput> formInputs = newFormInput()
+                .withId(null, null)
+                .withQuestion(question, question)
+                .withPriority(0, 1)
+                .withScope(ASSESSMENT, ASSESSMENT)
+                .build(2).stream().map(formInput -> formInputRepository.save(formInput)).collect(toList());
+
+        // For each of the assessments, save one response for each of the two form inputs
+        List<AssessorFormInputResponse> saved = newAssessorFormInputResponse()
+                .withId(null, null, null, null)
+                .withAssessment(assessments.get(0), assessments.get(0), assessments.get(1), assessments.get(1))
+                .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(0), formInputs.get(1))
+                .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4")
+                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .build(4).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
+
+        // There should be a response found for each of the form inputs, for each assessment
+        AssessorFormInputResponse foundForAssessment1FormInput1 = repository.findByAssessmentIdAndFormInputId(assessments.get(0).getId(), formInputs.get(0).getId());
+        AssessorFormInputResponse foundForAssessment1FormInput2 = repository.findByAssessmentIdAndFormInputId(assessments.get(0).getId(), formInputs.get(1).getId());
+        AssessorFormInputResponse foundForAssessment2FormInput1 = repository.findByAssessmentIdAndFormInputId(assessments.get(1).getId(), formInputs.get(0).getId());
+        AssessorFormInputResponse foundForAssessment2FormInput2 = repository.findByAssessmentIdAndFormInputId(assessments.get(1).getId(), formInputs.get(1).getId());
+        assertEquals(saved.get(0), foundForAssessment1FormInput1);
+        assertEquals(saved.get(1), foundForAssessment1FormInput2);
+        assertEquals(saved.get(2), foundForAssessment2FormInput1);
+        assertEquals(saved.get(3), foundForAssessment2FormInput2);
     }
 }

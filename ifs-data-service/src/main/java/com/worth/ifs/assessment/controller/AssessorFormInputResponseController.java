@@ -4,10 +4,7 @@ import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +26,10 @@ public class AssessorFormInputResponseController {
     @RequestMapping(value = "/assessment/{assessmentId}/question/{questionId}", method = RequestMethod.GET)
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(@PathVariable("assessmentId") Long assessmentId, @PathVariable("questionId") Long questionId) {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/formInput/{formInputId}/assessment/{assessmentId}", method = RequestMethod.PUT)
+    public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") final Long formInputId, @PathVariable("assessmentId") final Long assessmentId, @RequestBody final String value) {
+        return assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value).toPutResponse();
     }
 }

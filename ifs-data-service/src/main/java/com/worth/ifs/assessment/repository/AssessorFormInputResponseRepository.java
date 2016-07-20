@@ -1,6 +1,5 @@
 package com.worth.ifs.assessment.repository;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import org.springframework.data.repository.CrudRepository;
 
@@ -20,4 +19,5 @@ public interface AssessorFormInputResponseRepository extends CrudRepository<Asse
 
     List<AssessorFormInputResponse> findByAssessmentIdAndFormInputQuestionId(Long assessmentId, Long questionId);
 
+    AssessorFormInputResponse findByAssessmentIdAndFormInputId(Long assessmentId, Long formInputId);
 }

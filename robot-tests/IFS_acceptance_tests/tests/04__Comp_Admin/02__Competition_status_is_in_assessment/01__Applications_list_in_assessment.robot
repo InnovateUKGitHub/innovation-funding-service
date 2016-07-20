@@ -92,9 +92,9 @@ Non submitted applications from this competition should be visible
     Then the user should not see the element    link=00000001
 
 Excel export
-    [Documentation]    INFUND-1987
-    [Tags]    HappyPath    Failing
-    # we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
+    [Documentation]    INFUND-1987, INFUND-4039
+    [Tags]    HappyPath    Pending
+    # TODO we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
     Given the user navigates to the page    ${COMP_ADMINISTRATOR_OPEN}
     When the admin downloads the excel
     And user opens the excel and checks the content
@@ -141,8 +141,8 @@ Download File
 the admin downloads the excel
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    https://ifs-local-dev/management/competition/1/download    submitted_applications.xlsx
-    sleep    2s
+    Download File    ${ALL_COOKIES}   ${server}/management/competition/1/download    submitted_applications.xlsx
+    wait until keyword succeeds   300ms    1 seconds    Download should be done
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx

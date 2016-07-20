@@ -19,14 +19,6 @@
 
             <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-                <!--/* /div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                    <h1 class="heading-medium error-summary-heading">
-                        Invalid input provided
-                    </h1>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                    </ul>
-                </div */-->
 
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
@@ -43,37 +35,9 @@
                     <div th:replace="question-type/form-elements :: readonly-file-download (filename=${model.appendixDetails.filename}, filesizeKbytes=${model.appendixDetails.filesizeKbytes}, fileDescription=${model.appendixFileDescription}, downloadURL=@{/})" />
                 </div>
 
-                <!--
-                new score input type tag?
-                <div th:include="fragments/assessment :: assessment-feedback-score (score=*{score})" th:remove="tag" />
-                -->
-
-                <!--
-                new scope confirmation tag?
-                <div th:include="fragments/assessment :: assessment-feedback-scope" th:remove="tag" />
-                -->
-
-                <!--
-                <fieldset>
-                    <legend class="visuallyhidden">Question feedback</legend>
-                    <div class="form-group">
-                        <div class="form-group">
-                            <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                                <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
-                            </label>
-
-                            <details th:unless="${#strings.isEmpty(model.assessorGuidanceQuestion)}">
-                                <summary>
-                                    <span class="summary" th:text="${model.assessorGuidanceQuestion}" />
-                                </summary>
-                                <div class="panel-indent" ifs:utext="${model.assessorGuidanceAnswer}" />
-                            </details>
-
-                            <div th:include="fragments/assessment :: assessment-form-textarea-wordcount (id=${model.questionId}, name=${inputName}, value=*{value}, readonly=false, maxWords=${model.feedbackWordsLimit}, currentWordsLeft=${model.feedbackWordsRemaining})" th:remove="tag" />
-                        </div>
-                    </div>
-                </fieldset>
-                -->
+                <div class="question" th:each="formInput : ${model.assessmentFormInputs}" th:id="'form-input-'+${formInput.id}">
+                    <div th:replace="fragments/assessment-types :: ${formInput.formInputTypeTitle} (formInput=${formInput})" />
+                </div>
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             </form>

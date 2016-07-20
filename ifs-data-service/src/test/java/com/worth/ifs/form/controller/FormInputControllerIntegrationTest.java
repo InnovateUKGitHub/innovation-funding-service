@@ -33,7 +33,7 @@ public class FormInputControllerIntegrationTest extends BaseControllerIntegratio
         Long formInputId = 1L;
         List<FormInputResource> formInputs = controller.findByQuestionId(questionId).getSuccessObject();
 
-        assertThat(formInputs, hasSize(1));
+        assertThat(formInputs, hasSize(3));
 
         Optional<FormInputResource> formInput = formInputs.stream().filter(f -> f.getId().equals(formInputId)).findFirst();
 

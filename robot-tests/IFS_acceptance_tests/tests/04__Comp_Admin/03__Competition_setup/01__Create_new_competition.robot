@@ -58,7 +58,7 @@ Initial details server-side validations
 Initial details client-side validations
     [Documentation]    INFUND-2982
     [Tags]    Pending    HappyPath
-    # pending INFUND-3957
+    # TODO pending INFUND-3957
     When the user selects the option from the drop-down menu    Competition Executive One    id=executiveUserId
     Then the user should not see the error anymore    Please select a competition executive
     When the user enters text to a text field    id=openingDateDay    01
@@ -101,7 +101,7 @@ Initial details correct state aid status
 Initial details competition code generation
     [Documentation]    INFUND-2984
     [Tags]    Pending
-    # pending INFUND-3957
+    # TODO pending INFUND-3957
     When the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

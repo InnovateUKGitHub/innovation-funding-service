@@ -6,7 +6,6 @@ import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
@@ -29,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
@@ -41,6 +41,7 @@ import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
@@ -52,8 +53,9 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -108,7 +110,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testAssessmentDetails() throws Exception {
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
-        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplicationId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
@@ -132,7 +134,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(processRoleService.getById(assessment.getProcessRole())).thenReturn(settable(processRole));
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
-        Map<Long, List<AssessmentFeedbackResource>> assessorResponsesMap = asMap(1L, asList(assessorResponses.get(0), assessorResponses.get(1)), 2L, asList(assessorResponses.get(2), assessorResponses.get(3)));
+        Map<Long, List<AssessorFormInputResponseResource>> assessorResponsesMap = asMap(1L, asList(assessorResponses.get(0), assessorResponses.get(1)), 2L, asList(assessorResponses.get(2), assessorResponses.get(3)));
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResource formInput = newFormInputResource().withId(1L).build();
@@ -154,7 +156,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testAssessmentFinance() throws Exception {
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
-        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplicationId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
@@ -186,6 +188,25 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getApplicationFinancesByOrganisation()))
                 .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()))
         ;
+    }
+
+    @Test
+    public void testRejectApplication() throws Exception {
+        final String reason = "reason";
+        final String comment = "comment";
+        final Long assessmentId = 1L;
+
+        when(assessmentService.rejectApplication(assessmentId, "reason", "comment")).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/{assessmentId}/status", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", reason)
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(view().name("assessor/assessor-dashboard"))
+                .andReturn();
+
+        verify(assessmentService, only()).rejectApplication(assessmentId, reason, comment);
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {

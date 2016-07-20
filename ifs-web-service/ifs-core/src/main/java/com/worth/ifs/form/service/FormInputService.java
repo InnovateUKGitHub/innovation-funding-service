@@ -15,4 +15,6 @@ public interface FormInputService {
     List<FormInputResource> findAssessmentInputsByQuestion(Long questionId);
 
     List<FormInputResource> findApplicationInputsByCompetition(Long competitionId);
+
+    List<FormInputResource> findAssessmentInputsByCompetition(Long competitionId);
 }

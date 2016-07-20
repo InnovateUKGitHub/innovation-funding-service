@@ -48,11 +48,6 @@ INSERT IGNORE INTO `process` (`id`, `end_date`, `event`, `last_modified`, `start
 INSERT IGNORE INTO `process` (`id`, `end_date`, `event`, `last_modified`, `start_date`, `status`, `process_type`, `process_role`) VALUES (11,NULL,'accept','2016-07-14 10:43:11',NULL,'open','Assessment',65);
 INSERT IGNORE INTO `process` (`id`, `end_date`, `event`, `last_modified`, `start_date`, `status`, `process_type`, `process_role`) VALUES (12,NULL,'','2016-07-11 12:10:44',NULL,'pending','Assessment',66);
 
--- Create new Form Input Types for different type of fields that the assessor will answer - Research Category, Scope and Score
-INSERT IGNORE INTO `form_input_type` (`id`, `title`) VALUES (21,'assessor_research_category');
-INSERT IGNORE INTO `form_input_type` (`id`, `title`) VALUES (22,'assessor_application_in_scope');
-INSERT IGNORE INTO `form_input_type` (`id`, `title`) VALUES (23,'assessor_score');
-
 -- Create Assessor Form Inputs for each Question in the 'Project details' and 'Application questions' sections where appropriate
 
 -- Competition 1

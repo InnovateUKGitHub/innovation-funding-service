@@ -45,6 +45,10 @@ public class FormInputResponseBuilder extends BaseBuilder<FormInputResponse, For
     public FormInputResponseBuilder withFileEntry(FileEntry fileEntry) {
         return with(response -> response.setFileEntry(fileEntry));
     }
+    
+    public FormInputResponseBuilder withValue(String value) {
+        return with(response -> response.setValue(value));
+    }
 
     @Override
     protected FormInputResponse createInitial() {

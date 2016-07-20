@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,10 @@ public class AssessorFormInputResponseServiceImpl implements AssessorFormInputRe
     @Override
     public List<AssessorFormInputResponseResource> getAllAssessorFormInputResponsesByAssessmentAndQuestion(Long assessmentId, Long questionId) {
         return assessorFormInputResponseRestService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> updateFormInputResponse(Long assessmentId, Long formInputId, String value) {
+        return assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value).toServiceResult();
     }
 }

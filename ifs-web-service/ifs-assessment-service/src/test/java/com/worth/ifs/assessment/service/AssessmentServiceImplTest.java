@@ -9,12 +9,14 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.builder.AssessmentResourceBuilder;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.builder.ProcessRoleResourceBuilder;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,6 +29,7 @@ import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentService> {
@@ -87,5 +90,20 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         final List<QuestionResource> response = service.getAllQuestionsById(assessmentId);
         assertSame(expected, response);
+    }
+
+    @Test
+    public void testRejectApplication() {
+        Long assessmentId = 1L;
+        String reason = "reason";
+        String comment = "comment";
+
+        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
+        processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
+        processOutcome.setComment(comment);
+        processOutcome.setDescription(reason);
+        when(assessmentRestService.updateStatus(assessmentId,processOutcome)).thenReturn(restSuccess());
+        assertTrue(service.rejectApplication(assessmentId,reason,comment).isSuccess());
+        verify(assessmentRestService, only()).updateStatus(assessmentId,processOutcome);
     }
 }
