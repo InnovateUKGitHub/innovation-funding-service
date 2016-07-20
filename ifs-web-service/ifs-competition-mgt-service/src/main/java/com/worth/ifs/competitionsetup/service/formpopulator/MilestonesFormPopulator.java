@@ -1,19 +1,18 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import com.worth.ifs.application.service.MilestoneService;
-import com.worth.ifs.competition.resource.MilestoneResource;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Form populator for the milestones competition setup section.
@@ -38,43 +37,43 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         List<MilestoneResource> allDatesByCompetitionId = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
 
         allDatesByCompetitionId.forEach(milestone -> {
-            if (milestone.getName().equals(competitionSetupForm.getOpenDate())) {
+            if (MilestoneName.OPEN_DATE.equals(milestone.getName())) {
                 populateOpenDay(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getBriefingEvent())) {
+            else if (MilestoneName.BRIEFING_EVENT.equals(milestone.getName())) {
                 populateBriefingEvent(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getSubmissionDate())) {
+            else if (MilestoneName.SUBMISSION_DATE.equals(milestone.getName())) {
                 populateSubmissionDate(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getAllocateAssessors())) {
+            else if (MilestoneName.ALLOCATE_ASSESSORS.equals(milestone.getName())) {
                 populateAllocateAssessorsDay(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getAssessorBriefing())) {
+            else if (MilestoneName.ASSESSOR_BRIEFING.equals(milestone.getName())) {
                 populateAssessorBriefingDay(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getAssessorAccepts())) {
+            else if (MilestoneName.ASSESSOR_ACCEPTS.equals(milestone.getName())) {
                 populateAssessorAccepts(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getAssessorDeadline())) {
+            else if (MilestoneName.ASSESSOR_DEADLINE.equals(milestone.getName())) {
                 populateAssessorDeadline(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getLineDraw())) {
+            else if (MilestoneName.LINE_DRAW.equals(milestone.getName())) {
                 populateLineDraw(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getAssessmentPanel())) {
+            else if (MilestoneName.ASSESSMENT_PANEL.equals(milestone.getName())) {
                 populateAssessmentPanel(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getPanelDate())) {
+            else if (MilestoneName.PANEL_DATE.equals(milestone.getName())) {
                 populatePanelDate(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getFundersPanel())) {
+            else if (MilestoneName.FUNDERS_PANEL.equals(milestone.getName())) {
                 populateFundersPanel(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getNotifications())) {
+            else if (MilestoneName.NOTIFICATIONS.equals(milestone.getName())) {
                 populateNotifications(competitionSetupForm, milestone);
             }
-            if (milestone.getName().equals(competitionSetupForm.getReleaseFeedback())) {
+            else if (MilestoneName.RELEASE_FEEDBACK.equals(milestone.getName())) {
                 populateReleaseFeedback(competitionSetupForm, milestone);
             }
         });

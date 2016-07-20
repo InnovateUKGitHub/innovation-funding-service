@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -26,8 +27,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -37,6 +36,7 @@ import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.user.domain.User;
 
 /**
@@ -85,18 +85,6 @@ public class Competition {
 
     @Column( length = 5000 )
     private String description;
-    @DateTimeFormat
-    private LocalDateTime startDate;
-    @DateTimeFormat
-    private LocalDateTime endDate;
-    @DateTimeFormat
-    private LocalDateTime assessmentStartDate;
-    @DateTimeFormat
-    private LocalDateTime assessmentEndDate;
-    @DateTimeFormat
-    private LocalDateTime fundersPanelEndDate;
-	@DateTimeFormat
-    private LocalDateTime assessorFeedbackDate;
 
     @Enumerated(EnumType.STRING)
     private CompetitionResource.Status status;
@@ -106,7 +94,7 @@ public class Competition {
     private CompetitionType competitionType;
 
     @OneToMany(mappedBy = "competition")
-    private List<Milestone> milestones;
+    private List<Milestone> milestones = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="executiveUserId", referencedColumnName="id")
@@ -160,16 +148,16 @@ public class Competition {
         this.sections = sections;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.setStartDate(startDate);
+        this.setEndDate(endDate);
         status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.setStartDate(startDate);
+        this.setEndDate(endDate);
         status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
 
@@ -199,24 +187,7 @@ public class Competition {
         return name;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public LocalDateTime getAssessmentEndDate() {
-        return assessmentEndDate;
-    }
-
-    public LocalDateTime getAssessmentStartDate() {
-        return assessmentStartDate;
-    }
-
-
-    public void setSections(List<Section> sections) {
+	public void setSections(List<Section> sections) {
         this.sections = sections;
     }
 
@@ -230,19 +201,19 @@ public class Competition {
 
     @JsonIgnore
     public long getDaysLeft(){
-        return getDaysBetween(LocalDateTime.now(), this.endDate);
+        return getDaysBetween(LocalDateTime.now(), this.getEndDate());
     }
     @JsonIgnore
     public long getAssessmentDaysLeft(){
-        return getDaysBetween(LocalDateTime.now(), this.assessmentEndDate);
+        return getDaysBetween(LocalDateTime.now(), this.getAssessmentEndDate());
     }
     @JsonIgnore
     public long getTotalDays(){
-        return getDaysBetween(this.startDate, this.endDate);
+        return getDaysBetween(this.getStartDate(), this.getEndDate());
     }
     @JsonIgnore
     public long getAssessmentTotalDays() {
-        return getDaysBetween(this.assessmentStartDate, this.assessmentEndDate);
+        return getDaysBetween(this.getAssessmentStartDate(), this.getAssessmentEndDate());
     }
     @JsonIgnore
     public long getStartDateToEndDatePercentage() {
@@ -267,22 +238,65 @@ public class Competition {
         this.description = description;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+    public LocalDateTime getEndDate() {
+        return getMilestoneValue(MilestoneName.SUBMISSION_DATE);
     }
-
     public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
+    	setMilestoneValue(MilestoneName.SUBMISSION_DATE, endDate);
     }
-
+    public LocalDateTime getStartDate() {
+    	return getMilestoneValue(MilestoneName.OPEN_DATE);
+    }
+    public void setStartDate(LocalDateTime startDate) {
+        setMilestoneValue(MilestoneName.OPEN_DATE, startDate);
+    }
+    public LocalDateTime getAssessmentEndDate() {
+    	return getMilestoneValue(MilestoneName.FUNDERS_PANEL);
+    }
+    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
+    	setMilestoneValue(MilestoneName.FUNDERS_PANEL, assessmentEndDate);
+    }
+    public LocalDateTime getAssessmentStartDate() {
+    	return getMilestoneValue(MilestoneName.ASSESSOR_ACCEPTS);
+    }
+    public void setAssessmentStartDate(LocalDateTime assessmentStartDate){
+    	setMilestoneValue(MilestoneName.ASSESSOR_ACCEPTS, assessmentStartDate);
+    }
     public LocalDateTime getAssessorFeedbackDate() {
-        return assessorFeedbackDate;
+    	return getMilestoneValue(MilestoneName.ASSESSOR_DEADLINE);
     }
-
     public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
-        this.assessorFeedbackDate = assessorFeedbackDate;
+    	setMilestoneValue(MilestoneName.ASSESSOR_DEADLINE, assessorFeedbackDate);
     }
+    public LocalDateTime getFundersPanelEndDate() {
+    	return getMilestoneValue(MilestoneName.NOTIFICATIONS);
+	}
+    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
+    	setMilestoneValue(MilestoneName.NOTIFICATIONS, fundersPanelEndDate);
+	}
 
+    private void setMilestoneValue(MilestoneName milestoneName, LocalDateTime dateTime) {
+		Milestone milestone = milestones.stream().filter(m -> milestoneName.equals(m.getName())).findAny().orElseGet(() -> {
+			Milestone m = new Milestone();
+			m.setCompetition(this);
+			m.setName(milestoneName);
+			milestones.add(m);
+			return m;
+		});
+		
+		milestone.setDate(dateTime);
+	}
+    
+	private LocalDateTime getMilestoneValue(MilestoneName milestoneName) {
+		Optional<Milestone> milestone = milestones.stream().filter(m -> milestoneName.equals(m.getName())).findAny();
+		
+		if(milestone.isPresent()) {
+			return milestone.get().getDate();
+		}
+		
+		return null;
+	}
+    
     private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
     }
@@ -294,14 +308,6 @@ public class Competition {
         double deadlineProgress = 100-( ( (double)daysLeft/(double)totalDays )* 100);
         long startDateToEndDatePercentage = (long) deadlineProgress;
         return startDateToEndDatePercentage;
-    }
-
-    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
-        this.assessmentEndDate = assessmentEndDate;
-    }
-
-    public void setAssessmentStartDate(LocalDateTime assessmentStartDate){
-        this.assessmentStartDate = assessmentStartDate;
     }
 
     public Integer getMaxResearchRatio() {
@@ -323,14 +329,6 @@ public class Competition {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public LocalDateTime getFundersPanelEndDate() {
-		return fundersPanelEndDate;
-	}
-    
-    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
-		this.fundersPanelEndDate = fundersPanelEndDate;
-	}
 
 	protected void setDateProvider(DateProvider dateProvider) {
 		this.dateProvider = dateProvider;

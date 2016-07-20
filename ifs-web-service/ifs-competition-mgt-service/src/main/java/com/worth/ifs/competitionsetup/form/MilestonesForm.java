@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
  */
 public class MilestonesForm extends CompetitionSetupForm {
 
-    private final String openDate = "1. Open date";
     @NotNull(message="Please enter the open date")
     @Range(min=1, max=31, message= "Please enter a open day")
     private Integer openDateDay;
@@ -21,7 +20,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer openDateYear;
     private String openDateDayOfWeek;
 
-    private final String briefingEvent = "2. Briefing event";
     @NotNull(message="Please enter a briefing event")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer briefingEventDay;
@@ -33,7 +31,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer briefingEventYear;
     private String briefingEventDayOfWeek;
 
-    private final String submissionDate = "3. Submission date";
     @NotNull(message="Please enter the submission date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer submissionDateDay;
@@ -45,7 +42,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer submissionDateYear;
     private String submissionDateDayOfWeek;
 
-    private final String allocateAssessors = "4. Allocate assessors";
     @NotNull(message="Please enter the allocate accessors date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer allocateAssessorsDay;
@@ -57,7 +53,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer allocateAssessorsYear;
     private String allocateAssessorsDayOfWeek;
 
-    private final String assessorBriefing = "5. Assessor briefing";
     @NotNull(message="Please enter the assessor briefing date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer assessorBriefingDay;
@@ -69,7 +64,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer assessorBriefingYear;
     private String assessorBriefingDayOfWeek;
 
-    private final String assessorAccepts = "6. Assessor accepts";
     @NotNull(message="Please enter the assessor accepts date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer assessorAcceptsDay;
@@ -81,7 +75,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer assessorAcceptsYear;
     private String assessorAcceptsDayOfWeek;
 
-    private final String assessorDeadline = "7. Assessor deadline";
     @NotNull(message="Please enter the assessor deadline date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer assessorDeadlineDay;
@@ -93,7 +86,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer assessorDeadlineYear;
     private String assessorDeadlineDayOfWeek;
 
-    private final String lineDraw = "8. Line draw";
     @NotNull(message="Please enter the line draw date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer lineDrawDay;
@@ -105,7 +97,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer lineDrawYear;
     private String lineDrawDayOfWeek;
 
-    private final String assessmentPanel = "9. Assessment panel";
     @NotNull(message="Please enter the assesment panel date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer assessmentPanelDay;
@@ -117,7 +108,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer assessmentPanelYear;
     private String assessmentPanelDayOfWeek;
 
-    private final String panelDate = "10. Panel date";
     @NotNull(message="Please enter the panel date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer panelDateDay;
@@ -129,7 +119,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer panelDateYear;
     private String panelDateDayOfWeek;
 
-    private final String fundersPanel = "11. Funders panel";
     @NotNull(message="Please enter the funders date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer fundersPanelDay;
@@ -141,7 +130,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer fundersPanelYear;
     private String fundersPanelDayOfWeek;
 
-    private final String notifications = "12. Notifications";
     @NotNull(message="Please enter the notifications date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer notificationsDay;
@@ -153,7 +141,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     private Integer notificationsYear;
     private String notificationsDayOfWeek;
 
-    private final String releaseFeedback = "13. Release feedback";
     @NotNull(message="Please enter the release feedback date")
     @Range(min=1, max=31, message= "Please enter a opening day")
     private Integer releaseFeedbackDay;
@@ -164,10 +151,6 @@ public class MilestonesForm extends CompetitionSetupForm {
     @Range(min=1900, max=9000, message= "Please enter a opening year")
     private Integer releaseFeedbackYear;
     private String releaseFeedbackDayOfWeek;
-
-    public String getOpenDate() {
-        return openDate;
-    }
 
     public Integer getOpenDateDay() {
         return openDateDay;
@@ -199,10 +182,6 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setOpenDateDayOfWeek(String openDateDayOfWeek) {
         this.openDateDayOfWeek = openDateDayOfWeek;
-    }
-
-    public String getBriefingEvent() {
-        return briefingEvent;
     }
 
     public Integer getBriefingEventDay() {
@@ -237,10 +216,6 @@ public class MilestonesForm extends CompetitionSetupForm {
         this.briefingEventDayOfWeek = briefingEventDayOfWeek;
     }
 
-    public String getSubmissionDate() {
-        return submissionDate;
-    }
-
     public Integer getSubmissionDateDay() {
         return submissionDateDay;
     }
@@ -271,10 +246,6 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setSubmissionDateDayOfWeek(String submissionDateDayOfWeek) {
         this.submissionDateDayOfWeek = submissionDateDayOfWeek;
-    }
-
-    public String getAllocateAssessors() {
-        return allocateAssessors;
     }
 
     public Integer getAllocateAssessorsDay() {
@@ -309,10 +280,6 @@ public class MilestonesForm extends CompetitionSetupForm {
         this.allocateAssessorsDayOfWeek = allocateAssessorsDayOfWeek;
     }
 
-    public String getAssessorBriefing() {
-        return assessorBriefing;
-    }
-
     public Integer getAssessorBriefingDay() {
         return assessorBriefingDay;
     }
@@ -343,10 +310,6 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setAssessorBriefingDayOfWeek(String assessorBriefingDayOfWeek) {
         this.assessorBriefingDayOfWeek = assessorBriefingDayOfWeek;
-    }
-
-    public String getAssessorAccepts() {
-        return assessorAccepts;
     }
 
     public Integer getAssessorAcceptsDay() {
@@ -381,10 +344,6 @@ public class MilestonesForm extends CompetitionSetupForm {
         this.assessorAcceptsDayOfWeek = assessorAcceptsDayOfWeek;
     }
 
-    public String getAssessorDeadline() {
-        return assessorDeadline;
-    }
-
     public Integer getAssessorDeadlineDay() {
         return assessorDeadlineDay;
     }
@@ -415,10 +374,6 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setAssessorDeadlineDayOfWeek(String assessorDeadlineDayOfWeek) {
         this.assessorDeadlineDayOfWeek = assessorDeadlineDayOfWeek;
-    }
-
-    public String getLineDraw() {
-        return lineDraw;
     }
 
     public Integer getLineDrawDay() {
@@ -453,10 +408,6 @@ public class MilestonesForm extends CompetitionSetupForm {
         this.lineDrawDayOfWeek = lineDrawDayOfWeek;
     }
 
-    public String getAssessmentPanel() {
-        return assessmentPanel;
-    }
-
     public Integer getAssessmentPanelDay() {
         return assessmentPanelDay;
     }
@@ -487,10 +438,6 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setAssessmentPanelDayOfWeek(String assessmentPanelDayOfWeek) {
         this.assessmentPanelDayOfWeek = assessmentPanelDayOfWeek;
-    }
-
-    public String getPanelDate() {
-        return panelDate;
     }
 
     public Integer getPanelDateDay() {
@@ -525,10 +472,6 @@ public class MilestonesForm extends CompetitionSetupForm {
         this.panelDateDayOfWeek = panelDateDayOfWeek;
     }
 
-    public String getFundersPanel() {
-        return fundersPanel;
-    }
-
     public Integer getFundersPanelDay() {
         return fundersPanelDay;
     }
@@ -561,10 +504,6 @@ public class MilestonesForm extends CompetitionSetupForm {
         this.fundersPanelDayOfWeek = fundersPanelDayOfWeek;
     }
 
-    public String getNotifications() {
-        return notifications;
-    }
-
     public Integer getNotificationsDay() {
         return notificationsDay;
     }
@@ -595,10 +534,6 @@ public class MilestonesForm extends CompetitionSetupForm {
 
     public void setNotificationsDayOfWeek(String notificationsDayOfWeek) {
         this.notificationsDayOfWeek = notificationsDayOfWeek;
-    }
-
-    public String getReleaseFeedback() {
-        return releaseFeedback;
     }
 
     public Integer getReleaseFeedbackDay() {

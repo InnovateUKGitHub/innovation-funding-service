@@ -1,20 +1,23 @@
 package com.worth.ifs.competition.controller;
 
-import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.MilestoneResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.junit.Assert.*;
+import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 /**
  * Integration test for testing the rest services of the milestone controller
@@ -44,7 +47,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertTrue(milestoneResult.isSuccess());
         List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
         assertNotNull(milestone);
-        assertTrue(milestone.size() == 5);
+        assertEquals(6, milestone.size());
     }
 
     @Rollback
@@ -65,7 +68,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         List<MilestoneResource> milestones = milestoneResult.getSuccessObject();
         assertNotNull(milestones);
-        assertTrue(milestones.size() == 5);
+        assertEquals(6, milestones.size());
         Long id = milestones.get(milestones.size() -1).getId();
 
         MilestoneResource newMilestone = createNewMilestone();
@@ -84,7 +87,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         List<MilestoneResource> milestones = milestoneResult.getSuccessObject();
 
         MilestoneResource milestone = milestones.get(0);
-        milestone.setName("testUpdate");
+        milestone.setName(MilestoneName.OPEN_DATE);
         milestone.setDate(LocalDateTime.now());
 
     }

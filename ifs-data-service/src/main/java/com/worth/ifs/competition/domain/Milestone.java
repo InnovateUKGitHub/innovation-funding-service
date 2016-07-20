@@ -1,14 +1,24 @@
 package com.worth.ifs.competition.domain;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 @Entity
 public class Milestone {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private MilestoneName name;
     private LocalDateTime date;
 
     @ManyToOne
@@ -24,11 +34,11 @@ public class Milestone {
         this.id = id;
     }
 
-    public String getName() {
+    public MilestoneName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(MilestoneName name) {
         this.name = name;
     }
 

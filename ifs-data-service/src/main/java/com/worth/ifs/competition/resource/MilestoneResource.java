@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class MilestoneResource {
     private Long id;
-    private String name;
+    private MilestoneName name;
     private LocalDateTime date;
     private Long competition;
 
@@ -17,11 +17,11 @@ public class MilestoneResource {
         this.id = id;
     }
 
-    public String getName() {
+    public MilestoneName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(MilestoneName name) {
         this.name = name;
     }
 
@@ -39,5 +39,21 @@ public class MilestoneResource {
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+    
+    public enum MilestoneName {
+        OPEN_DATE,
+        BRIEFING_EVENT,
+        SUBMISSION_DATE,
+        ALLOCATE_ASSESSORS,
+        ASSESSOR_BRIEFING,
+        ASSESSOR_ACCEPTS,
+        ASSESSOR_DEADLINE,
+        LINE_DRAW,
+        ASSESSMENT_PANEL,
+        PANEL_DATE,
+        FUNDERS_PANEL,
+        NOTIFICATIONS,
+        RELEASE_FEEDBACK;
     }
 }
