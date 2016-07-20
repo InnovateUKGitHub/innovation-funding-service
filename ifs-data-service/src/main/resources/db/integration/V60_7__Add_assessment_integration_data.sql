@@ -107,7 +107,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (16,'This is the feedback from Professor Plum for Project team.',1,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (17,'Industrial research',1,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (18,'1',1,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (18,'true',1,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (19,'This is the feedback from Professor Plum for Scope.',1,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (20,'8',1,62,'2016-07-15 11:41:36');
@@ -134,7 +134,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (33,'This is the feedback from Professor Plum for Risks.',2,56,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (34,'Technical feasibility',2,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (35,'1',2,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (35,'true',2,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (36,'This is the feedback from Professor Plum for Scope.',2,61,'2016-07-15 11:41:36');
 
 -- Add Assessor responses for Competition 1, Assessment 3 (Assessed)
@@ -164,7 +164,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (52,'This is the feedback from Professor Plum for Project team.',3,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (53,'Experimental development',3,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (54,'1',3,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (54,'true',3,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (55,'This is the feedback from Professor Plum for Scope.',3,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (56,'2',3,62,'2016-07-15 11:41:36');
@@ -200,7 +200,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (75,'This is the feedback from Felix Wilson for Project team.',5,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (76,'Technical feasibility',5,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (77,'1',5,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (77,'true',5,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (78,'This is the feedback from Felix Wilson for Scope.',5,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (79,'9',5,62,'2016-07-15 11:41:36');
@@ -227,7 +227,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (92,'This is the feedback from Felix Wilson for Risks.',6,56,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (93,'Industrial research',6,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (94,'1',6,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (94,'true',6,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (95,'This is the feedback from Felix Wilson for Scope.',6,61,'2016-07-15 11:41:36');
 
 -- Add Assessor responses for Competition 1, Assessment 7 (Assessed)
@@ -257,7 +257,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (111,'This is the feedback from Felix Wilson for Project team.',7,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (112,'Experimental development',7,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (113,'1',7,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (113,'true',7,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (114,'This is the feedback from Felix Wilson for Scope.',7,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (115,'1',7,62,'2016-07-15 11:41:36');
@@ -297,7 +297,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (16,'This is the feedback from Professor Plum for Project team.',1,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (17,'Industrial research',1,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (18,'1',1,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (18,'true',1,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (19,'This is the feedback from Professor Plum for Scope.',1,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (20,'8',1,62,'2016-07-15 11:41:36');
@@ -324,7 +324,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (33,'This is the feedback from Professor Plum for Risks.',2,56,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (34,'Technical feasibility',2,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (35,'1',2,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (35,'true',2,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (36,'This is the feedback from Professor Plum for Scope.',2,61,'2016-07-15 11:41:36');
 
 -- Add Assessor responses for Competition 1, Assessment 3 (Assessed)
@@ -354,7 +354,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (52,'This is the feedback from Professor Plum for Project team.',3,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (53,'Experimental development',3,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (54,'1',3,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (54,'true',3,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (55,'This is the feedback from Professor Plum for Scope.',3,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (56,'2',3,62,'2016-07-15 11:41:36');
@@ -390,7 +390,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (75,'This is the feedback from Felix Wilson for Project team.',5,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (76,'Technical feasibility',5,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (77,'1',5,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (77,'true',5,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (78,'This is the feedback from Felix Wilson for Scope.',5,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (79,'9',5,62,'2016-07-15 11:41:36');
@@ -417,7 +417,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (92,'This is the feedback from Felix Wilson for Risks.',6,56,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (93,'Industrial research',6,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (94,'1',6,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (94,'true',6,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (95,'This is the feedback from Felix Wilson for Scope.',6,61,'2016-07-15 11:41:36');
 
 -- Add Assessor responses for Competition 1, Assessment 7 (Assessed)
@@ -447,7 +447,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (111,'This is the feedback from Felix Wilson for Project team.',7,58,'2016-07-15 11:41:36');
 -- Q13
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (112,'Experimental development',7,59,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (113,'1',7,60,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (113,'true',7,60,'2016-07-15 11:41:36');
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (114,'This is the feedback from Felix Wilson for Scope.',7,61,'2016-07-15 11:41:36');
 -- Q15
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (115,'1',7,62,'2016-07-15 11:41:36');
