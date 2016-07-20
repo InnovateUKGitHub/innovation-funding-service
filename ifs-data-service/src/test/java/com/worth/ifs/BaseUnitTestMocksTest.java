@@ -15,13 +15,10 @@ import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.assessment.mapper.AssessmentFeedbackMapper;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
-import com.worth.ifs.assessment.repository.AssessmentFeedbackRepository;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
-import com.worth.ifs.assessment.transactional.AssessmentFeedbackService;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
@@ -105,12 +102,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentService assessmentServiceMock;
-
-    @Mock
-    protected AssessmentFeedbackMapper assessmentFeedbackMapperMock;
-
-    @Mock
-    protected AssessmentFeedbackService assessmentFeedbackServiceMock;
 
     @Mock
     protected AssessorFormInputResponseMapper assessorFormInputResponseMapperMock;
@@ -204,9 +195,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;
-
-    @Mock
-    protected AssessmentFeedbackRepository assessmentFeedbackRepositoryMock;
 
     @Mock
     protected AssessorFormInputResponseRepository assessorFormInputResponseRepositoryMock;
