@@ -2,6 +2,7 @@ package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.handler.item.CostHandler;
@@ -10,7 +11,6 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.NotSecured;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -86,6 +86,6 @@ public interface CostService {
     ServiceResult<Void> deleteFinanceFileEntry(@P("applicationFinanceId")long applicationFinanceId);
 
     @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
-    ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId")long applicationFinanceId);
+    ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId")long applicationFinanceId);
 
 }

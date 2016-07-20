@@ -2,6 +2,7 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorHolder;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -9,8 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
@@ -84,5 +84,33 @@ public class ValidationHandler {
 
     public static ValidationHandler newBindingResultHandler(BindingResult bindingResult) {
         return new ValidationHandler(bindingResult);
+    }
+
+    /**
+     * Provides a convenient wrapper around a common validation pattern when a single, potentially failing action is
+     * performed, using suppliers for failure views and success views to help drive navigation.
+     *
+     * The pattern goes:
+     *
+     * 1) Are there any binding errors currently present?  If yes, return the failure view
+     * 2) Perform the action that may succeed or fail
+     * 3) Did the action fail?  If so, add any errors from the failed result (binding them against and return the failure view
+     * 4) Otherwise, return the success view
+     *
+     * @param field
+     * @param failureView
+     * @param successView
+     * @param action
+     * @return
+     */
+    public String performActionOrBindErrorsToField(String field, Supplier<String> failureView, Supplier<String> successView, Supplier<FailingOrSucceedingResult<?, ?>> action) {
+
+        return failNowOrSucceedWith(failureView, () -> {
+
+            FailingOrSucceedingResult<?, ?> result = action.get();
+
+            return addAnyErrors(result, toField(field)).
+                   failNowOrSucceedWith(failureView, successView);
+        });
     }
 }

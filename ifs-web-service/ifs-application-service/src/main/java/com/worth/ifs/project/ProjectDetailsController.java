@@ -80,7 +80,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
-	    List<ProjectUserResource> projectUsers = getProjectUsers(projectResource.getId());
+	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
         Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
@@ -91,7 +91,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
-                userIsLeadPartner(projectId, loggedInUser.getId())));
+                projectService.isUserLeadPartner(projectId, loggedInUser.getId())));
         model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
 
         return "project/detail";
@@ -326,7 +326,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        List<ProjectUserResource> projectUsers = getProjectUsers(projectId);
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
@@ -334,7 +334,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                              ApplicationResource applicationResource) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        List<ProjectUserResource> leadPartners = getLeadPartners(projectId);
+        List<ProjectUserResource> leadPartners = projectService.getLeadPartners(projectId);
 
         model.addAttribute("allUsers", leadPartners);
         model.addAttribute("project", projectResource);
@@ -342,18 +342,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         model.addAttribute(FORM_ATTR_NAME, form);
     }
 
-    private List<ProjectUserResource> getLeadPartners(Long projectId) {
-        List<ProjectUserResource> projectUsers = getProjectUsers(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        return simpleFilter(projectUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
-    }
-
-    private List<ProjectUserResource> getProjectUsers(Long projectId) {
-        return projectService.getProjectUsersForProject(projectId);
-    }
-
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
-        List<ProjectUserResource> thisProjectUsers = getProjectUsers(projectId);
+        List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         return !projectUsersForOrganisation.isEmpty();
     }
@@ -363,7 +353,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return false;
         }
 
-        List<ProjectUserResource> thisProjectUsers = getProjectUsers(projectId);
+        List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         List<ProjectUserResource> projectUsersForUserAndOrganisation = simpleFilter(projectUsersForOrganisation, user -> user.getUser().equals(userId));
 
@@ -372,7 +362,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
 
-        List<ProjectUserResource> projectUsers = getProjectUsers(projectId);
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> financeContacts = simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
 
         form.setOrganisation(organisation);
@@ -404,7 +394,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
-        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
+        if(!projectService.isUserLeadPartner(projectResource.getId(), loggedInUser.getId())) {
             return redirectToProjectDetails(projectId);
         }
 
@@ -461,10 +451,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
-    }
-
-    private boolean userIsLeadPartner(Long projectId, Long userId) {
-        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }
 
     private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {

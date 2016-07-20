@@ -15,7 +15,11 @@
         <div class="grid-row">
             <div class="column-two-thirds">
                 <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>    
-                <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>  
+                <h1 class="heading-xlarge no-margin"><span th:text="${heading}">Title here</span>
+                    <th:block th:if="${partner == 'lead'}">
+                        <small>(Lead partner)</small>
+                    </th:block>
+                </h1> 
             </div> 
             <div class="column-third" th:unless="${subheading == 'createComp'}">
                 <h2 class="heading-small comp-status-label">
