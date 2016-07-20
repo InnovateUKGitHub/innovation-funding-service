@@ -4,8 +4,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,13 +14,13 @@ public class AssessorFeedbackRestServiceImpl extends BaseRestService implements 
     @Override
     public RestResult<FileEntryResource> addAssessorFeedbackDocument(Long applicationId, String contentType, long contentLength, String originalFilename, byte[] file) {
         String url = restUrl + "/assessorFeedbackDocument?applicationId=" + applicationId + "&filename=" + originalFilename;
-        return postWithRestResult(url, file, createHeader(contentType,  contentLength), FileEntryResource.class);
+        return postWithRestResult(url, file, createFileUploadHeader(contentType,  contentLength), FileEntryResource.class);
     }
 
     @Override
     public RestResult<Void> removeAssessorFeedbackDocument(Long applicationId) {
         String url = restUrl + "/assessorFeedbackDocument?applicationId=" + applicationId;
-        return deleteWithRestResult(url, Void.class);
+        return deleteWithRestResult(url);
     }
 
     @Override
@@ -48,12 +46,6 @@ public class AssessorFeedbackRestServiceImpl extends BaseRestService implements 
 		String url = restUrl + "/submitAssessorFeedback/" + competitionId;
         return postWithRestResult(url, Void.class);
 	}
-	
-    private HttpHeaders createHeader(String contentType, long contentLength){
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(contentType));
-        headers.setContentLength(contentLength);
-        return headers;
-    }
+
 
 }

@@ -11,7 +11,6 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -33,12 +32,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
@@ -47,6 +43,7 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -140,7 +137,10 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            RestResult<FileEntryResource> uploadFileResult = uploadFormInput(applicationId, request);
+            MultipartFile file = applicationForm.getAssessorFeedback();
+
+            RestResult<FileEntryResource> uploadFileResult = assessorFeedbackRestService.addAssessorFeedbackDocument(applicationId,
+                    file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
             return validationHandler.
                     addAnyErrors(uploadFileResult, toField("assessorFeedback")).
@@ -170,8 +170,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
     }
 
     @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
-    public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
-                                                                @PathVariable("applicationId") final String applicationIdString,
+    public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final String applicationIdString,
                                                                 @PathVariable("organisationId") final String organisationId,
                                                                 @ModelAttribute("form") ApplicationForm form,
                                                                 Model model,
@@ -256,28 +255,6 @@ public class ApplicationManagementController extends AbstractApplicationControll
         } else {
             return AssessorFeedbackViewModel.withNoFile(readonly);
         }
-    }
-
-    private RestResult<FileEntryResource> uploadFormInput(Long applicationId, HttpServletRequest request) {
-
-        final Map<String, MultipartFile> fileMap = ((MultipartHttpServletRequest) request).getFileMap();
-        final MultipartFile file = fileMap.get("assessorFeedback");
-
-        if (file != null && !file.isEmpty()) {
-
-            try {
-
-                return assessorFeedbackRestService.addAssessorFeedbackDocument(applicationId,
-                        file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
-
-            } catch (IOException e) {
-                LOG.error(e);
-                throw new UnableToReadUploadedFile();
-            }
-        }
-
-        LOG.error("No assessorFeedback file was available during upload within the multipart request");
-        throw new UnableToReadUploadedFile();
     }
 
     private String redirectToApplicationOverview(Long competitionId, Long applicationId) {

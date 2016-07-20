@@ -1,18 +1,14 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Arrays.asList;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.comparators.*;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,20 +16,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceGrantRequestedComparator;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadApplicantComparator;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadComparator;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceNumberOfPartnersComparator;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourcePercentageCompleteComparator;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceTotalProjectCostComparator;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Arrays.asList;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
@@ -51,15 +43,18 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 			ApplicationStatusConstants.APPROVED.getId(),
 			ApplicationStatusConstants.REJECTED.getId());
 	
-	private static final Map<String, String[]> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, String[]>() {{
-		put("name", new String[]{"name", "id"});
-		put("duration", new String[]{"durationInMonths", "id"});
+	private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
+		put("name", new Sort(ASC, new String[]{"name", "id"}));
+		put("duration", new Sort(ASC, new String[]{"durationInMonths", "id"}));
+		put("percentageComplete", new Sort(DESC, new String[]{"completion", "id"}));
 	}};
-	
+
+	// TODO These comparators are used to sort application after loading them in memory.
+	// TODO The code currently is retrieving to many of them and this sorting should be done in the database query.
+	// TODO Ideally they should all be replaced
 	private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS = new HashMap<String, Comparator<ApplicationSummaryResource>>(){{
 		put("lead", new ApplicationSummaryResourceLeadComparator());
 		put("leadApplicant", new ApplicationSummaryResourceLeadApplicantComparator());
-		put("percentageComplete", new ApplicationSummaryResourcePercentageCompleteComparator());
 		put("numberOfPartners", new ApplicationSummaryResourceNumberOfPartnersComparator());
 		put("grantRequested", new ApplicationSummaryResourceGrantRequestedComparator());
 		put("totalProjectCost", new ApplicationSummaryResourceTotalProjectCostComparator());
@@ -110,9 +105,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 	
 	private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, int pageSize, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
-		String[] sortField = getApplicationSummarySortField(sortBy);
-		Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(Sort.Direction.ASC, sortField));
-		
+		Sort sortField = getApplicationSummarySortField(sortBy);
+		Pageable pageable = new PageRequest(pageIndex, pageSize, sortField);
+
 		if(canUseSpringDataPaginationForSummaryResults(sortBy)){
 			Page<Application> applicationResults = paginatedApplicationsSupplier.apply(pageable);
 			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(applicationSummaryPageMapper::mapToResource);
@@ -149,12 +144,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		return !FIELDS_NOT_SORTABLE_IN_DB.stream().anyMatch(field -> field.equals(sortBy));
 	}
 
-	private String[] getApplicationSummarySortField(String sortBy) {
-		String[] result =  SORT_FIELD_TO_DB_SORT_FIELDS.get(sortBy);
-		if(result == null) {
-			return new String[]{"id"};
-		}
-		return result;
+	private Sort getApplicationSummarySortField(String sortBy) {
+		Sort result =  SORT_FIELD_TO_DB_SORT_FIELDS.get(sortBy);
+		return result != null ?  result : new Sort(ASC, new String[]{"id"});
 	}
 
 }

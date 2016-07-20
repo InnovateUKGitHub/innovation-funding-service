@@ -81,7 +81,7 @@
 		<table>
 			<tbody>
 				<tr>
-					<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
+					<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 						<th class="width-large">
 							<label class="form-label" for="working-days">Working days per year</label>
 						</th>
@@ -90,7 +90,7 @@
 						</td>
 					</th:block>
 
-					<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+					<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 						<th class="width-large">
 							Working days per year
 						</th>
@@ -121,7 +121,7 @@
 				</tr>
 			</tfoot>
 			
-			<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
+			<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 				<tbody>
 					<tr>
 						<td style="width: 30%">
@@ -167,7 +167,7 @@
 				</tbody>
 			</th:block>
 
-			<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+			<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 				<tbody>
 					<tr>
 						<td style="width: 30%">Manager</td>
@@ -194,7 +194,7 @@
 			</div>
 		</th:block>
 
-		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved'}">
+		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-labour'}">
 				<a th:href="@{'?status=edit-labour'}" class="button button-secondary">Edit</a>
 			</th:block>
@@ -318,7 +318,7 @@
 			</table>
 		</div>
 
-		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved'}">
+		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-admin'}">
 				<a th:href="@{'?status=edit-admin'}" class="button button-secondary">Edit</a>
 			</th:block>
@@ -352,12 +352,12 @@
 			<tfoot>
 				<tr>
 					<th colspan="3">Total materials costs</th>
-					<td class="numeric">-&pound;8,600</td>
+					<td class="numeric">&pound;8,600</td>
 					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">&nbsp;</td>
 				</tr>
 			</tfoot>
 
-			<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
+			<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 				<tbody>
 					<tr>
 						<td style="width: 30%">
@@ -415,7 +415,7 @@
 				</tbody>
 			</th:block>
 
-			<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+			<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 				<tbody>
 					<tr>
 						<td>Powder</td>
@@ -446,7 +446,7 @@
 			</div>
 		</th:block>
 
-		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved'}">
+		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-materials'}">
 				<a th:href="@{'?status=edit-materials'}" class="button button-secondary">Edit</a>
 			</th:block>

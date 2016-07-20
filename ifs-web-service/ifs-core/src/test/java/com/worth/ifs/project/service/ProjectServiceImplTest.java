@@ -4,6 +4,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectServiceImpl;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -13,14 +14,17 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -189,5 +193,103 @@ public class ProjectServiceImplTest {
 		verify(projectRestService).getProjectById(projectResource.getId());
 
 		verify(applicationService).getLeadOrganisation(projectResource.getApplication());
+	}
+
+	@Test
+	public void testAddCollaborationAgreement() {
+
+		FileEntryResource createdFile = newFileEntryResource().build();
+
+		when(projectRestService.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+				thenReturn(restSuccess(createdFile));
+
+		ServiceResult<FileEntryResource> result =
+				service.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+		assertTrue(result.isSuccess());
+		assertEquals(createdFile, result.getSuccessObject());
+	}
+
+	@Test
+	public void testGetCollaborationAgreementFile() {
+
+		Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+		when(projectRestService.getCollaborationAgreementFile(123L)).thenReturn(restSuccess(content));
+
+		Optional<ByteArrayResource> result = service.getCollaborationAgreementFile(123L);
+		assertEquals(content, result);
+	}
+
+	@Test
+	public void testGetCollaborationAgreementFileDetails() {
+
+		FileEntryResource returnedFile = newFileEntryResource().build();
+
+		Optional<FileEntryResource> response = Optional.of(returnedFile);
+		when(projectRestService.getCollaborationAgreementFileDetails(123L)).thenReturn(restSuccess(response));
+
+		Optional<FileEntryResource> result = service.getCollaborationAgreementFileDetails(123L);
+		assertEquals(response, result);
+	}
+
+	@Test
+	public void testRemoveCollaborationAgreement() {
+
+		when(projectRestService.removeCollaborationAgreementDocument(123L)).thenReturn(restSuccess());
+
+		ServiceResult<Void> result = service.removeCollaborationAgreementDocument(123L);
+
+		assertTrue(result.isSuccess());
+
+		verify(projectRestService).removeCollaborationAgreementDocument(123L);
+	}
+
+	@Test
+	public void testAddExploitationPlan() {
+
+		FileEntryResource createdFile = newFileEntryResource().build();
+
+		when(projectRestService.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+				thenReturn(restSuccess(createdFile));
+
+		ServiceResult<FileEntryResource> result =
+				service.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+		assertTrue(result.isSuccess());
+		assertEquals(createdFile, result.getSuccessObject());
+	}
+
+	@Test
+	public void testGetCExploitationPlanFile() {
+
+		Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+		when(projectRestService.getExploitationPlanFile(123L)).thenReturn(restSuccess(content));
+
+		Optional<ByteArrayResource> result = service.getExploitationPlanFile(123L);
+		assertEquals(content, result);
+	}
+
+	@Test
+	public void testGetExploitationPlanFileDetails() {
+
+		FileEntryResource returnedFile = newFileEntryResource().build();
+
+		Optional<FileEntryResource> response = Optional.of(returnedFile);
+		when(projectRestService.getExploitationPlanFileDetails(123L)).thenReturn(restSuccess(response));
+
+		Optional<FileEntryResource> result = service.getExploitationPlanFileDetails(123L);
+		assertEquals(response, result);
+	}
+
+	@Test
+	public void testRemoveExploitationPlan() {
+
+		when(projectRestService.removeExploitationPlanDocument(123L)).thenReturn(restSuccess());
+
+		ServiceResult<Void> result = service.removeExploitationPlanDocument(123L);
+
+		assertTrue(result.isSuccess());
+
+		verify(projectRestService).removeExploitationPlanDocument(123L);
 	}
 }

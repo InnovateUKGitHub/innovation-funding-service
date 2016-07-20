@@ -5,6 +5,8 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -19,11 +21,13 @@ import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -227,6 +231,111 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testCreateCollaborationAgreementFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.createCollaborationAgreementFileEntry(123L, null, null), () -> {
+            verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileEntryDetails() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getCollaborationAgreementFileEntryDetails(123L), () -> {
+            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileEntryContents() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getCollaborationAgreementFileContents(123L), () -> {
+            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testDeleteCollaborationAgreementFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.deleteCollaborationAgreementFile(123L), () -> {
+            verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+
+    @Test
+    public void testCreateExploitationPlanFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.createExploitationPlanFileEntry(123L, null, null), () -> {
+            verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetExploitationPlanFileEntryDetails() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getExploitationPlanFileEntryDetails(123L), () -> {
+            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGetExploitationPlanFileEntryContents() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getExploitationPlanFileContents(123L), () -> {
+            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testDeleteExploitationPlanFileEntry() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.deleteExploitationPlanFile(123L), () -> {
+            verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getServiceClass() {
         return TestProjectService.class;
@@ -310,8 +419,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
             return null;
         }
-		
-		
+
 		@Override
         public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
             return null;
@@ -319,6 +427,56 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
             return null;
         }
     }
