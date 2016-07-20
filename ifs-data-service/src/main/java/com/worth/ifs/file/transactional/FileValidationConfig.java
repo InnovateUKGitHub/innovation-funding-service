@@ -35,6 +35,12 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.assessorfeedback.valid.media.types}")
     private List<String> validMediaTypesForAssessorFeedback;
 
+    @Value("${ifs.data.service.file.storage.projectsetupotherdocuments.max.filesize.bytes}")
+    private Long maxFilesizeBytesForProjectSetupOtherDocuments;
+
+    @Value("${ifs.data.service.file.storage.projectsetupotherdocuments.valid.media.types}")
+    private List<String> validMediaTypesForProjectSetupOtherDocuments;
+
     @Bean(name = "formInputResponseFileValidator")
     public FileHttpHeadersValidator getFormInputResponseFileValidator() {
         return createFileValidator(validMediaTypesForFormInputResponses, maxFilesizeBytesForFormInputResponses);
@@ -48,6 +54,11 @@ public class FileValidationConfig {
     @Bean(name = "assessorFeedbackFileValidator")
     public FileHttpHeadersValidator getAssessorFeedbackFileValidator() {
         return createFileValidator(validMediaTypesForAssessorFeedback, maxFilesizeBytesForAssessorFeedback);
+    }
+
+    @Bean(name = "projectSetupOtherDocumentsFileValidator")
+    public FileHttpHeadersValidator getProjectSetupOtherDocumentsFileValidator() {
+        return createFileValidator(validMediaTypesForProjectSetupOtherDocuments, maxFilesizeBytesForProjectSetupOtherDocuments);
     }
 
     private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {

@@ -10,7 +10,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
@@ -58,7 +57,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                 "&processRoleId=" + processRoleId +
                 "&filename=" + originalFilename;
 
-        final HttpHeaders headers = createHeader(contentType,  contentLength);
+        final HttpHeaders headers = createFileUploadHeader(contentType,  contentLength);
 
         return postWithRestResult(url, file, headers, FileEntryResource.class);
     }
@@ -71,7 +70,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                 "&applicationId=" + applicationId +
                 "&processRoleId=" + processRoleId;
 
-        return deleteWithRestResult(url, Void.class);
+        return deleteWithRestResult(url);
     }
 
     @Override
@@ -98,12 +97,5 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId) {
         String url = formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/" + formInputId + "/" + applicationId;
         return getWithRestResult(url, formInputResponseListType());
-    }
-
-    private HttpHeaders createHeader(String contentType, long contentLength){
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(contentType));
-        headers.setContentLength(contentLength);
-        return headers;
     }
 }

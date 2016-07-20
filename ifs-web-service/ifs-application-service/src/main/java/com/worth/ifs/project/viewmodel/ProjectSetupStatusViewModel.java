@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * A view model that backs the Project Status page
  */
-public class ProjectSetupStatusViewModel {
+public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
     private String projectName;

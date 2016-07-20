@@ -7,17 +7,24 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.transactional.ProjectService;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.worth.ifs.JsonTestUtil.fromJson;
 import static com.worth.ifs.JsonTestUtil.toJson;
@@ -34,17 +41,23 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
 
     private MonitoringOfficerResource monitoringOfficerResource;
+
+    private RestDocumentationResultHandler document;
 
     @Before
     public void setUp() {
@@ -57,6 +70,12 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withEmail("abc.xyz@gmail.com")
                 .withPhoneNumber("078323455")
                 .build();
+    }
+
+    @Before
+    public void setUpDocumentation() throws Exception {
+        this.document = document("project/{method-name}",
+                preprocessResponse(prettyPrint()));
     }
 
     @Override
@@ -339,7 +358,134 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .contentType(APPLICATION_JSON)
                 .content(toJson(bankDetailsResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(expectedErrors)))
-                .andReturn();
+                .andExpect(content().json(toJson(expectedErrors)));
+    }
+
+    @Test
+    public void addCollaborationAgreement() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUploadMethod(document));
+    }
+
+    @Test
+    public void updateCollaborationAgreement() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
+                (service, fileToUpload) -> service.updateCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUpdateMethod(document));
+    }
+
+    @Test
+    public void getCollaborationAgreementFileDetails() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.getCollaborationAgreementFileEntryDetails(projectId);
+
+        assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId}, emptyMap(),
+                projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetDetailsMethod(document));
+    }
+
+    @Test
+    public void getCollaborationAgreementFileContent() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service, fileToUpload) -> service.getCollaborationAgreementFileContents(projectId);
+
+        assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
+                emptyMap(), projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetContentsMethod(document));
+    }
+
+    @Test
+    public void deleteCollaborationAgreement() throws Exception {
+
+        Long projectId = 123L;
+
+        Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
+                service -> service.deleteCollaborationAgreementFile(projectId);
+
+        assertDeleteFile("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
+                emptyMap(), projectServiceMock, serviceCallToDelete).
+                andDo(documentFileDeleteMethod(document));
+    }
+
+
+
+    @Test
+    public void addExploitationPlan() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.createExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUploadProcess("/project/" + projectId + "/exploitation-plan", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUploadMethod(document));
+    }
+
+    @Test
+    public void updateExploitationPlan() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
+                (service, fileToUpload) -> service.updateExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUpdateProcess("/project/" + projectId + "/exploitation-plan", projectServiceMock, serviceCallToUpload).
+                andDo(documentFileUpdateMethod(document));
+    }
+
+    @Test
+    public void getExploitationPlanFileDetails() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.getExploitationPlanFileEntryDetails(projectId);
+
+        assertGetFileDetails("/project/{projectId}/exploitation-plan/details", new Object[] {projectId}, emptyMap(),
+                projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetDetailsMethod(document));
+    }
+
+    @Test
+    public void getExploitationPlanFileContent() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service, fileToUpload) -> service.getExploitationPlanFileContents(projectId);
+
+        assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
+                emptyMap(), projectServiceMock, serviceCallToUpload).
+                andDo(documentFileGetContentsMethod(document));
+    }
+
+    @Test
+    public void deleteExploitationPlan() throws Exception {
+
+        Long projectId = 123L;
+
+        Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
+                service -> service.deleteExploitationPlanFile(projectId);
+
+        assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[] {projectId},
+                emptyMap(), projectServiceMock, serviceCallToDelete).
+                andDo(documentFileDeleteMethod(document));
     }
 }

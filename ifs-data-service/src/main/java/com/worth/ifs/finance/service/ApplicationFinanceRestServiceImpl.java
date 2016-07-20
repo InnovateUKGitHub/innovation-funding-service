@@ -9,7 +9,6 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -87,7 +86,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
                 "?applicationFinanceId=" + applicationFinanceId +
                 "&filename=" + originalFilename;
 
-        final HttpHeaders headers = createHeader(contentType,  contentLength);
+        final HttpHeaders headers = createFileUploadHeader(contentType,  contentLength);
 
         return postWithRestResult(url, file, headers, FileEntryResource.class);
     }
@@ -97,7 +96,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
         String url = applicationFinanceRestURL + "/financeDocument" +
                 "?applicationFinanceId=" + applicationFinanceId;
 
-        return deleteWithRestResult(url, Void.class);
+        return deleteWithRestResult(url);
     }
 
     @Override
@@ -114,12 +113,5 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
                 "?applicationFinanceId=" + applicationFinanceId;
 
         return getWithRestResult(url, FileEntryResource.class);
-    }
-
-    private HttpHeaders createHeader(String contentType, long contentLength){
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(contentType));
-        headers.setContentLength(contentLength);
-        return headers;
     }
 }

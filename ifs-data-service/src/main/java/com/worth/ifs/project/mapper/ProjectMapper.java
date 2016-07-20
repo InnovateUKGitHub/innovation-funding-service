@@ -6,6 +6,7 @@ import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.file.mapper.FileEntryMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(
@@ -13,7 +14,8 @@ import org.mapstruct.Mapper;
         uses = {
                 AddressMapper.class,
                 ApplicationMapper.class,
-                ProjectUserMapper.class
+                ProjectUserMapper.class,
+                FileEntryMapper.class
         }
 )
 public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource, Long> {

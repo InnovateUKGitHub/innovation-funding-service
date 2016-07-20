@@ -553,6 +553,23 @@ public final class CollectionFunctions {
         return flattenLists(allPermutations);
     }
 
+    public static <T, R>  List<Pair<T, R>> asListOfPairs(Object... entries) {
+
+        if (entries.length % 2 != 0) {
+            throw new IllegalArgumentException("Should have an even number of names and values in list");
+        }
+
+        List<Pair<T, R>> list = new ArrayList<>();
+
+        for (int i = 0; i < entries.length; i += 2) {
+            T key = (T) entries[i];
+            R value = (R) entries[i + 1];
+            list.add(Pair.of(key, value));
+        }
+
+        return list;
+    }
+
     private static <T> List<List<T>> findPermutations(List<T> permutationStringSoFar, T currentWord, List<T> remainingWords) {
 
         List<T> newPermutationStringSoFar = combineLists(permutationStringSoFar, currentWord);
