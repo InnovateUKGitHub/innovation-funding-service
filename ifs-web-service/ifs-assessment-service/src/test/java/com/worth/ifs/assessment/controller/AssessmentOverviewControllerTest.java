@@ -6,7 +6,6 @@ import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
@@ -135,7 +134,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(processRoleService.getById(assessment.getProcessRole())).thenReturn(settable(processRole));
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
-        Map<Long, List<AssessmentFeedbackResource>> assessorResponsesMap = asMap(1L, asList(assessorResponses.get(0), assessorResponses.get(1)), 2L, asList(assessorResponses.get(2), assessorResponses.get(3)));
+        Map<Long, List<AssessorFormInputResponseResource>> assessorResponsesMap = asMap(1L, asList(assessorResponses.get(0), assessorResponses.get(1)), 2L, asList(assessorResponses.get(2), assessorResponses.get(3)));
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResource formInput = newFormInputResource().withId(1L).build();

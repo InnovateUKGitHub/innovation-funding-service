@@ -8,7 +8,6 @@ import com.worth.ifs.assessment.model.AssessmentFeedbackModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.assessment.service.AssessmentFeedbackService;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
@@ -18,10 +17,11 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -43,6 +43,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
@@ -60,9 +61,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<AssessmentFeedbackController> {
     @Mock
     private AssessmentService assessmentService;
-
-    @Mock
-    private AssessmentFeedbackService assessmentFeedbackService;
 
     @Mock
     private AssessorFormInputResponseService assessorFormInputResponseService;
@@ -198,53 +196,43 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         verify(assessorFormInputResponseService, never()).getAllAssessorFormInputResponsesByAssessmentAndQuestion(anyLong(), anyLong());
     }
 
-    @Ignore
     @Test
-    public void testUpdateFeedbackValue() throws Exception {
-        String value = "Blah";
-        when(assessmentFeedbackService.updateFeedbackValue(ASSESSMENT_ID, QUESTION_ID, value)).thenReturn(serviceSuccess());
+    public void testUpdateFormInputResponse() throws Exception {
+        String value = "Feedback";
+        Long formInputId = 1L;
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/{assessmentId}/question/{questionId}/feedback-value", ASSESSMENT_ID, QUESTION_ID)
+        mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("formInputId", String.valueOf(formInputId))
                 .param("value", value))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        verify(assessmentFeedbackService, only()).updateFeedbackValue(ASSESSMENT_ID, QUESTION_ID, value);
+        verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
     }
 
-    @Ignore
-    @Test
-    public void testUpdateScore() throws Exception {
-        Integer score = 10;
-        when(assessmentFeedbackService.updateFeedbackScore(ASSESSMENT_ID, QUESTION_ID, score)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/{assessmentId}/question/{questionId}/feedback-score", ASSESSMENT_ID, QUESTION_ID)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("score", String.valueOf(score)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("success", is("true")))
-                .andReturn();
-
-        verify(assessmentFeedbackService, only()).updateFeedbackScore(ASSESSMENT_ID, QUESTION_ID, score);
-    }
-
-    @Ignore
     @Test
     public void testSave() throws Exception {
-        String value = "Blah";
-        Integer score = 10;
+        List<FormInputResource> formInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
+
+        Long formInputIdScore = formInputs.get(0).getId();
+        Long formInputIdFeedback = formInputs.get(1).getId();
+        Pair<String, String> scoreResponse = Pair.of(format("formInput[%s]", formInputIdScore), "10");
+        Pair<String, String> feedbackResponse = Pair.of(format("formInput[%s]", formInputIdFeedback), "Feedback");
 
         mockMvc.perform(post("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("value", value)
-                .param("score", String.valueOf(score)))
+                .param(scoreResponse.getLeft(), scoreResponse.getRight())
+                .param(feedbackResponse.getLeft(), feedbackResponse.getRight()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/" + ASSESSMENT_ID))
                 .andReturn();
 
-        verify(assessmentFeedbackService, only()).updateAssessmentFeedback(ASSESSMENT_ID, QUESTION_ID, value, score);
+        InOrder inOrder = inOrder(assessorFormInputResponseService);
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
     }
 
     @Override
