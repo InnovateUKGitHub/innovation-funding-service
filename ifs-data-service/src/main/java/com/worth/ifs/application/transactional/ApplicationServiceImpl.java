@@ -23,7 +23,6 @@ import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.mapper.FormInputMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.notifications.resource.*;
@@ -43,7 +42,6 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -90,8 +88,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private QuestionService questionService;
     @Autowired
-    private ApplicationMapper applicationMapper;
-    @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
     @Autowired
     private SectionService sectionService;
@@ -100,7 +96,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
     @Autowired
-    private FormInputMapper formInputMapper;
+    private ApplicationMapper applicationMapper;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -110,8 +106,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
         Application application = new Application();
         application.setName(applicationName);
-        LocalDate currentDate = null;
-        application.setStartDate(currentDate);
+        application.setStartDate(null);
 
         String name = ApplicationStatusConstants.CREATED.getName();
 
@@ -124,9 +119,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
 
             List<ProcessRole> usersProcessRoles = user.getProcessRoles();
-			Organisation userOrganisation = usersProcessRoles.size()!=0
-                ? usersProcessRoles.get(0).getOrganisation()
-                : user.getOrganisations().get(0);
+
+            Organisation userOrganisation = usersProcessRoles.size() != 0
+                    ? usersProcessRoles.get(0).getOrganisation()
+                    : user.getOrganisations().get(0);
 
             ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
@@ -136,15 +132,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             application.setProcessRoles(processRoles);
             application.setCompetition(competition);
 
-            Application createdApplication = applicationRepository.save(application);
+            applicationRepository.save(application);
             processRoleRepository.save(processRole);
 
-            return serviceSuccess(applicationMapper.mapToResource(createdApplication));
+            return serviceSuccess(applicationMapper.mapToResource(application));
         });
     }
 
     @Override
-    public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
         long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -169,7 +165,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    private ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile, FormInputResponse existingResponse, long processRoleId, long applicationId, long formInputId, FormInputResponseFileEntryResource formInputResponseFile) {
+    private ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile, FormInputResponse existingResponse, long processRoleId, long applicationId, long formInputId, FormInputResponseFileEntryResource formInputResponseFile) {
         FileEntry fileEntry = successfulFile.getValue();
 
         if (existingResponse != null) {
@@ -177,7 +173,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingResponse.setFileEntry(fileEntry);
             formInputResponseRepository.save(existingResponse);
             FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
-            return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+            return serviceSuccess(fileEntryResource);
 
         }
 
@@ -186,26 +182,25 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
             formInputResponseRepository.save(newFormInputResponse);
             FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-            return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+            return serviceSuccess(fileEntryResource);
         });
     }
 
     @Override
-    public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<Void> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
+        ServiceResult<FormInputResponseFileAndContents> existingFileResult =
                 getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
 
         return existingFileResult.andOnSuccess(existingFile -> {
 
-            FormInputResponseFileEntryResource existingFormInputResource = existingFile.getKey();
+            FormInputResponseFileEntryResource existingFormInputResource = existingFile.getFormInputResponseFileEntry();
 
             FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
             FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
             FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
-            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturn(updatedFile ->
-                            Pair.of(updatedFile.getKey(), existingFormInputResource)
-            );
+
+            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturnVoid();
         });
     }
 
@@ -216,12 +211,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
 
-            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
+            ServiceResult<FormInputResponseFileAndContents> existingFileResult =
                     getFormInputResponseFileUpload(fileEntry);
 
             return existingFileResult.andOnSuccess(existingFile -> {
 
-                FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getKey();
+                FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getFormInputResponseFileEntry();
                 Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
 
                 FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
@@ -247,7 +242,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
+    public ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
         final FormInput formInput = formInputRepository.findOne(fileEntry.getFormInputId());
         if (formInput == null) {
             return serviceFailure(notFoundError(FormInput.class, fileEntry.getFormInputId()));
@@ -263,8 +258,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         }
         return formInputResponse.
                 andOnSuccess(fir -> fileService.getFileByFileEntryId(fir.getFileEntry().getId()).
-                        andOnSuccessReturn(inputStreamSupplier -> Pair.of(formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry), inputStreamSupplier)
-                        ));
+                andOnSuccessReturn(inputStreamSupplier -> {
+                    FormInputResponseFileEntryResource formInputResponseFileEntry = formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry);
+                    return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
+                }));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
@@ -296,7 +293,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
      * Use this method for finding a form input response when a question has single status (shared across application)
      *
      * @param fileEntry - in this case the FormInputResponseFileEntryId will contain the id of person to whom the question is assigned.
-     * @return
      */
     private ServiceResult<FormInputResponse> getFormInputResponseForQuestionAssignee(FormInputResponseFileEntryId fileEntry) {
         Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
@@ -314,8 +310,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<ApplicationResource>> findAll() {
-        ServiceResult<List<ApplicationResource>> res = serviceSuccess(applicationsToResources(applicationRepository.findAll()));
-        return res;
+        return serviceSuccess(applicationsToResources(applicationRepository.findAll()));
     }
 
     @Override
