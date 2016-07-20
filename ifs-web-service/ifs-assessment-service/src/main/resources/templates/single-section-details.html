@@ -14,16 +14,20 @@
                 </div>
                 <div class="column-third">
                     <span th:unless="${questionFeedback?.get(question.id) == null or section.name == 'Project details'}" th:remove="tag">
-                        <div class="score"> Score <div th:text="${questionFeedback.get(question.id).score}" th:remove="tag" /> / 10 </div>
-                        <img class="section-status" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                        <div class="score"> Score <div th:text="${questionFeedback.get(question.id).assessedScore}" th:remove="tag" /> / <div th:text="${questionFeedback.get(question.id).maximumScore}" th:remove="tag" /></div>
+                        <span th:if="${questionFeedback?.get(question.id).hasBeenCompleted}" th:remove="tag">
+                            <img class="section-status" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                        </span>
                     </span>
                     <span th:if="${section.name == 'Project details'}" th:remove="tag">
-                         <span th:if="${questionFeedback?.get(question.id) == null}" th:remove="tag">
+                         <span th:unless="${questionFeedback?.get(question.id).hasInput}" th:remove="tag">
                             <div class="score"> No score required </div>
                          </span>
-                         <span th:if="${question.shortName == 'Scope'}" th:remove="tag">
-                            <div class="score"> In scope? Yes</div>
-                            <img class="section-status" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                         <span th:if="${questionFeedback?.get(question.id).hasScope}" th:remove="tag">
+                            <div class="score"> In scope? <div th:text="${questionFeedback.get(question.id).scopeAnswer}" th:remove="tag" /></div>
+                             <span th:if="${questionFeedback?.get(question.id).hasBeenCompleted}" th:remove="tag">
+                                <img class="section-status" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                             </span>
                          </span>
                     </span>
                 </div>

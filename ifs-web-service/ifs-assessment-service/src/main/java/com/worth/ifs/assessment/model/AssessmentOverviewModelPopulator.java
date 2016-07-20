@@ -7,6 +7,7 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
+import com.worth.ifs.assessment.viewmodel.AssessmentOverviewRowViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
@@ -14,6 +15,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputRestService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -32,7 +34,6 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static java.util.stream.Collectors.groupingBy;
 
 @Component
 public class AssessmentOverviewModelPopulator {
@@ -56,6 +57,8 @@ public class AssessmentOverviewModelPopulator {
     private AssessorFormInputResponseService assessorFormInputResponseService;
     @Autowired
     private FormInputRestService formInputRestService;
+    @Autowired
+    private FormInputService formInputService;
     @Autowired
     private FileEntryRestService fileEntryRestService;
     @Autowired
@@ -92,7 +95,7 @@ public class AssessmentOverviewModelPopulator {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
         final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
-        final List<AssessorFormInputResponseResource> assessorResponses = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId);
+        //final List<AssessorFormInputResponseResource> assessorResponses = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId);
 
         final Map<Long, SectionResource> sections =
                 parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
@@ -111,7 +114,14 @@ public class AssessmentOverviewModelPopulator {
 
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
-        Map<Long, List<AssessorFormInputResponseResource>> questionFeedback = assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
+        final List<AssessmentOverviewRowViewModel> rows = getOverviewRows(assessmentId, questions);
+        //Map<Long, AssessmentOverviewRowViewModel> questionFeedback = rows.stream().collect(groupingBy(AssessmentOverviewRowViewModel::getQuestion));
+
+        final Map<Long, AssessmentOverviewRowViewModel> questionFeedback = rows.stream()
+                .collect(Collectors.toMap(
+                        AssessmentOverviewRowViewModel::getQuestion,
+                        assessmentOverviewRowViewModel -> assessmentOverviewRowViewModel)
+                );
 
         boolean hasFinanceSection = false;
         Long financeSectionId = null;
@@ -126,6 +136,15 @@ public class AssessmentOverviewModelPopulator {
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
         model.addAttribute("questionFeedback", questionFeedback);
+    }
+
+    private List<AssessmentOverviewRowViewModel> getOverviewRows(Long assessmentId, List<QuestionResource> questions) {
+        List<AssessorFormInputResponseResource> inputResponseList = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId);
+
+        return questions.stream().map(question -> {
+                List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(question.getId());
+                return new AssessmentOverviewRowViewModel(question, formInputs, inputResponseList);
+            }).collect(Collectors.toList());
     }
 
     private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
