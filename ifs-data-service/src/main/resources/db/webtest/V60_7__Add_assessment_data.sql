@@ -409,7 +409,7 @@ INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id
 
 -- Q47
 INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (122,'8',10,194,'2016-07-15 11:41:36');
-INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (123,'This is the feedback from Professor Plum for How many.',10,15,'2016-07-15 11:41:36');
+INSERT IGNORE INTO `assessor_form_input_response` (`id`, `value`, `assessment_id`, `form_input_id`, `updated_date`) VALUES (123,'This is the feedback from Professor Plum for How many.',10,195,'2016-07-15 11:41:36');
 
 -- Add Assessor responses for Competition 2, Assessment 11 (Open)
 -- Q46
