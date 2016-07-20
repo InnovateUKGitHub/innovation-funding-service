@@ -17,6 +17,8 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...               INFUND-3010 As a partner I want to be able to supply bank details for my business so that Innovate UK can verify its suitability for funding purposes
 ...
 ...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
+...
+...               INFUND-3382 As a partner I want to be able to view our project details after they have been submitted so that I can use them for reference
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
@@ -25,6 +27,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
 
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
@@ -207,8 +210,9 @@ Lead partner can change the project manager
     And the user should not see the text in the page      You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    test ten
-    And the user selects the radio button    projectManager    projectManager1
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link      link=Project manager
+    And the user selects the radio button     projectManager       projectManager1
+    And the user clicks the button/link     jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
     And the matching status checkbox is updated    project-details    3    yes
 
@@ -235,25 +239,40 @@ Lead partner can change the project address
 Project details submission flow
     [Documentation]    INFUND-3467
     [Tags]    HappyPath
-    When The user should not see the element    xpath=//span[contains(text(), 'No')]
+    When all the fields are completed
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the user should not see the text in the page      The project details have been submitted to Innovate UK
     Then the applicant clicks the submit button in the modal
     And the user should see the text in the page    The project details have been submitted to Innovate UK
     Then the user navigates to the page    ${successful_project_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
+    And the user should see the element    jQuery=ul li.require-action:nth-child(4)
 
 Project details submitted is read only
     [Documentation]    INFUND-3467
     [Tags]
     When the user clicks the button/link    link=Project details
-    Then The user should not see the element    xpath=//span[contains(text(), 'No')]
+    Then all the fields are completed
     And The user should not see the element    link=Start date
     And The user should not see the element    link=Project address
     And The user should not see the element    link=Project manager
     And The user should not see the element    link=Ludlow
     And The user should not see the element    link=EGGS
     And The user should not see the element    link=Cheeseco
+
+All partners can view submited project details
+    [Documentation]    INFUND-3471
+    [Setup]  the user logs out if they are logged in
+    When guest user log-in                      jessica.doe@ludlow.co.uk    Passw0rd
+    And the user navigates to the page          ${successful_project_page}/details
+    Then the user should not see the element    link=Ludlow
+    And all the fields are completed
+    Then the user logs out if they are logged in
+    When guest user log-in                      pete.tom@egg.com    Passw0rd
+    And the user navigates to the page          ${successful_project_page}/details
+    Then the user should not see the element    link=EGGS
+    And all the fields are completed
+
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
@@ -357,69 +376,90 @@ Before Monitoring Officer is assigned
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-3330
-    [Tags]    Pending    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]    Log in as user    &{Comp_admin1_credentials}
-    # TODO Pending due to work in progress
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
-    Then the user should see the text in the page    Cheese is good
+    Then the user should see the text in the page    Monitoring Officer
+    And the user should see the text in the page    Supporting information
+    And the user should see the text in the page    Cheese is good
     And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    1 Cheese Road, Bath, BA1 5LR
-    And the user should see the text in the page    1st Oct 2020
-    And the user should see the text in the page    Steve Smith
+    And the user should see the text in the page    1 Cheese Road
+    And the user should see the text in the page    Bath
+    And the user should see the text in the page    BA1 5LR
+   # And the user should see the text in the page    1 Jan 2018
+    And the user should see the text in the page    test ten
     And the user should see the text in the page    Cheeseco
     And the user should see the text in the page    Ludlow
     And the user should see the text in the page    EGGS
 
-MO client-side validation
-    [Documentation]    INFUND-3330
-    [Tags]    Pending    HappyPath
-    # TODO Pending due to work in progress
-
 MO server-side validation
     [Documentation]    INFUND-3330
-    [Tags]    Pending    HappyPath
-    # TODO Pending due to work in progress
+    [Tags]    HappyPath    Pending
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    Then the user should see an error    Please enter a first name
+    And the user should see an error    Please enter a last name
+    And the user should see an error    Please enter a valid email address
+    And the user should see an error    Please enter an email address
+    And the user should see an error    Please enter a phone number
+    And the user should see an error    Please enter a valid phone number
 
-
-MO details can be added and updated
-    [Documentation]    INFUND-3330, INFUND-3334
-    [Tags]
-    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
-    And the user navigates to the page  ${Successful_Monitoring_Officer_Page}
-    Then the user should see the text in the page    Monitoring Officer
+MO client-side validation
+    [Documentation]    INFUND-3330
+    [Tags]    HappyPath    Pending
     When the user enters text to a text field    id=firstName    Pradha
-    And the user enters text to a text field    id=lastName    Muniraj
+    Then the user moves focus away from an element for MO    id=firstName
+    And the user should not see the text in the page    Please enter a first name
+    Then the user enters text to a text field    id=lastName    Muniraj
+    And the user moves focus away from an element for MO    id=lastName
+    And the user should not see the text in the page    Please enter a last name
+    Then the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user moves focus away from an element for MO    id=emailAddress
+    And the user should not see the text in the page    Please enter a valid email address
+    And the user should not see the text in the page    Please enter an email address
+    Then the user enters text to a text field    id=phoneNumber    07438620303
+    And the user moves focus away from an element for MO    id=phoneNumber
+    And the user should not see the text in the page    Please enter a phone number
+    And the user should not see the text in the page    Please enter a valid phone number
+
+MO details can be added
+    [Documentation]    INFUND-3330, INFUND-3334
+    [Tags]    Pending
+    When standard verification for email address follows
     And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    And the user enters text to a text field    id=phoneNumber    07438620303
-    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    Then standard verification for Phone number follows
+    And the user moves focus away from an element for MO    id=phoneNumber
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+  #  And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Cancel")
+    Then the user should not see the text in the page    A Monitoring Officer has been assigned.
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
     Then the user should see the text in the page    A Monitoring Officer has been assigned.
-    And Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    testtest1    has been assigned to you
 
-MO details can be edited and updated
+
+MO details(email step)
+    [Documentation]     INFUND-3330, INFUND-3334
+    [Tags]     Email    Pending
+    When Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    ${test_mailbox_one_password}    has been assigned to you
+
+MO details can be edited and Viewed in the Project setup status page
     [Documentation]    INFUND-3330
     [Tags]    Pending
-    # TODO Pending due to work in progress
     Given the user clicks the button/link    link=Change Monitoring Officer
-    And the user enters text to a text field    id=firstName    Pradha
+    And the user enters text to a text field    id=firstName    Prada
     And the user enters text to a text field    id=lastName    Jagankumar
-    And the user enters text to a text field    id=emailAddress    pradha.raj@gmail.com
+    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
     And the user enters text to a text field    id=phoneNumber    08549731414
     And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    And the user reloads the page
-    Then the edited text should be visible
-    # TODO [Add step to check the status change in PS page]
-
-MO details can be viewed on the page after editting
-    [Documentation]    INFUND-3330
-    [Tags]    Pending
-    # TODO Pending due to work in progress
-    Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
-    Then the user should see the text in the page    Pradha
+    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+    Then the user should see the text in the page    A Monitoring Officer has been assigned.
+    And the user should see the text in the page    Prada
     And the user should see the text in the page    Jagankumar
-    And the user should see the text in the page    pradha.raj@gmail.com
     And the user should see the text in the page    08549731414
+    And Logout as user
+    When Log in as user    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Then the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user should see the text in the page    Your Monitoring Officer for this project is Prada Jagankumar.
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-3349
@@ -468,28 +508,30 @@ the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Submit project details")
 
 standard verification for email address follows
-    When the user enters text to a text field    id=emailAddress    ${EMPTY}
-    Then the user should see an error    Please enter your email
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_username}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_format}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
-    Then the user should see an error    Please enter a valid email address
-    And the user enters text to a text field    id=emailAddress    ${valid_email}
-    Then the user should see an error    Email address is already in use
+    the user enters text to a text field    id=emailAddress    ${EMPTY}
+    the user should see an error    Please enter an email address
+    the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
+    the user should see an error    Please enter a valid email address
+    the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
+    the user should see an error    Please enter a valid email address
+    the user enters text to a text field    id=emailAddress    ${invalid_email_no_username}
+    the user should see an error    Please enter a valid email address
+    the user enters text to a text field    id=emailAddress    ${invalid_email_format}
+    the user should see an error    Please enter a valid email address
+    the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
+    the user should see an error    Please enter a valid email address
 
 standard verification for Phone number follows
-    When the user enters text to a text field    id=phoneNumber    ${EMPTY}
-    Then the user should see an error    Please enter a phone number
-    And the user enters text to a text field    id=phoneNumber    invalidphone
-    Then the user should see an error    Please enter a valid phone number
+    the user enters text to a text field    id=phoneNumber    ${EMPTY}
+    the user should see an error    Please enter a phone number
+    the user enters text to a text field    id=phoneNumber    invalidphone
+    the user should see an error    Please enter a valid phone number
     And the user enters text to a text field    id=phoneNumber    0123
-    Then the user should see an error    Input for your phone number has a minimum length of 8 characters
+    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+    And the user should see an error    Input for your phone number has a minimum length of 8 characters
+    Then the user enters text to a text field    id=phoneNumber    07438620303
+  #  And the user moves focus away from an element for MO    id=phoneNumber
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
@@ -507,3 +549,19 @@ the user moves focus away from the element
     [Arguments]    ${element}
     mouse out       ${element}
     focus         jQuery=.button:contains("Submit bank account details")
+<<<<<<< HEAD
+=======
+
+all the fields are completed
+    the matching status checkbox is updated    project-details    1    yes
+    the matching status checkbox is updated    project-details    2    yes
+    the matching status checkbox is updated    project-details    3    yes
+    the matching status checkbox is updated    project-details-finance    1    yes
+    the matching status checkbox is updated    project-details-finance    2    yes
+    the matching status checkbox is updated    project-details-finance    3    yes
+
+the user moves focus away from an element for MO
+    [Arguments]    ${element}
+    mouse out    ${element}
+    focus    jQuery=.button:contains("Assign Monitoring Officer")
+>>>>>>> d13e8805fc21bb133b382a6cf22e82dc708cd9a1
