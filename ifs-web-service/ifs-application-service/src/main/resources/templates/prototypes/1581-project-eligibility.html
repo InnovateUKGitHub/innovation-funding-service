@@ -166,7 +166,7 @@
 
 			<p>All changes must be discussed with the applicant, by raising queries through IFS, before they are made.</p>
 
-			<a href="#">Review all changes to project finances</a>
+			<a href="/prototypes/1581-changes-finances">Review all changes to project finances</a>
 
 		</th:block>
 
@@ -259,9 +259,9 @@
 			    </label>
 		    </div>
 
-	    	<input class="button" data-js-modal="approve-eligibility" type="submit" value="Approve eligible costs" />
+	    	<button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
 
-		    <div class="approve-eligibility" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		    <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
@@ -272,12 +272,8 @@
 					<form>
 
 						<div class="form-group">
-			                <label for="rag-rating" class="form-label">Please select the RAG rating before approving</label>
-			                <select name="rag-rating" id="rag-rating" class="form-control width-medium">
-			                	<option value="Green">Green</option>
-			                	<option value="Amber">Amber</option>
-			                	<option value="Red">Red</option>
-			                </select>
+			                <label for="no-days" class="form-label">Number of days</label>
+			                <input type="text" class="width-small" id="no-days" name="no-days" />
 			            </div>
 
 						<hr />
@@ -352,6 +348,14 @@
 			jQuery("#admin-support-2").hide();
 			jQuery("#admin-support-3").hide();
 			jQuery("#admin-support-4").show();
+		}
+	});
+
+	jQuery('input#costs-reviewed').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#approve-eligibility").removeAttr('disabled');
+		}else{
+			jQuery("#approve-eligibility").attr('disabled','disabled');
 		}
 	});
 
