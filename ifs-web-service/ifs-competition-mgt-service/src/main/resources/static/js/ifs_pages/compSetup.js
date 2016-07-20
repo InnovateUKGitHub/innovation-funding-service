@@ -32,7 +32,7 @@ IFS.competition_management.setup = (function(){
                 if(typeof(data) !== 'undefined'){
                   if(data.success === "true"){
                     IFS.core.formValidation.setValid(field,data.message);
-                    field.val(data);
+                    field.val(data.message);
                   }
                   else {
                     IFS.core.formValidation.setInvalid(field,data.message);
