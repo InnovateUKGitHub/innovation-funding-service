@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -236,7 +235,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         LOG.error(String.format("acceptInvite %s => %s ", inviteHash, userId));
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
 
-            if(invite.getEmail().equals(user.getEmail())){
+            if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
                 invite.setStatus(InviteStatusConstants.ACCEPTED);
 
                 if(invite.getInviteOrganisation().getOrganisation()==null && !user.getOrganisations().isEmpty()){
