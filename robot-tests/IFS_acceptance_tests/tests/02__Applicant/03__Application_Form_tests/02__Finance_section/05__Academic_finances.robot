@@ -25,8 +25,9 @@ ${too_large_pdf}    large.pdf
 *** Test Cases ***
 Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
-    [Tags]
+    [Tags]    Pending
     [Setup]    Lead applicant marks the finances as complete
+    #infund INFUND-1960
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     Then the user should not see the element    css=#incurred-staff[readonly]
