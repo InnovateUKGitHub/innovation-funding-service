@@ -17,6 +17,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,6 +68,14 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     ValidationHandler validationHandler,
                                     @PathVariable("projectId") final Long projectId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        if ( (form.getAddressForm().getSelectedPostcode() == null
+            || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getAddressLine1())
+            || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getPostcode())
+            || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getTown())
+            ) && !OrganisationAddressType.REGISTERED.name().equals(form.getAddressType().name())) {
+            return bankDetails(model, projectId, loggedInUser, form);
+        }
 
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
