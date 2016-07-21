@@ -304,6 +304,7 @@ Before Monitoring Officer is assigned
     [Setup]    Log in as user    &{successful_applicant_credentials}
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
     And the user should see the text in the page    Innovate UK will assign you a Monitoring Officer
+    And the user should not see the element     jQuery=ul li.complete:nth-child(3)
     When the user clicks the button/link      link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
@@ -357,11 +358,11 @@ MO client-side validation
     And the user moves focus away from an element for MO    id=phoneNumber
     And the user should not see the text in the page    Please enter a phone number
     And the user should not see the text in the page    Please enter a valid phone number
-   # [To be checked]
-  #  And the user enters text to a text field    id=phoneNumber    0123
-  #  Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-  #  And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
-  #  And the user should see an error    Input for your phone number has a minimum length of 8 characters
+    # Pending due to INFUND-4101
+    #  And the user enters text to a text field    id=phoneNumber    0123
+    #  Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    #  And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+    #  And the user should see an error    Input for your phone number has a minimum length of 8 characters
 
 
 MO details can be added
@@ -410,6 +411,13 @@ MO details can be edited and Viewed in the Project setup status page
     And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
 
+
+MO details edit(email step)
+    [Documentation]   INFUND-3330, INFUND-3349
+    [Tags]   Email
+    When Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com   ${test_mailbox_one_password}   has been assigned to you
+
+
 MO details accessible/seen by all partners
     [Documentation]    INFUND-3349
     [Tags]    HappyPath
@@ -432,6 +440,7 @@ MO details accessible/seen by all partners
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
+
 
 Bank details server side validations
     [Documentation]    INFUND-3010
@@ -555,12 +564,13 @@ standard verification for Phone number follows
     the user should see an error    Please enter a phone number
     the user enters text to a text field    id=phoneNumber    invalidphone
     the user should see an error    Please enter a valid phone number
-  #  And the user enters text to a text field    id=phoneNumber    0123
-  #  Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-  #  And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
-  #  And the user should see an error    Input for your phone number has a minimum length of 8 characters
+    # Pending due to INFUND-2101
+    #  And the user enters text to a text field    id=phoneNumber    0123
+    #  Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    #  And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+    #  And the user should see an error    Input for your phone number has a minimum length of 8 characters
     Then the user enters text to a text field    id=phoneNumber    07438620303
-  #  And the user moves focus away from an element for MO    id=phoneNumber
+    #  And the user moves focus away from an element for MO    id=phoneNumber
 
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
