@@ -24,7 +24,7 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public List<ValidationMessages> update(List<MilestoneResource> milestones, Long competitionId) {
+    public ValidationMessages update(List<MilestoneResource> milestones, Long competitionId) {
        return milestoneRestService.update(milestones, competitionId).getSuccessObject();
     }
 

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,15 +24,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.AssessorsForm;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
 import com.worth.ifs.competitionsetup.form.FinanceForm;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -200,7 +202,13 @@ public class CompetitionSetupController {
         }
 
         if (!bindingResult.hasErrors()) {
-        	competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        	ValidationMessages saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        	if(saveSectionResult != null && saveSectionResult.hasErrors()) {
+        		saveSectionResult.getErrors().forEach(e -> {
+        			ObjectError error = new ObjectError("currentSection", e.getErrorMessage());
+        			bindingResult.addError(error);
+        		});
+        	}
         } else {
             LOG.debug("Form errors");
         }

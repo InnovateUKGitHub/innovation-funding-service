@@ -1,6 +1,8 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.rest.ValidationMessages;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 	}
 
 	@Override
-	public void saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ValidationMessages saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 		competition.setActivityCode(additionalInfoForm.getActivityCode());
 		competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
@@ -32,6 +34,8 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 		competition.setCoFundersBudget(additionalInfoForm.getCoFundersBudget());
 
         competitionService.update(competition);
+        
+        return null;
 	}
 
 	@Override

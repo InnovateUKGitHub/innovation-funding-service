@@ -15,7 +15,7 @@ public interface MilestoneService {
     ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(final Long id);
 
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<List<ValidationMessages>> update(Long id, List<MilestoneResource> milestones);
+    ServiceResult<ValidationMessages> update(Long id, List<MilestoneResource> milestones);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<MilestoneResource> create();

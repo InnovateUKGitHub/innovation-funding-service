@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import org.springframework.stereotype.Service;
 
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AssessorsForm;
@@ -19,8 +20,9 @@ public class AssessorsSectionSaver implements CompetitionSetupSectionSaver {
 	}
 
 	@Override
-	public void saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm) {
-		
+	public ValidationMessages saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm) {
+
+        return null;
 	}
 	
 	@Override

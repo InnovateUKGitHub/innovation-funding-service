@@ -29,7 +29,7 @@ public class MilestoneController {
     public RestResult<MilestoneResource> create() { return milestoneService.create().toPostCreateResponse();}
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public RestResult<List<ValidationMessages>> saveMilestone(@RequestBody List<MilestoneResource> milestones, @PathVariable("id") final Long id) {
+    public RestResult<ValidationMessages> saveMilestone(@RequestBody List<MilestoneResource> milestones, @PathVariable("id") final Long id) {
          return milestoneService.update(id, milestones).toPutWithBodyResponse();
     }
  }

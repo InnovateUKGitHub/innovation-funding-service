@@ -28,9 +28,8 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
-    public RestResult<List<ValidationMessages>> update(List<MilestoneResource> milestones, Long competitionId) {
-        return putWithRestResult(milestonesRestURL + "/" + competitionId, milestones, new ParameterizedTypeReference<List<ValidationMessages>>() {
-        });
+    public RestResult<ValidationMessages> update(List<MilestoneResource> milestones, Long competitionId) {
+        return putWithRestResult(milestonesRestURL + "/" + competitionId, milestones, ValidationMessages.class);
     }
 
     @Override

@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
-import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 
 /**
  * Competition setup section saver for the eligibility section.
@@ -27,7 +28,7 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 	}
 
 	@Override
-	public void saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ValidationMessages saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		
@@ -53,6 +54,8 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 		competition.setLeadApplicantType(type);
 		
 		competitionService.update(competition);
+		
+        return null;
 	}
 	
 	@Override

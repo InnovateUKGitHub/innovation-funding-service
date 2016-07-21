@@ -13,7 +13,7 @@ import java.util.List;
 public interface MilestoneService {
     List<MilestoneResource> getAllDatesByCompetitionId(Long competitionId);
 
-    List<ValidationMessages> update(List<MilestoneResource> milestones, Long competitionId);
+    ValidationMessages update(List<MilestoneResource> milestones, Long competitionId);
 
     MilestoneResource create();
 }

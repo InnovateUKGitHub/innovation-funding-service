@@ -536,7 +536,16 @@
     <form th:action="@{(${editable} ? '' : 'milestones/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-4-edit">
-
+                 <div class="error-summary" th:if="${#fields.hasAnyErrors()}">
+                    <h2 class="heading-medium error-summary-heading">
+                        Unable to save section
+                    </h2>
+                     
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+                    </ul>
+                </div>
+    
             <legend class="visuallyhidden">Milestones</legend>
 
             <table>

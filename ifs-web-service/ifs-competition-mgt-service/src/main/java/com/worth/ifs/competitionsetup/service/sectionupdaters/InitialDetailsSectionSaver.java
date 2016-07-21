@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -26,7 +27,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 	}
 
 	@Override
-	public void saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ValidationMessages saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 		
@@ -51,6 +52,8 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		competitionService.update(competition);
 
 		initialDetailsForm.setCompetitionCode(competition.getCode());
+
+        return null;
 	}
 	
 	@Override
