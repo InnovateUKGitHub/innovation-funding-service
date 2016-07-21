@@ -330,10 +330,7 @@ public class BaseUnitTest {
 
         SectionResourceBuilder sectionResourceBuilder = newSectionResource().withCompetition(competitionResource.getId());
 
-        QuestionResource q01Resource = questionResourceBuilder.with(id(1L)).with(name("Application details")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).
-                        build();
-        when(questionService.getById(q01Resource.getId())).thenReturn(q01Resource);
+        QuestionResource q01Resource = setupQuestionResource(1L, "Application details", questionResourceBuilder);
 
         SectionResource sectionResource1 = sectionResourceBuilder.
                 with(id(1L)).
@@ -341,10 +338,7 @@ public class BaseUnitTest {
                 withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId)).
                 build();
 
-        QuestionResource q10Resource = questionResourceBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).
-                        build();
-        when(questionService.getById(q10Resource.getId())).thenReturn(q10Resource);
+        QuestionResource q10Resource = setupQuestionResource(10L, "How does your project align with the scope of this competition?", questionResourceBuilder);
 
         SectionResource sectionResource2 = sectionResourceBuilder.
                 with(id(2L)).
@@ -352,22 +346,13 @@ public class BaseUnitTest {
                 withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId)).
                 build();
 
-        QuestionResource q20Resource = questionResourceBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).
-                        build();
-        when(questionService.getById(q20Resource.getId())).thenReturn(q20Resource);
+        QuestionResource q20Resource = setupQuestionResource(20L, "1. What is the business opportunity that this project addresses?", questionResourceBuilder);
 
-        QuestionResource q21Resource = questionResourceBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
-        when(questionService.getById(q21Resource.getId())).thenReturn(q21Resource);
+        QuestionResource q21Resource = setupQuestionResource(21L, "2. What is the size of the market opportunity that this project might open up?", questionResourceBuilder);
 
-        QuestionResource q22Resource = questionResourceBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
-        when(questionService.getById(q22Resource.getId())).thenReturn(q22Resource);
+        QuestionResource q22Resource = setupQuestionResource(22L, "3. How will the results of the project be exploited and disseminated?", questionResourceBuilder);
 
-        QuestionResource q23Resource = questionResourceBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
-        when(questionService.getById(q23Resource.getId())).thenReturn(q23Resource);
+        QuestionResource q23Resource = setupQuestionResource(23L, "4. What economic, social and environmental benefits is the project expected to deliver?", questionResourceBuilder);
 
         SectionResource sectionResource3 = sectionResourceBuilder.
                 with(id(3L)).
@@ -376,21 +361,13 @@ public class BaseUnitTest {
                 build();
 
 
-        QuestionResource q30Resource = questionResourceBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
-        when(questionService.getById(q30Resource.getId())).thenReturn(q30Resource);
+        QuestionResource q30Resource = setupQuestionResource(30L, "5. What technical approach will be adopted and how will the project be managed?", questionResourceBuilder);
 
-        QuestionResource q31Resource = questionResourceBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
-        when(questionService.getById(q31Resource.getId())).thenReturn(q31Resource);
+        QuestionResource q31Resource = setupQuestionResource(31L, "6. What is innovative about this project?", questionResourceBuilder);
 
-        QuestionResource q32Resource = questionResourceBuilder.with(id(32L)).with(name("7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
-        when(questionService.getById(q32Resource.getId())).thenReturn(q32Resource);
+        QuestionResource q32Resource = setupQuestionResource(32L, "7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?", questionResourceBuilder);
 
-        QuestionResource q33Resource = questionResourceBuilder.with(id(33L)).with(name("8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?")).
-                withFormInputs(simpleMap(newFormInputResource().with(incrementingIds(1)).build(1), FormInputResource::getId)).build();
-        when(questionService.getById(q33Resource.getId())).thenReturn(q33Resource);
+        QuestionResource q33Resource = setupQuestionResource(33L, "8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?", questionResourceBuilder);
 
         SectionResource sectionResource4 = sectionResourceBuilder.
                 with(id(4L)).
@@ -689,5 +666,15 @@ public class BaseUnitTest {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
         return messageSource;
+    }
+
+    private QuestionResource setupQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {
+        List<FormInputResource> formInputs = newFormInputResource().with(incrementingIds(1)).build(1);
+        QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
+                withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
+                build();
+        when(questionService.getById(questionResource.getId())).thenReturn(questionResource);
+        when(formInputService.findApplicationInputsByQuestion(questionResource.getId())).thenReturn(formInputs);
+        return questionResource;
     }
 }
