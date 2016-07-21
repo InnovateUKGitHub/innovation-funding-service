@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -267,7 +268,7 @@ public class CompetitionSetupControllerTest {
                 .withActivityCode("Activity Code")
                 .withInnovateBudget("Innovate Budget")
                 .withFunder("Funder")
-                .withFunderBudget(1234D)
+                .withFunderBudget(new BigDecimal(1234))
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")

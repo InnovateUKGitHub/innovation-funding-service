@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
+
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -24,7 +26,7 @@ public class AdditionalInfoSectionSaverTest {
 	
 	@Test
 	public void testSaveCompetitionSetupSection() {
-		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "Funder", 0.0);
+		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "Funder", new BigDecimal(123));
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
@@ -34,7 +36,7 @@ public class AdditionalInfoSectionSaverTest {
 		assertEquals("Activity", competition.getActivityCode());
 		assertEquals("Innovate", competition.getInnovateBudget());
 		assertEquals("Funder", competition.getFunder());
-		assertEquals(Double.valueOf(0), competition.getFunderBudget());
+		assertEquals(new BigDecimal(123), competition.getFunderBudget());
 
 		verify(competitionService).update(competition);
 	}

@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -60,7 +61,7 @@ public class CompetitionResource {
     private String activityCode;
     private String innovateBudget;
     private String funder;
-    private Double funderBudget;
+    private BigDecimal funderBudget;
 
 
     public CompetitionResource() {
@@ -436,11 +437,11 @@ public class CompetitionResource {
         this.funder = funder;
     }
 
-    public Double getFunderBudget() {
+    public BigDecimal getFunderBudget() {
         return funderBudget;
     }
 
-    public void setFunderBudget(Double funderBudget) {
+    public void setFunderBudget(BigDecimal funderBudget) {
         this.funderBudget = funderBudget;
     }
 

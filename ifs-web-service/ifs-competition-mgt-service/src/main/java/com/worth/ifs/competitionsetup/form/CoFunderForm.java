@@ -1,6 +1,7 @@
 package com.worth.ifs.competitionsetup.form;
 
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 
 /**
  * Created by skistapur on 18/07/2016.
@@ -9,7 +10,7 @@ public class CoFunderForm {
 
     private String coFunder;
     @Min(value=0, message = "Please a valid number.")
-    private Double coFunderBudget;
+    private BigDecimal coFunderBudget;
 
     public String getCoFunder() {
         return coFunder;
@@ -19,11 +20,11 @@ public class CoFunderForm {
         this.coFunder = coFunder;
     }
 
-    public Double getCoFunderBudget() {
+    public BigDecimal getCoFunderBudget() {
         return coFunderBudget;
     }
 
-    public void setCoFunderBudget(Double coFunderBudget) {
+    public void setCoFunderBudget(BigDecimal coFunderBudget) {
         this.coFunderBudget = coFunderBudget;
     }
 }

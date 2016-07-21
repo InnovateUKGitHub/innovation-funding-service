@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class CompetitionTest {
     private String activityCode;
     private String innovateBudget;
     private String funder;
-    private Double funderBudget;
+    private BigDecimal funderBudget;
 
     @Before
     public void setUp() throws Exception {
@@ -59,7 +60,7 @@ public class CompetitionTest {
         activityCode = "ActivityCode";
         innovateBudget = "Innovate Budget";
         funder = "Funder";
-        funderBudget = 0.0;
+        funderBudget = new BigDecimal(0);
 
         sections = new ArrayList<>();
         sections.add(new Section());
@@ -89,14 +90,14 @@ public class CompetitionTest {
         coFunder1.setId(1L);
         coFunder1.setCompetition(competition);
         coFunder1.setCoFunder("CoFunder1");
-        coFunder1.setCoFunderBudget(1D);
+        coFunder1.setCoFunderBudget(new BigDecimal(1));
         returnList.add(coFunder1);
 
         CompetitionCoFunder coFunder2 = new CompetitionCoFunder();
         coFunder2.setId(2L);
         coFunder2.setCompetition(competition);
         coFunder2.setCoFunder("CoFunder2");
-        coFunder2.setCoFunderBudget(2D);
+        coFunder2.setCoFunderBudget(new BigDecimal(2));
         returnList.add(coFunder2);
 
         return returnList;

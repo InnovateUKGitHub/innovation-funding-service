@@ -2,6 +2,7 @@ package com.worth.ifs.fixtures;
 
 import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +17,14 @@ public class CompetitionCoFundersFixture {
         CompetitionCoFunderResource coFunder1 = new CompetitionCoFunderResource();
         coFunder1.setId(1L);
         coFunder1.setCoFunder("coFunder1");
-        coFunder1.setCoFunderBudget(1D);
+        coFunder1.setCoFunderBudget(new BigDecimal(1));
         coFunder1.setCompetitionId(1L);
         returnList.add(coFunder1);
 
         CompetitionCoFunderResource coFunder2 = new CompetitionCoFunderResource();
         coFunder2.setId(2L);
         coFunder2.setCoFunder("coFunder2");
-        coFunder2.setCoFunderBudget(2D);
+        coFunder2.setCoFunderBudget(new BigDecimal(2));
         coFunder2.setCompetitionId(1L);
         returnList.add(coFunder2);
 

@@ -1,5 +1,7 @@
 package com.worth.ifs.competition.resource;
 
+import java.math.BigDecimal;
+
 /**
  * Created by skistapur on 18/07/2016.
  */
@@ -7,7 +9,7 @@ public class CompetitionCoFunderResource {
 
     private Long id;
     private String coFunder;
-    private Double coFunderBudget;
+    private BigDecimal coFunderBudget;
     private Long competitionId;
 
 
@@ -27,11 +29,11 @@ public class CompetitionCoFunderResource {
         this.coFunder = coFunder;
     }
 
-    public Double getCoFunderBudget() {
+    public BigDecimal getCoFunderBudget() {
         return coFunderBudget;
     }
 
-    public void setCoFunderBudget(Double coFunderBudget) {
+    public void setCoFunderBudget(BigDecimal coFunderBudget) {
         this.coFunderBudget = coFunderBudget;
     }
 

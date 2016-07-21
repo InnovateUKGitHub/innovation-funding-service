@@ -3,6 +3,7 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static com.google.common.primitives.Longs.asList;
@@ -73,5 +74,5 @@ public class CompetitionResourceDocs {
             .withActivityCode("Activity-Code")
             .withInnovateBudget("INNOVATE-Budget")
             .withFunder("funder, funder")
-            .withFunderBudget(1234D, 23423D);
+            .withFunderBudget(new BigDecimal(1234), new BigDecimal(23423));
 }

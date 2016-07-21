@@ -277,8 +277,7 @@
                             <span class="form-label-bold">Budget</span>
                         </label>
                         <input type="number" min="0"  class="form-control width-x-large" th:id="${iteration.index}+'-funderBudget'"
-                               th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value=""
-                        data-number-errorMessage="Test" />
+                               th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value="" />
                     </div>
                 </div>
             </div>
@@ -546,22 +545,6 @@
 	                    <option th:each="researchParticipationAmount : ${researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
 	                </select>
                 </fieldset>
-            </div>
-
-            <div class="form-group extra-margin">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Are resubmissions allowed?</legend>
-                    <p>Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
-                    <label class="block-label" for="stream-1-comp-resubmission-yes">
-                        <input value="Yes" type="radio" id="stream-1-comp-resubmission-yes" name="stream-1-comp-resubmission-group" />
-                        Yes
-                    </label>
-                    <label class="block-label" for="stream-1-comp-resubmission-no">
-                        <input value="No" type="radio" id="stream-1-comp-resubmission-no" name="stream-1-comp-resubmission-group" />
-                        No
-                    </label>
-                </fieldset>
-                <hr />
             </div>
 
             <button class="button">Done</button>

@@ -7,6 +7,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -147,7 +148,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((funder, object) -> setField("funder", funder, object), fundersMultiple);
     }
 
-    public CompetitionResourceBuilder withFunderBudget(Double... funderBudgets) {
+    public CompetitionResourceBuilder withFunderBudget(BigDecimal... funderBudgets) {
         return withArray((funderBudget, object) -> setField("funderBudget", funderBudget, object), funderBudgets);
     }
 

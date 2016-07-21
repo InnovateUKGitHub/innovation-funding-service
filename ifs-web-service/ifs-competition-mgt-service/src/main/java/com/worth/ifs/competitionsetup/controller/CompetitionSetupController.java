@@ -3,7 +3,7 @@ package com.worth.ifs.competitionsetup.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -215,7 +214,7 @@ public class CompetitionSetupController {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-        node.put("message",message);
+        node.put("message", CharMatcher.is('\"').trimFrom(message));
         return node;
     }
 

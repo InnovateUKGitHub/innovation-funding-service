@@ -13,6 +13,7 @@ import com.worth.ifs.user.domain.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -114,7 +115,7 @@ public class Competition {
     private String activityCode;
     private String innovateBudget;
     private String funder;
-    private Double funderBudget;
+    private BigDecimal funderBudget;
 
     private boolean multiStream;
     private String streamName;
@@ -471,11 +472,12 @@ public class Competition {
         this.funder = funder;
     }
 
-    public Double getFunderBudget() {
+
+    public BigDecimal getFunderBudget() {
         return funderBudget;
     }
 
-    public void setFunderBudget(Double funderBudget) {
+    public void setFunderBudget(BigDecimal funderBudget) {
         this.funderBudget = funderBudget;
     }
 

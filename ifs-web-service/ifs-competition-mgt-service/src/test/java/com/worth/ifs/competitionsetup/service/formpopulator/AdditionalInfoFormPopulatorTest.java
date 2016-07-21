@@ -7,6 +7,8 @@ import com.worth.ifs.fixtures.CompetitionCoFundersFixture;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +28,7 @@ public class AdditionalInfoFormPopulatorTest {
 				.withActivityCode("Activity Code")
 				.withInnovateBudget("Innovate Budget")
 				.withFunder("Funder")
-				.withFunderBudget(1234D)
+				.withFunderBudget(new BigDecimal(1234))
 				.withCompetitionCode("c123")
 				.withPafCode("p123")
 				.withBudgetCode("b123")
@@ -40,7 +42,7 @@ public class AdditionalInfoFormPopulatorTest {
 		assertEquals("Activity Code", form.getActivityCode());
 		assertEquals("Innovate Budget", form.getInnovateBudget());
 		assertEquals("Funder", form.getFunder());
-		assertEquals(Double.valueOf(1234.0), form.getFunderBudget());
+		assertEquals(new BigDecimal(1234.0), form.getFunderBudget());
 		assertEquals("c123", form.getCompetitionCode());
 		assertEquals("p123", form.getPafNumber());
 		assertEquals("b123", form.getBudgetCode());

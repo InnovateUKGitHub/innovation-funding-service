@@ -8,9 +8,6 @@ CREATE TABLE `competition_co_funder` (
   `co_funder` varchar(255) DEFAULT NULL,
   `co_funder_budget` decimal(10,2) DEFAULT '0.00',
   `competition_id` bigint(20) NOT NULL,
-  `created_timestamp` timestamp NULL DEFAULT NULL,
-  `updated_timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_update_user` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `competition_co_funders_compitions_id_idx` (`competition_id`),
   CONSTRAINT `competition_co_funders_compitions_id` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION

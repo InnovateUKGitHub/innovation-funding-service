@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     @Size(max = 255, message = "Funder has a maximum length of 255 characters")
     private String funder;
     @Min(value=0, message = "Please a valid number.")
-    private Double funderBudget;
+    private BigDecimal funderBudget;
     @NotEmpty(message = "Please enter a PAF number")
     private String pafNumber;
     @NotEmpty(message = "Please generate a competition code")
@@ -33,7 +34,7 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     public AdditionalInfoForm() {
     }
 
-    public AdditionalInfoForm(String activityCode, String innovateBudget, String funder, Double funderBudget) {
+    public AdditionalInfoForm(String activityCode, String innovateBudget, String funder, BigDecimal funderBudget) {
         this.activityCode = activityCode;
         this.innovateBudget = innovateBudget;
         this.funder = funder;
@@ -64,11 +65,11 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
         this.funder = funder;
     }
 
-    public Double getFunderBudget() {
+    public BigDecimal getFunderBudget() {
         return funderBudget;
     }
 
-    public void setFunderBudget(Double funderBudget) {
+    public void setFunderBudget(BigDecimal funderBudget) {
         this.funderBudget = funderBudget;
     }
 
@@ -109,7 +110,7 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     }
 
     public Double getTotalFunding() {
-        double totalFunding = coFunders.stream().filter(o -> o.getCoFunderBudget() != null).mapToDouble(o -> o.getCoFunderBudget()).sum();
-        return funderBudget != null ? (totalFunding + funderBudget) : totalFunding;
+        double totalFunding = coFunders.stream().filter(o -> o.getCoFunderBudget() != null).mapToDouble(o -> o.getCoFunderBudget().doubleValue()).sum();
+        return funderBudget != null ? (totalFunding + funderBudget.doubleValue()) : totalFunding;
     }
 }
