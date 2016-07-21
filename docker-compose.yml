@@ -20,7 +20,6 @@ services:
     build:
       context: .
       dockerfile: web-dockerfile
-    mem_limit: 750m
     ports:
       - "8080:8080"
       - "12345:12345"
@@ -37,7 +36,6 @@ services:
     build:
       context: .
       dockerfile: data-dockerfile
-    mem_limit: 750m
     ports:
       - "8090:8080"
       - "12346:12345"
@@ -65,6 +63,35 @@ services:
         aliases:
          - database
          - ifs-database
+
+  smtp:
+    container_name: smtp
+    image: camptocamp/smtp-sink
+    expose:
+      - 25
+    networks:
+      - back-tier
+
+  imap:
+    container_name: imap
+    image: camptocamp/courier-imap
+    volumes_from:
+      - smtp:rw
+    expose:
+      - 143
+    networks:
+      - front-tier
+      - back-tier
+
+  webmail:
+    container_name: webmail
+    image: camptocamp/sqwebmail
+    ports:
+      - "1234:80"
+    volumes_from:
+      - smtp:rw
+    networks:
+      - back-tier
 
 networks:
   front-tier:

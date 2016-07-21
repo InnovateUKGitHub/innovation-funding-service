@@ -25,11 +25,13 @@ IFS.core.loadOrder = {
       IFS.core.conditionalForms.init();
       IFS.core.editor.init();
       IFS.core.formValidation.init();
+      IFS.core.wordCount.init();
     },
     finalize : function(){
       IFS.core.modal.init();
       IFS.core.upload.init();
       IFS.core.autoSubmitForm.init();
+      IFS.core.pieChart.init();
     }
   },
   'app-form' : {
