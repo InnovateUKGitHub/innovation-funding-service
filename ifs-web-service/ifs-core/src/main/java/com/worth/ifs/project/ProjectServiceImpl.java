@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -12,6 +13,7 @@ import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
-import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -115,7 +117,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
 
-        List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, pu -> pu.getOrganisation()));
+        List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
         List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationRestService::getOrganisationById);
         RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);
 
@@ -131,5 +133,75 @@ public class ProjectServiceImpl implements ProjectService {
     public Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId) {
         return projectRestService.getMonitoringOfficerForProject(projectId).toOptionalIfNotFound().
                 getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId) {
+        return projectRestService.getCollaborationAgreementFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId) {
+        return projectRestService.getCollaborationAgreementFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addCollaborationAgreementDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId) {
+        return projectRestService.removeCollaborationAgreementDocument(projectId).toServiceResult();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getExploitationPlanFile(Long projectId) {
+        return projectRestService.getExploitationPlanFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId) {
+        return projectRestService.getExploitationPlanFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+
+    @Override
+    public ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addExploitationPlanDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeExploitationPlanDocument(Long projectId) {
+        return projectRestService.removeExploitationPlanDocument(projectId).toServiceResult();
+    }
+
+    @Override
+    public List<ProjectUserResource> getLeadPartners(Long projectId) {
+        List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
+        return simpleFilter(partnerUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
+    }
+
+    @Override
+    public List<ProjectUserResource> getPartners(Long projectId) {
+        List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
+        return simpleFilter(partnerUsers, projectUser -> !(projectUser.getOrganisation().equals(leadOrganisation.getId())));
+    }
+
+    @Override
+    public boolean isUserLeadPartner(Long projectId, Long userId) {
+        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+    }
+
+    @Override
+    public boolean isUserPartner(Long projectId, Long userId) {
+        return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+    }
+
+    private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
+        List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
+        return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
     }
 }

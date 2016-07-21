@@ -148,7 +148,33 @@
 
 	<p>To generate spend profiles both the viability and eligibility sections must be approved for all partners. This will create individual flat profile spends for all the partners, which they can edit to reflect their planned spend during the project.</p>
 
-	<a href="#" class="button button-large">Generate spend profile</a>
+	<a href="#" class="button button-large" data-js-modal="generate-spend-profile">Generate spend profile</a>
+
+	<div class="generate-spend-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+
+			<h2 class="heading-medium no-margin">Generate spend profile</h2>
+
+			<p>This will generate a flat spend profile for all the project partners, and will lock the finance checks. Generating the spend profile indicates that the Finance checks have been completed for all applicants.</p>
+
+			<p>Finance Contacts will be notified that they can now create their spend profile</p>
+
+			<hr />
+
+        	<div class="alignright-button">
+				
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+				<input type="hidden" id="status" name="status" value="orgSizeChanged" />
+
+        		<a class="button" th:href="@{${#httpServletRequest.requestURI}}">Generate spend profile</a>
+
+        	</div>
+
+        </div>
+    </div>
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

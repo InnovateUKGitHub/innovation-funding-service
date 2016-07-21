@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status?stage=level2'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finances'})" th:remove="tag" />
+
+	<p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances, though your designated finance partner will be the main contact for queries in this section. If changes are made finances will not be approved without your consultation.</p>
+
+	<h2 class="heading-medium">Overview</h2>
+
+	<div class="table-overflow">
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Total costs</th>
+					<th scope="col" class="numeric">% grant</th>
+					<th scope="col" class="numeric">Funding sought</th>
+					<th scope="col" class="numeric">Other public sector funding</th>
+					<th scope="col" class="numeric">Contribution to project</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>&pound;286,283</td>
+					<td class="numeric">55%</td>
+					<td class="numeric">&pound;180,399</td>
+					<td class="numeric">20,000</td>
+					<td class="numeric">&pound;85,885</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="extra-margin">
+		<a href="/prototypes/3986-view-finance-changes">Review all changes to project finances</a>
+	</div>
+
+	<div class="panel-indent">
+		<h3 class="heading-medium no-margin-top">% Grant has been reduced from 55% to 40% </h3>
+		<dl class="standard-definition-list">
+			<dt>Funding sought</dt>
+			<dd>&pound;180,399</dd>
+
+			<dt>Funding granted</dt>
+			<dd>&pound;160,000</dd>
+		</dl>
+	</div>
+
+	<h2 class="heading-medium">Detailed finances</h2>
+	<p>After querying any costs with you any change made to your finances will be visible here. Please review this your finances after any changes are discussed to ensure they have been made as expected, you are responsible for the accuracy of the approved finances.</p>
+
+	<div class="collapsible section-overview extra-margin">
+	        
+       	<h2>Labour
+	       <span data-mirror="#section-total-1">&pound; 126,207</span>
+       	</h2>	
+		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:with="status=partnerView" th:remove="tag" />
+
+		<h2>Administration support costs
+    		<span data-mirror="#section-total-2">&pound; 0</span>
+       	</h2>
+		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:with="status=partnerView" th:remove="tag" />
+
+		<h2>Materials
+	        <span data-mirror="#section-total-3">&pound; 8,600</span>
+       	</h2>
+		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-materials" th:with="status=partnerView" th:remove="tag" />
+
+		<h2>Capital usage
+	        <span data-mirror="#section-total-4">&pound; 0</span>
+       	</h2>
+		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-capital" th:with="status=partnerView" th:remove="tag" />
+	    	
+	    <h2>Subcontracting costs
+	        <span data-mirror="#section-total-5">&pound; 150,000</span>
+       	</h2>
+		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:with="status=partnerView" th:remove="tag" />
+	    
+    	<h2>Travel &amp; subsistence
+	        <span data-mirror="#section-total-6">&pound; 0</span>
+       	</h2>
+		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-travel" th:with="status=partnerView" th:remove="tag" />
+
+    	<h2>Other costs
+			<span data-mirror="#section-total-3">&pound; 0</span>
+       	</h2>
+		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-other" th:with="status=partnerView" th:remove="tag" />
+
+	</div>
+
+
+	<h3 class="heading-medium">Other funding</h3>
+
+	<p>This is any other applicable public sector funding that you have applied for or received for this project, that Innovate UK have been informed of.</p>
+
+	<div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" th:remove="tag" />
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+	
+	// ]]>
+</script>
+</body>
+</html>

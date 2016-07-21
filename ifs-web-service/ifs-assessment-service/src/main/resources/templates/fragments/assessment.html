@@ -2,25 +2,6 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 
-<!-- ======== Assessment - assessor feedback textarea and word count ======= -->
-<div th:fragment="assessment-form-textarea-wordcount (id, name, value, readonly, maxWords, currentWordsLeft)">
-    <div class="textarea-wrapped word-count">
-        <textarea th:id="'form-textarea-'+${id}"
-              th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
-              th:field="*{value}"
-              th:readonly="${readonly}"
-              th:attrappend="data-max_words=${maxWords != null}?@{${maxWords}}"
-              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
-              >
-        </textarea>
-
-        <div class="textarea-footer">
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${maxWords}, currentWordsLeft=${currentWordsLeft})" th:remove="tag"/>
-        </div>
-    </div>
-</div>
-
-
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
 <div th:fragment="assessment-header-sub">
     <div class="sub-header">
@@ -32,40 +13,6 @@
           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
         </div>
     </div>
-</div>
-
-
-<!-- =================== Assessment feedback score ============================== -->
-<div th:fragment="assessment-feedback-score (score)">
-    <fieldset>
-        <legend class="visuallyhidden">Question score</legend> 
-        <div class="form-group">
-        <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
-        <select class="form-control width-medium" th:field="*{score}" id="assessor-question-score">
-            <option value="">Set score</option>
-            <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" th:selected="${val == score}">1</option>
-        </select> / 10
-        </div>
-    </fieldset>
-</div>
-
-
-<!-- =================== Assessment feedback scope ============================== -->
-<div th:fragment="assessment-feedback-scope">
-    <h2 class="heading-small">Is this application in scope?</h2>
-    <fieldset class="inline">
-        <legend class="visuallyhidden">Is this application in scope?</legend>
-        <div class="form-group">
-            <label class="block-label" for="assessor-question-confirmation-yes">
-                <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
-                Yes
-            </label>
-            <label class="block-label" for="assessor-question-confirmation-no">
-                <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
-                No
-            </label>
-        </div>
-    </fieldset>
 </div>
 
 

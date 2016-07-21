@@ -46,7 +46,7 @@ function resetDB {
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"DROP DATABASE ifs"`
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
     cd ../ifs-data-service
-    ./gradlew flywayClean flywayMigrate
+    ./gradlew clean processResources flywayClean flywayMigrate
 }
 
 function clearDownFileRepository {

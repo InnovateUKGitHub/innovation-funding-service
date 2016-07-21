@@ -3,8 +3,8 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.security.SecuredBySpring;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -17,13 +17,13 @@ public interface AssessorFeedbackService {
     ServiceResult<FileEntryResource> createAssessorFeedbackFileEntry(@P("applicationId") long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'DOWNLOAD_ASSESSOR_FEEDBACK')")
-    ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getAssessorFeedbackFileEntryContents(long applicationId);
+    ServiceResult<FileAndContents> getAssessorFeedbackFileEntryContents(long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'DOWNLOAD_ASSESSOR_FEEDBACK')")
     ServiceResult<FileEntryResource> getAssessorFeedbackFileEntryDetails(long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPLOAD_ASSESSOR_FEEDBACK')")
-    ServiceResult<FileEntryResource> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<Void> updateAssessorFeedbackFileEntry(long applicationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'REMOVE_ASSESSOR_FEEDBACK')")
     ServiceResult<Void> deleteAssessorFeedbackFileEntry(long applicationId);

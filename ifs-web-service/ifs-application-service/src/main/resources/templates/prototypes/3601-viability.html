@@ -15,11 +15,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Viability'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Aptrans Ltd'}, ${'Viability'})" th:with="partner=lead" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
@@ -32,12 +32,12 @@
 	</th:block>
 	
 	<th:block th:if="${param.compName != null and param.compName[0] == 'updated'}">
-		<div class="panel-indent">
+		<div class="panel-indent" th:unless="${param.status != null and param.status[0] == 'approved'}">
 			<h2 class="heading-medium no-margin-top">Company name updated since original application</h2>
 
 			<dl class="standard-definition-list">
 				<dt>Name in application</dt>
-				<dd>Aptrans Ltd</dd>
+				<dd>Aptran</dd>
 			</dl>
 
 			<div class="form-group">
@@ -47,6 +47,16 @@
 				</label>
 			</div>
 		</div>
+		
+		<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+			<div class="panel-indent">
+				<dl class="standard-definition-list">
+					<dt>Name in application</dt>
+					<dd>Aptran</dd>
+				</dl>
+			</div>
+		</th:block>
+
 	</th:block>
 
 	<h2 class="heading-medium">Finances overview</h2>
@@ -92,8 +102,6 @@
 		<dt>Organisation size</dt>
 		<dd>Medium</dd>
 
-		<dt>On FTSE 100</dt>
-		<dd>No</dd>
 	</dl>
 
 
@@ -143,7 +151,7 @@
 
 	</th:block>
 
-	<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'changeOrgSize' or param.status != null and param.status[0] == 'approved'}">
+	<div th:unless="${param.status != null and param.status[0] == 'changeOrgSize' or param.status != null and param.status[0] == 'approved'}">
 		<a th:href="@{'?status=changeOrgSize#change-org-title'}">Change organisation size</a>
 	</div>
 
@@ -226,7 +234,12 @@
 		</form>
 
 	</th:block>
-
+	
+	<dl class="standard-definition-list extra-margin">
+		<dt>On FTSE 100</dt>
+		<dd>No</dd>
+	</dl>
+		
 	<h2 class="heading-medium">Mint details</h2>
 
 	<dl class="standard-definition-list">
@@ -362,6 +375,8 @@
 	jQuery('input#project-viable').on('click',function(e){ 
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#confirm-viability").removeAttr('disabled');
+		}else{
+			jQuery("#confirm-viability").attr('disabled','disabled');
 		}
 	});
 	// ]]>

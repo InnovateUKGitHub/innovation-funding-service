@@ -31,11 +31,16 @@ public class FormInputServiceImpl implements FormInputService {
 
     @Override
     public List<FormInputResource> findAssessmentInputsByQuestion(Long questionId) {
-        return formInputRestService.getByCompetitionIdAndScope(questionId, ASSESSMENT).getSuccessObjectOrThrowException();
+        return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT).getSuccessObjectOrThrowException();
     }
 
     @Override
     public List<FormInputResource> findApplicationInputsByCompetition(Long competitionId) {
         return formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<FormInputResource> findAssessmentInputsByCompetition(Long competitionId) {
+        return formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT).getSuccessObjectOrThrowException();
     }
 }

@@ -238,6 +238,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * all ServiceResults are successful.  In the event of a failure, all encountered failing ServiceResults' Errors will
      * be combined into a single failing ServiceResult
      */
+    @SafeVarargs
     public static <T> ServiceResult<Void> processAnyFailuresOrSucceed(ServiceResult<T>... results) {
         return processAnyFailuresOrSucceed(asList(results));
     }

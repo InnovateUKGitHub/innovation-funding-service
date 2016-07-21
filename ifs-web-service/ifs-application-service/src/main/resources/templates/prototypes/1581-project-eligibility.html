@@ -15,11 +15,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Eligibility'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Aptrans Ltd'}, ${'Eligibility'})" th:with="partner=lead" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
@@ -38,19 +38,19 @@
 			<thead>
 				<tr>
 					<th scope="col">Total costs</th>
-					<th scope="col">% grant</th>
-					<th scope="col">Funding sought</th>
-					<th scope="col">Other public sector funding</th>
-					<th scope="col">Contribution to project</th>
+					<th scope="col" class="numeric">% grant</th>
+					<th scope="col" class="numeric">Funding sought</th>
+					<th scope="col" class="numeric">Other public sector funding</th>
+					<th scope="col" class="numeric">Contribution to project</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td>&pound;286,283</td>
-					<td>55%</td>
-					<td>&pound;180,399</td>
-					<td>20,000</td>
-					<td>&pound;85,885</td>
+					<td class="numeric">55%</td>
+					<td class="numeric">&pound;180,399</td>
+					<td class="numeric">20,000</td>
+					<td class="numeric">&pound;85,885</td>
 				</tr>
 			</tbody>
 		</table>
@@ -166,7 +166,7 @@
 
 			<p>All changes must be discussed with the applicant, by raising queries through IFS, before they are made.</p>
 
-			<a href="#">Review all changes to project finances</a>
+			<a href="/prototypes/1581-changes-finances">Review all changes to project finances</a>
 
 		</th:block>
 
@@ -238,7 +238,7 @@
 
 	    <h3 class="heading-medium">Other funding</h3>
 
-	    <div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:remove="tag" />
+	    <div th:include="prototypes/fragments/finance-review-questions :: finance-question-changes" th:remove="tag" />
 
 
 	    <div class="extra-margin">
@@ -259,9 +259,9 @@
 			    </label>
 		    </div>
 
-	    	<input class="button" data-js-modal="approve-eligibility" type="submit" value="Approve eligible costs" />
+	    	<button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
 
-		    <div class="approve-eligibility" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		    <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
@@ -272,12 +272,8 @@
 					<form>
 
 						<div class="form-group">
-			                <label for="rag-rating" class="form-label">Please select the RAG rating before approving</label>
-			                <select name="rag-rating" id="rag-rating" class="form-control width-medium">
-			                	<option value="Green">Green</option>
-			                	<option value="Amber">Amber</option>
-			                	<option value="Red">Red</option>
-			                </select>
+			                <label for="no-days" class="form-label">Number of days</label>
+			                <input type="text" class="width-small" id="no-days" name="no-days" />
 			            </div>
 
 						<hr />
@@ -352,6 +348,14 @@
 			jQuery("#admin-support-2").hide();
 			jQuery("#admin-support-3").hide();
 			jQuery("#admin-support-4").show();
+		}
+	});
+
+	jQuery('input#costs-reviewed').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#approve-eligibility").removeAttr('disabled');
+		}else{
+			jQuery("#approve-eligibility").attr('disabled','disabled');
 		}
 	});
 

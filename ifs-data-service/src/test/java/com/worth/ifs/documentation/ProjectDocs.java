@@ -13,14 +13,17 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ProjectDocs {
     public static final FieldDescriptor[] projectResourceFields = {
-            fieldWithPath("id").description("Id of the project (which will be same as id of corresponding application)"),
+            fieldWithPath("id").description("Id of the project"),
             fieldWithPath("application").description("Application that the project was created from"),
             fieldWithPath("targetStartDate").description("Expected target start date for the project"),
             fieldWithPath("address").description("Address where the project is expected to be executed from"),
             fieldWithPath("durationInMonths").description("Duration that the project is expected to last"),
             fieldWithPath("name").description("The Project's name"),
             fieldWithPath("projectUsers").description("The ids of users with Roles on the Project"),
-            fieldWithPath("submittedDate").description("Date that project details were submitted by lead partner. Null means the details have not yet been submitted")
+            fieldWithPath("submittedDate").description("Date that project details were submitted by lead partner. Null means the details have not yet been submitted"),
+            fieldWithPath("collaborationAgreement").description("Id of the File Entry that contains the Collaboration Agreement of the partner organisations"),
+            fieldWithPath("exploitationPlan").description("Id of the File Entry that contains the Exploitation Plan of the partner organisations"),
+
     };
 
     public static final FieldDescriptor[] projectUserResourceFields = {

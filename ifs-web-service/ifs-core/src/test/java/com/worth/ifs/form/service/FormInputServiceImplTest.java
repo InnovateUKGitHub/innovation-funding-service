@@ -15,7 +15,6 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 public class FormInputServiceImplTest extends BaseServiceUnitTest<FormInputService> {
-
     @Mock
     private FormInputRestService formInputRestService;
 
@@ -53,7 +52,7 @@ public class FormInputServiceImplTest extends BaseServiceUnitTest<FormInputServi
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)).thenReturn(restSuccess(expected));
 
-        List<FormInputResource> response = service.findApplicationInputsByQuestion(questionId);
+        List<FormInputResource> response = service.findAssessmentInputsByQuestion(questionId);
 
         assertSame(expected, response);
         verify(formInputRestService, only()).getByQuestionIdAndScope(questionId, ASSESSMENT);
@@ -72,5 +71,20 @@ public class FormInputServiceImplTest extends BaseServiceUnitTest<FormInputServi
 
         assertSame(expected, response);
         verify(formInputRestService, only()).getByCompetitionIdAndScope(competitionId, APPLICATION);
+    }
+
+    @Test
+    public void findAssessmentInputsByCompetition() throws Exception {
+        List<FormInputResource> expected = newFormInputResource()
+                .build(2);
+
+        Long competitionId = 1L;
+
+        when(formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT)).thenReturn(restSuccess(expected));
+
+        List<FormInputResource> response = service.findAssessmentInputsByCompetition(competitionId);
+
+        assertSame(expected, response);
+        verify(formInputRestService, only()).getByCompetitionIdAndScope(competitionId, ASSESSMENT);
     }
 }

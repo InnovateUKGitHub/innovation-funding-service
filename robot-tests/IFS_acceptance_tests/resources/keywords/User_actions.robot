@@ -539,19 +539,16 @@ the lead applicant invites a registered user
     the user closes the browser
     The guest user opens the browser
 
-Open mailbox and verify the content
-    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
-    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
-    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
-    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
-    Should Not Be Empty    ${EMAIL_MATCH}
-    Delete All Emails
-    close mailbox
+#Open mailbox and verify the content
+#    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
+#    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
+#    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
+#    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+#    Should Not Be Empty    ${EMAIL_MATCH}
+#    Delete All Emails
+#    close mailbox
 
 Open mailbox and confirm received email
-    # TODO
-    #  this keyword has the same functionality as the Open mailbox and verify the content
-    #  once this is reviewed we can remove one of them
     [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
     [Documentation]    This Keyword searches the correct email using regex
     Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}

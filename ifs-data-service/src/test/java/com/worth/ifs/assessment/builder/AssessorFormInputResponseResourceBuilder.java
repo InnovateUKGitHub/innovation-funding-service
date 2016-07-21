@@ -55,6 +55,10 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
         return withArray((value, assessorFormInputResponse) -> setField("value", value, assessorFormInputResponse), values);
     }
 
+    public AssessorFormInputResponseResourceBuilder withFormInputMaxWordCount(Integer... formInputMaxWordCounts) {
+        return withArray((formInputMaxWordCount, assessorFormInputResponse) -> setField("formInputMaxWordCount", formInputMaxWordCount, assessorFormInputResponse), formInputMaxWordCounts);
+    }
+
     public AssessorFormInputResponseResourceBuilder withUpdatedDate(LocalDateTime... updatedDates) {
         return withArray((updatedDate, assessorFormInputResponse) -> setField("updatedDate", updatedDate, assessorFormInputResponse), updatedDates);
     }

@@ -1,14 +1,15 @@
 package com.worth.ifs.application.repository;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+
+import com.worth.ifs.application.domain.Application;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
-
-import com.worth.ifs.application.domain.Application;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -48,5 +49,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     Long countByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> submittedStatusIds);
 
 	Long countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds);
+
+	Long countByCompetitionIdAndApplicationStatusIdNotInAndCompletionGreaterThan(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
+
+	Long countByCompetitionIdAndApplicationStatusIdInAndCompletionLessThanEqual(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
     
 }

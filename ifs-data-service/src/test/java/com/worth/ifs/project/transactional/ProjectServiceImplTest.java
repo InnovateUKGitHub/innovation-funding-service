@@ -7,6 +7,9 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
@@ -19,13 +22,19 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
@@ -35,6 +44,9 @@ import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -776,6 +788,159 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     }
 
+    @Test
+    public void testCreateCollaborationAgreementFileEntry() {
+        assertCreateFile(
+                project::getCollaborationAgreement,
+                (fileToCreate, inputStreamSupplier) ->
+                        service.createCollaborationAgreementFileEntry(123L, fileToCreate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testUpdateCollaborationAgreementFileEntry() {
+        assertUpdateFile(
+                project::getCollaborationAgreement,
+                (fileToUpdate, inputStreamSupplier) ->
+                        service.updateCollaborationAgreementFileEntry(123L, fileToUpdate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileEntryDetails() {
+        assertGetFileDetails(
+                project::setCollaborationAgreement,
+                () -> service.getCollaborationAgreementFileEntryDetails(123L));
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileContents() {
+        assertGetFileContents(
+                project::setCollaborationAgreement,
+                () -> service.getCollaborationAgreementFileContents(123L));
+    }
+
+    @Test
+    public void testDeleteCollaborationAgreementFile() {
+        assertDeleteFile(
+                project::getCollaborationAgreement,
+                project::setCollaborationAgreement,
+                () -> service.deleteCollaborationAgreementFile(123L));
+    }
+
+    @Test
+    public void testCreateExploitationPlanFileEntry() {
+        assertCreateFile(
+                project::getExploitationPlan,
+                (fileToCreate, inputStreamSupplier) ->
+                        service.createExploitationPlanFileEntry(123L, fileToCreate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testUpdateExploitationPlanFileEntry() {
+        assertUpdateFile(
+                project::getExploitationPlan,
+                (fileToUpdate, inputStreamSupplier) ->
+                        service.updateExploitationPlanFileEntry(123L, fileToUpdate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testGetExploitationPlanFileEntryDetails() {
+        assertGetFileDetails(
+                project::setExploitationPlan,
+                () -> service.getExploitationPlanFileEntryDetails(123L));
+    }
+
+    @Test
+    public void testGetExploitationPlanFileContents() {
+        assertGetFileContents(
+                project::setExploitationPlan,
+                () -> service.getExploitationPlanFileContents(123L));
+    }
+
+    @Test
+    public void testDeleteExploitationPlanFile() {
+        assertDeleteFile(
+                project::getExploitationPlan,
+                project::setExploitationPlan,
+                () -> service.deleteExploitationPlanFile(123L));
+    }
+
+    private void assertGetFileContents(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileAndContents>> getFileContentsFn) {
+
+        FileEntry fileToGet = newFileEntry().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntryResource fileResourceToGet = newFileEntryResource().build();
+
+        fileSetter.accept(fileToGet);
+        when(fileServiceMock.getFileByFileEntryId(fileToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
+        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
+
+        ServiceResult<FileAndContents> result = getFileContentsFn.get();
+        assertTrue(result.isSuccess());
+        assertEquals(fileResourceToGet, result.getSuccessObject().getFileEntry());
+        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
+    }
+
+    private void assertCreateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<FileEntryResource>> createFileFn) {
+
+        FileEntryResource fileToCreate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntry createdFile = newFileEntry().build();
+        FileEntryResource createdFileResource = newFileEntryResource().build();
+
+        when(fileServiceMock.createFile(fileToCreate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), createdFile)));
+        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(createdFileResource);
+
+        ServiceResult<FileEntryResource> result = createFileFn.apply(fileToCreate, inputStreamSupplier);
+        assertTrue(result.isSuccess());
+        assertEquals(createdFileResource, result.getSuccessObject());
+        assertEquals(createdFile, fileGetter.get());
+    }
+
+    private void assertGetFileDetails(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileEntryResource>> getFileDetailsFn) {
+        FileEntry fileToGet = newFileEntry().build();
+
+        FileEntryResource fileResourceToGet = newFileEntryResource().build();
+
+        fileSetter.accept(fileToGet);
+        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
+
+        ServiceResult<FileEntryResource> result = getFileDetailsFn.get();
+        assertTrue(result.isSuccess());
+        assertEquals(fileResourceToGet, result.getSuccessObject());
+    }
+
+    private void assertDeleteFile(Supplier<FileEntry> fileGetter, Consumer<FileEntry> fileSetter, Supplier<ServiceResult<Void>> deleteFileFn) {
+        FileEntry fileToDelete = newFileEntry().build();
+
+        fileSetter.accept(fileToDelete);
+        when(fileServiceMock.deleteFile(fileToDelete.getId())).thenReturn(serviceSuccess(fileToDelete));
+
+        ServiceResult<Void> result = deleteFileFn.get();
+        assertTrue(result.isSuccess());
+        assertNull(fileGetter.get());
+
+        verify(fileServiceMock).deleteFile(fileToDelete.getId());
+    }
+
+    private void assertUpdateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<Void>> updateFileFn) {
+        FileEntryResource fileToUpdate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        FileEntry updatedFile = newFileEntry().build();
+        FileEntryResource updatedFileResource = newFileEntryResource().build();
+
+        when(fileServiceMock.updateFile(fileToUpdate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), updatedFile)));
+        when(fileEntryMapperMock.mapToResource(updatedFile)).thenReturn(updatedFileResource);
+
+        ServiceResult<Void> result = updateFileFn.apply(fileToUpdate, inputStreamSupplier);
+        assertTrue(result.isSuccess());
+        assertEquals(updatedFile, fileGetter.get());
+
+        verify(fileServiceMock).updateFile(fileToUpdate, inputStreamSupplier);
+    }
+
     private Project createProjectExpectationsFromOriginalApplication(Application application) {
 
         assertFalse(application.getProcessRoles().isEmpty());
@@ -801,16 +966,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
                 assertEquals(project, matchingProjectUser.get(0).getProject());
             });
-        });
-    }
-
-    private ProcessRole createProcessRoleExpectations(ProcessRole expectedProcessRole) {
-
-        return createLambdaMatcher(processRole -> {
-            assertEquals(expectedProcessRole.getApplication().getId(), processRole.getApplication().getId());
-            assertEquals(expectedProcessRole.getOrganisation().getId(), processRole.getOrganisation().getId());
-            assertEquals(expectedProcessRole.getRole().getId(), processRole.getRole().getId());
-            assertEquals(expectedProcessRole.getUser().getId(), processRole.getUser().getId());
         });
     }
 
