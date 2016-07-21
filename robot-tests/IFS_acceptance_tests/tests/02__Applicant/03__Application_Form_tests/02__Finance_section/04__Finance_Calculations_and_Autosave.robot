@@ -30,10 +30,11 @@ Labour
     ...
     ...    INFUND-1256
     [Tags]    HappyPath
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
+    The row should be removed    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     And the user reloads the page
     Then Totals should be correct    css=#section-total-9    £ 52,174    css=[data-mirror="#section-total-9"]    £ 52,174
     And the applicant edits the working days field
@@ -46,7 +47,7 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736z
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
@@ -60,7 +61,7 @@ Materials
     ...
     ...    INFUND-736
     [Tags]
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
@@ -71,7 +72,7 @@ Materials
 Capital usage
     [Documentation]    INFUND-736
     [Tags]
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     When the applicant fills the 'capital usage' field
     Then Totals should be correct    css=#section-total-12    £ 200    css=[data-mirror="#section-total-12"]    £ 200
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
@@ -84,7 +85,7 @@ Subcontracting costs
     ...    INFUND-736
     ...    INFUND-2303
     [Tags]
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
     And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
@@ -95,7 +96,7 @@ Subcontracting costs
 Travel and subsistence
     [Documentation]    INFUND-736
     [Tags]
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     When the Applicant fills the Travel fields
     Then Totals should be correct    css=#section-total-14    £ 2,000    css=[data-mirror="#section-total-14"]    £ 2,000
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
@@ -106,7 +107,7 @@ Travel and subsistence
 Other costs
     [Documentation]    INFUND-736
     [Tags]
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     When the applicant adds one row for the other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
@@ -116,7 +117,7 @@ Other costs
 Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
     [Tags]
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant selects 'Yes' and fills two rows
@@ -131,7 +132,7 @@ Other Funding
 
 Funding level
     [Tags]
-    #Pending INFUND-4027
+    #Pending INFUND-1821
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
 
@@ -141,15 +142,17 @@ the Applicant fills in the Labour costs for two rows
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=[name^="labour-labourDaysYearly"]
     Input Text    css=[name^="labour-labourDaysYearly"]    230
+    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
+    mouse out    css=input
     Focus    jQuery=button:contains('Add another role')
     the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
-    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
+    Mouse Out    css=input
 
 the applicant edits the working days field
     the user should see the element    css=[name^="labour-labourDaysYearly"]
@@ -241,7 +244,7 @@ the applicant adds one row for the other costs
     focus    css=.app-submit-btn
 
 the user reloads the page
-    Execute Javascript    jQuery('form').attr('data-test','true');
+    #Execute Javascript    jQuery('form').attr('data-test','true');
     Reload page
     sleep    800ms
 
@@ -315,3 +318,7 @@ auto-save should work for the "Grant" field
 The user navigates to the next page
     The user clicks the button/link    css=.next .pagination-label
     Run Keyword And Ignore Error    confirm action
+
+The row should be removed
+    [Arguments]    ${ROW}
+    Wait Until Element Is Not Visible    ${ROW}

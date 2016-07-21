@@ -4,6 +4,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
+...               AND    The user enters the funding level
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Finances    Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
@@ -14,11 +15,53 @@ Resource          ../../../../resources/keywords/User_actions.robot
 Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
+Mark as complete with empty other funding row should be impossible
+    [Documentation]    INFUND-2214
+    [Tags]
+    [Setup]    Run keywords    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
+    ...    AND    Focus    jQuery=button:contains('Add another source of funding')
+    ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
+    When the user marks the finances as complete
+    Then the user should see the element    css=.error-summary-list
+    #Then the user should see an error    You should provide at least 1 source of other funding
+
+Other funding client side
+    [Tags]
+    [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
+    Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
+    and the user should see an error    This field should be 1 or higher
+
+Other funding server side
+    [Documentation]    INFUND-2214
+    [Tags]
+    [Setup]
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
+    And the user marks the finances as complete
+    Then the user should see an error    Funding source cannot be blank
+    And the user should see an error    Please use MM-YYYY format
+    And the user should see an error    This field should be 1 or higher
+    And the user should see the element    css=.error-summary-list
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    ${EMPTY}    ${EMPTY}
+    Then the user should see an error    Funding source cannot be blank
+    And the user should see an error    This field cannot be left blank
+    And the user should see an error    This field should be 1 or higher
+
+Select NO and mark as complete should be possible
+    [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
+    [Tags]
+    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    And the user marks the finances as complete
+    Then the user should see the text in the page    Application overview
+    And the user should see the text in the page    These are the 10 questions which will be marked by assessors
+    [Teardown]    Run keywords    Applicant navigates to the finances of the Robot application
+    ...    AND    Run Keyword And Ignore Error    Focus    jQuery=button:contains("Edit")
+    ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
+
 Labour client side
     [Documentation]    INFUND-844
     [Tags]
     Given the user clicks the button/link    jQuery=button:contains("Labour")
-    #And the user clicks the button/link    jQuery=button:contains('Add another role')
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    -1
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     Then the user gets the expected validation errors    This field should be 1 or higher    This field cannot be left blank
@@ -236,51 +279,6 @@ Funding level server side
     ...    AND    Mouse out    id=cost-financegrantclaim
     ...    AND    Focus    jQuery=button:contains("Mark all as complete")
 
-Mark as complete with empty other funding row should be impossible
-    [Documentation]    INFUND-2214
-    [Tags]
-    [Setup]    Run keywords    Focus    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
-    ...    AND    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
-    ...    AND    Focus    jQuery=button:contains('Add another source of funding')
-    ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
-    When the user marks the finances as complete
-    Then the user should see the element    css=.error-summary-list
-    #Then the user should see an error    You should provide at least 1 source of other funding
-
-Other funding client side
-    [Tags]    Pending
-    [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    #INFUND-4042
-    When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
-    Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
-    and the user should see an error    This field should be 1 or higher
-
-Other funding server side
-    [Documentation]    INFUND-2214
-    [Tags]
-    [Setup]
-    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
-    And the user marks the finances as complete
-    Then the user should see an error    Funding source cannot be blank
-    And the user should see an error    Please use MM-YYYY format
-    And the user should see an error    This field should be 1 or higher
-    And the user should see the element    css=.error-summary-list
-    When the user enters invalid inputs in the other funding fields    ${EMPTY}    ${EMPTY}    ${EMPTY}
-    Then the user should see an error    Funding source cannot be blank
-    And the user should see an error    This field cannot be left blank
-    And the user should see an error    This field should be 1 or higher
-
-Select NO and mark as complete should be possible
-    [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
-    [Tags]
-    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
-    And the user marks the finances as complete
-    Then the user should see the text in the page    Application overview
-    And the user should see the text in the page    These are the 10 questions which will be marked by assessors
-    [Teardown]    Run keywords    Applicant navigates to the finances of the Robot application
-    ...    AND    Run Keyword And Ignore Error    Focus    jQuery=button:contains("Edit")
-    ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
-
 *** Keywords ***
 user selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
@@ -326,3 +324,7 @@ The user gets the expected validation errors
 
 the user selects a radio button
     the user selects the radio button    financePosition-organisationSize    MEDIUM
+
+The user enters the funding level
+    the user selects the radio button    financePosition-organisationSize    SMALL
+    Input Text    id=cost-financegrantclaim    20
