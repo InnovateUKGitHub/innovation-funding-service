@@ -23,8 +23,8 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public void update(MilestoneResource milestone, Long competitionId) {
-        milestoneRestService.update(milestone, competitionId).getSuccessObjectOrThrowException();
+    public void update(List<MilestoneResource> milestones, Long competitionId) {
+        milestoneRestService.update(milestones, competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override

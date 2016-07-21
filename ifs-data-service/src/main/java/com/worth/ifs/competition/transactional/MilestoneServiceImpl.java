@@ -36,17 +36,20 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         return serviceSuccess ((List) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
     }
 
+
     @Override
-    public ServiceResult<MilestoneResource> update(Long id, MilestoneResource milestones) {
-        Milestone milestone = milestoneMapper.mapToDomain(milestones);
-        milestone = milestoneRepository.save(milestone);
-        return serviceSuccess(milestoneMapper.mapToResource(milestone));
+    public ServiceResult<Void> update(Long id, List<MilestoneResource> milestones) {
+        milestones.forEach(m -> {
+            Milestone updatedMilestone = milestoneMapper.mapToDomain(m);
+            updatedMilestone = milestoneRepository.save(updatedMilestone);
+            milestoneMapper.mapToResource(updatedMilestone);
+        });
+        return serviceSuccess();
     }
 
     @Override
     public ServiceResult<MilestoneResource> create() {
         Milestone milestone = new Milestone();
-        //todo save all the milestones in list
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
     }
 }

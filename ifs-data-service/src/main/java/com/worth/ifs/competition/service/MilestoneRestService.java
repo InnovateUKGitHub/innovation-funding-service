@@ -12,7 +12,7 @@ public interface MilestoneRestService {
 
     RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long competitionId);
 
-    RestResult<Void> update(MilestoneResource milestones, Long competitionId);
+    RestResult<Void> update(List<MilestoneResource> milestones, Long competitionId);
 
     RestResult<MilestoneResource> create();
 }

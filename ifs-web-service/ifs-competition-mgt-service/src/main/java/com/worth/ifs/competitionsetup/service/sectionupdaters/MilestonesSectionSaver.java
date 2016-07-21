@@ -63,132 +63,135 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         return newMilestones;
     }
 
-    private void updateMilestonesForCompetition(List<MilestoneResource> milestones, MilestonesForm milestonesForm,
+    private List<MilestoneResource> updateMilestonesForCompetition(List<MilestoneResource> milestones, MilestonesForm milestonesForm,
                                            List<Long> milestonesIdList, CompetitionResource competition) {
+        List<MilestoneResource> updateMilestone = new ArrayList<>();
         milestones.forEach(milestone -> {
             if (MilestoneName.OPEN_DATE.equals(milestone.getName())){
-                updateOpenDay(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateOpenDay(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.BRIEFING_EVENT.equals(milestone.getName())) {
-                updateBriefingEvent(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateBriefingEvent(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.SUBMISSION_DATE.equals(milestone.getName())) {
-                updateSubmissionDate(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateSubmissionDate(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.ALLOCATE_ASSESSORS.equals(milestone.getName())) {
-                updateAllocateAssessors(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateAllocateAssessors(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.ASSESSOR_BRIEFING.equals(milestone.getName())) {
-                updateAssessorBriefing(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateAssessorBriefing(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.ASSESSOR_ACCEPTS.equals(milestone.getName())) {
-                updateAssessorAccepts(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateAssessorAccepts(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.ASSESSOR_DEADLINE.equals(milestone.getName())) {
-                updateAssessorDeadline(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateAssessorDeadline(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.LINE_DRAW.equals(milestone.getName())) {
-                updateLineDraw(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateLineDraw(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.ASSESSMENT_PANEL.equals(milestone.getName())) {
-                updateAssessmentPanel(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateAssessmentPanel(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.PANEL_DATE.equals(milestone.getName())) {
-                updatePanelDate(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updatePanelDate(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.FUNDERS_PANEL.equals(milestone.getName())) {
-                updateFundersPanel(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateFundersPanel(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.NOTIFICATIONS.equals(milestone.getName())) {
-                updateNotifications(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateNotifications(milestone, milestonesForm, milestonesIdList, competition));
             }else if (MilestoneName.RELEASE_FEEDBACK.equals(milestone.getName())) {
-                updateReleaseFeedback(milestone, milestonesForm, milestonesIdList, competition);
+                updateMilestone.add(updateReleaseFeedback(milestone, milestonesForm, milestonesIdList, competition));
             }
         });
+        milestoneService.update(updateMilestone, competition.getId());
+        return null;
     }
 
     private LocalDateTime populateDate(Integer day, Integer month, Integer year){
         return LocalDateTime.of(year, month, day, 0, 0);
     }
 
-    private void updateOpenDay(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateOpenDay(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getOpenDateDay(), milestonesForm.getOpenDateMonth(), milestonesForm.getOpenDateYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateBriefingEvent(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateBriefingEvent(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getBriefingEventDay(), milestonesForm.getBriefingEventMonth(), milestonesForm.getBriefingEventYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateSubmissionDate(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateSubmissionDate(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getSubmissionDateDay(), milestonesForm.getSubmissionDateMonth(), milestonesForm.getSubmissionDateYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateAllocateAssessors(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateAllocateAssessors(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getAllocateAssessorsDay(), milestonesForm.getAllocateAssessorsMonth(), milestonesForm.getAllocateAssessorsYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateAssessorBriefing(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateAssessorBriefing(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getAssessorBriefingDay(), milestonesForm.getAssessorBriefingMonth(), milestonesForm.getAssessorBriefingYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateAssessorAccepts(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateAssessorAccepts(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getAssessorAcceptsDay(), milestonesForm.getAssessorAcceptsMonth(), milestonesForm.getAssessorAcceptsYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateAssessorDeadline(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateAssessorDeadline(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getAssessorDeadlineDay(), milestonesForm.getAssessorDeadlineMonth(), milestonesForm.getAssessorDeadlineYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateLineDraw(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateLineDraw(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getLineDrawDay(), milestonesForm.getLineDrawMonth(), milestonesForm.getLineDrawYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateAssessmentPanel(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateAssessmentPanel(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getAssessmentPanelDay(), milestonesForm.getAssessmentPanelMonth(), milestonesForm.getAssessmentPanelYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updatePanelDate(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updatePanelDate(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getPanelDateDay(), milestonesForm.getPanelDateMonth(), milestonesForm.getPanelDateYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateFundersPanel(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateFundersPanel(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getFundersPanelDay(), milestonesForm.getFundersPanelMonth(), milestonesForm.getFundersPanelYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateNotifications(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateNotifications(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getNotificationsDay(), milestonesForm.getNotificationsMonth(), milestonesForm.getNotificationsYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 
-    private void updateReleaseFeedback(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
+    private MilestoneResource updateReleaseFeedback(MilestoneResource milestone, MilestonesForm milestonesForm, List<Long> milestonesIdList, CompetitionResource competition) {
         milestone.setDate(populateDate(milestonesForm.getReleaseFeedbackDay(), milestonesForm.getReleaseFeedbackMonth(), milestonesForm.getReleaseFeedbackYear()));
         milestone.setCompetition(competition.getId());
         milestonesIdList.add(milestone.getId());
-        milestoneService.update(milestone, competition.getId());
+        return milestone;
     }
 	
 	@Override
