@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
     </head>
@@ -35,8 +35,8 @@
                     <div th:replace="question-type/form-elements :: readonly-file-download (filename=${model.appendixDetails.filename}, filesizeKbytes=${model.appendixDetails.filesizeKbytes}, fileDescription=${model.appendixFileDescription}, downloadURL=@{/})" />
                 </div>
 
-                <div class="question" th:each="formInput : ${model.assessmentFormInputs}" th:id="'form-input-'+${formInput.id}">
-                    <div th:replace="fragments/assessment-types :: ${formInput.formInputTypeTitle} (formInput=${formInput})" />
+                <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
+                    <div th:replace="fragments/assessment-types :: ${field.formInputTypeTitle} (field=${field})" />
                 </div>
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
