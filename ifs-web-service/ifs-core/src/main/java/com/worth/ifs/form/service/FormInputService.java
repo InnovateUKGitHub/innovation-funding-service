@@ -9,6 +9,12 @@ import java.util.List;
  */
 public interface FormInputService {
     FormInputResource getOne(Long formInputId);
-    List<FormInputResource> findByQuestion(Long questionId);
-    List<FormInputResource> findByCompetitionId(Long competitionId);
+
+    List<FormInputResource> findApplicationInputsByQuestion(Long questionId);
+
+    List<FormInputResource> findAssessmentInputsByQuestion(Long questionId);
+
+    List<FormInputResource> findApplicationInputsByCompetition(Long competitionId);
+
+    List<FormInputResource> findAssessmentInputsByCompetition(Long competitionId);
 }

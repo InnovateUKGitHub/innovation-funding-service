@@ -1,8 +1,7 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.resource.FormInputResource;
 
 import java.util.List;
@@ -26,6 +25,11 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return new FormInputResourceBuilder(actions);
     }
 
+    @Override
+    protected FormInputResource createInitial() {
+        return new FormInputResource();
+    }
+
     public static FormInputResourceBuilder newFormInputResource() {
         return new FormInputResourceBuilder(emptyList())
                 .with(uniqueIds())
@@ -36,8 +40,8 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((id, formInput) -> formInput.setId(id), ids);
     }
 
-    public FormInputResourceBuilder withWordCount(Integer... wordCount) {
-        return withArray((id, formInput) -> setField("wordCount", id, formInput), wordCount);
+    public FormInputResourceBuilder withWordCount(Integer... wordCounts) {
+        return withArray((wordCount, formInput) -> setField("wordCount", wordCount, formInput), wordCounts);
     }
 
     public FormInputResourceBuilder withFormInputType(Long formInputType) {
@@ -48,8 +52,11 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return with(formInput -> formInput.setFormInputTypeTitle(formInputTypeTitle));
     }
 
-    @Override
-    protected FormInputResource createInitial() {
-        return new FormInputResource();
+    public FormInputResourceBuilder withPriority(Integer... priorities) {
+        return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
+    }
+
+    public FormInputResourceBuilder withScope(FormInputScope... scopes) {
+        return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 }

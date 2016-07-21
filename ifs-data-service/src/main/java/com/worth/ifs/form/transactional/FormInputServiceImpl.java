@@ -24,10 +24,7 @@ import com.worth.ifs.form.mapper.FormInputTypeMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseCommand;
-import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.form.resource.FormInputTypeResource;
+import com.worth.ifs.form.resource.*;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 
@@ -63,8 +60,18 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
+    public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope) {
+        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScope(questionId, scope)));
+    }
+
+    @Override
     public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
         return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionId(competitionId)));
+    }
+
+    @Override
+    public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndScope(competitionId, scope)));
     }
 
     private ServiceResult<FormInput> findFormInputEntity(Long id) {

@@ -35,8 +35,8 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
         return new ProcessRoleResource();
     }
 
-    public ProcessRoleResourceBuilder withApplicationId(final Long... ids) {
-        return withArray((id, processRoleResource) -> setField("application", id, processRoleResource), ids);
+    public ProcessRoleResourceBuilder withApplication(final Long... applications) {
+        return withArray((application, processRoleResource) -> setField("application", application, processRoleResource), applications);
     }
 
     public ProcessRoleResourceBuilder withUser(UserResource... users) {

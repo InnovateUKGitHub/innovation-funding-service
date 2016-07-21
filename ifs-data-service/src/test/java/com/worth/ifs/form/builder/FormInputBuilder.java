@@ -1,8 +1,10 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.domain.FormInputType;
 
 import java.util.List;
@@ -26,14 +28,23 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return new FormInputBuilder(actions);
     }
 
+    @Override
+    protected FormInput createInitial() {
+        return new FormInput();
+    }
+
     public static FormInputBuilder newFormInput() {
         return new FormInputBuilder(emptyList())
                 .with(uniqueIds())
                 .with(idBasedDescriptions("Description "));
     }
 
-    public FormInputBuilder withWordCount(Integer... wordCount) {
-        return withArray((id, formInput) -> setField("wordCount", id, formInput), wordCount);
+    public FormInputBuilder withId(Long... ids) {
+        return withArray(BuilderAmendFunctions::setId, ids);
+    }
+
+    public FormInputBuilder withWordCount(Integer... wordCounts) {
+        return withArray((wordCount, formInput) -> setField("wordCount", wordCount, formInput), wordCounts);
     }
 
     public FormInputBuilder withFormInputType(FormInputType formInputType) {
@@ -41,13 +52,14 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
     }
 
     public FormInputBuilder withQuestion(Question... questions) {
-        return withArray((id, question) -> setField("question", id, question), questions);
+        return withArray((question, formInput) -> setField("question", question, formInput), questions);
     }
 
+    public FormInputBuilder withPriority(Integer... priorities) {
+        return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
+    }
 
-
-    @Override
-    protected FormInput createInitial() {
-        return new FormInput();
+    public FormInputBuilder withScope(FormInputScope... scopes) {
+        return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 }
