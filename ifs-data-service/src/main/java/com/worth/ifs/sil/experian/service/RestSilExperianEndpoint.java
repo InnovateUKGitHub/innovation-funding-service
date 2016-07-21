@@ -38,21 +38,21 @@ public class RestSilExperianEndpoint implements SilExperianEndpoint {
 
     @Override
     public ServiceResult<ValidationResult> validate(AccountDetails accountDetails) {
-        final Either<ResponseEntity<SilError>, ResponseEntity<ValidationResult>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails, ValidationResult.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
+        final Either<ResponseEntity<SilError>, ResponseEntity<ValidationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails, ValidationResultWrapper.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if(response.isLeft()){
             return serviceFailure(new Error(EXPERIAN_VALIDATION_FAILED));
         } else {
-            return serviceSuccess(response.getRight().getBody());
+            return serviceSuccess(response.getRight().getBody().getValidationResult());
         }
     }
 
     @Override
     public ServiceResult<VerificationResult> verify(AccountDetails accountDetails) {
-        final Either<ResponseEntity<SilError>, ResponseEntity<VerificationResult>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianVerify, accountDetails, VerificationResult.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
+        final Either<ResponseEntity<SilError>, ResponseEntity<VerificationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianVerify, accountDetails, VerificationResultWrapper.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if(response.isLeft()){
             return serviceFailure(new Error(EXPERIAN_VERIFICATION_FAILED));
         } else {
-            return serviceSuccess(response.getRight().getBody());
+            return serviceSuccess(response.getRight().getBody().getVerificationResult());
         }
     }
 }

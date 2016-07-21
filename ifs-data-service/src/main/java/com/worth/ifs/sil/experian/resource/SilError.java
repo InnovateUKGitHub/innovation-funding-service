@@ -1,21 +1,20 @@
 package com.worth.ifs.sil.experian.resource;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-@JsonRootName("")
 public class SilError {
     private String code;
+    private String type;
     private String message;
     private String fields;
+    private String description;
 
     public SilError() {}
 
-    public SilError(String code, String message, String fields) {
+    public SilError(String code, String type, String message, String fields, String description) {
         this.code = code;
+        this.type = type;
         this.message = message;
         this.fields = fields;
+        this.description = description;
     }
 
     public String getCode() {
@@ -42,27 +41,19 @@ public class SilError {
         this.fields = fields;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SilError error = (SilError) o;
-
-        return new EqualsBuilder()
-                .append(code, error.code)
-                .append(message, error.message)
-                .append(fields, error.fields)
-                .isEquals();
+    public String getType() {
+        return type;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(code)
-                .append(message)
-                .append(fields)
-                .toHashCode();
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -8,6 +8,8 @@ public class AccountDetails {
     private String accountNumber;
     private String companyName;
     private String registrationNumber;
+    private String firstName = "NA";
+    private String lastName = "NA";
     private Address address;
 
     public AccountDetails() {}
@@ -58,6 +60,14 @@ public class AccountDetails {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     @Override

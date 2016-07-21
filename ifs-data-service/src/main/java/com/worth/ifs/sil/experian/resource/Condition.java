@@ -5,12 +5,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Condition {
     private String severity;
-    private String code;
+    private Integer code;
     private String description;
 
     public Condition() {}
 
-    public Condition(String severity, String code, String description) {
+    public Condition(String severity, Integer code, String description) {
         this.severity = severity;
         this.code = code;
         this.description = description;
@@ -24,11 +24,11 @@ public class Condition {
         this.severity = severity;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
@@ -39,6 +39,7 @@ public class Condition {
     public void setDescription(String description) {
         this.description = description;
     }
+
 
     @Override
     public boolean equals(Object o) {

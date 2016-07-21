@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Entity for persisting Bank Details for organisations associated with a project.
@@ -42,6 +43,9 @@ public class BankDetails {
     private boolean manualApproval;
 
     private boolean verified;
+
+    @OneToMany(mappedBy = "bankDetails", cascade = CascadeType.ALL)
+    private List<VerificationCondition> verificationConditions;
 
     public Long getId() {
         return id;
@@ -169,5 +173,17 @@ public class BankDetails {
                 .append(manualApproval)
                 .append(verified)
                 .toHashCode();
+    }
+
+    public boolean isRegistrationNumberMatched() {
+        return registrationNumberMatched;
+    }
+
+    public List<VerificationCondition> getVerificationConditions() {
+        return verificationConditions;
+    }
+
+    public void setVerificationConditions(List<VerificationCondition> verificationConditions) {
+        this.verificationConditions = verificationConditions;
     }
 }

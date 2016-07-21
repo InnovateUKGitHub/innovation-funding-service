@@ -1,10 +1,7 @@
 package com.worth.ifs.sil.experian.resource;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-
 import java.util.List;
 
-@JsonRootName(value = "VerificationResult")
 public class VerificationResult {
     private String personalDetailsScore;
     private String addressScore;

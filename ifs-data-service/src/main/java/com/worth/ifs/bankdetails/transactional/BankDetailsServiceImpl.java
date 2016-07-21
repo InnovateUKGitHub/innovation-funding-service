@@ -3,6 +3,7 @@ package com.worth.ifs.bankdetails.transactional;
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.bankdetails.domain.VerificationCondition;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.mapper.SILBankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
@@ -147,6 +148,20 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                     if(verificationResult.getRegNumberScore() != null) {
                         bankDetails.setRegistrationNumberMatched(verificationResult.getRegNumberScore().equals("Match"));
                     }
+
+                    List<Condition> conditions = verificationResult.getConditions();
+
+                    if(conditions != null && conditions.size() > 0){
+                        bankDetails.setVerificationConditions(conditions.stream().map(silCondition -> {
+                            VerificationCondition verificationCondition = new VerificationCondition();
+                            verificationCondition.setCode(silCondition.getCode());
+                            verificationCondition.setSeverity(silCondition.getSeverity());
+                            verificationCondition.setDescription(silCondition.getDescription());
+                            verificationCondition.setBankDetails(bankDetails);
+                            return verificationCondition;
+                        }).collect(Collectors.toList()));
+                    }
+
                     bankDetails.setVerified(true);
 
                     bankDetailsRepository.save(bankDetails);

@@ -30,11 +30,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public abstract class AbstractRestTemplateAdaptor {
     private final static Log LOG = LogFactory.getLog(AbstractRestTemplateAdaptor.class);
 
-    private final static ObjectMapper objectMapper = new ObjectMapper();
-
-    private final static ObjectMapper rootWrappingObjectMapper = new ObjectMapper().
-            configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true).
-            configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+    private final static ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -95,17 +91,6 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     @RestCacheInvalidateResult
-    public <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntityAndWrapRootInResponse(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        try {
-            ResponseEntity<String> asString = restPostWithEntity(path, postEntity, String.class);
-            return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            LOG.error(e);
-            return handleSuccessOrFailureJsonResponse(new ResponseEntity<>(e.getResponseBodyAsString(), e.getStatusCode()), responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
-        }
-    }
-
-    @RestCacheInvalidateResult
     public <T> ResponseEntity<T> restPutWithEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(path, PUT, jsonEntity(null), c);
     }
@@ -148,19 +133,15 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     protected final <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> handleSuccessOrFailureJsonResponse(ResponseEntity<String> asString, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return handleSuccessOrFailureJsonResponse(false, asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
-    }
-
-    protected final <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> handleSuccessOrFailureJsonResponse(boolean wrapRootInResponseJson, ResponseEntity<String> asString, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
 
         if (allExpectedSuccessStatusCodes.contains(asString.getStatusCode())) {
-            return fromJson(asString.getBody(), responseType, wrapRootInResponseJson).mapLeftOrRight(
+            return fromJson(asString.getBody(), responseType).mapLeftOrRight(
                     failure -> left(new ResponseEntity<>((R) null, INTERNAL_SERVER_ERROR)),
                     success -> right(new ResponseEntity<>(success, asString.getStatusCode()))
             );
         } else {
-            return fromJson(asString.getBody(), failureType, wrapRootInResponseJson).mapLeftOrRight(
+            return fromJson(asString.getBody(), failureType).mapLeftOrRight(
                     failure -> left(new ResponseEntity<>((R) null, INTERNAL_SERVER_ERROR)),
                     success -> left(new ResponseEntity<>(success, asString.getStatusCode()))
             );
@@ -186,21 +167,13 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     private <T> Either<Void, T> fromJson(String json, Class<T> responseType) {
-        return fromJson(json, responseType, false);
-    }
-
-    private <T> Either<Void, T> fromJson(String json, Class<T> responseType, boolean wrapRootInJson) {
         if (Void.class.isAssignableFrom(responseType) && isBlank(json)) {
             return right(null);
         }
         try {
-            if(wrapRootInJson) {
-                return right(rootWrappingObjectMapper.readValue(json, responseType));
-            } else {
-                return right(objectMapper.readValue(json, responseType));
-            }
+            return right(objectMapper.readValue(json, responseType));
         } catch (IOException e) {
-            LOG.error(e);
+        	LOG.error(e);
             return left();
         }
     }
