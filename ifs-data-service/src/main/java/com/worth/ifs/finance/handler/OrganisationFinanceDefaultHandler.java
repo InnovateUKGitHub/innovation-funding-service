@@ -30,7 +30,6 @@ import java.util.Map;
 @Component
 public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHandler {
     private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
-    private EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
     @Autowired
     private QuestionService questionService;
@@ -76,29 +75,31 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
+    	Map<CostType, CostCategory> costCategories = createCostCategories();
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
-        createCostCategories();
-        addCostsToCategories(costs);
-        calculateTotals();
+        costCategories = addCostsToCategories(costCategories, costs);
+        costCategories = calculateTotals(costCategories);
         return costCategories;
     }
 
     @Override
     public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-        getOrganisationFinances(applicationFinanceId);
-        resetCosts();
-        return costCategories;
+    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
+        return resetCosts(costCategories);
     }
 
-    private void createCostCategories() {
+    private Map<CostType, CostCategory> createCostCategories() {
+    	Map<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
         for(CostType costType : CostType.values()) {
             CostCategory costCategory = createCostCategoryByType(costType);
             costCategories.put(costType, costCategory);
         }
+        return costCategories;
     }
 
-    private void addCostsToCategories(List<Cost> costs) {
-        costs.stream().forEach(c -> addCostToCategory(c));
+    private Map<CostType, CostCategory> addCostsToCategories(Map<CostType, CostCategory> costCategories, List<Cost> costs) {
+        costs.stream().forEach(c -> addCostToCategory(costCategories, c));
+        return costCategories;
     }
 
     /**
@@ -106,30 +107,33 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
      * are added to a specific Category (e.g. labour).
      * @param cost Cost to be added
      */
-    private void addCostToCategory(Cost cost) {
+    private Map<CostType, CostCategory> addCostToCategory(Map<CostType, CostCategory> costCategories, Cost cost) {
         CostType costType = CostType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
         CostHandler costHandler = getCostHandler(costType);
         CostItem costItem = costHandler.toCostItem(cost);
         CostCategory costCategory = costCategories.get(costType);
         costCategory.addCost(costItem);
+        return costCategories;
     }
 
-    private void calculateTotals() {
+    private Map<CostType, CostCategory> calculateTotals(Map<CostType, CostCategory> costCategories) {
         costCategories.values()
                 .forEach(cc -> cc.calculateTotal());
-        calculateOverheadTotal();
+        return calculateOverheadTotal(costCategories);
     }
 
-    private void calculateOverheadTotal() {
+    private Map<CostType, CostCategory> calculateOverheadTotal(Map<CostType, CostCategory> costCategories) {
         CostCategory labourCostCategory = costCategories.get(CostType.LABOUR);
         OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(CostType.OVERHEADS);
         overheadCategory.setLabourCostTotal(labourCostCategory.getTotal());
         overheadCategory.calculateTotal();
+        return costCategories;
     }
 
-    private void resetCosts() {
+    private Map<CostType, CostCategory> resetCosts(Map<CostType, CostCategory> costCategories) {
         costCategories.values()
                 .forEach(cc -> cc.setCosts(new ArrayList<>()));
+        return costCategories;
     }
 
     @Override
