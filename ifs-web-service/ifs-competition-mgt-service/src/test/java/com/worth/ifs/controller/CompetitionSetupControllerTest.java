@@ -10,9 +10,11 @@ import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competitionsetup.controller.CompetitionSetupController;
+import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.fixtures.CompetitionCoFundersFixture;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
@@ -257,6 +259,36 @@ public class CompetitionSetupControllerTest {
                 .andExpect(view().name("competition/setup"));
         
         verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testCoFundersForCompetition() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withActivityCode("Activity Code")
+                .withInnovateBudget("Innovate Budget")
+                .withFunder("Funder")
+                .withFunderBudget(1234D)
+                .withCompetitionCode("c123")
+                .withPafCode("p123")
+                .withBudgetCode("b123")
+                .withCompetitionStatus(Status.COMPETITION_SETUP)
+                .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
+                .withId(8L).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional")
+                .param("activityCode", "a123")
+                .param("pafNumber", "p123")
+                .param("competitionCode", "c123")
+                .param("funder", "funder")
+                .param("funderBudget", "1")
+                .param("budgetCode", "b123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(any(AdditionalInfoForm.class),
+                any(CompetitionResource.class), any(CompetitionSetupSection.class));
     }
 
 }

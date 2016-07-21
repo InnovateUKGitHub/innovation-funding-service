@@ -6,6 +6,8 @@ import javax.persistence.*;
 
 /**
  * Created by skistapur on 18/07/2016.
+ *
+ * Entity model to store the Competition Co-Funders.
  */
 @Entity
 public class CompetitionCoFunder extends DomainObject {
@@ -54,28 +56,6 @@ public class CompetitionCoFunder extends DomainObject {
 
     public void setCoFunderBudget(Double coFunderBudget) {
         this.coFunderBudget = coFunderBudget;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CompetitionCoFunder that = (CompetitionCoFunder) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (coFunder != null ? !coFunder.equals(that.coFunder) : that.coFunder != null) return false;
-        return coFunderBudget != null ? coFunderBudget.equals(that.coFunderBudget) : that.coFunderBudget == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (coFunder != null ? coFunder.hashCode() : 0);
-        result = 31 * result + (coFunderBudget != null ? coFunderBudget.hashCode() : 0);
-        return result;
     }
 
     @Override

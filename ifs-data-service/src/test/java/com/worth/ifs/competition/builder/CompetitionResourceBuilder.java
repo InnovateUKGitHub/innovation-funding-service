@@ -2,6 +2,7 @@ package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.competition.resource.CollaborationLevel;
+import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.LeadApplicantType;
@@ -148,6 +149,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withFunderBudget(Double... funderBudgets) {
         return withArray((funderBudget, object) -> setField("funderBudget", funderBudget, object), funderBudgets);
+    }
+
+    public CompetitionResourceBuilder withCoFunders(List<CompetitionCoFunderResource> coFundersList) {
+        return withList(coFundersList, (coFunders, section) -> section.setCoFunders(coFundersList));
     }
 
     @Override

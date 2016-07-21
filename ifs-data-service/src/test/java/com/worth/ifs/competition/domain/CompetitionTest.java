@@ -78,6 +78,28 @@ public class CompetitionTest {
         competition.setInnovateBudget(innovateBudget);
         competition.setFunder(funder);
         competition.setFunderBudget(funderBudget);
+
+        competition.setCoFunders(getTestCoFunders(competition));
+    }
+
+
+    private List<CompetitionCoFunder> getTestCoFunders(Competition competition) {
+        List<CompetitionCoFunder> returnList = new ArrayList<>();
+        CompetitionCoFunder coFunder1 = new CompetitionCoFunder();
+        coFunder1.setId(1L);
+        coFunder1.setCompetition(competition);
+        coFunder1.setCoFunder("CoFunder1");
+        coFunder1.setCoFunderBudget(1D);
+        returnList.add(coFunder1);
+
+        CompetitionCoFunder coFunder2 = new CompetitionCoFunder();
+        coFunder2.setId(2L);
+        coFunder2.setCompetition(competition);
+        coFunder2.setCoFunder("CoFunder2");
+        coFunder2.setCoFunderBudget(2D);
+        returnList.add(coFunder2);
+
+        return returnList;
     }
 
     @Test
@@ -94,6 +116,7 @@ public class CompetitionTest {
         assertEquals(competition.getInnovateBudget(), innovateBudget);
         assertEquals(competition.getFunder(), funder);
         assertEquals(competition.getFunderBudget(), funderBudget);
+        assertEquals(competition.getCoFunders().size(), getTestCoFunders(competition).size());
     }
 
     @Test
