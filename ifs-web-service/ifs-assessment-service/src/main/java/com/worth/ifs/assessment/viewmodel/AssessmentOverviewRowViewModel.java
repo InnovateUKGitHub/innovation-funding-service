@@ -10,6 +10,9 @@ import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+/**
+ * Holder of model attributes for response information displayed on the Assessment Overview shown as part of the assessment journey.
+ */
 public class AssessmentOverviewRowViewModel {
 
     private static final String SCOPE_INPUT_TYPE = "assessor_application_in_scope";

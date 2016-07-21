@@ -36,6 +36,9 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
+/**
+ * Build the model for Assessment Overview view.
+ */
 @Component
 public class AssessmentOverviewModelPopulator {
     @Autowired
