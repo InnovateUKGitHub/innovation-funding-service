@@ -1,6 +1,8 @@
 package com.worth.ifs.application.form;
 
 import com.worth.ifs.controller.BaseBindingResultTarget;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -52,5 +54,29 @@ public class Form extends BaseBindingResultTarget {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Form form = (Form) o;
+
+        return new EqualsBuilder()
+                .append(formInput, form.formInput)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(formInput)
+                .toHashCode();
     }
 }
