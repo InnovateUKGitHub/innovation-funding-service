@@ -23,7 +23,7 @@
         <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Declaration of interest':'Edit your declaration of interest')}">Declaration of interest</h1>
     </div>
 
-    <p>If you, or a member of your close family, is connected to a body who conducts material financial transactions, this has to be formally reported by Innovate UK.</p>
+    <p>Innovate UK are required to formally report all material financial transactions with bodies connected with any independent assessors or any of their close family members.</p>
 
     <p>Please complete the sections below, declaring all interests held during the financial year ending 31 March 2017.</p>
 
@@ -35,23 +35,18 @@
 		<fieldset>
 			<h3 class="heading-medium no-margin">Principal employer and role</h3>
 			<legend class="visuallyhidden">Principal employer and role</legend>
-			<p class="form-hint">Tell us about your current employer and position</p>
-			<div class="grid-row extra-margin">
-				<div class="column-half">
-					<div class="form-group">
-						<label for="doi-principal-employer" class="form-label-bold">Prinicipal employer</label>
-						<input name="doi-principal-employer" id="doi-principal-employer" class="form-control width-full" th:value="(${param.edit != null} ? 'Company A' : '')"/>
-					</div>
-				</div>
-
-				<div class="column-half">
-					<div class="form-group">
-						<label for="doi-principal-employer-role" class="form-label-bold">Role</label>
-						<input name="doi-principal-employer-role" id="doi-principal-employer-role" class="form-control width-full" th:value="(${param.edit != null} ? 'Job Role X' : '')"/>
-					</div>
-				</div>
+			<p class="form-hint extra-margin-bottom">Tell us about your current employer and position</p>
+		
+			<div class="form-group">
+				<label for="doi-principal-employer" class="form-label-bold">Prinicipal employer</label>
+				<input name="doi-principal-employer" id="doi-principal-employer" class="form-control width-full" th:value="(${param.edit != null} ? 'Company A' : '')"/>
 			</div>
-
+		
+			<div class="form-group">
+				<label for="doi-principal-employer-role" class="form-label-bold">Role</label>
+				<input name="doi-principal-employer-role" id="doi-principal-employer-role" class="form-control width-full" th:value="(${param.edit != null} ? 'Job Role X' : '')"/>
+			</div>
+			
 			<div class="form-group">
 				<label for="doi-affiliations" class="form-label-bold">Professional affiliations</label>
 				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company affiliation example</div></textarea>
@@ -60,71 +55,144 @@
 
 
 		<fieldset class="extra-margin">
-			<h2 class="heading-medium no-margin">Appointments, directorships and consultancies</h2>
-			<legend class="visuallyhidden">Appointments, directorships and consultancies</legend>
-			<div class="grid-row extra-margin">
-				<div class="column-half">
-					<div class="form-group">
-						<label for="doi-organisation" class="form-label-bold">Organisation</label>
-						<input name="doi-organisation" id="doi-organisation" class="form-control width-full" th:value="(${param.edit != null} ? 'Example organisation' : '')"/>
-					</div>
-				</div>
-
-				<div class="column-half">
-					<div class="form-group">
-						<label for="doi-organisation-position" class="form-label-bold">Position</label>
-						<input name="doi-organisation-position" id="doi-organisation-position" class="form-control width-full" th:value="(${param.edit != null} ? 'Example position' : '')"/>
-					</div>
-				</div>
-			</div>
-			<p class="alignright">
-				<a href="#">Add another position</a>
-			</p>
+			<h2 class="heading-small no-margin">Do you have any appointments, directorships or consultancies?</h2>
+			<legend class="visuallyhidden">Do you have any appointments, directorships or consultancies?</legend>
 
 			<div class="form-group">
-				<label for="doi-pecuniary" class="form-label-bold">Other financial interests</label>
+				<fieldset class="inline">
+					<label class="block-label" for="appointments-1">
+						<input id="appointments-1" name="appointments-group" value="Yes" type="radio" />
+						Yes
+					</label>
+					<label class="block-label" for="appointments-2">
+						<input id="appointments-2" name="appointments-group" value="No" type="radio" />
+						No
+					</label>
+				</fieldset>
+			</div>
+			
+
+			<div class="visuallyhidden" id="add-appointments">
+
+				<div class="grid-row extra-margin">
+					<div class="column-half">
+						<div class="form-group">
+							<label for="doi-organisation" class="form-label-bold">Organisation</label>
+							<input name="doi-organisation" id="doi-organisation" class="form-control width-full" th:value="(${param.edit != null} ? 'Example organisation' : '')"/>
+						</div>
+					</div>
+
+					<div class="column-half">
+						<div class="form-group">
+							<label for="doi-organisation-position" class="form-label-bold">Position</label>
+							<input name="doi-organisation-position" id="doi-organisation-position" class="form-control width-full" th:value="(${param.edit != null} ? 'Example position' : '')"/>
+						</div>
+					</div>
+				</div>
+
+				<p class="alignright">
+					<a href="#">Add another position</a>
+				</p>
+
+			</div>
+
+
+
+			<div class="form-group">
+				<h2 class="heading-small">Do you have any other pecuniary interests?</h2>
 				<p class="form-hint">Tell us about any other organisations in which you have a position or investment from which you could benefit financially.</p>
-				<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full"></textarea>
+				
+				<div class="form-group">
+					<fieldset class="inline">
+						<label class="block-label" for="pecuniary-1">
+							<input id="pecuniary-1" name="pecuniary-group" value="Yes" type="radio" />
+							Yes
+						</label>
+						<label class="block-label" for="pecuniary-2">
+							<input id="pecuniary-2" name="pecuniary-group" value="No" type="radio" />
+							No
+						</label>
+					</fieldset>
+				</div>
+				
+				<div id="add-pecuniary" class="visuallyhidden">
+					<label for="doi-pecuniary" class="form-label-bold">Please describe these interests?</label>
+					<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full"></textarea>
+				</div>
+				
 			</div>
 
 		</fieldset>
+		
+		<h2 class="heading-medium no-margin-top">Close family member affiliations</h2>
 
-		<hr />
-		
-		<h2 class="heading-large">Close family member affiliations</h2>
-		
 		<fieldset>
-			<h3 class="heading-medium no-margin">Close family member appointments, directorships and consultancies</h3>
-			<legend class="visuallyhidden">Close family member appointments, directorships and consultancies</legend>
+			<h3 class="heading-small no-margin">Do any of your close family members have any appointments, directorships or consultancies?</h3>
+			<legend class="visuallyhidden">Do any of your close family members have any appointments, directorships or consultancies?</legend>
 			
-			<div class="grid-row extra-margin">
-				<div class="column-third">
-					<div class="form-group">
-						<label for="doi-family-relation" class="form-label-bold">Relation</label>
-						<input name="doi-family-relation" id="doi-family-relation" class="form-control width-full" value="" />
-					</div>
-				</div>
-				<div class="column-third">
-					<div class="form-group">
-						<label for="doi-family-organisation" class="form-label-bold">Organisation</label>
-						<input name="doi-family-organisation" id="doi-family-organisation" class="form-control width-full" value="" />
-					</div>
-				</div>
-				<div class="column-third">
-					<div class="form-group">
-						<label for="doi-family-position" class="form-label-bold">Position</label>
-						<input name="doi-family-position" id="doi-family-position" class="form-control width-full" value="" />
-					</div>
-				</div>
+			<div class="form-group">
+				<fieldset class="inline">
+					<label class="block-label" for="family-1">
+						<input id="family-1" name="family-group" value="Yes" type="radio" />
+						Yes
+					</label>
+					<label class="block-label" for="family-2">
+						<input id="family-2" name="family-group" value="No" type="radio" />
+						No
+					</label>
+				</fieldset>
 			</div>
 
-			<p class="alignright">
-				<a href="#">Add another family member</a>
-			</p>
+			<div id="add-family" class="visuallyhidden">
+				<div class="grid-row extra-margin">
+					<div class="column-third">
+						<div class="form-group">
+							<label for="doi-family-relation" class="form-label-bold">Relation</label>
+							<input name="doi-family-relation" id="doi-family-relation" class="form-control width-full" value="" />
+						</div>
+					</div>
+					<div class="column-third">
+						<div class="form-group">
+							<label for="doi-family-organisation" class="form-label-bold">Organisation</label>
+							<input name="doi-family-organisation" id="doi-family-organisation" class="form-control width-full" value="" />
+						</div>
+					</div>
+					<div class="column-third">
+						<div class="form-group">
+							<label for="doi-family-position" class="form-label-bold">Position</label>
+							<input name="doi-family-position" id="doi-family-position" class="form-control width-full" value="" />
+						</div>
+					</div>
+				</div>
+
+				<p class="alignright">
+					<a href="#">Add another family member</a>
+				</p>
+			</div>
+		
+		</fieldset>
+
+		<fieldset>
+			<h3 class="heading-small no-margin">Do any of your close family members have any other pecuniary interests?</h3>
+			<legend class="visuallyhidden">Do any of your close family members have any other pecuniary interests?</legend>
+
+			<p class="form-hint">Tell us about any other organisations in which a close family member holds a position or investment from which you could benefit financially</p>
 
 			<div class="form-group">
-				<label for="doi-close-pecuniary" class="form-label-bold">Close family member: other financial interests</label>
-				<p class="form-hint">Tell us about any other organisations in which a close family member holds a position or investment from which you could benefit financially</p>
+				<fieldset class="inline">
+					<label class="block-label" for="family-pecuniary-1">
+						<input id="family-pecuniary-1" name="family-pecuniary-group" value="Yes" type="radio" />
+						Yes
+					</label>
+					<label class="block-label" for="family-pecuniary-2">
+						<input id="family-pecuniary-2" name="family-pecuniary-group" value="No" type="radio" />
+						No
+					</label>
+				</fieldset>
+			</div>
+
+			<div class="form-group visuallyhidden" id="add-family-pecuniary">
+				<label for="doi-close-pecuniary" class="form-label-bold">Please describe these interests</label>
 				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">N/A</div></textarea>
 			</div>
 
@@ -156,5 +224,50 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery('input[name=appointments-group]').on('click',function(e){
+
+		if ( jQuery(this).val() == 'Yes' ) {
+			jQuery('#add-appointments').removeClass('visuallyhidden');
+		}else{
+			jQuery('#add-appointments').addClass('visuallyhidden');
+		}
+
+	});
+
+	jQuery('input[name=pecuniary-group]').on('click',function(e){
+
+		if ( jQuery(this).val() == 'Yes' ) {
+			jQuery('#add-pecuniary').removeClass('visuallyhidden');
+		}else{
+			jQuery('#add-pecuniary').addClass('visuallyhidden');
+		}
+
+	});
+
+	jQuery('input[name=family-group]').on('click',function(e){
+
+		if ( jQuery(this).val() == 'Yes' ) {
+			jQuery('#add-family').removeClass('visuallyhidden');
+		}else{
+			jQuery('#add-family').addClass('visuallyhidden');
+		}
+
+	});
+
+	jQuery('input[name=family-pecuniary-group]').on('click',function(e){
+
+		if ( jQuery(this).val() == 'Yes' ) {
+			jQuery('#add-family-pecuniary').removeClass('visuallyhidden');
+		}else{
+			jQuery('#add-family-pecuniary').addClass('visuallyhidden');
+		}
+
+	});
+
+
+	// ]]>
+</script>
 </body>
 </html>
