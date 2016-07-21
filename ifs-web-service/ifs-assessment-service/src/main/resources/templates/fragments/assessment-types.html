@@ -46,16 +46,13 @@
 
 <!-- =================== Assessment feedback score ============================== -->
 <div th:fragment="assessor_score (field)">
-    <fieldset>
-        <legend class="visuallyhidden">Question score</legend> 
-        <div class="form-group">
-            <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
-            <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
-                <option value="">Set score</option>
-                <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" />
-            </select> / 10
-        </div>
-    </fieldset>
+    <div class="form-group">
+        <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
+        <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
+            <option value="">Set score</option>
+            <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" />
+        </select> / 10
+    </div>
 </div>
 
 
