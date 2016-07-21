@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.CompletedPercentageResourceBuilder.newCompletedPercentageResource;
 import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
 import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
@@ -44,11 +43,12 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.countByCompetitionId(COMP_ID)).thenReturn(83L);
 		
-		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(COMP_ID, CREATED_AND_OPEN_STATUS_IDS)).thenReturn(newApplication().withId(1L, 2L).withCompletion(new BigDecimal("20"), new BigDecimal("80")).build(2));
+		when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndCompletionLessThanEqual(COMP_ID, CREATED_AND_OPEN_STATUS_IDS, new BigDecimal(50L))).thenReturn(1L);
 		when(applicationServiceMock.getProgressPercentageByApplicationId(1L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("20")).build()));
 		when(applicationServiceMock.getProgressPercentageByApplicationId(2L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()));
+
 		
-		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdNotIn(COMP_ID, SUBMITTED_STATUS_IDS)).thenReturn(newApplication().withId(3L, 4L).withCompletion(new BigDecimal("20"), new BigDecimal("80")).build(2));
+		when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdNotInAndCompletionGreaterThan(COMP_ID, SUBMITTED_STATUS_IDS, new BigDecimal(50L))).thenReturn(1L);
 		when(applicationServiceMock.getProgressPercentageByApplicationId(3L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("20")).build()));
 		when(applicationServiceMock.getProgressPercentageByApplicationId(4L)).thenReturn(serviceSuccess(newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()));
 		
