@@ -117,7 +117,7 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
             @PathVariable("questionId") Long questionId) {
         // TODO possiby get the form inputs from assessmentFormInputs in the view model?
         // TODO validation
-        List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
+        List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
         List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
         formInputResponses.stream().forEach(responsePair -> {
             Long formInputId = responsePair.getLeft();

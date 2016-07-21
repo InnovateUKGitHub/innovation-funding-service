@@ -22,7 +22,8 @@ import org.mapstruct.Mappings;
 public abstract class AssessorFormInputResponseMapper extends BaseMapper<AssessorFormInputResponse, AssessorFormInputResponseResource, Long> {
 
     @Mappings({
-            @Mapping(source = "formInput.question.id", target = "question")
+            @Mapping(source = "formInput.question.id", target = "question"),
+            @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount"),
     })
     @Override
     public abstract AssessorFormInputResponseResource mapToResource(AssessorFormInputResponse domain);

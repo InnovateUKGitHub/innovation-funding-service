@@ -1,74 +1,86 @@
 === Create application
 ==== Request
-include::{snippets}/application/create-application/http-request.adoc[]
-include::{snippets}/application/create-application/path-parameters.adoc[]
-include::{snippets}/application/create-application/request-fields.adoc[]
+include::{snippets}/application/create-application-by-application-name-for-user-id-and-competition-id/http-request.adoc[]
+include::{snippets}/application/create-application-by-application-name-for-user-id-and-competition-id/path-parameters.adoc[]
+include::{snippets}/application/create-application-by-application-name-for-user-id-and-competition-id/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/application/create-application/http-response.adoc[]
-include::{snippets}/application/create-application/response-fields.adoc[]
+include::{snippets}/application/create-application-by-application-name-for-user-id-and-competition-id/http-response.adoc[]
+include::{snippets}/application/create-application-by-application-name-for-user-id-and-competition-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/create-application/curl-request.adoc[]
+include::{snippets}/application/create-application-by-application-name-for-user-id-and-competition-id/curl-request.adoc[]
 
 === Find all applications
 ==== Request
-include::{snippets}/application/find-all-applications/http-request.adoc[]
+include::{snippets}/application/find-all/http-request.adoc[]
 
 ==== Response
-include::{snippets}/application/find-all-applications/http-response.adoc[]
-include::{snippets}/application/find-all-applications/response-fields.adoc[]
+include::{snippets}/application/find-all/http-response.adoc[]
+include::{snippets}/application/find-all/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/find-all-applications/curl-request.adoc[]
+include::{snippets}/application/find-all/curl-request.adoc[]
 
 === Find all applications belonging to a user
 ==== Request
-include::{snippets}/application/find-user-applications/http-request.adoc[]
-include::{snippets}/application/find-user-applications/path-parameters.adoc[]
+include::{snippets}/application/find-by-user-id/http-request.adoc[]
+include::{snippets}/application/find-by-user-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/application/find-user-applications/http-response.adoc[]
-include::{snippets}/application/find-user-applications/response-fields.adoc[]
+include::{snippets}/application/find-by-user-id/http-response.adoc[]
+include::{snippets}/application/find-by-user-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/find-user-applications/curl-request.adoc[]
+include::{snippets}/application/find-by-user-id/curl-request.adoc[]
+
+=== Find one application by competition id and user id
+==== Request
+include::{snippets}/application/get-applications-by-competition-id-and-user-id/http-request.adoc[]
+include::{snippets}/application/get-applications-by-competition-id-and-user-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/get-applications-by-competition-id-and-user-id/http-response.adoc[]
+include::{snippets}/application/get-applications-by-competition-id-and-user-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/get-applications-by-competition-id-and-user-id/curl-request.adoc[]
 
 === Find one application by id
 ==== Request
-include::{snippets}/application/get-application/http-request.adoc[]
-include::{snippets}/application/get-application/path-parameters.adoc[]
+include::{snippets}/application/get-application-by-id/http-request.adoc[]
+include::{snippets}/application/get-application-by-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/application/get-application/http-response.adoc[]
-include::{snippets}/application/get-application/response-fields.adoc[]
+include::{snippets}/application/get-application-by-id/http-response.adoc[]
+include::{snippets}/application/get-application-by-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/get-application/curl-request.adoc[]
+include::{snippets}/application/get-application-by-id/curl-request.adoc[]
 
 === Get progress percentage for application id
 ==== Request
-include::{snippets}/application/get-progress-percentage/http-request.adoc[]
-include::{snippets}/application/get-progress-percentage/path-parameters.adoc[]
+include::{snippets}/application/get-progress-percentage-by-application-id/http-request.adoc[]
+include::{snippets}/application/get-progress-percentage-by-application-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/application/get-progress-percentage/http-response.adoc[]
-include::{snippets}/application/get-progress-percentage/response-fields.adoc[]
+include::{snippets}/application/get-progress-percentage-by-application-id/http-response.adoc[]
+include::{snippets}/application/get-progress-percentage-by-application-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/get-progress-percentage/curl-request.adoc[]
+include::{snippets}/application/get-progress-percentage-by-application-id/curl-request.adoc[]
 
 === Check is application is ready for submit
 ==== Request
-include::{snippets}/application/ready-for-submit/http-request.adoc[]
-include::{snippets}/application/ready-for-submit/path-parameters.adoc[]
+include::{snippets}/application/application-ready-for-submit/http-request.adoc[]
+include::{snippets}/application/application-ready-for-submit/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/application/ready-for-submit/http-response.adoc[]
-include::{snippets}/application/ready-for-submit/response-fields.adoc[]
+include::{snippets}/application/application-ready-for-submit/http-response.adoc[]
+include::{snippets}/application/application-ready-for-submit/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/ready-for-submit/curl-request.adoc[]
+include::{snippets}/application/application-ready-for-submit/curl-request.adoc[]
 
 === Save application details
 ==== Request

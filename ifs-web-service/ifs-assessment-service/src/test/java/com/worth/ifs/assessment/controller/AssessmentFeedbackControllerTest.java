@@ -141,7 +141,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Value 1", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertEquals(simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput), model.getAssessorResponses());
-        assertEquals("Value 1", model.getApplicantResponse());
         assertFalse(model.isAppendixExists());
         assertNull(model.getAppendixDetails());
 
@@ -215,7 +214,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void testSave() throws Exception {
-        List<FormInputResource> formInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
 
         Long formInputIdScore = formInputs.get(0).getId();
         Long formInputIdFeedback = formInputs.get(1).getId();

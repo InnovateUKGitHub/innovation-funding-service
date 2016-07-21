@@ -102,22 +102,4 @@ public class AssessmentFeedbackModelPopulator {
         return simpleToMap(assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId),
                 AssessorFormInputResponseResource::getFormInput);
     }
-
-    /*
-    private int getFeedbackWordsRemaining(int feedbackWordsLimit, AssessmentFeedbackResource assessmentFeedback) {
-        String feedback = assessmentFeedback.getFeedback();
-
-        if (feedbackWordsLimit <= 0 || feedback == null) {
-            return 0;
-        }
-
-        // clean any HTML markup from the feedback
-        Document doc = Jsoup.parse(feedback);
-        String cleaned = doc.text();
-
-        int feedbackLength = cleaned.split("\\s+").length;
-        int wordsRemaining = feedbackWordsLimit - feedbackLength;
-
-        return max(0, wordsRemaining);
-    }*/
 }

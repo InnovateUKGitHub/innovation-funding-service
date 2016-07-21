@@ -5,11 +5,17 @@ import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.form.resource.FormInputResource;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.lang.Integer.max;
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 /**
@@ -111,5 +117,29 @@ public class AssessmentFeedbackViewModel {
 
     public String getAppendixFileDescription() {
         return format("View %s appendix", lowerCase(getQuestionShortName()));
+    }
+
+    public Integer getWordsRemaining(Long formInputId) {
+        Optional<FormInputResource> formInput = simpleFindFirst(assessmentFormInputs, assessmentFormInput -> formInputId.equals(assessmentFormInput.getId()));
+        Optional<AssessorFormInputResponseResource> response = ofNullable(assessorResponses.get(formInputId));
+
+        if (!(formInput.isPresent() && response.isPresent())) {
+            return null;
+        }
+
+        Integer maxWordCount = formInput.get().getWordCount();
+        String value = response.get().getValue();
+        if (maxWordCount == null || value == null) {
+            return null;
+        }
+
+        // clean any HTML markup from the value
+        Document doc = Jsoup.parse(value);
+        String cleaned = doc.text();
+
+        int valueLength = cleaned.split("\\s+").length;
+        int wordsRemaining = maxWordCount - valueLength;
+
+        return max(0, wordsRemaining);
     }
 }

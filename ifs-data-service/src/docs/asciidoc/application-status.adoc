@@ -1,11 +1,11 @@
 === Get application status by status id
 ==== Request
-include::{snippets}/application-status/get-application-status/http-request.adoc[]
-include::{snippets}/application-status/get-application-status/path-parameters.adoc[]
+include::{snippets}/application-status/get-application-status-by-id/http-request.adoc[]
+include::{snippets}/application-status/get-application-status-by-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/application-status/get-application-status/http-response.adoc[]
-include::{snippets}/application-status/get-application-status/response-fields.adoc[]
+include::{snippets}/application-status/get-application-status-by-id/http-response.adoc[]
+include::{snippets}/application-status/get-application-status-by-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application-status/get-application-status/curl-request.adoc[]
+include::{snippets}/application-status/get-application-status-by-id/curl-request.adoc[]
