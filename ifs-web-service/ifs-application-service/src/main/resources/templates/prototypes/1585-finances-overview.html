@@ -13,23 +13,30 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status?stage=level2'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/3813-finance-check-landing'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finance checks'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finances overview'})" th:remove="tag" />
 
-	<p>Innovate are currently reviewing your finances. during this stage costs outlined in your application may be queried, enabling thathis may take a while here are details on your finances as thy are reviewed by innovate UK</p>
-	
-	<ul>
-		<li>
-			<a href="/prototypes/3985-partner-finances">View finances</a> 
-		</li>
-		<li>
-			<a href="/prototypes/1585-finances-overview">Project finance overview</a> 
-		</li>
-	</ul>
-	
+	<p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
+
+	<div class="eligibility" th:unless="${param.warning != null}">
+
+		<dl class="list-eligibility">
+			<dt>Maximum research participation</dt>
+			<dd>30%</dd>
+			<dt>Current research participation</dt>
+			<dd>11%</dd>
+		</dl>
+		
+		<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-success" th:remove="tag" />
+
+	</div>
+
+	<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="status=partnerView" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:with="status=partnerView" th:remove="tag" />
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
