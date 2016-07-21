@@ -3,10 +3,7 @@ package com.worth.ifs.sil.experian.service;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.sil.experian.resource.AccountDetails;
-import com.worth.ifs.sil.experian.resource.SilError;
-import com.worth.ifs.sil.experian.resource.ValidationResult;
-import com.worth.ifs.sil.experian.resource.VerificationResult;
+import com.worth.ifs.sil.experian.resource.*;
 import com.worth.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,21 +38,21 @@ public class RestSilExperianEndpoint implements SilExperianEndpoint {
 
     @Override
     public ServiceResult<ValidationResult> validate(AccountDetails accountDetails) {
-        final Either<ResponseEntity<ValidationResult>, ResponseEntity<SilError>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails, SilError.class, ValidationResult.class, HttpStatus.ACCEPTED);
+        final Either<ResponseEntity<SilError>, ResponseEntity<ValidationResult>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails, ValidationResult.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if(response.isLeft()){
-            return serviceSuccess(response.getLeft().getBody());
-        } else {
             return serviceFailure(new Error(EXPERIAN_VALIDATION_FAILED));
+        } else {
+            return serviceSuccess(response.getRight().getBody());
         }
     }
 
     @Override
     public ServiceResult<VerificationResult> verify(AccountDetails accountDetails) {
-        final Either<ResponseEntity<VerificationResult>, ResponseEntity<SilError>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianVerify, accountDetails, SilError.class, VerificationResult.class, HttpStatus.ACCEPTED);
+        final Either<ResponseEntity<SilError>, ResponseEntity<VerificationResult>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianVerify, accountDetails, VerificationResult.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if(response.isLeft()){
-            return serviceSuccess(response.getLeft().getBody());
-        } else {
             return serviceFailure(new Error(EXPERIAN_VERIFICATION_FAILED));
+        } else {
+            return serviceSuccess(response.getRight().getBody());
         }
     }
 }

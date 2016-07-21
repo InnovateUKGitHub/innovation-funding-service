@@ -1,26 +1,28 @@
 package com.worth.ifs.sil.experian.resource;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+@JsonRootName("")
 public class SilError {
-    private int code;
+    private String code;
     private String message;
     private String fields;
 
     public SilError() {}
 
-    public SilError(int code, String message, String fields) {
+    public SilError(String code, String message, String fields) {
         this.code = code;
         this.message = message;
         this.fields = fields;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
