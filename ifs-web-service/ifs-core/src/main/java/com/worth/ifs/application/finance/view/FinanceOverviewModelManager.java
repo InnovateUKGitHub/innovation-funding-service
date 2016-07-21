@@ -62,7 +62,7 @@ public class FinanceOverviewModelManager {
     private void addFinanceSections(Long competitionId, Model model) {
     	SectionResource section = sectionService.getFinanceSection(competitionId);
     	
-    	if(section != null) {
+    	if(section == null) {
     		return;
     	}
     	
