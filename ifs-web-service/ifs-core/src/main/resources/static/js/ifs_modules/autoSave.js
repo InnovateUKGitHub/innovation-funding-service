@@ -34,58 +34,81 @@ IFS.core.autoSave = (function(){
         },
         fieldChanged : function (element){
             var field = jQuery(element);
-            var name = field.attr('name');
-            var fieldId = field.attr('id').replace('form-textarea-','');
-            var applicationId = jQuery("#application_id").val();
-            var autoSaveEnabled = true;
-            if(field.hasClass('js-autosave-disabled')){
-              autoSaveEnabled = false;
-            }
+            var autoSaveEnabled = !field.hasClass('js-autosave-disabled');
 
-            if((typeof(applicationId) !== 'undefined') && (typeof(name) !== 'undefined') && autoSaveEnabled) {
-              //for the 3 seperate field date that has to be send as one
+            if(autoSaveEnabled) {
+              //make sure repeating rows process sequential per row
+              var promiseListName;
+              if(field.closest('[data-repeatable-row]').length){
+                promiseListName = field.closest('[data-repeatable-row]').attr('id');
+              }
+              else {
+                promiseListName =field.attr('name');
+              }
+              //per field we handle the request on a promise base, this means that ajax calls should be per field sequental
+              //this menas we can still have async as two fields can still be processed at the same time
+              //http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
+              if(typeof(promiseList[promiseListName]) == 'undefined'){
+                promiseList[promiseListName] = jQuery.when({}); //fire first promise :)
+              }
 
-              var fieldValue = field.val();
+              promiseList[promiseListName] = promiseList[promiseListName].then(IFS.core.autoSave.processAjax(field));
+          }
+        },
+        getFieldJson : function(field){
+          var fieldId = field.attr('id').replace('form-textarea-','');
+          var applicationId = jQuery("#application_id").val();
+          var fieldValue = field.val();
+          var name = field.attr('name');
+
+          if((typeof(fieldId) !== 'undefined') && (typeof(applicationId) !== 'undefined') && (typeof(name) !== 'undefined')){
               var datefield = field.attr('data-date');
+
+              //for the 3 seperate field date that has to be send as one
               if(typeof datefield !== typeof undefined && datefield !== false){
                 fieldValue = field.attr('data-date');
                 var fieldInfo = field.closest('.date-group');
                 name = fieldInfo.attr('data-field-group-name');
                 fieldId = fieldInfo.attr('data-field-group-id');
               }
-
               var jsonObj = {
                   value: fieldValue,
                   formInputId: fieldId,
                   fieldName: name,
                   applicationId: applicationId
               };
-              //per field we handle the request on a promise base, this means that ajax calls should be per field sequental
-              //this menas we can still have async as two fields can still be processed at the same time
-              //http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
-              if(typeof(promiseList[name]) == 'undefined'){
-                promiseList[name] = jQuery.when({}); //fire first promise :)
-              }
-              promiseList[name] = promiseList[name].then(IFS.core.autoSave.processAjax(field, applicationId,jsonObj));
+              return jsonObj;
           }
+          else {
+            return false;
+          }
+
         },
-        processAjax : function(field,applicationId, data){
+        processAjax : function(field){
           return function(){
+            var data = IFS.core.autoSave.getFieldJson(field);
             var defer = jQuery.Deferred();
+
+            if(data===false){
+              defer.resolve();
+              return defer.promise();
+            }
+            else {
+            //todo Brent de Kok: refactor this beast.
             var formGroup = field.closest('.form-group');
             var formTextareaSaveInfo = formGroup.find('.textarea-save-info');
             var startAjaxTime= new Date().getTime();
+
 
             if(formTextareaSaveInfo.length === 0){
                formGroup.find('.textarea-footer').append('<span class="textarea-save-info" />');
                formTextareaSaveInfo = formGroup.find('.textarea-save-info');
             }
 
-            var name = field.attr('name');
-        	var nameDashSplit = name.split('-');
-        	var unsavedCostId = nameDashSplit.length > 2 ? nameDashSplit[3] : null;
-        	var unsavedCostRow = nameDashSplit.length == 4 && unsavedCostId.length > 7 && unsavedCostId.substring(0, 7) === 'unsaved';
-        	
+            var name = data.fieldName;
+            var applicationId = data.applicationId;
+      	    var unsavedCostRow = name.indexOf('unsaved') > -1 ? true : false;
+
             jQuery.ajaxProtected({
                 type: 'POST',
                 url: '/application/'+applicationId+'/form/saveFormElement',
@@ -93,44 +116,42 @@ IFS.core.autoSave = (function(){
                 dataType: "json",
                 beforeSend: function() {
                    formTextareaSaveInfo.html('Saving...');
-                   if (unsavedCostRow) {
-                	   var fieldsForUnsavedCost = jQuery('input[name*="' + unsavedCostId + '"]');
-                	   fieldsForUnsavedCost.prop("disabled", true);
-                   }
                }
             })
             .done(function(data){
                 var doneAjaxTime = new Date().getTime();
                 var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
-                // set the form-saved-state
-                jQuery('body').trigger('updateSerializedFormState');
 
-                
-            	// set field_id on field name
-            	if(data.field_id !== null) {
-                	if (unsavedCostRow) {
-                		var fieldsForUnsavedCost = jQuery('input[name*="' + unsavedCostId + '"]');
-                		fieldsForUnsavedCost.each(function(){
-                			var thisFieldNameSplit = jQuery(this).attr('name').split('-');
-                			jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + data.field_id);
-                		});
-                		
-                		var costRows = jQuery('tr[data-repeatable-row="' + unsavedCostId + '"]');
-            			costRows.attr('data-repeatable-row', data.field_id);
-                		
-                		var buttonPlaceholder = jQuery('span[id*="' + unsavedCostId + '"]');
-                		if(buttonPlaceholder !== null) {
+                //costrow code
+            	  if((typeof(data.field_id) !== 'undefined') && (unsavedCostRow === true)) {
+                  var nameDashSplit = name.split('-');
+                  var unsavedCostId = nameDashSplit.length > 2 ? nameDashSplit[3] : null;
+                  var fieldsForUnsavedCost = jQuery('input[name*="' + unsavedCostId + '"]');
+
+                  fieldsForUnsavedCost.each(function(){
+                    var thisFieldNameSplit = jQuery(this).attr('name').split('-');
+                    jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + data.field_id);
+                  });
+
+                  var row = jQuery('[data-repeatable-row="'+unsavedCostId+'"]');
+
+                  //add the button
+                  var button = row.find('[name="remove_cost"]');
+              		if(button.length === 0) {
+                      var buttonColumn = row.find('.buttoncolumn');
                 			var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + data.field_id + '">Remove</button>';
-                			buttonPlaceholder.replaceWith(buttonHtml);
-                		}
-                		
-                		fieldsForUnsavedCost.prop("disabled", false);
-                	}
-            	}
-            	
+                			buttonColumn.append(buttonHtml);
+
+                      //set the repeatable row id for referencing the removal, leave the original id as that is used for the promise
+                      row.attr('data-repeatable-row', data.field_id);
+                  }
+                  // set the form-saved-state
+                  jQuery('body').trigger('updateSerializedFormState');
+
+            	  }
+
                 if(data.success == 'true'){
-                	
                 	//save message
                     setTimeout(function(){
                         IFS.core.autoSave.clearServerSideValidationErrors(field);
@@ -182,7 +203,8 @@ IFS.core.autoSave = (function(){
                 defer.resolve();
            });
           return defer.promise();
-          };
+          }
+        };
         },
         clearServerSideValidationErrors : function(field){
             for (var i = 0; i < serverSideValidationErrors.length; i++){

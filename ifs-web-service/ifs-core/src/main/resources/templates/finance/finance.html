@@ -222,7 +222,7 @@
 	                       data-max-errormessage="You must enter a value less than 10 digits"
 	                        />
 	            </td>
-	            <td rowspan="2" class="rowspan" th:unless="${complete == 'complete'}">
+	            <td rowspan="2" class="rowspan buttoncolumn" th:unless="${complete == 'complete'}">
 	                <button th:unless="${cost.id == null}"
 	                        type="submit"
 	                        name="remove_cost"
@@ -230,7 +230,6 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
-	                <span th:if="${cost.id == null}" th:id="${'cost-labour-'+costIdentifier+'-buttonplaceholder'}"></span>
 	            </td>
 	        </tr>
 	        <tr th:attr="data-repeatable-row=${costIdentifier}">
@@ -245,7 +244,7 @@
 	                       th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly,#cost-labour-'+costIdentifier+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
 	                       th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
 	            </td>
-	
+
 	        </tr>
 	    </div>
     </div>
@@ -545,7 +544,7 @@
 	                    </label>
 	                </fieldset>
 	            </div>
-	
+
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'error' : ''">
 	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-deprecation_period'}" class="form-label">
 	                    <span>Depreciation period (months)</span>
@@ -565,7 +564,7 @@
 	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'field-error' : ''"
 	                         />
 	            </div>
-	
+
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'error' : ''">
 	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-npv'}" class="form-label">
 	                    <span>Net present value at the start of your project or the price you bought it for (£)</span>
@@ -584,9 +583,9 @@
 	                        required="required"
 	                        data-max-errormessage="You must enter a value less than 20 digits"
 	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'field-error' : ''" />
-	
+
 	            </div>
-	
+
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'error' : ''">
 	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-residual_value'}" class="form-label">
 	                    <span>Residual value at end of project (£)</span>
@@ -606,7 +605,7 @@
 	                        data-max-errormessage="You must enter a value less than 20 digits"
 	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'field-error' : ''"/>
 	            </div>
-	
+
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'error' : ''">
 	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-utilisation'}" class="form-label">
 	                    <span>Utilisation (%)</span>
@@ -624,7 +623,7 @@
 	                       required="required"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'field-error' : ''"/>
 	            </div>
-	
+
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'error' : ''">
 	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-netCost'}" class="form-label">
 	                      <span>Net Cost</span>
@@ -641,7 +640,7 @@
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'error' : ''"
 	                       />
 	            </div>
-	
+
 	            <button th:unless="${cost.id == null}"
 	                    type="submit"
 	                    name="remove_cost"
@@ -685,7 +684,7 @@
 
     <div th:fragment="subcontracting_row" th:remove="tag">
         <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
-    
+
 	        <div class="form-row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'error' : ''">
 	                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-name'}">
@@ -717,16 +716,16 @@
 	                       required="required"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'field-error' : ''"   />
 	            </div>
-	
+
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''">
 	                <label class="form-label" th:for="${'cost-'+ type + '-'+costIdentifier+'-role'}">
 	                  <span>Role of the subcontractor in the project and description of the work they’ll do</span>
 	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" th:remove="tag" />
 	                </label>
-	
+
 	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
 	            </div>
-	
+
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
 	                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-subcontractingCost'}">
 	                      <span>Cost</span>
@@ -1083,7 +1082,7 @@
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'field-error' : ''"
 	                       required="required" />
 	            </td>
-	
+
 	            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'error' : ''">
 	              <label th:for="${'cost-'+type+'-'+costIdentifier+'-fundingAmount'}">
 	                <span class="visuallyhidden">Funding amount (&pound;)</span>
