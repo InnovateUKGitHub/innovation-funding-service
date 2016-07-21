@@ -36,8 +36,7 @@ Calculations for Lead applicant
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring. We need to add an extra collaborator in the newly created application for this.
-    [Tags]    Panding
-    #Pening INFUND-4078
+    [Tags]
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
@@ -48,9 +47,8 @@ Calculations for the first collaborator
     ...
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]    Pending
+    [Tags]
     [Setup]    Guest user log-in    &{collaborator1_credentials}
-    #Pening INFUND-4078
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
