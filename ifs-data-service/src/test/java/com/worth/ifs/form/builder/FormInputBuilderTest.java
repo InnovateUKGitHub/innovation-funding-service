@@ -26,11 +26,12 @@ public class FormInputBuilderTest {
     public void test_buildOne_defaultValuesAsExpected() {
         FormInput formInput = newFormInput()
                 .withPriority(0)
-                .withScope(APPLICATION, ASSESSMENT, APPLICATION)
+                .withScope(APPLICATION)
                 .build();
         assertEquals(Long.valueOf(1), formInput.getId());
         assertEquals("Description 1", formInput.getDescription());
         assertEquals(Integer.valueOf(0), formInput.getPriority());
+        assertEquals(APPLICATION, formInput.getScope());
     }
 
     @Test

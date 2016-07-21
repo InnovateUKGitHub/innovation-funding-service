@@ -49,7 +49,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     public void update() throws Exception {
         Long assessmentId = 1L;
         Long questionId = 1L;
-        Long formInputId = 44L;
+        Long formInputId = 169L;
         String oldValue = "This is the feedback from Professor Plum for Business opportunity.";
         String newValue = "Feedback";
 

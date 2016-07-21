@@ -10,6 +10,7 @@ Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
+Resource          Guest_commons.robot
 
 *** Variables ***
 ${correct_email}    steve.smith@empire.com
@@ -76,26 +77,26 @@ Email persists with invalid email address and empty password
     ${invalid_email}    ${EMPTY}
 
 *** Keywords ***
-Email persists on invalid login
-    [Arguments]    ${email_address}    ${password}
-    Given the guest user enters the login credentials    ${email_address}    ${password}
-    When the user tries to log in
-    Then the user is not logged-in
-    And the email address should persist    ${email_address}
-
-the user is not logged-in
-    Element Should Not Be Visible    link=My dashboard
-    Element Should Not Be Visible    link=Logout
-
-the email address should persist
-
-    [Arguments]     ${email_address}
-    # Note: we have to do it this way rather than the more straightforward eg Textfield Value Should Be
-    # due to a bug in selenium2library
-    ${stored_data}=     Get Value       id=username
-    Should Be Equal     ${stored_data}      ${email_address}
-
-
-the user tries to log in
-    the user clicks the button/link    css=button[name="_eventId_proceed"]
-    the user should see the text in the page    ${unsuccessful_login_message}
+#Email persists on invalid login
+#    [Arguments]    ${email_address}    ${password}
+#    Given the guest user inserts user email & password    ${email_address}    ${password}
+#    When the user tries to log in
+#    Then the user is not logged-in
+#    And the email address should persist    ${email_address}
+#
+#the user is not logged-in
+#    Element Should Not Be Visible    link=My dashboard
+#    Element Should Not Be Visible    link=Logout
+#
+#the email address should persist
+#
+#    [Arguments]     ${email_address}
+#    # Note: we have to do it this way rather than the more straightforward eg Textfield Value Should Be
+#    # due to a bug in selenium2library
+#    ${stored_data}=     Get Value       id=username
+#    Should Be Equal     ${stored_data}      ${email_address}
+#
+#
+#the user tries to log in
+#    the user clicks the button/link    css=button[name="_eventId_proceed"]
+#    the user should see the text in the page    ${unsuccessful_login_message}

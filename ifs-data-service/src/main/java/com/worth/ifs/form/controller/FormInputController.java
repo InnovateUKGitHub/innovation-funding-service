@@ -19,12 +19,12 @@ public class FormInputController {
     @Autowired
     private FormInputService formInputService;
 
-    @RequestMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public RestResult<FormInputResource> findOne(@PathVariable("id") Long id) {
         return formInputService.findFormInput(id).toGetResponse();
     }
 
-    @RequestMapping("/findByQuestionId/{questionId}")
+    @RequestMapping(value = "/findByQuestionId/{questionId}", method = RequestMethod.GET)
     public RestResult<List<FormInputResource>> findByQuestionId(@PathVariable("questionId") Long questionId) {
         return formInputService.findByQuestionId(questionId).toGetResponse();
     }
@@ -34,12 +34,12 @@ public class FormInputController {
         return formInputService.findByQuestionIdAndScope(questionId, scope).toGetResponse();
     }
 
-    @RequestMapping("/findByCompetitionId/{competitionId}")
+    @RequestMapping(value = "/findByCompetitionId/{competitionId}", method = RequestMethod.GET)
     public RestResult<List<FormInputResource>> findByCompetitionId(@PathVariable("competitionId") Long competitionId) {
         return formInputService.findByCompetitionId(competitionId).toGetResponse();
     }
 
-    @RequestMapping("/findByCompetitionId/{competitionId}/scope/{scope}")
+    @RequestMapping(value = "/findByCompetitionId/{competitionId}/scope/{scope}", method = RequestMethod.GET)
     public RestResult<List<FormInputResource>> findByCompetitionIdAndScope(@PathVariable("competitionId") Long competitionId, @PathVariable("scope") FormInputScope scope) {
         return formInputService.findByCompetitionIdAndScope(competitionId, scope).toGetResponse();
     }
