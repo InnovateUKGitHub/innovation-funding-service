@@ -19,6 +19,8 @@ Documentation     INFUND-2607 As an applicant I want to have a link to the feedb
 ...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
 ...
 ...               INFUND-3382 As a partner I want to be able to view our project details after they have been submitted so that I can use them for reference
+...
+...               INFUND-2634 As a partner I want to be able to view details of the assigned Monitoring Officer for my project so I can contact them
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Comp admin    Upload
@@ -37,9 +39,6 @@ ${unsuccessful_application_comp_admin_view}    ${server}/management/competition/
 ${Successful_Monitoring_Officer_Page}    ${server}/management/project/4/monitoring-officer
 
 *** Test Cases ***
-
-
-
 Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
@@ -62,6 +61,7 @@ Comp admin can view unsuccessful uploaded feedback
     And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
     [Teardown]    Logout as user
 
+
 Unsuccessful applicant can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
@@ -71,6 +71,7 @@ Unsuccessful applicant can view the uploaded feedback
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${unsuccessful_application_comp_admin_view}
+
 
 Unsuccessful applicant cannot remove the uploaded feedback
     [Documentation]    INFUND-2607
@@ -297,6 +298,141 @@ Non-lead partner cannot change any project details
     And the user should be redirected to the correct page    ${successful_project_page}
 
 
+Before Monitoring Officer is assigned
+    [Documentation]    INFUND-3349
+    [Tags]    HappyPath
+    [Setup]    Log in as user    &{successful_applicant_credentials}
+    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user should see the text in the page    Innovate UK will assign you a Monitoring Officer
+    When the user clicks the button/link      link=Monitoring Officer
+    Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
+    And the user should not see the text in the page    A Monitoring Officer has been assigned.
+
+
+Comp admin can view the Supporting information details on MO page
+    [Documentation]    INFUND-3330
+    [Tags]    HappyPath
+    [Setup]    Log in as user    &{Comp_admin1_credentials}
+    When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    Monitoring Officer
+    And the user should see the text in the page    Supporting information
+    And the user should see the text in the page    Cheese is good
+    And the user should see the text in the page    Earth Observation
+    And the user should see the text in the page    1 Cheese Road
+    And the user should see the text in the page    Bath
+    And the user should see the text in the page    BA1 5LR
+    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2018
+    And the user should see the text in the page    test ten
+    And the user should see the text in the page    Cheeseco
+    And the user should see the text in the page    Ludlow
+    And the user should see the text in the page    EGGS
+
+
+MO server-side validation
+    [Documentation]    INFUND-3330
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    Then the user should see an error    Please enter a first name
+    And the user should see an error    Please enter a last name
+    And the user should see an error    Please enter a valid email address
+    And the user should see an error    Please enter an email address
+    And the user should see an error    Please enter a phone number
+    And the user should see an error    Please enter a valid phone number
+
+
+MO client-side validation
+    [Documentation]    INFUND-3330
+    [Tags]    HappyPath
+    When the user enters text to a text field    id=firstName    Abbey
+    Then the user moves focus away from an element for MO    id=firstName
+    And the user should not see the text in the page    Please enter a first name
+    Then the user enters text to a text field    id=lastName    Abigail
+    And the user moves focus away from an element for MO    id=lastName
+    And the user should not see the text in the page    Please enter a last name
+    Then the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user moves focus away from an element for MO    id=emailAddress
+    And the user should not see the text in the page    Please enter a valid email address
+    And the user should not see the text in the page    Please enter an email address
+    Then the user enters text to a text field    id=phoneNumber    07438620303
+    And the user moves focus away from an element for MO    id=phoneNumber
+    And the user should not see the text in the page    Please enter a phone number
+    And the user should not see the text in the page    Please enter a valid phone number
+   # [To be checked]
+  #  And the user enters text to a text field    id=phoneNumber    0123
+  #  Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+  #  And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+  #  And the user should see an error    Input for your phone number has a minimum length of 8 characters
+
+
+MO details can be added
+    [Documentation]    INFUND-3330, INFUND-3334
+    [Tags]    HappyPath
+    When standard verification for email address follows
+    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+    Then standard verification for Phone number follows
+    And the user moves focus away from an element for MO    id=phoneNumber
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Cancel")
+    Then the user should not see the text in the page    A Monitoring Officer has been assigned.
+    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+    Then The user should see the element    css=.success-alert
+    And the user should see the text in the page    A Monitoring Officer has been assigned.
+    And Logout as user
+    Then Log in as user    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user should see the element    jQuery=ul li.complete:nth-child(3)
+    And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
+
+
+MO details(email step)
+    [Documentation]     INFUND-3330, INFUND-3334
+    [Tags]     Email
+    When Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    ${test_mailbox_one_password}    has been assigned to you
+
+
+MO details can be edited and Viewed in the Project setup status page
+    [Documentation]    INFUND-3330, INFUND-3349
+    [Tags]    HappyPath
+    [Setup]    Log in as user    &{Comp_admin1_credentials}
+    Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    When the user clicks the button/link    link=Change Monitoring Officer
+    And the user edits the MO details
+    And the user can see the changed MO details
+    And Logout as user
+    When Log in as user    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Then the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user should see the element    jQuery=ul li.complete:nth-child(3)
+    And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    And the user clicks the button/link    link=Monitoring Officer
+    Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
+    And the user should see the text in the page    Grace Harper
+    And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user should see the text in the page    08549731414
+
+MO details accessible/seen by all partners
+    [Documentation]    INFUND-3349
+    [Tags]    HappyPath
+    Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(3)
+    And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    And the user clicks the button/link    link=Monitoring Officer
+    Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
+    And the user should see the text in the page    Grace Harper
+    And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user should see the text in the page    08549731414
+    Then Logout as user
+    When Log in as user    pete.tom@egg.com    Passw0rd
+    And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(3)
+    And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    And the user clicks the button/link    link=Monitoring Officer
+    Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
+    And the user should see the text in the page    Grace Harper
+    And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user should see the text in the page    08549731414
+
 Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
@@ -365,113 +501,6 @@ Bank details submission
     Then the user navigates to the page    ${successful_project_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
 
-Before Monitoring Officer is assigned
-    [Documentation]    INFUND-3349
-    [Tags]    Pending    HappyPath
-    # TODO Pending due to INFUND-3963
-    Given the user navigates to the page    ${successful_project_page}
-    When the user clicks the button/link      link=Monitoring Officer
-    Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
-    And the user should not see the element    [element to check the green tick mark is not there]
-
-Comp admin can view the Supporting information details on MO page
-    [Documentation]    INFUND-3330
-    [Tags]    HappyPath    Pending
-    [Setup]    Log in as user    &{Comp_admin1_credentials}
-    When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
-    Then the user should see the text in the page    Monitoring Officer
-    And the user should see the text in the page    Supporting information
-    And the user should see the text in the page    Cheese is good
-    And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    1 Cheese Road
-    And the user should see the text in the page    Bath
-    And the user should see the text in the page    BA1 5LR
-   # And the user should see the text in the page    1 Jan 2018
-    And the user should see the text in the page    test ten
-    And the user should see the text in the page    Cheeseco
-    And the user should see the text in the page    Ludlow
-    And the user should see the text in the page    EGGS
-
-MO server-side validation
-    [Documentation]    INFUND-3330
-    [Tags]    HappyPath    Pending
-    When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    Then the user should see an error    Please enter a first name
-    And the user should see an error    Please enter a last name
-    And the user should see an error    Please enter a valid email address
-    And the user should see an error    Please enter an email address
-    And the user should see an error    Please enter a phone number
-    And the user should see an error    Please enter a valid phone number
-
-MO client-side validation
-    [Documentation]    INFUND-3330
-    [Tags]    HappyPath    Pending
-    When the user enters text to a text field    id=firstName    Pradha
-    Then the user moves focus away from an element for MO    id=firstName
-    And the user should not see the text in the page    Please enter a first name
-    Then the user enters text to a text field    id=lastName    Muniraj
-    And the user moves focus away from an element for MO    id=lastName
-    And the user should not see the text in the page    Please enter a last name
-    Then the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    And the user moves focus away from an element for MO    id=emailAddress
-    And the user should not see the text in the page    Please enter a valid email address
-    And the user should not see the text in the page    Please enter an email address
-    Then the user enters text to a text field    id=phoneNumber    07438620303
-    And the user moves focus away from an element for MO    id=phoneNumber
-    And the user should not see the text in the page    Please enter a phone number
-    And the user should not see the text in the page    Please enter a valid phone number
-
-MO details can be added
-    [Documentation]    INFUND-3330, INFUND-3334
-    [Tags]    Pending
-    When standard verification for email address follows
-    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    Then standard verification for Phone number follows
-    And the user moves focus away from an element for MO    id=phoneNumber
-    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-  #  And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Cancel")
-    Then the user should not see the text in the page    A Monitoring Officer has been assigned.
-    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
-    Then the user should see the text in the page    A Monitoring Officer has been assigned.
-
-
-MO details(email step)
-    [Documentation]     INFUND-3330, INFUND-3334
-    [Tags]     Email    Pending
-    When Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    ${test_mailbox_one_password}    has been assigned to you
-
-MO details can be edited and Viewed in the Project setup status page
-    [Documentation]    INFUND-3330
-    [Tags]    Pending
-    Given the user clicks the button/link    link=Change Monitoring Officer
-    And the user enters text to a text field    id=firstName    Prada
-    And the user enters text to a text field    id=lastName    Jagankumar
-    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    And the user enters text to a text field    id=phoneNumber    08549731414
-    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
-    Then the user should see the text in the page    A Monitoring Officer has been assigned.
-    And the user should see the text in the page    Prada
-    And the user should see the text in the page    Jagankumar
-    And the user should see the text in the page    08549731414
-    And Logout as user
-    When Log in as user    worth.email.test+fundsuccess@gmail.com    Passw0rd
-    Then the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE}
-    And the user should see the text in the page    Your Monitoring Officer for this project is Prada Jagankumar.
-
-MO details accessible/seen by all partners
-    [Documentation]    INFUND-3349
-    [Tags]    Pending    HappyPath
-    # TODO Pending due to work in progress
-    Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
-    Then the user should see the text in the page    [greeen tick mark element]
-    And the user should see the text in the page    Your project has been assigned a Monitoring Officer
-    And the user should see the text in the page    Pradha Jagankumar
-    And the user should see the text in the page    pradha.raj@gmail.com
-    And the user should see the text in the page    08549731414
 
 *** Keywords ***
 the user should see a validation error
@@ -526,12 +555,13 @@ standard verification for Phone number follows
     the user should see an error    Please enter a phone number
     the user enters text to a text field    id=phoneNumber    invalidphone
     the user should see an error    Please enter a valid phone number
-    And the user enters text to a text field    id=phoneNumber    0123
-    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
-    And the user should see an error    Input for your phone number has a minimum length of 8 characters
+  #  And the user enters text to a text field    id=phoneNumber    0123
+  #  Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+  #  And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+  #  And the user should see an error    Input for your phone number has a minimum length of 8 characters
     Then the user enters text to a text field    id=phoneNumber    07438620303
   #  And the user moves focus away from an element for MO    id=phoneNumber
+
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
@@ -544,13 +574,11 @@ the applicant clicks the submit button in the modal
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 
-
 the user moves focus away from the element
     [Arguments]    ${element}
     mouse out       ${element}
     focus         jQuery=.button:contains("Submit bank account details")
-<<<<<<< HEAD
-=======
+
 
 all the fields are completed
     the matching status checkbox is updated    project-details    1    yes
@@ -564,4 +592,21 @@ the user moves focus away from an element for MO
     [Arguments]    ${element}
     mouse out    ${element}
     focus    jQuery=.button:contains("Assign Monitoring Officer")
->>>>>>> d13e8805fc21bb133b382a6cf22e82dc708cd9a1
+
+
+the user edits the MO details
+    Input Text    id=firstName    Grace
+    Input Text    id=lastName    Harper
+ #   Input Text    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+    Input Text    id=phoneNumber    08549731414
+    the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+
+
+the user can see the changed MO details
+    The user should see the element    css=.success-alert
+    the user should see the text in the page    A Monitoring Officer has been assigned.
+    Textfield Should Contain    id=firstName    Grace
+    Textfield Should Contain    id=lastName    Harper
+   # Textfield Should Contain    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+  #  Element Should Contain    id=phoneNumber    08549731414
