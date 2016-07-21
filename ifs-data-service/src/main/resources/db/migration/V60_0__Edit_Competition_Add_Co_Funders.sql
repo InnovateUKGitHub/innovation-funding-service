@@ -10,8 +10,10 @@ CREATE TABLE `competition_co_funder` (
   `competition_id` bigint(20) NOT NULL,
   `created_timestamp` timestamp NULL DEFAULT NULL,
   `updated_timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_update_user` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `competition_co_funders_compitions_id_idx` (`competition_id`),
   CONSTRAINT `competition_co_funders_compitions_id` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=177 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=201 DEFAULT CHARSET=utf8;
+
 
