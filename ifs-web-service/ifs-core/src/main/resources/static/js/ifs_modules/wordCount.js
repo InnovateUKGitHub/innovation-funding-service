@@ -1,4 +1,4 @@
-IFS.application.wordCount = (function(){
+IFS.core.wordCount = (function(){
     "use strict";
     var s;
     var typeTimeout;
@@ -12,10 +12,10 @@ IFS.application.wordCount = (function(){
             jQuery('body').on('change keyup', s.wordcountEl, function(e){
               if(e.type == 'keyup'){
                 clearTimeout(typeTimeout);
-                typeTimeout = setTimeout(function(){IFS.application.wordCount.updateWordCount(e.target); }, s.typeTimeout);
+                typeTimeout = setTimeout(function(){IFS.core.wordCount.updateWordCount(e.target); }, s.typeTimeout);
               }
               else {
-                IFS.application.wordCount.updateWordCount(e.target);
+                IFS.core.wordCount.updateWordCount(e.target);
               }
              });
         },
