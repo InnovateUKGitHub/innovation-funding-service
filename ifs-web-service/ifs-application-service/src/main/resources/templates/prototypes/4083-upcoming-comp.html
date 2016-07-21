@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="app-dashboard">
+<body class="app-overview">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -12,17 +12,14 @@
 
 
 <main id="content">
-
-
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader()" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin">Invitation to assess 'Technology inspired'</h1>
-    </div>
-    
-    <p>You have been invited at act as an assessor for our new competition <strong>'Technology Inspired'</strong>. Please read the information below and confirm whether you are available to assess applications for this competition.</p>
+
+	<h1 class="heading-large no-margin">Upcoming competition 'Technology inspired</h1>
+
+    <p>You have agreed to act as an assessor for our upcoming competition 'Technology Inspired'</p>
 
     <section class="boxed">
     
@@ -40,26 +37,9 @@
 
         <p><a href="#" rel="external">See competition brief</a></p>
 
-        <h3 class="heading-small">You should reject this competition if:</h3>
-        <ul class="list-bullet">
-            <li>You are unavailable for the dates of the assessment period</li>
-            <li>You would be unable to return all assessments by the deadline above</li>
-            <li>This competition is outside your area of expertise</li>
-            <li>You have a direct conflict of interest, such as you will be intending to apply to this competition</li>
-        </ul>
+        <p>If you have any queries, please contact the competitions team <a href="mailto:competitions@innovateuk.gov.uk">**competitions@innovateuk.gov.uk</a></p>
 
     </section>
-
-	<form>
-        <fieldset>
-            <legend class="visuallyhidden">Are you available to assess this competition?</legend>
-            <h2 class="heading-medium">Are you available to assess this competition?</h2>
-            <a href="/prototypes/1360-assessor-invite-start" class="button large" name="accept" value="accepted" type="submit">Accept</a>
-            <a role="button" tabindex="0" class="button button-warning large" href="#" data-js-modal="modal-reject-assessment">Reject</a>
-        </fieldset>
-    </form>
-
-    <div th:include="prototypes/fragments/assessor-view :: prototype-modal-comp-reject" th:with="backTo='/prototypes/4081-assessor-thank-you'" th:remove="tag" />
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
