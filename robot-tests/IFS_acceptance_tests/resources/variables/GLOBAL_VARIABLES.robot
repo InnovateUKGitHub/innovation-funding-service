@@ -1,5 +1,5 @@
 *** Variables ***
-${BROWSER}        Firefox
+${BROWSER}        chrome
 ${SERVER_BASE}    ifs-local-dev
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
