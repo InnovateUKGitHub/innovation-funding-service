@@ -146,10 +146,10 @@ IFS.core.autoSave = (function(){
                       //set the repeatable row id for referencing the removal, leave the original id as that is used for the promise
                       row.attr('data-repeatable-row', data.field_id);
                   }
-                  // set the form-saved-state
-                  jQuery('body').trigger('updateSerializedFormState');
-
             	  }
+                
+                // set the form-saved-state
+                jQuery('body').trigger('updateSerializedFormState');
 
                 if(data.success == 'true'){
                 	//save message
