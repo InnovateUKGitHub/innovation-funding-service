@@ -230,6 +230,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
+                  <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
 	            </td>
 	        </tr>
 	        <tr th:attr="data-repeatable-row=${costIdentifier}">
@@ -467,7 +468,7 @@
 	                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
 	                        />
 	            </td>
-	            <td class="alignright remove" th:unless="${complete == 'complete'}">
+	            <td class="alignright buttoncolumn remove" th:unless="${complete == 'complete'}">
 	                <button th:unless="${cost.id == null}"
 	                        type="submit"
 	                        name="remove_cost"
@@ -475,7 +476,7 @@
 	                        th:class="'buttonlink js-remove-row'"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
-	                <span th:if="${cost.id == null}" th:id="${'cost-materials-'+costIdentifier+'-buttonplaceholder'}"></span>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
 	            </td>
 	        </tr>
         </div>
@@ -648,7 +649,7 @@
 	                    th:value="${cost.id}"
 	                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	            </button>
-	            <span th:if="${cost.id == null}" th:id="${'cost-capital_usage-'+costIdentifier+'-buttonplaceholder'}"></span>
+	            <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
 	        </div>
         </div>
     </div>
@@ -751,7 +752,7 @@
 	                    th:value="${cost.id}"
 	                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	            </button>
-	            <span th:if="${cost.id == null}" th:id="${'cost-subcontracting-'+costIdentifier+'-buttonplaceholder'}"></span>
+	            <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
 	        </div>
         </div>
     </div>
@@ -875,7 +876,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
-	                <span th:if="${cost.id == null}" th:id="${'cost-'+type+'-'+costIdentifier+'-buttonplaceholder'}"></span>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
 	            </td>
 	        </tr>
         </div>
@@ -955,7 +956,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
-	                <span th:if="${cost.id == null}" th:id="${'cost-'+type+'-'+costIdentifier+'-buttonplaceholder'}"></span>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
 	            </td>
 	        </tr>
         </div>
@@ -1110,7 +1111,7 @@
 	                        th:value="${cost.id}"
 	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
 	                </button>
-	                <span th:if="${cost.id == null}" th:id="${'cost-'+type+'-'+costIdentifier+'-buttonplaceholder'}"></span>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
 	            </td>
 	        </tr>
         </div>

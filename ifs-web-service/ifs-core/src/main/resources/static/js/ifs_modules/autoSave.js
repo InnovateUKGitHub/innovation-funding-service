@@ -137,17 +137,16 @@ IFS.core.autoSave = (function(){
                   var row = jQuery('[data-repeatable-row="'+unsavedCostId+'"]');
 
                   //add the button
-                  var button = row.find('[name="remove_cost"]');
-              		if(button.length === 0) {
-                      var buttonColumn = row.find('.buttoncolumn');
+                  var button = row.find('.buttonplaceholder');
+              		if(button.length) {
                 			var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + data.field_id + '">Remove</button>';
-                			buttonColumn.append(buttonHtml);
+                			row.find('.buttonplaceholder').replaceWith(buttonHtml);
 
                       //set the repeatable row id for referencing the removal, leave the original id as that is used for the promise
                       row.attr('data-repeatable-row', data.field_id);
                   }
             	  }
-                
+
                 // set the form-saved-state
                 jQuery('body').trigger('updateSerializedFormState');
 
