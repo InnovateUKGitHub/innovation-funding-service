@@ -8,10 +8,15 @@ import com.worth.ifs.util.CollectionFunctions;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 public class AssessmentOverviewRowViewModel {
 
     private static final String SCOPE_INPUT_TYPE = "assessor_application_in_scope";
     private static final String SCORE_INPUT_TYPE = "assessor_score";
+    private static final String TRUE = "true";
+    private static final String YES = "Yes";
+    private static final String NO = "No";
 
     private Long question;
     private boolean hasInput;
@@ -19,7 +24,8 @@ public class AssessmentOverviewRowViewModel {
     private boolean hasBeenCompleted;
 
     private String assessedScore;
-    private String maximumScore;
+    private Integer maximumScore;
+    private String scopeResponse;
 
 
     public AssessmentOverviewRowViewModel(QuestionResource question, List<FormInputResource> formInputs, List<AssessorFormInputResponseResource> allAssessorFormInputResponses) {
@@ -37,15 +43,17 @@ public class AssessmentOverviewRowViewModel {
         Map<Long, AssessorFormInputResponseResource> formInputResponseMap = CollectionFunctions.simpleToMap(
                                                                                 allAssessorFormInputResponses,
                                                                                 AssessorFormInputResponseResource :: getFormInput);
+        this.maximumScore = question.getAssessorMaximumScore();
 
         formInputs.forEach(input -> {
             if (formInputResponseMap.get(input.getId()) != null) {
                 if (input.getFormInputTypeTitle().equals(SCOPE_INPUT_TYPE)) {
                     this.hasScope = true;
-                    this.assessedScore = formInputResponseMap.get(input.getId()).getValue();
+                    if (!isBlank(formInputResponseMap.get(input.getId()).getValue())) {
+                        this.scopeResponse = formInputResponseMap.get(input.getId()).getValue().equals(TRUE) ? YES : NO;
+                    }
                 } else if (input.getFormInputTypeTitle().equals(SCORE_INPUT_TYPE)) {
-                    this.maximumScore = String.valueOf(question.getAssessorMaximumScore());
-                    this.assessedScore = formInputResponseMap.get(input.getId()).getValue();
+                     this.assessedScore = formInputResponseMap.get(input.getId()).getValue();
                 }
             }
         });
@@ -53,7 +61,7 @@ public class AssessmentOverviewRowViewModel {
         this.hasBeenCompleted = true;
         formInputs.forEach(input -> {
             if (formInputResponseMap.get(input.getId()) == null ||
-                formInputResponseMap.get(input.getId()).getValue().isEmpty()) {
+                    isBlank(formInputResponseMap.get(input.getId()).getValue()) ) {
                 this.hasBeenCompleted = false;
             }
         });
@@ -79,15 +87,9 @@ public class AssessmentOverviewRowViewModel {
         return assessedScore;
     }
 
-    public String getMaximumScore() {
+    public Integer getMaximumScore() {
         return maximumScore;
     }
 
-    public String getScopeAnswer() {
-        if (this.assessedScore.isEmpty()) {
-            return "";
-        } else {
-            return this.assessedScore.equals("1") ? "Yes" : "No";
-        }
-    }
+    public String getScopeResponse() { return scopeResponse; }
 }
