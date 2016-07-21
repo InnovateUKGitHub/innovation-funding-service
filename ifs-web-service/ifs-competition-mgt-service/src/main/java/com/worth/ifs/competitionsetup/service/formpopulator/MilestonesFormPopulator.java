@@ -28,7 +28,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         return CompetitionSetupSection.MILESTONES;
     }
     
-    private String shortDayName;
+    public String shortDayName;
     
     @Override
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
@@ -83,7 +83,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     /*
 	 * Returns the first free letters of the name of the weekday
 	 */
-    private String getNameOfWeek(LocalDateTime localDateTime, String shortDayName) {
+    private String getNameOfDay(LocalDateTime localDateTime, String shortDayName) {
         if (shortDayName == null) {
              shortDayName = "- ";
         } try {
@@ -99,21 +99,21 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         competitionSetupForm.setOpenDateDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setOpenDateMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setOpenDateYear(milestone.getDate().getYear());
-        competitionSetupForm.setOpenDateDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setOpenDateDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateBriefingEvent(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setBriefingEventDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setBriefingEventMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setBriefingEventYear(milestone.getDate().getYear());
-        competitionSetupForm.setBriefingEventDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setBriefingEventDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateSubmissionDate(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setSubmissionDateDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setSubmissionDateMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setSubmissionDateYear(milestone.getDate().getYear());
-        competitionSetupForm.setSubmissionDateDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setSubmissionDateDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
 
     }
 
@@ -121,69 +121,69 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         competitionSetupForm.setAllocateAssessorsDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setAllocateAssessorsMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setAllocateAssessorsYear(milestone.getDate().getYear());
-        competitionSetupForm.setAllocateAssessorsDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setAllocateAssessorsDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateAssessorBriefingDay(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setAssessorBriefingDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setAssessorBriefingMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setAssessorBriefingYear(milestone.getDate().getYear());
-        competitionSetupForm.setAssessorBriefingDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setAssessorBriefingDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateAssessorAccepts(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setAssessorAcceptsDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setAssessorAcceptsMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setAssessorAcceptsYear(milestone.getDate().getYear());
-        competitionSetupForm.setAssessorAcceptsDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setAssessorAcceptsDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateAssessorDeadline(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setAssessorDeadlineDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setAssessorDeadlineMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setAssessorDeadlineYear(milestone.getDate().getYear());
-        competitionSetupForm.setAssessorDeadlineDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setAssessorDeadlineDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateLineDraw(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setLineDrawDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setLineDrawMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setLineDrawYear(milestone.getDate().getYear());
-        competitionSetupForm.setLineDrawDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setLineDrawDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateAssessmentPanel(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setAssessmentPanelDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setAssessmentPanelMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setAssessmentPanelYear(milestone.getDate().getYear());
-        competitionSetupForm.setAssessmentPanelDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setAssessmentPanelDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populatePanelDate(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setPanelDateDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setPanelDateMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setPanelDateYear(milestone.getDate().getYear());
-        competitionSetupForm.setPanelDateDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setPanelDateDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateFundersPanel(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setFundersPanelDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setFundersPanelMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setFundersPanelYear(milestone.getDate().getYear());
-        competitionSetupForm.setFundersPanelDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setFundersPanelDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateNotifications(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setNotificationsDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setNotificationsMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setNotificationsYear(milestone.getDate().getYear());
-        competitionSetupForm.setNotificationsDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setNotificationsDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 
     private void populateReleaseFeedback(MilestonesForm competitionSetupForm, MilestoneResource milestone)  {
         competitionSetupForm.setReleaseFeedbackDay(milestone.getDate().getDayOfMonth());
         competitionSetupForm.setReleaseFeedbackMonth(milestone.getDate().getMonthValue());
         competitionSetupForm.setReleaseFeedbackYear(milestone.getDate().getYear());
-        competitionSetupForm.setReleaseFeedbackDayOfWeek(getNameOfWeek(milestone.getDate(), shortDayName));
+        competitionSetupForm.setReleaseFeedbackDayOfWeek(getNameOfDay(milestone.getDate(), shortDayName));
     }
 }

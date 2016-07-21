@@ -1,5 +1,6 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.service.MilestoneRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public void update(List<MilestoneResource> milestones, Long competitionId) {
-        milestoneRestService.update(milestones, competitionId).getSuccessObjectOrThrowException();
+    public List<ValidationMessages> update(List<MilestoneResource> milestones, Long competitionId) {
+       return milestoneRestService.update(milestones, competitionId).getSuccessObject();
     }
 
     @Override

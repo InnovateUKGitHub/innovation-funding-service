@@ -1,5 +1,6 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.commons.rest.ValidationMessages;
 import org.springframework.stereotype.Service;
 import com.worth.ifs.competition.resource.MilestoneResource;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public interface MilestoneService {
     List<MilestoneResource> getAllDatesByCompetitionId(Long competitionId);
 
-    void update(List<MilestoneResource> milestones, Long competitionId);
+    List<ValidationMessages> update(List<MilestoneResource> milestones, Long competitionId);
 
     MilestoneResource create();
 }

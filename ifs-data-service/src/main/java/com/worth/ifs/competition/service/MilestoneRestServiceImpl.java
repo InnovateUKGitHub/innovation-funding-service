@@ -1,9 +1,11 @@
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
-    public RestResult<Void> update(List<MilestoneResource> milestones, Long competitionId) {
-        return putWithRestResult(milestonesRestURL + "/" + competitionId, milestones, Void.class);
+    public RestResult<List<ValidationMessages>> update(List<MilestoneResource> milestones, Long competitionId) {
+        return putWithRestResult(milestonesRestURL + "/" + competitionId, milestones, new ParameterizedTypeReference<List<ValidationMessages>>() {
+        });
     }
 
     @Override
