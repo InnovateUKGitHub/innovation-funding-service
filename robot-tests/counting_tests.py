@@ -69,6 +69,13 @@ dev_running_tests_pybot_output = shell("pybot --outputdir test_counting --python
 dev_running_tests = tidyUpPybotOutput(dev_running_tests_pybot_output)
 
 
+print "Counting the happy path tests..."
+
+happy_path_tests_pybot_output = shell("pybot --outputdir test_counting --pythonpath IFS_acceptance_tests/libs --dryrun --include HappyPath --exclude Pending --exclude Failing --exclude PendingForDev --exclude FailingForDev IFS_acceptance_tests/tests")
+
+happy_path_tests = tidyUpPybotOutput(happy_path_tests_pybot_output)
+
+
 print "Counting tagged tests..."
 
 failing_tests_pybot_output = shell("pybot --outputdir test_counting --pythonpath IFS_acceptance_tests/libs --dryrun --include Failing IFS_acceptance_tests/tests")
@@ -102,6 +109,8 @@ print  "Test report:"
 print "Tests running locally:", local_running_tests
 
 print "Tests running against the dev server:", dev_running_tests
+
+print "Tests on the happy path run:", happy_path_tests
 
 print "Tests marked as Failing:", failing_tests
 
