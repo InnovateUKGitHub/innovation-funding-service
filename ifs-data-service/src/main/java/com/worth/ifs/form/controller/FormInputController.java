@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Exposes CRUD operations through a REST API to manage {@link com.worth.ifs.form.domain.FormInput} related data.
+ */
 @RestController
 @RequestMapping("/forminput")
 public class FormInputController {
