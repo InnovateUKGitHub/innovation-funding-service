@@ -1,8 +1,6 @@
 #!/bin/bash
 
-sudo echo "Thanks for entering sudo!"
-
-setEnv() {
+function setEnv() {
     case $OSTYPE in
         darwin*)
             echo "Mac detected"
@@ -38,7 +36,7 @@ function coloredEcho(){
     tput sgr0;
 }
 
-function addTestFiles {
+function addTestFiles() {
     echo "***********Adding test files***************"
     echo "***********Making the quarantined directory ***************"
     docker-compose exec data mkdir -p ${virusScanQuarantinedFolder}
@@ -47,7 +45,7 @@ function addTestFiles {
 }
 
 
-function buildAndDeploy {
+function buildAndDeploy() {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
     cd ${dataServiceCodeDir}
     ## Before we start the build we need to have an webtest test build environment
@@ -56,7 +54,7 @@ function buildAndDeploy {
     mv docker-build.gradle docker-build.gradle.tmp
     mv webtest.gradle.tmp docker-build.gradle
     ./gradlew -Pprofile=docker cleanDeploy -x test
-    ./gradlew flywayMigrate
+    ./gradlew -Pprofile=docker flywayMigrate
     ## Replace the webtest build environment with the one we had before.
     echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"
     mv docker-build.gradle.tmp docker-build.gradle
@@ -66,16 +64,17 @@ function buildAndDeploy {
 
 }
 
-function resetLDAP {
-    cd ${shibbolethScriptsPath}
-    ./reset-shibboleth-users.sh
+function resetLDAP() {
+    cd ../setup-files/scripts/docker
+    ./syncShib.sh
 }
 
-function startServers {
+function startServers() {
     pwd
     cd ../setup-files/scripts/docker
-    ./clean.sh
     ./startup.sh
+    ./deploy.sh -x test
+    ./syncShib.sh
     wait
     cd ../shibboleth/ui
     # ./deploy-ui.sh
@@ -93,35 +92,45 @@ function startServers {
     resetLDAP
 }
 
+function startSeleniumGrid() {
+    cd ../robot-tests
+    cd ${testDirectory}
+    cd ${scriptDir}
+    declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
+    echo ${suiteCount}
+    docker-compose up -d
+    docker-compose scale chrome=${suiteCount}
+    unset suiteCount
+}
 
-function runTests {
+function startPybot() {
+    echo "********** starting pybot for ${1} **************"
+    targetDir=`basename ${1}`
+    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
+}
+
+function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
-    if [ "$localMailSendingImplemented" ]
-    then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
-    else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
-    fi
-}
+    for D in `find ${testDirectory}/* -maxdepth 0 -type d`
+    do
+        startPybot ${D}
+    done
 
+    for job in `jobs -p`
+    do
+        wait $job
+    done
 
-function runHappyPathTests {
-    echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
-    cd ${scriptDir}
-    if [ "$localMailSendingImplemented" ]
-    then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
-    else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
-    fi
+    results=`find target/* -regex ".*/output\.xml"`
+    rebot -d target ${results}
 }
 
 function runTestsRemotely {
     echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude Failing --exclude Pending --exclude FailingForDev --name IFS ${testDirectory}/*
 }
 
 setEnv
@@ -130,40 +139,13 @@ echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
 uploadFileDir=${scriptDir}"/upload_files"
-cd ../setup-files/scripts/environments
-shibbolethScriptsPath=$(pwd)
-echo "shibbolethScriptsPath:        ${shibbolethScriptsPath}"
-
-cd ../../../ifs-data-service
-dateFormat=`date +%Y-%m-%d`
+cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
-dataWebappsPath=`sed '/^\#/d' docker-build.gradle | grep 'ext.tomcatWebAppsDir'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "dataWebappsPath:   ${dataWebappsPath}"
-dataTomcatPath="$(dirname "$dataWebappsPath")"
-echo "dataTomcatPath:    ${dataTomcatPath}"
-dataTomcatBinPath=${dataTomcatPath}"/bin"
-echo "dataTomcatBinPath: ${dataTomcatBinPath}"
-dataLogPath=$dataTomcatPath"/logs"
-echo "dataLogPath:       ${dataLogPath}"
-dataLogFilePath=${dataLogPath}"/catalina."${dateFormat}".log"
-echo "dataLogFilePath:   ${dataLogFilePath}"
-dataPort=`sed '/^\#/d' docker-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "dataPort:          ${dataPort}"
-mysqlUser=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsDatasourceUsername'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "mysqlUser:         ${mysqlUser}"
-mysqlPassword=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsDatasourcePassword'  | cut -d "=" -f2 | sed 's/"//g'`
 baseFileStorage=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`
-ifsDatasourceHost=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsDatasourceHost'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "${baseFileStorage}"
-storedFileFolder=${baseFileStorage}/ifs/
-echo "${storedFileFolder}"
-virusScanHoldingFolder=${baseFileStorage}/virus-scan-holding/
-echo "virusScanHoldingFolder:		${virusScanHoldingFolder}"
 virusScanQuarantinedFolder=${baseFileStorage}/virus-scan-quarantined
 echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
-virusScanScannedFolder=${baseFileStorage}/virus-scan-scanned
-echo "virusScanScannedFolder:		${virusScanScannedFolder}"
 echo "We are about to delete the above directories, make sure that they are right ones!"
 postcodeLookupKey=`sed '/^\#/d' docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
@@ -175,20 +157,9 @@ else
     echo "Postcode lookup implemented. The tests will expect proper data from the SuT."
     postcodeLookUpImplemented='YES'
 fi
-sendMailLocally=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsSendMailLocally'  | cut -d "=" -f2 | sed 's/"//g'`
-if [ $sendMailLocally = 'false' ]
-then
-    echo "Sending mail locally not implemented"
-    unset localMailSendingImplemented
-else
-    echo "Sending mail locally is implemented. The tests will expect emails to be sent out to all whitelisted recipients. Please take care not to spam anyone!"
-    localMailSendingImplemented='YES'
-fi
 cd ../ifs-web-service
 webServiceCodeDir=`pwd`
 echo "webServiceCodeDir: ${webServiceCodeDir}"
-webPort=`sed '/^\#/d' docker-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
-echo "webPort:           ${webPort}"
 webBase="ifs-local-dev"
 echo "webBase:           ${webBase}"
 
@@ -196,38 +167,19 @@ echo "webBase:           ${webBase}"
 unset opt
 unset quickTest
 unset testScrub
-unset happyPath
-useXvfb=true
-unset remoteRun
-unset startServersInDebugMode
 
 
-testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :D :x" opt ; do
+testDirectory='IFS_acceptance_tests/tests'
+while getopts ":q :t :d:" opt ; do
     case $opt in
         q)
          quickTest=1
         ;;
-	t)
-	 testScrub=1
-	;;
-	h)
-	 happyPath=1
-	;;
-	p)
-	 happyPathTestOnly=1
-	;;
-	x)
-	 useXvfb=false
-	;;
-        r)
-         remoteRun=1
+        t)
+         testScrub=1
         ;;
         d)
          testDirectory="$OPTARG"
-        ;;
-        D)
-         startServersInDebugMode=true
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
@@ -247,6 +199,8 @@ while getopts ":q :t :h :p :r :d: :D :x" opt ; do
     esac
 done
 
+startSeleniumGrid
+
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
@@ -259,21 +213,6 @@ then
     buildAndDeploy
     startServers
     addTestFiles
-elif [ "$happyPath" ]
-then
-    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
-    buildAndDeploy
-    startServers
-    addTestFiles
-    runHappyPathTests
-elif [ "$happyPathTestOnly" ]
-then
-    echo "run test only"
-    runHappyPathTests
-elif [ "$remoteRun" ]
-then
-    echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
-    runTestsRemotely
 else
     echo "using quickTest:   FALSE" >&2
     buildAndDeploy
