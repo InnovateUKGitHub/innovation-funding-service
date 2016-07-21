@@ -20,12 +20,9 @@ if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.application = {};
 IFS.application.loadOrder = {
   common : {
-    init : function(){
-      IFS.application.wordCount.init();
-    },
+    init : function(){},
     finalize : function(){
       IFS.application.progressiveSelect.init();
-      IFS.application.pieChart.init();
     }
   },
   'app-form' : {
