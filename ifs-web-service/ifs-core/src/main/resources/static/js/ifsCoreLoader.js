@@ -41,5 +41,11 @@ IFS.core.loadOrder = {
       IFS.core.autoSave.init();
       IFS.core.finance.init();
     }
+  },
+  'assessment-form' : {
+    init : function(){
+      IFS.core.unsavedChanges.init();
+      IFS.core.autoSave.init();
+    }
   }
 };

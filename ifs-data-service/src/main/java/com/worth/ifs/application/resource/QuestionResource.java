@@ -15,20 +15,17 @@ public class QuestionResource {
     private String name;
     private String shortName;
     private String description;
-    private String assessorGuidanceQuestion;
-    private String assessorGuidanceAnswer;
     private final List<Long> formInputs = new ArrayList<>();
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
     private Integer priority;
-    private boolean needingAssessorScore;
-    private boolean needingAssessorFeedback;
     private Long competition;
     private Long section;
     private List<Long> questionStatuses;
     private List<Long> costs;
     private String questionNumber;
+    private Integer assessorMaximumScore;
 
     public QuestionResource() {
         //default constructor
@@ -48,22 +45,6 @@ public class QuestionResource {
 
     public String getDescription() {
         return this.description;
-    }
-
-    public String getAssessorGuidanceQuestion() {
-        return assessorGuidanceQuestion;
-    }
-
-    public void setAssessorGuidanceQuestion(String assessorGuidanceQuestion) {
-        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
-    }
-
-    public String getAssessorGuidanceAnswer() {
-        return assessorGuidanceAnswer;
-    }
-
-    public void setAssessorGuidanceAnswer(String assessorGuidanceAnswer) {
-        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
     }
 
     public List<Long> getQuestionStatuses() {
@@ -123,6 +104,9 @@ public class QuestionResource {
         return this.questionNumber;
     }
 
+    public Integer getAssessorMaximumScore() {
+        return assessorMaximumScore;
+    }
 
     public List<Long> getFormInputs() {
         return this.formInputs;
@@ -139,22 +123,6 @@ public class QuestionResource {
 
     public Boolean getAssignEnabled() {
         return this.assignEnabled;
-    }
-
-    public boolean isNeedingAssessorFeedback() {
-        return needingAssessorFeedback;
-    }
-
-    public void setNeedingAssessorFeedback(boolean needingAssessorFeedback) {
-        this.needingAssessorFeedback = needingAssessorFeedback;
-    }
-
-    public boolean isNeedingAssessorScore() {
-        return needingAssessorScore;
-    }
-
-    public void setNeedingAssessorScore(boolean needingAssessorScore) {
-        this.needingAssessorScore = needingAssessorScore;
     }
 
     public void setId(Long id) {
@@ -193,6 +161,10 @@ public class QuestionResource {
         this.questionNumber = questionNumber;
     }
 
+    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
+        this.assessorMaximumScore = assessorMaximumScore;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -206,14 +178,10 @@ public class QuestionResource {
         QuestionResource that = (QuestionResource) o;
 
         return new EqualsBuilder()
-                .append(needingAssessorScore, that.needingAssessorScore)
-                .append(needingAssessorFeedback, that.needingAssessorFeedback)
                 .append(id, that.id)
                 .append(name, that.name)
                 .append(shortName, that.shortName)
                 .append(description, that.description)
-                .append(assessorGuidanceQuestion, that.assessorGuidanceQuestion)
-                .append(assessorGuidanceAnswer, that.assessorGuidanceAnswer)
                 .append(formInputs, that.formInputs)
                 .append(markAsCompletedEnabled, that.markAsCompletedEnabled)
                 .append(assignEnabled, that.assignEnabled)
@@ -224,6 +192,7 @@ public class QuestionResource {
                 .append(questionStatuses, that.questionStatuses)
                 .append(costs, that.costs)
                 .append(questionNumber, that.questionNumber)
+                .append(assessorMaximumScore, that.assessorMaximumScore)
                 .isEquals();
     }
 
@@ -234,20 +203,17 @@ public class QuestionResource {
                 .append(name)
                 .append(shortName)
                 .append(description)
-                .append(assessorGuidanceQuestion)
-                .append(assessorGuidanceAnswer)
                 .append(formInputs)
                 .append(markAsCompletedEnabled)
                 .append(assignEnabled)
                 .append(multipleStatuses)
                 .append(priority)
-                .append(needingAssessorScore)
-                .append(needingAssessorFeedback)
                 .append(competition)
                 .append(section)
                 .append(questionStatuses)
                 .append(costs)
                 .append(questionNumber)
+                .append(assessorMaximumScore)
                 .toHashCode();
     }
 }

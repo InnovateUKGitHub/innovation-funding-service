@@ -1,20 +1,5 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryType;
@@ -30,6 +15,20 @@ import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -53,6 +52,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionTypeMapper competitionTypeMapper;
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
+    @Autowired
+    private CompetitionCoFunderService competitionCoFunderService;
 
 
     @Override
@@ -96,6 +97,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         saveInnovationArea(competitionResource);
         saveInnovationSector(competitionResource);
         saveResearchCategories(competitionResource);
+        saveCoFunders(competitionResource);
+    }
+
+    private void saveCoFunders(CompetitionResource competitionResource) {
+        competitionCoFunderService.reinsertCoFunders(competitionResource);
     }
 
     private void saveInnovationSector(CompetitionResource competitionResource) {

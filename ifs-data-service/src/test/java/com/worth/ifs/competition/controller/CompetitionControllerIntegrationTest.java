@@ -5,6 +5,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.util.fixtures.CompetitionCoFundersFixture;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +171,41 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         checkUpdatedCompetitionCategories(savedCompetition);
     }
 
+
+    @Rollback
+    @Test
+    public void testUpdateCompetitionCoFunders() throws Exception {
+        getAllCompetitions(2);
+
+        // Create new competition
+        CompetitionResource competition = createNewCompetition();
+
+        getAllCompetitions(3);
+
+        // Update competition
+        competition.setName(COMPETITION_NAME_UPDATED);
+        Long sectorId = Long.valueOf(INNOVATION_SECTOR_ID);
+        Long areaId = Long.valueOf(INNOVATION_AREA_ID);
+        competition.setInnovationSector(sectorId);
+        competition.setInnovationArea(areaId);
+
+        //With one co-funder
+        competition.setCoFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(1, competition.getId()));
+        RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
+        assertTrue("Assert save is success", saveResult.isSuccess());
+        getAllCompetitions(3);
+        CompetitionResource savedCompetition = saveResult.getSuccessObject();
+        assertEquals(1, savedCompetition.getCoFunders().size());
+
+        // Now re-insert with 2 co-funders
+        competition.setCoFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(2, competition.getId()));
+        saveResult = controller.saveCompetition(competition, competition.getId());
+        assertTrue("Assert save is success", saveResult.isSuccess());
+        savedCompetition = saveResult.getSuccessObject();
+        // we should expect in total two co-funders.
+        assertEquals(2, savedCompetition.getCoFunders().size());
+    }
+
     @Rollback
     @Test
     public void testCompetitionCategorySaving() throws Exception {
@@ -252,6 +288,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertThat(competition.getName(), isEmptyOrNullString());
         return competition;
     }
+
 
     private void checkUpdatedCompetitionCategories(CompetitionResource savedCompetition) {
         assertEquals(COMPETITION_NAME_UPDATED, savedCompetition.getName());

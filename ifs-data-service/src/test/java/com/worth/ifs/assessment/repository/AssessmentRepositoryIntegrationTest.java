@@ -28,6 +28,9 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     private ProcessRoleRepository processRoleRepository;
 
     @Autowired
+    private AssessorFormInputResponseRepository assessorFormInputResponseRepository;
+
+    @Autowired
     @Override
     protected void setRepository(final AssessmentRepository repository) {
         this.repository = repository;
@@ -36,6 +39,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     @Test
     @Rollback
     public void testFindAll() throws Exception {
+        assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
         final ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
