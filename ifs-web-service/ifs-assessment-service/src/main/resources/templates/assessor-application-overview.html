@@ -29,7 +29,7 @@
               <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
-                        <div th:replace="single-section-details :: sectionDetails (question=${question},  responses=${responses}, section=${section}, sectionQuestions=${sectionQuestions}, currentApplication=${currentApplication}, assessmentId=${assessmentId})"></div>
+                        <div th:replace="single-section-details :: sectionDetails (section=${section}, sectionQuestions=${sectionQuestions}, assessmentId=${assessmentId}, questionFeedback=${questionFeedback})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
                     <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">

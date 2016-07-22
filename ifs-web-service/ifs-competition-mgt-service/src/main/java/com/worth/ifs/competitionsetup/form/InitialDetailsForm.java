@@ -40,13 +40,6 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "Please select a lead technologist")
     private Long leadTechnologistUserId;
 
-    @NotEmpty(message = "Please enter a PAF number")
-    private String pafNumber;
-    @NotEmpty(message = "Please generate a competition code")
-    private String competitionCode;
-    @NotEmpty(message = "Please enter a budget code")
-    private String budgetCode;
-
     public Long getExecutiveUserId() {
         return executiveUserId;
     }
@@ -119,27 +112,5 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.leadTechnologistUserId = leadTechnologistUserId;
     }
 
-    public String getPafNumber() {
-        return pafNumber;
-    }
 
-    public void setPafNumber(String pafNumber) {
-        this.pafNumber = pafNumber;
-    }
-
-    public String getCompetitionCode() {
-        return competitionCode;
-    }
-
-    public void setCompetitionCode(String competitionCode) {
-        this.competitionCode = competitionCode;
-    }
-
-    public String getBudgetCode() {
-        return budgetCode;
-    }
-
-    public void setBudgetCode(String budgetCode) {
-        this.budgetCode = budgetCode;
-    }
 }

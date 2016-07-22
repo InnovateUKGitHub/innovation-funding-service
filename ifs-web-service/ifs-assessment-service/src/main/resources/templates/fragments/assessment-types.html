@@ -20,47 +20,39 @@
 
 <!-- ======== Assessment - assessor feedback textarea and word count ======= -->
 <div th:fragment="textarea (field)">
-    <fieldset>
-        <legend class="visuallyhidden">Question feedback</legend>
-        <div class="form-group">
-            <div class="form-group">
-                <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                    <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
-                </label>
+    <div class="form-group">
+        <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
+            <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+        </label>
 
-                <details th:unless="${#strings.isEmpty(field.guidanceQuestion)}">
-                    <summary>
-                        <span class="summary" th:text="${field.guidanceQuestion}" />
-                    </summary>
-                    <div class="panel-indent" ifs:utext="${field.guidanceAnswer}" />
-                </details>
+        <details th:unless="${#strings.isEmpty(field.guidanceQuestion)}">
+            <summary>
+                <span class="summary" th:text="${field.guidanceQuestion}" />
+            </summary>
+            <div class="panel-indent" ifs:utext="${field.guidanceAnswer}" />
+        </details>
 
-                <div class="textarea-wrapped word-count">
-                    <textarea th:field="*{formInput[__${field.id}__]}" id="assessor-question-feedback-text" th:attr="data-max_words=${field.wordCount}">
-                    </textarea>
+        <div class="textarea-wrapped word-count">
+            <textarea th:field="*{formInput[__${field.id}__]}" th:attr="data-max_words=${field.wordCount}" th:id="'form-textarea-'+${field.id}">
+            </textarea>
 
-                    <div class="textarea-footer">
-                        <div th:include="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${model.getWordsRemaining(field.id)})" th:remove="tag"/>
-                    </div>
-                </div>
+            <div class="textarea-footer">
+                <div th:include="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${model.getWordsRemaining(field.id)})" th:remove="tag" />
             </div>
         </div>
-    </fieldset>
+    </div>
 </div>
 
 
 <!-- =================== Assessment feedback score ============================== -->
 <div th:fragment="assessor_score (field)">
-    <fieldset>
-        <legend class="visuallyhidden">Question score</legend> 
-        <div class="form-group">
-            <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
-            <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
-                <option value="">Set score</option>
-                <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" />
-            </select> / 10
-        </div>
-    </fieldset>
+    <div class="form-group">
+        <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
+        <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
+            <option value="">Set score</option>
+            <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" />
+        </select> / 10
+    </div>
 </div>
 
 

@@ -1,7 +1,9 @@
 package com.worth.ifs.competition.resource;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +28,8 @@ public class CompetitionResource {
     private List<Long> questions = new ArrayList<>();
     private List<Long> sections = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
+    private List<CompetitionCoFunderResource> coFunders = new ArrayList<>();
+
     private String name;
     private String description;
     private LocalDateTime startDate;
@@ -52,19 +56,19 @@ public class CompetitionResource {
     private String pafCode;
     private String budgetCode;
     private String code;
-    
+
     private boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
     private LeadApplicantType leadApplicantType;
     private Set<Long> researchCategories;
-    
+
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private String activityCode;
     private String innovateBudget;
-    private String coFunders;
-    private String coFundersBudget;
+    private String funder;
+    private BigDecimal funderBudget;
 
 
     public CompetitionResource() {
@@ -91,7 +95,7 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
-    public boolean isOpen(){
+    public boolean isOpen() {
         return Status.OPEN.equals(competitionStatus);
     }
 
@@ -162,6 +166,11 @@ public class CompetitionResource {
         return assessmentEndDate;
     }
 
+    public String assementEndDateDisplay() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM YYYY");
+        return getAssessmentEndDate().format(formatter);
+    }
+
     public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
         this.assessmentEndDate = assessmentEndDate;
     }
@@ -198,7 +207,7 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
-    public boolean isClosingSoon(){
+    public boolean isClosingSoon() {
         long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(LocalDateTime.now(), this.endDate);
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
     }
@@ -267,14 +276,14 @@ public class CompetitionResource {
     public void setAcademicGrantPercentage(Integer academicGrantPercentage) {
         this.academicGrantPercentage = academicGrantPercentage;
     }
-    
+
     public LocalDateTime getFundersPanelEndDate() {
-		return fundersPanelEndDate;
-	}
-    
+        return fundersPanelEndDate;
+    }
+
     public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
-		this.fundersPanelEndDate = fundersPanelEndDate;
-	}
+        this.fundersPanelEndDate = fundersPanelEndDate;
+    }
 
     public Long getExecutive() {
         return executive;
@@ -355,14 +364,14 @@ public class CompetitionResource {
     public void setInnovationAreaName(String innovationAreaName) {
         this.innovationAreaName = innovationAreaName;
     }
-    
+
     public Set<Long> getResearchCategories() {
-		return researchCategories;
-	}
-    
+        return researchCategories;
+    }
+
     public void setResearchCategories(Set<Long> researchCategories) {
-		this.researchCategories = researchCategories;
-	}
+        this.researchCategories = researchCategories;
+    }
 
     public List<Long> getMilestones() {
         return milestones;
@@ -371,46 +380,46 @@ public class CompetitionResource {
     public void setMilestones(List<Long> milestones) {
         this.milestones = milestones;
     }
-    
+
     public boolean isMultiStream() {
-		return multiStream;
-	}
-    
+        return multiStream;
+    }
+
     public void setMultiStream(boolean multiStream) {
-		this.multiStream = multiStream;
-	}
-    
+        this.multiStream = multiStream;
+    }
+
     public String getStreamName() {
-		return streamName;
-	}
-    
+        return streamName;
+    }
+
     public void setStreamName(String streamName) {
-		this.streamName = streamName;
-	}
-    
+        this.streamName = streamName;
+    }
+
     public CollaborationLevel getCollaborationLevel() {
-		return collaborationLevel;
-	}
-    
+        return collaborationLevel;
+    }
+
     public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
-		this.collaborationLevel = collaborationLevel;
-	}
-    
+        this.collaborationLevel = collaborationLevel;
+    }
+
     public LeadApplicantType getLeadApplicantType() {
-		return leadApplicantType;
-	}
-    
+        return leadApplicantType;
+    }
+
     public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
-		this.leadApplicantType = leadApplicantType;
-	}
-    
+        this.leadApplicantType = leadApplicantType;
+    }
+
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
-		return sectionSetupStatus;
-	}
-    
+        return sectionSetupStatus;
+    }
+
     public void setSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
-		this.sectionSetupStatus = sectionSetupStatus;
-	}
+        this.sectionSetupStatus = sectionSetupStatus;
+    }
 
     public enum Status {
         COMPETITION_SETUP, COMPETITION_SETUP_FINISHED, NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP
@@ -432,19 +441,27 @@ public class CompetitionResource {
         this.innovateBudget = innovateBudget;
     }
 
-    public String getCoFunders() {
+    public String getFunder() {
+        return funder;
+    }
+
+    public void setFunder(String funder) {
+        this.funder = funder;
+    }
+
+    public BigDecimal getFunderBudget() {
+        return funderBudget;
+    }
+
+    public void setFunderBudget(BigDecimal funderBudget) {
+        this.funderBudget = funderBudget;
+    }
+
+    public List<CompetitionCoFunderResource> getCoFunders() {
         return coFunders;
     }
 
-    public void setCoFunders(String coFunders) {
+    public void setCoFunders(List<CompetitionCoFunderResource> coFunders) {
         this.coFunders = coFunders;
-    }
-
-    public String getCoFundersBudget() {
-        return coFundersBudget;
-    }
-
-    public void setCoFundersBudget(String coFundersBudget) {
-        this.coFundersBudget = coFundersBudget;
     }
 }
