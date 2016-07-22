@@ -4,6 +4,8 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.util.CollectionFunctions;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -95,4 +97,36 @@ public class AssessmentOverviewRowViewModel {
     }
 
     public String getScopeResponse() { return scopeResponse; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessmentOverviewRowViewModel that = (AssessmentOverviewRowViewModel) o;
+
+        return new EqualsBuilder()
+                .append(hasInput, that.hasInput)
+                .append(hasScope, that.hasScope)
+                .append(hasBeenCompleted, that.hasBeenCompleted)
+                .append(question, that.question)
+                .append(assessedScore, that.assessedScore)
+                .append(maximumScore, that.maximumScore)
+                .append(scopeResponse, that.scopeResponse)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(question)
+                .append(hasInput)
+                .append(hasScope)
+                .append(hasBeenCompleted)
+                .append(assessedScore)
+                .append(maximumScore)
+                .append(scopeResponse)
+                .toHashCode();
+    }
 }
