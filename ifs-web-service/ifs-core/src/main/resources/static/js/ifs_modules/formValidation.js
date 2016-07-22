@@ -130,44 +130,50 @@ IFS.core.formValidation = (function(){
         checkPasswordPolicy : function(field,showMessage){
             var password = field.val();
             var confirmsToPasswordPolicy = true;
+
             //we only check for the policies if there is something filled in
             if(password.length){
+              var upperCaseErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-uppercase');
+              var lowerCaseErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-lowercase');
+              var numberErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-number');
+              var nameErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-name');
+
               var uppercase = /(?=\S*?[A-Z])/;
               if(uppercase.test(password) === false){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.uppercase); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,upperCaseErrorMessage); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.uppercase); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,upperCaseErrorMessage); }
               }
 
               var lowercase = /(?=\S*?[a-z])/;
               if(lowercase.test(password) === false){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.lowercase); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,lowerCaseErrorMessage); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.lowercase); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,lowerCaseErrorMessage); }
               }
 
               var number = /(?=\S*?[0-9])/;
               if(number.test(password) === false){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.number); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,numberErrorMessage); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.number); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,numberErrorMessage); }
               }
 
               var firstname = jQuery(s.passwordPolicy.fields.firstname).val();
               var lastname = jQuery(s.passwordPolicy.fields.lastname).val();
               if(firstname.replace(' ','').length || lastname.replace(' ','').length){
                 if((password.toLowerCase().indexOf(firstname.toLowerCase()) > -1) || (password.toLowerCase().indexOf(lastname.toLowerCase()) > -1)){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.name);}
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,nameErrorMessage);}
                   confirmsToPasswordPolicy = false;
                 }
                 else {
-                    if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.name);}
+                    if(showMessage){ IFS.core.formValidation.setValid(field,nameErrorMessage);}
                 }
               }
             }
@@ -374,6 +380,8 @@ IFS.core.formValidation = (function(){
           var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'));
           var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0));
           var validNumbers = IFS.core.formValidation.checkNumber(d,false) && IFS.core.formValidation.checkNumber(m,false) && IFS.core.formValidation.checkNumber(y,false);
+          var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup,'date-invalid');
+          var futureErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup,'date-future');
 
           if(validNumbers && filledOut){
             var month = parseInt(m.val(),10);
@@ -382,7 +390,7 @@ IFS.core.formValidation = (function(){
             var date = new Date(year,month-1,day); //parse as date to check if it is a valid date
 
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
-                if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setValid(allFields,invalidErrorMessage); }
                 allFields.removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
                 //adding day of week which is not really validation might want to think about this
                 if(addWeekDay.length){
@@ -394,23 +402,23 @@ IFS.core.formValidation = (function(){
                 if(dateGroup.hasClass("js-future-date")){
                   var now = new Date();
                   if(now.setHours(0,0,0,0) <= date.setHours(0,0,0,0)){
-                    if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.future); }
+                    if(showMessage){ IFS.core.formValidation.setValid(allFields,futureErrorMessage); }
                     valid = true;
                   }
                   else {
-                    if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.future); }
+                    if(showMessage){ IFS.core.formValidation.setInvalid(allFields,futureErrorMessage); }
                     valid = false;
                   }
                 }
                 valid = true;
             } else {
-                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
                 allFields.addClass('js-autosave-disabled').attr('data-date','');
                 valid = false;
             }
           }
           else if (filledOut || fieldsVisited){
-                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
                 allFields.addClass('js-autosave-disabled').attr('data-date','');
                 valid = false;
           }
@@ -427,9 +435,27 @@ IFS.core.formValidation = (function(){
         getErrorMessage : function(field,type){
             //first look if there is a custom message defined on the element
             var errorMessage = field.attr('data-'+type+'-errormessage');
+
+            //support for submessages for one type (i.e date invalid / date future) and different password policys
+            var subtype;
+            if(type.indexOf('-') !== -1){
+               var types = type.split('-');
+               type = types[0];
+               subtype = types[1];
+            }
+            else {
+               type = type;
+               subtype = false;
+            }
+
             //if there is no data-errormessage we use the default messagging defined in the settings object
             if (typeof(errorMessage) == 'undefined') {
-              errorMessage = s[type].messageInvalid;
+              if(subtype === false){
+                errorMessage = s[type].messageInvalid;
+              }
+              else {
+                errorMessage = s[type].messageInvalid[subtype];
+              }
             }
             //replace value so we can have text like; this cannot be under %max%
             if(errorMessage.indexOf('%'+type+'%') !== -1){
