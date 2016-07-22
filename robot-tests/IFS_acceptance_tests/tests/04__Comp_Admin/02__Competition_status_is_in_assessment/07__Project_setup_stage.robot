@@ -452,7 +452,7 @@ Bank details server side validations
     When the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
     Then the user should see an error       Please enter an account number
     And the user should see an error        Please enter a sort code
-    And the user should see an error        You need to select a bank address before you can continue
+    And the user should see an error        You need to select a billing address before you can continue
 
 
 Bank details client side validations
@@ -462,7 +462,7 @@ Bank details client side validations
     And the user moves focus away from the element     name=accountNumber
     Then the user should not see the text in the page        Please enter an account number
     And the user should see an error       Please enter a valid account number
-    When the user enters text to a text field      name=accountNumber    12345678
+    When the user enters text to a text field      name=accountNumber    12345679
     And the user moves focus away from the element     name=accountNumber
     Then the user should not see the text in the page    Please enter an account number
     And the user should not see the text in the page     Please enter a valid account number
@@ -474,7 +474,7 @@ Bank details client side validations
     Then the user should not see the text in the page      Please enter a sort code
     And the user should not see the text in the page      Please enter a valid sort code
     When the user selects the radio button      addressType    REGISTERED
-    Then the user should not see the text in the page      You need to select a bank address before you can continue
+    Then the user should not see the text in the page      You need to select a billing address before you can continue
 
 
 Bank account postcode lookup
@@ -502,10 +502,10 @@ Bank details submission
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page      Your bank account details have been submitted to Innovate UK
+    And the user should not see the text in the page      Your bank details have been approved
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Your bank account details have been submitted to Innovate UK
+    And the user should see the text in the page    Your bank details have been approved
     And the user should see the element       css=.success-alert
     Then the user navigates to the page    ${successful_project_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)

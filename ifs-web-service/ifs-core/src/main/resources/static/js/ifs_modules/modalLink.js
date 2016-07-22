@@ -36,10 +36,7 @@ IFS.core.modal = (function(){
           var formValid = true;
           if((button.closest('form:not([novalidate])').length) && (s.html5validationMode)){
               var form = button.closest('form:not([novalidate])');
-              form[0].checkValidity();
-              if(form.find(':invalid').length){
-                 formValid = false;
-              }
+              formValid = form[0].checkValidity();
           }
           return formValid;
         },
