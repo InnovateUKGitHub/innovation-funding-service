@@ -14,28 +14,28 @@
 
         <div class="form-block" th:if="${model.registeredAddress}">
             <label class="block-label" for="address-use-org" data-target="registeredAddress">
-                <input id="address-use-org" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a bank address before you can continue" value="REGISTERED" th:field="*{addressType}"/>
+                <input id="address-use-org" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a billing address before you can continue" value="REGISTERED" th:field="*{addressType}"/>
                 Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
             </label>
         </div>
 
         <div class="form-block" th:if="${model.operatingAddress}">
             <label class="block-label" for="address-use-operating" data-target="operatingAddress">
-                <input id="address-use-operating" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a bank address before you can continue" value="OPERATING" th:field="*{addressType}"/>
+                <input id="address-use-operating" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a billing address before you can continue" value="OPERATING" th:field="*{addressType}"/>
                 Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
             </label>
         </div>
 
         <div class="form-block" th:if="${model.bankAddress}">
             <label class="block-label" for="address-use-bank" data-target="bankAddress">
-                <input id="address-use-bank" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a bank address before you can continue" value="BANK_DETAILS" th:field="*{addressType}"/>
+                <input id="address-use-bank" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a billing address before you can continue" value="BANK_DETAILS" th:field="*{addressType}"/>
                 Use bank address (<strong th:text="${model.bankAddress?.postcode}">SN1 2EE</strong>)
             </label>
         </div>
 
         <div class="form-block">
             <label class="block-label" for="address-add-bank" data-target="custom-postcode">
-                <input id="address-add-bank" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a bank address before you can continue" value="ADD_NEW" th:field="*{addressType}"/>
+                <input id="address-add-bank" type="radio" name="bank-address-group" required="required" data-required-errormessage="You need to select a billing address before you can continue" value="ADD_NEW" th:field="*{addressType}"/>
                 Enter an alternative banking address
             </label>
         </div>
