@@ -4,7 +4,7 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
     </head>
 
-    <body th:with="context='assessment'" class="assessment assessment-question">
+    <body th:with="context='assessment'" class="assessment assessment-form">
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -17,7 +17,7 @@
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" class="form-serialize-js">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
@@ -38,6 +38,8 @@
                 <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
                     <div th:replace="fragments/assessment-types :: ${field.formInputTypeTitle} (field=${field})" />
                 </div>
+
+                <input type="hidden" id="application_id" th:value="${model.application.id}" />
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             </form>
