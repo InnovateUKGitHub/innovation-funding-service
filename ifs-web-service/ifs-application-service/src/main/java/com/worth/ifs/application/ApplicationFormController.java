@@ -240,7 +240,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-            List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
+            List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -652,22 +652,27 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                Long userId,
                                                                Long applicationId,
                                                                boolean ignoreEmpty) {
+
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
-                .forEach(question -> question.getFormInputs()
-                        .stream()
-                        .filter(formInput1 -> !"fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()))
-                        .forEach(formInput -> {
-                                    if (params.containsKey("formInput[" + formInput + "]")) {
-                                        String value = request.getParameter("formInput[" + formInput + "]");
-                                        ValidationMessages errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
-                                        if (errors.hasErrors()) {
-                                            LOG.info("save failed. " + question.getId());
-                                            errorMap.put(question.getId(), simpleMap(errors.getErrors(), Error::getErrorMessage));
-                                        }
-                                    }
-                                }
-                        )
+                .forEach(question ->
+                        {
+                            List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
+                            formInputs
+                                    .stream()
+                                    .filter(formInput1 -> !"fileupload".equals(formInput1.getFormInputTypeTitle()))
+                                    .forEach(formInput -> {
+                                                if (params.containsKey("formInput[" + formInput.getId() + "]")) {
+                                                    String value = request.getParameter("formInput[" + formInput.getId() + "]");
+                                                    ValidationMessages errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value, ignoreEmpty);
+                                                    if (errors.hasErrors()) {
+                                                        LOG.info("save failed. " + question.getId());
+                                                        errorMap.put(question.getId(), simpleMap(errors.getErrors(), Error::getErrorMessage));
+                                                    }
+                                                }
+                                            }
+                                    );
+                        }
                 );
         return errorMap;
     }
@@ -677,13 +682,16 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                  final Map<String, String[]> params,
                                                                  HttpServletRequest request,
                                                                  Long applicationId,
-                                                                 Long processRoleId){
+                                                                 Long processRoleId) {
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
-                .forEach(question -> question.getFormInputs()
-                        .stream()
-                        .filter(formInput1 -> "fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()) && request instanceof StandardMultipartHttpServletRequest)
-                        .forEach(formInput -> processFormInput(formInput, params, applicationId, processRoleId, request, errorMap)));
+                .forEach(question -> {
+                    List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
+                    formInputs
+                            .stream()
+                            .filter(formInput1 -> "fileupload".equals(formInput1.getFormInputTypeTitle()) && request instanceof StandardMultipartHttpServletRequest)
+                            .forEach(formInput -> processFormInput(formInput.getId(), params, applicationId, processRoleId, request, errorMap));
+                });
         return errorMap;
     }
 

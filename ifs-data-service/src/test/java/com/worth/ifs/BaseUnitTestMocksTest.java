@@ -15,12 +15,12 @@ import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.assessment.mapper.AssessmentFeedbackMapper;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
-import com.worth.ifs.assessment.repository.AssessmentFeedbackRepository;
+import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.transactional.AssessmentFeedbackService;
+import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
+import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
@@ -31,6 +31,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
+import com.worth.ifs.competition.repository.CompetitionCoFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -70,7 +71,6 @@ import org.mockito.MockitoAnnotations;
  * This is a convenience subclass for all tests that require Mockito support.  At its simplest this class is simply a
  * place to store and initialise Mockito mocks.  Mocks can then be injected into particular attributes using the @InjectMocks
  * annotation.
- *
  */
 public abstract class BaseUnitTestMocksTest extends BaseTest {
 
@@ -95,7 +95,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ApplicationFinanceMapper applicationFinanceMapperMock;
 
-    @Mock    
+    @Mock
     protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
 
     @Mock
@@ -105,10 +105,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentService assessmentServiceMock;
 
     @Mock
-    protected AssessmentFeedbackMapper assessmentFeedbackMapperMock;
+    protected AssessorFormInputResponseMapper assessorFormInputResponseMapperMock;
 
     @Mock
-    protected AssessmentFeedbackService assessmentFeedbackServiceMock;
+    protected AssessorFormInputResponseService assessorFormInputResponseServiceMock;
 
     @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
@@ -118,7 +118,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompAdminEmailRepository compAdminEmailRepositoryMock;
-    
+
     @Mock
     protected ProjectFinanceEmailRepository projectFinanceEmailRepositoryMock;
 
@@ -198,7 +198,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentRepository assessmentRepositoryMock;
 
     @Mock
-    protected AssessmentFeedbackRepository assessmentFeedbackRepositoryMock;
+    protected AssessorFormInputResponseRepository assessorFormInputResponseRepositoryMock;
 
     @Mock
     protected RegistrationService registrationServiceMock;
@@ -286,6 +286,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected BankDetailsService bankDetailsServiceMock;
+
+    @Mock
+    protected CompetitionCoFunderRepository competitionCoFunderRepositoryMock;
 
     @Before
     public void setupMockInjection() {

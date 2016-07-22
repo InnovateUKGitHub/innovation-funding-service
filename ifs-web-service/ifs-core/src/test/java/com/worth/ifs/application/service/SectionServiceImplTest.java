@@ -74,7 +74,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         when(formInputService.getOne(1L)).thenReturn(formInputResource1);
         when(formInputService.getOne(2L)).thenReturn(formInputResource2);
 
-        when(formInputService.findByCompetitionId(anyLong())).thenReturn(asList(formInputResource1, formInputResource2));
+        when(formInputService.findApplicationInputsByCompetition(anyLong())).thenReturn(asList(formInputResource1, formInputResource2));
     }
 
     @Test

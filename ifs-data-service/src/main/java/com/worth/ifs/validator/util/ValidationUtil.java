@@ -10,6 +10,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.validator.ApplicationMarkAsCompleteValidator;
 import com.worth.ifs.validator.MinRowCountValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
@@ -28,6 +29,9 @@ import javax.validation.Validation;
 import javax.validation.groups.Default;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ValidationUtil {
@@ -133,12 +137,13 @@ public class ValidationUtil {
     public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
+        List<FormInput> formInputs = simpleFilter(question.getFormInputs(), formInput -> APPLICATION.equals(formInput.getScope()));
         if (question.hasMultipleStatuses()) {
-            for (FormInput formInput : question.getFormInputs()) {
+            for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
             }
         } else {
-            for (FormInput formInput : question.getFormInputs()) {
+            for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(application, formInput));
             }
         }

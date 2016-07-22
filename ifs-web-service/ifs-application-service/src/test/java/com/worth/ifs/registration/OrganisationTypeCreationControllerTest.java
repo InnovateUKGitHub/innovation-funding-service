@@ -2,6 +2,7 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
+
+import java.net.URLEncoder;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -79,7 +82,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
 
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().value("organisationType", "{\"organisationType\":1}"))
+                .andExpect(cookie().value("organisationType", URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8)))
                 .andExpect(view().name("redirect:/organisation/create/find-organisation"));
     }
 
@@ -96,7 +99,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
 
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().value("organisationType", "{\"organisationType\":2}"))
+                .andExpect(cookie().value("organisationType", URLEncoder.encode("{\"organisationType\":2}", CharEncoding.UTF_8)))
                 .andExpect(view().name("redirect:/organisation/create/type/new-account-organisation-type/?organisationType=2"));
     }
 }

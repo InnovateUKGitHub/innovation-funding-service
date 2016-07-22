@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+
+
+<!-- ======== Assessment - research category ======= -->
+<div th:fragment="assessor_research_category (field)">
+    <div class="form-group extra-margin">
+        <label class="form-label" for="research-category">
+            <span class="form-label-bold">Please select the research category for this project</span>
+        </label>
+        <select class="form-control" id="research-category" th:field="*{formInput[__${field.id}__]}">
+            <option value="">Please select...</option>
+            <option value="Technical feasibility studies">Technical feasibility studies</option>
+            <option value="Industrial research">Industrial research</option>
+            <option value="Experimental development">Experimental development</option>
+        </select>
+    </div>
+</div>
+
+
+<!-- ======== Assessment - assessor feedback textarea and word count ======= -->
+<div th:fragment="textarea (field)">
+    <div class="form-group">
+        <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
+            <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+        </label>
+
+        <details th:unless="${#strings.isEmpty(field.guidanceQuestion)}">
+            <summary>
+                <span class="summary" th:text="${field.guidanceQuestion}" />
+            </summary>
+            <div class="panel-indent" ifs:utext="${field.guidanceAnswer}" />
+        </details>
+
+        <div class="textarea-wrapped word-count">
+            <textarea th:field="*{formInput[__${field.id}__]}" th:attr="data-max_words=${field.wordCount}" th:id="'form-textarea-'+${field.id}">
+            </textarea>
+
+            <div class="textarea-footer">
+                <div th:include="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${model.getWordsRemaining(field.id)})" th:remove="tag" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- =================== Assessment feedback score ============================== -->
+<div th:fragment="assessor_score (field)">
+    <div class="form-group">
+        <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
+        <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
+            <option value="">Set score</option>
+            <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,10)}" />
+        </select> / 10
+    </div>
+</div>
+
+
+<!-- =================== Assessment feedback scope ============================== -->
+<div th:fragment="assessor_application_in_scope (field)">
+    <h2 class="heading-small">Is this application in scope?</h2>
+    <fieldset class="inline">
+        <legend class="visuallyhidden">Is this application in scope?</legend>
+        <div class="form-group">
+            <label class="block-label" th:each="option : ${ { true, false } }">
+                <input th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
+                <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
+            </label>
+        </div>
+    </fieldset>
+</div>
+
+
+</html>

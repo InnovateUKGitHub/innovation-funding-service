@@ -276,7 +276,7 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
         Model model,
         ApplicationForm form,
         List<SectionResource> allSections) {
-        List<FormInputResource> inputs = formInputService.findByCompetitionId(application.getCompetition());
+        List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         addApplicationDetails(application, competition, userId, section, model, form, userApplicationRoles, allSections, inputs);
 

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 
 /**
  * Holder of model attributes for the navigation during the assessment journey.
@@ -25,19 +26,19 @@ public class AssessmentNavigationViewModel {
     }
 
     public String getPreviousUrl() {
-        return previousQuestion.isPresent() ? previousQuestion.map(this::getNavigationUrl).get() : StringUtils.EMPTY;
+        return previousQuestion.map(this::getNavigationUrl).orElse(StringUtils.EMPTY);
     }
 
     public String getPreviousText() {
-        return previousQuestion.isPresent() ? previousQuestion.map(QuestionResource::getShortName).get() : StringUtils.EMPTY;
+        return previousQuestion.flatMap(question -> ofNullable(question.getShortName())).orElse(StringUtils.EMPTY);
     }
 
     public String getNextUrl() {
-        return nextQuestion.isPresent() ? nextQuestion.map(this::getNavigationUrl).get() : StringUtils.EMPTY;
+        return nextQuestion.map(this::getNavigationUrl).orElse(StringUtils.EMPTY);
     }
 
     public String getNextText() {
-        return nextQuestion.isPresent() ? nextQuestion.map(QuestionResource::getShortName).get() : StringUtils.EMPTY;
+        return nextQuestion.flatMap(question -> ofNullable(question.getShortName())).orElse(StringUtils.EMPTY);
     }
 
     public String getOverviewUrl() {

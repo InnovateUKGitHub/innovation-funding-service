@@ -93,7 +93,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     }
 
     private CostType costTypeForQuestion(QuestionResource question) {
-    	List<FormInputResource> formInputs = formInputService.findByQuestion(question.getId());
+    	List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
     	if(formInputs.isEmpty()) {
     		return null;
     	}

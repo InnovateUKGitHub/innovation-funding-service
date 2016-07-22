@@ -4,7 +4,8 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -13,19 +14,16 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
-import static java.lang.Math.max;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Build the model for Assessment Feedback view.
@@ -45,83 +43,63 @@ public class AssessmentFeedbackModelPopulator {
     @Autowired
     private FormInputResponseService formInputResponseService;
 
-    private static final int FEEDBACK_WORDS_LIMIT = 350;
+    @Autowired
+    private AssessorFormInputResponseService assessorFormInputResponseService;
 
-    public AssessmentFeedbackViewModel populateModel(final ApplicationResource application, final Long questionId, final AssessmentFeedbackResource assessmentFeedback) {
-        final CompetitionResource competition = getCompetition(application.getCompetition());
-        final QuestionResource question = getQuestion(questionId);
-        final boolean requireScore = question.isNeedingAssessorScore();
-        final boolean requireFeedback = question.isNeedingAssessorFeedback();
-        final boolean requireCategory = "Scope".equals(question.getShortName());
-        final boolean requireScopeConfirmation = "Scope".equals(question.getShortName());
-        final List<FormInputResource> questionFormInputs = getQuestionFormInputs(questionId);
-        final boolean appendixFormInputExists = questionFormInputs.size() > 1;
-        final FormInputResource questionFormInput = questionFormInputs.get(0);
-        final Map<Long, FormInputResponseResource> questionFormInputResponses = getQuestionFormInputResponsesAsMap(getQuestionFormInputResponses(application.getId(), questionFormInputs));
-        final FormInputResponseResource questionResponse = questionFormInputResponses.get(questionFormInput.getId());
-        final String questionResponseValue = questionResponse != null ? questionResponse.getValue() : null;
-        Integer feedbackWordsLimit = null;
-        Integer feedbackWordsRemaining = null;
-
-        if (requireFeedback) {
-            feedbackWordsLimit = FEEDBACK_WORDS_LIMIT;
-            feedbackWordsRemaining = getFeedbackWordsRemaining(feedbackWordsLimit, assessmentFeedback);
-        }
+    public AssessmentFeedbackViewModel populateModel(Long assessmentId, Long questionId, ApplicationResource application) {
+        CompetitionResource competition = getCompetition(application.getCompetition());
+        QuestionResource question = getQuestion(questionId);
+        List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
+        boolean appendixFormInputExists = applicationFormInputs.size() > 1;
+        FormInputResource applicationFormInput = applicationFormInputs.get(0);
+        Map<Long, FormInputResponseResource> applicantResponses = getApplicantResponses(application.getId(), applicationFormInputs);
+        FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInput.getId());
+        String applicantResponseValue = applicantResponse != null ? applicantResponse.getValue() : null;
+        List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(questionId);
+        Map<Long, AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
 
         if (appendixFormInputExists) {
-            final FormInputResource appendixFormInput = questionFormInputs.get(1);
-            final FormInputResponseResource appendixResponse = questionFormInputResponses.get(appendixFormInput.getId());
-            final boolean appendixResponseExists = appendixResponse != null;
-            if (appendixResponseExists) {
-                final FileDetailsViewModel appendixDetails = new FileDetailsViewModel(appendixResponse.getFilename(), appendixResponse.getFilesizeBytes());
-                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), questionResponseValue, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, question.getAssessorGuidanceQuestion(), question.getAssessorGuidanceAnswer(), feedbackWordsLimit, feedbackWordsRemaining, true, appendixDetails);
+            FormInputResource appendixFormInput = applicationFormInputs.get(1);
+            FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
+            boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
+            if (applicantAppendixResponseExists) {
+                FileDetailsViewModel appendixDetails = new FileDetailsViewModel(applicantAppendixResponse.getFilename(), applicantAppendixResponse.getFilesizeBytes());
+                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses, true, appendixDetails);
             }
         }
 
-        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), questionResponseValue, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, question.getAssessorGuidanceQuestion(), question.getAssessorGuidanceAnswer(), feedbackWordsLimit, feedbackWordsRemaining);
+        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses);
     }
 
-    private CompetitionResource getCompetition(final Long competitionId) {
+    private CompetitionResource getCompetition(Long competitionId) {
         return competitionService.getById(competitionId);
     }
 
-    private QuestionResource getQuestion(final Long questionId) {
+    private QuestionResource getQuestion(Long questionId) {
         return questionService.getById(questionId);
     }
 
-    private List<FormInputResource> getQuestionFormInputs(final Long questionId) {
-        return formInputService.findByQuestion(questionId);
+    private List<FormInputResource> getApplicationFormInputs(Long questionId) {
+        return formInputService.findApplicationInputsByQuestion(questionId);
     }
 
-    private Map<Long, FormInputResponseResource> getQuestionFormInputResponsesAsMap(final List<FormInputResponseResource> formInputResponses) {
+    private List<FormInputResource> getAssessmentFormInputs(Long questionId) {
+        return formInputService.findAssessmentInputsByQuestion(questionId);
+    }
+
+    private Map<Long, FormInputResponseResource> getApplicantResponses(Long applicationId, List<FormInputResource> applicationFormInputs) {
+        RestResult<List<List<FormInputResponseResource>>> applicantResponses = aggregate(applicationFormInputs
+                .stream()
+                .map(formInput -> formInputResponseService.getByFormInputIdAndApplication(formInput.getId(), applicationId))
+                .collect(toList()));
         return simpleToMap(
-                formInputResponses,
-                response -> response.getFormInput()
+                flattenLists(applicantResponses.getSuccessObjectOrThrowException()),
+                FormInputResponseResource::getFormInput
         );
     }
 
-    private List<FormInputResponseResource> getQuestionFormInputResponses(final Long applicationId, final List<FormInputResource> formInputs) {
-        final RestResult<List<List<FormInputResponseResource>>> questionFormInputResponses = aggregate(formInputs
-                .stream()
-                .map(formInput -> formInputResponseService.getByFormInputIdAndApplication(formInput.getId(), applicationId))
-                .collect(Collectors.toList()));
-        return flattenLists(questionFormInputResponses.getSuccessObjectOrThrowException());
-    }
-
-    private int getFeedbackWordsRemaining(final int feedbackWordsLimit, final AssessmentFeedbackResource assessmentFeedback) {
-        final String feedback = assessmentFeedback.getFeedback();
-
-        if (feedbackWordsLimit <= 0 || feedback == null) {
-            return 0;
-        }
-
-        // clean any HTML markup from the feedback
-        final Document doc = Jsoup.parse(feedback);
-        final String cleaned = doc.text();
-
-        final int feedbackLength = cleaned.split("\\s+").length;
-        final int wordsRemaining = feedbackWordsLimit - feedbackLength;
-
-        return max(0, wordsRemaining);
+    private Map<Long, AssessorFormInputResponseResource> getAssessorResponses(Long assessmentId, Long questionId) {
+        return simpleToMap(assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId),
+                AssessorFormInputResponseResource::getFormInput);
     }
 }

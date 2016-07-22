@@ -25,11 +25,13 @@ IFS.core.loadOrder = {
       IFS.core.conditionalForms.init();
       IFS.core.editor.init();
       IFS.core.formValidation.init();
+      IFS.core.wordCount.init();
     },
     finalize : function(){
       IFS.core.modal.init();
       IFS.core.upload.init();
       IFS.core.autoSubmitForm.init();
+      IFS.core.pieChart.init();
     }
   },
   'app-form' : {
@@ -38,6 +40,12 @@ IFS.core.loadOrder = {
       IFS.core.unsavedChanges.init();
       IFS.core.autoSave.init();
       IFS.core.finance.init();
+    }
+  },
+  'assessment-form' : {
+    init : function(){
+      IFS.core.unsavedChanges.init();
+      IFS.core.autoSave.init();
     }
   }
 };
