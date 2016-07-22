@@ -452,7 +452,7 @@ Bank details server side validations
     When the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
     Then the user should see an error       Please enter an account number
     And the user should see an error        Please enter a sort code
-    And the user should see an error        You need to select a bank address before you can continue
+    And the user should see an error        You need to select a billing address before you can continue
 
 
 Bank details client side validations
@@ -474,7 +474,7 @@ Bank details client side validations
     Then the user should not see the text in the page      Please enter a sort code
     And the user should not see the text in the page      Please enter a valid sort code
     When the user selects the radio button      addressType    REGISTERED
-    Then the user should not see the text in the page      You need to select a bank address before you can continue
+    Then the user should not see the text in the page      You need to select a billing address before you can continue
 
 
 Bank account postcode lookup
