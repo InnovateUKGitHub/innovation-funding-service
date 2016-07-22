@@ -27,7 +27,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
-			The partner's viability has been approved
+			The partner's viability has been approved by Paul Davidson, 27/07/2016
 		</div>
 	</th:block>
 	
@@ -160,7 +160,7 @@
 		<form>
 			<fieldset class="extra-margin">
 				<legend class="heading-medium" id="change-org-title">Change organisation size</legend>
-				<p class="form-hint">If the Mint report has uncovered that the Business has not self declared correctly please update theri business size. this should only be done after communication with the partner. Increasing the size ofthe Business will reduce theri grant amount.</p>
+				<p class="form-hint">If the Mint report shows that the business has not self declared properly, please update their business size. This should only be done after communicating with the lead partner. Increasing their buiness size will reduce their grant amount.</p>
 				<div class="form-block">
 					<label class="block-label" for="orgSizeSmall">
 						<input id="orgSizeSmall" type="radio" name="orgSizeGroup" value="Micro"/>
@@ -270,12 +270,13 @@
 	 <div class="form-group">
     	<label class="block-label" for="costs-reviewed">
 	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" th:disabled="${param.status != null and param.status[0] == 'approved'}" th:checked="${param.status != null and param.status[0] == 'approved'}" />
-	     	A Mint report has been used in conjunction with the viability information presented here and has been stored in accordance with Innovate UK audit requirements.
+	     	A Mint report has been used together with the viability information shown here. This information is stored in accordance with Innovate UK audit requirements.
 	    </label>
     </div>
 
 	<div class="extra-margin">
     	<a href="#" class="button button-secondary">Queries</a>
+    	<a href="#" class="button button-secondary">Notes</a>
     </div>
 
     <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
