@@ -1,16 +1,23 @@
 package com.worth.ifs.competition.resource;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.resource.ApplicationResource;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.resource.ApplicationResource;
 
 public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
@@ -157,6 +164,11 @@ public class CompetitionResource {
 
     public LocalDateTime getAssessmentEndDate() {
         return assessmentEndDate;
+    }
+
+    public String assementEndDateDisplay() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM YYYY");
+        return getAssessmentEndDate().format(formatter);
     }
 
     public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
