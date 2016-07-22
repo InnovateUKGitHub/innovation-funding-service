@@ -502,10 +502,10 @@ Bank details submission
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page      Your bank account details have been submitted to Innovate UK
+    And the user should not see the text in the page      Your bank details have been approved
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Your bank account details have been submitted to Innovate UK
+    And the user should see the text in the page    Your bank details have been approved
     And the user should see the element       css=.success-alert
     Then the user navigates to the page    ${successful_project_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)

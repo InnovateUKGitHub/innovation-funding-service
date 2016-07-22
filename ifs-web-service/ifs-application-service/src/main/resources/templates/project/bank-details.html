@@ -29,7 +29,8 @@
   </div>
 
   <div th:unless="${bankDetails == null}" class="success-alert">
-      <p><strong>Your bank account details have been submitted to Innovate UK</strong></p>
+      <p th:unless="${bankDetails.approved}"><strong>Bank account details below are now being reviewed. We will contact you if we need any further information.</strong></p>
+      <p th:if="${bankDetails.approved}"><strong>Your bank details have been approved</strong></p>
   </div>
 
 	<p th:class="${bankDetails == null ? '' : 'extra-margin'}" >In order for Innovate UK to fund your project we need your bank account details. We will then verify the bank account to the lead organisation.</p>

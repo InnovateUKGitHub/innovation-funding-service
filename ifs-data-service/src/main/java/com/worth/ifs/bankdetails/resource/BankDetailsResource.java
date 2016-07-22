@@ -112,7 +112,7 @@ public class BankDetailsResource {
 
     @JsonIgnore
     public boolean isApproved(){
-        return false;
+        return manualApproval || (verified && registrationNumberMatched && companyNameScore > 6 && addressScore > 6);
     }
 
     public String getOrganisationTypeName() {

@@ -17,7 +17,7 @@ public class SILBankDetailsMapper {
             address = new Address(null,
                     addressResource.getAddressLine1(),
                     addressResource.getAddressLine2(),
-                    null ,
+                    addressResource.getAddressLine3() ,
                     addressResource.getTown(),
                     addressResource.getPostcode());
         }
