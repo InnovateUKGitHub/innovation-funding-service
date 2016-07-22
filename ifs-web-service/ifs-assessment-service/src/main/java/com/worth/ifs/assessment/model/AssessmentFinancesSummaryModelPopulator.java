@@ -188,7 +188,7 @@ public class AssessmentFinancesSummaryModelPopulator {
                 ));
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
 
-        List<FormInputResource> formInputs = formInputService.findByCompetitionId(competitionId);
+        List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())

@@ -1,16 +1,22 @@
-<!-- =================Tabbed navigation competion setup=========================== -->
-
+<!-- =================== Comp setup section - Initial Details (1) ============================== -->
 
 <div th:fragment="comp-setup-navigation(sections, completedStatuses, currentSection, competition)">
-    <ul class="inline-nav">
-        <!-- /* Select the first section if currentSection is not defined */ -->
-        <li th:each="(section, iteration : ${sections})" th:classappend="${(section == currentSection) || (currentSection == null and iteration.index==0) ? 'selected' : ''} + '' + ${completedStatuses.contains(section) ? 'marked-as-complete' : ''}">
-            <a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
-               th:text="${section.name}">Section Name</a>
-        </li>
-    </ul>
-</div>
+    <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
+        <ul class="list-overview">
+            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}"
+                th:classappend="${(section == currentSection) || (currentSection == null and iteration.index==0) ? 'selected' : ''} + '' + ${completedStatuses.contains(section) ? 'marked-as-complete' : ''}">
+                <h3 class="heading-small">
+                    <a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
+                        th:text="${section.name}">Section Name</a>
+                </h3>
+            </li>
+        </ul>
 
+        <div class="extra-margin">
+            <a href="#" class="button no-margin-right" id="compCTA">Save as in preparation</a>
+        </div>
+    </div>
+</div>
 
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="comp-admin-page-title-subheading(subtitle, heading, subheading)">

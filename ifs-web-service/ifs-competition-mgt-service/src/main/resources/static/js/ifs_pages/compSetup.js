@@ -9,6 +9,8 @@ IFS.competition_management.setup = (function(){
         s = this.settings;
         IFS.competition_management.setup.handleCompetitionCode();
 
+        IFS.competition_management.setup.handleAddCoFunder();
+
         jQuery("body.competition-management.competition-setup").on('change','#competitionTypeId',function(){
           IFS.competition_management.setup.handleStateAid();
         });
@@ -18,35 +20,26 @@ IFS.competition_management.setup = (function(){
     },
     handleCompetitionCode : function(){
         jQuery(document).on('click','#generate-code',function(){
-            var inst = jQuery(this);
-            var day = jQuery('#openingDate .day input').val();
-            var month = jQuery('#openingDate .month input').val();
-            var year = jQuery('#openingDate .year input').val();
-            var formGroup = inst.closest('.form-group');
-
-            if((jQuery('#openingDate').hasClass('error') === false) && day.length && month.length && year.length){
-                formGroup.removeClass('error');
-                formGroup.find("label .error-message").remove();
-
-                var competitionId = inst.val();
-                var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/'+competitionId+'/generateCompetitionCode?day='+day+'&month='+month+'&year='+year;
-                //todo ajax failure
-                jQuery.ajaxProtected({
-                  type: "GET",
-                  url: url,
-                  success: function(data) {
-                       data = data.replace(/"/g,"");
-                      inst.closest('.form-group').find('input').val(data);
-                      inst.remove();
+            var button = jQuery(this);
+            var competitionId = button.val();
+            var field = button.closest('.form-group').find('input');
+            var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/'+competitionId+'/generateCompetitionCode';
+            //todo ajax failure
+            jQuery.ajaxProtected({
+              type: "GET",
+              url: url,
+              success: function(data) {
+                if(typeof(data) !== 'undefined'){
+                  if(data.success === "true"){
+                    IFS.core.formValidation.setValid(field,data.message);
+                    field.val(data.message);
                   }
-                });
-            }
-            else {
-              formGroup.addClass('error');
-              if(formGroup.find('.error-message.correct-date-error-message').length === 0){
-                formGroup.find("label").append('<span class="error-message correct-date-error-message">Please fill in a correct date before generating the competition code</span>');
+                  else {
+                    IFS.core.formValidation.setInvalid(field,data.message);
+                  }
+                }
               }
-            }
+            });
         });
     },
     handleInnovationSector : function(){
@@ -77,6 +70,18 @@ IFS.competition_management.setup = (function(){
          stateAid = 'no';
        }
        jQuery('#stateAid').attr('aria-hidden','false').find('p').html('<span class="'+stateAid+'">'+stateAid+'</span>');
+    },
+    handleAddCoFunder: function() {
+      jQuery(document).on('click','#add-cofunder',function() {
+          var count = parseInt(jQuery('#co-funder-count').val(),10);
+          jQuery('<div class="grid-row" id="co-funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Co-funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="coFunders['+ count +'].coFunder" value=""></div> </div>' +
+              '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="coFunders['+ count +'].coFunderBudget" value=""></div> </div></div>')
+              .insertBefore('#dynamic-row-pointer');
+
+          jQuery('#co-funder-count').val(count + 1);
+          return false;
+      });
+
     }
 
   };

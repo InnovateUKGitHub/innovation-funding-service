@@ -1,11 +1,10 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
+import org.springframework.stereotype.Service;
 
 /**
  * Form populator for the initial details competition setup section.
@@ -35,10 +34,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 			competitionSetupForm.setOpeningDateYear(competitionResource.getStartDate().getYear());
 		}
 
-		competitionSetupForm.setCompetitionCode(competitionResource.getCode());
-		competitionSetupForm.setPafNumber(competitionResource.getPafCode());
 		competitionSetupForm.setTitle(competitionResource.getName());
-		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
 
 		return competitionSetupForm;
 	}

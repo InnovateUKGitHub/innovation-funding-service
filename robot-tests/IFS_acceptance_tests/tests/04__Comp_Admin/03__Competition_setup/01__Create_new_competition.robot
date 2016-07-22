@@ -10,6 +10,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2986 Create a Competition: Step 3: Eligibility
 ...
 ...               INFUND-3182 As a Competition Executive I want to the ability to save progress on each tab in competition setup.
+...
+...               IFUND-3888 Rearrangement of Competitions setup
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -31,64 +33,46 @@ User can navigate to the competition setup form
     ...    State Aid when I select a 'Competition type' in competition setup.
     ...
     ...    INFUND-2986 Create a Competition: Step 3: Eligibility
+    ...    IFUND-3888
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    Then the user redirects to the page    Competition Setup    Step 1: Initial competition details
+    When the user clicks the button/link       jQuery=.button:contains("Create competition")
+    Then the user navigates to the page        ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link       link=Initial Details
+    Then the user redirects to the page        Initial details    This will create a new Competition
     And the user should not see the element    css=#stateAid
 
-Initial details server-side validations
-    [Documentation]    INFUND-2982
-    [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see an error    Please select a competition executive
-    And the user should see an error    Please enter an opening month
-    And the user should see an error    Please enter an opening year
-    And the user should see an error    Please enter an opening day
-    And the user should see an error    Please enter a title
-    And the user should see an error    Please select an innovation sector
-    And the user should see an error    Please select an innovation area
-    And the user should see an error    Please select a competition type
-    And the user should see an error    Please select a lead technologist
-    And the user should see an error    Please enter a PAF number
-    And the user should see an error    Please enter a budget code
-    And the user should see an error    Please generate a competition code
-    And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
-    Then the user should see the text in the page    Please fill in a correct date before generating the competition code
 
-Initial details client-side validations
-    [Documentation]    INFUND-2982
-    [Tags]    Pending    HappyPath
-    # TODO pending INFUND-3957
-    When the user selects the option from the drop-down menu    Competition Executive One    id=executiveUserId
-    Then the user should not see the error anymore    Please select a competition executive
-    When the user enters text to a text field    id=openingDateDay    01
-    Then the user should not see the error anymore    Please enter an opening day
-    And the user enters text to a text field    Id=openingDateMonth    12
-    Then the user should not see the error anymore    Please enter an opening month
-    And the user enters text to a text field    id=openingDateYear    2017
-    Then the user should not see the error anymore    Please enter an opening year
-    When the user enters text to a text field    id=title    Competition title
-    And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    Then the user should not see the error anymore    Please select an innovation sector
-    Then the user should not see the error anymore    Please enter a title
-    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
-    Then the user should not see the error anymore    Please select an innovation area
-    When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
-    Then the user should not see the error anymore    Please select a competition type
-    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    Then the user should not see the error anymore    Please select a lead technologist
-    When the user enters text to a text field    id=pafNumber    2016
-    And the user enters text to a text field    id=budgetCode    2004
-    And the user moves focus to a different part of the page
-    Then the user should not see the error anymore    Please enter a budget code
-    And the user should not see the text in the page    Please enter a PAF number
+Server-side validations
+    [Documentation]    INFUND-2982, IFUND-3888
+    [Tags]
+    # TODO update when story INFUND-3002 is completed
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see an error    Please enter a title
+    And the user should see an error     Please select a competition type
+    And the user should see an error     Please select an innovation sector
+    And the user should see an error     Please select an innovation area
+    And the user should see an error     Please enter an opening year
+    And the user should see an error     Please enter an opening day
+    And the user should see an error     Please enter an opening month
+    And the user should see an error     Please select a lead technologist
+    And the user should see an error     Please select a competition executive
+    When the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    And the user clicks the button/link    link=Funding Information
+    Then the user redirects to the page    Funding information    Reporting fields
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    ## Fill in for Funder, Budget
+    Then the user should see an error       Please enter a PAF number
+    And the user should see an error        Please enter a budget code
+    ## Fill in for Activity code
+    And the user should see an error        Please generate a competition code
+    When the user clicks the button/link    jQuery=.button:contains("Generate code")
+    Then the user should see an error       Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section
 
 Initial details correct state aid status
-    [Documentation]    INFUND-2982
-    ...
-    ...    INFUND-2983
+    [Documentation]    INFUND-2982, INFUND-2983, INFUND-3888
     [Tags]    HappyPath
-    Given the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
+    Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}/section/initial
+    And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     Then the user should see the element    css=.yes
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
@@ -98,39 +82,76 @@ Initial details correct state aid status
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
 
-Initial details competition code generation
-    [Documentation]    INFUND-2984
-    [Tags]    Pending
-    # TODO pending INFUND-3957
-    When the user enters text to a text field    id=openingDateDay    01
-    And the user enters text to a text field    Id=openingDateMonth    12
-    And the user enters text to a text field    id=openingDateYear    2017
-    And the user clicks the button/link    jQuery=.button:contains("Generate competition code")
-    Then the competition code should be correct
+Initial details client-side validations
+    [Documentation]    INFUND-2982, INFUND-3888
+    [Tags]    HappyPath
+    When the user enters text to a text field                   id=title    Competition title
+    Then the user should not see the error any more             Please enter a title
+    When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
+    Then the user should not see the error any more             Please select a competition type
+    When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
+    Then the user should not see the error any more            Please select an innovation sector
+    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    Then the user should not see the error any more            Please select an innovation area
+    When the user enters text to a text field                   id=openingDateDay    01
+    Then the user should not see the error any more             Please enter an opening day
+    When the user enters text to a text field                   Id=openingDateMonth    12
+    Then the user should not see the error any more            Please enter an opening month
+    When the user enters text to a text field                   id=openingDateYear    2017
+    Then the user should not see the error any more            Please enter an opening year
+    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
+    Then the user should not see the error any more             Please select a lead technologist
+    When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    Then the user should not see the error any more             Please select a competition executive
+    ##  State aid value is tested in 'Initial details correct state aid status'
+    When the user clicks the button/link                        jQuery=.button:contains("Done")
+    Then the user should see the text in the page               Competition Executive Two
+    And the user should see the text in the page                1/12/2017
+    And the user should see the text in the page                Competition Technologist One
+    And the user should see the text in the page                Competition title
+    And the user should see the text in the page                Health and life sciences
+    And the user should see the text in the page                Advanced Therapies
+    And the user should see the text in the page                Additive Manufacturing
+    And the user should see the text in the page                Yes
+    And the user should see the element                         jQuery=.button:contains("Edit")
+    When the user clicks the button/link                        jQuery=.button:contains("Return to setup overview")
+    Then the user navigates to the page                         ${COMP_MANAGEMENT_COMP_SETUP}
 
-Additional information can be saved
-    [Documentation]    INFUND-2985
-    ...
-    ...    INFUND-3182
-    Given the user clicks the button/link    link=Additional Information
-    And the user should see the text in the page    Additional competition information
-    When the user enters text to a text field    id=activityCode    lorem
-    When the user enters text to a text field    id=innovateBudget    ipsum
-    And the user enters text to a text field    id=coFunders    dolor
-    When the user enters text to a text field    id=coFundersBudget    sit
-    And the user clicks the button/link    jQuery=.button:contains("Done")
-    And The user should not see the element    id=activityCode
-    And the user clicks the button/link    link=Initial Details
-    And the user clicks the button/link    link=Additional Information
-    Then the user should see the text in the page    lorem
-    And the user should see the text in the page    ipsum
-    And the user should see the text in the page    dolor
-    And the user should see the text in the page    sit
+
+Funding Information can be saved
+    [Documentation]    INFUND-2985, INFUND-3182, IFUND-3888
+    Given the user navigates to the page            ${COMP_MANAGEMENT_COMP_SETUP}
+    And the user clicks the button/link             link=Funding Information
+    And the user should see the text in the page    Funding information
+    When the user enters text to a text field       id=funder    FunderName
+    And the user enters text to a text field        id=funderBudget    20000
+    Then the user should see the text in the page    Total: £ 20,000
+    When the user clicks the button/link            link=+Add co-funder
+    Then the user should see the element            id=0-funder
+    And the user should see the element             id=0-funderBudget
+    And the user enters text to a text field        id=0-funder    FunderName2
+    And the user enters text to a text field        id=0-funderBudget    1000
+    And wait_until_keyword_succeeds                 300ms    1 seconds    the user should see the text in the page    Total: £ 21,000
+    When the user enters text to a text field       id=pafNumber    2016
+    And the user enters text to a text field        id=budgetCode    2004
+    And the user enters text to a text field        id=activityCode    4242
+    When the user clicks the button/link            jQuery=.button:contains("Generate code")
+    Then the user should not see the error any more    Please generate a competition code
+    ## Validation for the Competition code connection with the Start date is tested in 'Server-side validations'
+    And the user clicks the button/link             jQuery=.button:contains("Done")
+    And the user should see the text in the page    FunderName
+    And the user should see the text in the page    FunderName2
+    And the user should see the text in the page    £21,000.00
+    And the user should see the text in the page    2016
+    And the user should see the text in the page    2004
+    And the user should see the text in the page    4242
+    And the user should see the text in the page    2010-1
+
 
 Additional information can be edited again
-    [Documentation]    INFUND-2985
-    ...
-    ...    INFUND-3182
+    [Documentation]    INFUND-2985, INFUND-3182
+    [Tags]    Pending
+    # TODO Additional info, doesnt exist anymore. Update after story INFUND-3002
     Given the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=activityCode    amet
     And the user clicks the button/link    jQuery=.button:contains("Done")
@@ -156,7 +177,7 @@ Eligibility server-side validations
     And the user should see the text in the page    A stream name is required
 
 Eligibility client-side validations
-    [Documentation]    INFUND-2986, INFUND-2988
+    [Documentation]    INFUND-2986, INFUND-2988, INFUND-3888
     [Tags]
     Given the user selects the radio button    multipleStream    yes
     When the user selects the checkbox    id=research-categories-33
@@ -198,11 +219,6 @@ Eligibility page should contain the correct options
     When the user should see the element    xpath=//input[@type='radio' and @name='leadApplicantType' and @value='either']
 
 *** Keywords ***
-the competition code should be correct
-    the user should not see the element    jQuery=.button:contains("Generate competition code")
-    ${input_value} =    Get Value    id=competitionCode
-    Should Be Equal As Strings    ${input_value}    1712-1
-
 the user moves focus to a different part of the page
     focus    link=Sign out
 
