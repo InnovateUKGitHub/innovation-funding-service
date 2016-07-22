@@ -190,7 +190,6 @@ Eligibility client-side validations
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
     And the user selects the option from the drop-down menu    30%    name=researchParticipationAmountId
-    And the user selects the radio button    stream-1-comp-resubmission-group    Yes
     And the user moves focus to a different part of the page
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
