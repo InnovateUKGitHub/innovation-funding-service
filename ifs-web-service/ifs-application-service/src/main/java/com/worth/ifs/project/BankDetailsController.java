@@ -71,7 +71,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
 
-        BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource.getId(), organisationAddressResource, form);
+        BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource, organisationAddressResource, form);
         ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
 
         if (updateResult.isFailure()) {
@@ -144,6 +144,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         processAddressLookupFields(form);
         return "project/bank-details";
     }
+
     private String doViewConfirmBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource, RestResult<BankDetailsResource> bankDetailsResourceRestResult, UserResource loggedInUser) {
         populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult);
         processAddressLookupFields(form);
@@ -166,14 +167,17 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     private BankDetailsResource buildBankDetailsResource(Long projectId,
-                                                     Long organisationId,
+                                                     OrganisationResource organisation,
                                                      OrganisationAddressResource organisationAddressResource,
                                                      BankDetailsForm form){
         BankDetailsResource bankDetailsResource = new BankDetailsResource();
         bankDetailsResource.setAccountNumber(form.getAccountNumber());
         bankDetailsResource.setSortCode(form.getSortCode());
         bankDetailsResource.setProject(projectId);
-        bankDetailsResource.setOrganisation(organisationId);
+        bankDetailsResource.setOrganisation(organisation.getId());
+        bankDetailsResource.setCompanyName(organisation.getName());
+        bankDetailsResource.setOrganisationTypeName(organisation.getOrganisationTypeName());
+        bankDetailsResource.setRegistrationNumber(organisation.getCompanyHouseNumber());
         bankDetailsResource.setOrganisationAddress(organisationAddressResource);
         return bankDetailsResource;
     }

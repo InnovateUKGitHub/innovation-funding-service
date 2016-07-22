@@ -17,6 +17,8 @@ public class FormInputResource {
     private Boolean includedInApplicationSummary = false;
     private String guidanceQuestion;
     private String guidanceAnswer;
+    private Integer priority;
+    private FormInputScope scope;
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
@@ -132,6 +134,22 @@ public class FormInputResource {
 
     public void setGuidanceAnswer(final String guidanceAnswer) {
         this.guidanceAnswer = guidanceAnswer;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public FormInputScope getScope() {
+        return scope;
+    }
+
+    public void setScope(FormInputScope scope) {
+        this.scope = scope;
     }
 }
 

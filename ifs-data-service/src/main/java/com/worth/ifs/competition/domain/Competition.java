@@ -7,7 +7,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.List;
+
+import com.worth.ifs.commons.error.Error;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -26,6 +28,9 @@ import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
@@ -78,6 +83,9 @@ public class Competition {
     private List<Question> questions = new ArrayList<>();
 
     @OneToMany(mappedBy="competition")
+    private List<CompetitionCoFunder> coFunders = new ArrayList<>();
+
+    @OneToMany(mappedBy="competition")
     @OrderBy("priority ASC")
     private List<Section> sections = new ArrayList<>();
 
@@ -120,8 +128,8 @@ public class Competition {
 
     private String activityCode;
     private String innovateBudget;
-    private String coFunders;
-    private String coFundersBudget;
+    private String funder;
+    private BigDecimal funderBudget;
 
     private boolean multiStream;
     private String streamName;
@@ -283,20 +291,20 @@ public class Competition {
 			milestones.add(m);
 			return m;
 		});
-		
+
 		milestone.setDate(dateTime);
 	}
-    
+
 	private LocalDateTime getMilestoneValue(MilestoneName milestoneName) {
 		Optional<Milestone> milestone = milestones.stream().filter(m -> milestoneName.equals(m.getName())).findAny();
-		
+
 		if(milestone.isPresent()) {
 			return milestone.get().getDate();
 		}
-		
+
 		return null;
 	}
-    
+
     private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
     }
@@ -480,20 +488,29 @@ public class Competition {
         this.innovateBudget = innovateBudget;
     }
 
-    public String getCoFunders() {
+    public String getFunder() {
+        return funder;
+    }
+
+    public void setFunder(String funder) {
+        this.funder = funder;
+    }
+
+
+    public BigDecimal getFunderBudget() {
+        return funderBudget;
+    }
+
+    public void setFunderBudget(BigDecimal funderBudget) {
+        this.funderBudget = funderBudget;
+    }
+
+    public List<CompetitionCoFunder> getCoFunders() {
         return coFunders;
     }
 
-    public void setCoFunders(String coFunders) {
+    public void setCoFunders(List<CompetitionCoFunder> coFunders) {
         this.coFunders = coFunders;
-    }
-
-    public String getCoFundersBudget() {
-        return coFundersBudget;
-    }
-
-    public void setCoFundersBudget(String coFundersBudget) {
-        this.coFundersBudget = coFundersBudget;
     }
 }
 

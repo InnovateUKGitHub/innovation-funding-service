@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
     </head>
 
-    <body th:with="context='assessment'" class="assessment assessment-question">
+    <body th:with="context='assessment'" class="assessment assessment-form">
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -17,16 +17,8 @@
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" class="form-serialize-js">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-                <!--/* /div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                    <h1 class="heading-medium error-summary-heading">
-                        Invalid input provided
-                    </h1>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                    </ul>
-                </div */-->
 
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
@@ -36,42 +28,18 @@
                         <span th:text="${model.questionName}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.questionResponse}" />
+                    <p th:text="${model.applicantResponse}" />
                 </div>
 
                 <div th:if="${model.appendixExists}">
                     <div th:replace="question-type/form-elements :: readonly-file-download (filename=${model.appendixDetails.filename}, filesizeKbytes=${model.appendixDetails.filesizeKbytes}, fileDescription=${model.appendixFileDescription}, downloadURL=@{/})" />
                 </div>
 
-                <div th:if="${model.requireScore}" th:remove="tag">
-                    <div th:include="fragments/assessment :: assessment-feedback-score (score=*{score})" th:remove="tag" />
+                <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
+                    <div th:replace="fragments/assessment-types :: ${field.formInputTypeTitle} (field=${field})" />
                 </div>
 
-                <div th:if="${model.requireScopeConfirmation}" th:remove="tag">
-                    <div th:include="fragments/assessment :: assessment-feedback-scope" th:remove="tag" />
-                </div>
-
-                <div th:if="${model.requireFeedback}" th:remove="tag">
-                    <fieldset>
-                        <legend class="visuallyhidden">Question feedback</legend>
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                                    <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
-                                </label>
-
-                                <details th:unless="${#strings.isEmpty(model.assessorGuidanceQuestion)}">
-                                    <summary>
-                                        <span class="summary" th:text="${model.assessorGuidanceQuestion}" />
-                                    </summary>
-                                    <div class="panel-indent" ifs:utext="${model.assessorGuidanceAnswer}" />
-                                </details>
-
-                                <div th:include="fragments/assessment :: assessment-form-textarea-wordcount (id=${model.questionId}, name=${inputName}, value=*{value}, readonly=false, maxWords=${model.feedbackWordsLimit}, currentWordsLeft=${model.feedbackWordsRemaining})" th:remove="tag" />
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
+                <input type="hidden" id="application_id" th:value="${model.application.id}" />
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             </form>

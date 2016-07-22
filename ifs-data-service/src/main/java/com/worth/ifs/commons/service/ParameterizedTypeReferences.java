@@ -5,7 +5,7 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -35,7 +35,7 @@ import java.util.Set;
 public final class ParameterizedTypeReferences {
 
 	private ParameterizedTypeReferences() {}
-	
+
     /**
      * Basic types
      */
@@ -64,8 +64,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AssessmentFeedbackResource>> assessmentFeedbackResourceListType() {
-        return new ParameterizedTypeReference<List<AssessmentFeedbackResource>>() {};
+    public static ParameterizedTypeReference<List<AssessorFormInputResponseResource>> assessorFormInputResponseResourceListType() {
+        return new ParameterizedTypeReference<List<AssessorFormInputResponseResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {

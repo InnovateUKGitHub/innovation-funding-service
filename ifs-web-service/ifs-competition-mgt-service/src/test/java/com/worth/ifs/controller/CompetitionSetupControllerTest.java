@@ -10,9 +10,11 @@ import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competitionsetup.controller.CompetitionSetupController;
+import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.fixtures.CompetitionCoFundersFixture;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -104,15 +107,14 @@ public class CompetitionSetupControllerTest {
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/setup"));
     }
 
     @Test
     public void editCompetitionSetupSectionInitial() throws Exception{
 
         InitialDetailsForm competitionSetupInitialDetailsForm = new InitialDetailsForm();
-        competitionSetupInitialDetailsForm.setCompetitionCode("Code");
         competitionSetupInitialDetailsForm.setTitle("Test competition");
         competitionSetupInitialDetailsForm.setCompetitionTypeId(2L);
 
@@ -160,12 +162,15 @@ public class CompetitionSetupControllerTest {
     @Test
     public void generateCompetitionCode() throws Exception {
         LocalDateTime time = LocalDateTime.of(2016, 12, 1, 0, 0);
-
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
+        competition.setStartDate(time);
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionService.generateCompetitionCode(COMPETITION_ID, time)).thenReturn("1612-1");
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/generateCompetitionCode?day=01&month=12&year=2016"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(is("1612-1")));
+                .andExpect(jsonPath("message", is("1612-1")));
+                //.andExpect(content().string(is("1612-1")));
     }
 
     @Test
@@ -255,6 +260,36 @@ public class CompetitionSetupControllerTest {
                 .andExpect(view().name("competition/setup"));
         
         verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testCoFundersForCompetition() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withActivityCode("Activity Code")
+                .withInnovateBudget("Innovate Budget")
+                .withFunder("Funder")
+                .withFunderBudget(new BigDecimal(1234))
+                .withCompetitionCode("c123")
+                .withPafCode("p123")
+                .withBudgetCode("b123")
+                .withCompetitionStatus(Status.COMPETITION_SETUP)
+                .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
+                .withId(8L).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional")
+                .param("activityCode", "a123")
+                .param("pafNumber", "p123")
+                .param("competitionCode", "c123")
+                .param("funder", "funder")
+                .param("funderBudget", "1")
+                .param("budgetCode", "b123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(any(AdditionalInfoForm.class),
+                any(CompetitionResource.class), any(CompetitionSetupSection.class));
     }
 
 }

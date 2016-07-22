@@ -33,7 +33,6 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 		
 		competition.setName(initialDetailsForm.getTitle());
-		competition.setBudgetCode(initialDetailsForm.getBudgetCode());
 		competition.setExecutive(initialDetailsForm.getExecutiveUserId());
 
 		try {
@@ -45,14 +44,11 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		}
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
 		competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
-		competition.setPafCode(initialDetailsForm.getPafNumber());
 
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 		competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
 		competitionService.update(competition);
-
-		initialDetailsForm.setCompetitionCode(competition.getCode());
 
         return null;
 	}

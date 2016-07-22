@@ -38,6 +38,11 @@ import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.CharMatcher;
+
 
 /**
  * Controller for showing and handling the different competition setup sections
@@ -47,13 +52,13 @@ import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
- 
+
     @Autowired
     private CompetitionService competitionService;
-    
+
     @Autowired
     private CompetitionSetupService competitionSetupService;
-   
+
     @Autowired
     private CategoryService categoryService;
 
@@ -67,9 +72,17 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        return "redirect:/competition/setup/" + competitionId + "/section/initial";
+        CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
+        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+        return "competition/setup";
     }
-    
+
+    @RequestMapping(value = "/{competitionId}/home", method = RequestMethod.GET)
+    public String competitionSetupHome(Model model, @PathVariable("competitionId") Long competitionId) {
+          return "competition/setup-home";
+    }
+
+
     @RequestMapping(value = "/{competitionId}/section/{sectionPath}/edit", method = RequestMethod.POST)
     public String setSectionAsIncomplete(@PathVariable("competitionId") Long competitionId, @PathVariable("sectionPath") String sectionPath) {
 
@@ -78,7 +91,7 @@ public class CompetitionSetupController {
     		LOG.error("Invalid section path specified: " + sectionPath);
             return "redirect:/dashboard";
     	}
-    	
+
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
 
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
@@ -92,7 +105,7 @@ public class CompetitionSetupController {
     		LOG.error("Invalid section path specified: " + sectionPath);
             return "redirect:/dashboard";
     	}
-    	
+
         CompetitionResource competition = competitionService.getById(competitionId);
 
         if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
@@ -105,7 +118,7 @@ public class CompetitionSetupController {
 
         return "competition/setup";
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/initial", method = RequestMethod.POST)
     public String submitInitialSectionDetails(@Valid @ModelAttribute("competitionSetupForm") InitialDetailsForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -114,7 +127,7 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/additional", method = RequestMethod.POST)
     public String submitAdditionalSectionDetails(@Valid @ModelAttribute("competitionSetupForm") AdditionalInfoForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -123,7 +136,7 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/eligibility", method = RequestMethod.POST)
     public String submitEligibilitySectionDetails(@Valid @ModelAttribute("competitionSetupForm") EligibilityForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -135,7 +148,7 @@ public class CompetitionSetupController {
     	}
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ELIGIBILITY, model);
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/milestones", method = RequestMethod.POST)
     public String submitMilestonesSectionDetails(@Valid @ModelAttribute("competitionSetupForm") MilestonesForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -144,7 +157,7 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.MILESTONES, model);
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/assessors", method = RequestMethod.POST)
     public String submitMilestonesSectionDetails(@Valid @ModelAttribute("competitionSetupForm") AssessorsForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -153,7 +166,7 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ASSESSORS, model);
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/application", method = RequestMethod.POST)
     public String submitApplicationFormSectionDetails(@Valid @ModelAttribute("competitionSetupForm") ApplicationFormForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -162,7 +175,7 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
     }
-    
+
     @RequestMapping(value = "/{competitionId}/section/finance", method = RequestMethod.POST)
     public String submitFinanceSectionDetails(@Valid @ModelAttribute("competitionSetupForm") FinanceForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -171,7 +184,7 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.FINANCE, model);
     }
-    
+
     /* AJAX Function */
     @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
     @ResponseBody
@@ -183,16 +196,18 @@ public class CompetitionSetupController {
     /* AJAX Function */
     @RequestMapping(value = "/{competitionId}/generateCompetitionCode", method = RequestMethod.GET)
     @ResponseBody
-    public String generateCompetitionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
+    public JsonNode generateCompetitionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
 
-        LocalDateTime openingDate = LocalDateTime.of(Integer.parseInt(request.getParameter("year")),
-                Integer.parseInt(request.getParameter("month")),
-                Integer.parseInt(request.getParameter("day")),
-                0, 0, 0);
-        return competitionService.generateCompetitionCode(competitionId, openingDate);
+      CompetitionResource competition = competitionService.getById(competitionId);
+      if (competition.getStartDate() != null) {
+        return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
+      }
+      else {
+        return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
+      }
     }
 
-    
+
     private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -216,6 +231,14 @@ public class CompetitionSetupController {
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
 
         return "competition/setup";
+    }
+
+    private ObjectNode createJsonObjectNode(boolean success, String message) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("success", success ? "true" : "false");
+        node.put("message", CharMatcher.is('\"').trimFrom(message));
+        return node;
     }
 
 }

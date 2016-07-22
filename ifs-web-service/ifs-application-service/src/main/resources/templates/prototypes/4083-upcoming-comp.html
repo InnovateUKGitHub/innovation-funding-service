@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large no-margin">Upcoming competition 'Technology inspired</h1>
+
+    <p>You have agreed to act as an assessor for our upcoming competition 'Technology Inspired'</p>
+
+    <section class="boxed">
+    
+        <h2 class="heading-medium no-margin">15th - 25th April - Assessment Period</h2>
+        <p>Remote assessment period for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the actual number of applications will depend on the application response and could be less than this.  Our assessment fee for this competition is &pound;100 per application.</p>
+
+        <p>The assessor briefing will be a mandatory one hour webinar taking place on the 21st March.</p>
+    
+    </section>
+
+    <section>
+        
+        <h2 class="heading-medium">Competition Details - Technology Inspired</h2>
+        <p>Innovate UK is to invest up to &pound;3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
+
+        <p><a href="#" rel="external">See competition brief</a></p>
+
+        <p>If you have any queries, please contact the competitions team <a href="mailto:competitions@innovateuk.gov.uk">**competitions@innovateuk.gov.uk</a></p>
+
+    </section>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
