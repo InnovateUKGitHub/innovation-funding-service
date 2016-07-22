@@ -462,7 +462,7 @@ Bank details client side validations
     And the user moves focus away from the element     name=accountNumber
     Then the user should not see the text in the page        Please enter an account number
     And the user should see an error       Please enter a valid account number
-    When the user enters text to a text field      name=accountNumber    12345678
+    When the user enters text to a text field      name=accountNumber    12345679
     And the user moves focus away from the element     name=accountNumber
     Then the user should not see the text in the page    Please enter an account number
     And the user should not see the text in the page     Please enter a valid account number
