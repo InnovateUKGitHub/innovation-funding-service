@@ -56,6 +56,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         if (!messages.hasErrors()) {
             List<Milestone> milestoneEntities = milestones.stream().map(milestoneMapper::mapToDomain).collect(Collectors.toList());
             competition.setMilestones(milestoneEntities);
+            milestoneEntities.forEach(m -> milestoneRepository.save(m));
             return serviceSuccess();
         }
         return serviceFailure(messages.getErrors());
