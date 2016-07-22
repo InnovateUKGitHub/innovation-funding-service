@@ -45,7 +45,7 @@ User can navigate to the competition setup form
 Server-side validations
     [Documentation]    INFUND-2982, IFUND-3888
     [Tags]
-    # TODO update when INFUND-4097 is completed
+    # TODO update when story INFUND-3002 is completed
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title
     And the user should see an error     Please select a competition type
@@ -85,21 +85,20 @@ Initial details correct state aid status
 Initial details client-side validations
     [Documentation]    INFUND-2982, INFUND-3888
     [Tags]    HappyPath
-    # TODO Validation error messages should not be there after selecting a value Update when INFUND-4098 is completed
     When the user enters text to a text field                   id=title    Competition title
-#    Then the user should not see the error any more             Please enter a title
+    Then the user should not see the error any more             Please enter a title
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should not see the error any more             Please select a competition type
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-#    Then the user should not see the error any more            Please select an innovation sector
+    Then the user should not see the error any more            Please select an innovation sector
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
-#    Then the user should not see the error any more            Please select an innovation area
+    Then the user should not see the error any more            Please select an innovation area
     When the user enters text to a text field                   id=openingDateDay    01
-#    Then the user should not see the error anymore             Please enter an opening day
+    Then the user should not see the error any more             Please enter an opening day
     When the user enters text to a text field                   Id=openingDateMonth    12
-#    Then the user should not see the error any more            Please enter an opening month
+    Then the user should not see the error any more            Please enter an opening month
     When the user enters text to a text field                   id=openingDateYear    2017
-#    Then the user should not see the error any more            Please enter an opening year
+    Then the user should not see the error any more            Please enter an opening year
     When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
     Then the user should not see the error any more             Please select a lead technologist
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
@@ -121,7 +120,6 @@ Initial details client-side validations
 
 Funding Information can be saved
     [Documentation]    INFUND-2985, INFUND-3182, IFUND-3888
-    [Tags]    Pending
     Given the user navigates to the page            ${COMP_MANAGEMENT_COMP_SETUP}
     And the user clicks the button/link             link=Funding Information
     And the user should see the text in the page    Funding information
@@ -138,7 +136,7 @@ Funding Information can be saved
     And the user enters text to a text field        id=budgetCode    2004
     And the user enters text to a text field        id=activityCode    4242
     When the user clicks the button/link            jQuery=.button:contains("Generate code")
-    # TODO Then the user should not see the error any more    Please generate a competition code - INFUND-4103
+    Then the user should not see the error any more    Please generate a competition code
     ## Validation for the Competition code connection with the Start date is tested in 'Server-side validations'
     And the user clicks the button/link             jQuery=.button:contains("Done")
     And the user should see the text in the page    FunderName
@@ -153,7 +151,7 @@ Funding Information can be saved
 Additional information can be edited again
     [Documentation]    INFUND-2985, INFUND-3182
     [Tags]    Pending
-    # TODO Additional info, doesnt exist anymore. Update.
+    # TODO Additional info, doesnt exist anymore. Update after story INFUND-3002
     Given the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=activityCode    amet
     And the user clicks the button/link    jQuery=.button:contains("Done")
@@ -177,7 +175,6 @@ Eligibility server-side validations
     And the user should see the text in the page    Please select a collaboration level
     And the user should see the text in the page    Please select a lead applicant type
     And the user should see the text in the page    A stream name is required
-    # TODO update error message about resubmissions - INFUND-4104
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986, INFUND-2988, INFUND-3888
@@ -222,11 +219,6 @@ Eligibility page should contain the correct options
     When the user should see the element    xpath=//input[@type='radio' and @name='leadApplicantType' and @value='either']
 
 *** Keywords ***
-the competition code should be correct
-    the user should not see the element    jQuery=.button:contains("Generate competition code")
-    ${input_value} =    Get Value    id=competitionCode
-    Should Be Equal As Strings    ${input_value}    1712-1
-
 the user moves focus to a different part of the page
     focus    link=Sign out
 
