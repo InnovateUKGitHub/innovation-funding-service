@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -78,7 +78,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 	
 	@Override
-	public ValidationMessages saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section) {
 		
 		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
@@ -87,13 +87,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			throw new IllegalArgumentException();
 		}
 		
-		ValidationMessages validationMessages = saver.saveSection(competitionResource, competitionSetupForm);
+		List<Error> errors = saver.saveSection(competitionResource, competitionSetupForm);
 		
-		if(validationMessages == null || !validationMessages.hasErrors()) {
+		if(errors == null || errors.isEmpty()) {
 			competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
 		}
 		
-		return validationMessages;
+		return errors;
 	}
 	
 	private void populateGeneralModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {

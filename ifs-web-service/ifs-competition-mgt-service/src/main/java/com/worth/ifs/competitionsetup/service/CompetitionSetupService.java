@@ -1,12 +1,13 @@
 package com.worth.ifs.competitionsetup.service;
 
+import java.util.List;
+
 import org.springframework.ui.Model;
 
-import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-
 /**
  * service for logic around handling the various sections of competition setup.
  */
@@ -18,6 +19,6 @@ public interface CompetitionSetupService {
 	CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
 			CompetitionSetupSection section);
 	
-	ValidationMessages saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+	List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section);
 }

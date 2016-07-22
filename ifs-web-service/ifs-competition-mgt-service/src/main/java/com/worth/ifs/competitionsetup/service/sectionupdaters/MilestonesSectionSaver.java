@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.service.MilestoneService;
-import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
@@ -32,7 +32,7 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 	}
 
 	@Override
-	public ValidationMessages saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
 
@@ -55,7 +55,7 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         return newMilestones;
     }
 
-    private ValidationMessages updateMilestonesForCompetition(List<MilestoneResource> milestones, MilestonesForm milestonesForm,
+    private List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, MilestonesForm milestonesForm,
                                            CompetitionResource competition) {
         List<MilestoneResource> updateMilestone = new ArrayList<>();
         milestones.forEach(milestone -> {

@@ -1,10 +1,12 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -28,7 +30,7 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 	}
 
 	@Override
-	public ValidationMessages saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		

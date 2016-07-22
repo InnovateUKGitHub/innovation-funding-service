@@ -1,6 +1,8 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import com.worth.ifs.commons.rest.ValidationMessages;
+import java.util.List;
+
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -11,5 +13,5 @@ public interface CompetitionSetupSectionSaver {
 	
 	boolean supportsForm(Class<? extends CompetitionSetupForm> clazz);
 	
-	ValidationMessages saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
+	List<Error> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 }

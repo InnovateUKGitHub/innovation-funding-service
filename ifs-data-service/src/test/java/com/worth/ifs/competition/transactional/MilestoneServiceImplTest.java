@@ -65,10 +65,9 @@ public class MilestoneServiceImplTest {
 				ms(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 10, 0, 0))
 			);
 		
-		ServiceResult<ValidationMessages> result = service.update(1L, milestones);
+		ServiceResult<Void> result = service.update(1L, milestones);
 		
 		assertTrue(result.isSuccess());
-		assertFalse(result.getSuccessObject().hasErrors());
 		assertEquals(MilestoneName.ASSESSMENT_PANEL, competition.getMilestones().get(0).getName());
 		assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), competition.getMilestones().get(0).getDate());
 		assertEquals(MilestoneName.FUNDERS_PANEL, competition.getMilestones().get(1).getName());
@@ -85,12 +84,67 @@ public class MilestoneServiceImplTest {
 				ms(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0))
 			);
 		
-		ServiceResult<ValidationMessages> result = service.update(1L, milestones);
+		ServiceResult<Void> result = service.update(1L, milestones);
 		
-		assertTrue(result.isSuccess());
-		assertTrue(result.getSuccessObject().hasErrors());
-		assertEquals(1, result.getSuccessObject().getErrors().size());
-		assertEquals("Dates are not sequential", result.getSuccessObject().getErrors().get(0).getErrorMessage());
+		assertFalse(result.isSuccess());
+		assertEquals(1, result.getFailure().getErrors().size());
+		assertEquals("Milestones must be in date order", result.getFailure().getErrors().get(0).getErrorMessage());
+		assertEquals(0, competition.getMilestones().size());
+	}
+	
+	@Test
+	public void testUpdateMilestonesNullDate() {
+		Competition competition = newCompetition().build();
+		when(competitionRepository.findById(1L)).thenReturn(competition);
+		
+		List<MilestoneResource> milestones = asList(
+				ms(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
+				ms(MilestoneName.ASSESSMENT_PANEL, null)
+			);
+		
+		ServiceResult<Void> result = service.update(1L, milestones);
+		
+		assertFalse(result.isSuccess());
+		assertEquals(1, result.getFailure().getErrors().size());
+		assertEquals("Milestones must have dates specified", result.getFailure().getErrors().get(0).getErrorMessage());		
+		assertEquals(0, competition.getMilestones().size());
+	}
+	
+	@Test
+	public void testUpdateMilestonesDateInPast() {
+		Competition competition = newCompetition().build();
+		when(competitionRepository.findById(1L)).thenReturn(competition);
+		
+		List<MilestoneResource> milestones = asList(
+				ms(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
+				ms(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(1985, 3, 10, 0, 0))
+			);
+		
+		ServiceResult<Void> result = service.update(1L, milestones);
+		
+		assertFalse(result.isSuccess());
+		assertEquals(1, result.getFailure().getErrors().size());
+		assertEquals("Milestones cannot be in the past", result.getFailure().getErrors().get(0).getErrorMessage());
+		assertEquals(0, competition.getMilestones().size());
+	}
+	
+	@Test
+	public void testUpdateMilestonesErrorsNotRepeated() {
+		Competition competition = newCompetition().build();
+		when(competitionRepository.findById(1L)).thenReturn(competition);
+		
+		List<MilestoneResource> milestones = asList(
+				ms(MilestoneName.FUNDERS_PANEL, null),
+				ms(MilestoneName.ASSESSMENT_PANEL, null),
+				ms(MilestoneName.ALLOCATE_ASSESSORS, null),
+				ms(MilestoneName.ASSESSOR_ACCEPTS, null)
+			);
+		
+		ServiceResult<Void> result = service.update(1L, milestones);
+		
+		assertFalse(result.isSuccess());
+		assertEquals(1, result.getFailure().getErrors().size());
+		assertEquals("Milestones must have dates specified", result.getFailure().getErrors().get(0).getErrorMessage());		
 		assertEquals(0, competition.getMilestones().size());
 	}
 

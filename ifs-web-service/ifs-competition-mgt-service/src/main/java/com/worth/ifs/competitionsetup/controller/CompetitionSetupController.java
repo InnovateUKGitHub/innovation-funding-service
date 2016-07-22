@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -202,9 +202,9 @@ public class CompetitionSetupController {
         }
 
         if (!bindingResult.hasErrors()) {
-        	ValidationMessages saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
-        	if(saveSectionResult != null && saveSectionResult.hasErrors()) {
-        		saveSectionResult.getErrors().forEach(e -> {
+        	List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        	if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
+        		saveSectionResult.forEach(e -> {
         			ObjectError error = new ObjectError("currentSection", e.getErrorMessage());
         			bindingResult.addError(error);
         		});

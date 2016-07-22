@@ -1,8 +1,11 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AssessorsForm;
@@ -20,9 +23,9 @@ public class AssessorsSectionSaver implements CompetitionSetupSectionSaver {
 	}
 
 	@Override
-	public ValidationMessages saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm) {
+	public List<Error> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm) {
 
-        return null;
+        return new ArrayList<>();
 	}
 	
 	@Override

@@ -1,12 +1,16 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.service.MilestoneRestService;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.service.MilestoneRestService;
+
+import com.worth.ifs.commons.error.Error;
 
 /**
  * This class contains methods to retrieve and store {@link MilestoneResource} related data,
@@ -24,8 +28,12 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public ValidationMessages update(List<MilestoneResource> milestones, Long competitionId) {
-       return milestoneRestService.update(milestones, competitionId).getSuccessObject();
+    public List<Error> update(List<MilestoneResource> milestones, Long competitionId) {
+       RestResult<Void> result = milestoneRestService.update(milestones, competitionId);
+       if(result.isFailure()) {
+    	   return result.getFailure().getErrors();
+       }
+       return new ArrayList<>();
     }
 
     @Override
