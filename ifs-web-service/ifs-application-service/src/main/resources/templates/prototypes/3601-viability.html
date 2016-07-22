@@ -27,7 +27,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
-			The partner's viability has been approved
+			The partner's viability has been approved by Paul Davidson, 27/07/2016
 		</div>
 	</th:block>
 	
@@ -276,6 +276,7 @@
 
 	<div class="extra-margin">
     	<a href="#" class="button button-secondary">Queries</a>
+    	<a href="#" class="button button-secondary">Notes</a>
     </div>
 
     <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
