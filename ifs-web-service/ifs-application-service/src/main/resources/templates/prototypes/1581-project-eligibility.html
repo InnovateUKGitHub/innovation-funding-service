@@ -75,9 +75,9 @@
 
 			<h3 class="heading-medium">Project finance overview</h3>
 
-			<p>These finances where initially submitted at the application stage. All changes made to the finances are will be viewable by the applicants as soon as the changes are saved.</p>
+			<p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
 
-			<p>All changes must be discussed with the applicant, by raising queries through IFS, before they are made.</p>
+			<p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
 
 			<a href="/prototypes/1581-changes-finances">Review all changes to project finances</a>
 
@@ -167,7 +167,7 @@
 						<div class="form-group">
 							<label for="change-grant-percent" class="form-label-bold">
 								Change % grant
-								<span class="form-hint">When Changing the % grant the revised funding level must be below the level originally applied for</span>
+								<span class="form-hint">When changing the % grant, the revised funding level must be below the level originally applied for</span>
 							</label>
 							<input class="form-control width-small" id="change-grant-percent" name="change-grant-percent" type="number" th:value="${(param.action != null and param.action[0] == 'grantUpdated' ? '40' : '55')}" /> <strong><a th:href="@{'?status=changeGrant&#38;action=grantUpdated'}">Update</a></strong>
 						</div>
@@ -201,7 +201,7 @@
 
 								<h2 class="heading-medium no-margin">Change % grant</h2>
 
-								<p>This will approve the applicants project costs.</p>
+								<p>This will approve the applicant's project costs.</p>
 
 								<dl class="standard-definition-list">
 									<dt>Grant requested</dt>
