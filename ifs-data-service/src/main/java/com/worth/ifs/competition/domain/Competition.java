@@ -2,15 +2,10 @@ package com.worth.ifs.competition.domain;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.List;
 
 import com.worth.ifs.commons.error.Error;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
