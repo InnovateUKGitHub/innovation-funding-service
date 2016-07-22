@@ -37,6 +37,8 @@ ${unsuccessful_application_overview}    ${server}/application/17
 ${successful_application_comp_admin_view}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_comp_admin_view}    ${server}/management/competition/3/application/17
 ${Successful_Monitoring_Officer_Page}    ${server}/management/project/4/monitoring-officer
+${project_details_submitted_message}     The project details have been submitted to Innovate UK
+
 
 *** Test Cases ***
 Comp admin can view uploaded feedback
@@ -268,11 +270,13 @@ All partners can view submited project details
     And the user navigates to the page          ${successful_project_page}/details
     Then the user should not see the element    link=Ludlow
     And all the fields are completed
+    And the user should see the text in the page        ${project_details_submitted_message}
     Then the user logs out if they are logged in
     When guest user log-in                      pete.tom@egg.com    Passw0rd
     And the user navigates to the page          ${successful_project_page}/details
     Then the user should not see the element    link=EGGS
     And all the fields are completed
+    And the user should see the text in the page       ${project_details_submitted_message}
 
 
 Non-lead partner cannot change any project details
