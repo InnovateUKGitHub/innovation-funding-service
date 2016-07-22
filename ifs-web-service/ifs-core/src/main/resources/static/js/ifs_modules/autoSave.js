@@ -127,7 +127,7 @@ IFS.core.autoSave = (function(){
             	  if((typeof(data.field_id) !== 'undefined') && (unsavedCostRow === true)) {
                   var nameDashSplit = name.split('-');
                   var unsavedCostId = nameDashSplit.length > 2 ? nameDashSplit[3] : null;
-                  var fieldsForUnsavedCost = jQuery('input[name*="' + unsavedCostId + '"]');
+                  var fieldsForUnsavedCost = jQuery('[data-repeatable-row] [name*="' + unsavedCostId + '"]');
 
                   fieldsForUnsavedCost.each(function(){
                     var thisFieldNameSplit = jQuery(this).attr('name').split('-');
