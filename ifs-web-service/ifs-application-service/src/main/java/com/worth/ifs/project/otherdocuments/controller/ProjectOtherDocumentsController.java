@@ -55,13 +55,6 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
-    private String doViewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser, ProjectOtherDocumentsForm form) {
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
-        model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
-        return "project/other-documents";
-    }
-
     @RequestMapping(value = "/collaboration-agreement", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId) {
@@ -141,6 +134,13 @@ public class ProjectOtherDocumentsController {
                 () -> projectService.removeExploitationPlanDocument(projectId));
     }
 
+    private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("form", form);
+        return "project/other-documents";
+    }
+
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToOtherDocumentsPage(projectId);
@@ -175,7 +175,7 @@ public class ProjectOtherDocumentsController {
         );
     }
 
-    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(@PathVariable("projectId") Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
+    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
         if (content.isPresent() && fileDetails.isPresent()) {
             return getFileResponseEntity(content.get(), fileDetails.get());
         } else {
