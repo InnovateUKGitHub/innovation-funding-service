@@ -20,11 +20,11 @@ public class ProjectResource {
     private String name;
     private LocalDateTime submittedDate;
     private List<Long> projectUsers;
+    private Long collaborationAgreement;
+    private Long exploitationPlan;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
-
-    private Long projectManager;
 
     @JsonIgnore
     public boolean isProjectDetailsSubmitted(){
@@ -63,14 +63,6 @@ public class ProjectResource {
         this.durationInMonths = durationInMonths;
     }
 
-    public Long getProjectManager() {
-        return projectManager;
-    }
-
-    public void setProjectManager(Long projectManager) {
-        this.projectManager = projectManager;
-    }
-
     public String getName() {
         return name;
     }
@@ -106,5 +98,21 @@ public class ProjectResource {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public Long getCollaborationAgreement() {
+        return collaborationAgreement;
+    }
+
+    public void setCollaborationAgreement(Long collaborationAgreement) {
+        this.collaborationAgreement = collaborationAgreement;
+    }
+
+    public Long getExploitationPlan() {
+        return exploitationPlan;
+    }
+
+    public void setExploitationPlan(Long exploitationPlan) {
+        this.exploitationPlan = exploitationPlan;
     }
 }

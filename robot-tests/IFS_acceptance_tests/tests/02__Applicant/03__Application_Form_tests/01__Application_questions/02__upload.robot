@@ -16,9 +16,25 @@ ${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/downloa
 ${virus_scanning_warning}    This file is awaiting virus scanning
 
 *** Test Cases ***
-Large pdf uploads not allowed
+Appendices available only for the correct questions
     [Documentation]    INFUND-832
     [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    ## Please leave this test case on top. It checks the appearance of the Upload button for pdfs before other tests do an actual upload
+    the user cannot see the option to upload a file on the question    link=1. Business opportunity
+    the user cannot see the option to upload a file on the question    link=2. Potential market
+    the user cannot see the option to upload a file on the question    link=3. Project exploitation
+    the user cannot see the option to upload a file on the question    link=4. Economic benefit
+    the user can see the option to upload a file on the question       link=5. Technical approach
+    the user can see the option to upload a file on the question       link=6. Innovation
+    the user cannot see the option to upload a file on the question    link=7. Risks
+    the user can see the option to upload a file on the question       link=8. Project team
+    the user cannot see the option to upload a file on the question    link=9. Funding
+    the user cannot see the option to upload a file on the question    link=10. Adding value
+
+Large pdf uploads not allowed
+    [Documentation]    INFUND-832
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -37,7 +53,7 @@ Non pdf uploads not allowed
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    HappyPath
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -47,7 +63,7 @@ Lead applicant can upload a pdf file
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]    HappyPath
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
@@ -56,8 +72,8 @@ Lead applicant can view a file
 
 Lead applicant can download a pdf file
     [Documentation]    INFUND-2720
-    [Tags]    Pending
-    # Pending until download functionality has been plugged in
+    [Tags]    Pending    HappyPath
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -65,7 +81,7 @@ Lead applicant can download a pdf file
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -78,7 +94,7 @@ Collaborators can view a file
 Collaborators can download a pdf file
     [Documentation]    INFUND-2720
     [Tags]    Pending
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -92,7 +108,7 @@ Collaborators cannot upload a file if not assigned
 
 Collaborators cannot remove a file if not assigned
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]    HappyPath
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the text in the page    Remove
 
@@ -126,7 +142,7 @@ Collaborators can view a file when the question is assigned
 Collaborator can download a file when the question is assigned
     [Documentation]    INFUND-2720
     [Tags]    Pending
-    # Pending until download functionality has been plugged in
+    # TODO Pending until download functionality has been plugged in
     Given the user should see the text in the page    ${valid_pdf}
     When the user downloads the file from the link    ${valid_pdf}    ${download_link}
     Then the file should be downloaded    ${valid_pdf}
@@ -134,7 +150,7 @@ Collaborator can download a file when the question is assigned
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
     [Tags]    Pending
-    #pending INFUND-3259
+    # TODO pending INFUND-3259
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -151,20 +167,6 @@ Collaborators can upload a file when the question is assigned
     When the user should see the text in the page    Upload
     Then the user uploads the file to the 'Innovation' question    ${valid_pdf}
     And the user can re-assign the question back to the lead applicant
-
-Appendices available only for the correct questions
-    [Documentation]    INFUND-832
-    [Tags]
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    the user cannot see the option to upload a file on the question    link=1. Business opportunity
-    the user cannot see the option to upload a file on the question    link=2. Potential market
-    the user cannot see the option to upload a file on the question    link=3. Project exploitation
-    the user cannot see the option to upload a file on the question    link=4. Economic benefit
-    # the user can see the option to upload a file on the question    link=6. Innovation [Have commented this for implementing INFUND-3007 by Pradha]
-    the user cannot see the option to upload a file on the question    link=7. Risks
-    the user can see the option to upload a file on the question    link=8. Project team
-    the user cannot see the option to upload a file on the question    link=9. Funding
-    the user cannot see the option to upload a file on the question    link=10. Adding value
 
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683

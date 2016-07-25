@@ -1,18 +1,17 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDateTime;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDateTime;
+
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class InitialDetailsFormPopulatorTest {
 
@@ -54,9 +53,6 @@ public class InitialDetailsFormPopulatorTest {
 		assertEquals(Integer.valueOf(2), form.getOpeningDateDay());
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
-		assertEquals("code", form.getCompetitionCode());
-		assertEquals("paf", form.getPafNumber());
 		assertEquals("name", form.getTitle());
-		assertEquals("budgetcode", form.getBudgetCode());
 	}
 }

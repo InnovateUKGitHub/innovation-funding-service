@@ -229,6 +229,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return restSuccess(successfulResult, OK);
     }
 
+    public static <T> RestResult<T> restAccepted(T successfulResult) {
+        return restSuccess(successfulResult, ACCEPTED);
+    }
+
     public static <T> RestResult<T> restSuccess(T result, HttpStatus statusCode) {
         return new RestResult<>(right(result), statusCode);
     }
@@ -280,7 +284,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
         } else {
-            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
+            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(response.getStatusCode(), "Unexpected status code " + response.getStatusCode(), response.getStatusCode()));
         }
     }
 

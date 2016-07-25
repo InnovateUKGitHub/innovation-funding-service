@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="full-width project-setup">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Finance overview'}, ${'Finance checks'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<div class="constrain-width">
+
+		<h2 class="heading-medium">Overview</h2>
+		
+		<div class="table-overflow ">
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Start date</th>
+						<th scope="col">Duration</th>
+						<th scope="col" class="numeric">Total project cost</th>
+						<th scope="col" class="numeric">Grant applied for</th>
+						<th scope="col" class="numeric">Other public sector funding</th>
+						<th scope="col" class="numeric">Total % grant</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1st June 2016</td>
+						<td>36 months</td>
+						<td class="numeric">&pound;400,0000</td>
+						<td class="numeric">&pound;200,000</td>
+						<td class="numeric">&pound;0</td>
+						<td class="numeric">50%</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="cf">
+			<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+		</div>
+		
+
+		<div class="eligibility" th:unless="${param.warning != null}">
+
+			<dl class="list-eligibility">
+				<dt>Maximum research participation</dt>
+				<dd>30%</dd>
+				<dt>Current research participation</dt>
+				<dd>11%</dd>
+			</dl>
+			
+			<div th:include="prototypes/fragments/applicant-view :: prototype-eligibility-success" th:remove="tag" />
+
+		</div>
+
+	</div>
+
+	<div class="table-overflow extra-margin">
+		
+		<h2 class="heading-medium">Project cost breakdown</h2>
+		
+		<table>
+			<thead>
+				<tr>
+					<th scope="col" style="min-width: 200px">Partner</th>
+					<th scope="col" class="numeric">% Grant</th>
+					<th scope="col" colspan="2" class="aligncentre">Total costs</th>
+					<th scope="col" colspan="2" class="aligncentre">Labour</th>
+					<th scope="col" colspan="2" class="aligncentre">AMS</th>
+					<th scope="col" class="numeric">AMS to labour</th>
+					<th scope="col" colspan="2" class="aligncentre">Materials</th>
+					<th scope="col" colspan="2" class="aligncentre">Capital util</th>
+					<th scope="col" colspan="2" class="aligncentre">Sub contract</th>
+					<th scope="col" colspan="2" class="aligncentre">Travel and subsistence</th>
+					<th scope="col" colspan="2" class="aligncentre">Academic costs</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th scope="row">Total</th>
+
+					<td class="numeric">73%</td>
+
+					<td class="numeric">&pound;375,000</td>
+					<td class="numeric">100%</td>
+
+					<td class="numeric">&pound;180,000</td>
+					<td class="numeric">48%</td>
+
+					<td class="numeric">&pound;36,000</td>
+					<td class="numeric">10%</td>
+
+					<td class="numeric">20%</td>
+
+					<td class="numeric">&pound;44,000</td>
+					<td class="numeric">12%</td>
+
+					<td class="numeric">&pound;15,000</td>
+					<td class="numeric">4%</td>
+
+					<td class="numeric">&pound;25,000</td>
+					<td class="numeric">7%</td>
+
+					<td class="numeric">&pound;25,000</td>
+					<td class="numeric">7%</td>
+
+					<td class="numeric">&pound;50,000</td>
+					<td class="numeric">13%</td>
+				</tr>
+			</tfoot>
+			<tbody>
+				<tr>
+					<th scope="row">
+						Aptrans Ltd<br />
+						<small>Lead partner</small>
+					</th>
+					<td class="numeric">50%</td>
+
+					<td class="numeric">&pound;190,000</td>
+					<td class="numeric">51%</td>
+
+					<td class="numeric">&pound;100,000</td>
+					<td class="numeric">53%</td>
+
+					<td class="numeric">&pound;20,000</td>
+					<td class="numeric">11%</td>
+
+					<td class="numeric">20%</td>
+
+					<td class="numeric">&pound;30,000</td>
+					<td class="numeric">16%</td>
+
+					<td class="numeric">&pound;10,000</td>
+					<td class="numeric">5%</td>
+
+					<td class="numeric">&pound;20,000</td>
+					<td class="numeric">11%</td>
+
+					<td class="numeric">&pound;10,000</td>
+					<td class="numeric">5%</td>
+
+					<td class="numeric">&pound;0</td>
+					<td class="numeric">0%</td>
+
+				</tr>
+
+				<tr>
+					<th scope="row">
+						Biotech Corp <br />
+						<small>Partner</small>
+					</th>
+					<td class="numeric">50%</td>
+
+					<td class="numeric">&pound;190,000</td>
+					<td class="numeric">51%</td>
+
+					<td class="numeric">&pound;100,000</td>
+					<td class="numeric">53%</td>
+
+					<td class="numeric">&pound;20,000</td>
+					<td class="numeric">11%</td>
+
+					<td class="numeric">20%</td>
+
+					<td class="numeric">&pound;30,000</td>
+					<td class="numeric">16%</td>
+
+					<td class="numeric">&pound;10,000</td>
+					<td class="numeric">5%</td>
+
+					<td class="numeric">&pound;20,000</td>
+					<td class="numeric">11%</td>
+
+					<td class="numeric">&pound;10,000</td>
+					<td class="numeric">5%</td>
+
+					<td class="numeric">&pound;0</td>
+					<td class="numeric">0%</td>
+
+				</tr>
+
+				<tr>
+					<th scope="row">
+						University of Cardiff <br />
+						<small>Lead partner</small>
+					</th>
+					<td class="numeric">50%</td>
+
+					<td class="numeric">&pound;190,000</td>
+					<td class="numeric">51%</td>
+
+					<td class="numeric">&pound;100,000</td>
+					<td class="numeric">53%</td>
+
+					<td class="numeric">&pound;20,000</td>
+					<td class="numeric">11%</td>
+
+					<td class="numeric">20%</td>
+
+					<td class="numeric">&pound;30,000</td>
+					<td class="numeric">16%</td>
+
+					<td class="numeric">&pound;10,000</td>
+					<td class="numeric">5%</td>
+
+					<td class="numeric">&pound;20,000</td>
+					<td class="numeric">11%</td>
+
+					<td class="numeric">&pound;10,000</td>
+					<td class="numeric">5%</td>
+
+					<td class="numeric">&pound;0</td>
+					<td class="numeric">0%</td>
+
+				</tr>
+			</tbody>
+		</table>
+
+
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	
+	// ]]>
+</script>
+</body>
+</html>

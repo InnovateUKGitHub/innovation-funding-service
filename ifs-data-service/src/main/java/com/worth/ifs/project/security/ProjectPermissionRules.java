@@ -58,4 +58,32 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean compAdminsCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
     }
+
+    @PermissionRule(
+            value = "UPLOAD_OTHER_DOCUMENTS",
+            description = "The lead partners can upload Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
+    public boolean leadPartnersCanUploadOtherDocuments(ProjectResource project, UserResource user) {
+        return isLeadPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_OTHER_DOCUMENTS",
+            description = "Partners can download Other Documents (Collaboration Agreement, Exploitation Plan) that their lead partners have uploaded")
+    public boolean partnersCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_OTHER_DOCUMENTS_DETAILS",
+            description = "Partners can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
+    public boolean partnersCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "DELETE_OTHER_DOCUMENTS",
+            description = "The lead partners can delete Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
+    public boolean leadPartnersCanDeleteOtherDocuments(ProjectResource project, UserResource user) {
+        return isLeadPartner(project.getId(), user.getId());
+    }
 }

@@ -1,23 +1,20 @@
 package com.worth.ifs.application.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.QuestionResourceBuilder;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
@@ -27,7 +24,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-
 
 public class SectionServiceImplTest extends BaseUnitTestMocksTest {
 
@@ -50,7 +46,6 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     public void setUp() {
         super.setUp();
 
-        ArrayList<SectionResource> sections = new ArrayList<>();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         parentSection = newSectionResource().withId(10L).withCompetition(competition.getId()).build();
         childSection1 = newSectionResource().withId(20L).withCompetition(competition.getId()).withParentSection(parentSection.getId()).build();
@@ -76,7 +71,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         when(formInputService.getOne(1L)).thenReturn(formInputResource1);
         when(formInputService.getOne(2L)).thenReturn(formInputResource2);
 
-        when(formInputService.findByCompetitionId(anyLong())).thenReturn(asList(formInputResource1, formInputResource2));
+        when(formInputService.findApplicationInputsByCompetition(anyLong())).thenReturn(asList(formInputResource1, formInputResource2));
     }
 
     @Test

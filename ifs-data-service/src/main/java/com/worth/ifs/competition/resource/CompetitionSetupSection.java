@@ -8,14 +8,17 @@ import java.util.Map;
  * It is used when recording which sections are marked as complete during the competition setup process.
  */
 public enum CompetitionSetupSection {
-
+	HOME("home", "Home Page"),
 	INITIAL_DETAILS("initial", "Initial Details"),
-	ADDITIONAL_INFO("additional", "Additional Information"),
+	ADDITIONAL_INFO("additional", "Funding Information"),
 	ELIGIBILITY("eligibility", "Eligibility"),
 	MILESTONES("milestones", "Milestones"),
+	APPLICATION_FORM("application", "Application Questions"),
+	FINANCE("finance", "Application Finances"),
 	ASSESSORS("assessors", "Assessors"),
-	APPLICATION_FORM("application", "Application Form"),
-	FINANCE("finance", "Finance");
+	DESCRIPTION_AND_BRIEF("description", "Description and brief");
+
+
 	
 	private String path;
 	private String name;

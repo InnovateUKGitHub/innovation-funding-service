@@ -33,7 +33,8 @@ Autosave in the form questions
 
 Word count works
     [Documentation]    INFUND-198
-    [Tags]
+    [Tags]    Pending     HappyPath
+    # Pending due to chromedriver
     When the Applicant edits the Project summary
     Then the word count should be correct for the Project summary
     And the Applicant edits the Project description question (300 words)
@@ -164,13 +165,13 @@ the text box should be editable
     Element Should Be Enabled    css=#form-input-11 textarea
 
 the button state should change to 'Mark as complete'
-    the user should see the element   jQuery=button:contains("Mark as complete")
+    the user should see the element    jQuery=button:contains("Mark as complete")
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
     Run Keyword And Ignore Error    confirm action
-    the user should see the element        jQuery=#section-1 .section:nth-child(2)
-    the user should not see the element   jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
+    the user should see the element    jQuery=#section-1 .section:nth-child(2)
+    the user should not see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label

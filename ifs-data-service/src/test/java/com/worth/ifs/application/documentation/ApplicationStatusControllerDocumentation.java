@@ -40,7 +40,7 @@ public class ApplicationStatusControllerDocumentation extends BaseControllerMock
     }
 
     @Test
-    public void documentGetApplicationStatusById() throws Exception {
+    public void getApplicationStatusById() throws Exception {
         Long statusId = 1L;
 
         ApplicationStatusResource status = newApplicationStatusResource().withName("Open").build();

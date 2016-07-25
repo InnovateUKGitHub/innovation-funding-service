@@ -39,7 +39,7 @@ IFS.core.formValidation = (function(){
                 messageInvalid : "Please enter a valid email address"
             },
             required : {
-                fields: '[required]:not([data-date])',
+                fields: '[required]',
                 messageInvalid : "This field cannot be left blank"
             },
             minlength : {
@@ -99,7 +99,7 @@ IFS.core.formValidation = (function(){
 
           //will only work on html5 validation browsers
           jQuery('form:not([novalidate]) input').on('invalid',function(){
-            jQuery(this).trigger('change');
+              jQuery(this).trigger('change');
           });
           IFS.core.formValidation.betterMinLengthSupport();
         },
@@ -279,19 +279,25 @@ IFS.core.formValidation = (function(){
         },
         checkRequired : function(field,showMessage){
             var errorMessage = IFS.core.formValidation.getErrorMessage(field,'required');
+
             if(field.val() !== null){
               if(field.is(':checkbox,:radio')){
-                 var name = field.attr("name");
-                 if(typeof(name) !== 'undefined'){
+                var name = field.attr("name");
+                if(typeof(name) !== 'undefined'){
+                   var fieldGroup = jQuery('[name="'+name+'"]');
                    if(jQuery('[name="'+name+'"]:checked').length === 0){
-                     if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
+                     if(showMessage) {
+                      fieldGroup.each(function(){ IFS.core.formValidation.setInvalid(jQuery(this),errorMessage); });
+                     }
                      return false;
                    }
                    else {
-                     if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
+                     if(showMessage) {
+                       fieldGroup.each(function(){ IFS.core.formValidation.setValid(jQuery(this),errorMessage); });
+                     }
                      return true;
                    }
-                 }
+                }
               }
               else {
                 if(field.val().length === 0){
@@ -318,7 +324,7 @@ IFS.core.formValidation = (function(){
         checkMinLength : function(field,showMessage){
             var errorMessage = IFS.core.formValidation.getErrorMessage(field,'minlength');
             var minlength = parseInt(field.attr('minlength'),10);
-            if(field.val().length < minlength){
+            if((field.val().length > 0) && (field.val().length < minlength)){
               if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
               return false;
             }

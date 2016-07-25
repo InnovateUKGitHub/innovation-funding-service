@@ -15,16 +15,16 @@ import java.util.List;
 public class AssessmentOverviewForm extends Form {
 
     private String rejectReason;
-    private String rejectInformation;
+    private String rejectComment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
 
     public AssessmentOverviewForm() {
     }
 
-    public AssessmentOverviewForm(String rejectReason, String rejectInformation, BindingResult bindingResult, List<ObjectError> objectErrors) {
+    public AssessmentOverviewForm(String rejectReason, String rejectComment, BindingResult bindingResult, List<ObjectError> objectErrors) {
         this.rejectReason = rejectReason;
-        this.rejectInformation = rejectInformation;
+        this.rejectComment = rejectComment;
         this.bindingResult = bindingResult;
         this.objectErrors = objectErrors;
     }
@@ -37,12 +37,12 @@ public class AssessmentOverviewForm extends Form {
         this.rejectReason = rejectReason;
     }
 
-    public String getRejectInformation() {
-        return rejectInformation;
+    public String getRejectComment() {
+        return rejectComment;
     }
 
-    public void setRejectInformation(String rejectInformation) {
-        this.rejectInformation = rejectInformation;
+    public void setRejectComment(String rejectComment) {
+        this.rejectComment = rejectComment;
     }
 
     public BindingResult getBindingResult() {
@@ -77,7 +77,7 @@ public class AssessmentOverviewForm extends Form {
 
         return new EqualsBuilder()
                 .append(rejectReason, that.rejectReason)
-                .append(rejectInformation, that.getRejectInformation())
+                .append(rejectComment, that.rejectComment)
                 .append(bindingResult, that.bindingResult)
                 .append(objectErrors, that.objectErrors)
                 .isEquals();
@@ -87,7 +87,7 @@ public class AssessmentOverviewForm extends Form {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(rejectReason)
-                .append(rejectInformation)
+                .append(rejectComment)
                 .append(bindingResult)
                 .append(objectErrors)
                 .toHashCode();

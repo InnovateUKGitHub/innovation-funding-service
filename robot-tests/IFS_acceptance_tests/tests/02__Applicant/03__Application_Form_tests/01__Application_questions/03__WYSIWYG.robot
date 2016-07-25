@@ -28,13 +28,13 @@ Italic text format
 
 Numbering bullet format
     [Documentation]    INFUND-187
-    [Tags]    HappyPath
+    [Tags]
     When the Applicant clicks on the Numbering bullet button in the "business opportunity" field
     Then all text entered should be in Numbering bullets and stay the same after page refresh
 
 Bullet format
     [Documentation]    INFUND-187
-    [Tags]    HappyPath
+    [Tags]
     When the Applicant clicks on the Bullet format button in the "business opportunity" field
     Then all text entered should be in Bullet format and stay the same after page refresh
 
@@ -42,7 +42,7 @@ Bullet format
 the Applicant clicks on the Bold button in the "business opportunity" field
     Clear Element Text    css=#form-input-1 .editor
     Press Key    css=#form-input-1 .editor    \\8
-    Sleep     1s
+    Sleep    1s
     click element    css=.bold_button
 
 the Applicant clicks on the Italic button in the "business opportunity" field

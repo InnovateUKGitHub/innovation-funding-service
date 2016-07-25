@@ -5,7 +5,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 /**
  * View model that backs the Project Details - Start Date page
  */
-public class ProjectDetailsStartDateViewModel {
+public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsViewModel {
     private Long projectId;
     private String projectNumber;
     private String projectName;

@@ -2,7 +2,7 @@
 Documentation     INFUND-2606 - As a competition administrator I want a view of all applications at the 'Assessor Feedback' stage so that I can publish their uploaded assessor feedback
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Comp admin
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Status and applications are correct
     [Documentation]    INFUND-2606
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the page    ${server}/management/competition/3
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the text in the page    Cheese is great
@@ -34,7 +34,7 @@ The 'Fund project?' column title is now 'Funded' and isn't editable
 
 Publish assessor feedback button is now visible
     [Documentation]    INFUND-2606
-    [Tags]
+    [Tags]    HappyPath
     When the user should not see the element    jQuery=.button:contains("Notify applicants")
     Then the user should see the element    jQuery=.button:contains("Publish assessor feedback")
     And publish assessor feedback button should be disabled

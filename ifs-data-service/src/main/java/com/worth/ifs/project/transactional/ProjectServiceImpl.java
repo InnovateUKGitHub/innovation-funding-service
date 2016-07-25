@@ -8,10 +8,15 @@ import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.BasicFileAndContents;
+import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -39,11 +44,13 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -54,15 +61,13 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
@@ -81,9 +86,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private MonitoringOfficerMapper monitoringOfficerMapper;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -109,6 +111,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private FileEntryMapper fileEntryMapper;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -117,12 +125,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
+    public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId) {
+    public ServiceResult<ProjectResource> getByApplicationId(Long applicationId) {
         return getProjectByApplication(applicationId).andOnSuccessReturn(projectMapper::mapToResource);
     }
 
@@ -137,22 +145,25 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+    public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateProjectManager(project, projectManagerId).
-                        andOnSuccessReturnVoid(project::setProjectManager));
+                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
+                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
-                andOnSuccess(() -> getProject(projectId).
-                        andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate)));
+                andOnSuccess(() -> getProject(projectId)).
+                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
     }
 
     @Override
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
+                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
                         andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                 andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
@@ -194,8 +205,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-        List<ProjectUser> projectUsers = projectUserRepository.findByProjectId(projectId);
+        List<ProjectUser> projectUsers = getProjectUsersByProjectId(projectId);
         return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
+    }
+
+    private List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
+        return projectUserRepository.findByProjectId(projectId);
     }
 
     @Override
@@ -237,7 +252,153 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
 
-        return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult));
+        return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getCollaborationAgreement();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
+            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
+        });
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getCollaborationAgreement();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        });
+    }
+
+    @Override
+    public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
+        return getProject(projectId).andOnSuccess(project ->
+                getCollaborationAgreement(project).andOnSuccess(fileEntry ->
+                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                removeCollaborationAgreementFileFromProject(project))));
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getExploitationPlan();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
+            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
+        });
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getExploitationPlan();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        });
+    }
+
+    @Override
+    public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturnVoid(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
+    }
+
+    @Override
+    public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
+        return getProject(projectId).andOnSuccess(project ->
+                getExploitationPlan(project).andOnSuccess(fileEntry ->
+                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                removeExploitationPlanFileFromProject(project))));
+    }
+
+    private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
+        if (project.getCollaborationAgreement() == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        } else {
+            return serviceSuccess(project.getCollaborationAgreement());
+        }
+    }
+
+    private FileEntryResource linkCollaborationAgreementFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+        FileEntry fileEntry = fileDetails.getValue();
+        linkCollaborationAgreementFileEntryToProject(fileEntry, project);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
+    private void linkCollaborationAgreementFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setCollaborationAgreement(fileEntry);
+    }
+
+    private void removeCollaborationAgreementFileFromProject(Project project) {
+        project.setCollaborationAgreement(null);
+    }
+
+    private ServiceResult<FileEntry> getExploitationPlan(Project project) {
+        if (project.getExploitationPlan() == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        } else {
+            return serviceSuccess(project.getExploitationPlan());
+        }
+    }
+
+    private FileEntryResource linkExploitationPlanFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+        FileEntry fileEntry = fileDetails.getValue();
+        linkExploitationPlanFileEntryToProject(fileEntry, project);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
+    private void linkExploitationPlanFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setExploitationPlan(fileEntry);
+    }
+
+    private void removeExploitationPlanFileFromProject(Project project) {
+        project.setExploitationPlan(null);
     }
 
 
@@ -248,7 +409,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer);
 
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
-                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, Collections.EMPTY_MAP);
+                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, emptyMap());
 
     }
 
@@ -268,7 +429,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer) {
 
         Project project = projectRepository.findOne(monitoringOfficer.getProject());
-        User projectManager = project.getProjectManager().getUser();
+        User projectManager = getExistingProjectManager(project).get().getUser();
 
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
@@ -370,6 +531,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess();
     }
 
+    private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
+
+        if (project.isProjectDetailsSubmitted()) {
+            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+        }
+
+        return serviceSuccess(project);
+    }
+
     private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
@@ -390,18 +560,27 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getOnlyElementOrFail(partnerUsers);
     }
 
-    private ServiceResult<ProcessRole> validateProjectManager(Project project, Long projectManagerId) {
-        Application application = applicationRepository.findOne(project.getApplication().getId());
-        Organisation leadPartner = application.getLeadOrganisation();
+    private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
 
-        List<ProcessRole> leadPartnerProcessRoles = simpleFilter(application.getProcessRoles(), pr -> leadPartner.equals(pr.getOrganisation()));
-        List<ProcessRole> matchingProcessRoles = simpleFilter(leadPartnerProcessRoles, lppr -> projectManagerId.equals(lppr.getUser().getId()));
+        List<ProjectUser> leadPartners = getLeadPartners(project);
+        List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
 
-        if(!matchingProcessRoles.isEmpty()) {
-            return getOnlyElementOrFail(matchingProcessRoles).andOnSuccess(processRole -> serviceSuccess(processRole));
+        if(!matchingProjectUsers.isEmpty()) {
+            return getOnlyElementOrFail(matchingProjectUsers);
         } else {
-            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_IN_LEAD_ORGANISATION));
+            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
         }
+    }
+
+    private List<ProjectUser> getLeadPartners(Project project) {
+        Application application = project.getApplication();
+        Organisation leadPartnerOrganisation = application.getLeadOrganisation();
+        return simpleFilter(project.getProjectUsers(),  pu -> organisationsEqual(leadPartnerOrganisation, pu)
+                && pu.getRole().isPartner());
+    }
+
+    private boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
+        return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
@@ -440,20 +619,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
-    private ServiceResult<Address> getAddress(long addressId) {
-        return find(addressRepository.findOne(addressId), notFoundError(Address.class, addressId));
-    }
-
     private ServiceResult<Project> getProjectByApplication(long applicationId){
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
     private boolean validateIsReadyForSubmission(final Project project) {
-        return !(project.getAddress() == null || project.getProjectManager() == null || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
+        return !(project.getAddress() == null || !getExistingProjectManager(project).isPresent() || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
     }
 
     private boolean allFinanceContactsNotSet(Long projectId){
-        List<ProjectUser> projectUserObjs = projectUserRepository.findByProjectId(projectId);
+        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectUserResources = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUserResources);
         List<ProjectUserResource> financeRoles = simpleFilter(projectUserResources, ProjectUserResource::isFinanceContact);
@@ -473,5 +648,29 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
+    }
+
+    private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
+
+        Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
+
+        return existingProjectManager.map(pm -> {
+
+            pm.setUser(leadPartnerUser.getUser());
+            pm.setOrganisation(leadPartnerUser.getOrganisation());
+            return serviceSuccess();
+
+        }).orElseGet(() -> getRole(PROJECT_MANAGER).andOnSuccessReturnVoid(projectManagerRole -> {
+
+            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProject(),
+                    projectManagerRole, leadPartnerUser.getOrganisation());
+            project.addProjectUser(projectUser);
+        }));
+    }
+
+    private Optional<ProjectUser> getExistingProjectManager(Project project) {
+        List<ProjectUser> projectUsers = getProjectUsersByProjectId(project.getId());
+        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
+        return getOnlyElementOrEmpty(projectManagers);
     }
 }

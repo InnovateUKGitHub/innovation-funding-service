@@ -61,7 +61,7 @@
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
-      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'require-action' : (model.bankDetails.isApproved ? 'complete' : 'waiting')}">
+      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'require-action' : (model.bankDetails.approved ? 'complete' : 'waiting')}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -91,17 +91,17 @@
         </div>
       </li>
 
-      <!--/* ========================= Other documentse ========================= */-->
+      <!--/* ========================= Other documents ========================= */-->
 
       <li>
         <div class="progress-status" />
         <div class="progress-info">
           <div th:unless="${param.user != null}" th:remove="tag">
-            <h2 class="heading-medium"><a href="/prototypes/1590-document-upload">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
             <p>As the lead partner in the consortium, you will need to upload documents including:</p>
           </div>
           <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-            <h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
             <p>The lead partner of the consortium will need to upload documents including:</p>
           </div>
           <ul class="list-bullet">

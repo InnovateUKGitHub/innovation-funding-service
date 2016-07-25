@@ -16,16 +16,16 @@ include::{snippets}/assessor-feedback/find-one/curl-request.adoc[]
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
 ==== Request
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/http-request.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/request-parameters.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/request-fields.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-create-assessor-feedback/http-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-create-assessor-feedback/request-parameters.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-create-assessor-feedback/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/http-response.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/response-fields.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-create-assessor-feedback/http-response.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-create-assessor-feedback/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_create/curl-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-create-assessor-feedback/curl-request.adoc[]
 
 
 
@@ -48,15 +48,30 @@ include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileContents/c
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
 ==== Request
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/http-request.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/request-parameters.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-entry/http-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-entry/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/http-response.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/response-fields.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-entry/http-response.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-entry/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/curl-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-entry/curl-request.adoc[]
+
+
+
+=== Get Assessor Feedback document content for an Application
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/http-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-get-assessor-feedback-file-contents/curl-request.adoc[]
 
 
 
@@ -64,15 +79,15 @@ include::{snippets}/assessor-feedback/assessorFeedbackDocument_getFileEntry/curl
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
 ==== Request
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/http-request.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/request-parameters.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/request-fields.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-update-assessor-feedback/http-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-update-assessor-feedback/request-parameters.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-update-assessor-feedback/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/http-response.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-update-assessor-feedback/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/curl-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-update-assessor-feedback/curl-request.adoc[]
 
 
 
@@ -80,11 +95,11 @@ include::{snippets}/assessor-feedback/assessorFeedbackDocument_update/curl-reque
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
 ==== Request
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/http-request.adoc[]
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/request-parameters.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-delete-assessor-feedback/http-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-delete-assessor-feedback/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/http-response.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-delete-assessor-feedback/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessor-feedback/assessorFeedbackDocument_delete/curl-request.adoc[]
+include::{snippets}/assessorfeedback/assessorFeedbackDocument_test-delete-assessor-feedback/curl-request.adoc[]

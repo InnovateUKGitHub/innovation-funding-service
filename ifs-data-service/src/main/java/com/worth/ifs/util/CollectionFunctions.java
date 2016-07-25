@@ -191,6 +191,25 @@ public final class CollectionFunctions {
     }
 
     /**
+     * Return the one and only element in the given list, or empty if none exists
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> getOnlyElementOrEmpty(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return Optional.empty();
+        }
+
+        if (list.size() > 1) {
+            throw new IllegalArgumentException("More than one element was available in list " + list + ", so cannot return only element");
+        }
+
+        return Optional.of(list.get(0));
+    }
+
+    /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      *
      * @param list
@@ -508,18 +527,15 @@ public final class CollectionFunctions {
      * @return
      */
     public static <T> BinaryOperator<T> nullSafe(final BinaryOperator<T> notNullSafe) {
-        return new BinaryOperator<T>() {
-            @Override
-            public T apply(T t1, T t2) {
-                if (t1 != null && t2 != null) {
-                    return notNullSafe.apply(t1, t2);
-                } else if (t1 != null) {
-                    return t1;
-                } else if (t2 != null) {
-                    return t2;
-                }
-                return null;
+        return (t1, t2) -> {
+            if (t1 != null && t2 != null) {
+                return notNullSafe.apply(t1, t2);
+            } else if (t1 != null) {
+                return t1;
+            } else if (t2 != null) {
+                return t2;
             }
+            return null;
         };
     }
 
@@ -537,6 +553,23 @@ public final class CollectionFunctions {
         return flattenLists(allPermutations);
     }
 
+    public static <T, R>  List<Pair<T, R>> asListOfPairs(Object... entries) {
+
+        if (entries.length % 2 != 0) {
+            throw new IllegalArgumentException("Should have an even number of names and values in list");
+        }
+
+        List<Pair<T, R>> list = new ArrayList<>();
+
+        for (int i = 0; i < entries.length; i += 2) {
+            T key = (T) entries[i];
+            R value = (R) entries[i + 1];
+            list.add(Pair.of(key, value));
+        }
+
+        return list;
+    }
+
     private static <T> List<List<T>> findPermutations(List<T> permutationStringSoFar, T currentWord, List<T> remainingWords) {
 
         List<T> newPermutationStringSoFar = combineLists(permutationStringSoFar, currentWord);
@@ -548,4 +581,5 @@ public final class CollectionFunctions {
         List<List<List<T>>> furtherPermutations = mapWithIndex(remainingWords, (i, remainingWord) -> findPermutations(newPermutationStringSoFar, remainingWord, removeElement(remainingWords, i)));
         return flattenLists(furtherPermutations);
     }
+
 }

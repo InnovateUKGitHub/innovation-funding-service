@@ -33,7 +33,6 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,9 @@ import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.*;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -85,12 +86,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
-        model.addAttribute("projectManager", getProjectManagerProcessRole(projectResource.getId()));
+        model.addAttribute("projectManager", getProjectManager(projectResource.getId()).orElse(null));
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
-                userIsLeadPartner(projectId, loggedInUser.getId())));
+                projectService.isUserLeadPartner(projectId, loggedInUser.getId())));
         model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
 
         return "project/detail";
@@ -118,7 +119,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, form, true);
     }
 
-    @RequestMapping(value = "/{projectId}/details/finance-contact", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/finance-contact", method = POST)
     public String updateFinanceContact(Model model,
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
@@ -144,7 +145,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return doViewProjectManager(model, projectId, loggedInUser, form);
     }
 
-    @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-manager", method = POST)
     public String updateProjectManager(Model model, @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
@@ -176,7 +177,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/details-start-date";
     }
 
-    @RequestMapping(value = "/{projectId}/details/start-date", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/start-date", method = POST)
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
@@ -211,7 +212,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/details-address";
     }
 
-    @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", method = POST)
     public String updateAddress(Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
@@ -261,7 +262,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 success -> redirectToProjectDetails(projectId));
     }
 
-    @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
@@ -273,7 +274,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = POST)
     public String selectAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
@@ -282,7 +283,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = POST)
     public String manualAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
                                 @PathVariable("projectId") Long projectId) {
@@ -292,20 +293,18 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @RequestMapping(value = "/{projectId}/details/submit", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}/details/submit", method = POST)
     public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
         projectService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToProjectDetails(projectId);
     }
 
-    private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) throws InterruptedException, ExecutionException {
+    private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {
 
-        Future<ProcessRoleResource> processRoleResource = getProjectManagerProcessRole(projectId);
+        Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
 
         ProjectManagerForm form = new ProjectManagerForm();
-        if(processRoleResource != null) {
-            form.setProjectManager(processRoleResource.get().getUser());
-        }
+        form.setProjectManager(existingProjectManager.map(ProjectUserResource::getId).orElse(null));
         return form;
     }
 
@@ -326,33 +325,21 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return modelForFinanceContact(model, projectId, organisation, loggedInUser, form, setDefaultFinanceContact);
     }
 
-    private Future<ProcessRoleResource> getProjectManagerProcessRole(Long projectId) {
-        ProjectResource projectResource = projectService.getById(projectId);
-        Future<ProcessRoleResource> processRoleResource;
-        if(projectResource.getProjectManager() != null) {
-            processRoleResource = processRoleService.getById(projectResource.getProjectManager());
-        } else {
-            processRoleResource = null;
-        }
-        return processRoleResource;
+    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
     private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
                                              ApplicationResource applicationResource) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        List<ProjectUserResource> leadPartners = getLeadPartners(projectId);
+        List<ProjectUserResource> leadPartners = projectService.getLeadPartners(projectId);
 
         model.addAttribute("allUsers", leadPartners);
         model.addAttribute("project", projectResource);
         model.addAttribute("app", applicationResource);
         model.addAttribute(FORM_ATTR_NAME, form);
-    }
-
-    private List<ProjectUserResource> getLeadPartners(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        return simpleFilter(projectUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
     }
 
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
@@ -407,7 +394,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
-        if(!userIsLeadPartner(projectResource.getId(), loggedInUser.getId())) {
+        if(!projectService.isUserLeadPartner(projectResource.getId(), loggedInUser.getId())) {
             return redirectToProjectDetails(projectId);
         }
 
@@ -464,10 +451,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
-    }
-
-    private boolean userIsLeadPartner(Long projectId, Long userId) {
-        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }
 
     private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {

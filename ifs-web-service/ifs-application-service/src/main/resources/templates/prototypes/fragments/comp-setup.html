@@ -458,7 +458,7 @@
     </div>
 
     <div class="panel-indent">
-        This will create a new Competition - you will be able to specify more details as you proceed
+        This will create a new competition. You can add more details as you progress.
     </div>
 
     <form id="form-essential">
@@ -565,7 +565,7 @@
 
             <div class="form-group">
                 <label class="form-label" for="compLeadTechnologist">
-                    <span class="form-label-bold">Competition Lead technologist</span>
+                    <span class="form-label-bold">Competition lead technologist</span>
                 </label>
                 <select class="form-control width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
@@ -783,19 +783,37 @@
         </fieldset>
 
         <fieldset id="section-2-done">
-            <dl class="standard-definition-list">
-                <dt>Funder</dt>
-                <dd>Research council</dd>
-                <dt>Budget</dt>
-                <dd>&pound;5,000,000</dd>
-                <dt>Total budget</dt>
-                <dd>&pound;5,000,000</dd>
-            </dl>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Funder</th>
+                        <th scope="col" class="numeric">Budget</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th scope="row">Total</th>
+                        <td class="numeric">&pound;1,300,000</td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr>
+                        <td>Innovate UK</td>
+                        <td class="numeric">&pound;500,000</td>
+                    </tr>
+                    <tr>
+                        <td>ATI</td>
+                        <td class="numeric">&pound;800,000</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <dl class="standard-definition-list extra-margin">
                 <dt>PAF number</dt>
-                <dd>1243</dd>
+                <dd>AB124</dd>
                 <dt>Activity code</dt>
-                <dd>1243</dd>
+                <dd>XY653</dd>
                 <dt>Competition code</dt>
                 <dd>1243</dd>
             </dl>
@@ -1001,7 +1019,7 @@
     <div class="form-group">
         <fieldset class="inline">
             <legend class="form-label-bold">Lead applicant</legend>
-            <p>Select the Lead Applicant type required</p>
+            <p>Select the lead applicant type required</p>
             <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
                 <input th:id="${'stream-'+streamNo+'-comp-lead-business'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Business" type="radio" checked="checked" />
                 Business
@@ -1020,7 +1038,7 @@
     <div class="form-group">
         <label class="form-label" th:for="${'stream-'+streamNo+'-comp-participation'}">
             <span class="form-label-bold">Research participation</span>
-            <span class="form-hint">This indicates the maximum level of Research participation alllowed</span>
+            <span class="form-hint">This indicates the maximum level of research participation alllowed</span>
         </label>
         <select class="form-control width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
             <option value="">30%</option>
@@ -1061,7 +1079,7 @@
     </div>
     
     <div class="panel-indent">
-        Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
+        Define the competition milestones. Once you enter a date into the 'submission date' field, this will automatically generate the other dates. You are able to edit these dates, but this will affect the overall calculation.
     </div>
 
     <form>
@@ -1089,7 +1107,7 @@
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders panel'}, rowNo=11" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
                 </tbody>

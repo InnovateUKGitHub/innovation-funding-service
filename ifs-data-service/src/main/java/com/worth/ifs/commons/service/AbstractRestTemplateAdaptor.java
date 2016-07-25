@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
@@ -28,6 +29,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public abstract class AbstractRestTemplateAdaptor {
     private final static Log LOG = LogFactory.getLog(AbstractRestTemplateAdaptor.class);
+
+    private final static ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -168,7 +171,7 @@ public abstract class AbstractRestTemplateAdaptor {
             return right(null);
         }
         try {
-            return right(new ObjectMapper().readValue(json, responseType));
+            return right(objectMapper.readValue(json, responseType));
         } catch (IOException e) {
         	LOG.error(e);
             return left();

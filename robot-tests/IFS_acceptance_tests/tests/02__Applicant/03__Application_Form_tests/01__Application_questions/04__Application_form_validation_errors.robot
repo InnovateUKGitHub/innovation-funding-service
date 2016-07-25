@@ -26,7 +26,7 @@ Day field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_day    32
     Then the user should see an error    Please enter a valid date
@@ -83,12 +83,12 @@ Duration field client side
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
     Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
-    And the applicant should not see the validation error any more
+    And the applicant should not see the validation error of the duration any more
 
 Application details server side
     [Documentation]    INFUND-2843
-    [Tags]    Pending
-    # pending INFUND-3999
+    [Tags]    Pending    HappyPath
+    # TODO pending INFUND-3999
     Given the user should see the text in the page    Application details
     When the user enters text to a text field    id=application_details-title    ${EMPTY}
     Then the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
@@ -104,7 +104,8 @@ Application details server side
 
 Empty text area
     [Documentation]    INFUND-43
-    [Tags]
+    [Tags]    Pending
+    # Pending due to chromedriver
     Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
     Then the user should see an error    Please enter some text
@@ -151,3 +152,11 @@ Applicant goes to the application details page of the Robot application
 the user enters some text in the text area
     Input Text    css=#form-input-11 .editor    Test text
     Mouse Out    css=#form-input-11 .editor
+
+the applicant should not see the validation error of the duration any more
+    Focus    css=.app-submit-btn
+    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error    mouse out    css=.editor
+    Focus    css=.app-submit-btn
+    sleep    300ms
+    Wait Until Page Does Not Contain    Please enter a valid value

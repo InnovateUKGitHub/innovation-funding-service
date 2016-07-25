@@ -2,8 +2,8 @@ package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
@@ -43,22 +43,25 @@ public class Project {
 
     private LocalDateTime submittedDate;
 
-    @OneToOne
-    @JoinColumn(name="projectManager", referencedColumnName="id")
-    private ProcessRole projectManager;
-
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
+    private FileEntry collaborationAgreement;
+
+    @ManyToOne
+    @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
+    private FileEntry exploitationPlan;
+
     public Project() {}
 
-    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, ProcessRole projectManager, String name, LocalDateTime submittedDate) {
+    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, String name, LocalDateTime submittedDate) {
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
         this.address = address;
         this.durationInMonths = durationInMonths;
-        this.projectManager = projectManager;
         this.name = name;
         this.submittedDate = submittedDate;
     }
@@ -117,14 +120,6 @@ public class Project {
         this.durationInMonths = durationInMonths;
     }
 
-    public ProcessRole getProjectManager() {
-        return projectManager;
-    }
-
-    public void setProjectManager(ProcessRole projectManager) {
-        this.projectManager = projectManager;
-    }
-
     public String getName() {
         return name;
     }
@@ -146,7 +141,8 @@ public class Project {
     }
 
     public void setProjectUsers(List<ProjectUser> projectUsers) {
-        this.projectUsers = projectUsers;
+        this.projectUsers.clear();
+        this.projectUsers.addAll(projectUsers);
     }
 
     public LocalDateTime getSubmittedDate() {
@@ -155,5 +151,21 @@ public class Project {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public FileEntry getCollaborationAgreement() {
+        return collaborationAgreement;
+    }
+
+    public void setCollaborationAgreement(FileEntry collaborationAgreement) {
+        this.collaborationAgreement = collaborationAgreement;
+    }
+
+    public FileEntry getExploitationPlan() {
+        return exploitationPlan;
+    }
+
+    public void setExploitationPlan(FileEntry exploitationPlan) {
+        this.exploitationPlan = exploitationPlan;
     }
 }

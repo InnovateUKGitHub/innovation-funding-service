@@ -1,5 +1,18 @@
 package com.worth.ifs.form.transactional;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInput;
@@ -11,23 +24,9 @@ import com.worth.ifs.form.mapper.FormInputTypeMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseCommand;
-import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.form.resource.FormInputTypeResource;
+import com.worth.ifs.form.resource.*;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.function.Supplier;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class FormInputServiceImpl extends BaseTransactionalService implements FormInputService {
@@ -61,8 +60,18 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
+    public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope) {
+        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScope(questionId, scope)));
+    }
+
+    @Override
     public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
         return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionId(competitionId)));
+    }
+
+    @Override
+    public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndScope(competitionId, scope)));
     }
 
     private ServiceResult<FormInput> findFormInputEntity(Long id) {
@@ -94,24 +103,25 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(userId, applicationId);
         return find(user(userId), formInput(formInputId), openApplication(applicationId)).
                 andOnSuccess((user, formInput, application) ->
-                                getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
-                                    if (!response.getValue().equals(htmlUnescapedValue)) {
-                                        response.setUpdateDate(LocalDateTime.now());
-                                        response.setUpdatedBy(userAppRole);
-                                    }
-                                    response.setValue(htmlUnescapedValue);
-                                    formInputResponseRepository.save(response);
-                                    return response;
-                                })
-                );
+                getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
+                    if (!response.getValue().equals(htmlUnescapedValue)) {
+                        response.setUpdateDate(LocalDateTime.now());
+                        response.setUpdatedBy(userAppRole);
+                    }
+                    response.setValue(htmlUnescapedValue);
+                    application.addFormInputResponse(response);
+                    applicationRepository.save(application);
+                    return response;
+                })
+            );
     }
-
+    
     private ServiceResult<FormInputResponse> getOrCreateResponse(Application application, FormInput formInput, ProcessRole userAppRole) {
 
-        List<FormInputResponse> existingResponse = formInputResponseRepository.findByApplicationIdAndFormInputId(application.getId(), formInput.getId());
+    	Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInput(formInput);
 
-        return existingResponse != null && !existingResponse.isEmpty() ?
-                serviceSuccess(existingResponse.get(0)) :
+        return existingResponse != null && existingResponse.isPresent() ?
+                serviceSuccess(existingResponse.get()) :
                 serviceSuccess(new FormInputResponse(LocalDateTime.now(), "", userAppRole, formInput, application));
     }
 

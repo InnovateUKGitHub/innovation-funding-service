@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -39,6 +40,7 @@ import com.worth.ifs.competitiontemplate.repository.CompetitionTemplateRepositor
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.transactional.BaseTransactionalService;
 
+
 /**
  * Service for operations around the usage and processing of Competitions
  */
@@ -56,8 +58,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
+    private CompetitionCoFunderService competitionCoFunderService;
+	@Autowired
     private CompetitionTemplateRepository competitionTemplateRepository;
-    
+
+
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
@@ -99,6 +104,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         saveInnovationArea(competitionResource);
         saveInnovationSector(competitionResource);
         saveResearchCategories(competitionResource);
+        saveCoFunders(competitionResource);
+    }
+
+    private void saveCoFunders(CompetitionResource competitionResource) {
+        competitionCoFunderService.reinsertCoFunders(competitionResource);
     }
 
     private void saveInnovationSector(CompetitionResource competitionResource) {

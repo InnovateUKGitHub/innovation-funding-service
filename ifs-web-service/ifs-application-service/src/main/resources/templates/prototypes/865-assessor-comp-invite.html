@@ -15,7 +15,7 @@
 
 
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to competition dashboard'}, ${'/prototypes/865-assessor-dashboard-invites'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader()" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
@@ -54,12 +54,12 @@
         <fieldset>
             <legend class="visuallyhidden">Are you available to assess this competition?</legend>
             <h2 class="heading-medium">Are you available to assess this competition?</h2>
-            <a href="/prototypes/865-assessor-dashboard-invites?accepted=yes" class="button large" name="accept" value="accepted" type="submit">Accept</a>
+            <a href="/prototypes/1360-assessor-invite-start" class="button large" name="accept" value="accepted" type="submit">Accept</a>
             <a role="button" tabindex="0" class="button button-warning large" href="#" data-js-modal="modal-reject-assessment">Reject</a>
         </fieldset>
     </form>
 
-    <div th:include="prototypes/fragments/assessor-view :: prototype-modal-comp-reject" th:with="backTo='/prototypes/865-assessor-dashboard-invites?accepted=no'" th:remove="tag" />
+    <div th:include="prototypes/fragments/assessor-view :: prototype-modal-comp-reject" th:with="backTo='/prototypes/4081-assessor-thank-you'" th:remove="tag" />
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

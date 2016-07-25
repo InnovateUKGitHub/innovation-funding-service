@@ -1,5 +1,8 @@
 package com.worth.ifs.util;
 
+import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
@@ -8,11 +11,15 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Optional;
 
 @Configurable
 public final class CookieUtil {
     private CookieUtil(){}
+    private static final Log LOG = LogFactory.getLog(CookieUtil.class);
 
     @Value("${server.session.cookie.secure}")
     private static boolean cookieSecure;
@@ -22,7 +29,13 @@ public final class CookieUtil {
 
     public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
         if (StringUtils.hasText(fieldName)){
-            Cookie cookie = new Cookie(fieldName, fieldValue);
+            Cookie cookie = null;
+            try {
+                cookie = new Cookie(fieldName, URLEncoder.encode(fieldValue, CharEncoding.UTF_8));
+            } catch (UnsupportedEncodingException e) {
+                LOG.error(e);
+                return;
+            }
             cookie.setSecure(cookieSecure);
             cookie.setHttpOnly(cookieHttpOnly);
             cookie.setPath("/");
@@ -49,7 +62,12 @@ public final class CookieUtil {
     public static String getCookieValue(HttpServletRequest request, String fieldName){
         Optional<Cookie> cookie = getCookie(request, fieldName);
         if(cookie.isPresent()){
-            return cookie.get().getValue();
+            try {
+                return URLDecoder.decode(cookie.get().getValue(), CharEncoding.UTF_8);
+            } catch (UnsupportedEncodingException ignore) {
+                LOG.error(ignore);
+                //Do nothing
+            }
         }
         return "";
     }
