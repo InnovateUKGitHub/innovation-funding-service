@@ -214,8 +214,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	private Function<QuestionTemplate, Question> createQuestion(Competition competition, Section section) {
 		return (QuestionTemplate questionTemplate) -> {
 			Question question = new Question();
-			question.setAssessorGuidanceAnswer(questionTemplate.getAssessorGuidanceAnswer());
-			question.setAssessorGuidanceQuestion(questionTemplate.getAssessorGuidanceQuestion());
+			//question.setAssessorGuidanceAnswer(questionTemplate.getAssessorGuidanceAnswer());
+			//question.setAssessorGuidanceQuestion(questionTemplate.getAssessorGuidanceQuestion());
 			question.setDescription(questionTemplate.getDescription());
 			question.setName(questionTemplate.getName());
 			question.setShortName(questionTemplate.getShortName());

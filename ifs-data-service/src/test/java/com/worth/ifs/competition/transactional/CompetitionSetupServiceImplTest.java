@@ -103,8 +103,8 @@ public class CompetitionSetupServiceImplTest {
     	assertEquals("description", section.getDescription());
     	assertEquals(2, section.getQuestions().size());
     	Question question = section.getQuestions().get(0);
-    	assertEquals("assessorGuidanceAnswer", question.getAssessorGuidanceAnswer());
-    	assertEquals("assessorGuidanceQuestion", question.getAssessorGuidanceQuestion());
+    	//assertEquals("assessorGuidanceAnswer", question.getAssessorGuidanceAnswer());
+    	//assertEquals("assessorGuidanceQuestion", question.getAssessorGuidanceQuestion());
     	assertEquals("description", question.getDescription());
     	assertEquals("name", question.getName());
     	assertEquals("shortName", question.getShortName());
