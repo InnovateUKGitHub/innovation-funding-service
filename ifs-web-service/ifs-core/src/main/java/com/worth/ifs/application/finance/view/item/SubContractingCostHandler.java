@@ -49,9 +49,10 @@ public class SubContractingCostHandler extends CostHandler {
         	return null;
         }
         
-        if(cost == null) {
+	    if((id == null || Long.valueOf(0L).equals(id)) && (cost == null)) {
         	cost = BigDecimal.ZERO;
         }
+	    
         return new SubContractingCost(id, cost, country, name, role);
     }
 }

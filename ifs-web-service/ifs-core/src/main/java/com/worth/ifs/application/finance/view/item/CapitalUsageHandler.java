@@ -55,16 +55,18 @@ public class CapitalUsageHandler extends CostHandler {
         	return null;
         }
         
-        if(npv == null) {
-        	npv = BigDecimal.ZERO;
-        }
-        
-        if(residualValue == null) {
-        	residualValue = BigDecimal.ZERO;
-        }
-        
-        if(utilisation == null) {
-        	utilisation = 0;
+        if(id == null || Long.valueOf(0L).equals(id)) {
+	        if(npv == null) {
+	        	npv = BigDecimal.ZERO;
+	        }
+	        
+	        if(residualValue == null) {
+	       	residualValue = BigDecimal.ZERO;
+	        }
+	        
+	        if(utilisation == null) {
+	        	utilisation = 0;
+	        }
         }
         
         return new CapitalUsage(id, deprecation, description, existing,

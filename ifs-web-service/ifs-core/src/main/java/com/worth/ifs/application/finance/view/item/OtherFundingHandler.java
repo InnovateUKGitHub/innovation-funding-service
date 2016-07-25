@@ -51,10 +51,10 @@ public class OtherFundingHandler extends CostHandler {
         	return null;
         }
         
-        if(fundingAmount == null) {
+        if((id == null || Long.valueOf(0L).equals(id)) && (fundingAmount == null)) {
         	fundingAmount = BigDecimal.ZERO;
         }
-        
+
         return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
     }
 }
