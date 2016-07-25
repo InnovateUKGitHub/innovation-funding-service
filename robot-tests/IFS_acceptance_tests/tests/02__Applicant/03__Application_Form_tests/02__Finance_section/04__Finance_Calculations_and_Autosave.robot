@@ -68,8 +68,7 @@ Materials
 
 Capital usage
     [Documentation]    INFUND-736
-    [Tags]    Pending
-    #pending INFUND-4108
+    [Tags]
     When the applicant fills the 'capital usage' field
     Then Totals should be correct    css=#section-total-12    £ 200    css=[data-mirror="#section-total-12"]    £ 200
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
@@ -110,8 +109,7 @@ Other costs
 
 Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
-    [Tags]    Pending
-    #pending INFUND-4109
+    [Tags]
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant selects 'Yes' and fills two rows
@@ -126,7 +124,6 @@ Other Funding
 
 Funding level
     [Tags]
-    #Pending INFUND-1821
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
 
@@ -227,7 +224,7 @@ the Applicant fills the Travel fields
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    mouse out     css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
+    mouse out    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
     focus    css=.app-submit-btn
 
 the applicant adds one row for the other costs

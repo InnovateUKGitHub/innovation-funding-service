@@ -77,9 +77,8 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    Pending
+    [Tags]
     [Setup]    Make the finances ready for mark as complete
-    #INFUND-1960
     When the user marks the finances as complete
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     And the user clicks the button/link    link=Finances overview

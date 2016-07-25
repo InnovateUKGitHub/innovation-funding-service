@@ -17,18 +17,17 @@ Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
-    [Tags]    Pending
+    [Tags]
     [Setup]    Run keywords    the user clicks the button/link    jQuery=label:contains(Yes) input
     ...    AND    the user clicks the button/link    jQuery=label:contains(Yes) input
     ...    AND    Focus    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
-    #INFUND-1960
     When the user marks the finances as complete
     Then the user should see the element    css=.error-summary-list
     #Then the user should see an error    You should provide at least 1 source of other funding
 
 Other funding client side
-    [Tags]    Pending
+    [Tags]
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
@@ -36,7 +35,7 @@ Other funding client side
 
 Other funding server side
     [Documentation]    INFUND-2214
-    [Tags]    Pending
+    [Tags]
     [Setup]
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
     And the user marks the finances as complete
@@ -51,7 +50,7 @@ Other funding server side
 
 Select NO and mark as complete should be possible
     [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
-    [Tags]    Pending
+    [Tags]
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     And the user marks the finances as complete
     Then the user should see the text in the page    Application overview
