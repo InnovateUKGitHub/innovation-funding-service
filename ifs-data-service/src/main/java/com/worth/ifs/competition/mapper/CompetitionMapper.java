@@ -24,7 +24,8 @@ import org.mapstruct.Mappings;
         CategoryLinkMapper.class,
         MilestoneMapper.class,
         CompetitionTypeMapper.class,
-        SectionMapper.class
+        SectionMapper.class,
+        CompetitionCoFunderMapper.class
     }
 )
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {

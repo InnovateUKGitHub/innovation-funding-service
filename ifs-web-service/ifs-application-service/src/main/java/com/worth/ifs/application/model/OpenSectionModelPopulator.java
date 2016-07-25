@@ -260,7 +260,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
-        List<FormInputResource> formInputResources = formInputService.findByCompetitionId(competition.getId());
+        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(competition.getId());
 
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
             .collect(Collectors.toMap(
@@ -348,7 +348,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         sectionQuestions.put(currentSection.getId(), questions);
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
 
         model.addAttribute("currentSectionId", currentSection.getId());
         model.addAttribute("currentSection", currentSection);

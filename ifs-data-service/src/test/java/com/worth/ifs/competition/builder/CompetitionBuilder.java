@@ -52,12 +52,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("innovateBudget", innovateBudget, competition));
     }
 
-    public CompetitionBuilder withCoFunders(String coFunders) {
-        return with(competition -> setField("coFunders", coFunders, competition));
+    public CompetitionBuilder withFunder(String funder) {
+        return with(competition -> setField("funder", funder, competition));
     }
 
-    public CompetitionBuilder withCoFundersBudget(String coFundersBudget) {
-        return with(competition -> setField("coFundersBudget", coFundersBudget, competition));
+    public CompetitionBuilder withFunderBudget(Double funderBudget) {
+        return with(competition -> setField("funderBudget", funderBudget, competition));
     }
 
     public CompetitionBuilder withName(String name) {
