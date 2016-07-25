@@ -21,14 +21,14 @@ public class SectionPermissionRules extends BasePermissionRules {
         return false;
     }
 
-    @PermissionRule(value = "MARK_SECTION_AS_COMPLETE", description = "Only collaborator can mark a section as complete")
+    @PermissionRule(value = "MARK_SECTION_AS_COMPLETE", description = "Only member of project team can mark a section as complete")
     public boolean onlyLeadApplicantCanMarkSectionAsComplete(ApplicationResource applicationResource, UserResource user) {
-        return isCollaborator(applicationResource.getId(), user);
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
-    @PermissionRule(value = "MARK_SECTION_AS_INCOMPLETE", description = "Only collaborator can mark a section as incomplete")
+    @PermissionRule(value = "MARK_SECTION_AS_INCOMPLETE", description = "Only member of project team can mark a section as incomplete")
     public boolean onlyLeadApplicantCanMarkSectionAsInComplete(ApplicationResource applicationResource, UserResource user) {
-        return isCollaborator(applicationResource.getId(), user);
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
 }
