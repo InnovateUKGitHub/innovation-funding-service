@@ -3,6 +3,7 @@ package com.worth.ifs.commons.error;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
@@ -186,13 +187,13 @@ public class Error implements Serializable {
 
     @Override
     public String toString() {
-        return "Error{" +
-                "errorKey='" + errorKey + '\'' +
-                ", fieldName='" + fieldName + '\'' +
-                ", fieldRejectedValue=" + fieldRejectedValue +
-                ", arguments=" + arguments +
-                ", errorMessage='" + errorMessage + '\'' +
-                ", statusCode=" + statusCode +
-                '}';
+        return new ToStringBuilder(this)
+                .append("errorKey", errorKey)
+                .append("fieldName", fieldName)
+                .append("fieldRejectedValue", fieldRejectedValue)
+                .append("arguments", arguments)
+                .append("errorMessage", errorMessage)
+                .append("statusCode", statusCode)
+                .toString();
     }
 }
