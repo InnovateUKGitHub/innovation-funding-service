@@ -13,7 +13,7 @@ import java.util.List;
 public interface SectionRepository extends PagingAndSortingRepository<Section, Long> {
 	@Override
     List<Section> findAll();
-	List<Section> findByCompetitionId(Long competitionId);
+	List<Section> findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(Long competitionId);
     Section findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(Long competitionId, Integer priority);
     Section findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(Long competitionId, Long parentSectionId, Integer priority);
     Section findFirstByCompetitionIdAndPriorityLessThanAndQuestionGroupOrderByPriorityDesc(Long competitionId, Integer priority, boolean questionGroup);
