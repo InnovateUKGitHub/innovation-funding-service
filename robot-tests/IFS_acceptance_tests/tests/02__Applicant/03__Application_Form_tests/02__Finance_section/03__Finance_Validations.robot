@@ -24,7 +24,6 @@ Mark as complete with empty other funding row should be impossible
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
     Then the user should see the element    css=.error-summary-list
-    #Then the user should see an error    You should provide at least 1 source of other funding
 
 Other funding client side
     [Tags]
