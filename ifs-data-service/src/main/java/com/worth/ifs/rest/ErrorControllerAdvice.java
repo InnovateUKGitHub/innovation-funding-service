@@ -27,7 +27,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public @ResponseBody RestErrorResponse bindException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
-        List<Error> fieldErrors = simpleMap(bindingResult.getFieldErrors(), e -> fieldError(e.getField(), e.getCode()));
+        List<Error> fieldErrors = simpleMap(bindingResult.getFieldErrors(), e -> fieldError(e.getField(), e.getRejectedValue(), e.getCode()));
         List<Error> globalErrors = simpleMap(bindingResult.getGlobalErrors(), e -> new Error(e.getCode(), e.getDefaultMessage(), NOT_ACCEPTABLE));
         return new RestErrorResponse(combineLists(fieldErrors, globalErrors));
     }

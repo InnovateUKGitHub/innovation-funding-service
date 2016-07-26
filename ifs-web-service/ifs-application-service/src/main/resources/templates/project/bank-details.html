@@ -47,56 +47,74 @@
     <h2 class="heading-medium no-margin-bottom">Account details</h2>
     <p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
 
-    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber') ? 'error' : ''}">
+    <!--/* open */-->
+    <th:block th:unless="${readonly}">
 
-      <label for="bank-acc-number">
-        <span class="form-label-bold">Account number</span>
-        <span class="form-hint">For example: 15481965</span>
-        <span th:if="${#fields.hasErrors('accountNumber')}" th:remove="tag">
-              <span class="error-message"  th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
-        </span>
-      </label>
-      <input type="text" data-required-errormessage="Please enter an account number" data-minlength-errormessage="Please enter a valid account number" th:errorclass="field-error" required="required"  th:readonly="${readonly}" maxlength="8" minlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
-    </div>
-
-    <div class="form-group"  th:classappend="${#fields.hasErrors('sortCode') ? 'error' : ''}">
-      <label for="bank-sort-code">
-        <span class="form-label-bold">Sort code</span>
-        <span class="form-hint">For example: 311212</span>
-        <span th:if="${#fields.hasErrors('sortCode')}" th:remove="tag">
-              <span class="error-message"  th:each="err : ${#fields.errors('sortCode')}" th:text="${err}" />
-        </span>
-      </label>
-      <input type="text" data-required-errormessage="Please enter a sort code" data-minlength-errormessage="Please enter a valid sort code" th:errorclass="field-error" required="required" th:readonly="${readonly}" maxlength="6" minlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
-    </div>
-
-    <div class="form-group" th:unless="${readonly}">
-        <fieldset>
-            <h2 class="heading-medium">Billing address</h2>
-            <legend>
-              <span class="visuallyhidden">Billing address</span>
-            </legend>
-            <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
-            <div th:unless="${readonly}" th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
-        </fieldset>
-    </div>
-    <div th:if="${readonly}" th:remove="tag">
-      <h2 class="heading-medium no-margin">Billing address</h2>
-      <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
-
-      <div class="boxed extra-margin">
-          <h3 class="heading-medium no-margin-top" th:unless="readonly">Confirm project location</h3>
-          <p th:if="${bankDetails?.organisationAddress.address}" >
-            <th:block th:each="addressLine : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
-                <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-            </th:block>
-          </p>
+      <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber') ? 'error' : ''}">
+        <label for="bank-acc-number">
+          <span class="form-label-bold">Account number</span>
+          <span class="form-hint">For example: 15481965</span>
+          <span th:if="${#fields.hasErrors('accountNumber')}" th:remove="tag">
+                <span class="error-message"  th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
+          </span>
+        </label>
+        <input type="text" data-required-errormessage="Please enter an account number" data-minlength-errormessage="Please enter a valid account number" th:errorclass="field-error" required="required" maxlength="8" minlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
       </div>
 
-    </div>
+      <div class="form-group"  th:classappend="${#fields.hasErrors('sortCode') ? 'error' : ''}">
+        <label for="bank-sort-code">
+          <span class="form-label-bold">Sort code</span>
+          <span class="form-hint">For example: 311212</span>
+          <span th:if="${#fields.hasErrors('sortCode')}" th:remove="tag">
+                <span class="error-message"  th:each="err : ${#fields.errors('sortCode')}" th:text="${err}" />
+          </span>
+        </label>
+        <input type="text" data-required-errormessage="Please enter a sort code" data-minlength-errormessage="Please enter a valid sort code" th:errorclass="field-error" required="required" maxlength="6" minlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
+      </div>
 
-    <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
-    <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}" th:unless="${readonly}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
+      <div class="form-group">
+          <fieldset>
+              <h2 class="heading-medium">Billing address</h2>
+              <legend>
+                <span class="visuallyhidden">Billing address</span>
+              </legend>
+              <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+              <div th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
+          </fieldset>
+      </div>
+
+      <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
+      <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
+
+
+    </th:block>
+
+    <!--/* closed readonly */-->
+
+    <th:block th:if="${readonly}">
+      <dl class="standard-definition-list extra-margin">
+    		<dt>Account number</dt>
+
+    		<dd>
+          <th:block th:text="*{'*****'+#strings.substring(accountNumber,5,8)}" />
+    		</dd>
+    		<dt>Sort code</dt>
+        <dd>
+          <th:block th:text="*{'****'+#strings.substring(sortCode,4,6)}" />
+        </dd>
+    	</dl>
+
+      <h2 class="heading-medium no-margin-bottom">Billing address</h2>
+      <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+
+      <p class="extra-margin" th:if="${bankDetails?.organisationAddress.address}" >
+        <th:block th:each="addressLine,stats : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
+            <span th:text="${addressLine+' '}" th:remove="tag">An address line</span><br th:unless="${stats.index == 0}"/>
+        </th:block>
+      </p>
+
+    </th:block>
+
 
 	</form>
 

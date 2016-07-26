@@ -52,8 +52,7 @@ Lead partner can see the overview of the project details
 
 Submit button is disabled if the details are not fully filled out
     [Documentation]    INFUND-3467
-    [Tags]    Pending
-    # TODO
+    [Tags]
     When the user should see the element    xpath=//span[contains(text(), 'No')]
     Then the submit button should be disabled
 
@@ -97,7 +96,7 @@ Lead partner can change the Start Date
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Run Keyword And Ignore Error    When the user clicks the button/link    jQuery=.button:contains("Save")    # Click the button for second time because the focus is still in the date field
     The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
-    And the user should see the text in the page    1 Jan 2018    # It just doesnt go to the details page
+    And the user should see the text in the page    1 Jan 2018
     Then the matching status checkbox is updated    project-details    1    yes
 
 Lead partner can change the project manager
@@ -115,6 +114,7 @@ Lead partner can change the project manager
     And the user selects the radio button    projectManager    projectManager1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
+    And the user should see the text in the page     test twenty
     And the matching status checkbox is updated    project-details    3    yes
 
 Lead partner can change the project address
@@ -138,9 +138,22 @@ Lead partner can change the project address
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    1, Bath, BA1 5LR
 
+Non-lead partner cannot change start date, project manager or project address
+    [Documentation]
+    [Tags]
+    [Setup]    Logout as user
+    Given guest user log-in      jessica.doe@ludlow.co.uk     Passw0rd
+    When the user navigates to the page      ${project_in_setup_page}
+    Then the user should not see the element      link=Start date
+    And the user should not see the element      link=Project manager
+    And the user should not see the element     link=Project address
+    [Teardown]    Logout as user
+
+
 Project details submission flow
     [Documentation]    INFUND-3467
     [Tags]    HappyPath
+    [Setup]   guest user log-in  steve.smith@empire.com      Passw0rd
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     When all the fields are completed
     And the applicant clicks the submit button and the clicks cancel in the submit modal
@@ -151,7 +164,7 @@ Project details submission flow
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     And the user should see the element    jQuery=ul li.require-action:nth-child(4)
 
-Project details submitted is read only
+Project details read only after submission
     [Documentation]    INFUND-3467
     [Tags]
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
@@ -163,7 +176,7 @@ Project details submitted is read only
     And The user should not see the element    link=EGGS
     And The user should not see the element    link=Cheeseco
 
-All partners can view submited project details
+All partners can view submitted project details
     [Documentation]    INFUND-3471
     [Setup]    the user logs out if they are logged in
     When guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
@@ -174,7 +187,7 @@ All partners can view submited project details
     Then the user logs out if they are logged in
     When guest user log-in    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
-    Then the user should not see the element    link=EGGS
+    Then the user should not see the element    link=Consumed By Riffage Ltd
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
 
@@ -185,7 +198,7 @@ Non-lead partner cannot change any project details
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Start date
-    #    And the user should see the text in the page    1 Jan 2018 DateFails
+    And the user should see the text in the page    1 Jan 2018
     And the user should not see the element    link=Start date
     And the user should see the text in the page    Project manager
     And the user should see the text in the page    test twenty

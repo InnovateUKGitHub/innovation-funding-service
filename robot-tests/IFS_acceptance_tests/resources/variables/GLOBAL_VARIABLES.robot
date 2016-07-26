@@ -61,7 +61,7 @@ ${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project/1/details
 ${project_in_setup_page}     ${server}/project/1
 ${project_start_date_page}    ${server}/project/1/details/start-date
 ${project_address_page}    ${server}/project/1/details/project-address
-${project_manager_page}    ${server}/project/1/details/start-date
+${project_manager_page}    ${server}/project/1/details/project-manager
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
