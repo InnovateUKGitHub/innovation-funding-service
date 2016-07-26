@@ -1,5 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 
@@ -12,6 +14,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceFailure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,13 +165,19 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAll()));
     }
 
-	@Override
+    @Override
 	public ServiceResult<Void> initialiseFormForCompetitionType(Long competitionId, Long competitionTypeId) {
 		CompetitionTemplate template = competitionTemplateRepository.findByCompetitionTypeId(competitionTypeId);
-		//TODO check not null
 		Competition competition = competitionRepository.findById(competitionId);
-		//TODO check competition status
-		List<SectionTemplate> sectionsWithoutParentSections = template.getSectionTemplates().stream().filter(s -> s.getParentSectionTemplate() == null).collect(Collectors.toList());
+
+        if(competition == null || !competition.getCompetitionStatus().equals(Status.COMPETITION_SETUP)) {
+            return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
+        }
+
+        List<SectionTemplate> sectionsWithoutParentSections =
+                template.getSectionTemplates().stream()
+                        .filter(s -> s.getParentSectionTemplate() == null)
+                        .collect(Collectors.toList());
 		
 		attachSections(competition, template.getSectionTemplates(), null);
 		
@@ -214,8 +224,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	private Function<QuestionTemplate, Question> createQuestion(Competition competition, Section section) {
 		return (QuestionTemplate questionTemplate) -> {
 			Question question = new Question();
-			//question.setAssessorGuidanceAnswer(questionTemplate.getAssessorGuidanceAnswer());
-			//question.setAssessorGuidanceQuestion(questionTemplate.getAssessorGuidanceQuestion());
 			question.setDescription(questionTemplate.getDescription());
 			question.setName(questionTemplate.getName());
 			question.setShortName(questionTemplate.getShortName());

@@ -35,6 +35,7 @@ CREATE TABLE `section_template` (
   `assessor_guidance_description` varchar(5000) DEFAULT NULL,
   `parent_section_template_id` BIGINT(20) DEFAULT NULL,
   `competition_template_id` BIGINT(20) NOT NULL,
+  `priority` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_st_pstid` (`parent_section_template_id`),
   KEY `FK_st_ctid` (`competition_template_id`),
@@ -50,6 +51,7 @@ CREATE TABLE `question_template` (
   `description` varchar(5000) DEFAULT NULL,
   `assessor_guidance_question` varchar(5000) DEFAULT NULL,
   `assessor_guidance_answer` varchar(5000) DEFAULT NULL,
+  `priority` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_qqt_stid` (`section_template_id`),
   CONSTRAINT `FK_qqt_stid` FOREIGN KEY (`section_template_id`) REFERENCES `section_template` (`id`)

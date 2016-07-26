@@ -1,5 +1,6 @@
 package com.worth.ifs.competitionsetup.service;
 
+import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.springframework.ui.Model;
 
 import com.worth.ifs.competition.resource.CompetitionResource;

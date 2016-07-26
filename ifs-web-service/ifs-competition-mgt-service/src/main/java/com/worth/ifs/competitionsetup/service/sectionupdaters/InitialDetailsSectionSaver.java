@@ -5,6 +5,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Autowired
 	private CompetitionService competitionService;
+
+	@Autowired
+	private CompetitionSetupService competitionSetupService;
 	
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -47,7 +51,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 		competitionService.update(competition);
 
-
+		competitionService.initApplicationForm(competition.getId(), initialDetailsForm.getCompetitionTypeId());
 	}
 	
 	@Override

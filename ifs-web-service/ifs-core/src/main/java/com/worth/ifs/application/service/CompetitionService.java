@@ -31,5 +31,7 @@ public interface CompetitionService {
 
     void setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);
 
+    void initApplicationForm(Long competitionId, Long competitionTypeId);
+
     String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
 }
