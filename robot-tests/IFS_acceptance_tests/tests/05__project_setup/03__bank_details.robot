@@ -72,7 +72,8 @@ Bank account postcode lookup
 
 Bank details submission
     [Documentation]    INFUND-3010
-    [Tags]
+    [Tags]    Pending
+    # Pending until finance checks are synchronsied between the SIL (on the dev server) and the stub (locally) - this will happen on 27/07
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
     And the user should not see the text in the page    Your bank details have been approved
