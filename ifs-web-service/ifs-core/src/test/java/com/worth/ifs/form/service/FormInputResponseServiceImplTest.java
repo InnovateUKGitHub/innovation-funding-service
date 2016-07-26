@@ -54,7 +54,9 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void test_save() {
 
-        ValidationMessages validation = new ValidationMessages(fieldError("value", "an error", NOT_ACCEPTABLE), fieldError("value", "another error", NOT_ACCEPTABLE));
+        ValidationMessages validation = new ValidationMessages(
+                fieldError("value", "", "an error", NOT_ACCEPTABLE),
+                fieldError("value", "", "another error", NOT_ACCEPTABLE));
 
         when(restServiceMock.saveQuestionResponse(123L, 456L, 789L, "A new value", false)).
                 thenReturn(restSuccess(validation));

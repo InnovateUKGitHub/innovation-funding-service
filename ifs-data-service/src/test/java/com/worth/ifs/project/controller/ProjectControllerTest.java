@@ -278,11 +278,11 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withPhoneNumber("hello")
                 .build();
 
-        Error firstNameError = fieldError("firstName", "NotEmpty");
-        Error lastNameError = fieldError("lastName", "NotEmpty");
-        Error emailError = fieldError("email", "Email");
-        Error phoneNumberError = fieldError("phoneNumber", "Pattern");
-        Error phoneNumberLengthError = fieldError("phoneNumber", "Size");
+        Error firstNameError = fieldError("firstName", "", "NotEmpty");
+        Error lastNameError = fieldError("lastName", "", "NotEmpty");
+        Error emailError = fieldError("email", "abc", "Email");
+        Error phoneNumberError = fieldError("phoneNumber", "hello", "Pattern");
+        Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "Size");
 
         MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
@@ -333,13 +333,13 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
-        Error invalidSortCodeError = fieldError("sortCode", "Pattern");
-        Error sortCodeNotProvided = fieldError("sortCode", "NotBlank");
-        Error invalidAccountNumberError = fieldError("accountNumber","Pattern");
-        Error accountNumberNotProvided = fieldError("accountNumber", "NotBlank");
-        Error organisationAddressNotProvided = fieldError("organisationAddress","NotNull");
-        Error organisationIdNotProvided = fieldError("organisation","NotNull");
-        Error projectIdNotProvided = fieldError("project","NotNull");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
+        Error sortCodeNotProvided = fieldError("sortCode", null, "NotBlank");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
+        Error accountNumberNotProvided = fieldError("accountNumber", null, "NotBlank");
+        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "NotNull");
+        Error organisationIdNotProvided = fieldError("organisation", null, "NotNull");
+        Error projectIdNotProvided = fieldError("project", null, "NotNull");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
