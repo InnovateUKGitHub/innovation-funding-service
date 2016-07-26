@@ -73,7 +73,7 @@ public class BankDetailsController extends AddressLookupBaseController {
             || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getAddressLine1())
             || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getPostcode())
             || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getTown())
-            ) && !OrganisationAddressType.REGISTERED.name().equals(form.getAddressType().name())) {
+            ) && OrganisationAddressType.ADD_NEW.name().equals(form.getAddressType().name())) {
             return bankDetails(model, projectId, loggedInUser, form);
         }
 
