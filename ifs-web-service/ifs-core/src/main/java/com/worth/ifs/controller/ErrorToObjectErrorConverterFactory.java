@@ -12,13 +12,13 @@ import java.util.Optional;
 public class ErrorToObjectErrorConverterFactory {
 
     public static ErrorToObjectErrorConverter toField(String field) {
-        return e -> Optional.of(newFieldError(e, field));
+        return e -> Optional.of(newFieldError(e, field, e.getFieldRejectedValue()));
     }
 
     public static ErrorToObjectErrorConverter fieldErrorsToFieldErrors() {
         return e -> {
             if (e.isFieldError()) {
-                return Optional.of(newFieldError(e, e.getFieldName()));
+                return Optional.of(newFieldError(e, e.getFieldName(), e.getFieldRejectedValue()));
             }
             return Optional.empty();
         };
@@ -35,7 +35,7 @@ public class ErrorToObjectErrorConverterFactory {
     public static ErrorToObjectErrorConverter mappingErrorKeyToField(String errorKey, String targetField) {
         return e -> {
             if (errorKey.equals(e.getErrorKey())) {
-                return Optional.of(newFieldError(e, targetField));
+                return Optional.of(newFieldError(e, targetField, e.getFieldRejectedValue()));
             }
             return Optional.empty();
         };
@@ -45,7 +45,7 @@ public class ErrorToObjectErrorConverterFactory {
         return mappingErrorKeyToField(errorKey.name(), targetField);
     }
 
-    private static FieldError newFieldError(Error e, String fieldName) {
-        return new FieldError("", fieldName, null, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage());
+    private static FieldError newFieldError(Error e, String fieldName, Object rejectedValue) {
+        return new FieldError("", fieldName, rejectedValue, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage());
     }
 }

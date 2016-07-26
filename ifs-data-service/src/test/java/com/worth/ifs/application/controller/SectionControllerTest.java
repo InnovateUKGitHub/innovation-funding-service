@@ -8,8 +8,6 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.domain.Competition;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.context.MessageSource;
@@ -43,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SectionControllerTest extends BaseControllerMockMVCTest<SectionController> {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Mock
     protected SectionService sectionService;
@@ -167,7 +164,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"fieldName\":null,\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
+                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
                 .andDo(
                         document(
                             "section/mark-as-complete-invalid",
