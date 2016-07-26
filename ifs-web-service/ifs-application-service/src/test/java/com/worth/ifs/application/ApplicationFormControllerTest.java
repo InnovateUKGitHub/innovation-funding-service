@@ -103,7 +103,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         costId = Long.valueOf(1);
 
         // save actions should always succeed.
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "Please enter some text 123")));
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
     }
 

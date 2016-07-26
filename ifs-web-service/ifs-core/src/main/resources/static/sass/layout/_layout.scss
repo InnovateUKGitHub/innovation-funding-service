@@ -86,6 +86,14 @@
 
 }
 
+details {
+
+    th {
+        box-sizing: border-box;
+        min-width: 50px;
+    }
+}
+
 @include ie(8){
 	.header-logo a {
 		width: image-width('../images/innovateuk_logo.png');
