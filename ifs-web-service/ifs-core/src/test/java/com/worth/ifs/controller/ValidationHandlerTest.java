@@ -8,10 +8,8 @@ import org.springframework.validation.ObjectError;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorConverter;
 import com.worth.ifs.commons.error.ErrorHolder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,8 +15,9 @@ import java.util.*;
 import java.util.function.Function;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.commons.error.ErrorConverterFactory.asGlobalErrors;
+import static com.worth.ifs.commons.error.ErrorConverterFactory.fieldErrorsToFieldErrors;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -100,14 +102,39 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         errors.add(error);
     }
 
-    public void addAll(ValidationMessages messages) {
+    public void addAll(ErrorHolder messages) {
         if (messages != null) {
-            this.errors.addAll(messages.getErrors());
+            addAnyErrors(messages.getErrors());
+        }
+    }
+
+    public void addAll(ErrorHolder messages, ErrorConverter converter, ErrorConverter... otherConverters) {
+        if (messages != null) {
+            addAnyErrors(messages.getErrors(), converter, otherConverters);
         }
     }
 
     public void addAll(List<ValidationMessages> messages) {
-        messages.forEach(this::addAll);
+        messages.forEach(list -> addAnyErrors(list.getErrors()));
+    }
+
+    public void addAll(List<ValidationMessages> messages, ErrorConverter converter, ErrorConverter... otherConverters) {
+        messages.forEach(list -> addAnyErrors(list.getErrors(), converter, otherConverters));
+    }
+
+    private void addAnyErrors(List<Error> errors) {
+        addAnyErrors(errors, fieldErrorsToFieldErrors(), asGlobalErrors());
+    }
+
+    private void addAnyErrors(List<Error> errors, ErrorConverter converter, ErrorConverter... otherConverters) {
+        errors.forEach(e -> {
+            List<Optional<Error>> optionalConversionsForThisError = simpleMap(combineLists(converter, otherConverters), fn -> fn.apply(e));
+            Optional<Optional<Error>> successfullyConvertedErrorList = simpleFindFirst(optionalConversionsForThisError, Optional::isPresent);
+
+            if (successfullyConvertedErrorList.isPresent()) {
+                this.errors.add(successfullyConvertedErrorList.get().get());
+            }
+        });
     }
 
     public void addErrors(List<Error> errors) {
@@ -132,7 +159,7 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
         errors.addAll(simpleMap(bindingResult.getFieldErrors(), e -> {
             String errorMessage = messageResolver.apply(e);
-            return fieldError(e.getField(), errorMessage);
+            return fieldError(e.getField(), e.getRejectedValue(), errorMessage);
         }));
 
         errors.addAll(simpleMap(bindingResult.getGlobalErrors(), e ->
