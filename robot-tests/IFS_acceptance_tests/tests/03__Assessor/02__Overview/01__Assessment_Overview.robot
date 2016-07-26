@@ -2,7 +2,7 @@
 Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware.
 Suite Setup
 Suite Teardown    the user closes the browser
-Force Tags
+Force Tags        Pending
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Unable to assess this application
     [Documentation]    INFUND-3540
-    [Tags]
+    [Tags]    Pending
     [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
     When the user navigates to the page     ${Assessment_overview_9}
     Then The user should see the element    css=#content .extra-margin details summary
