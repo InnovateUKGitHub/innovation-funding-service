@@ -16,18 +16,22 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.error.CommonErrors.unsupportedMediaTypeError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.http.MediaType.APPLICATION_ATOM_XML;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -225,6 +229,41 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                         param("uploadCollaborationAgreementClicked", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/123/other-documents"));
+    }
+
+
+    @Test
+    public void testUploadCollaborationAgreementButApiErrorsOccur() throws Exception {
+
+        long projectId = 123L;
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "My content!".getBytes());
+
+        when(projectService.addCollaborationAgreementDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceFailure(asList(
+                        unsupportedMediaTypeError(singletonList(APPLICATION_ATOM_XML)),
+                        unsupportedMediaTypeError(singletonList(APPLICATION_JSON)))));
+
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+
+        MvcResult result = mockMvc.perform(
+                fileUpload("/project/123/other-documents").
+                        file(uploadedFile).
+                        param("uploadCollaborationAgreementClicked", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/other-documents")).
+                andReturn();
+
+        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+        assertEquals(2, form.getObjectErrors().size());
+        assertEquals(form.getObjectErrors(), form.getBindingResult().getFieldErrors("collaborationAgreement"));
+
     }
 
     @Test

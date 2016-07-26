@@ -273,7 +273,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<Section> sections;
         // if no parent defined, just check all sections.
         if (parentSection == null) {
-            sections = sectionRepository.findByCompetitionId(application.getCompetition().getId());
+            sections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(application.getCompetition().getId());
         } else {
             sections = parentSection.getChildSections();
         }
@@ -363,7 +363,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Override
     public ServiceResult<List<SectionResource>> getByCompetionId(final Long competitionId) {
-        return find(sectionRepository.findByCompetitionId(competitionId), notFoundError(Section.class, competitionId)).
+        return find(sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competitionId), notFoundError(Section.class, competitionId)).
                 andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
     }
 

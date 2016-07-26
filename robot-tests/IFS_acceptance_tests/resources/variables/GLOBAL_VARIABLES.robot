@@ -57,6 +57,7 @@ ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/24/form/
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
 ${SUCCESSFUL_PROJECT_PAGE}    ${server}/project/4
+${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project/4/details
 ${project_start_date_page}    ${server}/project/4/details/start-date
 ${project_address_page}    ${server}/project/4/details/project-address
 ${project_manager_page}    ${server}/project/4/details/start-date

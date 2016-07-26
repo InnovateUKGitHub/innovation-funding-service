@@ -210,7 +210,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         when(assessmentService.rejectApplication(assessmentId, "reason", "comment")).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/{assessmentId}/status", assessmentId)
+        mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
