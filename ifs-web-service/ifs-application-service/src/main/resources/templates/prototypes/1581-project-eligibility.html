@@ -153,7 +153,7 @@
 
 	    <div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:remove="tag" />
 
-		<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or param.status != null and param.status[0] == 'changeGrant'}">
+		<!-- <div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or param.status != null and param.status[0] == 'changeGrant'}">
 			<a th:href="@{'?status=changeGrant#change-grant'}">Change % grant</a>
 		</div>
 
@@ -237,12 +237,12 @@
 
 			</form>
 
-		</th:block>
+		</th:block> -->
 
 
 	    <div class="extra-margin">
-	    	<a href="#" class="button button-secondary">Queries</a>
-	    	<a href="#" class="button button-secondary">Notes</a>
+	    	<a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
+	    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
 	    </div>
 		
 		
@@ -267,13 +267,18 @@
 
 					<h2 class="heading-medium no-margin">Approve eligible costs</h2>
 
-					<p>This will approve the applicants project costs.</p>
+					<p>This partner will now be marked as eligible for this project, please state the eligibility RAG rating</p>
 
 					<form>
 
 						<div class="form-group">
-			                <label for="no-days" class="form-label">Number of days</label>
-			                <input type="text" class="width-small" id="no-days" name="no-days" />
+			                <label for="rag-rating" class="form-label">RAG rating</label>
+			                <select id="rag-rating" name="rag-rating" class="form-control" >
+			                	<option value="">--</option>
+			                	<option value="Green">Green</option>
+			                	<option value="Amber">Amber</option>
+			                	<option value="Red">Red</option>
+			                </select>
 			            </div>
 
 						<hr />
