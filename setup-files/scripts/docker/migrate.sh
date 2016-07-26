@@ -5,5 +5,6 @@ cd $BASEDIR
 
 eval $(docker-machine env default)
 cd ../../../
-
-docker-compose down --rmi all -v --remove-orphans
+./gradlew -Pprofile=docker flywayClean flywayMigrate
+cd $BASEDIR
+./syncShib.sh

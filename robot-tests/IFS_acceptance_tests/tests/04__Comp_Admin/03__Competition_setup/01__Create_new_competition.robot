@@ -120,6 +120,7 @@ Initial details client-side validations
 
 Funding Information can be saved
     [Documentation]    INFUND-2985, INFUND-3182, IFUND-3888
+    [Tags]    Pending
     Given the user navigates to the page            ${COMP_MANAGEMENT_COMP_SETUP}
     And the user clicks the button/link             link=Funding Information
     And the user should see the text in the page    Funding information
@@ -167,6 +168,7 @@ Additional information can be edited again
 Eligibility server-side validations
     [Documentation]    INFUND-2986
     [Tags]
+    [Setup]    the user navigates to the page     ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
     And the user should see the text in the page    Stream
     Given the user selects the radio button    multipleStream    yes

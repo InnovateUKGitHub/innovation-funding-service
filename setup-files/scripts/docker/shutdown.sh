@@ -2,7 +2,7 @@
 
 eval $(docker-machine env default)
 
-BASEDIR=$(dirname "$0")
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
 cd ../../../

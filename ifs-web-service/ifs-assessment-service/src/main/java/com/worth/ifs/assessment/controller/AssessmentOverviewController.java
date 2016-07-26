@@ -59,7 +59,7 @@ public class AssessmentOverviewController extends AbstractApplicationController 
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{assessmentId}/status")
+    @RequestMapping(method = RequestMethod.POST, value = "/{assessmentId}/reject")
     public String rejectApplication(
             final Model model,
             final HttpServletResponse response,

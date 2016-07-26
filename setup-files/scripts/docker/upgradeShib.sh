@@ -4,6 +4,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
 eval $(docker-machine env default)
-cd ../../../
 
-docker-compose down --rmi all -v --remove-orphans
+./_delete-shib-users-remote.sh
+./_install-or-upgrade.sh
+./syncShib.sh
