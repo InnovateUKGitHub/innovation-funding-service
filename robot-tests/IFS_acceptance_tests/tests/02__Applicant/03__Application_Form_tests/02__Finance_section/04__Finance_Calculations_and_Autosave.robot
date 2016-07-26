@@ -74,6 +74,7 @@ Capital usage
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-12    £ 100    css=[data-mirror="#section-total-12"]    £ 100
+    And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
 Subcontracting costs
