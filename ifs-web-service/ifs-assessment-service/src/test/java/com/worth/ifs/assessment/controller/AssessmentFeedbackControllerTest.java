@@ -141,6 +141,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Value 1", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertEquals(simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput), model.getAssessorResponses());
+        assertTrue(model.isScoreFormInputExists());
+        assertFalse(model.isScopeFormInputExists());
         assertFalse(model.isAppendixExists());
         assertNull(model.getAppendixDetails());
 

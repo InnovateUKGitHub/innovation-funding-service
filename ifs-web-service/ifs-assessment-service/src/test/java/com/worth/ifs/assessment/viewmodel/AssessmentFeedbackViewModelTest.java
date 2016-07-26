@@ -25,7 +25,7 @@ public class AssessmentFeedbackViewModelTest {
     public void testGetAppendixFileDescription() throws Exception {
         String questionShortName = "Technical approach";
 
-        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, questionShortName, null, null, null, null, null);
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, questionShortName, null, null, null, null, null, false, false);
 
         assertEquals("View technical approach appendix", assessmentFeedbackViewModel.getAppendixFileDescription());
     }
@@ -98,7 +98,7 @@ public class AssessmentFeedbackViewModelTest {
                 .build()
         );
 
-        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses);
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses, false, false);
 
         assertNull(assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
@@ -116,6 +116,6 @@ public class AssessmentFeedbackViewModelTest {
                 .build()
         );
 
-        return new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses);
+        return new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses, false, false);
     }
 }

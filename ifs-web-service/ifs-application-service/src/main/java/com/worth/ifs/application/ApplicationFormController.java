@@ -32,7 +32,6 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
-import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,11 +63,12 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.commons.rest.ValidationMessages.collectValidationMessages;
-import static com.worth.ifs.commons.rest.ValidationMessages.fromBindingResult;
+import static com.worth.ifs.commons.error.ErrorConverterFactory.toField;
+import static com.worth.ifs.commons.rest.ValidationMessages.*;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.HttpUtils.requestParameterPresent;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -408,7 +408,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar) {
 
         if (errorsSoFar.hasErrors()) {
-            return new ValidationMessages(fieldError("formInput[application]", "application.validation.MarkAsCompleteFailed"));
+            return new ValidationMessages(fieldError("formInput[application]", "", "application.validation.MarkAsCompleteFailed"));
         } else {
 
             ValidationMessages messages = new ValidationMessages();
@@ -416,7 +416,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, response, errorsSoFar);
 
             if (collectValidationMessages(applicationMessages).hasErrors()) {
-                messages.addError(fieldError("formInput[application]", "application.validation.MarkAsCompleteFailed"));
+                messages.addError(fieldError("formInput[application]", "", "application.validation.MarkAsCompleteFailed"));
                 messages.addAll(handleApplicationDetailsValidationMessages(applicationMessages, application));
             }
 
@@ -436,7 +436,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                             e.toString();
                             if (validationMessage.getObjectName().equals("target")) {
                                 if (StringUtils.hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getErrorMessage()));
+                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                                     if (e.getErrorKey().equals("durationInMonths")) {
                                         application.setDurationInMonths(null);
                                     }
@@ -452,13 +452,13 @@ public class ApplicationFormController extends AbstractApplicationController {
         ValidationMessages messages = new ValidationMessages();
 
         if (errorsSoFar.hasErrors()) {
-            messages.addError(fieldError("formInput[cost]", "application.validation.MarkAsCompleteFailed"));
+            messages.addError(fieldError("formInput[cost]", "", "application.validation.MarkAsCompleteFailed"));
         } else {
             SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
             List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request);
 
             if (collectValidationMessages(financeErrorsMark).hasErrors()) {
-                messages.addError(fieldError("formInput[cost]", "application.validation.MarkAsCompleteFailed"));
+                messages.addError(fieldError("formInput[cost]", "", "application.validation.MarkAsCompleteFailed"));
                 messages.addAll(handleMarkSectionValidationMessages(financeErrorsMark));
             }
         }
@@ -477,12 +477,12 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .forEach(e -> {
                     if (validationMessage.getObjectName().equals("costItem")) {
                         if (StringUtils.hasText(e.getErrorKey())) {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getErrorMessage()));
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                         } else {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getErrorMessage()));
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                         }
                     } else {
-                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getErrorMessage()));
+                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                     }
                 })
         );
@@ -553,7 +553,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
 
             if (errorsSoFar.hasFieldErrors(questionId + "")) {
-                markAsCompleteErrors.add(new ValidationMessages(fieldError(questionId + "", "Please enter valid data before marking a question as complete.")));
+                markAsCompleteErrors.add(new ValidationMessages(fieldError(questionId + "", "", "Please enter valid data before marking a question as complete.")));
             }
 
             return markAsCompleteErrors;
@@ -636,26 +636,23 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                           boolean ignoreEmpty) {
         final Map<String, String[]> params = request.getParameterMap();
 
-        Map<Long, List<String>> errorMap = new HashMap<>();
+        ValidationMessages errors = new ValidationMessages();
 
-        errorMap.putAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId, ignoreEmpty));
+        errors.addAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId, ignoreEmpty));
 
-        errorMap.putAll(saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
+        errors.addAll(saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
 
-        ValidationMessages toFieldErrors = new ValidationMessages();
-        errorMap.forEach((k, errorsList) -> errorsList.forEach(e -> toFieldErrors.addError(fieldError("formInput[" + k + "]", e, e))));
-        return toFieldErrors;
+        return errors;
     }
 
-    // TODO DW - ideally this would return a ValidationMessages with fieldErrors for the given Long
-    private Map<Long, List<String>> saveNonFileUploadQuestions(List<QuestionResource> questions,
+    private ValidationMessages saveNonFileUploadQuestions(List<QuestionResource> questions,
                                                                Map<String, String[]> params,
                                                                HttpServletRequest request,
                                                                Long userId,
                                                                Long applicationId,
                                                                boolean ignoreEmpty) {
 
-        Map<Long, List<String>> errorMap = new HashMap<>();
+        ValidationMessages allErrors = new ValidationMessages();
         questions.stream()
                 .forEach(question ->
                         {
@@ -664,42 +661,42 @@ public class ApplicationFormController extends AbstractApplicationController {
                                     .stream()
                                     .filter(formInput1 -> !"fileupload".equals(formInput1.getFormInputTypeTitle()))
                                     .forEach(formInput -> {
-                                                if (params.containsKey("formInput[" + formInput.getId() + "]")) {
-                                                    String value = request.getParameter("formInput[" + formInput.getId() + "]");
-                                                    ValidationMessages errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value, ignoreEmpty);
-                                                    if (errors.hasErrors()) {
-                                                        LOG.info("save failed. " + question.getId());
-                                                        errorMap.put(question.getId(), simpleMap(errors.getErrors(), Error::getErrorMessage));
-                                                    }
-                                                }
-                                            }
-                                    );
+
+                                        String formInputKey = "formInput[" + formInput.getId() + "]";
+
+                                        requestParameterPresent(formInputKey, request).ifPresent(value -> {
+                                            ValidationMessages errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value, ignoreEmpty);
+                                            allErrors.addAll(errors, toField(formInputKey));
+                                        });
+                                    });
                         }
                 );
-        return errorMap;
+        return allErrors;
     }
 
-    // TODO DW - ideally this would return a ValidationMessages with fieldErrors for the given Long
-    private Map<Long, List<String>> saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
+    private ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                                  final Map<String, String[]> params,
                                                                  HttpServletRequest request,
                                                                  Long applicationId,
                                                                  Long processRoleId) {
-        Map<Long, List<String>> errorMap = new HashMap<>();
+        ValidationMessages allErrors = new ValidationMessages();
         questions.stream()
                 .forEach(question -> {
                     List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
                     formInputs
                             .stream()
                             .filter(formInput1 -> "fileupload".equals(formInput1.getFormInputTypeTitle()) && request instanceof StandardMultipartHttpServletRequest)
-                            .forEach(formInput -> processFormInput(formInput.getId(), params, applicationId, processRoleId, request, errorMap));
+                            .forEach(formInput ->
+                                allErrors.addAll(processFormInput(formInput.getId(), params, applicationId, processRoleId, request))
+                            );
                 });
-        return errorMap;
+        return allErrors;
     }
 
-    private void processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errorMap){
+    private ValidationMessages processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request){
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
             formInputResponseService.removeFile(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
+            return noErrors();
         } else {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
             final MultipartFile file = fileMap.get("formInput[" + formInputId + "]");
@@ -712,17 +709,24 @@ public class ApplicationFormController extends AbstractApplicationController {
                             file.getSize(),
                             file.getOriginalFilename(),
                             file.getBytes());
+
                     if (result.isFailure()) {
-                        errorMap.put(formInputId,
-                                result.getFailure().getErrors().stream()
-                                        .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+
+                        ValidationMessages errors = new ValidationMessages();
+                        result.getFailure().getErrors().forEach(e -> {
+                            errors.addError(fieldError("formInput[" + formInputId + "]", e.getFieldRejectedValue(), e.getErrorKey()));
+                        });
+                        return errors;
                     }
+
                 } catch (IOException e) {
                 	LOG.error(e);
                     throw new UnableToReadUploadedFile();
                 }
             }
         }
+
+        return noErrors();
     }
 
     /**
