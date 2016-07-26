@@ -29,7 +29,7 @@ public class AssessorFormInputResponseController {
     }
 
     @RequestMapping(value = "/formInput/{formInputId}/assessment/{assessmentId}", method = RequestMethod.PUT)
-    public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") final Long formInputId, @PathVariable("assessmentId") final Long assessmentId, @RequestBody final String value) {
+    public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") Long formInputId, @PathVariable("assessmentId") Long assessmentId, @RequestBody(required = false) String value) {
         return assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value).toPutResponse();
     }
 }

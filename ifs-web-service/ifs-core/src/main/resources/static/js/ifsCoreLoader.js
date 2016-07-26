@@ -45,7 +45,8 @@ IFS.core.loadOrder = {
   'assessment-form' : {
     init : function(){
       IFS.core.unsavedChanges.init();
-      IFS.core.autoSave.init();
+      // TODO INFUND-3780 autosave disabled since URL is not correct for Assessments
+      // IFS.core.autoSave.init();
     }
   }
 };
