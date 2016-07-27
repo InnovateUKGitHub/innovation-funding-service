@@ -15,20 +15,20 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project setup'}, ${'Project details'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Aptrans Ltd'}, ${'Review notes'})" th:with="partner=lead" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
 	<hr />
 
-	<h2 class="heading-medium">Aptrans Ltd finances</h2>
-	<p>Query any of the project costs with the finance contact at the organisation.</p>
+	<h2 class="heading-medium">Review notes</h2>
+	<p>Any conversations made outside the queries or notes made during the finance checks should be placed in this section. After the Finance checks are completed this section will no longer be editable.</p>
 	
-	<th:block th:include="prototypes/fragments/project-setup :: prototype-post-query('query','admin')" /> 
+	<th:block th:include="prototypes/fragments/project-setup :: prototype-post-query('note','admin')" /> 
 	
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
