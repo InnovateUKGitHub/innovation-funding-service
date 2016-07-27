@@ -3,6 +3,7 @@ package com.worth.ifs.competition.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
@@ -82,5 +83,24 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         public ServiceResult<List<CompetitionResource>> findAll() {
             return serviceSuccess(newCompetitionResource().build(2));
         }
+
+        @Override
+        public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionCountResource> countCompetitions() { return null; }
+
     }
 }

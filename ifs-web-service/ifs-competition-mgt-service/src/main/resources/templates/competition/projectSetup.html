@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+</head>
+<body th:with="context='comp-management'" class="competition-management competition-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:include="competition/dashboard :: comp-dashboard-header" th:remove="tag" />
+    <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'projectSetup'}, counts=${counts})" th:remove="tag" />
+
+    <section th:with="projectSetupComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).PROJECT_SETUP)}">
+        <h2 class="heading-medium"
+            th:text="'Project set up ('+${projectSetupComps == null ? '0' : projectSetupComps.size()}+')'"></h2>
+        <table>
+            <tbody>
+                <tr th:each="competition : ${projectSetupComps}">
+                    <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

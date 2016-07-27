@@ -2,6 +2,7 @@ package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
@@ -22,4 +23,16 @@ public interface CompetitionService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionResource>> findLiveCompetitions();
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions();
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionResource>> findUpcomingCompetitions();
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<CompetitionCountResource> countCompetitions();
 }

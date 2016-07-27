@@ -1,17 +1,5 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryType;
@@ -19,8 +7,20 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -80,4 +80,25 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findAll()));
     }
 
+    @Override
+    public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
+        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findLive()));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
+        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findProjectSetup()));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
+        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findUpcoming()));
+    }
+
+    @Override
+    public ServiceResult<CompetitionCountResource> countCompetitions() {
+        //TODO INFUND-3833 populate complete count
+        return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
+                competitionRepository.countUpcoming(), 0L));
+    }
 }
