@@ -1,62 +1,82 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
 </head>
-<body th:with="context='assessment'" class="app-dashboard">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+    <body th:with="context='assessment'" class="assessor-dashboard">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-
-    <!-- HARDCODED PROTOTYPE HTML -->
-    <div class="hgroup">
-        <h1 class="heading-large">Assessor Dashboard</h1>
-    </div>
-
-    <div class="my-applications">
-
-        <div th:if="${param.noInvites != null}" th:remove="tag">
-            <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites-empty" th:remove="tag" />
-        </div>
-
-        <div th:if="${param.noInvites == null}" th:remove="tag">
-            <!-- Standard view invite sent -->
-            <div th:if="${param.accepted == null}" th:remove="tag">
-                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites" th:remove="tag" />
-
-                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
+            <div class="hgroup">
+                <h1 class="heading-large">Assessor Dashboard</h1>
             </div>
 
-            <!-- Invite either accepted or declined -->
-            <div th:if="${param.accepted != null}" th:remove="tag">
-                <div th:if="${param.accepted[0] == 'yes'}" th:remove="tag">
-                    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
-                    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invite-accepted" th:remove="tag" />
-                </div>
+            <div class="my-applications">
+                <h2 class="heading-medium">Competitions for assessment (1)</h2>
+                <ul class="boxed-list">
+                    <!--/*li th:each="competition : ${competitionsInProcess}">
+<div class="grid-row">
+                            <div class="column-half">
+                                <h2 class="heading-medium"><a href="https://ifs-local-dev/assessment/assessor/dashboard/competition/2">Juggling Craziness</a></h2>
+                                <p class="form-hint">Assessment progress:</p>
+                                <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
+                            </div>
 
-                <div th:if="${param.accepted[0] == 'no'}" th:remove="tag">
-                    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" th:remove="tag" />
-                </div>
+                            <div class="column-half">
+                                <div class="competition-deadline">
+                                    <div class="day">
+                                        31<span>st</span>
+                                    </div>
+                                    <div class="month">December deadline</div>
+                                </div>
+
+                                <div th:include="fragments/elements :: pie" th:with="daysPercentage=${competitions.get(application.getId()).getStartDateToEndDatePercentage()},daysLeft=${competitions.get(application.getId()).getDaysLeft()}" th:remove="tag" />
+                            </div>
+                        </div>
+                    </li*/-->
+
+                    <li>
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <h2 class="heading-medium">
+                                <a href="https://ifs-local-dev/assessment/assessor/dashboard/competition/2">Juggling Craziness</a>
+                                </h2>
+                                <p class="form-hint">Assessment progress:</p>
+                                <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
+                            </div>
+
+                            <div class="column-half">
+                                <div class="competition-deadline">
+                                    <div class="day">
+                                        31<span>st</span>
+                                    </div>
+                                    <div class="month">December deadline</div>
+                                    <div class="time">
+                                        <!--<span th:text="${#temporals.format(endDate, 'HH:mm')}" />-->
+                                    </div>
+                                </div>
+
+                                <div class="pie-container">
+                                    <div class="pie" aria-hidden="true"><svg viewBox="0 0 32 32"><title>67%</title><circle r="16" cx="16" cy="16" stroke-dasharray="67 100"></circle></svg></div>
+                                    <div class="pie-overlay">
+                                        <div>16</div>
+                                        <span>Days left</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-        </div>
-    </div>
 
-    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-profile" th:remove="tag" />
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
 
-
-
-    <!-- END OFHARDCODED PROTOTYPE HTML -->
-
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-</main>
-
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
-</body>
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
 </html>
