@@ -56,11 +56,11 @@ ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/8
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/24/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
-${SUCCESSFUL_PROJECT_PAGE}    ${server}/project/4
-${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project/4/details
-${project_start_date_page}    ${server}/project/4/details/start-date
-${project_address_page}    ${server}/project/4/details/project-address
-${project_manager_page}    ${server}/project/4/details/start-date
+${SUCCESSFUL_PROJECT_PAGE}    ${server}/project-setup/project/4
+${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/4/details
+${project_start_date_page}    ${server}/project/project-setup/4/details/start-date
+${project_address_page}    ${server}/project/project-setup/4/details/project-address
+${project_manager_page}    ${server}/project/project-setup/4/details/start-date
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
