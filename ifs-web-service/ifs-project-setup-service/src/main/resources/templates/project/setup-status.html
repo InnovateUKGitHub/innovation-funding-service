@@ -25,7 +25,7 @@
           <h2 class="heading-medium">Successful application</h2>
           <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
           <p class="linkbar">
-            <a th:href="@{/application/{id}/summary(id=${model.applicationId})}" class="buttonlink">View application and feedback</a>
+            <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View application and feedback</a>
             <a href="#" class="buttonlink">View terms and conditions of grant offer</a>
           </p>
         </div>
