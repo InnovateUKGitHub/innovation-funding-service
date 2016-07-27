@@ -1,16 +1,21 @@
-package com.worth.ifs.controller;
+package com.worth.ifs;
 
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.controller.CustomFormBindingControllerAdvice;
+import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.method.HandlerMethod;
@@ -19,7 +24,9 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 /**
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
@@ -38,28 +45,57 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     @Before
     public void setUp() {
 
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
+        super.setup();
 
-        // start with fresh ids when using builders
-        BuilderAmendFunctions.clearUniqueIds();
+        mockMvc = setupMockMvc(controller, () -> getLoggedInUser(), env, messageSource);
+
+        setLoggedInUser(loggedInUser);
+    }
+
+    public static <ControllerType> MockMvc setupMockMvc(ControllerType controller, Supplier<UserResource> loggedInUserSupplier, Environment environment, MessageSource messageSource) {
 
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
 
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(controller, new ErrorControllerAdvice())
+        MockMvc mockMvc = MockMvcBuilders
+                .standaloneSetup(controller)
+                .setControllerAdvice(
+                        new ErrorControllerAdvice(),
+                        new CustomFormBindingControllerAdvice(),
+                        modelAttributeAdvice(loggedInUserSupplier)
+                )
                 .addFilter(new CookieFlashMessageFilter())
                 .setLocaleResolver(localeResolver)
-                .setHandlerExceptionResolvers(createExceptionResolver())
-                .setCustomArgumentResolvers(new ValidationHandlerMethodArgumentResolver())
+                .setHandlerExceptionResolvers(createExceptionResolver(environment, messageSource))
+                .setCustomArgumentResolvers(
+                        new ValidationHandlerMethodArgumentResolver()
+                )
                 .setViewResolvers(viewResolver())
                 .build();
-        
-        super.setup();
+
+        return mockMvc;
     }
 
-    public ExceptionHandlerExceptionResolver createExceptionResolver() {
+    private static ControllerModelAttributeAdvice modelAttributeAdvice(Supplier<UserResource> loggedInUserSupplier) {
+
+        ControllerModelAttributeAdvice modelAttributeAdvice = new ControllerModelAttributeAdvice();
+
+        ReflectionTestUtils.setField(modelAttributeAdvice, "userAuthenticationService", new UserAuthenticationService() {
+            @Override
+            public Authentication getAuthentication(HttpServletRequest request) {
+                return new UserAuthentication(loggedInUserSupplier.get());
+            }
+
+            @Override
+            public UserResource getAuthenticatedUser(HttpServletRequest request) {
+                return loggedInUserSupplier.get();
+            }
+        });
+
+        return modelAttributeAdvice;
+    }
+
+    public static ExceptionHandlerExceptionResolver createExceptionResolver(Environment env, MessageSource messageSource) {
         ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
             protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
                 Method method = new ExceptionHandlerMethodResolver(ErrorControllerAdvice.class).resolveMethod(exception);
@@ -78,7 +114,8 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      * Get the user on the Spring Security ThreadLocals
      */
     protected UserResource getLoggedInUser() {
-        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+        UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getDetails() : null;
     }
 
     /**

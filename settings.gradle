@@ -1,6 +1,7 @@
 include 'ifs-data-service'
 include 'ifs-web-service'
-include 'ifs-web-service:ifs-core'
+include 'ifs-web-service:ifs-web-core'
 include 'ifs-web-service:ifs-application-service'
 include 'ifs-web-service:ifs-competition-mgt-service'
 include 'ifs-web-service:ifs-assessment-service'
+include 'ifs-web-service:ifs-project-setup-service'

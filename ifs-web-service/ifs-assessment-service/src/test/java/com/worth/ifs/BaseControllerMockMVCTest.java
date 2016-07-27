@@ -1,6 +1,5 @@
 package com.worth.ifs;
 
-import com.worth.ifs.assessment.controller.ErrorControllerAdvice;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.UserResource;
