@@ -1,12 +1,14 @@
 package com.worth.ifs.application.finance.view.item;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.util.NumberUtils;
 
-import java.math.BigDecimal;
-import java.util.List;
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
 
 /**
  * Handles the conversion of form fields to a cost item
@@ -49,6 +51,24 @@ public class CapitalUsageHandler extends CostHandler {
             }
         }
 
+        if(allNull(id, deprecation, description, existing, npv, residualValue, utilisation)) {
+        	return null;
+        }
+        
+        if(id == null || Long.valueOf(0L).equals(id)) {
+	        if(npv == null) {
+	        	npv = BigDecimal.ZERO;
+	        }
+	        
+	        if(residualValue == null) {
+	       	residualValue = BigDecimal.ZERO;
+	        }
+	        
+	        if(utilisation == null) {
+	        	utilisation = 0;
+	        }
+        }
+        
         return new CapitalUsage(id, deprecation, description, existing,
                 npv, residualValue, utilisation);
     }

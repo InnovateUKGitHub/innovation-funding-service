@@ -3,7 +3,6 @@ package com.worth.ifs.finance.resource.category;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
 
 /**
  * Handles the conversion of form fields to other funding item
@@ -44,6 +45,14 @@ public class OtherFundingHandler extends CostHandler {
                         break;
                 }
             }
+        }
+
+        if(allNull(id, otherPublicFunding, fundingSource, securedDate, fundingAmount)) {
+        	return null;
+        }
+        
+        if((id == null || Long.valueOf(0L).equals(id)) && (fundingAmount == null)) {
+        	fundingAmount = BigDecimal.ZERO;
         }
 
         return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);

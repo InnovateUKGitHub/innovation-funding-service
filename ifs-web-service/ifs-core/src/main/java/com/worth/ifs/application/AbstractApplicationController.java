@@ -21,6 +21,7 @@ import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.service.ApplicationService;
@@ -411,15 +412,15 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         
-        List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
+        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         boolean hasFinanceSection;
         Long financeSectionId;
-        if(financeSections.isEmpty()) {
+        if(financeSection == null) {
         	hasFinanceSection = false;
         	financeSectionId = null;
         } else {
         	hasFinanceSection = true;
-        	financeSectionId = financeSections.get(0).getId();
+        	financeSectionId = financeSection.getId();
         }
         
         model.addAttribute("hasFinanceSection", hasFinanceSection);
@@ -492,18 +493,21 @@ public abstract class AbstractApplicationController extends BaseController {
                                                         Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
         
-        List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FINANCE);
-        boolean hasFinanceSection = !financeSections.isEmpty();
+        SectionResource financeSection = sectionService.getFinanceSection(competitionId);
+        boolean hasFinanceSection = financeSection != null;
         
         if(hasFinanceSection) {
 	        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+	        
+	        List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
+	        
 	        if(!form.isAdminMode()){
 	            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-	            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+	            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
 	        } else if(form.getImpersonateOrganisationId() != null){
                 // find user in the organisation we want to impersonate.
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
             }
         }
     }
