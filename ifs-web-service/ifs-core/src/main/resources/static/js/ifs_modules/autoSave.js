@@ -122,31 +122,10 @@ IFS.core.autoSave = (function(){
                 var doneAjaxTime = new Date().getTime();
                 var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
-
-                //costrow code
+                //transform name of costrow for persisting to database
             	  if((typeof(data.field_id) !== 'undefined') && (unsavedCostRow === true)) {
-                  var nameDashSplit = name.split('-');
-                  var unsavedCostId = nameDashSplit.length > 2 ? nameDashSplit[3] : null;
-                  var fieldsForUnsavedCost = jQuery('[data-repeatable-row] [name*="' + unsavedCostId + '"]');
-
-                  fieldsForUnsavedCost.each(function(){
-                    var thisFieldNameSplit = jQuery(this).attr('name').split('-');
-                    jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + data.field_id);
-                  });
-
-                  var row = jQuery('[data-repeatable-row="'+unsavedCostId+'"]');
-
-                  //add the button
-                  var button = row.find('.buttonplaceholder');
-              		if(button.length) {
-                			var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + data.field_id + '">Remove</button>';
-                			row.find('.buttonplaceholder').replaceWith(buttonHtml);
-
-                      //set the repeatable row id for referencing the removal, leave the original id as that is used for the promise
-                      row.attr('data-repeatable-row', data.field_id);
-                  }
-            	  }
-
+                  jQuery('body').trigger('persistUnsavedRow',[name,data.field_id]);
+                }
                 // set the form-saved-state
                 jQuery('body').trigger('updateSerializedFormState');
 
