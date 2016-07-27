@@ -3,8 +3,8 @@
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
-docker stop ifs-local-dev
-docker rm ifs-local-dev
+docker-compose -p ifs stop shib
+docker-compose -p ifs rm ifs-local-dev
 
 cd shibImages
 

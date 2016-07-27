@@ -7,4 +7,4 @@ cd $BASEDIR
 
 cd ../../../
 
-docker-compose stop
+docker-compose -p ifs stop
