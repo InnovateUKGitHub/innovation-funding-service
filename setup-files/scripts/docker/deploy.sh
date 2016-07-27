@@ -2,14 +2,13 @@
 
 eval $(docker-machine env default)
 
-BASEDIR=$(dirname "$0")
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
 cd ../../../
 
 data() {
     cd ifs-data-service
-    ./gradlew -Pprofile=docker flywayClean flywayMigrate
     ./gradlew -Pprofile=docker cleanDeploy "$@"
     echo "copying data service war to container"
     docker cp build/war/* ifs-data-service:/opt/tomcat/webapps/

@@ -125,6 +125,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void testAssessorCanSeeTheApplicationFinancesTotals() {
+        assertTrue(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, assessor));
+        assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, user2));
+        assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, leadOnApplication1));
+        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource2, assessor));
+    }
+
+    @Test
     public void onlyUsersPartOfTheApplicationCanChangeApplicationResourceTest() {
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user2));

@@ -92,9 +92,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         List<Error> getCostItemErrors = flattenLists(simpleMap(invalidItems, validationMessages ->
                 simpleMap(validationMessages.getErrors(), e -> {
                     if(StringUtils.hasText(e.getErrorKey())){
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
                     }else{
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
                     }
                 })
         ));
@@ -106,9 +106,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         storedItemErrors.forEach((costId, validationMessages) ->
             validationMessages.getErrors().stream().forEach(e -> {
                 if(StringUtils.hasText(e.getErrorKey())){
-                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                 }else{
-                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                 }
             })
         );

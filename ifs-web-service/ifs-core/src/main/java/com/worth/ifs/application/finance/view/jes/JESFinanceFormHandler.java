@@ -27,10 +27,7 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
@@ -53,7 +50,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     protected MessageSource messageSource;
 
-    public static final String REMOVE_FINANCE_DOCUMENT = "remove_uploaded_file";
+    private static final String REMOVE_FINANCE_DOCUMENT = "remove_uploaded_file";
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId) {
@@ -207,7 +204,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
                         List<Error> errors = simpleMap(result.getFailure().getErrors(), e -> {
                             String lookedUpMessage = MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale());
-                            return fieldError("formInput[jes-upload]", lookedUpMessage);
+                            return fieldError("formInput[jes-upload]", e.getFieldRejectedValue(), lookedUpMessage);
                         });
 
                         return new ValidationMessages(errors);
