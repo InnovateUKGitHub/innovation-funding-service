@@ -635,7 +635,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th scope="col" style="width: 40%" id="dateName">Milestone</th>
+                    <th scope="col" style="width: 40%" id="milestoneDescription">Milestone</th>
                     <th scope="col" style="width: 10%" id="dateOfWeek">Weekday</th>
                     <th scope="col" style="width: 10%" id="day">Day</th>
                     <th scope="col" style="width: 10%" id="month">Month</th>
@@ -644,33 +644,34 @@
                 </thead>
                 <tbody>
                     <tr class="date-group js-future-date">
-                        <tr th:each="milestonesFormEntryList, iterStat : ${competitionSetupForm.milestonesFormEntryList}" >
-                            <td class="js-addWeekDay" th:text="${milestonesFormEntryList.milestoneName.dateName}"></td>
-                            <td th:text="${milestonesFormEntryList.dayOfWeek}"></td>
+                        <tr th:each="milestonesFormEntryList, iterStat : ${competitionSetupForm.milestonesFormEntryList}"
+                            name="milestonesFormEntryList" th:value="${iterStat.index}">
+                            <td  th:text="${milestonesFormEntryList.milestoneName.milestoneDescription}"></td>
+                            <td class="js-addWeekDay" th:text="${milestonesFormEntryList.dayOfWeek}"></td>
                             <td class="day">
                                 <input type="number"
-                                       placeholder="DD"
-                                       min="1"
-                                       max="31"
-                                       required="required"
-                                       data-required-errormessage="template error"
-                                       th:name="${'day[' + iterStat.index + ']'}" th:value="${milestonesFormEntryList.day}" />
+                                placeholder="DD"
+                                min="1"
+                                max="31"
+                                required="required"
+                                data-required-errormessage="template error"
+                                       th:field="*{milestonesFormEntryList[__${iterStat.index}__].day}" />
                             </td>
                             <td class="month">
                                 <input type="number"
-                                       placeholder="MM"
-                                       min="1"
-                                       max="12"
-                                       required="required"
-                                       data-required-errormessage="template error"
-                                       th:name="${'month[' + iterStat.index + ']'}" th:value="${milestonesFormEntryList.month}" />
+                                placeholder="MM"
+                                min="1"
+                                max="12"
+                                required="required"
+                                data-required-errormessage="template error"
+                                       th:field="*{milestonesFormEntryList[__${iterStat.index}__].month}" />
                             </td>
                             <td class="year" >
                                 <input type="number"
                                        placeholder="YYYY"
                                        required="required"
                                        data-required-errormessage="template error"
-                                       th:name="${'year[' + iterStat.index + ']'}" th:value="${milestonesFormEntryList.year}" />
+                                       th:field="*{milestonesFormEntryList[__${iterStat.index}__].year}" />
                             </td>
                         </tr>
                     </tr>
@@ -684,7 +685,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 40%" id="dateName">Milestone</th>
+                        <th scope="col" style="width: 40%" id="milestoneDescription">Milestone</th>
                         <th scope="col" style="width: 10%" id="dayOfWeek">Weekday</th>
                         <th scope="col" style="width: 10%" id="day">Day</th>
                         <th scope="col" style="width: 10%" id="month">Month</th>
@@ -693,7 +694,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="milestonesFormEntryList : ${competitionSetupForm.milestonesFormEntryList}" >
-                        <td th:text="${milestonesFormEntryList.milestoneName.dateName}"></td>
+                        <td th:text="${milestonesFormEntryList.milestoneName.milestoneDescription}"></td>
                         <td th:text="${milestonesFormEntryList.dayOfWeek}"></td>
                         <td th:text="${milestonesFormEntryList.day}"></td>
                         <td th:text="${milestonesFormEntryList.month}"></td>

@@ -56,14 +56,14 @@ public class MilestoneResource {
         NOTIFICATIONS("12. Notifications"),
         RELEASE_FEEDBACK("13. Release feedback");
 
-        private String dateName;
+        private String milestoneDescription;
 
-        MilestoneName(String dateName) {
-            this.dateName = dateName;
+        MilestoneName(String milestoneDescription) {
+            this.milestoneDescription = milestoneDescription;
         }
 
-        public String getDateName() {
-            return dateName;
+        public String getMilestoneDescription() {
+            return milestoneDescription;
         }
     }
 }
