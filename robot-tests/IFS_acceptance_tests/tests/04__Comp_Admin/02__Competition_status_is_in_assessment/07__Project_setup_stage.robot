@@ -36,7 +36,7 @@ ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
 ${successful_application_comp_admin_view}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_comp_admin_view}    ${server}/management/competition/3/application/17
-${Successful_Monitoring_Officer_Page}    ${server}/management/project/4/monitoring-officer
+${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/4/monitoring-officer
 ${project_details_submitted_message}     The project details have been submitted to Innovate UK
 
 
