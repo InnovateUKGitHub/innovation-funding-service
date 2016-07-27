@@ -21,6 +21,7 @@ Guest user can't access the assessor dashboard
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_DASHBOARD}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
+    [Teardown]    the user closes the browser
 
 Guest user can't access the competitions details page
     [Documentation]    INFUND-1683
@@ -28,6 +29,7 @@ Guest user can't access the competitions details page
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_COMPETITIONS_DETAILS}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
+    [Teardown]    the user closes the browser
 
 Guest user can't access the assessor's review application page
     [Documentation]    INFUND-1683
@@ -35,6 +37,7 @@ Guest user can't access the assessor's review application page
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
+    [Teardown]    the user closes the browser
 
 Guest user can't access the assessor's details page
     [Documentation]    INFUND-1683
@@ -42,6 +45,7 @@ Guest user can't access the assessor's details page
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_DETAILS_PAGE}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
+    [Teardown]    the user closes the browser
 
 Applicant can't access the assessor's dashboard page
     [Documentation]    INFUND-1683
@@ -49,6 +53,7 @@ Applicant can't access the assessor's dashboard page
     #TODO Pending due to INFUND-1753
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    ${403_error_message}
+    [Teardown]    the user closes the browser
 
 
 Applicant can't access the competitions details page
@@ -57,6 +62,7 @@ Applicant can't access the competitions details page
     # TODO Pending due to INFUND-1753
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message    ${ASSESSOR_COMPETITIONS_DETAILS}     ${403_error_message}
+    [Teardown]    the user closes the browser
 
 Applicant can't access the assessor's review application page
     [Documentation]    INFUND-1683
@@ -64,6 +70,7 @@ Applicant can't access the assessor's review application page
     # TODO Pending due to upcoming refactoring work for the assessor story
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message    ${ASSESSOR_REVIEW_APPLICATION}    ${404_error_message}
+    [Teardown]    the user closes the browser
 
 
 Applicant can't access the assessor's details page
@@ -72,6 +79,7 @@ Applicant can't access the assessor's details page
     # TODO Pending due to upcoming refactoring work for the assessor story
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message   ${ASSESSOR_DETAILS_PAGE}       ${404_error_message}
+    [Teardown]    the user closes the browser
 
 
 *** Keywords ***
