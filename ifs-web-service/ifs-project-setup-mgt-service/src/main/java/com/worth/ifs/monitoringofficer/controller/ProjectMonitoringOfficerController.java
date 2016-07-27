@@ -1,4 +1,4 @@
-package com.worth.ifs.project.controller;
+package com.worth.ifs.monitoringofficer.controller;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
@@ -9,9 +9,9 @@ import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.ProjectService;
-import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
-import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
+import com.worth.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;

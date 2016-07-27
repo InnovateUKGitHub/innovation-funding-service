@@ -1,16 +1,16 @@
-package com.worth.ifs.project;
+package com.worth.ifs.project.monitoringofficer.controller;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.BaseControllerMockMVCTest;
+import com.worth.ifs.monitoringofficer.controller.ProjectMonitoringOfficerController;
+import com.worth.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
+import com.worth.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
-import com.worth.ifs.project.controller.ProjectMonitoringOfficerController;
-import com.worth.ifs.project.controller.form.ProjectMonitoringOfficerForm;
-import com.worth.ifs.project.controller.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;

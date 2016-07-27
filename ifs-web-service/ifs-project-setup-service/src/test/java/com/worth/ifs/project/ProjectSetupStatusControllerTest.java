@@ -1,4 +1,4 @@
-package project;
+package com.worth.ifs.project;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;

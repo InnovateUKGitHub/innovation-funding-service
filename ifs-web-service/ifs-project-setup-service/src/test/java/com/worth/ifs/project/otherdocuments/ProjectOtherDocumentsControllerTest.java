@@ -1,4 +1,4 @@
-package project.otherdocuments;
+package com.worth.ifs.project.otherdocuments;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;

@@ -1,4 +1,4 @@
-package com.worth.ifs.project.controller.viewmodel;
+package com.worth.ifs.monitoringofficer.viewmodel;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;

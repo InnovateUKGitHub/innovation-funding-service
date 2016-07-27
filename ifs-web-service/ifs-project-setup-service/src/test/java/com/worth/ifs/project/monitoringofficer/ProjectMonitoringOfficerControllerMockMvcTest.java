@@ -1,4 +1,4 @@
-package project.monitoringofficer;
+package com.worth.ifs.project.monitoringofficer;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.project.monitoringofficer.controller.ProjectMonitoringOfficerController;
