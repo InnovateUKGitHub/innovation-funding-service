@@ -5,6 +5,7 @@ CREATE TABLE `form_input_template` (
   `guidance_answer` varchar(5000) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `included_in_application_summary` tinyint(1) NOT NULL DEFAULT '1',
+  `priority` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_fit_fitype` (`form_input_type_id`),
   CONSTRAINT `FK_fit_fitype` FOREIGN KEY (`form_input_type_id`) REFERENCES `form_input_type` (`id`));
