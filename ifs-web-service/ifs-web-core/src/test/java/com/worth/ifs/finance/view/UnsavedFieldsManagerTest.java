@@ -1,15 +1,15 @@
-package com.worth.ifs.application.finance.view;
+package com.worth.ifs.finance.view;
+
+import com.worth.ifs.application.finance.model.FinanceFormField;
+import com.worth.ifs.application.finance.view.UnsavedFieldsManager;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.worth.ifs.application.finance.model.FinanceFormField;
 public class UnsavedFieldsManagerTest {
 
 	private UnsavedFieldsManager unsavedFieldsManager;
