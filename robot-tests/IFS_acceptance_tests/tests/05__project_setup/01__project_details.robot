@@ -25,7 +25,34 @@ ${project_details_submitted_message}    The project details have been submitted 
 
 *** Test Cases ***
 
-Partner can see the project setup page
+
+Non-lead partner can see the project setup page
+    [Documentation]    INFUND-2612
+    [Tags]    HappyPath
+    [Setup]     log in as user    jessica.doe@ludlow.co.uk     Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
+    And the user should see the element    link=View application and feedback
+    And the user should see the element    link=View terms and conditions of grant offer
+    And the user should see the text in the page    Project details
+    And the user should see the text in the page    Monitoring Officer
+    And the user should see the text in the page    Bank details
+
+
+Non-lead partner can see the application overview
+    [Documentation]   INFUND-2612
+    [Tags]   HappyPath
+    And the user should see the text in the page    Other documents
+    When the user clicks the button/link      link=View application and feedback
+    Then the user should see the text in the page      Congratulations, your application has been successful
+    And the user should see the text in the page       Application questions
+    And the user should not see an error in the page
+    [Teardown]    logout as user
+
+
+Lead partner can see the project setup page
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
     [Setup]     log in as user    &{lead_applicant_credentials}
@@ -39,6 +66,16 @@ Partner can see the project setup page
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
+
+Lead partner can see the application overview
+    [Documentation]    INFUND-2612
+    [Tags]   HappyPath
+    When the user clicks the button/link      link=View application and feedback
+    Then the user should see the text in the page      Congratulations, your application has been successful
+    And the user should see the text in the page       Application questions
+    And the user should not see an error in the page
+    [Teardown]    the user goes back to the previous page
+
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613

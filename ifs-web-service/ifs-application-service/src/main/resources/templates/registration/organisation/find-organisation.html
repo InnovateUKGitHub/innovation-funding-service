@@ -58,16 +58,16 @@
                 <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
 
                 <div th:if="${organisationForm.manualEntry}" th:remove="tag">
-                    <div th:include="create-application/fragments :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
-                    <div th:include="create-application/fragments :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+                    <div th:include="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
+                    <div th:include="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
                     <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
                 </div>
             </span>
         </span>
         <span th:unless="${searchEnabled}">
             <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
-            <div th:include="create-application/fragments :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
-            <div th:include="create-application/fragments :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+            <div th:include="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
+            <div th:include="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
             <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
         </span>
     </form>
