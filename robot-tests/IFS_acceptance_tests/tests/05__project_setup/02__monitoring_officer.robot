@@ -47,7 +47,8 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    BA1 5LR
     #    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2018    DateFails
     And the user should see the text in the page    test twenty
-    And the user should see the text in the page    Consumed By Riffage Ltd
+    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
 
 MO server-side validation
