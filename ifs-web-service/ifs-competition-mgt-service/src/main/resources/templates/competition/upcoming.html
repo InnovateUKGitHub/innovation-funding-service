@@ -17,32 +17,36 @@
     <section th:with="inPrepComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)}">
         <h2 class="heading-medium"
             th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
-        <table>
-            <tbody>
-                <tr th:each="competition : ${inPrepComps}">
-                    <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${inPrepComps}">
+                <th:block
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.startDateDisplay()}">
+                </th:block>
+            </li>
+        </ul>
     </section>
 
     <section th:with="notStartedComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
         <h2 class="heading-medium"
             th:text="'Ready to open ('+${notStartedComps == null ? '0' : notStartedComps.size()}+')'"></h2>
-        <table>
-            <tbody>
-            <tr th:each="competition : ${notStartedComps}">
-                <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
-            </tr>
-            </tbody>
-        </table>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${notStartedComps}">
+                <th:block
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.startDateDisplay()}">
+                </th:block>
+            </li>
+        </ul>
     </section>
 
     <div class="grid-row">
         <div class="column-half">
-            <div class="alignright extra-margin">
-                <a href="competition/create" class="button button-large" th:text="#{ifs.competition.create_competition}">Create Competition</a>
-            </div>
+            <a href="competition/create" class="button button-large" th:text="#{ifs.competition.create_competition}">Create Competition</a>
         </div>
     </div>
     

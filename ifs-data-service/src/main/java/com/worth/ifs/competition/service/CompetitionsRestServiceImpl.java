@@ -51,18 +51,8 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<List<CompetitionResource>> findCompleteCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/complete", competitionResourceListType());
-    }
-
-    @Override
     public RestResult<CompetitionCountResource> countCompetitions() {
         return getWithRestResult(competitionsRestURL + "/count", CompetitionCountResource.class);
-    }
-
-    @Override
-    public RestResult<List<CompetitionResource>> searchCompetitions(String searchTerm) {
-        return getWithRestResult(competitionsRestURL + "/search/" + searchTerm, competitionResourceListType());
     }
 
     @Override

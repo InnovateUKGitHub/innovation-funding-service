@@ -18,9 +18,7 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionResource>> findLiveCompetitions();
     RestResult<List<CompetitionResource>> findProjectSetupCompetitions();
     RestResult<List<CompetitionResource>> findUpcomingCompetitions();
-    RestResult<List<CompetitionResource>> findCompleteCompetitions();
     RestResult<CompetitionCountResource> countCompetitions();
-    RestResult<List<CompetitionResource>> searchCompetitions(String searchTerm);
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);

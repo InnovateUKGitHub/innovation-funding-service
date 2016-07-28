@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -54,10 +55,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public void addCategories(Competition competition) {
+    public Competition addCategories(Competition competition) {
         addInnovationSector(competition);
         addInnovationArea(competition);
         addResearchCategories(competition);
+        return competition;
     }
 
     private void addInnovationSector(Competition competition) {
@@ -77,22 +79,30 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionResource>> findAll() {
-        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findAll()));
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findAll().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
     }
 
     @Override
     public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findLive()));
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
     }
 
     @Override
     public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findProjectSetup()));
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
     }
 
     @Override
     public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findUpcoming()));
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
     }
 
     @Override

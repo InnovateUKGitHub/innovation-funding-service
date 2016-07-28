@@ -17,63 +17,78 @@
     <section th:with="openComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).OPEN)}">
         <h2 class="heading-medium"
             th:text="'Open ('+${openComps == null ? '0' : openComps.size()}+')'"></h2>
-        <table>
-            <tbody>
-                <tr th:each="competition : ${openComps}">
-                    <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${openComps}">
+                <th:block
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.applications.size() + ' applicants'}">
+                </th:block>
+            </li>
+        </ul>
     </section>
 
     <section th:with="closedComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).CLOSED)}">
         <h2 class="heading-medium"
             th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
-        <table>
-            <tbody>
-                <tr th:each="competition : ${closedComps}">
-                    <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${closedComps}">
+                <th:block
+                        th:include="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.applications.size() + ' applicants'}">
+                </th:block>
+            </li>
+        </ul>
     </section>
 
     <section th:with="inAssesmentComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).IN_ASSESSMENT)}">
         <h2 class="heading-medium"
             th:text="'In assessment ('+${inAssesmentComps == null ? '0' : inAssesmentComps.size()}+')'"></h2>
-        <table>
-            <tbody>
-                <tr th:each="competition : ${inAssesmentComps}">
-                    <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${inAssesmentComps}">
+                <th:block
+                        th:include="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.applications.size() + ' applicants'}">
+                </th:block>
+            </li>
+        </ul>
     </section>
 
 
     <section th:with="panelComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).FUNDERS_PANEL)}">
         <h2 class="heading-medium"
             th:text="'Panel ('+${panelComps == null ? '0' : panelComps.size()}+')'"></h2>
-        <table>
-            <tbody>
-                <tr th:each="competition : ${panelComps}">
-                    <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${panelComps}">
+                <th:block
+                        th:include="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.applications.size() + ' applicants'}">
+                </th:block>
+            </li>
+        </ul>
     </section>
 
 
     <section th:with="informComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).ASSESSOR_FEEDBACK)}">
         <h2 class="heading-medium"
             th:text="'Inform ('+${informComps == null ? '0' : informComps.size()}+')'"></h2>
-        <table>
-            <tbody>
-                <tr th:each="competition : ${informComps}">
-                    <div th:include="competition/dashboard :: dashboard-row (competition=${competition})" th:remove="tag" ></div>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${informComps}">
+                <th:block
+                        th:include="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.applications.size() + ' applicants'}">
+                </th:block>
+            </li>
+        </ul>
     </section>
 
 

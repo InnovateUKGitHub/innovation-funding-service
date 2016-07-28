@@ -302,10 +302,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(Boolean.FALSE, competitionsResult.getSuccessObject().getSectionSetupStatus().get(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
-
-
-
-
     @Rollback
     @Test
     public void testFindMethods() throws Exception {
@@ -341,12 +337,17 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 assessorFeedbackCompetition.getId());
         Set<Long> notLiveCompetitionIds = Sets.newHashSet(notStartedCompetition.getId(), projectSetup.getId());
 
-        assertThat(liveCompetitions.size(), equalTo(liveCompetitionIds.size()));
-        assertThat(counts.getLiveCount(), equalTo((long) liveCompetitionIds.size()));
+        //Live competitions plus one the test data.
+        assertThat(liveCompetitions.size(), equalTo(liveCompetitionIds.size() + 1));
+        assertThat(counts.getLiveCount(), equalTo((long) (liveCompetitionIds.size() + 1)));
 
         liveCompetitions.stream().forEach(competitionResource -> {
-            assertTrue(liveCompetitionIds.contains(competitionResource.getId()));
-            assertFalse(notLiveCompetitionIds.contains(competitionResource.getId()));
+            //Existing competitions in the db should be ignored.
+            if (!existingComps.get(0).getId().equals(competitionResource.getId())
+                    && !existingComps.get(1).getId().equals(competitionResource.getId())) {
+                assertTrue(liveCompetitionIds.contains(competitionResource.getId()));
+                assertFalse(notLiveCompetitionIds.contains(competitionResource.getId()));
+            }
         });
 
         List<CompetitionResource> projectSetupCompetitions = controller.projectSetup().getSuccessObjectOrThrowException();

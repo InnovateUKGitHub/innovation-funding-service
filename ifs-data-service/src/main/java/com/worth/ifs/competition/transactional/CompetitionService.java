@@ -19,7 +19,7 @@ public interface CompetitionService {
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
 
     @NotSecured(value = "Not secured here, because this is only added extra information on the competition instance.", mustBeSecuredByOtherServices = true)
-    void addCategories(@P("competition") Competition competition);
+    Competition addCategories(@P("competition") Competition competition);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
@@ -33,6 +33,6 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findUpcomingCompetitions();
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 }

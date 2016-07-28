@@ -141,7 +141,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
         CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
         CompetitionResource resource3 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
-        when(competitionsRestService.getLiveCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2, resource3)));
+        when(competitionsRestService.findLiveCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2, resource3)));
 
         Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getLiveCompetitions();
 
@@ -155,7 +155,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void test_getProjectSetupCompetitions() throws Exception {
         CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP).build();
         CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP).build();
-        when(competitionsRestService.getProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+        when(competitionsRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
         Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getProjectSetupCompetitions();
 
@@ -168,7 +168,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void test_getUpcomingCompetitions() throws Exception {
         CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build();
         CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.NOT_STARTED).build();
-        when(competitionsRestService.getUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+        when(competitionsRestService.findUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
         Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getUpcomingCompetitions();
 
