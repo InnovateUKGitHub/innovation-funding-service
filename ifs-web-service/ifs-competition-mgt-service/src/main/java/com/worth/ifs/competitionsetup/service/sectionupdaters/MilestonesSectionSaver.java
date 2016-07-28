@@ -43,27 +43,32 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         if (milestoneResource == null || milestoneResource.isEmpty()) {
             milestoneResource.addAll(createMilestonesForCompetition());
         }
-        List<Error> errors = validateMilestones(milestonesFormEntryList);
+        List<Error> errors = validateMilestoneDates(milestonesFormEntryList);
 
+        for (int i = 0; i < milestoneResource.size(); i++) {
+            MilestonesFormEntry thisMilestonesFormEntry = milestonesFormEntryList.get(i);
+            thisMilestonesFormEntry.setMilestoneName(milestoneResource.get(i).getName());
+
+            milestoneResource.get(i).setCompetition(competition.getId());
+            LocalDateTime temp = populateDate(milestonesFormEntryList.get(i).getDay(), milestonesFormEntryList.get(i).getMonth(), milestonesFormEntryList.get(i).getYear());
+            if (temp != null) {
+                milestoneResource.get(i).setDate(temp);
+            }
+        }
         if (errors.size() > 0){
             return errors;
         }
         else {
-            for (int i = 0; i < milestoneResource.size(); i++) {
-                milestoneResource.get(i).setCompetition(competition.getId());
-                LocalDateTime temp = populateDate(milestonesFormEntryList.get(i).getDay(), milestonesFormEntryList.get(i).getMonth(), milestonesFormEntryList.get(i).getYear());
-                milestoneResource.get(i).setDate(temp);
-
-                MilestonesFormEntry thisMilestonesFormEntry = milestonesFormEntryList.get(i);
-//                thisMilestonesFormEntry.setDayOfWeek(getNameOfDay(temp));
-                thisMilestonesFormEntry.setMilestoneName(milestoneResource.get(i).getName());
-            }
             return milestoneService.update(milestoneResource, competition.getId());
         }
     }
 
     private LocalDateTime populateDate(Integer day, Integer month, Integer year){
-        return LocalDateTime.of(year, month, day, 0, 0);
+        if (day != null && month != null && year != null){
+            return LocalDateTime.of(year, month, day, 0, 0);
+        } else {
+            return null;
+        }
     }
 
     private List<MilestoneResource> createMilestonesForCompetition() {
@@ -76,14 +81,10 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         return newMilestones;
     }
 
-	@Override
-	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-        return MilestonesForm.class.equals(clazz);
-	}
-
-    private List<Error> validateMilestones(List<MilestonesFormEntry> milestonesFormEntries {
+    private List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
         milestonesFormEntries.forEach(milestone -> {
+
                 Integer day = milestone.getDay();
                 Integer month = milestone.getMonth();
                 Integer year = milestone.getYear();
@@ -91,10 +92,16 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
                 if ((day == null || 1 > day || day > 31)
                         || (month == null || month < 1 || month > 12) || (year == null || year < 1900)){
                     if(errors.size() == 0) {
-                        errors.add(new Error("error.milestone.invalid", "Please enter the valid date", HttpStatus.BAD_REQUEST);)
+                        errors.add(new Error("error.milestone.invalid", "Please enter the valid date", HttpStatus.BAD_REQUEST));
                     }
                 }
             });
         return errors;
     }
+
+    @Override
+    public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
+        return MilestonesForm.class.equals(clazz);
+    }
+
 }
