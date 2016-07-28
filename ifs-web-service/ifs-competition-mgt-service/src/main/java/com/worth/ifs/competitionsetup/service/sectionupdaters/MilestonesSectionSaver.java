@@ -1,5 +1,6 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,33 +38,36 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
-        List<MilestonesFormEntry> milestonesFormEntryList = milestonesForm.getMilestonesFormEntryList();
-        List<MilestoneResource> milestoneResource = milestoneService.getAllDatesByCompetitionId(competition.getId());
+        List<MilestonesFormEntry> milestoneEntries = milestonesForm.getMilestonesFormEntryList();
+        List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competition.getId());
 
-        if (milestoneResource == null || milestoneResource.isEmpty()) {
-            milestoneResource.addAll(createMilestonesForCompetition());
+        if (milestones == null || milestones.isEmpty()) {
+            milestones.addAll(createMilestonesForCompetition());
         }
-        List<Error> errors = validateMilestoneDates(milestonesFormEntryList);
+        List<Error> errors = validateMilestoneDates(milestoneEntries);
+        return updateMilestonesForCompetition(milestones, milestoneEntries, competition, errors);
+    }
 
-        for (int i = 0; i < milestoneResource.size(); i++) {
-            MilestonesFormEntry thisMilestonesFormEntry = milestonesFormEntryList.get(i);
-            thisMilestonesFormEntry.setMilestoneName(milestoneResource.get(i).getName());
+    private List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, CompetitionResource competition, List<Error> errors) {
+        for (int i = 0; i < milestones.size(); i++) {
+            MilestonesFormEntry thisMilestonesFormEntry = milestoneEntries.get(i);
+            thisMilestonesFormEntry.setMilestoneName(milestones.get(i).getName());
 
-            milestoneResource.get(i).setCompetition(competition.getId());
-            LocalDateTime temp = populateDate(milestonesFormEntryList.get(i).getDay(), milestonesFormEntryList.get(i).getMonth(), milestonesFormEntryList.get(i).getYear());
+            milestones.get(i).setCompetition(competition.getId());
+            LocalDateTime temp = populateMilestoneDate(milestoneEntries.get(i).getDay(), milestoneEntries.get(i).getMonth(), milestoneEntries.get(i).getYear());
             if (temp != null) {
-                milestoneResource.get(i).setDate(temp);
+                milestones.get(i).setDate(temp);
             }
         }
         if (errors.size() > 0){
             return errors;
         }
         else {
-            return milestoneService.update(milestoneResource, competition.getId());
+            return milestoneService.update(milestones, competition.getId());
         }
     }
 
-    private LocalDateTime populateDate(Integer day, Integer month, Integer year){
+    private LocalDateTime populateMilestoneDate(Integer day, Integer month, Integer year){
         if (day != null && month != null && year != null){
             return LocalDateTime.of(year, month, day, 0, 0);
         } else {
@@ -90,18 +94,27 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
                 Integer year = milestone.getYear();
 
                 if ((day == null || 1 > day || day > 31)
-                        || (month == null || month < 1 || month > 12) || (year == null || year < 1900)){
-                    if(errors.size() == 0) {
-                        errors.add(new Error("error.milestone.invalid", "Please enter the valid date", HttpStatus.BAD_REQUEST));
-                    }
-                }
+                        || (month == null || month < 1 || month > 12) || (year == null || year < 1900)
+                        || !isMilestoneDateValid(day, month, year)){
+                        if(errors.size() == 0) {
+                            errors.add(new Error("error.milestone.invalid", "Please enter the valid date", HttpStatus.BAD_REQUEST));
+                        }}
             });
         return errors;
+    }
+
+    private Boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
+        try{
+            LocalDateTime.of(year, month, day, 0,0);
+            return true;
+        }
+        catch(DateTimeException dte){
+            return false;
+        }
     }
 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
         return MilestonesForm.class.equals(clazz);
     }
-
 }
