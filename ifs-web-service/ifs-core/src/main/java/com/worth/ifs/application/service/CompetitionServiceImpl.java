@@ -79,7 +79,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void initApplicationForm(Long competitionId, Long competitionTypeId) {
+    public void initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId) {
         competitionsRestService.initApplicationForm(competitionId, competitionTypeId);
     }
 

@@ -178,6 +178,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 		CompetitionTemplate template = competitionTemplateRepository.findByCompetitionTypeId(competitionTypeId);
 		Competition competition = competitionRepository.findById(competitionId);
 
+        //Clean every time a different competition type is selected - this function is called
         cleanUpCompetitionSections(competition);
 
         if(competition == null || !competition.getCompetitionStatus().equals(Status.COMPETITION_SETUP)) {
@@ -200,7 +201,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return serviceSuccess();
 	}
 
-    private void cleanUpCompetitionSections(Competition competition) {
+	private void cleanUpCompetitionSections(Competition competition) {
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
         formInputRepository.delete(formInputs);
 
