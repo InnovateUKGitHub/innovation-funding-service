@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Form for the milestones competition setup section.
+ * List of fields for the milestones competition setup section.
  */
 public class MilestonesForm extends CompetitionSetupForm {
 
-    public List<MilestonesFormEntry> milestonesFormEntryList = new ArrayList<>();
+    private List<MilestonesFormEntry> milestonesFormEntryList = new ArrayList<>();
 
     public List<MilestonesFormEntry> getMilestonesFormEntryList() {
         return milestonesFormEntryList;

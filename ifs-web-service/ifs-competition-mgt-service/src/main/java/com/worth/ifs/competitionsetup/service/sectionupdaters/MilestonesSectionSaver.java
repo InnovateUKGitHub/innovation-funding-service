@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.service.MilestoneService;
@@ -42,19 +43,23 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         if (milestoneResource == null || milestoneResource.isEmpty()) {
             milestoneResource.addAll(createMilestonesForCompetition());
         }
+        List<Error> errors = validateMilestones(milestonesFormEntryList);
 
-        List<MilestoneResource> updateMilestoneList = new ArrayList<>();
-
-        for (int i = 0; i < milestoneResource.size(); i++) {
-            milestoneResource.get(i).setCompetition(competition.getId());
-            LocalDateTime temp = populateDate(milestonesFormEntryList.get(i).getDay(), milestonesFormEntryList.get(i).getMonth(), milestonesFormEntryList.get(i).getYear());
-            milestoneResource.get(i).setDate(temp);
-
-            MilestonesFormEntry thisMilestonesFormEntry = milestonesFormEntryList.get(i);
-            thisMilestonesFormEntry.setDayOfWeek(getNameOfDay(temp));
-            thisMilestonesFormEntry.setMilestoneName(milestoneResource.get(i).getName());
+        if (errors.size() > 0){
+            return errors;
         }
-        return milestoneService.update(milestoneResource, competition.getId());
+        else {
+            for (int i = 0; i < milestoneResource.size(); i++) {
+                milestoneResource.get(i).setCompetition(competition.getId());
+                LocalDateTime temp = populateDate(milestonesFormEntryList.get(i).getDay(), milestonesFormEntryList.get(i).getMonth(), milestonesFormEntryList.get(i).getYear());
+                milestoneResource.get(i).setDate(temp);
+
+                MilestonesFormEntry thisMilestonesFormEntry = milestonesFormEntryList.get(i);
+//                thisMilestonesFormEntry.setDayOfWeek(getNameOfDay(temp));
+                thisMilestonesFormEntry.setMilestoneName(milestoneResource.get(i).getName());
+            }
+            return milestoneService.update(milestoneResource, competition.getId());
+        }
     }
 
     private LocalDateTime populateDate(Integer day, Integer month, Integer year){
@@ -76,17 +81,20 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         return MilestonesForm.class.equals(clazz);
 	}
 
-    /*
-	 * Returns the first free letters of the name of the weekday
-	 */
-    private String getNameOfDay(LocalDateTime localDateTime) {
-        String shortDayName = "-";
-        try {
-            String dayOfWeek = localDateTime.getDayOfWeek().name();
-            shortDayName = dayOfWeek.substring(0, 1) + dayOfWeek.substring(1, 3).toLowerCase();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return shortDayName;
+    private List<Error> validateMilestones(List<MilestonesFormEntry> milestonesFormEntries {
+        List<Error> errors =  new ArrayList<>();
+        milestonesFormEntries.forEach(milestone -> {
+                Integer day = milestone.getDay();
+                Integer month = milestone.getMonth();
+                Integer year = milestone.getYear();
+
+                if ((day == null || 1 > day || day > 31)
+                        || (month == null || month < 1 || month > 12) || (year == null || year < 1900)){
+                    if(errors.size() == 0) {
+                        errors.add(new Error("error.milestone.invalid", "Please enter the valid date", HttpStatus.BAD_REQUEST);)
+                    }
+                }
+            });
+        return errors;
     }
 }

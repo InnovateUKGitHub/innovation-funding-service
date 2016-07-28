@@ -1,23 +1,27 @@
 package com.worth.ifs.competitionsetup.form;
 
 import com.worth.ifs.competition.resource.MilestoneResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
- *
+ * Form for the milestones competition setup section.
  */
 public class MilestonesFormEntry extends CompetitionSetupForm {
+    @Range(min = 1, max = 31)
+    private Integer day;
+    @Range(min = 1, max = 12)
+    private Integer month;
+    @Range(min = 2016, max = 9000)
+    private Integer year;
+    private MilestoneResource.MilestoneName milestoneName;
+    private String dayOfWeek;
 
-    @Range(min = 1, max = 31, message = "MFE")
-    public Integer day;
-    @Range(min = 1, max = 12, message = "MFE")
-    public Integer month;
-    @Range(min = 1900, max = 9000, message = "MFE")
-    public Integer year;
-    public MilestoneResource.MilestoneName milestoneName;
-    public String dayOfWeek;
+    private static final Log LOG = LogFactory.getLog(MilestonesFormEntry.class);
 
     public Integer getDay() {
         return day;
@@ -44,8 +48,9 @@ public class MilestonesFormEntry extends CompetitionSetupForm {
     }
 
     public String getDayOfWeek() {
-        return dayOfWeek;
+        return getNameOfDay();
     }
+
 
     public void setDayOfWeek(String dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
@@ -57,5 +62,28 @@ public class MilestonesFormEntry extends CompetitionSetupForm {
 
     public void setMilestoneName(MilestoneResource.MilestoneName milestoneName) {
         this.milestoneName = milestoneName;
+    }
+
+    private String getNameOfDay() {
+        String dayName =  getMilestoneDate(day, month, year);
+        if(dayName == null) {
+            dayOfWeek = "-";
+        }
+        else {
+            try {
+                dayOfWeek = dayName.substring(0, 1) + dayName.substring(1, 3).toLowerCase();
+            } catch (Exception ex) {
+                LOG.error(ex);
+            }
+        }
+        return dayOfWeek;
+    }
+
+    private String getMilestoneDate (Integer day, Integer month, Integer year) {
+        if (day != null && month != null && year != null){
+            return LocalDateTime.of(year, month, day, 0, 0).getDayOfWeek().name();
+        } else {
+            return null;
+        }
     }
 }
