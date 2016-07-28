@@ -1,10 +1,21 @@
 package com.worth.ifs.application.finance.view;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.Form;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
@@ -14,13 +25,6 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 
 /**
  * Managing all the view attributes for the finances
@@ -45,6 +49,12 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     
     @Autowired
     private FormInputService formInputService;
+    
+    @Autowired
+    private ApplicationService applicationService;
+    
+    @Autowired
+    private CompetitionService competitionService;
     
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
@@ -79,14 +89,19 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
         
-        // add cost for each cost question
-        for(QuestionResource question: costsQuestions) {
-        	CostType costType = costTypeForQuestion(question);
-        	if(costType != null) {
-	        	CostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
-	            CostItem costItem = financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
-	        	category.addCost(costItem);
-        	}
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        
+        if(!application.hasBeenSubmitted() && competition.isOpen()) {
+	        // add cost for each cost question
+	        for(QuestionResource question: costsQuestions) {
+	        	CostType costType = costTypeForQuestion(question);
+	        	if(costType != null) {
+		        	CostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
+		            CostItem costItem = financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
+		        	category.addCost(costItem);
+	        	}
+	        }
         }
 
         return applicationFinanceResource;
