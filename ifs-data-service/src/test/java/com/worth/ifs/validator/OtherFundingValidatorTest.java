@@ -89,6 +89,12 @@ public class OtherFundingValidatorTest {
         expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
     }
     @Test
+    public void testInvalidSecuredDateNoSource() {
+        mockWithRadio("Yes");
+        OtherFunding otherFunding = new OtherFunding(4L, "Yes", null, "12-2014hvhvh", new BigDecimal(100));
+        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
+    }
+    @Test
     public void testValidFullAmount() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "10-2014", new BigDecimal(100));

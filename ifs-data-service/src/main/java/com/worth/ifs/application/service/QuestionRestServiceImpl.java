@@ -1,21 +1,23 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.commons.service.BaseRestService;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.stereotype.Service;
+import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
+import static java.util.Arrays.asList;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
-import static java.util.Arrays.asList;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.service.BaseRestService;
 
 /**
  * QuestionRestServiceImpl is a utility for CRUD operations on {@link Question}.
@@ -87,4 +89,10 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     public RestResult<QuestionResource> getQuestionByFormInputType(String formInputType) {
         return getWithRestResult(questionRestURL + "/getQuestionByFormInputType/" + formInputType, QuestionResource.class);
     }
+
+	@Override
+	public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(
+			Long sectionId, QuestionType type) {
+		 return getWithRestResult(questionRestURL + "/getQuestionsBySectionIdAndType/" + sectionId + "/" + type.name(), questionResourceListType());
+	}
 }

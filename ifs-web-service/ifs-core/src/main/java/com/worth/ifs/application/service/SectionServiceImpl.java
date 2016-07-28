@@ -1,21 +1,20 @@
 package com.worth.ifs.application.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.stream.Collectors.toList;
@@ -41,7 +40,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         LOG.debug(String.format("mark section as complete %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
-        return sectionRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccessObject();
+        return sectionRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -162,6 +161,29 @@ public class SectionServiceImpl implements SectionService {
     @Override
 	public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
 		return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccessObjectOrThrowException();
+	}
+    
+    @Override
+	public SectionResource getFinanceSection(Long competitionId) {
+    	return getSingleSectionByType(competitionId, SectionType.FINANCE);
+
+	}
+    
+    @Override
+	public SectionResource getOrganisationFinanceSection(Long competitionId) {
+    	return getSingleSectionByType(competitionId, SectionType.ORGANISATION_FINANCES);
+	}
+    
+	private SectionResource getSingleSectionByType(Long competitionId, SectionType type) {
+    	List<SectionResource> sections = getSectionsForCompetitionByType(competitionId, type);
+    	if(sections.isEmpty()) {
+    		LOG.error("no " + type + " section found for competition " + competitionId);
+    		return null;
+    	}
+    	if(sections.size() > 1) {
+    		LOG.warn("multiple " + type + " sections found for competition " + competitionId);
+    	}
+    	return sections.get(0);
 	}
 
 }

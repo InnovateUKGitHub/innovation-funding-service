@@ -32,7 +32,6 @@ import java.util.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Collections.singletonList;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
@@ -91,8 +90,12 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
-        CostItem costItem = costHandler.toCostItem(costFormFieldId, singletonList(financeFormField));
-        return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
+        if(costItem != null) {
+        	return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        } else {
+        	return ValidationMessages.noErrors();
+        }
     }
 
     private FinanceFormField getCostFormField(String costTypeKey, String value) {
@@ -228,8 +231,14 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     @Override
-    public CostItem addCost(Long applicationId, Long userId, Long questionId) {
+    public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
         // not to be implemented, can't add extra rows of finance to the JES form
         throw new NotImplementedException("Can't add extra rows of finance to the JES form");
     }
+
+	@Override
+	public CostItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
+		// not to be implemented, can't add extra rows of finance to the JES form
+        throw new NotImplementedException("Can't add extra rows of finance to the JES form");
+	}
 }

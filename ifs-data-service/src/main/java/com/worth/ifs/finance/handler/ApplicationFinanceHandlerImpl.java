@@ -26,16 +26,16 @@ import java.util.Map;
 public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler {
 
     @Autowired
-    ApplicationFinanceRepository applicationFinanceRepository;
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Autowired
-    OrganisationRepository organisationRepository;
+    private OrganisationRepository organisationRepository;
 
     @Autowired
-    OrganisationFinanceDelegate organiastionFinanceDelegate;
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Autowired
-    ApplicationFinanceMapper applicationFinanceMapper;
+    private ApplicationFinanceMapper applicationFinanceMapper;
 
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
@@ -57,7 +57,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         for(ApplicationFinance applicationFinance : applicationFinances) {
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            OrganisationFinanceHandler organisationFinanceHandler = organiastionFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
             EnumMap<CostType, CostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId(), applicationFinance.getApplication().getCompetition()));
             applicationFinanceResource.setFinanceOrganisationDetails(costs);
             applicationFinanceResources.add(applicationFinanceResource);
@@ -90,10 +90,9 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-
-    protected void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
+    private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
-        OrganisationFinanceHandler organisationFinanceHandler = organiastionFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
         Map<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }

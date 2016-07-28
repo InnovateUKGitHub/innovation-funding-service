@@ -24,12 +24,12 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class FinanceOverviewModelManager {
-    ApplicationFinanceRestService applicationFinanceRestService;
-    SectionService sectionService;
-    QuestionService questionService;
-    FinanceService financeService;
-    FileEntryRestService fileEntryRestService;
-    FormInputService formInputService;
+    private ApplicationFinanceRestService applicationFinanceRestService;
+    private SectionService sectionService;
+    private QuestionService questionService;
+    private FinanceService financeService;
+    private FileEntryRestService fileEntryRestService;
+    private FormInputService formInputService;
 
     @Autowired
     public FinanceOverviewModelManager(ApplicationFinanceRestService applicationFinanceRestService, SectionService sectionService,
@@ -60,13 +60,11 @@ public class FinanceOverviewModelManager {
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
-    	List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FINANCE);
+    	SectionResource section = sectionService.getFinanceSection(competitionId);
     	
-    	if(sections.isEmpty()) {
+    	if(section == null) {
     		return;
     	}
-    	
-    	SectionResource section = sections.get(0);
     	
         sectionService.removeSectionsQuestionsWithType(section, "empty");
 

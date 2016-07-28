@@ -178,7 +178,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
     ) throws ExecutionException, InterruptedException {
         Long applicationId = Long.valueOf(applicationIdString);
         ApplicationResource application = applicationService.getById(applicationId);
-        SectionResource financeSection = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE).get(0);
+        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
         UserResource impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);

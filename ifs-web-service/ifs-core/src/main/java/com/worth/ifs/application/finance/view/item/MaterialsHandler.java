@@ -8,6 +8,8 @@ import com.worth.ifs.util.NumberUtils;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 /**
  * Handles the conversion of form fields to material items
  */
@@ -38,6 +40,9 @@ public class MaterialsHandler extends CostHandler {
             }
         }
 
+        if(allNull(id, item, cost, quantity)) {
+        	return null;
+        }
         return new Materials(id, item, cost, quantity);
     }
 }

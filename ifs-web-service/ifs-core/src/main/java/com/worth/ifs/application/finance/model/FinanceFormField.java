@@ -1,12 +1,12 @@
 package com.worth.ifs.application.finance.model;
 
 public class FinanceFormField {
-    String fieldName;
-    String costName;
-    String keyType;
-    String value;
-    String questionId;
-    String id;
+    private String fieldName;
+    private String costName;
+    private String keyType;
+    private String value;
+    private String questionId;
+    private String id;
 
     public FinanceFormField(String fieldName, String value, String id, String questionId, String costName, String keyType) {
         this.fieldName = fieldName;
