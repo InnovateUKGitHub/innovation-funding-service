@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project setup status'" th:remove="tag" />
+</head>
+<body th:with="context='applicant'" class="project-overview">
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <h1 class="heading-xlarge">Project setup status</h1>
+    </div>
+    <p class="form-hint">You need to complete the following steps before this project can begin.</p>
+
+    <ul class="ifs-progress-list extra-margin">
+
+      <li class="complete">
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium">Successful application</h2>
+          <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
+          <p class="linkbar">
+            <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View application and feedback</a>
+            <a href="#" class="buttonlink">View terms and conditions of grant offer</a>
+          </p>
+        </div>
+      </li>
+      <!--/* ========================= Project Details ========================= */-->
+      <li th:classappend="${model.projectDetailsSubmitted ? 'complete' : 'require-action'}">
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium">
+            <a th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
+          </h2>
+          <p>Confirm the contact details, proposed start date and location of the project.</p>
+        </div>
+      </li>
+      <!--/* ========================= Monitoring Officer ========================= */-->
+      <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : ''}">
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium"><a th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a></h2>
+          <p th:if="${model.monitoringOfficerAssigned}">
+            Your Monitoring Officer for this project is  <th:block th:text="${model.monitoringOfficerName}" />.
+          </p>
+          <p th:unless="${model.monitoringOfficerAssigned}">
+            Innovate UK will assign you a Monitoring Officer
+          </p>
+        </div>
+      </li>
+      <!--/* ========================= Bank Details ========================= */-->
+      <li th:unless="${model.projectDetailsSubmitted}">
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium">Bank details</h2>
+          <p>We need bank details for each consortium member so that we can pay the grant.</p>
+        </div>
+      </li>
+      <li th:if="${model.projectDetailsSubmitted}" th:classappend="${model.bankDetails == null ? 'require-action' : (model.bankDetails.approved ? 'complete' : 'waiting')}">
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium">
+            <a th:if="${model.funded}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
+            <th:block th:unless="${model.funded}">Bank details (not required)</th:block>
+          </h2>
+          <p>We need bank details for each consortium member so that we can pay the grant.</p>
+        </div>
+      </li>
+      <!--/* ========================= Finance Check ========================= */-->
+
+      <li>
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium"><a href="#">Finance checks</a></h2>
+          <p>We will review all project costs and contact you if we have any queries.</p>
+        </div>
+      </li>
+
+      <!--/* ========================= Spend Profile ========================= */-->
+
+      <li>
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium"><a href="#">Spend profile</a></h2>
+          <p>Once we have approved your financial information, we will produce a spend profile.</p>
+        </div>
+      </li>
+
+      <!--/* ========================= Other documents ========================= */-->
+
+      <li>
+        <div class="progress-status" />
+        <div class="progress-info">
+          <div th:unless="${param.user != null}" th:remove="tag">
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <p>As the lead partner in the consortium, you will need to upload documents including:</p>
+          </div>
+          <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <p>The lead partner of the consortium will need to upload documents including:</p>
+          </div>
+          <ul class="list-bullet">
+            <li>a collaboration agreement</li>
+            <li>exploitation plan</li>
+          </ul>
+        </div>
+      </li>
+      <!--/* ========================= GOL ========================= */-->
+
+      <li>
+        <div class="progress-status" />
+        <div class="progress-info">
+          <h2 class="heading-medium">Grant offer letter</h2>
+          <p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+        </div>
+      </li>
+
+    </ul>
+
+    <hr />
+
+    <strong><a href="/prototypes/1589-team-status">What's the status of each of my partners</a></strong>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

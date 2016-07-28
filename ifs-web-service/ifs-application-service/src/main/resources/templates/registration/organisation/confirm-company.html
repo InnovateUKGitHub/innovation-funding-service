@@ -17,7 +17,7 @@
 
     <h2 class="heading-medium" th:text="${organisationForm.organisationType.name}"></h2>
 
-    <div th:include="create-application/fragments :: organisation-details" th:remove="tag"/>
+    <div th:include="fragments/addresses :: organisation-details" th:remove="tag"/>
 
     <a th:href="@{/organisation/create/save-company}" name="save-company" class="button button-large">Save</a>
 
