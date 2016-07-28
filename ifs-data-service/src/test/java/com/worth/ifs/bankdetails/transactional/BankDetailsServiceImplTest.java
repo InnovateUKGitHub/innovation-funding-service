@@ -34,6 +34,8 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -42,6 +44,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private Project project;
     private Organisation organisation;
     private BankDetails bankDetails;
+    private AccountDetails accountDetails;
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
     @Before
@@ -54,6 +57,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         OrganisationAddress organisationAddress = newOrganisationAddress().build();
         bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withOrganiationAddress(organisationAddressResource).build();
         bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganisation(organisation).withOrganiationAddress(organisationAddress).build();
+        accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
         when(organisationAddressRepositoryMock.findOne(organisationAddressResource.getId())).thenReturn(organisationAddress);
@@ -83,7 +87,6 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Test
     public void testSaveValidBankDetails(){
         project.setSubmittedDate(LocalDateTime.now());
-        AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
         ValidationResult validationResult = new ValidationResult();
         validationResult.setCheckPassed(true);
         when(silExperianEndpointMock.validate(accountDetails)).thenReturn(serviceSuccess(validationResult));
@@ -101,6 +104,22 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
+    }
+
+    @Test
+    public void testBankDetailsAreNotSavedIfExperianValidationFails(){
+        project.setSubmittedDate(LocalDateTime.now());
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.setCheckPassed(false);
+        when(silExperianEndpointMock.validate(accountDetails)).thenReturn(serviceSuccess(validationResult));
+        verify(silExperianEndpointMock, never()).verify(accountDetails);
+        verify(bankDetailsRepositoryMock, never()).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+        //verify(service, never()).updateBankDetails(bankDetailsResource);
+    }
+
+    @Test
+    public void testVerificationOccursOnceBankDetailsAreSaved(){
+
     }
 
     @Override

@@ -61,22 +61,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                 andOnSuccessReturn(bankDetailsMapper::mapToResource);
     }
 
-    private ServiceResult<Void> projectDetailsExist(final Long projectId){
-        Project project = projectRepository.findOne(projectId);
-        if(project.getSubmittedDate() == null){
-            return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
-        }
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId){
-        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(bankDetails != null){
-            return serviceFailure(new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE));
-        }
-        return serviceSuccess();
-    }
-
     @Override
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
         return projectDetailsExist(bankDetailsResource.getProject()).
@@ -92,6 +76,32 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                                                 })
                                 )
                 );
+    }
+
+    @Override
+    public ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId) {
+        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(bankDetails != null) {
+            return serviceSuccess(bankDetailsMapper.mapToResource(bankDetails));
+        } else {
+            return serviceFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION, asList(projectId, organisationId), HttpStatus.NOT_FOUND));
+        }
+    }
+
+    private ServiceResult<Void> projectDetailsExist(final Long projectId){
+        Project project = projectRepository.findOne(projectId);
+        if(project.getSubmittedDate() == null){
+            return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
+        }
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId){
+        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(bankDetails != null){
+            return serviceFailure(new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE));
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<AccountDetails> saveBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource){
@@ -111,16 +121,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         bankDetailsRepository.save(bankDetails);
 
         return serviceSuccess(accountDetails);
-    }
-
-    @Override
-    public ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId) {
-        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(bankDetails != null) {
-            return serviceSuccess(bankDetailsMapper.mapToResource(bankDetails));
-        } else {
-            return serviceFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION, asList(projectId, organisationId), HttpStatus.NOT_FOUND));
-        }
     }
 
     private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource){
