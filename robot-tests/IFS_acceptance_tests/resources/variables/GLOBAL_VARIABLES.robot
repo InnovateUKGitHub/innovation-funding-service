@@ -58,6 +58,7 @@ ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisatio
 ${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
 ${SUCCESSFUL_PROJECT_PAGE}    ${server}/project-setup/project/4
 ${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/1/details
+${project_in_setup_page}     ${server}/project-setup/project/1
 ${project_start_date_page}    ${server}/project-setup/project/1/details/start-date
 ${project_address_page}    ${server}/project-setup/project/1/details/project-address
 ${project_manager_page}    ${server}/project-setup/project/1/details/start-date
