@@ -8,14 +8,18 @@ import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COM
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
+import com.worth.ifs.form.repository.FormInputRepository;
+import com.worth.ifs.form.resource.FormInputScope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +69,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionCoFunderService competitionCoFunderService;
 	@Autowired
     private CompetitionTemplateRepository competitionTemplateRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private FormInputRepository formInputRepository;
 
 
     @Override
@@ -170,6 +178,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 		CompetitionTemplate template = competitionTemplateRepository.findByCompetitionTypeId(competitionTypeId);
 		Competition competition = competitionRepository.findById(competitionId);
 
+        cleanUpCompetitionSections(competition);
+
         if(competition == null || !competition.getCompetitionStatus().equals(Status.COMPETITION_SETUP)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
@@ -178,14 +188,32 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 template.getSectionTemplates().stream()
                         .filter(s -> s.getParentSectionTemplate() == null)
                         .collect(Collectors.toList());
-		
-		attachSections(competition, template.getSectionTemplates(), null);
-		
-		competition.setCompetitionType(template.getCompetitionType());
-		return serviceSuccess();
+
+
+		attachSections(competition, sectionsWithoutParentSections, null);
+        sectionRepository.save(competition.getSections());
+
+        competition.setCompetitionType(template.getCompetitionType());
+
+        competitionRepository.save(competition);
+
+        return serviceSuccess();
 	}
 
-	private void attachSections(Competition competition, List<SectionTemplate> sectionTemplates, Section parentSection) {
+    private void cleanUpCompetitionSections(Competition competition) {
+        List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
+        formInputRepository.delete(formInputs);
+
+        List<Question> questions = questionRepository.findByCompetitionId(competition.getId());
+        questionRepository.delete(questions);
+
+        List<Section> sections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competition.getId());
+        competition.setSections(new ArrayList());
+        sectionRepository.delete(sections);
+    }
+
+
+    private void attachSections(Competition competition, List<SectionTemplate> sectionTemplates, Section parentSection) {
 		if(sectionTemplates == null) {
 			return;
 		}
@@ -203,7 +231,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			if(!competition.getSections().contains(section)){
 				competition.getSections().add(section);
 			}
+
+
 			section.setQuestions(createQuestions(competition, section, sectionTemplate.getQuestionTemplates()));
+            questionRepository.save(section.getQuestions());
 			
 			attachSections(competition, sectionTemplate.getChildSectionTemplates(), section);
 			
@@ -229,7 +260,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			question.setShortName(questionTemplate.getShortName());
 			question.setCompetition(competition);
 			question.setSection(section);
-			question.setFormInputs(createFormInputs(competition, question, questionTemplate.getFormInputTemplates()));
+
+            // save it to get an question id for form inputs
+			questionRepository.save(question);
+
+            question.setFormInputs(createFormInputs(competition, question, questionTemplate.getFormInputTemplates()));
+            formInputRepository.save(question.getFormInputs());
 			return question;
 		};
 	}
@@ -246,10 +282,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			formInput.setGuidanceQuestion(formInputTemplate.getGuidanceQuestion());
 			formInput.setFormInputType(formInputTemplate.getFormInputType());
 			formInput.setIncludedInApplicationSummary(formInputTemplate.getIncludedInApplicationSummary());
-			formInput.setInputValidators(formInputTemplate.getInputValidators());
-			formInput.setCompetition(competition);
+			formInput.setInputValidators(new HashSet(formInputTemplate.getInputValidators()));
+            formInput.setCompetition(competition);
 			formInput.setQuestion(question);
-			return formInput;
+            formInput.setPriority(formInputTemplate.getPriority());
+            formInput.setScope(FormInputScope.APPLICATION);
+            return formInput;
 		};
 	}
 }

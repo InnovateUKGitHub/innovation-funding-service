@@ -35,7 +35,7 @@ public class QuestionTemplate {
     @JoinTable(name = "question_template_form_input_template",
             joinColumns = {@JoinColumn(name = "question_template_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "form_input_template_id", referencedColumnName = "id")})
-    @OrderColumn(name = "priority", nullable = false)
+    //@OrderColumn(name = "priority", nullable = false)
     private List<FormInputTemplate> formInputTemplates = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -19,11 +19,11 @@ public class FormInputTemplate {
 	
     @Id
     private Long id;
-    
+
 	@ManyToOne
     @JoinColumn(name = "formInputTypeId", referencedColumnName = "id")
     private FormInputType formInputType;
-	
+
 	@ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name = "form_input_template_form_validator",
             joinColumns = {@JoinColumn(name = "form_input_template_id")},
@@ -40,14 +40,16 @@ public class FormInputTemplate {
 
     private Boolean includedInApplicationSummary = false;
 
+    private Integer priority;
+
     public Long getId() {
 		return id;
 	}
-    
+
     public void setId(Long id) {
 		this.id = id;
 	}
-    
+
 	public FormInputType getFormInputType() {
 		return formInputType;
 	}
@@ -95,5 +97,12 @@ public class FormInputTemplate {
 	public void setIncludedInApplicationSummary(Boolean includedInApplicationSummary) {
 		this.includedInApplicationSummary = includedInApplicationSummary;
 	}
-    
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
 }
