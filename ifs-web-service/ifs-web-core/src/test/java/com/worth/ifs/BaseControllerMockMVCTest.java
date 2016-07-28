@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.controller.ControllerModelAttributeAdvice;
 import com.worth.ifs.controller.CustomFormBindingControllerAdvice;
 import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import com.worth.ifs.exception.ErrorControllerAdvice;
