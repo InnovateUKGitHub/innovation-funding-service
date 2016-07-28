@@ -11,6 +11,8 @@ public interface FinanceFormHandler {
     ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId);
     ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value);
     void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value);
-    CostItem addCost(Long applicationId, Long userId, Long questionId);
+    ValidationMessages addCost(Long applicationId, Long userId, Long questionId);
+    CostItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId);
     RestResult<ByteArrayResource> getFile(Long applicationFinanceId);
+	
 }

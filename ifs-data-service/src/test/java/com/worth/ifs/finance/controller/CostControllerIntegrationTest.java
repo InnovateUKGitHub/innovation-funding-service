@@ -53,10 +53,10 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private String overMaxAllowedTextSize;
 
     @Mock
-    BindingResult bindingResult;
+    private BindingResult bindingResult;
 
     @Autowired
-    CostRepository costRepository;
+    private CostRepository costRepository;
     private Cost grandClaimCost;
     private ApplicationFinance applicationFinance;
     private long leadApplicantId;
@@ -64,7 +64,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     public static final long APPLICATION_ID = 1L;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Override
     @Autowired
@@ -86,12 +86,16 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
 
         overhead =  (Overhead) controller.get(51L).getSuccessObject();
-        capitalUsage = (CapitalUsage) controller.add(applicationFinance.getId(), 31L, null).getSuccessObject();
-        subContractingCost = (SubContractingCost) controller.add(applicationFinance.getId(), 32L, new SubContractingCost()).getSuccessObject();
-        travelCost = (TravelCost) controller.add(applicationFinance.getId(), 33L, new TravelCost()).getSuccessObject();
-        otherCost = (OtherCost) controller.add(applicationFinance.getId(), 34L, null).getSuccessObject();
-
-        otherFundingCost = (OtherFunding) controller.add(applicationFinance.getId(), 35L, null).getSuccessObject();
+        ValidationMessages capitalUsageResult = controller.add(applicationFinance.getId(), 31L, null).getSuccessObject();
+        capitalUsage = (CapitalUsage) controller.get(capitalUsageResult.getObjectId()).getSuccessObject();
+        ValidationMessages subConstractingCostResult = controller.add(applicationFinance.getId(), 32L, new SubContractingCost()).getSuccessObject();
+        subContractingCost = (SubContractingCost) controller.get(subConstractingCostResult.getObjectId()).getSuccessObject();
+        ValidationMessages travelCostResult = controller.add(applicationFinance.getId(), 33L, new TravelCost()).getSuccessObject();
+        travelCost = (TravelCost) controller.get(travelCostResult.getObjectId()).getSuccessObject();
+        ValidationMessages otherCostResult = controller.add(applicationFinance.getId(), 34L, null).getSuccessObject();
+        otherCost = (OtherCost) controller.get(otherCostResult.getObjectId()).getSuccessObject();
+        ValidationMessages otherFundingResult = controller.add(applicationFinance.getId(), 35L, null).getSuccessObject();
+        otherFundingCost = (OtherFunding) controller.get(otherFundingResult.getObjectId()).getSuccessObject();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
@@ -131,7 +135,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -170,8 +174,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
 
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
-
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     /* Overhead Section Tests */
@@ -187,7 +190,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -241,7 +244,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -277,7 +280,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
 
     }
 
@@ -298,7 +301,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -358,10 +361,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationSubContractingCostUpdateSuccess() {
-        assertNotNull(subContractingCost.getName());
-        assertNotNull(subContractingCost.getCountry());
-        assertNotNull(subContractingCost.getRole());
-        assertNotNull(subContractingCost.getCost());
 
         subContractingCost.setName("Tom Bloggs");
         subContractingCost.setCountry("UK");
@@ -370,7 +369,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(subContractingCost.getId(), subContractingCost);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -406,7 +405,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(subContractingCost.getId(), subContractingCost);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     /* TravelCost Section Tests */
@@ -422,7 +421,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -480,7 +479,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -534,8 +533,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals("Yes", otherFunding.getOtherPublicFunding());
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding);
-        ValidationMessages messages = validationMessages.getSuccessObject();
-        assertEquals(null, messages);
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -575,7 +573,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -632,7 +630,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
@@ -692,7 +690,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
-        assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
+        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
     }
 
     @Rollback
