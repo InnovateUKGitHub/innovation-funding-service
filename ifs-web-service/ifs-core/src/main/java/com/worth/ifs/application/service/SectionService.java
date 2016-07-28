@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -27,5 +28,7 @@ public interface SectionService {
     SectionResource getSectionByQuestionId(Long questionId);
     Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
     List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type);
+    SectionResource getFinanceSection(Long competitionId);
+    SectionResource getOrganisationFinanceSection(Long competitionId);
     List<SectionResource> findResourceByIdInList(List<Long> ids, List<SectionResource> list);
 }

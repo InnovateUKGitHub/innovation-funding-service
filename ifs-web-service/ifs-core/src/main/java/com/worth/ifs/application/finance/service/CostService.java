@@ -14,5 +14,7 @@ public interface CostService {
     List<CostFieldResource> getCostFields();
     RestResult<ValidationMessages> update(CostItem costItem);
     void delete(Long costId);
-    CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem);
+    ValidationMessages add(Long applicationFinanceId, Long questionId, CostItem costItem);
+    CostItem addWithoutPersisting(Long applicationFinanceId, Long questionId);
+    CostItem findById(Long costId);
 }

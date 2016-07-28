@@ -9,6 +9,8 @@ import com.worth.ifs.util.NumberUtils;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 /**
  * Handles the conversion of form fields to a labour cost
  */
@@ -45,6 +47,10 @@ public class LabourCostHandler extends CostHandler {
                         break;
                 }
             }
+        }
+        
+        if(allNull(id, grossAnnualSalary, role, labourDays, description, key)) {
+        	return null;
         }
         return new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
     }

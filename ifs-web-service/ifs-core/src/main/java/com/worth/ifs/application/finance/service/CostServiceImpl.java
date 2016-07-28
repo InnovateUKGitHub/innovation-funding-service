@@ -39,7 +39,17 @@ public class CostServiceImpl implements CostService {
     public void delete(Long costId) {costRestService.delete(costId);}
 
     @Override
-    public CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem) {
+    public ValidationMessages add(Long applicationFinanceId, Long questionId, CostItem costItem) {
         return costRestService.add(applicationFinanceId, questionId, costItem).getSuccessObjectOrThrowException();
     }
+    
+    @Override
+    public CostItem addWithoutPersisting(Long applicationFinanceId, Long questionId) {
+        return costRestService.addWithoutPersisting(applicationFinanceId, questionId).getSuccessObjectOrThrowException();
+    }
+
+	@Override
+	public CostItem findById(Long costId) {
+        return costRestService.findById(costId).getSuccessObjectOrThrowException();
+	}
 }

@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.security.QuestionPermissionRules;
 import com.worth.ifs.application.security.QuestionResourceLookupStrategy;
 import com.worth.ifs.application.transactional.QuestionService;
@@ -111,6 +112,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
                 () -> service.getQuestionByFormInputType(formInputTypeTitle),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
         );
+    }
+    
+    @Test
+    public void testGetQuestionsBySectionIdAndType() {
+         service.getQuestionsBySectionIdAndType(1L, QuestionType.GENERAL);
+         verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
     }
 
     @Override
@@ -222,6 +229,11 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId) {
             return null;
         }
+
+		@Override
+		public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
+			 return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+		}
     }
 }
 

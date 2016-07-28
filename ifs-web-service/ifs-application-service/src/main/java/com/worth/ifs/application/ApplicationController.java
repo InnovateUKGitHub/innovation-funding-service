@@ -251,8 +251,8 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     private String doAssignQuestionAndReturnSectionFragment(Model model,
-                                                            @PathVariable("applicationId") Long applicationId,
-                                                            @RequestParam("sectionId") Optional<Long> sectionId,
+                                                            Long applicationId,
+                                                            Optional<Long> sectionId,
                                                             HttpServletRequest request,
                                                             HttpServletResponse response,
                                                             ApplicationForm form) {
