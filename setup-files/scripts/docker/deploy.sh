@@ -7,28 +7,48 @@ cd $BASEDIR
 
 cd ../../../
 
-data() {
-    cd ifs-data-service
-    ./gradlew -Pprofile=docker cleanDeploy "$@"
-    echo "copying data service war to container"
-    docker cp build/war/* ifs-data-service:/opt/tomcat/webapps/
+function deploy() {
+    base="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    
+    service=$1
+    dir=$2
+    name=$(basename ${dir})
+
+    shift 2
+    
+    cd ${dir}
+    echo `pwd`
+    ../gradlew -Pprofile=docker cleanDeploy "$@"
+    echo "copying ${name} war to container"
+    for item in $( docker-compose -p ifs ps -q ${service}  ); do
+        docker cp build/war/* ${item}:/opt/tomcat/webapps/
+    done
     echo "copying complete"
     echo
     echo
-    cd ..
+    cd $base
 }
 
-web() {
-    cd ifs-web-service
+function core() {
+    cd ifs-web-service/ifs-core
     ./gradlew -Pprofile=docker cleanDeploy "$@"
-    echo "copying competition management service war to container"
-    docker cp ifs-competition-mgt-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
-    echo "copying application service war to container"
-    docker cp ifs-application-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
-    echo "copying complete"
-    echo
-    echo
-    cd ..
+    cd ../..
+}
+
+function data() {
+    deploy data ifs-data-service "$@"
+}
+
+function assessment() {
+    deploy web ifs-web-service/ifs-assessment-service "$@"
+}
+
+function cmgt() {
+    deploy web ifs-web-service/ifs-competition-mgt-service "$@"
+}
+
+function app() {
+    deploy web ifs-web-service/ifs-application-service "$@"
 }
 
 target=$1
@@ -37,15 +57,33 @@ shift
 case "$target" in
     all)
         data "$@"
-        web "$@"
+        core "$@"
+        app "$@"
+        cmgt "$@"
+        assessment "$@"
     ;;
     data)
         data "$@"
     ;;
     web)
-        web "$@"
+        core "$@"
+        app "$@"
+        cmgt "$@"
+        assessment "$@"
+    ;;
+    assesment)
+        core "$@"
+        assessment "$@"
+    ;;
+    comp-mgt)
+        core "$@"
+        cmgt "$@"
+    ;;
+    application)
+        core "$@"
+        app "$@"
     ;;
     *)
-        echo $"Usage: $0 {all|data|web} {gradleOpts}"
+        echo $"Usage: $0 {all|data|web|assesment|comp-mgt|application} {gradleOpts}"
         exit 1
 esac
