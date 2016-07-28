@@ -9,10 +9,18 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.repository.FormInputRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,7 +52,20 @@ public class CompetitionSetupServiceImplTest {
     private CompetitionTypeRepository competitionTypeRepository;
     @Mock
     private CompetitionTemplateRepository competitionTemplateRepository;
-    
+    @Mock
+    private FormInputRepository formInputRepository;
+    @Mock
+    private QuestionRepository questionRepository;
+    @Mock
+    private SectionRepository sectionRepository;
+
+    @Before
+	public void setup() {
+        when(formInputRepository.findByCompetitionId(anyLong())).thenReturn(new ArrayList());
+        when(questionRepository.findByCompetitionId(anyLong())).thenReturn(new ArrayList());
+        when(sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(anyLong())).thenReturn(new ArrayList());
+    }
+
     @Test
     public void testInitialiseForm() {
     	CompetitionType competitionType = new CompetitionType();

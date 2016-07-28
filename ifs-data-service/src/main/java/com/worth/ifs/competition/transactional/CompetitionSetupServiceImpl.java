@@ -261,7 +261,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			question.setCompetition(competition);
 			question.setSection(section);
 
-            // save it to get an question id for form inputs
+            // save it to get an question id for form input objects
 			questionRepository.save(question);
 
             question.setFormInputs(createFormInputs(competition, question, questionTemplate.getFormInputTemplates()));
@@ -282,7 +282,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			formInput.setGuidanceQuestion(formInputTemplate.getGuidanceQuestion());
 			formInput.setFormInputType(formInputTemplate.getFormInputType());
 			formInput.setIncludedInApplicationSummary(formInputTemplate.getIncludedInApplicationSummary());
-			formInput.setInputValidators(new HashSet(formInputTemplate.getInputValidators()));
+
+            if(formInputTemplate.getInputValidators() != null && formInputTemplate.getInputValidators().size() > 0) {
+                formInput.setInputValidators(new HashSet(formInputTemplate.getInputValidators()));
+            }
+
             formInput.setCompetition(competition);
 			formInput.setQuestion(question);
             formInput.setPriority(formInputTemplate.getPriority());
