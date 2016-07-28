@@ -1,7 +1,6 @@
 package com.worth.ifs.bankdetails;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.address.builder.AddressResourceBuilder;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -14,12 +13,8 @@ import com.worth.ifs.project.form.BankDetailsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.springframework.http.MediaType;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -44,42 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(Parameterized.class)
 public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDetailsController> {
-
-    private BankDetailsForm form;
-
-    private String expectedView;
-
-    public BankDetailsControllerTest(BankDetailsForm form, String expectedView) {
-        this.form = form;
-        this.expectedView = expectedView;
-    }
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-
-        AddressResource addressResourceWithNullAddressLine1 = AddressResourceBuilder.newAddressResource().build();
-        BankDetailsForm formWithSelectedPostcodeWithNullAddressLine1 = new BankDetailsForm();
-        formWithSelectedPostcodeWithNullAddressLine1.getAddressForm().setSelectedPostcode(addressResourceWithNullAddressLine1);
-
-        AddressResource addressResourceWithNullTown = AddressResourceBuilder.newAddressResource().
-                withAddressLine1("add Line1").build();
-        BankDetailsForm formWithSelectedPostcodeWithNullTown = new BankDetailsForm();
-        formWithSelectedPostcodeWithNullTown.getAddressForm().setSelectedPostcode(addressResourceWithNullTown);
-
-        AddressResource addressResourceWithNullPostcode = AddressResourceBuilder.newAddressResource().
-                withAddressLine1("add Line1").withTown("Town1").build();
-        BankDetailsForm formWithSelectedPostcodeWithNullPostcode = new BankDetailsForm();
-        formWithSelectedPostcodeWithNullPostcode.getAddressForm().setSelectedPostcode(addressResourceWithNullPostcode);
-
-        return Arrays.asList(new Object[][]{
-                {formWithSelectedPostcodeWithNullAddressLine1, "project/bank-details"},
-                {formWithSelectedPostcodeWithNullTown, "project/bank-details"},
-                {formWithSelectedPostcodeWithNullPostcode, "project/bank-details"},
-        });
-    }
-
 
     @Override
     protected BankDetailsController supplyControllerUnderTest() {
@@ -163,25 +123,6 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
 
     }
 
-    @Test
-    public void testUpdateBankDetailsWithVariousErrorScenarios() throws Exception {
-
-        ProjectResource projectResource = setUpMockingForUpdateBankDetails();
-
-        mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("sortCode", "123456").
-                param("accountNumber", "12345678").
-                param("addressType", ADD_NEW.name()).
-                param("addressForm.selectedPostcode.addressLine1", form.getAddressForm().getSelectedPostcode().getAddressLine1()).
-                param("addressForm.selectedPostcode.town", form.getAddressForm().getSelectedPostcode().getTown()).
-                param("addressForm.selectedPostcode.postcode", form.getAddressForm().getSelectedPostcode().getPostcode())).
-                andExpect(view().name(expectedView));
-
-        verify(bankDetailsRestService, never()).updateBankDetails(any(), any());
-
-    }
-
     private ProjectResource setUpMockingForUpdateBankDetails() {
 
         CompetitionResource competitionResource = newCompetitionResource().build();
@@ -195,7 +136,4 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
 
         return projectResource;
     }
-
-
-
 }

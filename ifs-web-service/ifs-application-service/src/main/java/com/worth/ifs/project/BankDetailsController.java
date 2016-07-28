@@ -69,11 +69,7 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @PathVariable("projectId") final Long projectId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        if ( (form.getAddressForm().getSelectedPostcode() == null
-            || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getAddressLine1())
-            || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getPostcode())
-            || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getTown())
-            ) && OrganisationAddressType.ADD_NEW.name().equals(form.getAddressType().name())) {
+        if (isNewAddressNotValid(form)) {
             return bankDetails(model, projectId, loggedInUser, form);
         }
 
@@ -146,6 +142,15 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
+    }
+
+    private boolean isNewAddressNotValid(BankDetailsForm form) {
+
+        return ( (form.getAddressForm().getSelectedPostcode() == null
+                || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getAddressLine1())
+                || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getPostcode())
+                || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getTown())
+        ) && OrganisationAddressType.ADD_NEW.name().equals(form.getAddressType().name()));
     }
 
     private String doViewBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource, RestResult<BankDetailsResource> bankDetailsResourceRestResult, UserResource loggedInUser) {
