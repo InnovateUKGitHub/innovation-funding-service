@@ -1,4 +1,4 @@
-package com.worth.ifs.bankdetails;
+package com.worth.ifs.project.bankdetails;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.builder.AddressResourceBuilder;
