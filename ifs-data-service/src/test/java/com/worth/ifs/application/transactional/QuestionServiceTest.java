@@ -1,31 +1,35 @@
 package com.worth.ifs.application.transactional;
 
-import java.util.Arrays;
-
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.mapper.QuestionMapper;
-import com.worth.ifs.application.mapper.SectionMapper;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.competition.domain.Competition;
-
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.SectionMapper;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 
 public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
@@ -119,7 +123,6 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         SectionResource currentSectionResource = newSectionResource().withCompetitionAndPriorityAndParent(newCompetition().build().getId(), 1, newSection().build().getId()).build();
         Question previousSectionQuestion = newQuestion().build();
         QuestionResource previousSectionQuestionResource = newQuestionResource().build();
-        Section previousSection = newSection().withQuestions(Arrays.asList(previousSectionQuestion)).build();
         SectionResource previousSectionResource = newSectionResource().withQuestions(Arrays.asList(previousSectionQuestion.getId())).build();
         when(sectionService.getById(currentSection.getId())).thenReturn(serviceSuccess(currentSectionResource));
         when(sectionService.getPreviousSection(currentSectionResource)).thenReturn(serviceSuccess(previousSectionResource));
@@ -128,7 +131,44 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         when(questionMapperMock.mapToResource(previousSectionQuestion)).thenReturn(previousSectionQuestionResource);
 
         assertEquals(previousSectionQuestionResource, questionService.getPreviousQuestionBySection(currentSection.getId()).getSuccessObject());
+    }
+    
+    @Test
+    public void getQuestionsBySectionIdAndTypeTest() {
+    	
+    	Question child1CostQuestion = newQuestion().withQuestionType(QuestionType.COST).build();
+    	Question child1OtherQuestion = newQuestion().withQuestionType(QuestionType.GENERAL).build();
+    	Section childSection1 = newSection().withQuestions(asList(child1CostQuestion, child1OtherQuestion)).build();
+    	
+    	Question child2CostQuestion = newQuestion().withQuestionType(QuestionType.COST).build();
+    	Question child2OtherQuestion = newQuestion().withQuestionType(QuestionType.GENERAL).build();
+    	Section childSection2 = newSection().withQuestions(asList(child2CostQuestion, child2OtherQuestion)).build();
 
+    	Question parentCostQuestion = newQuestion().withQuestionType(QuestionType.COST).build();
+    	Question parentOtherQuestion = newQuestion().withQuestionType(QuestionType.GENERAL).build();
+    	
+    	Section parentSection = newSection()
+    			.withQuestions(asList(parentCostQuestion, parentOtherQuestion))
+    			.withChildSections(asList(childSection1, childSection2))
+    			.build();
+    	
+    	when(sectionRepositoryMock.findOne(1L)).thenReturn(parentSection);
+    	
+    	QuestionResource questionResource1 = newQuestionResource().build();
+    	QuestionResource questionResource2 = newQuestionResource().build();
+    	QuestionResource questionResource3 = newQuestionResource().build();
+    	
+        when(questionMapperMock.mapToResource(child1CostQuestion)).thenReturn(questionResource1);
+        when(questionMapperMock.mapToResource(child2CostQuestion)).thenReturn(questionResource2);
+        when(questionMapperMock.mapToResource(parentCostQuestion)).thenReturn(questionResource3);
 
+    	
+    	ServiceResult<List<QuestionResource>> result = questionService.getQuestionsBySectionIdAndType(1L, QuestionType.COST);
+    	
+    	assertTrue(result.isSuccess());
+    	assertEquals(3, result.getSuccessObject().size());
+    	assertTrue(result.getSuccessObject().contains(questionResource1));
+    	assertTrue(result.getSuccessObject().contains(questionResource2));
+    	assertTrue(result.getSuccessObject().contains(questionResource3));
     }
 }

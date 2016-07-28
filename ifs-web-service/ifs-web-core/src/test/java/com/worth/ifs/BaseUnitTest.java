@@ -390,8 +390,11 @@ public class BaseUnitTest {
                 }
         );
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FINANCE)).thenReturn(Arrays.asList(sectionResource7));
+        when(sectionService.getFinanceSection(1L)).thenReturn(sectionResource7);
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource6));
 
+        when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList(q21Resource, q22Resource, q23Resource)) ;
+        
         ArrayList<QuestionResource> questionList = new ArrayList<>();
         for (SectionResource section : sectionResources) {
             section.setQuestionGroup(false);

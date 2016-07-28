@@ -25,6 +25,7 @@ public class QuestionResource {
     private List<Long> questionStatuses;
     private List<Long> costs;
     private String questionNumber;
+    private QuestionType type;
     private Integer assessorMaximumScore;
 
     public QuestionResource() {
@@ -160,6 +161,14 @@ public class QuestionResource {
     public void setQuestionNumber(String questionNumber) {
         this.questionNumber = questionNumber;
     }
+    
+    public QuestionType getType() {
+		return type;
+	}
+    
+    public void setType(QuestionType type) {
+		this.type = type;
+	}
 
     public void setAssessorMaximumScore(Integer assessorMaximumScore) {
         this.assessorMaximumScore = assessorMaximumScore;

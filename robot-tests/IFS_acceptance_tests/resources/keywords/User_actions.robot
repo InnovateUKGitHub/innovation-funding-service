@@ -228,8 +228,8 @@ The user should see the text in the page
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
-    sleep    500ms
-    Page should not contain    ${NOT_VISIBLE_TEXT}
+    sleep    100ms
+    Wait Until Page Does Not Contain    ${NOT_VISIBLE_TEXT}
 
 the user should not see an error in the page
     Page Should Not Contain    Error
@@ -359,12 +359,12 @@ the user downloads the file from the link
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
     Download File    ${ALL_COOKIES}    ${download_link}    ${filename}
-    wait until keyword succeeds   300ms    1 seconds    Download should be done
+    wait until keyword succeeds    300ms    1 seconds    Download should be done
 
 Download should be done
     [Documentation]    Verifies that the directory has only one folder
-    ...                Returns path to the file
-    ${files}    List Files In Directory   ${DOWNLOAD_FOLDER}
+    ...    Returns path to the file
+    ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
     Length Should Be    ${files}    1    Should be only one file in the download folder
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
     Log    File was successfully downloaded to ${file}
@@ -538,15 +538,14 @@ the lead applicant invites a registered user
     And the user should see the text in the page    Application overview
     the user closes the browser
     The guest user opens the browser
-
-#Open mailbox and verify the content
-#    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
-#    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
-#    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
-#    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
-#    Should Not Be Empty    ${EMAIL_MATCH}
-#    Delete All Emails
-#    close mailbox
+    #Open mailbox and verify the content
+    #    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
+    #    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
+    #    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
+    #    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
+    #    Should Not Be Empty    ${EMAIL_MATCH}
+    #    Delete All Emails
+    #    close mailbox
 
 Open mailbox and confirm received email
     [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}

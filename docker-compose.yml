@@ -23,6 +23,7 @@ services:
     ports:
       - "8080:8080"
       - "12345:12345"
+      - "8081:8081"
     links:
       - data
     networks:
@@ -39,6 +40,7 @@ services:
     ports:
       - "8090:8080"
       - "12346:12345"
+      - "8091:8081"
     depends_on:
       - mysql
     networks:

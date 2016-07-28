@@ -8,6 +8,8 @@ import com.worth.ifs.util.NumberUtils;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.util.NullCheckFunctions.allNull;
+
 /**
  * Handles the conversion of form fields to subcontracting costs
  */
@@ -43,6 +45,14 @@ public class SubContractingCostHandler extends CostHandler {
             }
         }
 
+        if(allNull(id, cost, country, name, role)) {
+        	return null;
+        }
+        
+	    if((id == null || Long.valueOf(0L).equals(id)) && (cost == null)) {
+        	cost = BigDecimal.ZERO;
+        }
+	    
         return new SubContractingCost(id, cost, country, name, role);
     }
 }

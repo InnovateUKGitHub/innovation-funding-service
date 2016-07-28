@@ -37,7 +37,7 @@ function addUserToShibboleth {
 
 export -f addUserToShibboleth
 
-BASEDIR=$(dirname "$0")
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
 docker cp _delete-shib-users-remote.sh ifs-local-dev:/tmp/_delete-shib-users-remote.sh

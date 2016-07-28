@@ -1,12 +1,13 @@
 package com.worth.ifs.application.finance.service;
 
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import java.util.List;
+
 import org.springframework.core.io.ByteArrayResource;
 
-import java.util.List;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 
 /**
  * {@code FinanceService} handles the finances for each of the applications. These finances
@@ -17,7 +18,7 @@ public interface FinanceService {
     ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId);
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
     List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
-    CostItem addCost(Long applicationFinanceId , Long questionId);
+    ValidationMessages addCost(Long applicationFinanceId , Long questionId);
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
     RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceFileEntryId);

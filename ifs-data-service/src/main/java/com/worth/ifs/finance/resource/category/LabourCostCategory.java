@@ -14,8 +14,8 @@ import java.util.List;
 public class LabourCostCategory implements CostCategory {
     public static final String WORKING_DAYS_PER_YEAR = "Working days per year";
     public static final String WORKING_DAYS_KEY = "working-days-per-year";
-    List<CostItem> costs = new ArrayList<>();
-    BigDecimal total = BigDecimal.ZERO;
+    private List<CostItem> costs = new ArrayList<>();
+    private BigDecimal total = BigDecimal.ZERO;
     private LabourCost workingDaysPerYearCostItem;
 
     @Override
@@ -60,7 +60,7 @@ public class LabourCostCategory implements CostCategory {
     public void addCost(CostItem costItem) {
         if (costItem != null) {
             LabourCost labourCost = (LabourCost) costItem;
-            if (labourCost.getDescription().equals(WORKING_DAYS_PER_YEAR)) {
+            if (WORKING_DAYS_PER_YEAR.equals(labourCost.getDescription())) {
                 workingDaysPerYearCostItem = (LabourCost) costItem;
             } else {
                 costs.add(costItem);
