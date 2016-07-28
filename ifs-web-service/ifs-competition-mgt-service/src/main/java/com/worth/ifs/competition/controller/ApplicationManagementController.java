@@ -40,9 +40,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
@@ -178,7 +178,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
     ) throws ExecutionException, InterruptedException {
         Long applicationId = Long.valueOf(applicationIdString);
         ApplicationResource application = applicationService.getById(applicationId);
-        SectionResource financeSection = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE).get(0);
+        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
         UserResource impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);

@@ -152,99 +152,102 @@
     </div>
 
 
-    <div th:fragment="labour_row" th:remove="tag">
+    <div th:fragment="labour_row" th:remove="tag" >
+        <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
+	        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+	            <td class="form-group"   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''">
+	                <label th:for="${'cost-labour-'+costIdentifier+'-role'}">
+	                    <span class="visuallyhidden">Role within project</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       class="form-control width-full"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? field-error : ''"
+	                       th:name="${type +'-role-' + question.id + '-' + costIdentifier}"
+	                       th:id="${'cost-labour-'+costIdentifier+'-role'}"
+	                       th:value="${cost.getRole()}"
+	                       th:readonly="${complete == 'complete'}"
+	                       required="required"
+	                       maxlength="255"  />
+	            </td>
+	            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossAnnualSalary]}')} ? 'error' : ''">
+	                <label th:for="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}">
+	                    <span class="visuallyhidden">Gross Annual Salary</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossAnnualSalary'})" th:remove="tag" />
+	                </label>
+	                <input type="number"
+	                       class="form-control width-full"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossAnnualSalary]}')} ? field-error : ''"
+	                       th:name="${type +'-grossAnnualSalary-' + question.id + '-' + costIdentifier}"
+	                       th:id="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}"
+	                       th:readonly="${complete == 'complete'}"
+	                       ifs:nonZeroValue="${cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : '0'}"
+	                       placeholder="0"
+	                       required="required"
+	                       min="1"
+	                       max="9999999999999999999"
+	                       data-max-errormessage="You must enter a value less than 20 digits"
+	                        />
+	            </td>
+	            <td class="numeric">
+	                <label th:for="${'cost-labour-'+costIdentifier+'-labourRate'}">
+	                    <span class="visuallyhidden">Rate (&pound;/day)</span>
+	                </label>
+	                <input type="text"
+	                       class="form-control width-full"
+	                       th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'},data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
+	                       data-calculation-operations="/"
+	                       readonly="readonly"
+	                       th:id="${'cost-labour-'+costIdentifier+'-labourRate'}"
+	                       th:name="${type +'-labourRate-' + question.id + '-' + costIdentifier}"
+	                       th:value="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
+	                       maxlength="255" />
+	            </td>
+	            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'error' : ''">
+	                <label th:for="${'cost-labour-'+costIdentifier+'-labourDays'}">
+	                    <span class="visuallyhidden">Days to be spent by all staff at this grade</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-labourDays'})" th:remove="tag" />
+	                </label>
+	                <input type="number"
+	                       class="form-control width-full"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')} ? field-error : ''"
+	                       th:readonly="${complete == 'complete'}"
+	                       th:id="${'cost-labour-'+costIdentifier+'-labourDays'}"
+	                       th:name="${type +'-labourDays-' + question.id + '-' + costIdentifier}"
+	                       ifs:nonZeroValue="${cost.labourDays}"
+	                       placeholder="0"
+	                       required="required"
+	                       min="1"
+	                       max="999999999"
+	                       data-max-errormessage="You must enter a value less than 10 digits"
+	                        />
+	            </td>
+	            <td rowspan="2" class="rowspan buttoncolumn" th:unless="${complete == 'complete'}">
+	                <button th:unless="${cost.id == null}"
+	                        type="submit"
+	                        name="remove_cost"
+	                        class="buttonlink js-remove-row"
+	                        th:value="${cost.id}"
+	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+	                </button>
+                  <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+	            </td>
+	        </tr>
+	        <tr th:attr="data-repeatable-row=${costIdentifier}">
+	            <td colspan="4" class="numeric colspan">
+	                <label th:for="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"><span>Total costs</span></label>
+	                <input type="text"
+	                       class="form-control width-medium"
+	                       data-calculation-operations="/,*"
+                           th:name="${type +'-total-' + question.id + '-' + costIdentifier}"
+	                       readonly="readonly"
+	                       th:id="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"
+	                       th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly,#cost-labour-'+costIdentifier+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
+	                       th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
+	            </td>
 
-        <tr th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <td class="form-group"   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-role]}')} ? 'error' : ''">
-                <label th:for="${'cost-labour-'+cost.id+'-role'}">
-                    <span class="visuallyhidden">Role within project</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-role'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       class="form-control width-full"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-role]}')} ? field-error : ''"
-                       th:name="${type +'-role-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-labour-'+cost.id+'-role'}"
-                       th:value="${cost.getRole()}"
-                       th:readonly="${complete == 'complete'}"
-                       required="required"
-                       maxlength="255"  />
-            </td>
-            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-grossAnnualSalary]}')} ? 'error' : ''">
-                <label th:for="${'cost-labour-'+cost.id+'-labourGrossSalary'}">
-                    <span class="visuallyhidden">Gross Annual Salary</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-grossAnnualSalary'})" th:remove="tag" />
-                </label>
-                <input type="number"
-                       class="form-control width-full"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+cost.id+'-grossAnnualSalary]}')} ? field-error : ''"
-                       th:name="${type +'-grossAnnualSalary-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
-                       th:readonly="${complete == 'complete'}"
-                       ifs:nonZeroValue="${cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : '0'}"
-                       placeholder="0"
-                       required="required"
-                       min="1"
-                       max="9999999999999999999"
-                       data-max-errormessage="You must enter a value less than 20 digits"
-                        />
-            </td>
-            <td class="numeric">
-                <label th:for="${'cost-labour-'+cost.id+'-labourRate'}">
-                    <span class="visuallyhidden">Rate (&pound;/day)</span>
-                </label>
-                <input type="text"
-                       class="form-control width-full"
-                       th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'},data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
-                       data-calculation-operations="/"
-                       readonly="readonly"
-                       th:id="${'cost-labour-'+cost.id+'-labourRate'}"
-                       th:name="${type + '-labourRate-' + question.id + '-' + cost.id}"
-                       th:value="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
-                       maxlength="255" />
-            </td>
-            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-labourDays]}')} ? 'error' : ''">
-                <label th:for="${'cost-labour-'+cost.id+'-labourDays'}">
-                    <span class="visuallyhidden">Days to be spent by all staff at this grade</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-labourDays'})" th:remove="tag" />
-                </label>
-                <input type="number"
-                       class="form-control width-full"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+cost.id+'-labourDays]}')} ? field-error : ''"
-                       th:readonly="${complete == 'complete'}"
-                       th:id="${'cost-labour-'+cost.id+'-labourDays'}"
-                       th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"
-                       ifs:nonZeroValue="${cost.labourDays}"
-                       placeholder="0"
-                       required="required"
-                       min="1"
-                       max="999999999"
-                       data-max-errormessage="You must enter a value less than 10 digits"
-                        />
-            </td>
-            <td rowspan="2" class="rowspan" th:unless="${complete == 'complete'}">
-                <button type="submit"
-                        name="remove_cost"
-                        class="buttonlink js-remove-row"
-                        th:value="${cost.id}"
-                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
-                </button>
-            </td>
-        </tr>
-        <tr th:attr="data-repeatable-row=${cost.id}">
-            <td colspan="4" class="numeric colspan">
-                <label th:for="${'cost-labour-'+cost.id+'-labourTotalCost'}"><span>Total costs</span></label>
-                <input type="text"
-                       class="form-control width-medium"
-                       data-calculation-operations="/,*"
-                       th:name="${type +'-total-' + question.id + '-' + cost.id}"
-                       readonly="readonly"
-                       th:id="${'cost-labour-'+cost.id+'-labourTotalCost'}"
-                       th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
-                       th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
-            </td>
-
-        </tr>
+	        </tr>
+	    </div>
     </div>
 
     <!-- ===========================Form: overheads =========================== -->
@@ -397,83 +400,86 @@
     <!-- =========================== repeating rows - Materials  =========================== -->
 
     <div th:fragment="materials_row" th:remove="tag">
-        <tr th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-item]}')} ? 'error' : ''">
-                <label th:for="${'cost-materials-'+cost.id+'-item'}">
-                    <span class="visuallyhidden">Item</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-item'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       class="form-control width-full"
-                       th:name="${type +'-item-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-materials-'+cost.id+'-item'}"
-                       th:value="${cost.getItem()}"
-                       th:readonly="${complete == 'complete'}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-item]}')} ? 'field-error' : ''"
-                       required="required"
-                       maxlength="255" />
-            </td>
-            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'error' : ''">
-              <label th:for="${'cost-materials-'+cost.id+'-quantity'}">
-                  <span class="visuallyhidden">Quantity</span>
-                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-quantity'})" th:remove="tag" />
-              </label>
-                <input type="number"
-                       class="form-control width-full"
-                       th:name="${type +'-quantity-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-materials-'+cost.id+'-quantity'}"
-                       placeholder="0"
-                       ifs:nonZeroValue="${cost.getQuantity()}"
-                       th:readonly="${complete == 'complete'}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'field-error' : ''"
-                       min="1"
-                       max="999999999"
-                       required="required"
-                       data-max-errormessage="You must enter a value less than 10 digits"
-                       />
-            </td>
-            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''">
-                <label th:for="${'cost-materials-'+cost.id+'-cost'}">
-                    <span class="visuallyhidden">Cost Per Item</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-cost'})" th:remove="tag" />
-                </label>
-                <input type="number"
-                       class="form-control width-full"
-                       th:name="${type +'-cost-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-materials-'+cost.id+'-cost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
-                       th:readonly="${complete == 'complete'}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
-                       placeholder="0"
-                       min="1"
-                       max="9999999999999999999"
-                       required="required"
-                       data-max-errormessage="You must enter a value less than 20 digits" />
-            </td>
-            <td>
-              <label th:for="${'cost-materials-'+cost.id+'-materialTotal'}">
-                  <span class="visuallyhidden">Total</span>
-              </label>
-                <input type="text"
-                       class="alignright form-control width-full"
-                       th:name="${type +'-total-' + question.id + '-' + cost.id}"
-                       th:attr="data-calculation-fields='#'+${'cost-materials-'+cost.id+'-quantity'}+',#'+${'cost-materials-'+cost.id+'-cost'},data-calculation-rawvalue=${cost.total}"
-                       th:id="${'cost-materials-'+cost.id+'-materialTotal'}"
-                       data-calculation-operations="*"
-                       readonly="readonly"
-                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
-                        />
-            </td>
-            <td class="alignright remove" th:unless="${complete == 'complete'}">
-                <button type="submit"
-                        name="remove_cost"
-                        th:value="${cost.id}"
-                        th:class="'buttonlink js-remove-row'"
-                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
-                </button>
-            </td>
-        </tr>
-
+        <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
+	        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+	            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''">
+	                <label th:for="${'cost-materials-'+costIdentifier+'-item'}">
+	                    <span class="visuallyhidden">Item</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       class="form-control width-full"
+	                       th:name="${type +'-item-' + question.id + '-' + costIdentifier}"
+	                       th:id="${'cost-materials-'+costIdentifier+'-item'}"
+	                       th:value="${cost.getItem()}"
+	                       th:readonly="${complete == 'complete'}"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"
+	                       required="required"
+	                       maxlength="255" />
+	            </td>
+	            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''">
+	              <label th:for="${'cost-materials-'+costIdentifier+'-quantity'}">
+	                  <span class="visuallyhidden">Quantity</span>
+	                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" th:remove="tag" />
+	              </label>
+	                <input type="number"
+	                       class="form-control width-full"
+	                       th:name="${type +'-quantity-' + question.id + '-' + costIdentifier}"
+	                       th:id="${'cost-materials-'+costIdentifier+'-quantity'}"
+	                       placeholder="0"
+	                       ifs:nonZeroValue="${cost.getQuantity()}"
+	                       th:readonly="${complete == 'complete'}"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"
+	                       min="1"
+	                       max="999999999"
+	                       required="required"
+	                       data-max-errormessage="You must enter a value less than 10 digits"
+	                       />
+	            </td>
+	            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
+	                <label th:for="${'cost-materials-'+costIdentifier+'-cost'}">
+	                    <span class="visuallyhidden">Cost Per Item</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" th:remove="tag" />
+	                </label>
+	                <input type="number"
+	                       class="form-control width-full"
+	                       th:name="${type +'-cost-' + question.id + '-' + costIdentifier}"
+	                       th:id="${'cost-materials-'+costIdentifier+'-cost'}"
+	                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+	                       th:readonly="${complete == 'complete'}"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
+	                       placeholder="0"
+	                       min="1"
+	                       max="9999999999999999999"
+	                       required="required"
+	                       data-max-errormessage="You must enter a value less than 20 digits" />
+	            </td>
+	            <td>
+	              <label th:for="${'cost-materials-'+costIdentifier+'-materialTotal'}">
+	                  <span class="visuallyhidden">Total</span>
+	              </label>
+	                <input type="text"
+	                       class="alignright form-control width-full"
+	                       th:name="${type +'-total-' + question.id + '-' + costIdentifier}"
+	                       th:attr="data-calculation-fields='#'+${'cost-materials-'+costIdentifier+'-quantity'}+',#'+${'cost-materials-'+costIdentifier+'-cost'},data-calculation-rawvalue=${cost.total}"
+	                       th:id="${'cost-materials-'+costIdentifier+'-materialTotal'}"
+	                       data-calculation-operations="*"
+	                       readonly="readonly"
+	                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
+	                        />
+	            </td>
+	            <td class="alignright buttoncolumn remove" th:unless="${complete == 'complete'}">
+	                <button th:unless="${cost.id == null}"
+	                        type="submit"
+	                        name="remove_cost"
+	                        th:value="${cost.id}"
+	                        th:class="'buttonlink js-remove-row'"
+	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+	                </button>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+	            </td>
+	        </tr>
+        </div>
     </div>
 
     <!-- ===========================Form: capital usage =========================== -->
@@ -502,145 +508,149 @@
     <!-- ===========================Form: capital usage repeating row =========================== -->
 
     <div th:fragment="capital_usage_row" th:remove="tag">
-        <div th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}" class="form-row">
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-description]}')} ? 'error' : ''">
-                <label th:for="${'cost-capital_usage-'+cost.id+'-description'}">
-                    <span>Item description</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-description'})" th:remove="tag" />
-                  </label>
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
-            </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-existing]}')} ? 'error' : ''">
-                <fieldset class="inline">
-                    <legend>New or existing item</legend>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-existing'})" th:remove="tag" />
-                    <label class="block-label">
-                        <input th:id="${'cost-capital_usage-'+cost.id+'-existing_0'}"
-                               type="radio"
-                               th:name="${type +'-existing-' + question.id + '-' + cost.id}"
-                               value="New"
-                               required="required"
-                               th:checked="${cost.existing == 'New'}"
-                               th:disabled="${complete == 'complete'}">
-                        New
-                        </input>
-                    </label>
-                    <label class="block-label">
-                        <input th:id="${'cost-capital_usage-'+cost.id+'-existing_1'}"
-                               type="radio"
-                               th:name="${type +'-existing-' + question.id + '-' + cost.id}"
-                               value="Existing"
-                               required="required"
-                               th:checked="${cost.existing == 'Existing'}"
-                               th:disabled="${complete == 'complete'}">
-                        Existing
-                        </input>
-                    </label>
-                </fieldset>
-            </div>
+        <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
+	        <div th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="form-row">
+	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'error' : ''">
+	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-description'}">
+	                    <span>Item description</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" th:remove="tag" />
+	                  </label>
+	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	            </div>
+	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-existing]}')} ? 'error' : ''">
+	                <fieldset class="inline">
+	                    <legend>New or existing item</legend>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-existing'})" th:remove="tag" />
+	                    <label class="block-label">
+	                        <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_0'}"
+	                               type="radio"
+	                               th:name="${type +'-existing-' + question.id + '-' + costIdentifier}"
+	                               value="New"
+	                               required="required"
+	                               th:checked="${cost.existing == 'New'}"
+	                               th:disabled="${complete == 'complete'}">
+	                        New
+	                        </input>
+	                    </label>
+	                    <label class="block-label">
+	                        <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_1'}"
+	                               type="radio"
+	                               th:name="${type +'-existing-' + question.id + '-' + costIdentifier}"
+	                               value="Existing"
+	                               required="required"
+	                               th:checked="${cost.existing == 'Existing'}"
+	                               th:disabled="${complete == 'complete'}">
+	                        Existing
+	                        </input>
+	                    </label>
+	                </fieldset>
+	            </div>
 
-            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-deprecation]}')} ? 'error' : ''">
-                <label th:for="${'cost-capital_usage-'+cost.id+'-deprecation_period'}" class="form-label">
-                    <span>Depreciation period (months)</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-deprecation'})" th:remove="tag" />
-                </label>
-                <input  type="number"
-                        th:id="${'cost-capital_usage-'+cost.id+'-deprecation_period'}"
-                        class="form-control form-finances-capital-usage-depreciation"
-                        th:name="${type +'-deprecation-' + question.id + '-' +  cost.id}"
-                        ifs:nonZeroValue="${cost.deprecation}"
-                        th:readonly="${complete == 'complete'}"
-                        placeholder="0"
-                        min="1"
-                        max="999999999"
-                        required="required"
-                        data-max-errormessage="You must enter a value less than 10 digits"
-                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-deprecation]}')} ? 'field-error' : ''"
-                         />
-            </div>
+	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'error' : ''">
+	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-deprecation_period'}" class="form-label">
+	                    <span>Depreciation period (months)</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-deprecation'})" th:remove="tag" />
+	                </label>
+	                <input  type="number"
+	                        th:id="${'cost-capital_usage-'+costIdentifier+'-deprecation_period'}"
+	                        class="form-control form-finances-capital-usage-depreciation"
+	                        th:name="${type +'-deprecation-' + question.id + '-' + costIdentifier}"
+	                        ifs:nonZeroValue="${cost.deprecation}"
+	                        th:readonly="${complete == 'complete'}"
+	                        placeholder="0"
+	                        min="1"
+	                        max="999999999"
+	                        required="required"
+	                        data-max-errormessage="You must enter a value less than 10 digits"
+	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'field-error' : ''"
+	                         />
+	            </div>
 
-            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-npv]}')} ? 'error' : ''">
-                <label th:for="${'cost-capital_usage-'+cost.id+'-npv'}" class="form-label">
-                    <span>Net present value at the start of your project or the price you bought it for (£)</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-npv'})" th:remove="tag" />
-                </label>
-                <input
-                        type="number"
-                        th:id="${'cost-capital_usage-'+cost.id+'-npv'}"
-                        class="form-control form-finances-capital-usage-npv"
-                        th:name="${type +'-npv-' + question.id + '-' + cost.id}"
-                        ifs:nonZeroValue="${cost.npv != null ? #numbers.formatDecimal(cost.npv,0,0) : '0'}"
-                        th:readonly="${complete == 'complete'}"
-                        placeholder="0"
-                        min="1"
-                        max="9999999999999999999"
-                        required="required"
-                        data-max-errormessage="You must enter a value less than 20 digits"
-                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-npv]}')} ? 'field-error' : ''" />
+	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'error' : ''">
+	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-npv'}" class="form-label">
+	                    <span>Net present value at the start of your project or the price you bought it for (£)</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-npv'})" th:remove="tag" />
+	                </label>
+	                <input
+	                        type="number"
+	                        th:id="${'cost-capital_usage-'+costIdentifier+'-npv'}"
+	                        class="form-control form-finances-capital-usage-npv"
+	                        th:name="${type +'-npv-' + question.id + '-' + costIdentifier}"
+	                        ifs:nonZeroValue="${cost.npv != null ? #numbers.formatDecimal(cost.npv,0,0) : '0'}"
+	                        th:readonly="${complete == 'complete'}"
+	                        placeholder="0"
+	                        min="1"
+	                        max="9999999999999999999"
+	                        required="required"
+	                        data-max-errormessage="You must enter a value less than 20 digits"
+	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'field-error' : ''" />
 
-            </div>
+	            </div>
 
-            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-residualValue]}')} ? 'error' : ''">
-                <label th:for="${'cost-capital_usage-'+cost.id+'-residual_value'}" class="form-label">
-                    <span>Residual value at end of project (£)</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-residualValue'})" th:remove="tag" />
-                </label>
-                <input
-                        type="number"
-                        th:id="${'cost-capital_usage-'+cost.id+'-residual_value'}"
-                        class="form-control form-finances-capital-usage-residual-value"
-                        th:name="${type +'-residualValue-' + question.id + '-' + cost.id}"
-                        ifs:nonZeroValue="${#numbers.formatDecimal(cost.residualValue,0,0)}"
-                        th:readonly="${complete == 'complete'}"
-                        placeholder="0"
-                        min="0"
-                        max="9999999999999999999"
-                        required="required"
-                        data-max-errormessage="You must enter a value less than 20 digits"
-                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-residualValue]}')} ? 'field-error' : ''"/>
-            </div>
+	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'error' : ''">
+	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-residual_value'}" class="form-label">
+	                    <span>Residual value at end of project (£)</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-residualValue'})" th:remove="tag" />
+	                </label>
+	                <input
+	                        type="number"
+	                        th:id="${'cost-capital_usage-'+costIdentifier+'-residual_value'}"
+	                        class="form-control form-finances-capital-usage-residual-value"
+	                        th:name="${type +'-residualValue-' + question.id + '-' + costIdentifier}"
+	                        ifs:nonZeroValue="${#numbers.formatDecimal(cost.residualValue,0,0)}"
+	                        th:readonly="${complete == 'complete'}"
+	                        placeholder="0"
+	                        min="0"
+	                        max="9999999999999999999"
+	                        required="required"
+	                        data-max-errormessage="You must enter a value less than 20 digits"
+	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'field-error' : ''"/>
+	            </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-utilisation]}')} ? 'error' : ''">
-                <label th:for="${'cost-capital_usage-'+cost.id+'-utilisation'}" class="form-label">
-                    <span>Utilisation (%)</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-utilisation'})" th:remove="tag" />
-                </label>
-                <input type="number"
-                       th:id="${'cost-capital_usage-'+cost.id+'-utilisation'}"
-                       class="form-control form-finances-capital-usage-utilisation"
-                       th:name="${type +'-utilisation-' + question.id + '-' + cost.id}"
-                       ifs:nonZeroValue="${cost.utilisation}"
-                       th:readonly="${complete == 'complete'}"
-                       placeholder="0"
-                       min="0"
-                       max="100"
-                       required="required"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-utilisation]}')} ? 'field-error' : ''"/>
-            </div>
+	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'error' : ''">
+	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-utilisation'}" class="form-label">
+	                    <span>Utilisation (%)</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-utilisation'})" th:remove="tag" />
+	                </label>
+	                <input type="number"
+	                       th:id="${'cost-capital_usage-'+costIdentifier+'-utilisation'}"
+	                       class="form-control form-finances-capital-usage-utilisation"
+	                       th:name="${type +'-utilisation-' + question.id + '-' + costIdentifier}"
+	                       ifs:nonZeroValue="${cost.utilisation}"
+	                       th:readonly="${complete == 'complete'}"
+	                       placeholder="0"
+	                       min="0"
+	                       max="100"
+	                       required="required"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'field-error' : ''"/>
+	            </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-netCost]}')} ? 'error' : ''">
-                <label th:for="${'cost-capital_usage-'+cost.id+'-netCost'}" class="form-label">
-                      <span>Net Cost</span>
-                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-netCost'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       class="form-control"
-                       th:attr="data-calculation-fields=${'#cost-capital_usage-'+cost.id+'-npv,#cost-capital_usage-'+cost.id+'-residual_value,#cost-capital_usage-'+cost.id+'-utilisation,100'}"
-                       data-calculation-operations="-,*,/"
-                       readonly="readonly"
-                       th:id="${'cost-capital_usage-'+cost.id+'-netCost'}"
-                       th:name="${type + '-netCost-' + question.id + '-' + cost.id}"
-                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-netCost]}')} ? 'error' : ''"
-                       />
-            </div>
+	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'error' : ''">
+	                <label th:for="${'cost-capital_usage-'+costIdentifier+'-netCost'}" class="form-label">
+	                      <span>Net Cost</span>
+	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-netCost'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       class="form-control"
+	                       th:attr="data-calculation-fields=${'#cost-capital_usage-'+costIdentifier+'-npv,#cost-capital_usage-'+costIdentifier+'-residual_value,#cost-capital_usage-'+costIdentifier+'-utilisation,100'}"
+	                       data-calculation-operations="-,*,/"
+	                       readonly="readonly"
+	                       th:id="${'cost-capital_usage-'+costIdentifier+'-netCost'}"
+	                       th:name="${type + '-netCost-' + question.id + '-' + costIdentifier}"
+	                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'error' : ''"
+	                       />
+	            </div>
 
-            <button type="submit"
-                    name="remove_cost"
-                    class="buttonlink js-remove-row"
-                    th:value="${cost.id}"
-                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
-            </button>
+	            <button th:unless="${cost.id == null}"
+	                    type="submit"
+	                    name="remove_cost"
+	                    class="buttonlink js-remove-row"
+	                    th:value="${cost.id}"
+	                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+	            </button>
+	            <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+	        </div>
         </div>
     </div>
 
@@ -674,74 +684,77 @@
     </div>
 
     <div th:fragment="subcontracting_row" th:remove="tag">
-        <div class="form-row" th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-name]}')} ? 'error' : ''">
-                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-name'}">
-                    <span>Subcontractor name</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-name'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       th:name="${type +'-name-' + question.id + '-' +cost.id}"
-                       class="form-control form-finances-subcontracting-company"
-                       th:id="${'cost-subcontracting-'+cost.id+'-name'}"
-                       th:value="${cost.name}"
-                       th:readonly="${complete == 'complete'}"
-                       maxlength="255"
-                       required="required"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-name]}')} ? 'field-error' : ''"  />
-            </div>
-            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-country]}')} ? 'error' : ''">
-                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-country'}">
-                    <span>Country where the subcontractor will work</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-country'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       th:name="${type +'-country-' + question.id + '-' + cost.id}"
-                       class="form-control"
-                       th:id="${'cost-subcontracting-'+cost.id+'-country'}"
-                       th:value="${cost.country}"
-                       th:readonly="${complete == 'complete'}"
-                       maxlength="255"
-                       required="required"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-country]}')} ? 'field-error' : ''"   />
-            </div>
+        <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-role]}')} ? 'error' : ''">
-                <label class="form-label" th:for="${'cost-'+ type + '-'+cost.id+'-role'}">
-                  <span>Role of the subcontractor in the project and description of the work they’ll do</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-role'})" th:remove="tag" />
-                </label>
+	        <div class="form-row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'error' : ''">
+	                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-name'}">
+	                    <span>Subcontractor name</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-name'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       th:name="${type +'-name-' + question.id + '-' + costIdentifier}"
+	                       class="form-control form-finances-subcontracting-company"
+	                       th:id="${'cost-subcontracting-'+costIdentifier+'-name'}"
+	                       th:value="${cost.name}"
+	                       th:readonly="${complete == 'complete'}"
+	                       maxlength="255"
+	                       required="required"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'field-error' : ''"  />
+	            </div>
+	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'error' : ''">
+	                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-country'}">
+	                    <span>Country where the subcontractor will work</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-country'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       th:name="${type +'-country-' + question.id + '-' + costIdentifier}"
+	                       class="form-control"
+	                       th:id="${'cost-subcontracting-'+costIdentifier+'-country'}"
+	                       th:value="${cost.country}"
+	                       th:readonly="${complete == 'complete'}"
+	                       maxlength="255"
+	                       required="required"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'field-error' : ''"   />
+	            </div>
 
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
-            </div>
+	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''">
+	                <label class="form-label" th:for="${'cost-'+ type + '-'+costIdentifier+'-role'}">
+	                  <span>Role of the subcontractor in the project and description of the work they’ll do</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" th:remove="tag" />
+	                </label>
 
-            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''">
-                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-subcontractingCost'}">
-                      <span>Cost</span>
-                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-cost'})" th:remove="tag" />
-                  </label>
-                <input type="number"
-                       class="form-control"
-                       th:name="${type +'-subcontractingCost-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-subcontracting-'+cost.id+'-subcontractingCost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
-                       th:readonly="${complete == 'complete'}"
-                       placeholder="0"
-                       min="1"
-                       max="9999999999999999999"
-                       required="required"
-                       data-max-errormessage="You must enter a value less than 20 digits"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"
-                       />
-            </div>
-            <button th:unless="${complete == 'complete'}" type="submit"
-                    name="remove_cost"
-                    class="buttonlink js-remove-row"
-                    th:value="${cost.id}"
-                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
-            </button>
+	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	            </div>
+
+	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
+	                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-subcontractingCost'}">
+	                      <span>Cost</span>
+	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" th:remove="tag" />
+	                  </label>
+	                <input type="number"
+	                       class="form-control"
+	                       th:name="${type +'-subcontractingCost-' + question.id + '-' + costIdentifier}"
+	                       th:id="${'cost-subcontracting-'+costIdentifier+'-subcontractingCost'}"
+	                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+	                       th:readonly="${complete == 'complete'}"
+	                       placeholder="0"
+	                       min="1"
+	                       max="9999999999999999999"
+	                       required="required"
+	                       data-max-errormessage="You must enter a value less than 20 digits"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
+	                       />
+	            </div>
+	            <button th:unless="${(complete == 'complete') or (cost.id == null)}" type="submit"
+	                    name="remove_cost"
+	                    class="buttonlink js-remove-row"
+	                    th:value="${cost.id}"
+	                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+	            </button>
+	            <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+	        </div>
         </div>
-
     </div>
 
 
@@ -789,80 +802,84 @@
     <!-- ===========================repeating rows : travel cost =========================== -->
 
     <div th:fragment="travel_row" th:remove="tag">
-        <tr th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-              <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-item]}')} ? 'error' : ''">
-                <label th:for="${'cost-'+type+'-'+cost.id+'-item'}">
-                      <span class="visuallyhidden">Purpose of journey or description of subsistence cost</span>
-                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-item'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       th:name="${type +'-item-' + question.id + '-' + cost.id}"
-                       class="form-control width-full"
-                       th:id="${'cost-'+type+'-'+cost.id+'-item'}"
-                       th:value="${cost.getItem()}"
-                       th:readonly="${complete == 'complete'}"
-                       required="required"
-                       maxlength="255"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-item]}')} ? 'field-error' : ''"/>
-            </td>
-            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'error' : ''">
-                <label th:for="${'cost-'+type+'-'+cost.id+'-quantity'}">
-                      <span class="visuallyhidden">Number of times</span>
-                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-quantity'})" th:remove="tag" />
-                </label>
-                <input type="number"
-                       th:name="${type +'-quantity-' + question.id + '-' + cost.id}"
-                       class="form-control width-full"
-                       th:id="${'cost-'+type+'-'+cost.id+'-quantity'}"
-                       ifs:nonZeroValue="${cost.getQuantity()}"
-                       th:readonly="${complete == 'complete'}"
-                       placeholder="0"
-                       min="1"
-                       max="999999999"
-                       required="required"
-                       data-max-errormessage="You must enter a value less than 10 digits"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-quantity]}')} ? 'field-error' : ''"  />
-            </td>
-            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''">
-                <label th:for="${'cost-'+type+'-'+cost.id+'-cost'}">
-                      <span class="visuallyhidden">Cost each (&pound;)</span>
-                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-cost'})" th:remove="tag" />
-                </label>
-                <input type="number"
-                       th:name="${type +'-cost-' + question.id + '-' + cost.id}"
-                       class="form-control width-full"
-                       th:id="${'cost-'+type+'-'+cost.id+'-cost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
-                       th:readonly="${complete == 'complete'}"
-                       placeholder="0"
-                       min="1"
-                       max="9999999999999999999"
-                       required="required"
-                       data-max-errormessage="You must enter a value less than 20 digits"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''" />
-            </td>
-            <td class="numeric">
-                <label th:for="${'cost-'+type+'-'+cost.id+'-travelCostTotal'}">
-                    <span class="visuallyhidden">Total (&pound;)</span>
-                </label>
-                <input type="text"
-                       th:name="${type +'-travelCostTotal-' + question.id + '-' + cost.id}"
-                       class="form-control width-full"
-                       readonly="readonly"
-                       th:id="${'cost-'+type+'-'+cost.id+'-travelCostTotal'}"
-                       th:attr="data-calculation-fields='#'+${'cost-'+type+'-'+cost.id+'-cost'}+',#'+${'cost-'+type+'-'+cost.id+'-quantity'},data-calculation-rawValue=${cost.getTotal()}"
-                       data-calculation-operations="*"
-                       th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
-            </td>
-            <td th:unless="${complete == 'complete'}">
-                <button type="submit"
-                        name="remove_cost"
-                        class="buttonlink js-remove-row"
-                        th:value="${cost.id}"
-                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
-                </button>
-            </td>
-        </tr>
+        <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
+	        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+	              <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''">
+	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-item'}">
+	                      <span class="visuallyhidden">Purpose of journey or description of subsistence cost</span>
+	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       th:name="${type +'-item-' + question.id + '-' + costIdentifier}"
+	                       class="form-control width-full"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-item'}"
+	                       th:value="${cost.getItem()}"
+	                       th:readonly="${complete == 'complete'}"
+	                       required="required"
+	                       maxlength="255"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"/>
+	            </td>
+	            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''">
+	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-quantity'}">
+	                      <span class="visuallyhidden">Number of times</span>
+	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" th:remove="tag" />
+	                </label>
+	                <input type="number"
+	                       th:name="${type +'-quantity-' + question.id + '-' + costIdentifier}"
+	                       class="form-control width-full"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-quantity'}"
+	                       ifs:nonZeroValue="${cost.getQuantity()}"
+	                       th:readonly="${complete == 'complete'}"
+	                       placeholder="0"
+	                       min="1"
+	                       max="999999999"
+	                       required="required"
+	                       data-max-errormessage="You must enter a value less than 10 digits"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"  />
+	            </td>
+	            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
+	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-cost'}">
+	                      <span class="visuallyhidden">Cost each (&pound;)</span>
+	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" th:remove="tag" />
+	                </label>
+	                <input type="number"
+	                       th:name="${type +'-cost-' + question.id + '-' + costIdentifier}"
+	                       class="form-control width-full"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-cost'}"
+	                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+	                       th:readonly="${complete == 'complete'}"
+	                       placeholder="0"
+	                       min="1"
+	                       max="9999999999999999999"
+	                       required="required"
+	                       data-max-errormessage="You must enter a value less than 20 digits"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''" />
+	            </td>
+	            <td class="numeric">
+	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-travelCostTotal'}">
+	                    <span class="visuallyhidden">Total (&pound;)</span>
+	                </label>
+	                <input type="text"
+	                       th:name="${type +'-travelCostTotal-' + question.id + '-' + costIdentifier}"
+	                       class="form-control width-full"
+	                       readonly="readonly"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-travelCostTotal'}"
+	                       th:attr="data-calculation-fields='#'+${'cost-'+type+'-'+costIdentifier+'-cost'}+',#'+${'cost-'+type+'-'+costIdentifier+'-quantity'},data-calculation-rawValue=${cost.getTotal()}"
+	                       data-calculation-operations="*"
+	                       th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+	            </td>
+	            <td th:unless="${complete == 'complete'}">
+	                <button th:unless="${cost.id == null}"
+	                        type="submit"
+	                        name="remove_cost"
+	                        class="buttonlink js-remove-row"
+	                        th:value="${cost.id}"
+	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+	                </button>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+	            </td>
+	        </tr>
+        </div>
     </div>
 
     <!-- ===========================Form: other cost =========================== -->
@@ -903,42 +920,46 @@
 
 
     <div th:fragment="other_costs_row" th:remove="tag">
-        <tr th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-description]}')} ? 'error' : ''">
-                <label th:for="${'cost-'+ type + '-'+cost.id+'-description'}">
-                    <span class="visuallyhidden">Description and justification of the cost</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-description'})" th:remove="tag" />
-                </label>
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
-            </td>
-            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''"  >
-                <label th:for="${'cost-'+type+'-'+cost.id+'-cost'}">
-                  <span class="visuallyhidden">Estimated cost (&pound;)</span>
-                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-cost'})" th:remove="tag" />
-                </label>
-                <input
-                       type="number"
-                       th:name="${type +'-otherCost-' + question.id + '-' + cost.id}"
-                       class="form-control"
-                       th:id="${'cost-'+type+'-'+cost.id+'-otherCost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
-                       th:readonly="${complete == 'complete'}"
-                       placeholder="0"
-                       min="1"
-                       max="9999999999999999999"
-                       required="required"
-                       data-max-errormessage="You must enter a value less than 20 digits"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'field-error' : ''"  />
-            </td>
-            <td th:unless="${complete == 'complete'}">
-                <button type="submit"
-                        class="buttonlink js-remove-row"
-                        name="remove_cost"
-                        th:value="${cost.id}"
-                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
-                </button>
-            </td>
-        </tr>
+        <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
+	        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+	            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'error' : ''">
+	                <label th:for="${'cost-'+ type + '-'+costIdentifier+'-description'}">
+	                    <span class="visuallyhidden">Description and justification of the cost</span>
+	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" th:remove="tag" />
+	                </label>
+	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	            </td>
+	            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''"  >
+	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-cost'}">
+	                  <span class="visuallyhidden">Estimated cost (&pound;)</span>
+	                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" th:remove="tag" />
+	                </label>
+	                <input
+	                       type="number"
+	                       th:name="${type +'-otherCost-' + question.id + '-' + costIdentifier}"
+	                       class="form-control"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-otherCost'}"
+	                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+	                       th:readonly="${complete == 'complete'}"
+	                       placeholder="0"
+	                       min="1"
+	                       max="9999999999999999999"
+	                       required="required"
+	                       data-max-errormessage="You must enter a value less than 20 digits"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"  />
+	            </td>
+	            <td th:unless="${complete == 'complete'}">
+	                <button th:unless="${cost.id == null}"
+	                        type="submit"
+	                        class="buttonlink js-remove-row"
+	                        name="remove_cost"
+	                        th:value="${cost.id}"
+	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+	                </button>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+	            </td>
+	        </tr>
+        </div>
     </div>
 
 
@@ -1028,68 +1049,71 @@
 
 
     <div th:fragment="other_funding_row" th:remove="tag">
+        <div th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" th:remove="tag" >
+	        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+	            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'error' : ''">
+	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-source'}">
+	                      <span class="visuallyhidden">Source of funding</span>
+	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:name="${type +'-fundingSource-' + question.id + '-' + costIdentifier}"
+	                       class="form-control width-full"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-source'}"
+	                       th:value="${cost.fundingSource}"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'field-error' : ''"
+	                       required="required"
+	                       maxlength="255"
+	                       data-required-errormessage="Funding source cannot be blank" />
+	            </td>
+	            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'error' : ''">
+	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-date'}">
+	                  <span class="visuallyhidden">Date secured</span>
+	                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" th:remove="tag" />
+	                </label>
+	                <input type="text"
+	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:name="${type +'-securedDate-' + question.id + '-' + costIdentifier}"
+	                       class="form-control width-medium"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-date'}"
+	                       placeholder="MM-YYYY"
+	                       maxlength="7"
+	                       th:value="${cost.securedDate}"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'field-error' : ''"
+	                       required="required" />
+	            </td>
 
-        <tr th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingSource]}')} ? 'error' : ''">
-                <label th:for="${'cost-'+type+'-'+cost.id+'-source'}">
-                      <span class="visuallyhidden">Source of funding</span>
-                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-fundingSource'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                       th:name="${type +'-fundingSource-' + question.id + '-' + cost.id}"
-                       class="form-control width-full"
-                       th:id="${'cost-'+type+'-'+cost.id+'-source'}"
-                       th:value="${cost.fundingSource}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingSource]}')} ? 'field-error' : ''"
-                       required="required"
-                       maxlength="255"
-                       data-required-errormessage="Funding source cannot be blank" />
-            </td>
-            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'error' : ''">
-                <label th:for="${'cost-'+type+'-'+cost.id+'-date'}">
-                  <span class="visuallyhidden">Date secured</span>
-                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-securedDate'})" th:remove="tag" />
-                </label>
-                <input type="text"
-                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                       th:name="${type +'-securedDate-' + question.id + '-' + cost.id}"
-                       class="form-control width-medium"
-                       th:id="${'cost-'+type+'-'+cost.id+'-date'}"
-                       placeholder="MM-YYYY"
-                       maxlength="7"
-                       th:value="${cost.securedDate}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'field-error' : ''"
-                       required="required" />
-            </td>
-
-            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingAmount]}')} ? 'error' : ''">
-              <label th:for="${'cost-'+type+'-'+cost.id+'-fundingAmount'}">
-                <span class="visuallyhidden">Funding amount (&pound;)</span>
-                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-fundingAmount'})" th:remove="tag" />
-              </label>
-                <input class="form-control width-medium"
-                       type="number"
-                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                       th:name="${type +'-fundingAmount-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-'+type+'-'+cost.id+'-fundingAmount'}"
-                       ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingAmount]}')} ? 'field-error' : ''"
-                       required="required"
-                       placeholder="0"
-                       min="1"
-                       max="9999999999999999999"
-                       data-max-errormessage="You must enter a value less than 20 digits"
-                       />
-            </td>
-            <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-                <button type="submit"
-                        name="remove_cost"
-                        class="buttonlink js-remove-row"
-                        th:value="${cost.id}"
-                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
-                </button>
-            </td>
-        </tr>
+	            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'error' : ''">
+	              <label th:for="${'cost-'+type+'-'+costIdentifier+'-fundingAmount'}">
+	                <span class="visuallyhidden">Funding amount (&pound;)</span>
+	                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" th:remove="tag" />
+	              </label>
+	                <input class="form-control width-medium"
+	                       type="number"
+	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:name="${type +'-fundingAmount-' + question.id + '-' + costIdentifier}"
+	                       th:id="${'cost-'+type+'-'+costIdentifier+'-fundingAmount'}"
+	                       ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'field-error' : ''"
+	                       required="required"
+	                       placeholder="0"
+	                       min="1"
+	                       max="9999999999999999999"
+	                       data-max-errormessage="You must enter a value less than 20 digits"
+	                       />
+	            </td>
+	            <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+	                <button th:unless="${cost.id == null}"
+	                        type="submit"
+	                        name="remove_cost"
+	                        class="buttonlink js-remove-row"
+	                        th:value="${cost.id}"
+	                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+	                </button>
+	                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+	            </td>
+	        </tr>
+        </div>
     </div>
 </html>

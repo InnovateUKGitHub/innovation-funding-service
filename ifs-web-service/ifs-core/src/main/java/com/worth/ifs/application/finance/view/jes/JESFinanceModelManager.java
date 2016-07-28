@@ -5,6 +5,7 @@ import com.worth.ifs.application.finance.model.AcademicFinanceFormField;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.form.Form;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.CostCategory;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -34,7 +36,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
     FinanceService financeService;
 
     @Override
-    public void addOrganisationFinanceDetails(Model model, Long applicationId, Long userId, Form form) {
+    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
         ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);

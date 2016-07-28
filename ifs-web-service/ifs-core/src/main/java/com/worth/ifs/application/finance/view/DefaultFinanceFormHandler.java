@@ -1,9 +1,42 @@
 package com.worth.ifs.application.finance.view;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.util.CollectionFunctions.flattenLists;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.finance.view.item.*;
+import com.worth.ifs.application.finance.view.item.CapitalUsageHandler;
+import com.worth.ifs.application.finance.view.item.CostHandler;
+import com.worth.ifs.application.finance.view.item.GrantClaimHandler;
+import com.worth.ifs.application.finance.view.item.LabourCostHandler;
+import com.worth.ifs.application.finance.view.item.MaterialsHandler;
+import com.worth.ifs.application.finance.view.item.OtherCostHandler;
+import com.worth.ifs.application.finance.view.item.OtherFundingHandler;
+import com.worth.ifs.application.finance.view.item.OverheadsHandler;
+import com.worth.ifs.application.finance.view.item.SubContractingCostHandler;
+import com.worth.ifs.application.finance.view.item.TravelCostHandler;
+import com.worth.ifs.application.finance.view.item.YourFinanceHandler;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -13,22 +46,6 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.util.Either;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.util.CollectionFunctions.flattenLists;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * {@code DefaultFinanceFormHandler} retrieves the costs and handles the finance data retrieved from the request, so it can be
@@ -39,8 +56,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements FinanceFormHandler {
     private static final Log LOG = LogFactory.getLog(DefaultFinanceFormHandler.class);
 
-
-
     @Autowired
     private CostService costService;
 
@@ -49,6 +64,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+    
+    @Autowired
+    private UnsavedFieldsManager unsavedFieldsManager;
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId) {
@@ -59,24 +77,24 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
 
         storeFinancePosition(request, applicationFinanceResource.getId());
-        ValidationMessages errors = getAndStoreCostitems(request);
+        ValidationMessages errors = getAndStoreCostitems(request, applicationFinanceResource.getId());
         addRemoveCostRows(request, applicationId, userId);
 
         return errors;
     }
 
-    private ValidationMessages getAndStoreCostitems(HttpServletRequest request) {
+    private ValidationMessages getAndStoreCostitems(HttpServletRequest request, Long applicationFinanceId) {
 
         ValidationMessages errors = new ValidationMessages();
 
-        List<Either<CostItem, ValidationMessages>> costItems = getCostItems(request);
+        List<Either<CostItem, ValidationMessages>> costItems = getCostItems(request.getParameterMap(), applicationFinanceId);
         List<ValidationMessages> invalidItems = costItems.stream().filter(e -> e.isRight()).map(e -> e.getRight()).collect(Collectors.toList());
         List<Error> getCostItemErrors = flattenLists(simpleMap(invalidItems, validationMessages ->
                 simpleMap(validationMessages.getErrors(), e -> {
                     if(StringUtils.hasText(e.getErrorKey())){
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
                     }else{
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
                     }
                 })
         ));
@@ -88,9 +106,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         storedItemErrors.forEach((costId, validationMessages) ->
             validationMessages.getErrors().stream().forEach(e -> {
                 if(StringUtils.hasText(e.getErrorKey())){
-                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                 }else{
-                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
                 }
             })
         );
@@ -118,9 +136,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     }
 
     @Override
-    public CostItem addCost(Long applicationId, Long userId, Long questionId) {
+    public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         return costService.add(applicationFinance.getId(), questionId, null);
+    }
+    
+    @Override
+    public CostItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
+        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+        return costService.addWithoutPersisting(applicationFinance.getId(), questionId);
     }
 
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
@@ -170,17 +194,13 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
     }
 
-    private List<Either<CostItem, ValidationMessages>> getCostItems(HttpServletRequest request) {
-        return mapRequestParametersToCostItems(request);
-    }
-
-    private List<Either<CostItem, ValidationMessages>> mapRequestParametersToCostItems(HttpServletRequest request) {
-        List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
+    private List<Either<CostItem, ValidationMessages>> getCostItems(Map<String, String[]> params, Long applicationFinanceId) {
+    	List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
         for (CostType costType : CostType.values()) {
-            List<String> costTypeKeys = request.getParameterMap().keySet().stream().
+            List<String> costTypeKeys = params.keySet().stream().
                     filter(k -> k.startsWith(costType.getType() + "-")).collect(Collectors.toList());
-            Map<Long, List<FinanceFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
-            List<Either<CostItem, ValidationMessages>> costItemsForType = getCostItems(costFieldMap, costType);
+            Map<Long, List<FinanceFormField>> costFieldMap = getCostDataRows(params, costTypeKeys);
+            List<Either<CostItem, ValidationMessages>> costItemsForType = getCostItems(costFieldMap, costType, applicationFinanceId);
             costItems.addAll(costItemsForType);
         }
 
@@ -190,24 +210,38 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     /**
      * Retrieve the complete cost item data row, so everything is together
      */
-    private Map<Long, List<FinanceFormField>> getCostDataRows(HttpServletRequest request, List<String> costTypeKeys) {
+    private Map<Long, List<FinanceFormField>> getCostDataRows(Map<String, String[]> params, List<String> costTypeKeys) {
         // make sure that we have the fields together acting on one cost
         Map<Long, List<FinanceFormField>> costKeyMap = new HashMap<>();
         for (String costTypeKey : costTypeKeys) {
-            String value = request.getParameter(costTypeKey);
+            String[] valueArray = params.get(costTypeKey);
+            String value;
+            if(valueArray.length > 0) {
+            	 value = valueArray[0];
+            } else {
+            	continue;
+            }
             FinanceFormField financeFormField = getCostFormField(costTypeKey, value);
-            if (financeFormField == null)
+            if (financeFormField == null) {
                 continue;
+            }
 
-            if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
-                Long id = Long.valueOf(financeFormField.getId());
-                if (costKeyMap.containsKey(id)) {
-                    costKeyMap.get(id).add(financeFormField);
-                } else {
-                    List<FinanceFormField> costKeyValues = new ArrayList<>();
-                    costKeyValues.add(financeFormField);
-                    costKeyMap.put(id, costKeyValues);
-                }
+            Long id;
+            if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
+                id = Long.valueOf(financeFormField.getId());
+            } else {
+            	if(StringUtils.isEmpty(financeFormField.getValue())) {
+            		continue;
+            	}
+            	id = -1L;
+            }
+            
+            if (costKeyMap.containsKey(id)) {
+                costKeyMap.get(id).add(financeFormField);
+            } else {
+                List<FinanceFormField> costKeyValues = new ArrayList<>();
+                costKeyValues.add(financeFormField);
+                costKeyMap.put(id, costKeyValues);
             }
         }
         return costKeyMap;
@@ -216,7 +250,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     /**
      * Retrieve the cost items from the request based on their type
      */
-    private List<Either<CostItem, ValidationMessages>> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType) {
+    private List<Either<CostItem, ValidationMessages>> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType, Long applicationFinanceId) {
         List<Either<CostItem, ValidationMessages>> costItems = new ArrayList<>();
 
         if(costFieldMap.size() == 0) {
@@ -227,11 +261,35 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         // create new cost items
         for (Map.Entry<Long, List<FinanceFormField>> entry : costFieldMap.entrySet()) {
             try{
-                CostItem costItem = costHandler.toCostItem(entry.getKey(), entry.getValue());
-                if (costItem != null) {
-                    Either<CostItem, ValidationMessages> either = Either.left(costItem);
-                    costItems.add(either);
-                }
+            	Long id = entry.getKey();
+            	List<FinanceFormField> fields = entry.getValue();
+            	
+            	if(id == -1L) {
+            		List<List<FinanceFormField>> fieldsSeparated = unsavedFieldsManager.separateFields(fields);
+            		for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
+            			CostItem costItem = costHandler.toCostItem(null, fieldGroup);
+                        if (costItem != null && fieldGroup.size() > 0) {
+                    		Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
+                    		ValidationMessages addResult = costService.add(applicationFinanceId, questionId, costItem);
+                    		Either<CostItem, ValidationMessages> either;
+                    		if(addResult.hasErrors()) {
+                    			either = Either.right(addResult);
+                    		} else {
+                    			CostItem added = costService.findById(addResult.getObjectId());
+                    			either = Either.left(added);
+                    		}
+                            
+                            costItems.add(either);
+                        }
+            		}
+            	} else {
+            		CostItem costItem = costHandler.toCostItem(id, fields);
+                    if (costItem != null) {
+                        Either<CostItem, ValidationMessages> either = Either.left(costItem);
+                        costItems.add(either);
+                    }
+            	}
+                
             }catch(NumberFormatException e){
                 ValidationMessages validationMessages = getValidationMessageFromException(entry, e);
                 Either<CostItem, ValidationMessages> either = Either.right(validationMessages);
@@ -241,16 +299,20 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         return costItems;
     }
 
-    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
+	private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
         CostType costType = CostType.fromString(financeFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
         Long costFormFieldId = 0L;
-        if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
+        if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
-        return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        if(costItem != null) {
+        	return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        } else {
+        	return new ValidationMessages();
+        }
     }
 
     private FinanceFormField getCostFormField(String costTypeKey, String value) {
@@ -294,32 +356,30 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     private ValidationMessages storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
 
         if (costItem.getId().equals(0L)) {
-            addCostItem(costItem, userId, applicationId, question);
-            return new ValidationMessages();
-        }
-
-        RestResult<ValidationMessages> messages = costService.update(costItem);
-        ValidationMessages validationMessages = messages.getSuccessObjectOrThrowException();
-        logValidationMessages(validationMessages);
-
-        return validationMessages;
-    }
-
-    private void logValidationMessages(ValidationMessages validationMessages) {
-        if (validationMessages.hasErrors()) {
-            validationMessages.getErrors().forEach(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
+            return addCostItem(costItem, userId, applicationId, question);
         } else {
-            LOG.debug("no validation errors on cost items");
+            RestResult<ValidationMessages> messages = costService.update(costItem);
+            ValidationMessages validationMessages = messages.getSuccessObject();
+
+            if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
+                LOG.debug("no validation errors on cost items");
+                return messages.getSuccessObject();
+            } else {
+                messages.getSuccessObject().getErrors().stream()
+                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
+                return messages.getSuccessObject();
+            }
         }
     }
 
-    private void addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private ValidationMessages addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            costService.add(applicationFinanceResource.getId(), questionId, costItem);
+            return costService.add(applicationFinanceResource.getId(), questionId, costItem);
         }
+        return null;
     }
 
     private Map<Long, ValidationMessages> storeCostItems(List<CostItem> costItems) {

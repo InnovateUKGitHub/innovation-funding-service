@@ -29,7 +29,7 @@ public interface ApplicationService {
 
     @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
     @SecuredBySpring(value = "CREATE",
-            description = "Any logged in user with Global roles or user with system registra role can create and application",
+            description = "Any logged in user with Global roles or user with system registrar role can create and application",
             securedType = ApplicationResource.class)
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 

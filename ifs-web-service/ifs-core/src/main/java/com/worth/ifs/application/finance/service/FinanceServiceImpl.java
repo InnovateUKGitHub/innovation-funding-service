@@ -1,10 +1,10 @@
 package com.worth.ifs.application.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.resource.ProcessRoleResource;
@@ -65,7 +65,7 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
-    public CostItem addCost(Long applicationFinanceId, Long questionId) {
+    public ValidationMessages addCost(Long applicationFinanceId, Long questionId) {
         return costRestService.add(applicationFinanceId, questionId, null).getSuccessObjectOrThrowException();
     }
 
