@@ -11,7 +11,9 @@ data() {
     cd ifs-data-service
     ./gradlew -Pprofile=docker cleanDeploy "$@"
     echo "copying data service war to container"
-    docker cp build/war/* ifs-data-service:/opt/tomcat/webapps/
+    for item in $( docker-compose -p ifs ps -q data  ); do
+        docker cp build/war/* ${item}:/opt/tomcat/webapps/
+    done
     echo "copying complete"
     echo
     echo
@@ -21,10 +23,15 @@ data() {
 web() {
     cd ifs-web-service
     ./gradlew -Pprofile=docker cleanDeploy "$@"
-    echo "copying competition management service war to container"
-    docker cp ifs-competition-mgt-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
-    echo "copying application service war to container"
-    docker cp ifs-application-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
+    items=$(docker-compose -p ifs ps -q web)
+    echo "copying competition management service war to containers"
+    for item in $items; do
+        docker cp ifs-competition-mgt-service/build/war/* ${item}:/opt/tomcat/webapps/
+    done
+    echo "copying application service war to containers"
+    for item in $items; do
+        docker cp ifs-application-service/build/war/* ${item}:/opt/tomcat/webapps/
+    done
     echo "copying complete"
     echo
     echo
