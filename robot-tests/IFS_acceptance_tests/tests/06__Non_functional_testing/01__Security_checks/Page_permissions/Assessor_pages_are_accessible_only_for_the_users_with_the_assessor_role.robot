@@ -81,6 +81,10 @@ Applicant can't access the assessor's details page
     When the user navigates to the page and gets a custom error message   ${ASSESSOR_DETAILS_PAGE}       ${404_error_message}
     [Teardown]    the user closes the browser
 
+Make sure that there are no browsers left open at the end of the test run
+    [Documentation]   Cleaning up any running processes before finishing the test run
+    Close any open browsers
+
 
 *** Keywords ***
 
