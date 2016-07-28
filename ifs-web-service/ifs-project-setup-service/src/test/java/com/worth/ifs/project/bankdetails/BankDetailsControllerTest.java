@@ -19,6 +19,7 @@ import java.util.Collections;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
+import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -30,6 +31,9 @@ import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuil
 import static com.worth.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -101,5 +105,35 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 andExpect(status().is3xxRedirection()).
                 andExpect(redirectedUrl("/project/" + projectResource.getId() + "/bank-details")).
                 andReturn();
+    }
+
+    @Test
+    public void testUpdateBankDetailsWhenAddressResourceIsNull() throws Exception {
+
+        ProjectResource projectResource = setUpMockingForUpdateBankDetails();
+
+        mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("sortCode", "123456").
+                param("accountNumber", "12345678").
+                param("addressType", ADD_NEW.name())).
+                andExpect(view().name("project/bank-details"));
+
+        verify(bankDetailsRestService, never()).updateBankDetails(any(), any());
+
+    }
+
+    private ProjectResource setUpMockingForUpdateBankDetails() {
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)));
+
+        return projectResource;
     }
 }
