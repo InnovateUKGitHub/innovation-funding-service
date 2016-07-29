@@ -30,7 +30,7 @@ function deploy() {
 }
 
 function core() {
-    cd ifs-web-service/ifs-core
+    cd ifs-web-service/ifs-web-core
     ./gradlew -Pprofile=docker cleanDeploy "$@"
     cd ../..
 }
@@ -39,7 +39,7 @@ function data() {
     deploy data ifs-data-service "$@"
 }
 
-function assessment() {
+function asm() {
     deploy web ifs-web-service/ifs-assessment-service "$@"
 }
 
@@ -51,6 +51,14 @@ function app() {
     deploy web ifs-web-service/ifs-application-service "$@"
 }
 
+function ps() {
+    deploy web ifs-web-service/ifs-project-setup-service "$@"
+}
+
+function psm() {
+    deploy web ifs-web-service/ifs-project-setup-mgt-service "$@"
+}
+
 target=$1
 shift
 
@@ -60,7 +68,7 @@ case "$target" in
         core "$@"
         app "$@"
         cmgt "$@"
-        assessment "$@"
+        asm "$@"
     ;;
     data)
         data "$@"
@@ -69,21 +77,29 @@ case "$target" in
         core "$@"
         app "$@"
         cmgt "$@"
-        assessment "$@"
+        asm "$@"
     ;;
-    assesment)
+    asm)
         core "$@"
-        assessment "$@"
+        asm "$@"
     ;;
     comp-mgt)
         core "$@"
         cmgt "$@"
     ;;
-    application)
+    app)
         core "$@"
         app "$@"
     ;;
+    ps)
+        core "$@"
+        ps "$@"
+    ;;
+    psm)
+        core "$@"
+        psm "$@"
+    ;;
     *)
-        echo $"Usage: $0 {all|data|web|assesment|comp-mgt|application} {gradleOpts}"
+        echo $"Usage: $0 {all|data|web|asm|comp-mgt|app|ps|psm} {gradleOpts}"
         exit 1
 esac

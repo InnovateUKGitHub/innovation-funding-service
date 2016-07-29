@@ -1,17 +1,5 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryType;
@@ -19,8 +7,21 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -54,10 +55,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public void addCategories(Competition competition) {
+    public Competition addCategories(Competition competition) {
         addInnovationSector(competition);
         addInnovationArea(competition);
         addResearchCategories(competition);
+        return competition;
     }
 
     private void addInnovationSector(Competition competition) {
@@ -77,7 +79,36 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionResource>> findAll() {
-        return serviceSuccess((List) competitionMapper.mapToResource(competitionRepository.findAll()));
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findAll().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
     }
 
+    @Override
+    public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList())
+            ));
+    }
+
+    @Override
+    public ServiceResult<CompetitionCountResource> countCompetitions() {
+        //TODO INFUND-3833 populate complete count
+        return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
+                competitionRepository.countUpcoming(), 0L));
+    }
 }

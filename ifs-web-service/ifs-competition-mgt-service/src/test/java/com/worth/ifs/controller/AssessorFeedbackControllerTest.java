@@ -1,25 +1,20 @@
 package com.worth.ifs.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.service.AssessorFeedbackService;
 import com.worth.ifs.competition.controller.AssessorFeedbackController;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.worth.ifs.application.service.AssessorFeedbackService;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
+import javax.servlet.http.HttpServletResponse;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<AssessorFeedbackController> {
 

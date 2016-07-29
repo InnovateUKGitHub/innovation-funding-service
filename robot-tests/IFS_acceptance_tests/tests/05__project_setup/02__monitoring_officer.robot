@@ -17,7 +17,7 @@ Resource          ../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/management/project/1/monitoring-officer
+${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
 
 
 *** Test Cases ***
