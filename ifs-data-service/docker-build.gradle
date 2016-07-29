@@ -25,13 +25,13 @@ ext.silRestBaseURL="http://ifs-data-service:8080/silstub"
 // not the stub will attempt to send emails out via an SMTP server, or simply log the emails being sent (it does this
 // regardless)
 //
-ext.ifsSendMailLocally=false
-ext.ifsSmtpHost="smtp.gmail.com"
-ext.ifsSmtpPort=465
-ext.ifsSmtpUser="example-user@example.com"
-ext.ifsSmtpAuth=true
-ext.ifsSmtpPassword="example-password"
-ext.ifsSmtpTlsEnabled=true
+ext.ifsSendMailLocally=true
+ext.ifsSmtpHost="smtp"
+ext.ifsSmtpPort=25
+ext.ifsSmtpUser="smtp"
+ext.ifsSmtpAuth=false
+ext.ifsSmtpPassword="smtp"
+ext.ifsSmtpTlsEnabled=false
 ext.ifsMailTimeoutMillis=10000
 
 ext.idpRestBaseURL="https://iuk-auth-localdev/regapi"

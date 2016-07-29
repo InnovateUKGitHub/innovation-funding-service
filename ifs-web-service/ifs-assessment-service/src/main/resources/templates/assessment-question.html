@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
     </head>
 
-    <body th:with="context='assessment'" class="assessment assessment-question">
+    <body th:with="context='assessment'" class="assessment assessment-form">
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -20,7 +20,8 @@
             <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" data-autosave="assessorFeedback">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
+                <p class="form-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
+                <p class="form-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
 
                 <div class="form-group">
                     <h2 class="heading-medium">
@@ -32,12 +33,14 @@
                 </div>
 
                 <div th:if="${model.appendixExists}">
-                    <div th:replace="question-type/form-elements :: readonly-file-download (filename=${model.appendixDetails.filename}, filesizeKbytes=${model.appendixDetails.filesizeKbytes}, fileDescription=${model.appendixFileDescription}, downloadURL=@{/})" />
+                    <div th:replace="question-type/form-elements :: readonly-file-download (filename=${model.appendixDetails.filename}, filesizeKbytes=${model.appendixDetails.filesizeKbytes}, fileDescription=${model.appendixFileDescription}+':', downloadURL=@{/})" />
                 </div>
 
-                <div class="question" th:each="formInput : ${model.assessmentFormInputs}" th:id="'form-input-'+${formInput.id}">
-                    <div th:replace="fragments/assessment-types :: ${formInput.formInputTypeTitle} (formInput=${formInput})" />
+                <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
+                    <div th:replace="fragments/assessment-types :: ${field.formInputTypeTitle} (field=${field})" />
                 </div>
+
+                <input type="hidden" id="application_id" th:value="${model.application.id}" />
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             </form>

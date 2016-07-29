@@ -1,15 +1,8 @@
 package com.worth.ifs.controller;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
-import java.util.Map;
-
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.application.service.ApplicationFundingDecisionService;
 import com.worth.ifs.competition.controller.FundingDecisionRestController;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +10,15 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.application.service.ApplicationFundingDecisionService;
+import java.util.Map;
+
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class FundingDecisionRestControllerTest extends BaseControllerMockMVCTest<FundingDecisionRestController> {
 

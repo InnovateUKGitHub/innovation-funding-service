@@ -2,7 +2,7 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.application.form.AddressForm;
+import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.RestResult;

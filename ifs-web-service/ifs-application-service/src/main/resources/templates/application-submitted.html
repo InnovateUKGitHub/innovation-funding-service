@@ -26,7 +26,7 @@
 
         <h2 class="heading-large">Key dates:</h2>
         <ul class="list-bullet">
-          <li>you will be notified of our decision by 14 October 2016</li>
+            <li th:text="'you will be notified of our decision by '+${currentCompetition.assementEndDateDisplay()}"></li>
         </ul>
 
         <p><a class="button" tabindex="0" role="button" th:href="${userDashboardLink}">Return to dashboard</a></p>

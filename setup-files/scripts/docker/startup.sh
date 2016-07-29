@@ -11,18 +11,18 @@ setHostFile(){
 
 }
 
-BASEDIR=$(dirname "$0")
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
 eval $(docker-machine env default)
-./_delete-shib-users-remote.sh
-./_install-or-upgrade.sh
+#TODO check if shibboleth image exists, if not install it.
 cd ../../../
-docker-compose up -d
+docker-compose -p ifs up -d
 wait
-docker-compose exec mysql mysql -uroot -ppassword -e 'create database ifs_test'
-docker-compose exec mysql mysql -uroot -ppassword -e 'create database ifs'
+sleep 1
+docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database ifs_test'
+docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database ifs'
 setHostFile
-./gradlew -Pprofile=docker flywayClean flywayMigrate
-cd setup-files/scripts/docker
-./syncShib.sh
+
+cd $BASEDIR
+./migrate.sh

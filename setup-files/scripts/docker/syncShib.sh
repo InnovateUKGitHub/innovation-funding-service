@@ -5,6 +5,8 @@ function executeMySQLCommand {
 
 export -f executeMySQLCommand
 
+eval $(docker-machine env default)
+
 function addUserToShibboleth {
 
     emailAddress=$1
@@ -35,10 +37,13 @@ function addUserToShibboleth {
 
 export -f addUserToShibboleth
 
-BASEDIR=$(dirname "$0")
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
-docker cp _delete-shib-users-remote.sh ifs-local-dev:/tmp/_delete-shib-users-remote.sh
-docker exec ifs-local-dev /tmp/_delete-shib-users-remote.sh
+for item in $( docker-compose -p ifs ps -q shib ); do
+    docker cp _delete-shib-users-remote.sh ${item}:/tmp/_delete-shib-users-remote.sh
+done
+
+docker-compose -p ifs exec shib /tmp/_delete-shib-users-remote.sh
 
 mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"

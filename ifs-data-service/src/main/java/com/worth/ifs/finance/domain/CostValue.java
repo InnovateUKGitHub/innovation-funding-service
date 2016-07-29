@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @IdClass(CostValueId.class)
 public class CostValue {
-    String value;
+    private String value;
 
     @Id
     @ManyToOne

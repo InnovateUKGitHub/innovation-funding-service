@@ -11,8 +11,8 @@ import com.worth.ifs.finance.resource.cost.CostItem;
  * Default representation for costs and defaults to summing up the costs.
  */
 public class DefaultCostCategory implements CostCategory {
-    List<CostItem> costs = new ArrayList<>();
-    BigDecimal total = BigDecimal.ZERO;
+    private List<CostItem> costs = new ArrayList<>();
+    private BigDecimal total = BigDecimal.ZERO;
 
     @Override
     public List<CostItem> getCosts() {
