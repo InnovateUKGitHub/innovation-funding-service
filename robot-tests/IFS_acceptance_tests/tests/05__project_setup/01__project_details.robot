@@ -71,17 +71,28 @@ Partner nominates a finance contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
     Then Logout as user
+    When Log in as user    pete.tom@egg.com    Passw0rd
+    Then the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=EGGS
+    And the user selects the radio button    financeContact    financeContact1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
+    And the matching status checkbox is updated    project-details-finance    2    yes
+    Then Logout as user
     When Log in as user    steve.smith@empire.com    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Consumed By Riffage Ltd
+    And the user clicks the button/link    link=Vitruvius Stonework Limited
     Then the user should see the text in the page    Finance contact
     And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated    project-details-finance    2    yes
+    And the matching status checkbox is updated    project-details-finance    3    yes
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
@@ -187,7 +198,7 @@ All partners can view submitted project details
     Then the user logs out if they are logged in
     When guest user log-in    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
-    Then the user should not see the element    link=Consumed By Riffage Ltd
+    Then the user should not see the element    link=Vitruvius Stonework Limited
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
 
@@ -263,5 +274,7 @@ the applicant clicks the submit button in the modal
 all the fields are completed
     the matching status checkbox is updated    project-details    1    yes
     the matching status checkbox is updated    project-details    2    yes
+    the matching status checkbox is updated    project-details    3    yes
     the matching status checkbox is updated    project-details-finance    1    yes
     the matching status checkbox is updated    project-details-finance    2    yes
+    the matching status checkbox is updated     project-details-finance    3    yes

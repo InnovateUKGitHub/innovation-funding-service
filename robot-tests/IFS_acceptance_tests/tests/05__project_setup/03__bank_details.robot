@@ -75,25 +75,14 @@ Bank details experian validations
     [Tags]
     When the user submits the bank account details     12345673      000003
     Then the user should see the text in the page     Modulus check has failed
-    When the user submits the bank account details     22345616     000003
-    Then the user should see the text in the page      Account does not support Direct Debit transactions
-    When the user submits the bank account details     22345632      000003
-    Then the user should see the text in the page       Account does not support Direct Credit transactions
-    When the user submits the bank account details      22345624     000003
-    Then the user should see the text in the page       Collection account requires a reference or roll account number
-    When the user submits the bank account details      22345683    000003
-    Then the user should see the text in the page       Account does not support AUDDIS transactions
-    When the user submits the bank account details     22345610     000004
-    Then the user should see the text in the page      Alternate information is available for this account
-
 
 
 
 Bank details submission
     [Documentation]    INFUND-3010
     [Tags]
-    When the user enters text to a text field      name=accountNumber         12345677
-    And the user enters text to a text field       name=sortCode              000003
+    When the user enters text to a text field      name=accountNumber         51406795
+    And the user enters text to a text field       name=sortCode              404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
     And the user should not see the text in the page    Your bank details have been approved
