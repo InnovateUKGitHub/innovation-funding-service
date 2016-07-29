@@ -1,6 +1,9 @@
 package com.worth.ifs.application.service;
 
+import com.google.common.collect.Lists;
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
@@ -12,12 +15,14 @@ import org.mockito.Mock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 
@@ -131,5 +136,54 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(expected, found);
     }
 
+    @Test
+    public void test_getLiveCompetitions() throws Exception {
+        CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionResource resource3 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
+        when(competitionsRestService.findLiveCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2, resource3)));
 
+        Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getLiveCompetitions();
+
+        assertTrue(result.get(CompetitionResource.Status.OPEN).contains(resource1));
+        assertTrue(result.get(CompetitionResource.Status.OPEN).contains(resource2));
+        assertTrue(result.get(CompetitionResource.Status.IN_ASSESSMENT).contains(resource3));
+        assertEquals(result.get(CompetitionResource.Status.ASSESSOR_FEEDBACK), null);
+    }
+
+    @Test
+    public void test_getProjectSetupCompetitions() throws Exception {
+        CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP).build();
+        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP).build();
+        when(competitionsRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+
+        Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getProjectSetupCompetitions();
+
+        assertTrue(result.get(CompetitionResource.Status.PROJECT_SETUP).contains(resource1));
+        assertTrue(result.get(CompetitionResource.Status.PROJECT_SETUP).contains(resource2));
+        assertEquals(result.get(CompetitionResource.Status.ASSESSOR_FEEDBACK), null);
+    }
+
+    @Test
+    public void test_getUpcomingCompetitions() throws Exception {
+        CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build();
+        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.NOT_STARTED).build();
+        when(competitionsRestService.findUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+
+        Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getUpcomingCompetitions();
+
+        assertTrue(result.get(CompetitionResource.Status.COMPETITION_SETUP).contains(resource1));
+        assertTrue(result.get(CompetitionResource.Status.NOT_STARTED).contains(resource2));
+        assertEquals(result.get(CompetitionResource.Status.ASSESSOR_FEEDBACK), null);
+    }
+
+    @Test
+    public void test_getCompetitionCounts() throws Exception {
+        CompetitionCountResource resource = new CompetitionCountResource();
+        when(competitionsRestService.countCompetitions()).thenReturn(restSuccess(resource));
+
+        CompetitionCountResource result = service.getCompetitionCounts();
+
+        assertEquals(result, resource);
+    }
 }
