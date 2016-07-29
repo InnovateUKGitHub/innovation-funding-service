@@ -1,8 +1,8 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,40 +34,44 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        List<MilestoneResource> allDatesByCompetitionId = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
+        List<MilestoneResource> allMilestonesByCompetitionId = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
+
+        if (allMilestonesByCompetitionId == null || allMilestonesByCompetitionId.isEmpty()) {
+            allMilestonesByCompetitionId.addAll(createMilestonesForCompetition(competitionResource));
+        }
 
         List<MilestonesFormEntry> milestoneFormEntries = new ArrayList<>();
 
-        allDatesByCompetitionId.forEach(milestone -> {
-            milestoneFormEntries.add(addMilestone(milestone));
+        allMilestonesByCompetitionId.forEach(milestone -> {
+            milestoneFormEntries.add(populateMilestoneFormEntries(milestone));
+
         });
         competitionSetupForm.setMilestonesFormEntryList(milestoneFormEntries);
         return competitionSetupForm;
     }
 
-    private MilestonesFormEntry addMilestone(MilestoneResource milestone) {
-        MilestonesFormEntry newMilestone = new MilestonesFormEntry();
-        newMilestone.setMilestoneName(milestone.getName());
-        newMilestone.setDay(milestone.getDate().getDayOfMonth());
-        newMilestone.setMonth(milestone.getDate().getMonthValue());
-        newMilestone.setYear(milestone.getDate().getYear());
-        newMilestone.setDayOfWeek(getNameOfDay(LocalDateTime.of(newMilestone.getYear(),
-                newMilestone.getMonth(), newMilestone.getDay(), 0, 0)));
-        return newMilestone;
+    private List<MilestoneResource> createMilestonesForCompetition(CompetitionResource competitionResource) {
+        List<MilestoneResource> newMilestones = new ArrayList<>();
+        Stream.of(MilestoneName.values()).forEach(name -> {
+            MilestoneResource newMilestone = new MilestoneResource();
+            newMilestone.setName(name);
+            newMilestone.setCompetition(competitionResource.getId());
+            newMilestones.add(newMilestone);
+        });
+        return newMilestones;
     }
 
-    /*
-	 * Returns the first free letters of the name of the weekday
-	 */
-    private String getNameOfDay(LocalDateTime localDateTime) {
-        String shortDayName = "-";
-        try {
-            String dayOfWeek = localDateTime.getDayOfWeek().name();
-            shortDayName = dayOfWeek.substring(0, 1) + dayOfWeek.substring(1, 3).toLowerCase();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    private MilestonesFormEntry populateMilestoneFormEntries(MilestoneResource milestone) {
+        MilestonesFormEntry newMilestone = new MilestonesFormEntry();
+        newMilestone.setMilestoneName(milestone.getName());
+        if (milestone.getDate() != null) {
+            newMilestone.setDay(milestone.getDate().getDayOfMonth());
+            newMilestone.setMonth(milestone.getDate().getMonthValue());
+            newMilestone.setYear(milestone.getDate().getYear());
+            newMilestone.setDayOfWeek(newMilestone.getDayOfWeek());
         }
-        return shortDayName;
+        return newMilestone;
     }
 }
+
 

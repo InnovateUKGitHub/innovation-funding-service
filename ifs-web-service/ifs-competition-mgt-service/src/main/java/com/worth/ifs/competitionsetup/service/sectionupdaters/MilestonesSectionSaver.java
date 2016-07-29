@@ -42,7 +42,7 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competition.getId());
 
         if (milestones == null || milestones.isEmpty()) {
-            milestones.addAll(createMilestonesForCompetition());
+            milestones.addAll(createMilestonesForCompetition(competition));
         }
         List<Error> errors = validateMilestoneDates(milestoneEntries);
         return updateMilestonesForCompetition(milestones, milestoneEntries, competition, errors);
@@ -75,11 +75,12 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         }
     }
 
-    private List<MilestoneResource> createMilestonesForCompetition() {
+    private List<MilestoneResource> createMilestonesForCompetition(CompetitionResource competition) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneName.values()).forEach(name -> {
             MilestoneResource newMilestone = milestoneService.create();
             newMilestone.setName(name);
+            newMilestone.setCompetition(competition.getId());
             newMilestones.add(newMilestone);
         });
         return newMilestones;
@@ -97,7 +98,7 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
                         || (month == null || month < 1 || month > 12) || (year == null || year < 1900)
                         || !isMilestoneDateValid(day, month, year)){
                         if(errors.size() == 0) {
-                            errors.add(new Error("error.milestone.invalid", "Please enter the valid date", HttpStatus.BAD_REQUEST));
+                            errors.add(new Error("error.milestone.invalid", "Please enter the valid date(s)", HttpStatus.BAD_REQUEST));
                         }}
             });
         return errors;
