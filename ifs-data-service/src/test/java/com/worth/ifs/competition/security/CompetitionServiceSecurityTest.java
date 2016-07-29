@@ -3,6 +3,7 @@ package com.worth.ifs.competition.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
@@ -26,11 +27,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<CompetitionService> {
 
     private CompetitionPermissionRules rules;
+    private CompetitionCountPermissionRules countRules;
 
     @Before
     public void lookupPermissionRules() {
 
         rules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
+        countRules = getMockPermissionRulesBean(CompetitionCountPermissionRules.class);
 
         initMocks(this);
     }
@@ -42,7 +45,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
     @Test
     public void testFindAll() {
-
         setLoggedInUser(null);
 
         ServiceResult<List<CompetitionResource>> results = service.findAll();
@@ -54,11 +56,53 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
     @Test
     public void testGetCompetitionById() {
-
         setLoggedInUser(null);
 
         assertAccessDenied(() -> service.getCompetitionById(1L), () -> {
             verify(rules).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void testFindLiveCompetitions() {
+        setLoggedInUser(null);
+
+        ServiceResult<List<CompetitionResource>> results = service.findLiveCompetitions();
+        assertEquals(0, results.getSuccessObject().size());
+
+        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verifyNoMoreInteractions(rules);
+    }
+
+    @Test
+    public void testFindProjectSetupCompetitions() {
+        setLoggedInUser(null);
+
+        ServiceResult<List<CompetitionResource>> results = service.findProjectSetupCompetitions();
+        assertEquals(0, results.getSuccessObject().size());
+
+        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verifyNoMoreInteractions(rules);
+    }
+
+    @Test
+    public void testFindUpcomingCompetitions() {
+        setLoggedInUser(null);
+
+        ServiceResult<List<CompetitionResource>> results = service.findUpcomingCompetitions();
+        assertEquals(0, results.getSuccessObject().size());
+
+        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verifyNoMoreInteractions(rules);
+    }
+
+    @Test
+    public void testCountCompetitions() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> service.countCompetitions(), () -> {
+            verify(countRules).anyoneCanViewCompetitionCounts(isA(CompetitionCountResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -75,12 +119,32 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public void addCategories(Competition competition) {
-        }
+        public Competition addCategories(Competition competition) { return competition; }
 
         @Override
         public ServiceResult<List<CompetitionResource>> findAll() {
             return serviceSuccess(newCompetitionResource().build(2));
         }
+
+        @Override
+        public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
+            return serviceSuccess(newCompetitionResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
+            return serviceSuccess(newCompetitionResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
+            return serviceSuccess(newCompetitionResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<CompetitionCountResource> countCompetitions() {
+            return serviceSuccess(new CompetitionCountResource());
+        }
+
     }
 }
