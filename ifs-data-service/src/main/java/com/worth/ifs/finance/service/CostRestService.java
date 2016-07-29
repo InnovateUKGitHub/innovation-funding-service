@@ -10,7 +10,8 @@ import java.util.List;
  * Interface for CRUD operations on {@link CostItem} related data.
  */
 public interface CostRestService{
-    RestResult<CostItem> add(Long applicationFinanceId, Long questionId, CostItem costItem);
+    RestResult<ValidationMessages> add(Long applicationFinanceId, Long questionId, CostItem costItem);
+    RestResult<CostItem> addWithoutPersisting(Long applicationFinanceId, Long questionId);
     RestResult<List<CostItem>> getCosts(Long applicationFinanceId);
     RestResult<ValidationMessages> update(CostItem costItem);
     RestResult<CostItem> findById(Long id);

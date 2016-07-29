@@ -1019,7 +1019,7 @@
     <div class="form-group">
         <fieldset class="inline">
             <legend class="form-label-bold">Lead applicant</legend>
-            <p>Select the Lead Applicant type required</p>
+            <p>Select the lead applicant type required</p>
             <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
                 <input th:id="${'stream-'+streamNo+'-comp-lead-business'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Business" type="radio" checked="checked" />
                 Business
@@ -1038,7 +1038,7 @@
     <div class="form-group">
         <label class="form-label" th:for="${'stream-'+streamNo+'-comp-participation'}">
             <span class="form-label-bold">Research participation</span>
-            <span class="form-hint">This indicates the maximum level of Research participation alllowed</span>
+            <span class="form-hint">This indicates the maximum level of research participation allowed</span>
         </label>
         <select class="form-control width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
             <option value="">30%</option>
@@ -1079,7 +1079,7 @@
     </div>
     
     <div class="panel-indent">
-        Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
+        Define the competition milestones. Once you enter a date into the 'submission date' field, this will automatically generate the other dates. You are able to edit these dates, but this will affect the overall calculation.
     </div>
 
     <form>
@@ -1107,7 +1107,7 @@
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders Panel'}, rowNo=11" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders panel'}, rowNo=11" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
                     <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
                 </tbody>

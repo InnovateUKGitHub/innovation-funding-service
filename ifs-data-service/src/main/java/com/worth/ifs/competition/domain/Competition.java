@@ -54,8 +54,11 @@ public class Competition {
             return status;
         }else if(getStartDate() == null || getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
-        }else if(getEndDate() != null && getEndDate().isAfter(today)){
+        }else if(getEndDate() != null && getEndDate().isAfter(today)) {
             return CompetitionResource.Status.OPEN;
+        }else if (getEndDate() != null && getEndDate().isBefore(today)
+                  && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
+            return CompetitionResource.Status.CLOSED;
         }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
             return CompetitionResource.Status.IN_ASSESSMENT;
         }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
@@ -139,7 +142,7 @@ public class Competition {
     @MapKeyColumn (name="section")
     @Column(name="status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-    
+
     public Competition() {
     	// no-arg constructor
         status = CompetitionResource.Status.COMPETITION_SETUP;

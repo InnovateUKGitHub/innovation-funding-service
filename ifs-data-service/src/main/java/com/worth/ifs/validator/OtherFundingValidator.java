@@ -57,6 +57,8 @@ public class OtherFundingValidator implements Validator {
             validateDate(otherFunding, errors);
             validateFundingSource(fundingSource, errors);
             validateFundingAmount(fundingAmount, errors);
+        } else if(userHasSelectedYesToOtherFunding && fundingSource == null) {
+        	validateDate(otherFunding, errors);
         }
     }
 

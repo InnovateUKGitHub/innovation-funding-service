@@ -1,7 +1,7 @@
 package com.worth.ifs.registration.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.form.AddressForm;
+import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,31 +1,32 @@
 package com.worth.ifs.finance.controller;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.http.MediaType;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.finance.transactional.CostService;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.springframework.http.MediaType;
+import com.worth.ifs.validator.util.ValidationUtil;
 
-import java.math.BigDecimal;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@Ignore("TODO DW - INFUND-1555 - reinstate test")
 public class CostControllerTest extends BaseControllerMockMVCTest<CostController> {
-
-    private BigDecimal value;
-    private Integer quantity;
 
     @Override
     protected CostController supplyControllerUnderTest() {
@@ -35,21 +36,29 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
     @Mock
     private CostService costServiceMock;
 
-    @Before
-    public void setUp() throws Exception {
-        value = new BigDecimal(1000);
-        quantity = new Integer(25);
-    }
-
+    @Mock
+    private ValidationUtil validationUtil;
+    
     @Test
     public void addShouldCreateNewCost() throws Exception{
 
         when(costServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(get("/cost/add/{applicationFinanceId}/{questionId}", "123", "456"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(costServiceMock, times(1)).addCost(123L, 456L, null);
+    }
+    
+    @Test
+    public void addShouldCreateNewCostWithoutPersisting() throws Exception{
+
+        when(costServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
+
+        mockMvc.perform(get("/cost/add-without-persisting/{applicationFinanceId}/{questionId}", "123", "456"))
+                .andExpect(status().isCreated());
+
+        verify(costServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
     }
 
     @Test
@@ -87,15 +96,6 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
     }
 
     @Test
-    public void updateShouldReturnNotFoundOnEmptyId() throws Exception {
-
-        when(costServiceMock.getCostFieldById(null)).thenReturn(serviceFailure(notFoundError(CostField.class, 1L)));
-
-        mockMvc.perform(get("/cost/get/{applicationFinanceId}", ""))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void updateShouldReturnEmptyResponseOnWrongId() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
@@ -130,7 +130,7 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
         when(costServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(get("/cost/delete/123"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(costServiceMock, times(1)).deleteCost(123L);
     }

@@ -20,9 +20,9 @@
                         <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
                     </span>
                     <span th:if="${section.name == 'Project details'}" th:remove="tag">
-                        <div th:unless="${currentRow.hasInput}" th:remove="tag" class="score"> No score required </div>
+                        <p th:unless="${currentRow.hasInput}" class="form-hint">No score required</p>
                         <span th:if="${currentRow.hasScope}" th:remove="tag">
-                            <div class="score"> In scope? <div th:text="${currentRow.scopeResponse}" th:remove="tag" /></div>
+                            <div class="score"> In scope? <strong th:text="${currentRow.scopeResponse}" /></div>
                             <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
                         </span>
                     </span>
