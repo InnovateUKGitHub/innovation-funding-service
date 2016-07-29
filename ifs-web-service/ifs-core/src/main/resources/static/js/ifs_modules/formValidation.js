@@ -95,7 +95,7 @@ IFS.core.formValidation = (function(){
           //set data attribute on date fields
           //which has the combined value of the dates
           //and also makes sure that other vaidation doesn't get triggered
-          jQuery(s.date.fields).attr('data-date','');
+          jQuery(s.date.fields).attr({'data-date':'','data-autosave-disabled':''});
 
           //will only work on html5 validation browsers
           jQuery('form:not([novalidate]) input').on('invalid',function(){
@@ -381,7 +381,7 @@ IFS.core.formValidation = (function(){
 
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
                 if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
-                allFields.removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
+                allFields.removeAttr('data-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
 
                 if(dateGroup.hasClass("js-future-date")){
                   var now = new Date();
@@ -397,13 +397,13 @@ IFS.core.formValidation = (function(){
                 return true;
             } else {
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
-                allFields.addClass('js-autosave-disabled').attr('data-date','');
+                allFields.attr({'data-date':'', 'autosave-disabled':''});
                 return false;
             }
           }
           else if (filledOut || fieldsVisited){
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
-                allFields.addClass('js-autosave-disabled').attr('data-date','');
+                allFields.attr({'data-date':'', 'autosave-disabled':''});
                 return false;
           }
           else {

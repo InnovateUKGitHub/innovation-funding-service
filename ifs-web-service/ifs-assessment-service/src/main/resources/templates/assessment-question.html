@@ -17,7 +17,7 @@
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" data-autosave="assessorFeedback">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
