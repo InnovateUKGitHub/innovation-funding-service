@@ -1,6 +1,8 @@
 package com.worth.ifs.project.viewmodel;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 
@@ -36,4 +38,28 @@ public class ProjectSpendProfileViewModel {
     public CompetitionResource getCompetition() {
         return competition;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectSpendProfileViewModel viewModel = (ProjectSpendProfileViewModel) o;
+
+        return new EqualsBuilder()
+                .append(projectId, viewModel.projectId)
+                .append(targetProjectStartDate, viewModel.targetProjectStartDate)
+                .append(durationInMonths, viewModel.durationInMonths)
+                .append(competition, viewModel.competition)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .toHashCode();
+    }
 }
+
