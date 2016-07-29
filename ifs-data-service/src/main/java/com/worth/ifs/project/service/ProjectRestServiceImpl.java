@@ -127,6 +127,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
+    public RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "other-documents", Boolean.class);
+    }
+
+    @Override
     public RestResult<Void> removeExploitationPlanDocument(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/exploitation-plan");
     }
