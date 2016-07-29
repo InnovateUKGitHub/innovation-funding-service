@@ -1,14 +1,27 @@
 package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
 
-@Ignore("TODO")
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.*;
+import static java.util.Collections.singletonList;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+
 public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<AssessmentService> {
 
     private AssessmentPermissionRules assessmentPermissionRules;
@@ -25,10 +38,42 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         assessmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentLookupStrategy.class);
     }
 
+    @Test
+    public void test_getAssessmentById_allowedIfGlobalCompAdminRole() {
+        final Long assessmentId = 9L;
+        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+       // when(assessmentLookupStrategy.getAssessment(assessmentId)).thenReturn(newAssessment().withId(assessmentId).build());
+        service.findById(assessmentId);
+        verify(assessmentPermissionRules).userCanReadAssessment(isA(Assessment.class), isA(UserResource.class));
+    }
+
+    @Test
+    public void test_getAssessmentById_allowedIfAssessorRole() {
+
+        RoleResource assessorRole = newRoleResource().withType(ASSESSOR).build();
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(assessorRole)).build());
+        service.findById(9L);
+    }
+
+
+    @Test
+    public void testAccessIsDenied() {
+        final Long assessmentId = 9L;
+        RoleResource applicantRole = newRoleResource().withType(APPLICANT).build();
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(applicantRole)).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        assertAccessDenied(
+                () -> service.findById(assessmentId),
+                () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(Assessment.class), isA(UserResource.class))
+        );
+    }
+
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
-            return null;
+            return serviceSuccess(newAssessmentResource().build());
         }
 
         @Override

@@ -23,16 +23,16 @@ public class AssessmentPermissionRules {
     private AssessmentRepository assessmentRepository;
 
     @PermissionRule(value = "READ", description = "users and competitionAdmins can read Assessments")
-    public static boolean userCanReadAssessment(final Assessment assessment, final UserResource user) {
+    public boolean userCanReadAssessment(final Assessment assessment, final UserResource user) {
         return isCompAdmin(user) || isOwner(assessment, user);
     }
 
     @PermissionRule(value = "UPDATE", description = "only owners can update Assessments")
-    public static boolean userCanUpdateAssessment(final Assessment assessment, final UserResource user) {
+    public boolean userCanUpdateAssessment(final Assessment assessment, final UserResource user) {
         return isOwner(assessment, user);
     }
 
-    static boolean isOwner(final Assessment assessment, final UserResource user) {
+    public boolean isOwner(final Assessment assessment, final UserResource user) {
         return simpleMap(assessment.getProcessRole().getApplication().getProcessRoles(), ProcessRole::getUser).stream()
                 .filter(u -> u != null)
                 .map(User::getId)

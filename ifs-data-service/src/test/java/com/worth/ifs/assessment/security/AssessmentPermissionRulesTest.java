@@ -1,36 +1,37 @@
 package com.worth.ifs.assessment.security;
 
-import java.util.List;
-
+import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static com.worth.ifs.assessment.security.AssessmentPermissionRules.isOwner;
-import static com.worth.ifs.assessment.security.AssessmentPermissionRules.userCanReadAssessment;
-import static com.worth.ifs.assessment.security.AssessmentPermissionRules.userCanUpdateAssessment;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class AssessmentPermissionRulesTest {
+public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<AssessmentPermissionRules> {
     private Assessment assessment;
     private UserResource applicant;
     private UserResource compadmin;
     private UserResource assessor;
+
+
+    @Override
+    protected AssessmentPermissionRules supplyPermissionRulesUnderTest() {
+            return new AssessmentPermissionRules();
+    }
 
     @Before
     public void setup(){
@@ -50,41 +51,41 @@ public class AssessmentPermissionRulesTest {
 
     @Test
     public void compAdminCanReadAssessment(){
-        assertTrue("a compadmin should be able to read an assessment", userCanReadAssessment(assessment, compadmin));
+        assertTrue("a compadmin should be able to read an assessment", rules.userCanReadAssessment(assessment, compadmin));
     }
 
     @Test
     public void ownerCanReadAssessment(){
-        assertTrue("the owner of an assessment should be able to read that assessment", userCanReadAssessment(assessment, assessor));
+        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessment(assessment, assessor));
     }
 
     @Test
     public void otherUsersCanNotReadAssessment(){
-        assertFalse("other users should not be able to read any assessments", userCanReadAssessment(assessment, applicant));
+        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessment(assessment, applicant));
     }
 
     @Test
     public void connectedUserShouldBeRecognised(){
-        assertTrue("the owner of an assessment should be recognised as connected", isOwner(assessment, assessor));
+        assertTrue("the owner of an assessment should be recognised as connected", rules.isOwner(assessment, assessor));
     }
 
     @Test
     public void unconnectedUserShouldNotBeRecognised(){
-        assertFalse("other users should not be recognised as connected", isOwner(assessment, applicant));
+        assertFalse("other users should not be recognised as connected", rules.isOwner(assessment, applicant));
     }
 
     @Test
     public void ownersCanUpdateAssessments(){
-        assertTrue("the owner of an assessment should able to update that assessment", userCanUpdateAssessment(assessment, assessor));
+        assertTrue("the owner of an assessment should able to update that assessment", rules.userCanUpdateAssessment(assessment, assessor));
     }
 
     @Test
     public void compAdminsCanNotUpdateAssessments(){
-        assertFalse("competition admins should not able to update assessments", userCanUpdateAssessment(assessment, compadmin));
+        assertFalse("competition admins should not able to update assessments", rules.userCanUpdateAssessment(assessment, compadmin));
     }
 
     @Test
     public void OtherUsersCanNotUpdateAssessments(){
-        assertFalse("other users should not able to update assessments", userCanUpdateAssessment(assessment, applicant));
+        assertFalse("other users should not able to update assessments", rules.userCanUpdateAssessment(assessment, applicant));
     }
 }
