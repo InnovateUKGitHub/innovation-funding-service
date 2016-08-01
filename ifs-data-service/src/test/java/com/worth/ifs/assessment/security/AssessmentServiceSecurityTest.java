@@ -11,8 +11,8 @@ import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
@@ -40,11 +40,10 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     @Test
     public void test_getAssessmentById_allowedIfGlobalCompAdminRole() {
-        final Long assessmentId = 9L;
+        final Long assessmentId = 1L;
         RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
-       // when(assessmentLookupStrategy.getAssessment(assessmentId)).thenReturn(newAssessment().withId(assessmentId).build());
+        when(assessmentLookupStrategy.getAssessment(assessmentId)).thenReturn(newAssessment().withId(assessmentId).build());
         service.findById(assessmentId);
         verify(assessmentPermissionRules).userCanReadAssessment(isA(Assessment.class), isA(UserResource.class));
     }
@@ -54,13 +53,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         RoleResource assessorRole = newRoleResource().withType(ASSESSOR).build();
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(assessorRole)).build());
-        service.findById(9L);
+        service.findById(1L);
     }
 
 
     @Test
     public void testAccessIsDenied() {
-        final Long assessmentId = 9L;
+        final Long assessmentId = 1L;
         RoleResource applicantRole = newRoleResource().withType(APPLICANT).build();
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(applicantRole)).build());
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
@@ -73,7 +72,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
-            return serviceSuccess(newAssessmentResource().build());
+           // return serviceSuccess(newAssessmentResource().withId(id).build());
+            return null;
         }
 
         @Override

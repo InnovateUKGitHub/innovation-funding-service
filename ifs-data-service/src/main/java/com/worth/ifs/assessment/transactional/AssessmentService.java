@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface AssessmentService {
 
-    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.resource.AssessmentResource', 'READ')")
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.domain.Assessment', 'READ')")
     ServiceResult<AssessmentResource> findById(@P("id") final Long id);
 
     @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
