@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
@@ -72,8 +73,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
-           // return serviceSuccess(newAssessmentResource().withId(id).build());
-            return null;
+           return serviceSuccess(newAssessmentResource().withId(id).build());
         }
 
         @Override
