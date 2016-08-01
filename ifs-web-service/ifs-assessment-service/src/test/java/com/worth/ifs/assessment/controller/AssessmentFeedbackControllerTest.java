@@ -123,7 +123,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Form expectedForm = new Form();
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource -> String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
         AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, of(questionResources.get(expectedPreviousQuestionId)), of(questionResources.get(expectedNextQuestionId)));
-        this.setupNextQuestionSection(sectionId,expectedNextQuestionId, true);
+        this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID))
                 .andExpect(status().isOk())
@@ -179,14 +179,14 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Form expectedForm = new Form();
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource -> String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
         AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, of(questionResources.get(expectedPreviousQuestionId)), Optional.empty());
-        this.setupNextQuestionSection(sectionId,expectedNextQuestionId, false);
+        this.setupNextQuestionSection(sectionId, expectedNextQuestionId, false);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().attribute("navigation", expectedNavigation))
-                .andExpect(view().name("assessment-question"))
+                .andExpect(view().name("assessment/application-question"))
                 .andReturn();
     }
 
@@ -201,7 +201,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(APPLICATION_DETAILS_QUESTION_ID, FORM_INPUT_TYPES.get("application_details"));
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
         this.setupInvites();
-        this.setupNextQuestionSection(sectionId,expectedNextQuestionId, true);
+        this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, APPLICATION_DETAILS_QUESTION_ID))
                 .andExpect(status().isOk())
@@ -281,12 +281,11 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         questionResources.get(APPLICATION_DETAILS_QUESTION_ID).setShortName("Application details");
     }
 
-    private void setupNextQuestionSection(Long sectionId,Long expectedNextQuestionId, boolean isAssessmentQuestion) {
+    private void setupNextQuestionSection(Long sectionId, Long expectedNextQuestionId, boolean isAssessmentQuestion) {
         SectionResource section = newSectionResource().withDisplayInAssessmentApplicationSummary(isAssessmentQuestion).build();
         when(sectionService.getById(sectionId)).thenReturn(section);
         QuestionResource question = questionResources.get(expectedNextQuestionId);
         question.setSection(sectionId);
-        when(questionService.getNextQuestion(QUESTION_ID)).thenReturn(Optional.of(question));
     }
 
     private List<FormInputResource> setupApplicationFormInputs(Long questionId, FormInputTypeResource... formInputTypes) {
