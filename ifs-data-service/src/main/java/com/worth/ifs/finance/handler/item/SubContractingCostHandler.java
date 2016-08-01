@@ -38,7 +38,7 @@ public class SubContractingCostHandler extends CostHandler {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
         Cost cost =  new Cost(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
                 0, subContractingCost.getCost(),null,null);
-        cost.getCostValues().add(
+        cost.addCostValues(
                 new CostValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));
         return cost;
     }

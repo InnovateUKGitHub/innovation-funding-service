@@ -54,11 +54,9 @@ public class CapitalUsageHandler extends CostHandler {
         CapitalUsage capitalUsage = (CapitalUsage) costItem;
         Cost capitalUsageCost = new Cost(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
-        capitalUsageCost.getCostValues().add(
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()));
-        capitalUsageCost.getCostValues().add(
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())));
-        capitalUsageCost.getCostValues().add(
+        capitalUsageCost.addCostValues(
+                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
+                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),
                 new CostValue(capitalUsageCost, costFields.get(COST_FIELD_UTILISATION), String.valueOf(capitalUsage.getUtilisation())));
 
         return capitalUsageCost;

@@ -1,5 +1,6 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.competition.controller.ApplicationManagementController;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationManagementControllerTest extends BaseControllerMockMVCTest<ApplicationManagementController>{
+public class ApplicationManagementControllerTest extends BaseControllerMockMVCTest<ApplicationManagementController> {
 
     @Test
     public void testDisplayApplicationForCompetitionAdministrator() throws Exception {

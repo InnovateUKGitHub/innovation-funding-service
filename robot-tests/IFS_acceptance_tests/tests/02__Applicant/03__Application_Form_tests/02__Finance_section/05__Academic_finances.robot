@@ -50,7 +50,7 @@ Academic finance calculations
     ...
     ...    INFUND-2399
     [Tags]    HappyPath
-    [Setup]     Guest user log-in     ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given The user navigates to the academic application finances
     When the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
@@ -195,7 +195,7 @@ the finance table should be correct
 Lead applicant marks the finances as complete
     Given guest user log-in    steve.smith@empire.com    Passw0rd
     The user navigates to the academic application finances
-    The user clicks the button/link    jQuery=label:contains(Medium - claim up to 60%) input
+    the user selects the radio button    financePosition-organisationSize    SMALL
     Input Text    id=cost-financegrantclaim    20
     The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     When the user marks the finances as complete

@@ -2,34 +2,61 @@
 
 eval $(docker-machine env default)
 
-BASEDIR=$(dirname "$0")
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
 cd ../../../
 
-data() {
-    cd ifs-data-service
-    ./gradlew -Pprofile=docker flywayClean flywayMigrate
-    ./gradlew -Pprofile=docker cleanDeploy "$@"
-    echo "copying data service war to container"
-    docker cp build/war/* ifs-data-service:/opt/tomcat/webapps/
+function deploy() {
+    base="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    
+    service=$1
+    dir=$2
+    name=$(basename ${dir})
+
+    shift 2
+    
+    cd ${dir}
+    echo `pwd`
+    ../gradlew -Pprofile=docker cleanDeploy "$@"
+    echo "copying ${name} war to container"
+    for item in $( docker-compose -p ifs ps -q ${service}  ); do
+        docker cp build/war/* ${item}:/opt/tomcat/webapps/
+    done
     echo "copying complete"
     echo
     echo
-    cd ..
+    cd $base
 }
 
-web() {
-    cd ifs-web-service
+function core() {
+    cd ifs-web-service/ifs-web-core
     ./gradlew -Pprofile=docker cleanDeploy "$@"
-    echo "copying competition management service war to container"
-    docker cp ifs-competition-mgt-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
-    echo "copying application service war to container"
-    docker cp ifs-application-service/build/war/* ifs-web-service:/opt/tomcat/webapps/
-    echo "copying complete"
-    echo
-    echo
-    cd ..
+    cd ../..
+}
+
+function data() {
+    deploy data ifs-data-service "$@"
+}
+
+function asm() {
+    deploy web ifs-web-service/ifs-assessment-service "$@"
+}
+
+function cmgt() {
+    deploy web ifs-web-service/ifs-competition-mgt-service "$@"
+}
+
+function app() {
+    deploy web ifs-web-service/ifs-application-service "$@"
+}
+
+function ps() {
+    deploy web ifs-web-service/ifs-project-setup-service "$@"
+}
+
+function psm() {
+    deploy web ifs-web-service/ifs-project-setup-mgt-service "$@"
 }
 
 target=$1
@@ -38,15 +65,41 @@ shift
 case "$target" in
     all)
         data "$@"
-        web "$@"
+        core "$@"
+        app "$@"
+        cmgt "$@"
+        asm "$@"
     ;;
     data)
         data "$@"
     ;;
     web)
-        web "$@"
+        core "$@"
+        app "$@"
+        cmgt "$@"
+        asm "$@"
+    ;;
+    asm)
+        core "$@"
+        asm "$@"
+    ;;
+    comp-mgt)
+        core "$@"
+        cmgt "$@"
+    ;;
+    app)
+        core "$@"
+        app "$@"
+    ;;
+    ps)
+        core "$@"
+        ps "$@"
+    ;;
+    psm)
+        core "$@"
+        psm "$@"
     ;;
     *)
-        echo $"Usage: $0 {all|data|web} {gradleOpts}"
+        echo $"Usage: $0 {all|data|web|asm|comp-mgt|app|ps|psm} {gradleOpts}"
         exit 1
 esac

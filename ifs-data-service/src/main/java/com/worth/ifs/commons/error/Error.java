@@ -22,6 +22,7 @@ public class Error implements Serializable {
 
     private String errorKey;
     private String fieldName;
+    private Object fieldRejectedValue;
     private List<Object> arguments;
     private String errorMessage;
 
@@ -102,23 +103,24 @@ public class Error implements Serializable {
     /**
      * A convenience method to create a field error
      */
-    public static Error fieldError(String fieldName, String messageOrCode) {
-        return fieldError(fieldName, messageOrCode, emptyList());
+    public static Error fieldError(String fieldName, Object fieldRejectedValue, String messageOrCode) {
+        return fieldError(fieldName, fieldRejectedValue, messageOrCode, emptyList());
     }
 
     /**
      * A convenience method to create a field error with arguments
      */
-    public static Error fieldError(String fieldName, String messageOrCode, Object... arguments) {
-        return fieldError(fieldName, messageOrCode, asList(arguments));
+    public static Error fieldError(String fieldName, Object fieldRejectedValue, String messageOrCode, Object... arguments) {
+        return fieldError(fieldName, fieldRejectedValue, messageOrCode, asList(arguments));
     }
 
     /**
      * A convenience method to create a field error
      */
-    public static Error fieldError(String fieldName, String messageOrCode, List<Object> arguments) {
+    public static Error fieldError(String fieldName, Object fieldRejectedValue, String messageOrCode, List<Object> arguments) {
         Error error = new Error(messageOrCode, messageOrCode, arguments, NOT_ACCEPTABLE);
         error.fieldName = fieldName;
+        error.fieldRejectedValue = fieldRejectedValue;
         return error;
     }
 
@@ -140,6 +142,14 @@ public class Error implements Serializable {
         return fieldName;
     }
 
+    public Object getFieldRejectedValue() {
+        return fieldRejectedValue;
+    }
+
+    public void setFieldRejectedValue(Object fieldRejectedValue) {
+        this.fieldRejectedValue = fieldRejectedValue;
+    }
+
     @JsonIgnore
     public boolean isFieldError() {
         return fieldName != null;
@@ -156,6 +166,7 @@ public class Error implements Serializable {
         return new EqualsBuilder()
                 .append(errorKey, error.errorKey)
                 .append(fieldName, error.fieldName)
+                .append(fieldRejectedValue, error.fieldRejectedValue)
                 .append(arguments, error.arguments)
                 .append(errorMessage, error.errorMessage)
                 .append(statusCode, error.statusCode)
@@ -167,18 +178,19 @@ public class Error implements Serializable {
         return new HashCodeBuilder(17, 37)
                 .append(errorKey)
                 .append(fieldName)
+                .append(fieldRejectedValue)
                 .append(arguments)
                 .append(errorMessage)
                 .append(statusCode)
                 .toHashCode();
     }
 
-
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("errorKey", errorKey)
                 .append("fieldName", fieldName)
+                .append("fieldRejectedValue", fieldRejectedValue)
                 .append("arguments", arguments)
                 .append("errorMessage", errorMessage)
                 .append("statusCode", statusCode)

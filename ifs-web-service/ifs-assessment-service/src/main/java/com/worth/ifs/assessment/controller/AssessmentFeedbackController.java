@@ -43,8 +43,8 @@ import static java.util.stream.Collectors.toMap;
 @RequestMapping("/{assessmentId}")
 public class AssessmentFeedbackController extends AbstractApplicationController {
 
-    private static String APPLICATION_DETAILS = "assessment-application-details";
-    private static String QUESTION = "assessment-question";
+    private static String APPLICATION_DETAILS = "assessment/application-details";
+    private static String QUESTION = "assessment/application-question";
 
     @Autowired
     private AssessmentService assessmentService;
@@ -122,7 +122,7 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         formInputResponses.stream().forEach(responsePair -> {
             Long formInputId = responsePair.getLeft();
             String value = responsePair.getRight();
-            // TODO could optimise this to save multiple responses at a time
+            // TODO INFUND-4105 optimise this to save multiple responses at a time
             assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
         });
         // TODO handle service errors

@@ -14,6 +14,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.time.LocalDateTime.now;
 
 /**
  * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.AssessorFormInputResponse} data.
@@ -40,6 +41,10 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Override
     public ServiceResult<Void> updateFormInputResponse(Long assessmentId, Long formInputId, String value) {
         AssessorFormInputResponseResource assessorFormInputResponse = getOrCreateAssessorFormInputResponse(assessmentId, formInputId).getSuccessObjectOrThrowException();
+        boolean same = (value == null && assessorFormInputResponse.getValue() == null) || (value != null && value.equals(assessorFormInputResponse.getValue()));
+        if (!same) {
+            assessorFormInputResponse.setUpdatedDate(now());
+        }
         assessorFormInputResponse.setValue(value);
         assessorFormInputResponseRepository.save(assessorFormInputResponseMapper.mapToDomain(assessorFormInputResponse));
         return serviceSuccess();
@@ -50,6 +55,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                     AssessorFormInputResponseResource newAssessorFormInputResponseResource = new AssessorFormInputResponseResource();
                     newAssessorFormInputResponseResource.setAssessment(assessmentId);
                     newAssessorFormInputResponseResource.setFormInput(formInputId);
+                    newAssessorFormInputResponseResource.setUpdatedDate(now());
                     return serviceSuccess(newAssessorFormInputResponseResource);
                 }, assessorFormInputResponseResource -> serviceSuccess(assessorFormInputResponseMapper.mapToResource(assessorFormInputResponseResource))
         );

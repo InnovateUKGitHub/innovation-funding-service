@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrganisationFinanceDelegate {
     @Autowired
-    OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
+    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
 
     @Autowired
-    OrganisationJESFinance organisationJESFinance;
+    private OrganisationJESFinance organisationJESFinance;
 
     public OrganisationFinanceHandler getOrganisationFinanceHandler(String organisationType) {
         switch(organisationType) {

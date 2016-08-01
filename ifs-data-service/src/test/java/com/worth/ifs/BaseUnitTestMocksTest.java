@@ -31,6 +31,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
+import com.worth.ifs.competition.repository.CompetitionCoFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -55,6 +56,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.UserMapper;
@@ -285,6 +287,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected BankDetailsService bankDetailsServiceMock;
+
+    @Mock
+    protected CompetitionCoFunderRepository competitionCoFunderRepositoryMock;
+
+    @Mock
+    protected SilExperianEndpoint silExperianEndpointMock;
 
     @Before
     public void setupMockInjection() {

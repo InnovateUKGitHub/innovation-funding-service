@@ -29,6 +29,8 @@ Comp admin can open the view mode of the application
     ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
     Given log in as user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+    Then the user should see the element    id=sort-by
+    And the user selects the option from the drop-down menu    id    id=sort-by
     When the user clicks the button/link    link=00000001
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element    link=Print application
