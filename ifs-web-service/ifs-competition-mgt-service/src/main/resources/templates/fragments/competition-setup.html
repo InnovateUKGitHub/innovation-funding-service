@@ -1,6 +1,6 @@
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
 
-<div th:fragment="comp-setup-navigation(sections, completedStatuses, currentSection, competition)">
+<div th:fragment="comp-setup-navigation(sections, completedStatuses, currentSection, competition, readyToOpen)">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
         <ul class="list-overview">
             <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}"
@@ -13,7 +13,8 @@
         </ul>
 
         <div class="extra-margin">
-            <a href="#" class="button no-margin-right" id="compCTA">Save as in preparation</a>
+            <a th:if="${readyToOpen}" th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"
+               class="button no-margin-right" id="compCTA">Save as Ready To Open</a>
         </div>
     </div>
 </div>

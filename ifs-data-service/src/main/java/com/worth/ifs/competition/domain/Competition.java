@@ -29,7 +29,8 @@ public class Competition {
 	
     public CompetitionResource.Status getCompetitionStatus() {
         LocalDateTime today = dateProvider.provideDate();
-        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)){
+        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)
+                || status.equals(CompetitionResource.Status.READY_TO_OPEN)){
             return status;
         }else if(getStartDate() == null || getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;

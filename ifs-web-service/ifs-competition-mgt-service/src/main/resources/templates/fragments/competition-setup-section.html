@@ -235,12 +235,13 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('funder')}" th:text="${err}" />
                         </th:block>
                     </label>
-                    <input class="form-control width-x-large"
+                    <input class="form-control width-x-large" required="required"
                            th:errorclass="field-error"
                            type="text"
                            th:field="${competitionSetupForm.funder}"
                            maxlength="255"
-                           data-maxlength-errormessage="Co-funders has a maximum length of 255 characters" />
+                           data-maxlength-errormessage="Funder has a maximum length of 255 characters"
+                           data-required-errormessage="Please enter a funder name"/>
                 </div>
                 </div>
 
@@ -252,10 +253,11 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('funderBudget')}" th:text="${err}" />
                             </th:block>
                         </label>
-                        <input th:class="${#fields.hasErrors('funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                        <input required="required" th:class="${#fields.hasErrors('funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                type="number" min="0"
                                id="funderBudget"
-                               th:field="${competitionSetupForm.funderBudget}" />
+                               th:field="${competitionSetupForm.funderBudget}"
+                               data-required-errormessage="Please enter a valid budget" />
                     </div>
                 </div>
             </div>

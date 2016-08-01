@@ -3,6 +3,7 @@ package com.worth.ifs.competitionsetup.form;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,8 +18,10 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     @Size(max = 255, message = "Innovate budget has a maximum length of 255 characters")
     private String innovateBudget;
     @Size(max = 255, message = "Funder has a maximum length of 255 characters")
+    @NotEmpty(message = "Please enter a funder name")
     private String funder;
     @Min(value=0, message = "Please a valid number.")
+    @NotNull(message = "Please enter a budget")
     private BigDecimal funderBudget;
     @NotEmpty(message = "Please enter a PAF number")
     private String pafNumber;
