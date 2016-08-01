@@ -4,7 +4,7 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
     </head>
 
-    <body th:with="context='assessment'" class="assessment" th:classappend="${model.scoreFormInputExists or model.scopeFormInputExists} ? assessment-form">
+    <body th:with="context='assessment', responseRequired=${!#lists.isEmpty(model.assessmentFormInputs)}" class="assessment" th:classappend="${responseRequired} ? assessment-form">
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -17,7 +17,7 @@
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
-            <form th:if="${model.scoreFormInputExists or model.scopeFormInputExists}" action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" class="form-serialize-js">
+            <form th:if="${responseRequired}" action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" class="form-serialize-js">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <p class="form-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
@@ -45,7 +45,7 @@
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             </form>
 
-            <div th:unless="${model.scoreFormInputExists or model.scopeFormInputExists}" th:remove="tag">
+            <div th:unless="${responseRequired}" th:remove="tag">
                 <div class="form-group">
                     <h2 class="heading-medium">
                         <span th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" th:remove="tag" />
