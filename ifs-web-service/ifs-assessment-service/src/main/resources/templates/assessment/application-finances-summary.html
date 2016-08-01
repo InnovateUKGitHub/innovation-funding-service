@@ -79,8 +79,6 @@
             <h2 class="heading-medium extra-margin">Project cost breakdown</h2>
             <div th:include="finance/finance-summary :: financial_summary_table" th:remove="tag"/>
 
-            <a class="button-secondary" th:href="@{/{id}(id=${assessmentId})}">Return to assessment overview</a>
-
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>
 
