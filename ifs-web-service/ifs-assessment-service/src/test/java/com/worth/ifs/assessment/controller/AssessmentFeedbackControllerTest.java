@@ -124,7 +124,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().attribute("navigation", expectedNavigation))
-                .andExpect(view().name("assessment-question"))
+                .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
         AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) result.getModelAndView().getModel().get("model");
@@ -174,7 +174,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().attribute("navigation", expectedNavigation))
-                .andExpect(view().name("assessment-application-details"))
+                .andExpect(view().name("assessment/application-details"))
                 .andReturn();
 
         AssessmentFeedbackApplicationDetailsViewModel model = (AssessmentFeedbackApplicationDetailsViewModel) result.getModelAndView().getModel().get("model");
