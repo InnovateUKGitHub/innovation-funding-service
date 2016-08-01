@@ -18,7 +18,7 @@
       </h2>
     </div>
     <div th:if="${competition == 'setup'}" th:remove="tag">
-        <h2 class="bold-small blue-block">Competition Setup</h2>  
+        <h2 class="bold-small blue-block">Competition Setup</h2>
     </div>
 </div>
 
@@ -191,10 +191,11 @@
 	           <th scope="col">Duration (months)</th>
 	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Fund project?</th>
 	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">Funded</th>
+             <th scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}"><span class="visuallyhidden">Save status</span></th>
 	         </tr>
 	       </thead>
 	       <tbody>
-	         <tr th:each="result : ${results.content}">
+	         <tr th:each="result : ${results.content}"  th:class="${competition.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
 	           <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
 	           <td th:text="${result.name}"></td>
 	           <td th:text="${result.lead}"></td>
@@ -203,17 +204,17 @@
 	           <td th:text="${result.totalProjectCost}"></td>
 	           <td th:text="${result.duration}"></td>
 	           <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
-	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" th:name="${result.id}" th:attr="competition=${competition.competitionId}">
+	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" th:name="${result.id}" th:attr="data-competition=${competition.competitionId}">
            			<option th:selected="${result.fundingDecision == null || result.fundingDecision.name() == 'UNDECIDED'}" value="-">-</option>
            			<option th:selected="${result.fundingDecision?.name() == 'FUNDED'}" value="Y">Yes</option>
            			<option th:selected="${result.fundingDecision?.name() == 'UNFUNDED'}" value="N">No</option>
            		  </select>
-           		  <span class="funding-decision-save-info" th:id="${'funding-decision-save-info-' + result.id}"></span>
 	           </td>
 	           <td scope="col" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" >
 	           		<span th:if="${result.isFunded()}" th:remove="tag">Yes</span>
 	           		<span th:unless="${result.isFunded()}" th:remove="tag">No</span>
 	           </td>
+             <td th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}" class="autosave-info"></td>
 	         </tr>
 	       </tbody>
 	     </table>
