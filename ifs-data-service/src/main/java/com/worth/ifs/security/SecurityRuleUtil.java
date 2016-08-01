@@ -27,6 +27,10 @@ public class SecurityRuleUtil {
         return hasRole(user, SYSTEM_REGISTRATION_USER);
     }
 
+    public static boolean isAssessor(UserResource user) {
+        return hasRole(user, ASSESSOR);
+    }
+
     private static boolean hasRole(UserResource user, UserRoleType type) {
         return user.hasRole(type);
     }
